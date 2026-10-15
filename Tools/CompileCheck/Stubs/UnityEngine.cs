@@ -1,0 +1,282 @@
+using System;
+using System.Collections.Generic;
+
+namespace UnityEngine
+{
+    public class Object
+    {
+        public string name;
+        public static void Destroy(Object obj) { }
+        public static void Destroy(Object obj, float t) { }
+        public static void DestroyImmediate(Object obj) { }
+        public static T FindObjectOfType<T>() where T : Object => null;
+        public static Object Instantiate(Object original) => original is GameObject g ? new GameObject(g.name) : original;
+        public static Object Instantiate(Object original, Transform parent) => Instantiate(original);
+    }
+
+    public class GameObject : Object
+    {
+        public Transform transform { get; } = new Transform();
+        public string tag;
+        public int layer;
+        public bool activeSelf = true;
+        public GameObject() { }
+        public GameObject(string name) { this.name = name; }
+        public static GameObject CreatePrimitive(PrimitiveType type) => new GameObject(type.ToString());
+        public T AddComponent<T>() where T : Component, new() { var c = new T(); c.gameObject = this; return c; }
+        public T GetComponent<T>() where T : class => null;
+        public T GetComponentInChildren<T>() where T : class => null;
+        public T GetComponentInParent<T>() where T : class => null;
+        public T[] GetComponents<T>() where T : class => Array.Empty<T>();
+        public void SetActive(bool v) { activeSelf = v; }
+    }
+
+    public class Component : Object
+    {
+        public GameObject gameObject;
+        public string tag { get => gameObject != null ? gameObject.tag : null; set { if (gameObject != null) gameObject.tag = value; } }
+        public Transform transform => gameObject != null ? gameObject.transform : new Transform();
+        public T GetComponent<T>() where T : class => gameObject?.GetComponent<T>();
+        public T GetComponentInChildren<T>() where T : class => null;
+        public T GetComponentInParent<T>() where T : class => null;
+        public T[] GetComponents<T>() where T : class => Array.Empty<T>();
+    }
+
+    public class Behaviour : Component { public bool enabled = true; }
+    public class MonoBehaviour : Behaviour
+    {
+        public void Invoke(string methodName, float time) { }
+    }
+
+    public class Transform : Component
+    {
+        public Vector3 position;
+        public Vector3 localPosition;
+        public Vector3 localScale = Vector3.one;
+        public Quaternion rotation = Quaternion.identity;
+        public Quaternion localRotation = Quaternion.identity;
+        public Vector3 right => localRotation * Vector3.right;
+        public Vector3 forward => localRotation * Vector3.forward;
+        public Vector3 up => localRotation * Vector3.up;
+        public int childCount => 0;
+        public Transform parent;
+        public void SetParent(Transform p, bool world = true) { parent = p; }
+        public Transform GetChild(int i) => null;
+        public void LookAt(Vector3 t) { }
+    }
+
+    public struct Vector3
+    {
+        public float x, y, z;
+        public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; }
+        public static Vector3 zero => new Vector3(0, 0, 0);
+        public static Vector3 one => new Vector3(1, 1, 1);
+        public static Vector3 up => new Vector3(0, 1, 0);
+        public static Vector3 forward => new Vector3(0, 0, 1);
+        public static Vector3 right => new Vector3(1, 0, 0);
+        public float sqrMagnitude => x * x + y * y + z * z;
+        public Vector3 normalized { get { float m = (float)Math.Sqrt(sqrMagnitude); return m > 1e-5f ? new Vector3(x / m, y / m, z / m) : zero; } }
+        public static Vector3 operator +(Vector3 a, Vector3 b) => new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
+        public static Vector3 operator -(Vector3 a, Vector3 b) => new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
+        public static Vector3 operator *(Vector3 a, float s) => new Vector3(a.x * s, a.y * s, a.z * s);
+        public static Vector3 operator *(float s, Vector3 a) => a * s;
+        public static float Min(float a, float b) => Math.Min(a, b);
+    }
+
+    public struct Quaternion
+    {
+        public float x, y, z, w;
+        public static Quaternion identity => new Quaternion { w = 1 };
+        public static Quaternion Euler(float x, float y, float z) => identity;
+        public static Vector3 operator *(Quaternion q, Vector3 v) => v;
+    }
+
+    public struct Color
+    {
+        public float r, g, b, a;
+        public Color(float r, float g, float b, float a = 1f) { this.r = r; this.g = g; this.b = b; this.a = a; }
+        public static Color white => new Color(1, 1, 1);
+        public static Color gray => new Color(0.5f, 0.5f, 0.5f);
+        public static Color cyan => new Color(0, 1, 1);
+        public static Color Lerp(Color a, Color b, float t) => a;
+    }
+
+    public static class ColorUtility
+    {
+        public static bool TryParseHtmlString(string html, out Color color) { color = Color.white; return true; }
+    }
+
+    public static class Mathf
+    {
+        public static float Clamp(float v, float min, float max) => Math.Min(max, Math.Max(min, v));
+        public static int Clamp(int v, int min, int max) => Math.Min(max, Math.Max(min, v));
+        public static float Max(float a, float b) => Math.Max(a, b);
+        public static int Max(int a, int b) => Math.Max(a, b);
+        public static float Min(float a, float b) => Math.Min(a, b);
+        public static int Min(int a, int b) => Math.Min(a, b);
+        public static float Clamp01(float v) => Clamp(v, 0, 1);
+    }
+
+    public static class Time
+    {
+        public static float deltaTime = 0.016f;
+        public static float fixedDeltaTime = 0.02f;
+    }
+
+    public static class Input
+    {
+        public static Vector3 mousePosition;
+        public static bool GetMouseButton(int b) => false;
+        public static bool GetMouseButtonDown(int b) => false;
+        public static bool GetMouseButtonUp(int b) => false;
+        public static float GetAxis(string name) => 0f;
+    }
+
+    public static class Screen { public static int width = 1080; public static int height = 1920; }
+    public static class Application { public static int targetFrameRate; }
+    public static class QualitySettings
+    {
+        public static string[] names = { "Low", "Mid" };
+        public static void SetQualityLevel(int i, bool a) { }
+    }
+    public static class Physics
+    {
+        public static Vector3 gravity = new Vector3(0, -9.81f, 0);
+        public static float sleepThreshold;
+        public static int defaultSolverIterations;
+        public static Collider[] OverlapSphere(Vector3 p, float r) => Array.Empty<Collider>();
+    }
+    public static class RenderSettings
+    {
+        public static Rendering.AmbientMode ambientMode;
+        public static Color ambientSkyColor, ambientEquatorColor, ambientGroundColor, ambientLight, fogColor;
+        public static float ambientIntensity, fogStartDistance, fogEndDistance;
+        public static bool fog;
+        public static FogMode fogMode;
+    }
+    public enum FogMode { Linear }
+    public enum PrimitiveType { Cube, Sphere, Cylinder, Plane, Capsule }
+    public enum LightType { Directional, Point, Spot }
+    public enum LightShadows { None, Soft, Hard }
+    public enum CameraClearFlags { Skybox, SolidColor, Depth, Nothing }
+    public enum CollisionDetectionMode { Discrete, Continuous, ContinuousDynamic, ContinuousSpeculative }
+    public enum RigidbodyInterpolation { None, Interpolate, Extrapolate }
+    public enum Space { World, Self }
+
+    public class Rigidbody : Component
+    {
+        public float mass = 1;
+        public bool isKinematic;
+        public bool detectCollisions = true;
+        public bool useGravity = true;
+        public Vector3 velocity;
+        public Vector3 angularVelocity;
+        public CollisionDetectionMode collisionDetectionMode;
+        public RigidbodyInterpolation interpolation;
+        public float sleepThreshold;
+        public void WakeUp() { }
+    }
+
+    public class Collider : Component { public bool enabled = true; }
+    public class Renderer : Component
+    {
+        public bool enabled = true;
+        public void GetPropertyBlock(MaterialPropertyBlock b) { }
+        public void SetPropertyBlock(MaterialPropertyBlock b) { }
+    }
+    public class MaterialPropertyBlock
+    {
+        public void SetColor(string n, Color c) { }
+    }
+    public class Joint : Component { public Rigidbody connectedBody; public float breakForce, breakTorque; }
+    public class FixedJoint : Joint { }
+    public class Light : Behaviour
+    {
+        public LightType type;
+        public Color color;
+        public float intensity;
+        public LightShadows shadows;
+        public float shadowStrength;
+    }
+    public class Camera : Behaviour
+    {
+        public static Camera main;
+        public float fieldOfView;
+        public CameraClearFlags clearFlags;
+        public Color backgroundColor;
+    }
+    public class AudioListener : Behaviour { }
+    public class Collision
+    {
+        public Collider collider;
+        public ContactPoint[] contacts = Array.Empty<ContactPoint>();
+    }
+    public struct ContactPoint { public Vector3 point; }
+    public static class Gizmos
+    {
+        public static Color color;
+        public static void DrawLine(Vector3 a, Vector3 b) { }
+    }
+    public static class Debug { public static void Log(object m) { } }
+    public static class Random
+    {
+        public static Vector3 insideUnitSphere => Vector3.one;
+        public static Quaternion rotation => Quaternion.identity;
+    }
+    public static class PlayerPrefs
+    {
+        static Dictionary<string, int> _i = new Dictionary<string, int>();
+        public static int GetInt(string k, int d = 0) => _i.TryGetValue(k, out var v) ? v : d;
+        public static void SetInt(string k, int v) => _i[k] = v;
+        public static void Save() { }
+    }
+    public class ScriptableObject : Object
+    {
+        public static T CreateInstance<T>() where T : ScriptableObject, new() => new T();
+    }
+    public class SerializeFieldAttribute : Attribute { }
+    public class HeaderAttribute : Attribute { public HeaderAttribute(string s) { } }
+    public class TooltipAttribute : Attribute { public TooltipAttribute(string s) { } }
+    public class RangeAttribute : Attribute { public RangeAttribute(float a, float b) { } }
+    public class RequireComponentAttribute : Attribute { public RequireComponentAttribute(Type t) { } }
+    public class CreateAssetMenuAttribute : Attribute
+    {
+        public string fileName; public string menuName; public int order;
+    }
+    public class RuntimeInitializeOnLoadMethodAttribute : Attribute
+    {
+        public RuntimeInitializeOnLoadMethodAttribute(RuntimeInitializeLoadType t) { }
+    }
+    public enum RuntimeInitializeLoadType { AfterSceneLoad, BeforeSceneLoad, AfterAssembliesLoaded, SubsystemRegistration, BeforeSplashScreen }
+    public class GUIStyle
+    {
+        public int fontSize; public FontStyle fontStyle;
+        public GUIStyleState normal = new GUIStyleState();
+        public GUIStyle() { }
+        public GUIStyle(GUIStyle s) { }
+    }
+    public class GUIStyleState { public Color textColor; }
+    public enum FontStyle { Normal, Bold, Italic, BoldAndItalic }
+    public struct Rect
+    {
+        public float x, y, width, height;
+        public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; }
+    }
+    public class GUIContent { public static GUIContent none = new GUIContent(); }
+    public static class GUI
+    {
+        public static bool enabled = true;
+        public static GUISkin skin = new GUISkin();
+        public static void Box(Rect r, GUIContent c) { }
+        public static void Label(Rect r, string s) { }
+        public static void Label(Rect r, string s, GUIStyle st) { }
+        public static bool Button(Rect r, string s) => false;
+        public static bool Button(Rect r, string s, GUIStyle st) => false;
+    }
+    public class GUISkin { public GUIStyle label = new GUIStyle(); public GUIStyle button = new GUIStyle(); }
+}
+
+namespace UnityEngine.Rendering
+{
+    public enum AmbientMode { Skybox, Trilight, Flat, Custom }
+}
