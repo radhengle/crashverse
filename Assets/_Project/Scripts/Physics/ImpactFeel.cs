@@ -65,6 +65,8 @@ namespace Crashverse.Sim
             new MaterialAudio { material = MaterialType.Brick, mediumMinImpulse = 40f, heavyMinImpulse = 150f, pitchOffsetSemitones = 0f, hardness = 3, voiceCapLow = 4, voiceCapMid = 8, voiceCapHigh = 10, bank = "SFX/Destruction/Brick", collapseSfx = "sfx_brick_collapse" },
             new MaterialAudio { material = MaterialType.Steel, mediumMinImpulse = 60f, heavyMinImpulse = 200f, pitchOffsetSemitones = 0f, hardness = 4, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8,  bank = "SFX/Destruction/Steel", collapseSfx = "sfx_steel_collapse" },
             new MaterialAudio { material = MaterialType.Glass, mediumMinImpulse = 15f, heavyMinImpulse = 80f,  pitchOffsetSemitones = 3f, hardness = 2, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8,  bank = "SFX/Destruction/Glass", collapseSfx = "sfx_glass_collapse" },
+            // Stone: PLACEHOLDER defaults (heavier/lower than brick) until Sound Manager tunes them and adds the bank.
+            new MaterialAudio { material = MaterialType.Stone, mediumMinImpulse = 50f, heavyMinImpulse = 180f, pitchOffsetSemitones = -2f, hardness = 3, voiceCapLow = 4, voiceCapMid = 8, voiceCapHigh = 10, bank = "SFX/Destruction/Stone", collapseSfx = "sfx_stone_collapse" },
             new MaterialAudio { material = MaterialType.Terrain, mediumMinImpulse = 40f, heavyMinImpulse = 150f, pitchOffsetSemitones = 0f, hardness = 0, voiceCapLow = 2, voiceCapMid = 3, voiceCapHigh = 4, bank = "SFX/Destruction/Impacts", collapseSfx = "" },
         };
 
@@ -236,6 +238,24 @@ namespace Crashverse.Sim
         public Shake shakeLight = new Shake(), shakeMedium = new Shake { amplitude = 0.08f, frequency = 22f, duration = 0.15f },
                      shakeHeavy = new Shake { amplitude = 0.2f, frequency = 18f, duration = 0.3f };
         public int dustLight = 4, dustMedium = 12, dustHeavy = 30, dustHeavyLow = 10;
+
+        /// <summary>Per-material presentation multipliers on shake amplitude, dust count and fragment ejection speed. Starting tunables.</summary>
+        [Serializable] public struct MaterialFeel { public MaterialType material; public float shakeScale, dustScale, ejectScale; }
+        public MaterialFeel[] materials =
+        {
+            new MaterialFeel { material = MaterialType.Wood,  shakeScale = 1f,   dustScale = 1f,   ejectScale = 1f },
+            new MaterialFeel { material = MaterialType.Brick, shakeScale = 1.1f, dustScale = 1.3f, ejectScale = 0.9f },
+            new MaterialFeel { material = MaterialType.Steel, shakeScale = 1.2f, dustScale = 0.5f, ejectScale = 0.7f },
+            new MaterialFeel { material = MaterialType.Glass, shakeScale = 0.8f, dustScale = 0.4f, ejectScale = 1.6f }, // high fragment ejection
+            new MaterialFeel { material = MaterialType.Terrain, shakeScale = 1f, dustScale = 1f,   ejectScale = 1f },
+            // Stone: PLACEHOLDER (heavy crumble: more dust, slow chunks) until Sound Manager / VFX tune it.
+            new MaterialFeel { material = MaterialType.Stone, shakeScale = 1.3f, dustScale = 1.5f, ejectScale = 0.6f },
+        };
+        public MaterialFeel FeelFor(MaterialType m)
+        {
+            if (materials != null) foreach (var f in materials) if (f.material == m) return f;
+            return new MaterialFeel { material = m, shakeScale = 1f, dustScale = 1f, ejectScale = 1f };
+        }
 
         public int HitStopMs(ImpactTier t, bool reduceMotion) => HitStopRule.Millis(t, hitStopLightMs, hitStopMediumMs, hitStopHeavyMs, hitStopMaxMs, reduceMotion);
         public Shake ShakeFor(ImpactTier t) => t == ImpactTier.Heavy ? shakeHeavy : t == ImpactTier.Medium ? shakeMedium : shakeLight;

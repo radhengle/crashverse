@@ -29,6 +29,8 @@ namespace Crashverse.Sim
     public static class DebrisMaterialMult
     {
         public const int Wood = 1000, Brick = 1100, Steel = 800, Neutral = 1000;
+        /// <summary>Starting tunables (Game designer to confirm): glass brittle ×1.5, stone tough ×0.9.</summary>
+        public const int Glass = 1500, Stone = 900;
     }
 
     /// <summary>Pure, engine-free debris damage maths. Deterministic for identical integer inputs.</summary>

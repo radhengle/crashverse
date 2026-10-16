@@ -20,7 +20,9 @@ namespace Crashverse.Sim
                 case MaterialKind.Wood: return MaterialType.Wood;
                 case MaterialKind.Brick: return MaterialType.Brick;
                 case MaterialKind.Steel: return MaterialType.Steel;
-                default: return MaterialType.Terrain; // Glass is added with Neon materials
+                case MaterialKind.Glass: return MaterialType.Glass;
+                case MaterialKind.Stone: return MaterialType.Stone;
+                default: return MaterialType.Terrain;
             }
         }
 
