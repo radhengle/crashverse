@@ -1,0 +1,25 @@
+<linker>
+  <!-- Components added only at runtime via AddComponent; IL2CPP managed stripping removes them otherwise (BUG-24). -->
+  <assembly fullname="UnityEngine.PhysicsModule">
+    <type fullname="UnityEngine.BoxCollider" preserve="all"/>
+    <type fullname="UnityEngine.SphereCollider" preserve="all"/>
+    <type fullname="UnityEngine.CapsuleCollider" preserve="all"/>
+    <type fullname="UnityEngine.MeshCollider" preserve="all"/>
+    <type fullname="UnityEngine.Rigidbody" preserve="all"/>
+    <type fullname="UnityEngine.FixedJoint" preserve="all"/>
+    <type fullname="UnityEngine.HingeJoint" preserve="all"/>
+    <type fullname="UnityEngine.ConfigurableJoint" preserve="all"/>
+    <type fullname="UnityEngine.PhysicMaterial" preserve="all"/>
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule">
+    <type fullname="UnityEngine.MeshRenderer" preserve="all"/>
+    <type fullname="UnityEngine.MeshFilter" preserve="all"/>
+    <type fullname="UnityEngine.LineRenderer" preserve="all"/>
+    <type fullname="UnityEngine.TrailRenderer" preserve="all"/>
+  </assembly>
+  <assembly fullname="UnityEngine.AudioModule">
+    <type fullname="UnityEngine.AudioSource" preserve="all"/>
+    <type fullname="UnityEngine.AudioListener" preserve="all"/>
+  </assembly>
+  <assembly fullname="UnityEngine.ParticleSystemModule" preserve="all"/>
+</linker>
