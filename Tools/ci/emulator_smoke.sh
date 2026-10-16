@@ -39,7 +39,7 @@ YEAR_SWIPES=0; for i in $(seq 1 20); do adb logcat -d -s Unity | grep -q "CVTAP|
 put YEAR_OPT x "$(coord ListModal Button_$YR)"; ctap $YEAR_OPT_X $YEAR_OPT_Y
 put CONTINUE x "$(coord AgeGateScreen Button_Continue)"; ctap $CONTINUE_X $CONTINUE_Y 5
 # First run has no login screen yet (guest sign-in is automatic in AccountLifecycle): GUEST taps the status bar, a no-op.
-export GUEST_X=540 GUEST_Y=20; echo "GUEST=540,20 (no login screen in first run)" >> "$OUT/coords.txt"
+export GUEST_X=30 GUEST_Y=1170; echo "GUEST=30,1170 (no login screen in first run: a no-op tap on the map pan surface; 540,20 hit the Store button)" >> "$OUT/coords.txt"
 put NODE1 x "$(coord MapScreen Button_1)"; ctap $NODE1_X $NODE1_Y 3
 put PLAY x "$(coord BriefingScreen Button_Play)"; ctap $PLAY_X $PLAY_Y 8
 put FIRE x "$(coord HudScreen Button_FIRE)"

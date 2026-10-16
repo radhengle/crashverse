@@ -42,13 +42,17 @@ for i in $(seq 1 30); do adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|MapScreen
   [ $i = 30 ] && { shot FAIL_no_map; echo "FAIL: map not reached 30 s after guest sign-in"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done
 shot 05_map_guest
 tap $NODE1_X $NODE1_Y; tap $PLAY_X $PLAY_Y 6; check l1_load; shot 06_l1_hud
-for s in $(seq 1 $SHOTS_L1); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $AIM_TO_X $AIM_TO_Y 400; fire "win$s"; sleep 5; check "win_shot$s"; done
+# a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows (max 3× the shot budget)
+for s in $(seq 1 $((SHOTS_L1 * 3))); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $AIM_TO_X $AIM_TO_Y 400; fire "win$s"; sleep 6; check "win_shot$s"
+  adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 result(){ local i r; for i in $(seq 1 40); do r=$(adb logcat -d -s Unity | grep -o "CVTAP|RESULT|[a-z]*" | tail -1 | cut -d'|' -f3); [ -n "$r" ] && { echo "$r"; return 0; }; sleep 1; done
   shot "FAIL_no_result_$1"; echo "FAIL: no win/fail result detected ($1)" >&2; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
 R1=$(result win); echo "scripted win line result: $R1" | tee "$OUT/result_win.txt"; shot 07_result_win
 [ "$R1" = win ] || echo "::warning::scripted L1 aim line gave '$R1', not a win (aim needs tuning; flow still exercised)"       # expect a win (>=85% after settle) on the scripted line
 adb logcat -c; tap $RETRY_X $RETRY_Y 6; check retry
-for s in $(seq 1 $SHOTS_L1); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $MISS_TO_X $MISS_TO_Y 400; fire "fail$s"; sleep 5; check "fail_shot$s"; done
+# a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows (max 3× the shot budget)
+for s in $(seq 1 $((SHOTS_L1 * 3))); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $MISS_TO_X $MISS_TO_Y 400; fire "fail$s"; sleep 6; check "fail_shot$s"
+  adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 R2=$(result fail); echo "miss line result: $R2" | tee "$OUT/result_fail.txt"; shot 08_result_fail
 [ "$R2" = fail ] || { echo "FAIL: miss line did not fail ($R2)"; exit 1; }
 adb logcat -d > "$OUT/logcat.txt"; echo "SMOKE PASS (screens in $OUT for visual review)"
