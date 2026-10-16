@@ -68,6 +68,10 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: EditMode test results
 
+      - name: Guard - fail on 0 tests / skipped / inconclusive / failed
+        if: always() && steps.tests.outcome != 'skipped'
+        run: python3 qa/ci/assert_unity_results.py test-results
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
