@@ -7,12 +7,15 @@ namespace Crashverse.Meta
     public class ComboTracker
     {
         public const float Window = 0.8f;
+        /// <summary>Window in 50 Hz sim ticks (0.8 s = 40 ticks), inclusive. Integer twin of Window for tick-driven play.</summary>
+        public const int WindowTicks = 40;
+        int _lastBreakTick = int.MinValue;
         public const int ShowFrom = 3;
         public int Current { get; private set; }
         public int BestThisRun { get; private set; }
         float _lastBreak = float.NegativeInfinity;
 
-        public void OnShot() { Current = 0; _lastBreak = float.NegativeInfinity; }
+        public void OnShot() { Current = 0; _lastBreak = float.NegativeInfinity; _lastBreakTick = int.MinValue; }
         public void ResetRun() { OnShot(); BestThisRun = 0; }
 
         /// <returns>The combo count after this break.</returns>
@@ -20,6 +23,15 @@ namespace Crashverse.Meta
         {
             Current = (Current > 0 && time - _lastBreak <= Window) ? Current + 1 : 1; // BUG-10: strictly <= 0.8 s, no tolerance
             _lastBreak = time;
+            if (Current > BestThisRun) BestThisRun = Current;
+            return Current;
+        }
+
+        /// <summary>Tick-based OnBreak (no float time): +1 when within WindowTicks (inclusive) of the previous break.</summary>
+        public int OnBreakTick(int tick)
+        {
+            Current = (Current > 0 && _lastBreakTick != int.MinValue && (long)tick - _lastBreakTick <= WindowTicks) ? Current + 1 : 1;
+            _lastBreakTick = tick;
             if (Current > BestThisRun) BestThisRun = Current;
             return Current;
         }
@@ -39,12 +51,5 @@ namespace Crashverse.Meta
             // BUG-05: floor with exact decimal maths (0.8739 → 873, 0.9999 → 999; no float drift such as 0.7f → 699)
             return (int)decimal.Floor((decimal)r * 1000m) + 500 * System.Math.Max(0, shotsLeft) + 50 * System.Math.Max(0, bestCombo) + (mastery ? 1000 : 0);
         }
-    }
-
-    /// <summary>Addendum §1: free hint from the 2nd consecutive fail; never in ranked Titan; needs hint data.</summary>
-    public static class HintRules
-    {
-        public static bool ShowHintButton(Crashverse.Data.LevelEntry level, int consecutiveFails, bool rankedTitan) =>
-            !rankedTitan && level != null && level.HasHint && consecutiveFails >= 2;
     }
 }
