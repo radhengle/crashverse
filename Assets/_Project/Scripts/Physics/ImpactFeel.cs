@@ -68,43 +68,50 @@ namespace Crashverse.Sim
         static readonly Action<ImpactEvent> Emit = e => AnimEventBus.Raise(ImpactEvents.NameOf(e.kind), e);
 
         public ImpactTierThresholds Thresholds => audioProfile != null ? audioProfile.thresholds : ImpactTierThresholds.Default;
-        int CurrentTick => _runner != null ? _runner.Tick : 0;
+        int CurrentTick => _runner != null ? ImpactTickPolicy.Tag(_runner.Tick, _runner.InTick) : 0;
+        bool Ranked => _runner != null && _runner.Ranked;
 
         void OnEnable()
         {
             Instance = this;
             _runner = SimRunner.Instance != null ? SimRunner.Instance : FindObjectOfType<SimRunner>();
-            if (_runner != null) _runner.Stepped += OnStepped;
+            if (_runner != null) { _runner.Stepped += OnStepped; _runner.TickBegin += OnTickBegin; }
         }
-        void OnDisable() { if (_runner != null) _runner.Stepped -= OnStepped; if (Instance == this) Instance = null; }
+        void OnDisable() { if (_runner != null) { _runner.Stepped -= OnStepped; _runner.TickBegin -= OnTickBegin; } if (Instance == this) Instance = null; }
 
         /// <summary>Call from SimRunner.BeginRun / Retry so cascade ids replay identically.</summary>
         public void ResetRun() { _buffer.Clear(); Cascades.Reset(); }
 
-        void OnStepped(int tick) => _buffer.Flush(Emit);
+        // See ImpactTickPolicy: ranked flushes after its own Physics.Simulate; non-ranked flushes the previous step at the next tick start.
+        void OnStepped(int tick) { if (ImpactTickPolicy.FlushOnStepped(Ranked)) _buffer.Flush(Emit); }
+        void OnTickBegin(int tick) { if (ImpactTickPolicy.FlushOnTickBegin(Ranked)) _buffer.Flush(Emit); }
 
         public void Report(ImpactKind kind, float impulse, float massKg, int pieceId, int matA, int matB, Vector3 pos, Vector3 normal,
-                           ImpactSourceKind source, int sourceId = 0, int damageStep = 0, int cascadeId = 0)
+                           ImpactSourceKind source, int sourceId = 0, int damageStep = 0, int cascadeId = 0,
+                           MaterialType typeA = MaterialType.Terrain, MaterialType typeB = MaterialType.Terrain)
         {
             var e = ImpactEvent.Make(CurrentTick, kind, impulse, massKg, Thresholds);
             e.pieceId = pieceId; e.materialA = matA; e.materialB = matB; e.position = pos.ToSim(); e.normal = normal.ToSim();
+            e.materialTypeA = typeA; e.materialTypeB = typeB;
             e.source = source; e.sourceId = sourceId; e.damageStep = damageStep; e.cascadeId = cascadeId;
-            if (kind == ImpactKind.Break && cascadeId != 0) e.cascadeCount = Cascades.RecordBreak(cascadeId);
+            if (kind == ImpactKind.Break && cascadeId != 0) e.cascadeCount = Cascades.RecordBreak(cascadeId, typeA);
             _buffer.Add(e);
         }
 
-        public int BeginCollapse(Vector3 pos, int plannedPieces)
+        public int BeginCollapse(Vector3 pos, int plannedPieces, MaterialCounts planned = default)
         {
             int id = Cascades.Begin();
             var e = ImpactEvent.Make(CurrentTick, ImpactKind.CollapseStart, 0f, 0f, Thresholds);
-            e.cascadeId = id; e.cascadeCount = plannedPieces; e.position = pos.ToSim(); _buffer.Add(e);
+            e.cascadeId = id; e.cascadeCount = plannedPieces; e.position = pos.ToSim();
+            e.materialCounts = planned; e.dominantMaterial = planned.Dominant; _buffer.Add(e);
             return id;
         }
 
         public void EndCollapse(int cascadeId, Vector3 pos)
         {
             var e = ImpactEvent.Make(CurrentTick, ImpactKind.CollapseEnd, 0f, 0f, Thresholds);
-            e.cascadeId = cascadeId; e.cascadeCount = Cascades.End(cascadeId); e.position = pos.ToSim(); _buffer.Add(e);
+            e.cascadeId = cascadeId; e.cascadeCount = Cascades.End(cascadeId, out var counts); e.position = pos.ToSim();
+            e.materialCounts = counts; e.dominantMaterial = counts.Dominant; _buffer.Add(e);
         }
     }
 

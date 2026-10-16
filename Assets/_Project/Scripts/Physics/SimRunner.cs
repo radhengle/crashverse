@@ -30,6 +30,10 @@ namespace Crashverse.Sim
         /// <summary>Called once per tick after Physics.Simulate (collision callbacks for this tick have run). Used to flush
         /// ImpactEvents in deterministic order. Presentation listeners must never write back into the sim.</summary>
         public event Action<int> Stepped;
+        /// <summary>Raised first in each tick body, before inputs. Non-ranked impact events from the previous step flush here.</summary>
+        public event Action<int> TickBegin;
+        /// <summary>True while SimRunner's FixedUpdate tick body runs (ranked Physics.Simulate happens inside it).</summary>
+        public bool InTick { get; private set; }
 
         readonly TickInputQueue<InputEvent> _inputs = new TickInputQueue<InputEvent>();
         SimulationMode _prevMode = SimulationMode.FixedUpdate;
@@ -79,11 +83,14 @@ namespace Crashverse.Sim
         {
             if (!Running) return;
             int t = Tick;
+            InTick = true;
+            TickBegin?.Invoke(t);
             _inputs.Drain(t, (tick, e) => InputApplied?.Invoke(tick, e));
             Ticked?.Invoke(t);
             if (Ranked) Physics.Simulate(Step);
             Stepped?.Invoke(t);
             Tick = t + 1;
+            InTick = false;
         }
 
         void RestoreMode()

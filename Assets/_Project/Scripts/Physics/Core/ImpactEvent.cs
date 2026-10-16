@@ -10,6 +10,43 @@ namespace Crashverse.Sim
     public enum ImpactTier : byte { Light = 0, Medium = 1, Heavy = 2 }
     public enum SizeClass : byte { S = 0, M = 1, L = 2 }
     public enum ImpactSourceKind : byte { Cannon = 0, PowerUp = 1, Debris = 2, Explosion = 3 }
+    /// <summary>Stable material family for audio/VFX banks. Ground and non-destructible scenery = Terrain.</summary>
+    public enum MaterialType : byte { Wood = 0, Brick = 1, Steel = 2, Glass = 3, Terrain = 4 }
+
+    /// <summary>Fixed-size per-material piece counts (no allocation). Dominant: highest count, ties to the lower enum value.</summary>
+    [Serializable]
+    public struct MaterialCounts
+    {
+        public int wood, brick, steel, glass, terrain;
+        public int Total => wood + brick + steel + glass + terrain;
+        public int Get(MaterialType t) => t switch { MaterialType.Wood => wood, MaterialType.Brick => brick, MaterialType.Steel => steel, MaterialType.Glass => glass, _ => terrain };
+        public void Add(MaterialType t, int n = 1)
+        {
+            switch (t) { case MaterialType.Wood: wood += n; break; case MaterialType.Brick: brick += n; break; case MaterialType.Steel: steel += n; break;
+                         case MaterialType.Glass: glass += n; break; default: terrain += n; break; }
+        }
+        public MaterialType Dominant
+        {
+            get { var best = MaterialType.Wood; int bc = wood;
+                  for (var t = MaterialType.Brick; t <= MaterialType.Terrain; t++) { int c = Get(t); if (c > bc) { bc = c; best = t; } }
+                  return Total == 0 ? MaterialType.Terrain : best; }
+        }
+    }
+
+    /// <summary>
+    /// Single tick definition for ImpactEvents in every mode: an event carries the tick whose physics step produced it.
+    /// Ranked (Script simulation): Physics.Simulate runs inside SimRunner's tick body, so tag = current tick and flush on
+    /// Stepped(t). Non-ranked (auto-simulate): Unity steps physics after all FixedUpdates, i.e. after SimRunner already
+    /// advanced Tick to t+1; callbacks arriving outside the tick body are tagged t (= Tick - 1) and the buffer is flushed at
+    /// the start of the next SimRunner tick (TickBegin), before that tick's logic. Reports raised by script inside the tick body
+    /// in non-ranked mode are tagged with the current tick and wait for the same flush, so each flush holds exactly one tick.
+    /// </summary>
+    public static class ImpactTickPolicy
+    {
+        public static int Tag(int runnerTick, bool insideTickBody) => insideTickBody ? runnerTick : Math.Max(0, runnerTick - 1);
+        public static bool FlushOnStepped(bool ranked) => ranked;
+        public static bool FlushOnTickBegin(bool ranked) => !ranked;
+    }
 
     /// <summary>Engine-free 3-vector so the Core asmdef stays noEngineReferences.</summary>
     [Serializable]
@@ -61,7 +98,10 @@ namespace Crashverse.Sim
         public ImpactKind kind;
         public ImpactTier tier;
         public float impulse;          // N·s
-        public int materialA, materialB; // material ids (MaterialDefinition index); -1 = none/ground
+        public int materialA, materialB; // raw MaterialDefinition index; -1 = none/ground (kept for debugging)
+        public MaterialType materialTypeA, materialTypeB; // stable families for audio banks; ground = Terrain
+        public MaterialType dominantMaterial; // CollapseStart/End: dominant family of the cascade's pieces
+        public MaterialCounts materialCounts; // CollapseStart (planned) / CollapseEnd (final) per-material counts
         public SimVec3 position, normal;
         public int pieceId;            // -1 for none (e.g. CollapseStart/End use cascade only)
         public SizeClass sizeClass;
@@ -74,7 +114,8 @@ namespace Crashverse.Sim
 
         public static ImpactEvent Make(int tick, ImpactKind kind, float impulse, float massKg, in ImpactTierThresholds t)
             => new ImpactEvent { tick = tick, kind = kind, impulse = impulse, tier = ImpactClassifier.Tier(impulse, t),
-                                 sizeClass = ImpactClassifier.Size(massKg, t), pieceId = -1, materialA = -1, materialB = -1 };
+                                 sizeClass = ImpactClassifier.Size(massKg, t), pieceId = -1, materialA = -1, materialB = -1,
+                                 materialTypeA = MaterialType.Terrain, materialTypeB = MaterialType.Terrain, dominantMaterial = MaterialType.Terrain };
     }
 
     /// <summary>Deterministic ordering inside a tick: kind (CollapseStart first, CollapseEnd last), cascade, piece, source, seq.
@@ -119,15 +160,26 @@ namespace Crashverse.Sim
         public void Clear() { _pending.Clear(); _seq = 0; }
     }
 
-    /// <summary>Assigns cascade ids (1, 2, ...) and counts Breaks per collapse. Reset on BeginRun so ids replay identically.</summary>
+    /// <summary>Assigns cascade ids (1, 2, ...) and counts Breaks per collapse, per material. Reset on BeginRun so ids replay identically.</summary>
     public sealed class CascadeTracker
     {
-        readonly Dictionary<int, int> _counts = new Dictionary<int, int>();
+        readonly Dictionary<int, MaterialCounts> _counts = new Dictionary<int, MaterialCounts>();
         int _next = 1;
-        public int Begin() { int id = _next++; _counts[id] = 0; return id; }
-        public int RecordBreak(int cascadeId) { if (!_counts.TryGetValue(cascadeId, out var n)) return 0; _counts[cascadeId] = ++n; return n; }
+        public int Begin() { int id = _next++; _counts[id] = default; return id; }
+        public int RecordBreak(int cascadeId) => RecordBreak(cascadeId, MaterialType.Terrain);
+        public int RecordBreak(int cascadeId, MaterialType m)
+        {
+            if (!_counts.TryGetValue(cascadeId, out var c)) return 0;
+            c.Add(m); _counts[cascadeId] = c; return c.Total;
+        }
+        public MaterialCounts Counts(int cascadeId) => _counts.TryGetValue(cascadeId, out var c) ? c : default;
         public bool IsActive(int cascadeId) => _counts.ContainsKey(cascadeId);
-        public int End(int cascadeId) { if (!_counts.TryGetValue(cascadeId, out var n)) return 0; _counts.Remove(cascadeId); return n; }
+        public int End(int cascadeId) => End(cascadeId, out _);
+        public int End(int cascadeId, out MaterialCounts counts)
+        {
+            if (!_counts.TryGetValue(cascadeId, out counts)) return 0;
+            _counts.Remove(cascadeId); return counts.Total;
+        }
         public void Reset() { _counts.Clear(); _next = 1; }
     }
 
