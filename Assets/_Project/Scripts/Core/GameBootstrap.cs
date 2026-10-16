@@ -17,7 +17,12 @@ namespace Crashverse.Core
     {
         static GameBootstrap _instance;
 
-        void Awake() { _instance = this; QualityController.ApplyMid(); Init(); }
+        void Awake()
+        {
+            _instance = this;
+            if (GameplayDirector.RankedReloadPending) return; // ranked fresh-scene reload: services are already up; GameplayDirector starts the run
+            QualityController.ApplyMid(); Init();
+        }
 
         /// <summary>A4: after a confirmed deletion the app restarts in first-run state without a process restart.</summary>
         public static void RestartFirstRun()
@@ -107,8 +112,45 @@ namespace Crashverse.Core
             r.PopAllAndPush(new MapScreen());
         }
 
+        /// <summary>
+        /// Ranked determinism (Developer decision, Oct 2026): a ranked run always starts in a freshly loaded scene. PhysX keeps
+        /// actor/broadphase/contact state across destroy-and-rebuild in one scene, so an in-place Retry (or a second run in the
+        /// same scene) is not guaranteed to replay bit-identically; a scene reload is (PERFL10 variant table, PR text).
+        /// The first run after a scene load needs no reload.
+        /// </summary>
+        static bool _sceneHostedRun;
+        static RunContext _pendingRanked;
+        public static bool RankedReloadPending => _pendingRanked != null;
+        /// <summary>Scene reloads done for ranked runs (tests).</summary>
+        public static int RankedReloads { get; private set; }
+
+        /// <summary>Reload the active scene, then start ctx in it. Used for every ranked start/Retry after the first run in a scene.</summary>
+        public static void ReloadForRanked(RunContext ctx)
+        {
+            EndRun();
+            _pendingRanked = ctx;
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnRankedSceneLoaded;
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnRankedSceneLoaded;
+            var sc = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            if (sc.buildIndex >= 0) UnityEngine.SceneManagement.SceneManager.LoadScene(sc.buildIndex);
+            else UnityEngine.SceneManagement.SceneManager.LoadScene(sc.name);
+        }
+
+        static void OnRankedSceneLoaded(UnityEngine.SceneManagement.Scene s, UnityEngine.SceneManagement.LoadSceneMode m)
+        {
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnRankedSceneLoaded;
+            var ctx = _pendingRanked; _pendingRanked = null;
+            _sceneHostedRun = false; _mapRoot = null; Map = null; // scene objects are gone
+            RankedReloads++;
+            if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); c.AddComponent<AudioListener>(); }
+            if (Object.FindObjectOfType<QualityController>() == null) new GameObject("Quality").AddComponent<QualityController>();
+            if (ctx != null) StartRun(ctx);
+        }
+
         public static void StartRun(RunContext ctx)
         {
+            if (ctx != null && ctx.mode == RunMode.TitanRanked && _sceneHostedRun) { ReloadForRanked(ctx); return; }
+            _sceneHostedRun = true;
             EndRun();
             if (_mapRoot != null) _mapRoot.SetActive(false);
             _runRoot = new GameObject("Run");
