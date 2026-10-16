@@ -495,6 +495,12 @@ static class Tests
             var c = new ComboTracker(); c.OnShot(); c.OnBreak(0f);
             T.Eq(1, c.OnBreak(0.8001f), "0.8001 s ends the combo"); T.Eq(2, c.OnBreak(1.6001f), "0.8 s still chains");
         });
+        T.Add("combo_window_ticks", () =>
+        {
+            var c = new ComboTracker(); c.OnShot();
+            T.Eq(1, c.OnBreakTick(100), "first break"); T.Eq(2, c.OnBreakTick(140), "40 ticks (0.8 s) inclusive");
+            T.Eq(1, c.OnBreakTick(181), "41 ticks ends the combo"); c.OnShot(); T.Eq(1, c.OnBreakTick(182), "shot resets");
+        });
         T.Add("BUG11_sagged_piece_scores_on_break", () =>
         {
             var l = new BreakLedger<string>();

@@ -16,6 +16,12 @@ namespace Crashverse.Sim
         public const float Step = SimTime.Step;
         public static SimRunner Instance { get; private set; }
 
+        /// <summary>
+        /// Current sim tick for gameplay timers. SimRunner.Tick keeps counting (without inputs) between runs so timers never
+        /// jump; with no SimRunner at all (editor tools) it falls back to whole fixed steps since startup.
+        /// </summary>
+        public static int NowTick => Instance != null ? Instance.Tick : (int)Math.Round(Time.fixedTimeAsDouble / Step);
+
         /// <summary>Index of the next tick to simulate; 0 at BeginRun. Inputs recorded "now" carry this tick.</summary>
         public int Tick { get; private set; }
         public bool Running { get; private set; }
@@ -73,7 +79,7 @@ namespace Crashverse.Sim
 
         void FixedUpdate()
         {
-            if (!Running) return;
+            if (!Running) { Tick++; return; } // clock only: no inputs, no scripted step
             int t = Tick;
             _inputs.Drain(t, (tick, e) => InputApplied?.Invoke(tick, e));
             Ticked?.Invoke(t);
