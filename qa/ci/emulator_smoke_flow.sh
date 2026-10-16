@@ -18,7 +18,7 @@ YEAR_MAX_SWIPES=${YEAR_MAX_SWIPES:-12}; LIST_SWIPE_MS=${LIST_SWIPE_MS:-400}
 FAIL_PATTERNS=${FAIL_PATTERNS:-$(dirname "$0")/logcat_fail_patterns.txt}
 WIN_SHOTS_JSON=${WIN_SHOTS_JSON:-levels/ch1/ci_win_shots.json}; LEVEL_ID=${LEVEL_ID:-c1_l01}; WIN_GSCALE=${WIN_GSCALE:-1.0}
 SCR_W=1080; SCR_H=2340   # updated from CVTAP|META; swipe coords in env/json are authored at 1080x2340
-WIN_YAW=${WIN_YAW:-1.0}; WIN_PITCH=${WIN_PITCH:-11.0}; MISS_YAW=${MISS_YAW:-1.0}; MISS_PITCH=${MISS_PITCH:--30}
+WIN_YAW=${WIN_YAW:-0.0}; WIN_PITCH=${WIN_PITCH:-11.0}; MISS_YAW=${MISS_YAW:-1.0}; MISS_PITCH=${MISS_PITCH:--30}
 AIM_MODE=${AIM_MODE:-hook}   # hook (fallback to swipe if hook not acknowledged) | swipe
 AIM_FILE=dev_aim_cmd.json; AIM_DIR=${AIM_DIR:-/sdcard/Android/data/$PKG/files}   # Application.persistentDataPath on Android
 step=0; aim_id=0
@@ -61,10 +61,14 @@ sx(){ echo $(( $1 * SCR_W / 1080 )); }; sy(){ echo $(( $1 * SCR_H / 2340 )); }  
 # aim_swipe fx fy tx ty  (1080x2340 authoring coords)
 aim_swipe(){ local a=$(sx "$1") b=$(sy "$2") c=$(sx "$3") d=$(sy "$4"); log "aim swipe $a,$b -> $c,$d"
   adb shell input swipe "$a" "$b" "$c" "$d" "${SWIPE_MS:-400}"; }
-# per-shot plan: lines "yaw pitch fx fy tx ty" from ci_win_shots.json, else l1_aim.env repeated
-win_plan(){ if [ -f "$WIN_SHOTS_JSON" ] && python3 "$(dirname "$0")/win_shots.py" "$WIN_SHOTS_JSON" "$LEVEL_ID" "$WIN_GSCALE" > "$OUT/win_plan.txt"; then log "win shots from $WIN_SHOTS_JSON ($LEVEL_ID)"
-  else log "win shots: $WIN_SHOTS_JSON unavailable, using l1_aim.env"; echo "$WIN_YAW $WIN_PITCH ${L1_WIN_FROM_X:-} ${L1_WIN_FROM_Y:-} ${L1_WIN_TO_X:-} ${L1_WIN_TO_Y:-}" > "$OUT/win_plan.txt"; fi
-  cat "$OUT/win_plan.txt"; }
+# ordered win candidates (ci_win_shots.json #13 first, then chapter1.json hint only if it disagrees; l1_aim.env if neither)
+win_candidates(){ python3 "$(dirname "$0")/win_shots.py" --level "$LEVEL_ID" --out "$OUT" --shots "$WIN_SHOTS_JSON" --gscale "$WIN_GSCALE" \
+    ${CHAPTER_JSON:+--chapter "$CHAPTER_JSON"} --swipe "${L1_WIN_FROM_X:-},${L1_WIN_FROM_Y:-},${L1_WIN_TO_X:-},${L1_WIN_TO_Y:-}" --yaw "$WIN_YAW" --pitch "$WIN_PITCH"; }
+# wait for a HudScreen BEGIN logged after the latest RESULT (i.e. the retried level is live)
+wait_hud_after_result(){ local t=0
+  until cv | awk '/^CVTAP\|RESULT\|/{r=NR} /^CVTAP\|BEGIN\|HudScreen$/{h=NR} END{exit !(h>r)}'; do t=$((t+1)); [ $t -gt "$STEP_TIMEOUT" ] && die "retry: HudScreen not reached"; sleep 1; done; }
+retry_level(){ tapb ResultsScreen Button_Retry 6; check retry; wait_hud_after_result; sleep 2; }
+
 # play_l1 <label> <want_results> <planfile>: each plan line "yaw pitch fx fy tx ty"; last line repeats for remaining shots
 play_l1(){ local lab=$1 want=$2 plan=$3 mode=$AIM_MODE s line yaw pitch fx fy tx ty t=0
   for s in $(seq 1 "$SHOTS_L1"); do
@@ -122,16 +126,23 @@ wait_cv "BEGIN|MapScreen"; sleep 2; check map; snap map
 cv | grep -q '^CVTAP|BEGIN|BlockedScreen$' && die "landed on BlockedScreen (age band)"
 tapb MapScreen Button_1 3; wait_cv "BEGIN|BriefingScreen"; snap briefing
 tapb BriefingScreen Button_Play 6; check l1_load
-# ---- 3. L1 win (BUG-24: must actually win) ----
+# ---- 3. L1 win (BUG-24: must actually win). Try each aim source in order; retry the level between attempts ----
 wait_cv "BEGIN|HudScreen" 1; sleep 2; snap l1_hud
-win_plan; play_l1 win 1 "$OUT/win_plan.txt"
-sleep 2; snap result_win
-[ "$(last_result)" = win ] || die "L1 win path produced '$(last_result)' (BUG-24)"
-log "L1 WIN asserted"
+NCAND=$(win_candidates); [ "${NCAND:-0}" -ge 1 ] || die "no win aim candidates for $LEVEL_ID"
+won=""; tried=""
+for c in $(seq 1 "$NCAND"); do
+  lab=$(cat "$OUT/win_plan_$c.label"); log "win attempt $c/$NCAND: $lab ($(head -1 "$OUT/win_plan_$c.txt"))"
+  [ "$c" -gt 1 ] && retry_level
+  want=$(( $(results) + 1 )); play_l1 "win$c" "$want" "$OUT/win_plan_$c.txt"
+  sleep 2; snap "result_win_attempt$c"; r=$(last_result); tried="$tried [$lab => $r]"
+  if [ "$r" = win ]; then won=$lab; break; fi
+  echo "::warning::L1 win attempt '$lab' produced '$r'"
+done
+[ -n "$won" ] || die "L1: no aim source won (BUG-24):$tried"
+echo "$won" > "$OUT/win_source.txt"; log "L1 WIN asserted; CVTAP|RESULT|win produced by: $won"; echo "::notice::L1 win produced by $won"
 # ---- 4. L1 fail ----
-tapb ResultsScreen Button_Retry 6; check retry
-wait_cv "BEGIN|HudScreen" 2; sleep 2
-echo "$MISS_YAW $MISS_PITCH ${L1_WIN_FROM_X:-} ${L1_WIN_FROM_Y:-} ${L1_MISS_TO_X:-} ${L1_MISS_TO_Y:-}" > "$OUT/miss_plan.txt"; play_l1 fail 2 "$OUT/miss_plan.txt"
+retry_level
+echo "$MISS_YAW $MISS_PITCH ${L1_WIN_FROM_X:-} ${L1_WIN_FROM_Y:-} ${L1_MISS_TO_X:-} ${L1_MISS_TO_Y:-}" > "$OUT/miss_plan.txt"; play_l1 fail $(( $(results) + 1 )) "$OUT/miss_plan.txt"
 sleep 2; snap result_fail
 [ "$(last_result)" = fail ] || die "L1 miss path produced '$(last_result)'"
 check final; adb logcat -d > "$OUT/logcat.txt"; log "SMOKE PASS"
