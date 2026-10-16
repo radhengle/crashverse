@@ -1,4 +1,5 @@
 # CRASHVERSE — Feature Test Cases v1.2 (QA)
+Change log: v1.2 rev c (2026-10-16): SG-34/35/36 closed per `design/Spec_Gap_Answers_v1.md` (cited **GA SG-xx**); added CMB-11/11a, HINT-16/16a, SC-13f/g.
 Change log: v1.2 (2026-10-16) adds sections I–L from `design/Design_Addendum_v1.1_Hint_Combo_Score_Store.md` (cited **ADD §x**); PM decisions: store = currency packs + cosmetics only; Free Hint, Combo and Score stay; stars stay on % of shots left. New gaps SG-25…SG-33. 🎨 = re-review against Art painted v2 screens.
 Change log: v1.2 rev b (2026-10-16): SG-25…SG-33 closed per ADD "Spec gap answers" (cited **ADD-GA SG-xx**); hint/combo/score/leaderboard/coin boundary cases added; worked examples re-checked (floor, cap 1.0, integer maths); SC-12 answered (formula right, art wrong), kept open vs Art v2.
 Change log: v1.1 (2026-10-16) adopts `design/Spec_Gap_Answers_v1.md` (cited **GA SG-xx**) and M1 contract v0.2 §5 (stars = shotsLeft/shotBudget vs per-level star3Pct/star2Pct, defaults 0.60/0.30, compared with ≥, no rounding). Star cases rewritten with exact boundaries. Live-ops dependency note added.
@@ -183,6 +184,8 @@ Max reachable shots left on a win is budget−1 unless a 0-shot win exists (it c
 | HINT-13 | Give Up, then Give Up | 2nd Give Up shows the hint (Give Up = fail, ADD-GA SG-28) |
 | HINT-14 | Fail ×1, quit to map mid-level, return, fail ×1 | Hint shown: quitting doesn't count and doesn't reset (counter 1→1→2) |
 | HINT-15 | Fail ×1, quit to map ×3, return, win | Counter reset by the clear; next fail shows no hint |
+| HINT-16 | Fail ×1, uninstall + reinstall (or new device), fail ×1 | No hint: counter is device-local and restarts at 0 (GA SG-35); not synced to the account |
+| HINT-16a | Fail ×2 on device A, sign in on device B, fail ×1 | No hint on B (counter 1) (GA SG-35) |
 
 ## J. Combo (ADD §2)
 | ID | Steps | Expected |
@@ -201,6 +204,8 @@ Max reachable shots left on a win is budget−1 unless a 0-shot win exists (it c
 | CMB-09 | Same level, same shots left, once with a x8 combo and once with none | Identical stars, mastery, win/fail; only the score differs (50 × highest combo, ADD §3) |
 | CMB-10 | A piece reaches HP 0 and then falls out of bounds in the same shot | Counts once (ADD-GA SG-30) |
 | CMB-10a | Piece pushed out of bounds, bounces back, leaves again | Counts once per shot |
+| CMB-11 | Winning run: shot 1 x4, shot 2 x2, shot 3 x6 | Highest combo = **6** (not 12, not 6+4+2): max over single shots, never summed (GA SG-34); score combo part = 50×6 = 300 |
+| CMB-11a | Failed attempt with x9, retry wins with best x3 | Highest combo = 3; failed attempts don't count (GA SG-34) |
 
 ## K. Campaign score (ADD §3)
 Formula (ADD §3 + ADD-GA SG-31, integer maths): score = floor(1000 × min(settledObjective%, 1.0)) + 500 × shotsLeft + 50 × highestCombo + 1000 × mastery. Highest combo counts even below x3; a shot with no breaks = 0. Worked examples re-checked against this rule.
@@ -228,6 +233,8 @@ Formula (ADD §3 + ADD-GA SG-31, integer maths): score = floor(1000 × min(settl
 | SC-13c | Two players reach the same total at t1 < t2 (server timestamp) | Earlier player ranks higher |
 | SC-13d | Cross a day/week/season boundary | No reset (all-time) |
 | SC-13e | View | Top 100 + own rank + friends filter |
+| SC-13f | Guest wins levels, opens campaign board | Not listed (own row hidden, "link to appear"), score still stored (GA SG-36, SG-19) |
+| SC-13g | Guest with validated bests links an account | Listed with all validated bests carried over (same total, original timestamp); board not reset (GA SG-36) |
 
 ## L. Store scope (ADD §4, PM VM-13)
 | ID | Steps | Expected |
@@ -268,6 +275,6 @@ Raised by the v1.1 review:
 - **SG-31 — CLOSED** (ADD-GA SG-31): settled %, cap 1.0, floor, integers, combo counts below x3. SC-04a–c, SC-05.
 - **SG-32 — CLOSED** (ADD-GA SG-32): validated wins only, all-time, earlier timestamp wins ties. SC-13a–e.
 - **SG-33 — CLOSED** (ADD-GA SG-33): coins buy coin-priced cosmetics only. ST-10/10a/10b.
-- **SG-34 (Low, new)** "Highest combo" across a run: the max over all shots of the run? (assumed; SG-31 says "a shot with no breaks counts as 0", which reads per shot.)
-- **SG-35 (Low, new)** Local-only hint counter (SG-27): does it reset on reinstall/device change? (acceptable, but confirm)
-- **SG-36 (Low, new)** Campaign leaderboard for guests: same link-to-appear rule as GA SG-19?
+- **SG-34 — CLOSED** (GA SG-34): largest single-shot combo in the winning run; never summed; failed attempts excluded. CMB-11/11a.
+- **SG-35 — CLOSED** (GA SG-35): device-local; resets to 0 on reinstall/new device (intended). HINT-16/16a.
+- **SG-36 — CLOSED** (GA SG-36): guests must link to be listed; validated bests carry over; all-time, no reset. SC-13f/g.

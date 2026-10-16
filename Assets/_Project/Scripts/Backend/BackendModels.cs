@@ -34,6 +34,20 @@ namespace Crashverse.Backend
         public RankedCheckpoint Last() => checkpoints.Count > 0 ? checkpoints[checkpoints.Count - 1] : null;
     }
 
+    /// <summary>
+    /// BUG-13: what the client reports for one campaign win. The server re-validates it against content and its own
+    /// progress, recomputes the score and keeps the per-level best; the client never sends a score or a total.
+    /// </summary>
+    [Serializable]
+    public class CampaignRunReport
+    {
+        public string reportId; // idempotency key for queued retries (BUG-14)
+        public string levelId; public bool won; public float destroyedRatio; public int shotsLeft; public int bestCombo; public bool mastery;
+    }
+
+    [Serializable]
+    public class CampaignSubmitResponse { public bool accepted; public string message; public int levelBest; public int total; public bool firstClear; }
+
     [Serializable] public class SubmitResponse { public SubmitStatus status; public string message; public int finalScore; }
 
     [Serializable]

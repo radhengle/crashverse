@@ -31,6 +31,7 @@ namespace Crashverse.Core
             GameplayDirector.ShowMap();
             await AppServices.SyncServerTime();
             var pending = await TitanRunJournal.FlushPending(AppServices.Backend);
+            await CampaignResultQueue.Flush(AppServices.Backend); // BUG-14
             if (pending != null) AppServices.Router.Toast("Interrupted ranked run: " + pending.message, 4f);
         }
 
@@ -38,7 +39,7 @@ namespace Crashverse.Core
         {
             if (paused || AppServices.Backend == null) return;
             await AppServices.SyncServerTime(); // SG-20: resync on resume
-            if (GameplayDirector.Session == null) await TitanRunJournal.FlushPending(AppServices.Backend);
+            if (GameplayDirector.Session == null) { await TitanRunJournal.FlushPending(AppServices.Backend); await CampaignResultQueue.Flush(AppServices.Backend); }
         }
     }
 

@@ -81,3 +81,13 @@ Times are shown in device local time with a zone label (e.g. IST) and reset at 0
 
 Still needs the real server: true tamper resistance (the stub DB is on device), reinstall-proof state, replay-based validation of offline tails.
 The stub's time source is an HTTP HEAD to `LocalBackendService.DefaultTimeUrl` (needs network; otherwise live-ops stay disabled).
+
+## Build 6e1ecac re-test: fixes
+| ID | Fix | Test(s) |
+|---|---|---|
+| BUG-13 | `SubmitCampaignScore(total)` removed. `SubmitCampaignResult(report)` sends raw win stats; the server checks the level, server-side prerequisite clear, shots/ratio/combo bounds; recomputes the score; keeps the best per level; sums the total itself; grants first-clear content rewards (client-sent rewards API `GrantCampaignReward` removed) | BUG13_*, SC13_campaign_leaderboard, first_clear_rewards_once |
+| BUG-14 | `CampaignResultQueue`: wins written to disk first, synced in order after each win, at launch and on resume; idempotent `reportId` | BUG14_offline_campaign_win_queued_and_synced |
+| BUG-15 | `seasonEndProcessed` set on rollover (no CS0649) | BUG15_season_end_processed_set |
+| Online cap | `ReportRankedCheckpoint` uses the same `offlineShotDamageCap` (5000/shot) as the offline tail | online_checkpoint_uses_plausibility_cap |
+
+Residual (needs the real server): reported campaign stats and mastery flags are bounds-checked, not simulated.

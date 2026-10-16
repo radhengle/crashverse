@@ -35,6 +35,8 @@ static class Tests
     }
     static SubmitResponse Ranked(LocalBackendService b, RankedTicket t, int dmg, int left, bool killed, bool final = true) =>
         b.FinalizeRanked(Play(b, t, dmg, left, killed, final)).Result;
+    static CampaignSubmitResponse Win(LocalBackendService b, string id, float ratio = 1f, int left = 1, int combo = 0) =>
+        b.SubmitCampaignResult(new CampaignRunReport { levelId = id, won = true, destroyedRatio = ratio, shotsLeft = left, bestCombo = combo }).Result;
     static bool Throws(Action a) { try { a(); return false; } catch (Exception) { return true; } }
 
     public static void Register()
@@ -270,13 +272,13 @@ static class Tests
         T.Add("leaderboard_top100_rank_guest_ties", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            var t = b.BeginRankedRun().Result; Ranked(b, t, 10000, 5, true);
+            var t = b.BeginRankedRun().Result; Ranked(b, t, 10000, t.shotBudget - 2, true);
             var p = b.GetLeaderboard(BoardType.DailyTitan, BoardPeriod.Current, false).Result;
             T.True(p.meIsGuestHidden && p.me == null, "guest stored but hidden");
             T.True(p.top.Count == 100, "top 100");
             b.LinkAccount("Google").Wait();
             p = b.GetLeaderboard(BoardType.DailyTitan, BoardPeriod.Current, false).Result;
-            T.True(p.me != null && p.me.rank == 1, "linked player listed at rank 1 (12500)");
+            T.True(p.me != null && p.me.score == 10000 + 500 * (t.shotBudget - 2), "linked player listed with own score");
             for (int i = 1; i < p.top.Count; i++)
             {
                 var a = p.top[i - 1]; var c = p.top[i];
@@ -288,7 +290,7 @@ static class Tests
         T.Add("top10_bonus_after_close", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            var t = b.BeginRankedRun().Result; Ranked(b, t, 10000, 5, true);
+            var t = b.BeginRankedRun().Result; Ranked(b, t, 10000, t.shotBudget - 2, true);
             b.SetTestClock(U("2026-10-17T00:15:00")); T.Eq(0, b.GetInbox().Result.Count, "not before board closes");
             b.SetTestClock(U("2026-10-17T00:15:01")); T.Eq(1, b.GetInbox().Result.Count, "bonus shards in inbox");
         });
@@ -300,9 +302,10 @@ static class Tests
         });
         T.Add("first_clear_rewards_once", () =>
         {
-            var b = NewBackend("2026-10-16T10:00:00"); var L10 = Db.GetLevel("c1_l10");
-            b.GrantCampaignReward(L10.id, L10.reward).Wait(); b.GrantCampaignReward(L10.id, L10.reward).Wait();
-            var w = b.GetWallet().Result; T.Eq(500, w.coins, "chest once"); T.True(w.powerUps.Contains("gravity_well"), "gravity well granted");
+            var b = NewBackend("2026-10-16T10:00:00");
+            foreach (var l in Db.Chapter1.levels) { Win(b, l.id); Win(b, l.id); }
+            var w = b.GetWallet().Result; T.True(w.powerUps.Contains("gravity_well"), "L10 power-up granted by server on first validated clear");
+            int coins = w.coins; Win(b, "c1_l10"); T.Eq(coins, b.GetWallet().Result.coins, "chest once");
         });
 
         // ── Addendum v1.1 ──
@@ -501,10 +504,58 @@ static class Tests
         T.Add("SC13_campaign_leaderboard", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount("Google").Wait();
-            T.Eq(4000, b.SubmitCampaignScore(4000).Result, "submitted"); T.Eq(4000, b.SubmitCampaignScore(3000).Result, "best kept");
+            var r1 = Win(b, "c1_l01", 1f, 1, 0); T.True(r1.accepted && r1.firstClear, "validated first clear");
+            Win(b, "c1_l01", 0.9f, 0, 0);                                    // worse run doesn't lower the best
+            var r2 = Win(b, "c1_l02", 0.9f, 2, 3);
+            int e = CampaignScore.Compute(true, 1f, 1, 0, false) + CampaignScore.Compute(true, 0.9f, 2, 3, false);
+            T.Eq(e, r2.total, "server sums its own per-level bests");
             var p = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result;
-            T.True(p.me != null && p.me.score == 4000 && !p.closed, "on the all-time board");
-            T.True(Throws(() => b.SubmitCampaignScore(b.CampaignScoreCeiling() + 1).Wait()), "above content ceiling rejected");
+            T.True(p.me != null && p.me.score == e && !p.closed, "on the all-time board");
+        });
+        T.Add("BUG13_server_validates_campaign_never_trusts_totals", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            T.True(typeof(IBackendService).GetMethod("SubmitCampaignScore") == null, "no API that accepts a client total");
+            T.True(!Win(b, "c1_l03").accepted, "L3 rejected: L2 not cleared on server (edited local save is irrelevant)");
+            T.True(!Win(b, "c1_l01", 0.5f, 1, 0).accepted, "ratio below win threshold");
+            T.True(!Win(b, "c1_l01", 1f, 4, 0).accepted, "shots left = budget (no shot fired)");
+            T.True(!Win(b, "c1_l01", 1f, 1, 999).accepted, "combo above piece count");
+            T.True(!b.SubmitCampaignResult(new CampaignRunReport { levelId = "c1_l01", won = false, destroyedRatio = 1f }).Result.accepted, "fails don't count");
+            T.True(!b.SubmitCampaignResult(new CampaignRunReport { levelId = "nope", won = true, destroyedRatio = 1f }).Result.accepted, "unknown level");
+            T.Eq(0, b.CampaignTotal(), "nothing recorded");
+            var ok = Win(b, "c1_l01", 1f, 1, 0); T.Eq(CampaignScore.Compute(true, 1f, 1, 0, false), ok.total, "score recomputed server-side");
+        });
+        T.Add("BUG14_offline_campaign_win_queued_and_synced", () =>
+        {
+            Crashverse.Core.CampaignResultQueue.Clear();
+            var b = NewBackend("2026-10-16T10:00:00"); b.SimulateOffline = true;
+            Crashverse.Core.CampaignResultQueue.Enqueue(new CampaignRunReport { levelId = "c1_l01", won = true, destroyedRatio = 1f, shotsLeft = 1 });
+            Crashverse.Core.CampaignResultQueue.Enqueue(new CampaignRunReport { levelId = "c1_l02", won = true, destroyedRatio = 1f, shotsLeft = 1 });
+            T.True(Crashverse.Core.CampaignResultQueue.Flush(b).Result == null, "offline: nothing sent");
+            T.Eq(2, Crashverse.Core.CampaignResultQueue.Count, "both kept");
+            b.SimulateOffline = false;
+            var r = Crashverse.Core.CampaignResultQueue.Flush(b).Result;
+            T.True(r.accepted, "synced in order (L1 before L2 prerequisite)"); T.Eq(0, Crashverse.Core.CampaignResultQueue.Count, "queue drained");
+            int total = b.CampaignTotal();
+            var dup = new CampaignRunReport { reportId = "fixed", levelId = "c1_l01", won = true, destroyedRatio = 1f, shotsLeft = 3 };
+            b.SubmitCampaignResult(dup).Wait(); int after = b.CampaignTotal();
+            b.SubmitCampaignResult(dup).Wait(); T.Eq(after, b.CampaignTotal(), "retry idempotent"); T.True(after >= total, "best only rises");
+        });
+        T.Add("BUG15_season_end_processed_set", () =>
+        {
+            var b = NewBackend("2026-11-08T10:00:00"); b.GetSeasonState().Wait();
+            var f = typeof(LocalBackendService).GetField("_s", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var db = f.GetValue(b); var fld = db.GetType().GetField("seasonEndProcessed");
+            T.True(!(bool)fld.GetValue(db), "not before season end");
+            b.SetTestClock(U("2026-11-09T00:00:00")); b.GetSeasonState().Wait();
+            T.True((bool)fld.GetValue(db), "set on rollover");
+        });
+        T.Add("online_checkpoint_uses_plausibility_cap", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00"); var t = b.BeginRankedRun().Result;
+            T.True(Throws(() => b.ReportRankedCheckpoint(new RankedCheckpoint { token = t.token, shotIndex = 1, damageScore = 5001, shotsLeft = t.shotBudget - 1 }).Wait()), "online +5001 rejected");
+            b.ReportRankedCheckpoint(new RankedCheckpoint { token = t.token, shotIndex = 1, damageScore = 5000, shotsLeft = t.shotBudget - 1 }).Wait();
+            T.True(Throws(() => b.ReportRankedCheckpoint(new RankedCheckpoint { token = t.token, shotIndex = 2, damageScore = 10001, shotsLeft = t.shotBudget - 2 }).Wait()), "second shot +5001 rejected");
         });
     }
 }

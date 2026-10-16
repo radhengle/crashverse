@@ -187,8 +187,14 @@ namespace Crashverse.Core
                     case RunMode.Campaign:
                         res.score = CampaignScore.Compute(won, res.ratio, ShotsLeft, combo, mastery);
                         res.firstClear = AppServices.Save.RecordResult(lvl.id, won, stars, mastery, res.score);
-                        if (res.firstClear && lvl.reward != null && lvl.reward.Length > 0) await backend.GrantCampaignReward(lvl.id, lvl.reward);
-                        if (won) await backend.SubmitCampaignScore(AppServices.Save.TotalScore()); // SC-13
+                        if (won)
+                        {
+                            // BUG-13/14: raw stats only, queued first; the server validates, scores, grants first-clear rewards and totals
+                            CampaignResultQueue.Enqueue(new CampaignRunReport { levelId = lvl.id, won = true, destroyedRatio = res.ratio, shotsLeft = ShotsLeft, bestCombo = combo, mastery = mastery });
+                            var sync = await CampaignResultQueue.Flush(backend);
+                            if (CampaignResultQueue.Count > 0) res.note = "Offline: result saved and will sync to the leaderboard later";
+                            else if (sync != null && !sync.accepted) res.note = sync.message;
+                        }
                         break;
                     case RunMode.Event:
                         AppServices.Save.RecordHintAttempt(lvl.id, won); // BUG-08: hint streak counts in events

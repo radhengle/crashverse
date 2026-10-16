@@ -22,7 +22,6 @@ namespace Crashverse.Backend
         Task<bool> ConsumeExtraCharge();
         Task<List<InboxItem>> GetInbox();
         Task<Wallet> ClaimInbox(string itemId);
-        Task<Wallet> GrantCampaignReward(string levelId, Reward[] rewards); // first clear only (SG-07)
 
         Task<DailyTitanConfig> GetDailyTitan();
         Task<RankedStatus> GetRankedStatus();
@@ -40,8 +39,11 @@ namespace Crashverse.Backend
         Task<SeasonState> ClaimSeasonTier(int tier, bool premium);
         Task<int> SubmitEventScore(string eventLevelId, int stars);
 
-        /// <summary>SC-13: all-time Chapter 1 campaign board (sum of best per-level scores).</summary>
-        Task<int> SubmitCampaignScore(int totalScore);
+        /// <summary>
+        /// SC-13 / BUG-13 / SG-07: report a campaign win. The server validates it, recomputes the score, keeps the best per level,
+        /// sums the board total itself and grants first-clear rewards from content. Idempotent per reportId.
+        /// </summary>
+        Task<CampaignSubmitResponse> SubmitCampaignResult(CampaignRunReport report);
 
         Task<LeaderboardPage> GetLeaderboard(BoardType board, BoardPeriod period, bool friendsOnly);
     }

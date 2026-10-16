@@ -17,5 +17,6 @@
     <Compile Include="../../Assets/_Project/Scripts/Weapons/WreckerSpec.cs" />
     <Compile Include="../../Assets/_Project/Scripts/UI/UITheme.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Core/TitanRunJournal.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Core/CampaignResultQueue.cs" />
   </ItemGroup>
 </Project>

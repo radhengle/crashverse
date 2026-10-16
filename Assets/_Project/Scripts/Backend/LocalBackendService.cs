@@ -22,6 +22,7 @@ namespace Crashverse.Backend
         [Serializable] class Sub { public string playerId; public string name; public int score; public long ticks; public bool friend; }
         [Serializable] class Board { public string key; public int type; public bool processed; public List<Sub> subs = new List<Sub>(); }
         [Serializable] class EventBest { public string levelId; public int stars; }
+        [Serializable] class LevelBestRec { public string levelId; public int best; }
         [Serializable] class TicketRec
         {
             public string token; public string dayKey; public int shotBudget; public bool used;
@@ -45,8 +46,9 @@ namespace Crashverse.Backend
             public List<EventBest> eventBest = new List<EventBest>();
             public List<string> titanClearDays = new List<string>();
             public List<Board> boards = new List<Board>();
-            public bool seasonEndProcessed; // legacy (pre-rollover saves)
-            public int campaignBest;
+            public bool seasonEndProcessed; // BUG-15: set when a season end has been processed (rollover idempotency/diagnostics)
+            public List<LevelBestRec> campaignLevels = new List<LevelBestRec>(); // BUG-13: server-held best per level
+            public List<string> processedReports = new List<string>();
         }
 
         readonly ContentDatabase _db;
@@ -150,19 +152,6 @@ namespace Crashverse.Backend
             Online();
             var it = _s.inbox.Find(i => i.id == itemId);
             if (it != null && !it.claimed && it.expiresUnixUtc > Unix(ServerNow)) { it.claimed = true; Grant(it.reward); Save(); }
-            return Task.FromResult(_s.wallet);
-        }
-
-        /// <summary>SG-07: chest/unlock/gate granted on first clear only (server-tracked).</summary>
-        public Task<Wallet> GrantCampaignReward(string levelId, Reward[] rewards)
-        {
-            Online();
-            if (rewards != null && !_s.grantedFirstClears.Contains(levelId))
-            {
-                _s.grantedFirstClears.Add(levelId);
-                foreach (var r in rewards) Grant(r);
-                Save();
-            }
             return Task.FromResult(_s.wallet);
         }
 
@@ -284,7 +273,7 @@ namespace Crashverse.Backend
             if (tk.used) throw new BackendException("Run already submitted");
             if (c.shotIndex == tk.lastShotIndex && c.damageScore == tk.lastDamage && c.killed == tk.lastKilled && c.shotsLeft == tk.lastShotsLeft)
             { c.receipt = Receipt(tk, c); return Task.FromResult(c); } // idempotent retry
-            var err = CheckStep(tk, tk.lastShotIndex, tk.lastDamage, tk.lastKilled, c, _db.Titan.maxDamageScore);
+            var err = CheckStep(tk, tk.lastShotIndex, tk.lastDamage, tk.lastKilled, c, _db.Titan.offlineShotDamageCap); // same per-shot cap online and offline
             if (err != null) throw new BackendException("Checkpoint rejected: " + err);
             tk.lastShotIndex = c.shotIndex; tk.lastDamage = c.damageScore; tk.lastShotsLeft = c.shotsLeft; tk.lastKilled = c.killed;
             c.receipt = Receipt(tk, c);
@@ -541,18 +530,49 @@ namespace Crashverse.Backend
         }
 
         /// <summary>
-        /// SC-13: campaign board = sum of best per-level campaign scores. Keeps the player's best; rejects totals above the
-        /// content-derived ceiling (per level: 1000 + 500×shots + 50×pieces + 1000 mastery).
+        /// SC-13 / BUG-13 / SG-07. Validates a reported win against content and server-held progress (level exists, prerequisite
+        /// cleared on the server, shots/ratio/combo within bounds), recomputes the score with CampaignScore, keeps the best
+        /// per level and recomputes the board total from those bests. First validated clear grants the level's content reward.
+        /// Residual (needs real server): the reported stats themselves come from the client; only their bounds are checked.
         /// </summary>
-        public Task<int> SubmitCampaignScore(int totalScore)
+        public Task<CampaignSubmitResponse> SubmitCampaignResult(CampaignRunReport r)
         {
             Online();
-            if (totalScore < 0 || totalScore > CampaignScoreCeiling()) throw new BackendException("Campaign score rejected");
-            if (totalScore > _s.campaignBest) _s.campaignBest = totalScore;
-            AddSub(BoardType.Campaign, CampaignKey, _s.campaignBest, ServerNow);
+            if (r != null && !string.IsNullOrEmpty(r.reportId) && _s.processedReports.Contains(r.reportId))
+                return Task.FromResult(new CampaignSubmitResponse { accepted = true, message = "Already synced", levelBest = LevelBest(r.levelId), total = CampaignTotal() });
+            var err = ValidateCampaign(r, out var lvl);
+            if (err != null) return Task.FromResult(new CampaignSubmitResponse { accepted = false, message = "Rejected: " + err, total = CampaignTotal() });
+            int score = Crashverse.Meta.CampaignScore.Compute(true, r.destroyedRatio, r.shotsLeft, r.bestCombo, r.mastery);
+            var rec = _s.campaignLevels.Find(x => x.levelId == lvl.id);
+            if (rec == null) { rec = new LevelBestRec { levelId = lvl.id }; _s.campaignLevels.Add(rec); }
+            if (score > rec.best) rec.best = score;
+            bool first = !_s.grantedFirstClears.Contains(lvl.id);
+            if (first) { _s.grantedFirstClears.Add(lvl.id); if (lvl.reward != null) foreach (var rw in lvl.reward) Grant(rw); }
+            if (!string.IsNullOrEmpty(r.reportId)) _s.processedReports.Add(r.reportId);
+            int total = CampaignTotal();
+            AddSub(BoardType.Campaign, CampaignKey, total, ServerNow, replace: true);
             Save();
-            return Task.FromResult(_s.campaignBest);
+            return Task.FromResult(new CampaignSubmitResponse { accepted = true, message = "Campaign result synced", levelBest = rec.best, total = total, firstClear = first });
         }
+
+        string ValidateCampaign(CampaignRunReport r, out LevelEntry lvl)
+        {
+            lvl = null;
+            if (r == null) return "empty report";
+            lvl = Array.Find(_db.Chapter1.levels, l => l.id == r.levelId);
+            if (lvl == null) return "unknown level";
+            if (!r.won) return "only wins are recorded";
+            if (!string.IsNullOrEmpty(lvl.requires) && !_s.grantedFirstClears.Contains(lvl.requires)) return "prerequisite level not cleared on server";
+            if (r.shotsLeft < 0 || r.shotsLeft > lvl.shots - 1) return "shots left out of range";
+            if (float.IsNaN(r.destroyedRatio) || r.destroyedRatio < 0f || r.destroyedRatio > 1f) return "ratio out of range";
+            if (!lvl.IsBoss && r.destroyedRatio + 1e-4f < lvl.winThreshold) return "ratio below win threshold";
+            int pieces = _db.GetLayout(lvl.layout)?.blocks?.Length ?? 0;
+            if (r.bestCombo < 0 || r.bestCombo > pieces) return "combo out of range";
+            return null;
+        }
+
+        int LevelBest(string id) => _s.campaignLevels.Find(x => x.levelId == id)?.best ?? 0;
+        public int CampaignTotal() { int t = 0; foreach (var x in _s.campaignLevels) t += x.best; return t; }
 
         public int CampaignScoreCeiling()
         {
@@ -626,6 +646,7 @@ namespace Crashverse.Backend
                     if (_s.premium && !_s.claimedPremium.Contains(i) && tr.premium != null)
                         _s.inbox.Add(new InboxItem { id = $"{old}_tier_{i}_premium", source = $"Unclaimed premium tier {i}", reward = tr.premium, expiresUnixUtc = exp });
                 }
+                _s.seasonEndProcessed = true; // BUG-15
                 _s.seasonId = curSeason; _s.seasonXp = 0; _s.bonusChests = 0; _s.premium = false;
                 _s.claimedFree.Clear(); _s.claimedPremium.Clear(); _s.eventBest.Clear();
                 Save();
