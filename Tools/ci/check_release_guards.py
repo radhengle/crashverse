@@ -51,7 +51,13 @@ def check_config():
     man = ROOT / "Assets/Plugins/Android/AndroidManifest.xml"
     if not man.exists() or not re.search(r'com\.google\.android\.gms\.permission\.AD_ID"\s+tools:node="remove"', man.read_text()):
         bad.append("Assets/Plugins/Android/AndroidManifest.xml must remove com.google.android.gms.permission.AD_ID")
+    if not re.search(r"^\s*AndroidTargetArchitectures:\s*3\s*$", ps_text(), re.M):
+        bad.append("ProjectSettings: AndroidTargetArchitectures must be 3 (ARMv7 | ARM64)")
+    if not re.search(r"scriptingBackend:\s*\n\s*Android:\s*1", ps_text()):
+        bad.append("ProjectSettings: Android scripting backend must be IL2CPP (1)")
     return bad
+
+def ps_text(): return (ROOT / "ProjectSettings/ProjectSettings.asset").read_text()
 
 def main():
     files = [p for p in (ROOT / "Assets").rglob("*.cs") if "Editor" not in p.parts]
