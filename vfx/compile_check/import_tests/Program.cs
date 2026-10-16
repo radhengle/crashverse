@@ -33,6 +33,11 @@ static class Program
         Eq("Budget island", C.TriBudget(C.AssetClass.Environment, "Island_Sunnyville"), 10000);
         Eq("Budget kit max", C.TriBudget(C.AssetClass.Kit, "Kit_Wood_Wall"), 1500);
         Eq("Budget kit min", C.TriMin(C.AssetClass.KitFractured), 500);
+        Eq("JNT not fragment", C.IsFragment("JNT_Wall_frag_01__Wall_frag_02"), false);
+        Eq("ANCHOR not fragment", C.IsFragment("ANCHOR_Wall_frag_01"), false);
+        Eq("UCX not fragment", C.IsFragment("UCX_Wall_frag_01"), false);
+        Eq("Kit texture max", C.PolicyFor("T_Brick_ORM", "Assets/_Project/Models/BuildingKit/Kit_Brick/textures/T_Brick_ORM.png").androidMax, 512);
+        Eq("Hero texture max", C.PolicyFor("T_Wrecker_A", "Assets/_Project/Models/Wrecker_v2/textures/T_Wrecker_A.png").androidMax, 1024);
         Console.WriteLine($"{runs - fails}/{runs} passed");
         return fails == 0 ? 0 : 1;
     }

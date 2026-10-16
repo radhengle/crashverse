@@ -30,11 +30,27 @@ Assets/_Project/Models/<Asset>/textures/T_<Asset>_A|_N|_ORM|_E|_Crack.png
 Assets/_Project/Models/<Asset>/M_<Asset>[_Emissive|_Inner].mat  created on import (External)
 Assets/_Project/Prefabs/Models/<Folder>/<Asset>.prefab          built by menu
 ```
-- Asset class comes from the file prefix: `Wrecker*` and `Hero_*` are **Hero**; `Island_*` and `Env_*` are **Environment**; `Kit_*` is **Kit**; `Kit_*_Fractured` is **KitFractured**.
-- Colliders: `UCX_<Target>[_##]` (models README) or `<Target>_COL[_##]`. **Fragment hulls are exactly `UCX_<Piece>_frag_##`** and target `<Piece>_frag_##` (the `_##` is the fragment number, not stripped). Other hulls drop one trailing `_##` (`UCX_Carriage_01` targets `Carriage`).
+### Object naming (final, one table)
+Sources: models/Model_Spec_v1.md (3D Modeler: rules 3 and 7, colliders), the Physics feel proposal (`FixedJoint` + `ANCHOR_` supports), and the Physics review of #28.
+
+| Name pattern | Meaning | Pipeline does | FBX user properties, stored on `ImportedPhysicsHints` of that object |
+|---|---|---|---|
+| `<Piece>_frag_##` | fragment of a `Kit_*_Fractured` piece; pivot = centre of mass | tagged `Fragment` if the tag exists; ordinal sort; LOD0 renderer | `mass_kg` → `mass` (kg) |
+| `<Piece>_frag_##_LOD1/2`, `<Part>_LOD0/1/2`, `<Asset>_LOD0/1/2.fbx` | LOD meshes | LODGroup | none |
+| `UCX_<Piece>_frag_##` | **fragment hull, exact match, frozen**: exactly one per fragment | convex MeshCollider on the fragment, or on a `COL_<Target>` child if the pivot differs | none |
+| `UCX_<Name>[_##]` | convex hull for a non-fragment (`_##` is the hull index; ≤8 per piece, ≤255 tris) | convex MeshCollider on `<Name>`. **Missing target: error, skipped** | none |
+| `COL_<Target>` | child collider object (created by the pipeline when the hull pivot ≠ target pivot; also accepted when authored) | kept | none |
+| `<Target>_COL[_##]` | **legacy alias** of `UCX_<Target>` | as `UCX_` | none |
+| `JNT_<FragA>__<FragB>[_##]` | joint / break point between two adjacent fragments (empty at the contact); the optional `_##` handles several joints between one pair | kept; ordinal sort after fragments; validator checks both fragments exist | `break_force_N` → `breakForce` (N), `break_torque_Nm` → `breakTorque` (N·m). Blank `""` = not authored (Physics material defaults apply) |
+| `ANCHOR_<Frag>` | anchor / support mark where a fragment touches the ground (Physics: a piece collapses when all `FixedJoint` + `ANCHOR_` supports are gone) | kept; validator checks the fragment exists | `anchor_to` → `anchorTo` (`"Ground"`, or set at level assembly) |
+| `Socket_Muzzle/Core/Module/Booster/WheelDust` (`Muzzle_Spawn` = v1 Muzzle) | gameplay/VFX attach points | kept; all 5 required on the Wrecker | none |
+| `Spawn_*`, `*_Hint`, `VFX_*` | helpers | kept | none |
+| any object | — | reparented under the named object, keeping its world pose | `attach_to` (string) |
+| any object | — | not imported (`density_kg_m3` is informational) | `density_kg_m3` |
+
+- A property that is missing or blank never overwrites an existing hint value. Hints are float SI authoring defaults; Physics owns conversion and use (see *Physics hints*).
+- Asset class comes from the file prefix: `Wrecker*` and `Hero_*` are **Hero**; `Island_*` and `Env_*` are **Environment**; `Kit_*` is **Kit**; `Kit_*_Fractured` is **KitFractured**. Textures are classified by folder (`BuildingKit/` = Kit).
 - **Kit files must be under `Assets/_Project/Models/BuildingKit/`**; the validator reports any other location as an error.
-- Sockets: `Socket_Muzzle|Core|Module|Booster|WheelDust` (v3). The v1 name `Muzzle_Spawn` is read as Muzzle.
-- Fragments are `<Piece>_frag_##`, and joints are `JNT_<A>__<B>`. Helpers (`Spawn_*`, `ANCHOR*`, `*_Hint`, `VFX_*`) are kept untouched.
 - No spaces and no Blender `.001` suffixes; the validator reports both as errors.
 
 ## 1 · FBX import settings
@@ -112,6 +128,14 @@ Texel density hint = sqrt(UV area × albedo w × h / world area) over the LOD0 m
 - Values are **float SI units**: `mass` in kg, `breakForce` in N, `breakTorque` in N·m, plus `anchorTo` as a name. They are authoring defaults only.
 - **Physics** converts them to its integer units and maps them onto `MaterialDefinition`; the pipeline adds no physics logic.
 - Steel `mass_kg` uses an **effective density of 800 kg/m³** (hollow sections), not solid steel.
+
+## Tests
+- **Unity EditMode** (`Assets/_Project/Editor/Import/Tests`, asmdef `Crashverse.Import.Tests`, Editor-only, `UNITY_INCLUDE_TESTS`, same layout as `Crashverse.Rules.Tests`):
+  - **Naming:** hull targets, fragment, joint, socket and kit-path rules.
+  - **Hints:** `ImportedPhysicsHints` (SI values, blank and missing never overwrite).
+  - **Prefab build:** builds a procedural fractured piece at test time under `BuildingKit/__ImportTest`, then deletes it. It checks one convex collider per fragment, the `COL_` child, no root fallback, the error on a missing target, the LODGroup, kept sockets, joints and anchors, ordinal order, and that no physics components are added.
+  - **Material wiring:** checks GlossyPBR maps, `_InnerFace`, no keywords, and texture import (NormalMap, sRGB, Android ASTC and size).
+- Assemblies: `Crashverse.Import` (runtime marker) and `Crashverse.Import.Editor` (Editor-only pipeline).
 
 ## Compile check
 `cd vfx/compile_check/import && dotnet build` type-checks the pipeline against API-shaped UnityEngine/UnityEditor stubs. It is **not** a Unity compile; the first real Unity import is still pending (licence).

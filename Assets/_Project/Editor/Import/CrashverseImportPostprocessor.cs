@@ -82,6 +82,12 @@ namespace Crashverse.EditorTools.Import
         void OnPostprocessGameObjectWithUserProperties(GameObject go, string[] names, object[] values)
         {
             if (!C.InScope(assetPath)) return;
+            ApplyUserProperties(go, names, values, assetPath);
+        }
+
+        /// <summary>Testable core of the user-property step (EditMode tests call it directly).</summary>
+        public static void ApplyUserProperties(GameObject go, string[] names, object[] values, string assetPath)
+        {
             float? mass = Num(names, values, "mass_kg"), brk = Num(names, values, "break_force_N"), tq = Num(names, values, "break_torque_Nm");
             string anchor = Str(names, values, "anchor_to");
             if (mass.HasValue || brk.HasValue || tq.HasValue || anchor != null)
@@ -118,10 +124,12 @@ namespace Crashverse.EditorTools.Import
         internal static string Str(string[] names, object[] values, string key)
         {
             int i = Array.IndexOf(names, key);
-            return i < 0 || values[i] == null ? null : values[i].ToString();
+            if (i < 0 || values[i] == null) return null;
+            string v = values[i].ToString();
+            return v.Length == 0 ? null : v;                 // blank ("") = not authored, never overwrites
         }
 
-        internal static Transform FindDeep(Transform t, string name)
+        public static Transform FindDeep(Transform t, string name)
         {
             if (t.name == name) return t;
             for (int i = 0; i < t.childCount; i++) { var r = FindDeep(t.GetChild(i), name); if (r != null) return r; }

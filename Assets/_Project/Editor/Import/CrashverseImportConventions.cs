@@ -97,13 +97,25 @@ namespace Crashverse.EditorTools.Import
         }
 
         static readonly Regex FragRx = new Regex(@"_frag_\d{2}$", RegexOptions.Compiled);
-        public static bool IsFragment(string name) => name != null && FragRx.IsMatch(StripLodSuffix(name));
+        /// <summary>&lt;Piece&gt;_frag_## (optionally _LODn). Hulls (UCX_), joints (JNT_) and anchors (ANCHOR_) that name a fragment are not fragments.</summary>
+        public static bool IsFragment(string name) => name != null && !name.StartsWith("UCX_", StringComparison.Ordinal) && !IsJoint(name) && !IsAnchor(name) && FragRx.IsMatch(StripLodSuffix(name));
+        /// <summary>ANCHOR_&lt;Frag&gt; empties (Model_Spec_v1 rule 3), carrying anchor_to.</summary>
+        public static bool IsAnchor(string name) => name != null && name.StartsWith("ANCHOR_", StringComparison.Ordinal);
+        /// <summary>JNT_&lt;FragA&gt;__&lt;FragB&gt;[_##]: returns false unless both sides are present.</summary>
+        public static bool TryParseJoint(string name, out string a, out string b)
+        {
+            a = b = null;
+            if (!IsJoint(name)) return false;
+            var m = Regex.Match(name, @"^JNT_(?<a>.+?_frag_\d{2})__(?<b>.+?_frag_\d{2})(_\d{2})?$");
+            if (!m.Success) return false;
+            a = m.Groups["a"].Value; b = m.Groups["b"].Value; return true;
+        }
         /// <summary>Kit files must live under Assets/_Project/Models/BuildingKit/.</summary>
         public const string KitRoot = ModelsRoot + "BuildingKit/";
         public static bool KitPathOk(string assetPath) => assetPath.Replace('\\', '/').StartsWith(KitRoot, StringComparison.Ordinal);
         public static bool IsJoint(string name) => name != null && name.StartsWith("JNT_", StringComparison.Ordinal);
         /// <summary>Non-render helper empties that must survive prefab building untouched.</summary>
-        public static bool IsHelper(string name) => SocketName(name) != null || IsJoint(name) || (name != null && (name.StartsWith("Spawn_", StringComparison.Ordinal) || name.StartsWith("ANCHOR", StringComparison.Ordinal) || name.EndsWith("_Hint", StringComparison.Ordinal) || name.StartsWith("VFX_", StringComparison.Ordinal)));
+        public static bool IsHelper(string name) => SocketName(name) != null || IsJoint(name) || (name != null && (name.StartsWith("Spawn_", StringComparison.Ordinal) || IsAnchor(name) || name.EndsWith("_Hint", StringComparison.Ordinal) || name.StartsWith("VFX_", StringComparison.Ordinal)));
 
         // ---------- materials / textures ----------
         public static readonly string[] MapSuffixes = { "_A", "_N", "_ORM", "_E", "_Crack" };
@@ -132,7 +144,9 @@ namespace Crashverse.EditorTools.Import
         {
             string s = MapSuffix(texStem);
             bool inner = texStem.Contains("_Inner");
-            var c = Classify(assetPath.Replace("/textures/", "/"));
+            // Textures are named T_<Asset>_*, so classify by location: BuildingKit -> Kit, else by the model folder name.
+            string pth = assetPath.Replace('\\', '/');
+            var c = pth.Contains("/BuildingKit/") ? AssetClass.Kit : Classify(Path.GetFileName(Path.GetDirectoryName(Path.GetDirectoryName(pth))) ?? "");
             int max = inner ? 256 : (c == AssetClass.Kit || c == AssetClass.KitFractured ? 512 : 1024);
             switch (s)
             {

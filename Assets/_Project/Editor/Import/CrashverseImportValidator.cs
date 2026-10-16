@@ -75,6 +75,12 @@ namespace Crashverse.EditorTools.Import
                             if (off > tol) Warn(baseName, "pivot", $"{f.name}: pivot {off:0.000} m from bounds centre (tol {tol:0.000}); README wants pivot = centre of mass");
                         }
                     }
+                    var fragNames = new HashSet<string>(all.Where(t => C.IsFragment(t.name)).Select(t => t.name));
+                    foreach (var j in all.Where(t => C.IsJoint(t.name)))
+                        if (!C.TryParseJoint(j.name, out var ja, out var jb)) Err(baseName, "joint", $"{j.name}: expected JNT_<FragA>__<FragB>[_##]");
+                        else if (!fragNames.Contains(ja) || !fragNames.Contains(jb)) Err(baseName, "joint", $"{j.name}: fragment {(fragNames.Contains(ja) ? jb : ja)} not found");
+                    foreach (var an in all.Where(t => C.IsAnchor(t.name)))
+                        if (!fragNames.Contains(an.name.Substring(7))) Err(baseName, "anchor", $"{an.name}: expected ANCHOR_<Frag> naming an existing fragment");
                     foreach (var h in hullsByTarget.Keys.Where(t => all.All(x => x.name != t))) Err(baseName, "collider", $"UCX_ hull targets missing '{h}'");
                 }
                 bool anyHull = all.Any(t => C.ColliderTarget(t.name) != null);
