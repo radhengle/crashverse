@@ -69,7 +69,11 @@ namespace Crashverse.Boss
             Defeated = true;
             foreach (var x in _all) if (x != _shutter && x.isObjectivePiece && !x.IsBroken) x.ForceCollapse(); // collapse cinematic
             if (_core != null) _core.SetHighlight(Color.white, 1f);
+            _defeatCollapse.Start(); // BOSS_TIDE_DEFEAT_COLLAPSE at +3500 ms unscaled. TODO(anim): moves to an anim event at frame 210 when the rig clip lands
         }
+
+        readonly Crashverse.Feel.TideDefeatCollapseTimer _defeatCollapse = new Crashverse.Feel.TideDefeatCollapseTimer();
+        void OnDisable() => _defeatCollapse.Cancel(); // level exit / reset (GameSession destroys this component)
 
         /// <summary>Called by GameSession after each shot resolves in phase 2. Returns the tell duration to wait (0 if opening).</summary>
         public float OnShotResolved()
@@ -84,6 +88,7 @@ namespace Crashverse.Boss
 
         void Update()
         {
+            _defeatCollapse.Tick(Time.unscaledDeltaTime * 1000f); // unscaled: hit stop / slow-mo don't stretch it
             if (_shutter == null) return;
             bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
             if (_tellTimer > 0f)

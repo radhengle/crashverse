@@ -36,7 +36,7 @@ namespace Crashverse.Feel
             PuTimeStart = "PU_TIME_START", PuTimeWarn = "PU_TIME_WARN", PuTimeEnd = "PU_TIME_END",
             CollapseLand = "COLLAPSE_LAND", DebrisFallOff = "DEBRIS_FALL_OFF",
             BossTitanStage = "BOSS_TITAN_STAGE", BossTitanDefeat = "BOSS_TITAN_DEFEAT", BossTitanHit = "BOSS_TITAN_HIT",
-            BossTideTell = "BOSS_TIDE_TELL", BossTideShutterClose = "BOSS_TIDE_SHUTTER_CLOSE", BossTideShutterOpen = "BOSS_TIDE_SHUTTER_OPEN", BossTidePhase2 = "BOSS_TIDE_PHASE2", BossTideCoreHit = "BOSS_TIDE_CORE_HIT", BossTideDefeat = "BOSS_TIDE_DEFEAT", BossTideDefeatCollapse = "BOSS_TIDE_DEFEAT_COLLAPSE" /* +210 f / 3500 ms into DEFEAT; Animator must raise from the clip */,
+            BossTideTell = "BOSS_TIDE_TELL", BossTideShutterClose = "BOSS_TIDE_SHUTTER_CLOSE", BossTideShutterOpen = "BOSS_TIDE_SHUTTER_OPEN", BossTidePhase2 = "BOSS_TIDE_PHASE2", BossTideCoreHit = "BOSS_TIDE_CORE_HIT", BossTideDefeat = "BOSS_TIDE_DEFEAT", BossTideDefeatCollapse = "BOSS_TIDE_DEFEAT_COLLAPSE" /* +210 f / 3500 ms into DEFEAT; code-driven via TideDefeatCollapseTimer until the rig clip lands */,
             UiBtnPress = "UI_BTN_PRESS", UiComboUp = "UI_COMBO_UP", UiComboTier = "UI_COMBO_TIER", UiStar = "UI_STAR_", UiMasteryTick = "UI_MASTERY_TICK",
             UiWin = "UI_WIN", UiShotSpend = "UI_SHOT_SPEND", UiThresholdHit = "UI_THRESHOLD_HIT", CamSlowMoStart = "CAM_SLOWMO_START";
     }
@@ -717,6 +717,29 @@ namespace Crashverse.Feel
         public void OutOfShots() { if (State != TitanAnimState.Defeat) Go(TitanAnimState.Survive); } // spec 04: no survive event (retired); results flow owns the fail beat
         protected override float DurationMs(TitanAnimState s) => s == TitanAnimState.Intro ? IntroMs : s == TitanAnimState.Hit ? HitMs : s == TitanAnimState.Stage ? StageMs : s == TitanAnimState.Survive ? SurviveMs : -1f;
         protected override void OnTimeout(TitanAnimState s) => Go(TitanAnimState.Idle);
+    }
+
+    /// <summary>
+    /// Raises BOSS_TIDE_DEFEAT_COLLAPSE once, 3500 ms (unscaled) after defeat start; Cancel() on level exit / reset. Engine-free.
+    /// TODO(anim): when the Tidewarden rig defeat clip lands, this moves to an anim event at frame 210 (+3500 ms) on the clip and this timer is removed.
+    /// </summary>
+    public sealed class TideDefeatCollapseTimer
+    {
+        public const float DelayMs = 3500f; // 210 f @ 60 fps
+        float _ms = -1f; bool _fired;
+        public bool Armed => _ms >= 0f;
+        public bool Fired => _fired;
+        /// <summary>Arms once per defeat; repeated Start() calls are ignored until Cancel().</summary>
+        public void Start() { if (_ms < 0f && !_fired) _ms = 0f; }
+        public void Cancel() { _ms = -1f; _fired = false; }
+        /// <summary>Advance by real (unscaled) ms. Returns true on the single tick that fires (and raises the event).</summary>
+        public bool Tick(float realDtMs)
+        {
+            if (_ms < 0f) return false;
+            _ms += realDtMs;
+            if (_ms < DelayMs) return false;
+            _ms = -1f; _fired = true; AnimEventBus.Raise(AnimEvents.BossTideDefeatCollapse); return true;
+        }
     }
 
     public enum TideAnimState { Intro, P1Idle, JointHit, JointBreak, PhaseChange, P2Open, Tell, P2Closing, P2Closed, P2Opening, CoreHit, Defeat }

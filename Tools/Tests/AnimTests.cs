@@ -136,6 +136,24 @@ static class AnimTests
             T.True(d2.SubmitPhys("PHYS_IMPACT", ShakeRouter.MatTerrain, 2, 2, 100f), "phys terrain shakes"); T.Eq("", h.Log, "terrain: no haptic");
             T.True(!Src("Assets/_Project/Scripts/Feel/FeelCore.cs").Contains("flagged for Animator"), "terrain no longer provisional");
         });
+        T.Add("TIDE_defeat_collapse_timer", () =>
+        {
+            int n = 0; Action<string, object> on = (e, _) => { if (e == AnimEvents.BossTideDefeatCollapse) n++; };
+            AnimEventBus.Raised += on;
+            try
+            {
+                var t = new TideDefeatCollapseTimer(); T.True(!t.Tick(5000f) && n == 0, "not armed → nothing");
+                t.Start(); for (int i = 0; i < 208; i++) t.Tick(1000f / 60f); T.Eq(0, n, "not before 3500 ms (3466 ms)");
+                t.Start(); T.True(!t.Tick(1000f / 60f) && n == 0, "re-Start while armed doesn't reset (frame 209)");
+                t.Tick(1000f / 60f); T.Eq(1, n, "fires at 3500 ms (frame 210)");
+                for (int i = 0; i < 300; i++) t.Tick(16f); t.Start(); t.Tick(4000f); T.Eq(1, n, "fires once per defeat");
+                var c = new TideDefeatCollapseTimer(); c.Start(); c.Tick(3000f); c.Cancel(); c.Tick(1000f); T.Eq(1, n, "cancelled on exit/reset");
+                c.Start(); c.Tick(3499f); T.Eq(1, n, "re-armed after reset, not yet"); c.Tick(1f); T.Eq(2, n, "new defeat after reset fires");
+                var src = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs");
+                T.True(src.Contains("_defeatCollapse.Start()") && src.Contains("Time.unscaledDeltaTime") && src.Contains("OnDisable() => _defeatCollapse.Cancel()") && src.Contains("TODO(anim)"), "wired: defeat start, unscaled tick, cancel on exit, TODO");
+            }
+            finally { AnimEventBus.Raised -= on; }
+        });
         T.Add("HAPTICS_buckets_and_gate", () =>
         {
             T.Eq(1, HapticBuckets.For(ShakeDispatcher.Strength(ShakeTable.ImpactWood))); T.Eq(2, HapticBuckets.For(ShakeDispatcher.Strength(ShakeTable.Fire)));
