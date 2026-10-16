@@ -6,36 +6,52 @@ namespace Crashverse.Sim.Tests
     public class DebrisDamageTests
     {
         const int Kg = 1000; // grams
+        const int W = DebrisMaterialMult.Wood;
+        static int D(int mmps, int g, int mult = W) => DebrisDamage.ComputeMilliHp(mmps, g, mult, false);
 
-        [Test] public void AtThreshold_NoDamage() => Assert.AreEqual(0, DebrisDamage.ComputeMilliHp(2000, 5 * Kg, false));
-        [Test] public void BelowThreshold_NoDamage() => Assert.AreEqual(0, DebrisDamage.ComputeMilliHp(1999, 5 * Kg, false));
-        [Test] public void JustAboveThreshold_Damages() => Assert.Greater(DebrisDamage.ComputeMilliHp(2001, 5 * Kg, false), 0);
+        [Test] public void AtThreshold_NoDamage() => Assert.AreEqual(0, D(2000, 5 * Kg));
+        [Test] public void BelowThreshold_NoDamage() => Assert.AreEqual(0, D(1999, 5 * Kg));
 
-        [Test] public void ScalesWithMassTimesSpeed()
+        [Test] public void JustAboveThreshold_IsContinuous_AboutZero()
         {
-            int a = DebrisDamage.ComputeMilliHp(3000, 2 * Kg, false);
-            Assert.AreEqual(2 * a, DebrisDamage.ComputeMilliHp(3000, 4 * Kg, false));   // 2x mass
-            Assert.AreEqual(2 * a, DebrisDamage.ComputeMilliHp(6000, 2 * Kg, false));   // 2x speed
-            Assert.AreEqual(15000, a);                                                  // 2 kg × 3 m/s × 2.5 HP
+            Assert.AreEqual(2, D(2001, 4 * Kg));      // 0.5 × 4 kg × 0.001 m/s = 0.002 HP
+            Assert.Less(D(2010, 10 * Kg), 100);       // < 0.1 HP just above threshold
+        }
+
+        [Test] public void Scaling_LinearInMassAndExcessSpeed()
+        {
+            int a = D(4000, 2 * Kg);                  // 0.5 × 2 × 2 = 2 HP
+            Assert.AreEqual(2000, a);
+            Assert.AreEqual(2 * a, D(4000, 4 * Kg));  // 2x mass
+            Assert.AreEqual(2 * a, D(6000, 2 * Kg));  // 2x excess speed (4 m/s over)
         }
 
         [Test] public void CappedAt60PerCollision()
         {
-            Assert.AreEqual(60000, DebrisDamage.ComputeMilliHp(50000, 100 * Kg, false));
-            Assert.AreEqual(DebrisDamageConfig.Default.capMilliHp, DebrisDamage.ComputeMilliHp(int.MaxValue, int.MaxValue, false));
+            Assert.AreEqual(60000, D(50000, 100 * Kg));
+            Assert.AreEqual(60000, D(int.MaxValue, int.MaxValue, DebrisMaterialMult.Brick));
+            Assert.AreEqual(59999, D(2000 + 119998, 1 * Kg)); // just under the cap
+        }
+
+        [Test] public void MaterialMultipliers()
+        {
+            Assert.AreEqual(10000, D(12000, 2 * Kg, DebrisMaterialMult.Wood));   // 0.5 × 2 × 10 × 1.0
+            Assert.AreEqual(11000, D(12000, 2 * Kg, DebrisMaterialMult.Brick));  // × 1.1
+            Assert.AreEqual(8000, D(12000, 2 * Kg, DebrisMaterialMult.Steel));   // × 0.8
+            Assert.AreEqual(60000, D(1000000, 2 * Kg, DebrisMaterialMult.Steel)); // cap applies after the multiplier
         }
 
         [Test] public void RestingContact_NoDamage()
         {
-            Assert.AreEqual(0, DebrisDamage.ComputeMilliHp(0, 50 * Kg, false));
-            Assert.AreEqual(0, DebrisDamage.ComputeMilliHp(10000, 50 * Kg, restingContact: true));
+            Assert.AreEqual(0, D(0, 50 * Kg));
+            Assert.AreEqual(0, DebrisDamage.ComputeMilliHp(10000, 50 * Kg, W, restingContact: true));
         }
 
         [Test] public void ConfigFromData()
         {
             var cfg = new DebrisDamageConfig { minSpeedMmPerS = 1000, milliHpPerKgMetrePerS = 1000, capMilliHp = 5000 };
-            Assert.AreEqual(1500, DebrisDamage.ComputeMilliHp(1500, 1 * Kg, false, cfg));
-            Assert.AreEqual(5000, DebrisDamage.ComputeMilliHp(9000, 1 * Kg, false, cfg));
+            Assert.AreEqual(500, DebrisDamage.ComputeMilliHp(1500, 1 * Kg, W, false, cfg));
+            Assert.AreEqual(5000, DebrisDamage.ComputeMilliHp(9000, 1 * Kg, W, false, cfg));
         }
 
         [Test] public void UnitConversion_Rounds()

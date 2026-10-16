@@ -188,7 +188,8 @@ namespace Crashverse.Destruction
             if (_broken || c.rigidbody == null || c.rigidbody.isKinematic) return;
             if (c.gameObject.GetComponent<Crashverse.Weapons.Projectile>() != null) return; // projectile applies its own damage
             int speed = DebrisDamage.ToMmPerS(c.relativeVelocity.magnitude);
-            int milli = DebrisDamage.ComputeMilliHp(speed, DebrisDamage.ToGrams(c.rigidbody.mass), false, DebrisDamageQueue.Config);
+            int mult = material != null ? material.debrisDamageTakenPermille : DebrisMaterialMult.Neutral; // ruling #7a: TARGET (this piece) material
+            int milli = DebrisDamage.ComputeMilliHp(speed, DebrisDamage.ToGrams(c.rigidbody.mass), mult, false, DebrisDamageQueue.Config);
             if (milli <= 0) return;
             var other = c.gameObject.GetComponent<DestructibleBlock>();
             DebrisDamageQueue.Enqueue(this, other != null ? other.blockId : "~" + c.gameObject.name, milli);

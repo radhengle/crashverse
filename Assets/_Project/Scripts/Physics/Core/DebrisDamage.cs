@@ -4,15 +4,15 @@ using System.Collections.Generic;
 namespace Crashverse.Sim
 {
     /// <summary>
-    /// Debris damage constants (Level Rulings v1 §7). Integer units: speed in mm/s, mass in grams, damage in milli-HP.
-    /// Change values here (or pass a custom config), never inline in gameplay code.
+    /// Debris damage constants (Level Rulings v1 §7, ruling #7a). Integer units: speed in mm/s, mass in grams, damage in
+    /// milli-HP, multipliers in permille. Starting values for Level Designer to verify on L7.
     /// </summary>
     [Serializable]
     public struct DebrisDamageConfig
     {
-        /// <summary>Damage only when relative impact speed is strictly above this (2 m/s).</summary>
+        /// <summary>Damage only when relative impact speed is strictly above this (2 m/s); speed counts from here.</summary>
         public int minSpeedMmPerS;
-        /// <summary>Milli-HP per (kg · m/s) of impact momentum (mass × speed).</summary>
+        /// <summary>Milli-HP per (kg · m/s) of excess speed: 0.5 HP = 500.</summary>
         public int milliHpPerKgMetrePerS;
         /// <summary>Cap per collision (60 HP).</summary>
         public int capMilliHp;
@@ -20,9 +20,15 @@ namespace Crashverse.Sim
         public static readonly DebrisDamageConfig Default = new DebrisDamageConfig
         {
             minSpeedMmPerS = 2000,
-            milliHpPerKgMetrePerS = 2500,
+            milliHpPerKgMetrePerS = 500,
             capMilliHp = 60000,
         };
+    }
+
+    /// <summary>Per-material multipliers (permille) on damage TAKEN by the struck piece. Data lives on MaterialDefinition.</summary>
+    public static class DebrisMaterialMult
+    {
+        public const int Wood = 1000, Brick = 1100, Steel = 800, Neutral = 1000;
     }
 
     /// <summary>Pure, engine-free debris damage maths. Deterministic for identical integer inputs.</summary>
@@ -33,22 +39,23 @@ namespace Crashverse.Sim
         public static int ToGrams(float kilograms) => (int)Math.Round(kilograms * 1000.0, MidpointRounding.AwayFromZero);
 
         /// <summary>
-        /// Damage (milli-HP) for one collision: 0 at or below the speed threshold or for resting contact; otherwise
-        /// mass × speed × scale, capped. massGrams is the striking body's mass.
+        /// Ruling #7a: damage = min(cap, 0.5 × mass_kg × (relSpeed − 2 m/s) × materialMult), only above 2 m/s; resting = 0.
+        /// massGrams is the striking body's mass; targetMultPermille is the struck piece's material multiplier. Floors to milli-HP.
         /// </summary>
-        public static int ComputeMilliHp(int relativeSpeedMmPerS, int massGrams, bool restingContact, DebrisDamageConfig cfg)
+        public static int ComputeMilliHp(int relativeSpeedMmPerS, int massGrams, int targetMultPermille, bool restingContact, DebrisDamageConfig cfg)
         {
-            if (restingContact || massGrams <= 0 || relativeSpeedMmPerS <= cfg.minSpeedMmPerS) return 0;
-            // g·mm/s = 1e-6 kg·m/s
+            if (restingContact || massGrams <= 0 || targetMultPermille <= 0 || relativeSpeedMmPerS <= cfg.minSpeedMmPerS) return 0;
             if (cfg.milliHpPerKgMetrePerS <= 0 || cfg.capMilliHp <= 0) return 0;
-            long momentum = (long)massGrams * relativeSpeedMmPerS;               // fits: int × int < 2^62
-            if (momentum >= long.MaxValue / cfg.milliHpPerKgMetrePerS) return cfg.capMilliHp; // overflow guard
-            long dmg = momentum * cfg.milliHpPerKgMetrePerS / 1000000L;
+            long excess = (long)relativeSpeedMmPerS - cfg.minSpeedMmPerS;           // mm/s
+            long momentum = (long)massGrams * excess;                                // g·mm/s = 1e-6 kg·m/s; < 2^63
+            long scale = (long)cfg.milliHpPerKgMetrePerS * targetMultPermille;       // milli-HP·permille per kg·m/s
+            if (momentum >= long.MaxValue / scale) return cfg.capMilliHp;             // overflow guard
+            long dmg = momentum * scale / 1000000000L;                                // 1e6 (units) × 1e3 (permille)
             return (int)Math.Min(dmg, (long)cfg.capMilliHp);
         }
 
-        public static int ComputeMilliHp(int relativeSpeedMmPerS, int massGrams, bool restingContact) =>
-            ComputeMilliHp(relativeSpeedMmPerS, massGrams, restingContact, DebrisDamageConfig.Default);
+        public static int ComputeMilliHp(int relativeSpeedMmPerS, int massGrams, int targetMultPermille, bool restingContact) =>
+            ComputeMilliHp(relativeSpeedMmPerS, massGrams, targetMultPermille, restingContact, DebrisDamageConfig.Default);
     }
 
     /// <summary>
