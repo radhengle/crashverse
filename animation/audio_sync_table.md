@@ -40,6 +40,7 @@ Frame = @60 fps from the start of the named state/trigger (negative = before). m
 | PU_DISARM | 0 / 0 | Armed → Disarm | power-down blip (not for Time Fracture) |
 | BOSS_TIDE_INTRO | 0 / 0 | Intro | rise, lantern ignite |
 | BOSS_TIDE_ARMS_RISE | 60 / 1000 after Intro start | Intro arms spread (1000–1800 ms, ease-out-back) | arms rise / chain creak |
+| BOSS_TIDE_DEFEAT_COLLAPSE | 210 / 3500 after Defeat start | final collapse into sea-stack | heavy rubble slam (haptic medium) |
 | BOSS_TIDE_JOINT_HIT / JOINT_BREAK | 0 / 0 | P1 | clang / metal snap |
 | BOSS_TIDE_ARMS_DROP | 0 / 0 | PhaseChange | arms fall crash (+36 f land) |
 | BOSS_TIDE_ARMS_LAND | 36 / 600 | PhaseChange | arms hit sea-stack/water |

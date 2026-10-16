@@ -81,3 +81,10 @@ Gameplay, timings that affect input, and audio are unchanged (audio events still
 
 ### Settings UI toggles
 Two rows, in order "Reduce Screen Shake", "Reduce Motion"; each row (v1 style: navy panel, label 36 px+, ON/OFF pill switch, row hit box ≥144 px). Toggle motion: knob slides 150 ms ease-out-quad, track colour cross-fade 150 ms (navy → cyan ON), no overshoot/bounce **in either mode**;  Preview: none (no shake demo). Toggle sfx `UI_TOGGLE`. Default OFF; Reduce Motion auto-ON with Android "Remove animations" (above).
+
+## Haptics timing (Animator decisions, 17 Oct, for audio/haptics.md and PR #37)
+- Haptics follow Reduce Motion (PM): off when Reduce Motion is on.
+- PU_GRAVITY_BURST: light tick at 1500 ms (implode start), peak pulse at 1600 ms when the burst ring fires.
+- Chain Reactor: medium pulse on PU_CHAIN_PULSE, then a light tick for each PU_CHAIN_LINK (80 ms stagger, so it clears the 40 ms rate limit). At most 5 link ticks per activation.
+- BOSS_TIDE_DEFEAT: strong pulse at 0 ms, then a second medium pulse at BOSS_TIDE_DEFEAT_COLLAPSE (+3500 ms).
+- BREAK_STEEL (non-joint): shake 0.03 m / 0.3° for 150 ms, light haptic. IMPACT_TERRAIN: 0.01 m for 80 ms is now final, with no haptic.

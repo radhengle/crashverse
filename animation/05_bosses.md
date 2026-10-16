@@ -17,7 +17,7 @@ Parts: plank armor, 2 steel shoulder joints (gold weak ring), brick shutter (emi
 | Shutter open | 350 | 21 | rotate open | ease-out-back | `BOSS_TIDE_SHUTTER_OPEN` |
 | Core hit (open) | 500 | 30 | core flash white; health shown **only** by crack steps on the model: intact → cracked (hit 1) → destroyed (hit 2); no HUD pips (OQ-B1) | — | `BOSS_TIDE_CORE_HIT` |
 | Shot on closed shutter | 200 | 12 | brick chip, no core reaction (SG-05) | — | `IMPACT_BRICK` |
-| Defeat cinematic | **4000 (confirmed 4.0 s)** | 240 | core implode 500, body crumbles top-down, collapse into sea-stack | ease-in | `BOSS_TIDE_DEFEAT` |
+| Defeat cinematic | **4000 (confirmed 4.0 s)** | 240 | core implode 500, body crumbles top-down, collapse into sea-stack (final collapse lands at 3500 ms / 210 f) | ease-in | `BOSS_TIDE_DEFEAT` (0), `BOSS_TIDE_DEFEAT_COLLAPSE` (+210 f / 3500 ms) |
 Shutter toggles after every shot starting open (SG-05); Animator just mirrors `ShutterOpen` bool from gameplay.
 
 ```mermaid
