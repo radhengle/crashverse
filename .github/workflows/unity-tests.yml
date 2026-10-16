@@ -20,7 +20,6 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      checks: write
     steps:
       - name: Free disk space (unityci editor image is large)
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
@@ -69,11 +68,9 @@ jobs:
           testMode: editmode
           artifactsPath: test-results/editmode
           customParameters: -nographics -logFile /github/workspace/unity-logs/Editor-editmode.log
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          checkName: EditMode test results
 
       - name: Guard EditMode - fail on 0 tests / skipped / inconclusive / failed
-        if: always() && steps.tests.outcome != 'skipped'
+        if: ${{ !cancelled() }}   # runs even if the test step was skipped/failed; missing XML => fail
         run: python3 qa/ci/assert_unity_results.py test-results/editmode
 
       # PlayMode runs as its own step (separate editor process) so a PlayMode crash can't zero out EditMode results.
@@ -91,8 +88,6 @@ jobs:
           testMode: playmode
           artifactsPath: test-results/playmode
           customParameters: -logFile /github/workspace/unity-logs/Editor-playmode.log
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          checkName: PlayMode test results
 
       - name: Guard PlayMode - fail on 0 tests / skipped / inconclusive / failed
         if: always() && steps.playmode.outcome != 'skipped'
@@ -115,3 +110,26 @@ jobs:
           path: test-results
           if-no-files-found: warn
           retention-days: 14
+
+  # Required-able aggregate: mark ONLY this check as required in branch protection.
+  # Fails unless every test job concluded 'success' (skipped/cancelled/failure => fail). No path filters on this workflow,
+  # so it runs on every PR; there is no "nothing relevant changed" pass.
+  unity-tests-gate:
+    name: unity-tests-gate
+    needs: [ editmode ]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    permissions: {}
+    steps:
+      - name: Require all Unity test jobs = success
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          echo "$RESULTS"
+          python3 - <<'PY'
+          import json, os, sys
+          needs = json.loads(os.environ["RESULTS"]); bad = {k: v["result"] for k, v in needs.items() if v["result"] != "success"}
+          if not needs: sys.exit("::error::gate has no upstream jobs")
+          if bad: sys.exit(f"::error::Unity tests not green: {bad} (skipped/cancelled count as failure)")
+          print("unity-tests-gate: all test jobs succeeded:", list(needs))
+          PY
