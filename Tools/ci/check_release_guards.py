@@ -55,7 +55,31 @@ def check_config():
         bad.append("ProjectSettings: AndroidTargetArchitectures must be 3 (ARMv7 | ARM64)")
     if not re.search(r"scriptingBackend:\s*\n\s*Android:\s*1", ps_text()):
         bad.append("ProjectSettings: Android scripting backend must be IL2CPP (1)")
+    # BUG-20: UI input module must match Active Input Handling, and the legacy module needs its axes.
+    pkgs = (ROOT / "Packages/manifest.json").read_text()
+    uses_new = "com.unity.inputsystem" in pkgs or re.search(r"activeInputHandler:\s*[12]", ps_text())
+    ui = (ROOT / "Assets/_Project/Scripts/UI/UIFramework.cs").read_text()
+    if uses_new and "InputSystemUIInputModule" not in ui: bad.append("Input System active but UI does not use InputSystemUIInputModule")
+    if not uses_new:
+        if "StandaloneInputModule" not in ui: bad.append("Legacy Input Manager active but UI has no StandaloneInputModule")
+        im = ROOT / "ProjectSettings/InputManager.asset"
+        names = input_axes(im) if im.exists() else set()
+        for a in ("Horizontal", "Vertical", "Submit", "Cancel"):
+            if a not in names: bad.append(f"ProjectSettings/InputManager.asset missing axis '{a}' (StandaloneInputModule throws, all taps dead: BUG-20)")
     return bad
+
+def input_axes(path):
+    """M1: parse InputManager.asset structurally: only m_Name entries that are list items directly under m_Axes count."""
+    names, in_axes, item_indent = set(), False, None
+    for line in path.read_text().splitlines():
+        if re.match(r"^\s*m_Axes:\s*$", line): in_axes = True; continue
+        if not in_axes: continue
+        if re.match(r"^\S", line) or re.match(r"^  \S", line) and not line.startswith("  -"): break  # left m_Axes
+        m = re.match(r"^(\s*)- (\w+):\s*(.*)$", line)
+        if m: item_indent = len(m.group(1)); cur = {m.group(2): m.group(3)}
+        m2 = re.match(r"^(\s*)m_Name:\s*(.+?)\s*$", line)
+        if m2 and item_indent is not None and len(m2.group(1)) == item_indent + 2: names.add(m2.group(2))
+    return names
 
 def ps_text(): return (ROOT / "ProjectSettings/ProjectSettings.asset").read_text()
 

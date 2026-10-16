@@ -10,6 +10,10 @@ on:
         type: choice
         options: [dev, release]
         default: dev
+      publish_tag:
+        description: "If set (e.g. dev-build-5), publish a prerelease after every gate passes"
+        type: string
+        default: ""
   push:
     branches: [ main ]
     paths:
@@ -55,7 +59,9 @@ jobs:
   build:
     name: GameCI Unity Android (${{ github.event.inputs.profile || 'dev' }})
     needs: guards
-    if: github.ref == 'refs/heads/main'
+    # M2: signed builds only from main, or a dispatch on main / dev/* (dispatch needs repo write).
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/dev/'))
+    environment: dev-signing
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -88,6 +94,14 @@ jobs:
           restore-keys: |
             Library-Android-${{ env.CRASHVERSE_BUILD_PROFILE }}-
 
+      - name: Decode persistent dev keystore (never committed; separate from the Play upload key)
+        env:
+          DEV_KEYSTORE_BASE64: ${{ secrets.DEV_KEYSTORE_BASE64 }}
+        run: |
+          set -e
+          [ -n "$DEV_KEYSTORE_BASE64" ] || { echo "::error::DEV_KEYSTORE_BASE64 secret missing"; exit 1; }
+          mkdir -p build-secrets && umask 077 && echo "$DEV_KEYSTORE_BASE64" | base64 -d > build-secrets/dev.keystore
+
       - name: Build APK
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
         env:
@@ -95,6 +109,11 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           CRASHVERSE_BUILD_PROFILE: ${{ env.CRASHVERSE_BUILD_PROFILE }}
+          CRASHVERSE_VERSION_CODE: ${{ github.run_number }}
+          CRASHVERSE_KEYSTORE_PATH: build-secrets/dev.keystore
+          CRASHVERSE_KEYSTORE_PASS: ${{ secrets.DEV_KEYSTORE_PASS }}
+          CRASHVERSE_KEYALIAS_NAME: ${{ secrets.DEV_KEYALIAS_NAME }}
+          CRASHVERSE_KEYALIAS_PASS: ${{ secrets.DEV_KEYALIAS_PASS }}
         with:
           targetPlatform: Android
           unityVersion: 2022.3.50f1
@@ -104,6 +123,11 @@ jobs:
           versioning: Custom # no git-derived versioning (it ran `git fetch`, which fails without persisted credentials)
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
+          androidKeystoreName: build-secrets/dev.keystore
+          androidKeystoreBase64: ${{ secrets.DEV_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.DEV_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.DEV_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.DEV_KEYALIAS_PASS }}
 
       - name: Assert 64-bit native libs (arm64-v8a libil2cpp.so + libunity.so)
         run: |
@@ -114,6 +138,59 @@ jobs:
             grep -q "lib/arm64-v8a/$lib" native_libs.txt || { echo "::error::$f is missing lib/arm64-v8a/$lib"; exit 1; }
           done
 
+      - name: Get build-tools 35 (zipalign -P 16, apksigner)
+        run: |
+          set -e
+          curl -fsSLo bt.zip https://dl.google.com/android/repository/build-tools_r35_linux.zip
+          echo "bd3a4966912eb8b30ed0d00b0cda6b6543b949d5ffe00bea54c04c81e1561d88  bt.zip" | sha256sum -c - # pinned (Google repo sha1 2cfaa0bb…07bc)
+          unzip -q bt.zip -d bt && echo "BT=$PWD/$(ls -d bt/* | head -1)" >> $GITHUB_ENV
+
+      - name: zipalign -P 16 + re-sign v1+v2+v3 with the persistent dev key
+        env:
+          KS_PASS: ${{ secrets.DEV_KEYSTORE_PASS }}
+          KA_NAME: ${{ secrets.DEV_KEYALIAS_NAME }}
+          KA_PASS: ${{ secrets.DEV_KEYALIAS_PASS }}
+        run: |
+          set -e
+          sudo chown -R "$(id -u):$(id -g)" build build-secrets # written by the GameCI container as root
+          f=$(ls build/Android/*.apk | head -1)
+          "$BT/zipalign" -f -P 16 -v 4 "$f" aligned.apk > /dev/null
+          "$BT/apksigner" sign --ks build-secrets/dev.keystore --ks-pass env:KS_PASS --ks-key-alias "$KA_NAME" --key-pass env:KA_PASS \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --out "$f" aligned.apk
+          rm -f aligned.apk "$f.idsig"
+          "$BT/zipalign" -c -P 16 -v 4 "$f" | tail -1
+          # Phone A/B variant (BUG-22): same build without lib/x86_64 (dev-build-3 had arm only and installs on the user's phone)
+          arm="${f%.apk}-arm-only.apk"; cp "$f" stripped.apk
+          zip -q -d stripped.apk 'lib/x86_64/*' 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/MANIFEST.MF'
+          "$BT/zipalign" -f -P 16 4 stripped.apk aligned.apk
+          "$BT/apksigner" sign --ks build-secrets/dev.keystore --ks-pass env:KS_PASS --ks-key-alias "$KA_NAME" --key-pass env:KA_PASS \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --out "$arm" aligned.apk
+          rm -f stripped.apk aligned.apk "$arm.idsig"
+          "$BT/apksigner" verify -v "$arm" | head -5
+
+      - name: Remove keystore from the workspace
+        if: always()
+        run: sudo rm -rf build-secrets
+
+      - name: Verify signature, cert pin, versionCode, no testOnly (publish gate)
+        env:
+          EXPECTED_VC: ${{ github.run_number }}
+        run: |
+          set -e
+          for f in build/Android/*.apk; do
+          "$BT/apksigner" verify --print-certs -v --min-sdk-version 23 "$f" | tee sig.txt  # v1 is only reported when checked below API 24
+          for v in "v1 scheme (JAR signing)" "v2 scheme (APK Signature Scheme v2)" "v3 scheme (APK Signature Scheme v3)"; do
+            grep -qF "Verified using $v: true" sig.txt || { echo "::error::not signed with $v"; exit 1; }
+          done
+          "$BT/zipalign" -c -P 16 4 "$f" || { echo "::error::not zipaligned (-P 16)"; exit 1; }
+          sha=$(grep -m1 "Signer #1 certificate SHA-256 digest" sig.txt | awk '{print $NF}')
+          [ "$sha" = "$(tr -d ' \n' < Tools/ci/dev_cert_sha256.txt)" ] || { echo "::error::signing cert $sha != pinned dev cert (Tools/ci/dev_cert_sha256.txt)"; exit 1; }
+          "$BT/aapt2" dump badging "$f" | tee badging.txt | head -3
+          grep -q "versionCode='$EXPECTED_VC'" badging.txt || { echo "::error::versionCode is not run_number $EXPECTED_VC"; exit 1; }
+          if "$BT/aapt2" dump xmltree --file AndroidManifest.xml "$f" | grep -qi testOnly; then echo "::error::testOnly set"; exit 1; fi
+          echo "OK $f cert=$sha versionCode=$EXPECTED_VC"
+          done
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -121,3 +198,68 @@ jobs:
           path: build/Android/*.apk
           if-no-files-found: error
           retention-days: 14
+
+  emulator-smoke:
+    name: Emulator smoke API ${{ matrix.api }} x86_64 1080x2340 (publish gate)
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [34, 36] # 36 = Android 16, the user's Nothing Phone 3a. arm64 images can't boot on x86 runners.
+    steps:
+      - name: Checkout (scripts only)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: Tools/ci
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: crashverse-android-apk
+          path: apk
+      - name: QA first-run flow (age gate → map → L1 → win → retry → fail)
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: ${{ matrix.api }}
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          cores: 4
+          ram-size: 4096M
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340
+          script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: emulator-smoke-api${{ matrix.api }}
+          path: smoke_out
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: Publish prerelease (only after signing gate + emulator smoke on every API)
+    needs: [build, emulator-smoke]
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_tag != ''
+    runs-on: ubuntu-24.04
+    environment: dev-builds
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: crashverse-android-apk
+          path: apk
+      - name: Create prerelease (pending QA review)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.inputs.publish_tag }}
+        run: |
+          gh release create "$TAG" apk/*.apk -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "$TAG (pending QA review)" \
+            --notes "Built from $GITHUB_SHA, run $GITHUB_RUN_ID. Signed with the persistent dev key (cert pinned in Tools/ci/dev_cert_sha256.txt), versionCode $GITHUB_RUN_NUMBER. Passed apksigner + emulator smoke (API 34/36). Pending QA review."
