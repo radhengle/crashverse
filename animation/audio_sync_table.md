@@ -37,13 +37,14 @@ Frame = @60 fps from the start of the named state/trigger (negative = before). m
 | PU_TIME_START / WARN / END | 0 / 0 **on arm**; 210 / 3500; 240 / 4000 real time (or END at impact of a shot fired during the slow; WARN skipped then) | Active | time crack, ticking, shatter |
 | PU_DISARM | 0 / 0 | Armed → Disarm | power-down blip (not for Time Fracture) |
 | BOSS_TIDE_INTRO | 0 / 0 | Intro | rise, lantern ignite |
+| BOSS_TIDE_ARMS_RISE | 60 / 1000 after Intro start | Intro arms spread (1000–1800 ms, ease-out-back) | arms rise / chain creak |
 | BOSS_TIDE_JOINT_HIT / JOINT_BREAK | 0 / 0 | P1 | clang / metal snap |
 | BOSS_TIDE_ARMS_DROP | 0 / 0 | PhaseChange | arms fall crash (+36 f land) |
 | BOSS_TIDE_ARMS_LAND | 36 / 600 | PhaseChange | arms hit sea-stack/water |
 | BOSS_TIDE_CHEST_OPEN | 42 / 700 | PhaseChange | plates grind open |
 | BOSS_TIDE_PHASE2 | 75 / 1250 | PhaseChange | core reveal flare |
-| BOSS_TIDE_TELL | 0 / 0 (pulses at 0, 30 f) | Tell | warning hum ×2 (exactly 2 Hz) |
-| BOSS_TIDE_SHUTTER_CLOSE / OPEN | 18 / 300 (thunk at end of 300 ms tween) ; 0 / 0 | shutter | heavy brick slam / grind |
+| BOSS_TIDE_TELL | 0 / 0 (pulses at 0, 25, 50 f) | Tell | warning hum on each pulse (2.4 Hz = 144 BPM beat) |
+| BOSS_TIDE_SHUTTER_CLOSE / OPEN | 0 / 0 = tween START (sound file carries its thunk at +300 ms / 18 f, end of tween) ; 0 / 0 | shutter | heavy brick slam / grind |
 | BOSS_TIDE_CORE_HIT | 0 / 0 | CoreHit | glass crack + roar |
 | BOSS_TIDE_DEFEAT | 0 / 0 | Defeat | collapse, clip length 4.0 s (confirmed) |
 | BOSS_TITAN_INTRO / HIT / STAGE / DEFEAT | 0 / 0 | Titan states | lava rise, iron clang (flinch), stagger groan (at 25/50/75%), meltdown |

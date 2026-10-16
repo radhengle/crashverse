@@ -64,7 +64,7 @@ Setting `ReduceMotion` (bool, **default OFF**), stored in local player prefs + p
 | Hit stop (02) | capped at 33 ms (2 f) and timeScale 0.3 (not 0.05) |
 | Flashes (muzzle, hit flash, joint ring, core hit, combo edge flash) | peak emissive/additive intensity ×0.4, alpha ≤ 0.5, duration ≥ 100 ms ramps (no 1–2 f strobe) |
 | Full-screen flashes / overlays | none: x20 combo edge flash off, Time Fracture overlay = static 25% tint fading 300 ms, boss defeat flare off, win rays static |
-| Repeating pulses (shutter tell 2 Hz, hint pulse, PowerArmed) | **gameplay tells kept** (shutter tell is a rule signal, DP L10) but as colour change, amplitude ×0.5, no brightness strobe > 3 Hz |
+| Repeating pulses (shutter tell 2.4 Hz, hint pulse, PowerArmed) | **gameplay tells kept** (shutter tell is a rule signal, DP L10) but as colour change, amplitude ×0.5, no brightness strobe > 3 Hz |
 | Camera blends (FollowShot) | FollowShot off: camera stays in AimCam framing; blends ≥ 400 ms ease-in-out |
 | UI motion (06) | overshoots removed (out-back → out-quad), scale pops capped 1.1, confetti ×0.25, coin fly kept (4 coins) |
 | Idle fidget / breathing loops | fidget off, idle amplitudes ×0.5 |
@@ -74,7 +74,7 @@ Gameplay, timings that affect input, and audio are unchanged (audio events still
 - 01 Cannon: no fire shake; muzzle flash ×0.4; recoil motion kept (readability); fidget off.
 - 02 Impacts: hit flash capped; hit stop ≤33 ms; particle counts unchanged.
 - 03 Collapse: no collapse-land shake; dust unchanged.
-- 04 Power-ups: Shockwave ring/Chain arcs alpha ≤0.5; Time Fracture no full-screen crack animation; Gravity burst no shake.
+- 04 Power-ups: Shockwave ring/Chain arcs alpha ≤0.5; Shockwave rapid link flashes collapse into ONE 100 ms tint (alpha ≤0.5, ease-out) per activation; Time Fracture no full-screen crack animation, keeps its static 30% env desaturation (a non-flashing state cue) under the static 25% tint; Gravity burst no shake.
 - 05 Bosses: phase change/defeat no shake or flare; shutter tell kept as colour change.
 - 06 UI: see table; star pops 0→1.1→1.
 - 07: shake 0, slow-mo off, FollowShot off.
