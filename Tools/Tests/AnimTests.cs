@@ -4,6 +4,13 @@ using System.IO;
 using Crashverse.Feel;
 
 /// <summary>Animation Spec v1 (animation/01–07): easing/tween maths, aim spring, cannon motion curves. Engine-free, runs in CI (dotnet run --project Tools/Tests).</summary>
+class AnimMemPrefs : IMotionPrefs
+{
+    readonly Dictionary<string, bool> _d = new Dictionary<string, bool>();
+    public bool TryGet(string key, out bool v) => _d.TryGetValue(key, out v);
+    public void Set(string key, bool v) => _d[key] = v;
+}
+
 static class AnimTests
 {
     static bool Near(float a, float b, float eps = 1e-3f) => Math.Abs(a - b) <= eps;
@@ -11,6 +18,54 @@ static class AnimTests
 
     public static void Register()
     {
+        T.Add("SHAKE_cap_pool_and_decay", () =>
+        {
+            var st = new ShakeStack();
+            for (int i = 0; i < 50; i++) st.Add(ShakeTable.BossPhase);
+            T.True(st.Count == ShakeStack.Capacity, "fixed pool, never grows");
+            var (p, r) = st.Tick(0.001f); T.True(Near(0.15f, p, 1e-4f) && Near(1.5f, r, 1e-4f), "combined cap 0.15 m / 1.5°");
+            var one = new ShakeStack(); one.Add(ShakeTable.Fire);
+            var (p0, r0) = one.Tick(0f); T.True(Near(0.06f, p0) && Near(0.6f, r0), "fire 0.06 m / 0.6° at t0");
+            var (p1, _) = one.Tick(0.09f); T.True(p1 < 0.06f && p1 > 0f, "decays (ease-out quad)");
+            one.Tick(0.1f); T.Eq(0, one.Count, "fire shake gone after 180 ms");
+            var two = new ShakeStack(); two.Add(ShakeTable.Fire); two.Add(ShakeTable.ImpactWood);
+            var (ps, rs) = two.Tick(0f); T.True(Near(0.08f, ps) && Near(0.8f, rs), "shakes add below the cap");
+            T.True(two.Frequency > 9f && two.Frequency < 14f, "amplitude-weighted frequency");
+            var off = new ShakeStack { Scale = 0f }; off.Add(ShakeTable.Fire); T.Eq(0, off.Count, "scale 0 (Reduce shake/motion) adds nothing");
+            var live = new ShakeStack(); live.Add(ShakeTable.Fire); live.Scale = 0f; var (pz, rz) = live.Tick(0.01f); T.True(pz == 0f && rz == 0f, "toggling mid-shake zeroes it at once");
+            var full = new ShakeStack(); for (int i = 0; i < ShakeStack.Capacity; i++) full.Add(ShakeTable.ImpactWood); full.Add(ShakeTable.BossPhase);
+            var (pf, _) = full.Tick(0f); T.True(pf >= 0.12f, "when full, a big shake replaces the weakest");
+        });
+        T.Add("SHAKE_router_table_07", () =>
+        {
+            ShakeSpec s;
+            T.True(ShakeRouter.TryGet(AnimEvents.WreckerFire, out s) && s.pos == 0.06f && s.rot == 0.6f && s.freq == 9 && s.durationMs == 180, "fire 0.06/0.6°/9 Hz/180 ms");
+            T.True(ShakeRouter.TryGet("IMPACT_WOOD", out s) && s.durationMs == 100, "impact wood");
+            T.True(ShakeRouter.TryGet("BREAK_BRICK", out s) && s.pos == 0.04f, "brick break");
+            T.True(ShakeRouter.TryGet("BREAK_STEEL_JOINT", out s) && s.pos == 0.06f && s.freq == 12, "steel joint");
+            T.True(ShakeRouter.TryGet(AnimEvents.CollapseLand, out s) && s.durationMs == 250, "collapse land");
+            T.True(ShakeRouter.TryGet("EXPLODE_CRATE", out s) && s.pos == 0.10f && ShakeRouter.TryGet("EXPLODE_BARREL", out _) && ShakeRouter.TryGet("PU_CHAIN_PULSE", out _), "explosion / chain reactor (+ deprecated barrel alias)");
+            T.True(ShakeRouter.TryGet("PU_GRAVITY_BURST", out s) && s.pos == 0.08f, "gravity burst");
+            T.True(ShakeRouter.TryGet("BOSS_TIDE_ARMS_DROP", out s) && s.durationMs == 600 && ShakeRouter.TryGet(AnimEvents.BossTitanDefeat, out _), "boss phase / defeat");
+            T.True(!ShakeRouter.TryGet(AnimEvents.UiBtnPress, out _) && !ShakeRouter.TryGet(AnimEvents.WreckerFireAnticipate, out _), "UI / anticipation don't shake");
+        });
+        T.Add("SHAKE_settings_reduce_shake_vs_motion", () =>
+        {
+            var prefs = new AnimMemPrefs();
+            var m = new MotionSettings(prefs, false);
+            T.True(!m.ReduceShake && !m.ReduceMotion, "both OFF by default");
+            T.Eq(1f, m.ShakeScale(QualityTier.Mid), "full shake"); T.Eq(0.7f, m.ShakeScale(QualityTier.Low), "low tier ×0.7");
+            m.SetReduceShake(true); T.Eq(0f, m.ShakeScale(QualityTier.Mid), "Reduce shake → shake 0"); T.True(!m.ReduceMotion && m.SlowMoAllowed(false, false), "…and nothing else");
+            m.SetReduceShake(false); m.SetReduceMotion(true);
+            T.True(m.ReduceShakeEffective && m.ReduceShakeLocked && !m.ReduceShake, "Reduce motion implies + locks Reduce shake, stored value untouched");
+            T.Eq(0f, m.ShakeScale(QualityTier.High), "Reduce motion forces shake off");
+            m.SetReduceMotion(false); T.True(!m.ReduceShakeEffective && !m.ReduceShakeLocked, "turning Reduce motion off restores the stored Reduce shake");
+            var auto = new MotionSettings(new AnimMemPrefs(), true);
+            T.True(auto.ReduceMotion && auto.ReduceMotionIsAuto && auto.ShakeScale(QualityTier.Mid) == 0f, "auto-on when Android animator duration scale = 0");
+            auto.SetReduceMotion(false); T.True(!auto.ReduceMotion && !auto.ReduceMotionIsAuto, "player can turn it off; explicit choice wins");
+            var sc = Src("Assets/_Project/Scripts/UI/Screens.cs"); T.True(sc.Contains("_shakeBtn.interactable = !m.ReduceShakeLocked"), "settings row greyed while locked");
+            var fd = Src("Assets/_Project/Scripts/Feel/FeelDirector.cs"); T.True(fd.Contains("animator_duration_scale"), "OS auto-on read on Android");
+        });
         T.Add("ANIM_ease_endpoints_all_types", () =>
         {
             foreach (EaseType e in Enum.GetValues(typeof(EaseType)))

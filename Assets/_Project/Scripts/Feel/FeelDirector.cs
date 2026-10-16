@@ -44,7 +44,7 @@ namespace Crashverse.Feel
         readonly ShakeStack _shake = new ShakeStack();
         readonly TimeScaleGovernor _time = new TimeScaleGovernor();
         TitanAnimStateMachine _titan;
-        float _seed; int _lastTitanDmg;
+        float _seed, _noisePhase; int _lastTitanDmg, _impactShakeFrame = -1;
 
         public void Bind(GameSession s, OrbitCamera cam, AimController aim)
         {
@@ -70,20 +70,29 @@ namespace Crashverse.Feel
             }
         }
 
-        void OnEnable() { AnimEventBus.Raised += OnEvent; Projectile.FirstImpact += OnImpact; }
-        void OnDisable() { AnimEventBus.Raised -= OnEvent; Projectile.FirstImpact -= OnImpact; Time.timeScale = 1f; }
+        void OnEnable() { AnimEventBus.Raised += OnEvent; Projectile.FirstImpact += OnImpact; CameraShake.Bind(_shake); }
+        void OnDisable() { AnimEventBus.Raised -= OnEvent; Projectile.FirstImpact -= OnImpact; CameraShake.Unbind(_shake); _shake.Clear(); Time.timeScale = 1f; }
 
         void OnEvent(string e, object _)
         {
+            // 07 shake table, routed by event name (fire, impacts, breaks, collapse, explosions, gravity burst, boss phase/defeat).
+            if (ShakeRouter.TryGet(e, out var spec) && !(ShakeRouter.IsImpact(e) && _impactShakeFrame == Time.frameCount))
+            {
+                _shake.Add(spec);
+                if (ShakeRouter.IsImpact(e)) _impactShakeFrame = Time.frameCount;
+            }
             switch (e)
             {
                 case AnimEvents.ReloadStart: _wrecker.GateReady = false; _wrecker.Fire(); _camSm.Fire(); _time.OnShotFired(); break;
-                case AnimEvents.WreckerFire: _shake.Add(ShakeTable.Fire); break;
                 case AnimEvents.WreckerReady: _readyMs = 0f; _wrecker.GateReady = true; _camSm.Settled(_s != null && (_s.State == SessionState.Won || _s.State == SessionState.Failed)); break;
             }
         }
 
-        void OnImpact(Projectile p) { _camSm.FirstImpact(); _shake.Add(ShakeTable.ImpactWood); _time.HitStop(50f); }
+        void OnImpact(Projectile p)
+        {
+            _camSm.FirstImpact(); _time.HitStop(50f);
+            if (_impactShakeFrame != Time.frameCount) { _shake.Add(ShakeTable.ImpactWood); _impactShakeFrame = Time.frameCount; } // one impact shake per frame (IMPACT_* events may also arrive)
+        }
 
         void Update()
         {
@@ -105,7 +114,8 @@ namespace Crashverse.Feel
             {
                 _shake.Scale = m.ShakeScale(tier);
                 var (pos, rot) = _shake.Tick(rdt);
-                float t = Time.unscaledTime * 25f + _seed;
+                _noisePhase += rdt * Mathf.Max(6f, _shake.Frequency); // 07 table frequency (6–14 Hz), amplitude-weighted
+                float t = _noisePhase + _seed;
                 _cam.feelOffset = new Vector3(Mathf.PerlinNoise(t, 0f) - 0.5f, Mathf.PerlinNoise(0f, t) - 0.5f, 0f) * (2f * pos);
                 _cam.feelRollDeg = (Mathf.PerlinNoise(t, t) - 0.5f) * 2f * rot;
                 bool follow = _camSm.State == CamState.FollowShot && Projectile.Latest != null && m.FollowShotEnabled;
