@@ -49,6 +49,8 @@ public static class ProdGuard
             if (!SecretVersions.IsPinned(x.Opt.PurchaseBindingPreviousSecretVersion)) bad.Add("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS must be a numeric version");
             else if (x.Opt.PreviousObfuscationPepper is not { Length: >= 32 }) bad.Add("previous purchase-binding secret version not loaded");
             else if (x.Opt.PurchaseBindingPreviousSecretVersion == x.Opt.PurchaseBindingSecretVersion) bad.Add("previous purchase-binding version equals the current one");
+            if (x.Opt.PreviousAcceptUntilUnixMs is not long until) bad.Add("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL must be set (ISO UTC date) when _PREVIOUS is set");
+            else if (until <= x.NowMs) bad.Add("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL has passed: remove SECRET_VERSION_PURCHASE_BINDING_PREVIOUS");
         }
         if (x.Opt.XEnabled) Check("x", x.X);
         if (x.Tokens == null) bad.Add("tokens: not configured");
