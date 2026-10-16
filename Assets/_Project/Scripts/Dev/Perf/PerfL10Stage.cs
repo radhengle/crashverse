@@ -107,6 +107,14 @@ namespace Crashverse.DevTools.Perf
             Debug.Log($"PERFL10_RUN_START,run={RunIndex},seed=0x{PerfL10Fixture.Seed:X16},tier={tier},blocks={_session.builder.Blocks.Count}");
         }
 
+        bool _retryPending;
+        void Update()
+        {
+            if (!_retryPending) return;
+            _retryPending = false;
+            _session.Retry(); _session.aim.launchSpeed = PerfL10Fixture.LaunchSpeed; BeginRun();
+        }
+
         void OnInput(int tick, InputEvent e)
         {
             if (e.type != PerfL10Fixture.ArmInput) return;
@@ -124,7 +132,7 @@ namespace Crashverse.DevTools.Perf
 
         void OnTick(int tick)
         {
-            if (Done) return;
+            if (Done || _retryPending) return;
             if (DebrisPool.Instance != null) Stats.SampleDebris(DebrisPool.Instance.ActiveCount);
             int since = tick - PerfL10Fixture.FireTick;
             bool tailDone = _lastCollapseEndTick >= 0 && tick - _lastCollapseEndTick >= tailTicks;
@@ -134,7 +142,8 @@ namespace Crashverse.DevTools.Perf
             Results.Add(new PerfL10Run { hit = Stats.Hit, hitRow = Stats.HitRow, hitY = Stats.HitY, saturatedMs = Stats.SaturatedMs, peakDebris = Stats.PeakDebris, hash = Stats.Hash, breaks = Stats.Breaks });
             if (RunIndex == 0) _firstHash = Stats.Hash; else if (Stats.Hash != _firstHash) _mismatch = true;
             RunIndex++;
-            if (RunIndex < runs) { _session.Retry(); _session.aim.launchSpeed = PerfL10Fixture.LaunchSpeed; BeginRun(); return; }
+            // Retry outside the sim tick: SimRunner.FixedUpdate sets Tick = t + 1 after Ticked, which would overwrite BeginRun's 0.
+            if (RunIndex < runs) { _retryPending = true; return; }
             Done = true;
             if (runs > 1) Debug.Log($"PERFL10_DETERMINISM,runs={runs},result={(_mismatch ? "MISMATCH" : "MATCH")},hash={_firstHash:X16}");
         }
