@@ -723,6 +723,18 @@ namespace Crashverse.Feel
     /// Raises BOSS_TIDE_DEFEAT_COLLAPSE once, 3500 ms (unscaled) after defeat start; Cancel() on level exit / reset. Engine-free.
     /// TODO(anim): when the Tidewarden rig defeat clip lands, this moves to an anim event at frame 210 (+3500 ms) on the clip and this timer is removed.
     /// </summary>
+    /// <summary>
+    /// BOSS_TIDE_DEFEAT is raised once per defeat, by whichever path gets there first: TidewardenController.Defeat() (code-driven, live today)
+    /// or TidewardenAnimStateMachine.CoreHit(). Reset() on level bind / exit / reset.
+    /// TODO(anim): when the Tidewarden rig defeat clip lands, DEFEAT moves to the clip's start event and this guard goes with it.
+    /// </summary>
+    public static class TideDefeatEvent
+    {
+        public static bool Raised { get; private set; }
+        public static bool RaiseOnce() { if (Raised) return false; Raised = true; AnimEventBus.Raise(AnimEvents.BossTideDefeat); return true; }
+        public static void Reset() => Raised = false;
+    }
+
     public sealed class TideDefeatCollapseTimer
     {
         public const float DelayMs = 3500f; // 210 f @ 60 fps
@@ -762,7 +774,7 @@ namespace Crashverse.Feel
         public void CoreHit()
         {
             CoreCracks = Math.Min(2, CoreCracks + 1); AnimEventBus.Raise(AnimEvents.BossTideCoreHit, CoreCracks);
-            if (CoreCracks >= 2) { AnimEventBus.Raise(AnimEvents.BossTideDefeat); Go(TideAnimState.Defeat); } else Go(TideAnimState.CoreHit);
+            if (CoreCracks >= 2) { TideDefeatEvent.RaiseOnce(); Go(TideAnimState.Defeat); } // skipped if Defeat() already raised it else Go(TideAnimState.CoreHit);
         }
         protected override float DurationMs(TideAnimState s)
         {

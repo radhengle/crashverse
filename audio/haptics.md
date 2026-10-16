@@ -39,7 +39,7 @@ Each bucket is a single `VibrationEffect.createOneShot(ms, amp)`, built once and
 | `EXPLODE_CRATE` (alias `EXPLODE_BARREL`) | Explosion 0.10 / 1.0° | 0.67 | 3 `break_med` |
 | `PU_CHAIN_PULSE` | Explosion 0.10 / 1.0° | 0.67 | 2 `impact` (medium override) ✅ Animator |
 | `PU_CHAIN_LINK` | none (haptic only) | — | 1 `light_tick` per link, 80 ms stagger, max 5 per activation (count resets on PULSE) ✅ Animator |
-| `BOSS_TIDE_DEFEAT_COLLAPSE` (new, +210 f / 3500 ms) | none (haptic only) | — | 2 `impact` (medium) ✅ Animator. **Animator must raise this event from the defeat clip** |
+| `BOSS_TIDE_DEFEAT_COLLAPSE` (new, +210 f / 3500 ms) | none (haptic only) | — | 2 `impact` (medium) ✅ Animator. Until the rig clip lands, **both** `BOSS_TIDE_DEFEAT` and this event are raised from code-driven `TidewardenController.Defeat()`: DEFEAT immediately (once per defeat, `TideDefeatEvent`), COLLAPSE via `TideDefeatCollapseTimer` (+3500 ms unscaled, once, cancelled on exit/reset). Then both move to the clip (frame 0 / frame 210) |
 | `BOSS_TIDE_PHASE2`, `BOSS_TIDE_DEFEAT`, `BOSS_TITAN_STAGE`, `BOSS_TITAN_DEFEAT` | BossPhase 0.12 / 1.2° | 0.80 | 4 `boom` 60 ms / 255 ★ |
 | `PHYS_IMPACT` medium/heavy | by material: wood/glass → ImpactWood, brick → BrickHit, steel → SteelRing, terrain → Terrain | | 1 `light_tick` (terrain: none) |
 | `PHYS_IMPACT` light, `PHYS_CRACK`, `PHYS_COLLAPSE_START` | none | — | none |
@@ -81,7 +81,7 @@ The pulse fires on the **same frame** as the routed event, which is the SFX tran
 | 3 | `COLLAPSE_LAND` | 0 / 0 per segment contact | landings within 40 ms → one pulse, strongest material (§4) | ✅ Sound Manager |
 | 4 | `PU_GRAVITY_BURST` | 90 / 1500; peak 1600 | light tick at 1500 ms (implode start), `break_med` at 1600 ms burst ring (scheduled, lead −20 → 1580 ms) | ✅ Animator |
 | 5 | `PU_CHAIN_PULSE` / `PU_CHAIN_LINK` | 0; links +5 f (80 ms) each | medium on PULSE; light tick per LINK, max 5 per activation | ✅ Animator |
-| 6 | `BOSS_TIDE_DEFEAT` / `BOSS_TIDE_DEFEAT_COLLAPSE` | 0 / 0; +210 f / 3500 ms (clip 4.0 s) | strong `boom` at start, medium at the new DEFEAT_COLLAPSE event (Animator raises it from the clip) | ✅ Animator |
+| 6 | `BOSS_TIDE_DEFEAT` / `BOSS_TIDE_DEFEAT_COLLAPSE` | 0 / 0; +210 f / 3500 ms (clip 4.0 s) | strong `boom` at start, medium at the new DEFEAT_COLLAPSE event. Until the rig clip lands, both events are raised from code-driven `Defeat()` (DEFEAT once via `TideDefeatEvent`, COLLAPSE via the 3500 ms unscaled timer) | ✅ Animator |
 | 7 | Haptic lead offset | `HapticTiming.LeadMs`, default **−20 ms** | see below | ✅ Sound Manager |
 | 8 | `BREAK_STEEL`; `IMPACT_TERRAIN` | 0 / 0 | BREAK_STEEL routed: shake 0.03 m / 0.3° 150 ms + light tick. IMPACT_TERRAIN final 0.01 m 80 ms, no haptic | ✅ Animator |
 | — | `BOSS_TIDE_ARMS_LAND` 36 / 600, `BOSS_TIDE_PHASE2` 75 / 1250, `IMPACT_*`/`BREAK_*` 0 / 0 | | on the event | as routed |

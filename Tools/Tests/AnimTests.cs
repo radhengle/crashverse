@@ -150,9 +150,27 @@ static class AnimTests
                 var c = new TideDefeatCollapseTimer(); c.Start(); c.Tick(3000f); c.Cancel(); c.Tick(1000f); T.Eq(1, n, "cancelled on exit/reset");
                 c.Start(); c.Tick(3499f); T.Eq(1, n, "re-armed after reset, not yet"); c.Tick(1f); T.Eq(2, n, "new defeat after reset fires");
                 var src = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs");
-                T.True(src.Contains("_defeatCollapse.Start()") && src.Contains("Time.unscaledDeltaTime") && src.Contains("OnDisable() => _defeatCollapse.Cancel()") && src.Contains("TODO(anim)"), "wired: defeat start, unscaled tick, cancel on exit, TODO");
+                T.True(src.Contains("_defeatCollapse.Start()") && src.Contains("Time.unscaledDeltaTime") && src.Contains("_defeatCollapse.Cancel();") && src.Contains("TODO(anim)"), "wired: defeat start, unscaled tick, cancel on exit, TODO");
             }
             finally { AnimEventBus.Raised -= on; }
+        });
+        T.Add("TIDE_defeat_raised_once", () =>
+        {
+            int n = 0; Action<string, object> on = (e, _) => { if (e == AnimEvents.BossTideDefeat) n++; };
+            AnimEventBus.Raised += on;
+            try
+            {
+                TideDefeatEvent.Reset();
+                T.True(TideDefeatEvent.RaiseOnce(), "Defeat() raises"); T.Eq(1, n, "raised");
+                var sm = new TidewardenAnimStateMachine(); sm.CoreHit(); sm.CoreHit();
+                T.Eq(1, n, "state machine CoreHit path skips: exactly once per defeat"); T.True(sm.State == TideAnimState.Defeat, "SM still enters Defeat");
+                T.True(!TideDefeatEvent.RaiseOnce(), "second Defeat() call no-op"); T.Eq(1, n, "still once");
+                TideDefeatEvent.Reset(); var sm2 = new TidewardenAnimStateMachine(); sm2.CoreHit(); sm2.CoreHit(); T.Eq(2, n, "after reset: SM-first path raises");
+                TideDefeatEvent.RaiseOnce(); T.Eq(2, n, "then Defeat() skips");
+                var src = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs");
+                T.True(src.Contains("Defeated = true;\n            Crashverse.Feel.TideDefeatEvent.RaiseOnce();") && src.Contains("TideDefeatEvent.Reset()") && src.Contains("moves to the rig defeat clip"), "Defeat() wired, reset on bind/exit, TODO");
+            }
+            finally { AnimEventBus.Raised -= on; TideDefeatEvent.Reset(); }
         });
         T.Add("HAPTICS_buckets_and_gate", () =>
         {
