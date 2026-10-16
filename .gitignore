@@ -51,3 +51,9 @@ Tools/CompileCheck/obj/
 *.zip
 Tools/Tests/bin/
 Tools/Tests/obj/
+
+# Signing keys: never commit (release/VERSIONING_AND_SIGNING.md)
+*.keystore
+*.jks
+*.p12
+build-secrets/

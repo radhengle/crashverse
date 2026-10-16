@@ -1,0 +1,110 @@
+# Signed release AAB for Play (release/VERSIONING_AND_SIGNING.md). Manual only.
+# Upload key comes from protected-environment secrets; the job is skipped cleanly when they are missing.
+name: Build Android AAB (release, signed)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-aab-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  secrets-check:
+    name: Upload-key secrets present?
+    runs-on: ubuntu-24.04
+    environment: release
+    outputs:
+      present: ${{ steps.check.outputs.present }}
+    steps:
+      - id: check
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KP: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          AN: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          AP: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+        run: |
+          if [ -n "$KS" ] && [ -n "$KP" ] && [ -n "$AN" ] && [ -n "$AP" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Upload-key secrets not configured; skipping the signed AAB build."
+          fi
+
+  aab:
+    name: GameCI Unity Android AAB (release)
+    needs: secrets-check
+    if: needs.secrets-check.outputs.present == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    environment: release
+    permissions:
+      contents: read
+    env:
+      CRASHVERSE_BUILD_PROFILE: release
+      CRASHVERSE_ANDROID_EXPORT: aab
+    steps:
+      - name: Free disk space (unityci editor image is large)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: false
+
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          lfs: false
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Release guards
+        run: python3 Tools/ci/check_release_guards.py
+
+      - name: Decode upload keystore (workspace-local, gitignored, removed after build)
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          umask 077
+          mkdir -p build-secrets
+          printf '%s' "$KS" | base64 -d > build-secrets/upload.keystore
+
+      - name: Build AAB
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          CRASHVERSE_BUILD_PROFILE: release
+          CRASHVERSE_ANDROID_EXPORT: aab
+          CRASHVERSE_KEYSTORE_PATH: build-secrets/upload.keystore
+          CRASHVERSE_KEYSTORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          CRASHVERSE_KEYALIAS_NAME: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          CRASHVERSE_KEYALIAS_PASS: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+        with:
+          targetPlatform: Android
+          unityVersion: 2022.3.50f1
+          buildName: CRASHVERSE
+          buildsPath: build
+          buildMethod: Crashverse.EditorTools.BuildScript.BuildAndroid
+          versioning: Custom
+          version: 0.1.${{ github.run_number }}
+          androidVersionCode: ${{ github.run_number }}
+
+      - name: Remove keystore
+        if: always()
+        run: rm -rf build-secrets
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: crashverse-android-aab
+          path: build/Android/*.aab
+          if-no-files-found: error
+          retention-days: 14

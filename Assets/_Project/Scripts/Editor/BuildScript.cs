@@ -20,10 +20,23 @@ namespace Crashverse.EditorTools
         {
             bool release = string.Equals(Environment.GetEnvironmentVariable("CRASHVERSE_BUILD_PROFILE"), "release", StringComparison.OrdinalIgnoreCase);
             SetDevDefine(!release);
+            // CRASHVERSE_ANDROID_EXPORT=aab → Android App Bundle signed with the upload key (paths/passwords from env, set by CI from secrets).
+            bool aab = string.Equals(Environment.GetEnvironmentVariable("CRASHVERSE_ANDROID_EXPORT"), "aab", StringComparison.OrdinalIgnoreCase);
+            EditorUserBuildSettings.buildAppBundle = aab;
+            var ks = Environment.GetEnvironmentVariable("CRASHVERSE_KEYSTORE_PATH");
+            if (!string.IsNullOrEmpty(ks))
+            {
+                PlayerSettings.Android.useCustomKeystore = true;
+                PlayerSettings.Android.keystoreName = ks;
+                PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable("CRASHVERSE_KEYSTORE_PASS");
+                PlayerSettings.Android.keyaliasName = Environment.GetEnvironmentVariable("CRASHVERSE_KEYALIAS_NAME");
+                PlayerSettings.Android.keyaliasPass = Environment.GetEnvironmentVariable("CRASHVERSE_KEYALIAS_PASS");
+            }
+            else if (aab) { Debug.LogError("AAB build needs the upload keystore (CRASHVERSE_KEYSTORE_PATH)"); EditorApplication.Exit(1); return; }
             var opts = new BuildPlayerOptions
             {
                 scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray(),
-                locationPathName = "build/Android/CRASHVERSE" + (release ? "" : "-dev") + ".apk",
+                locationPathName = "build/Android/CRASHVERSE" + (release ? "" : "-dev") + (aab ? ".aab" : ".apk"),
                 target = BuildTarget.Android,
                 options = release ? BuildOptions.None : BuildOptions.Development,
             };
