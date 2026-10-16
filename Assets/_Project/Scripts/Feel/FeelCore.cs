@@ -73,7 +73,12 @@ namespace Crashverse.Feel
 
         public MotionSettings(IMotionPrefs prefs, bool osRemoveAnimations) { _prefs = prefs; _osRemoveAnimations = osRemoveAnimations; }
 
+        /// <summary>The player's own stored Reduce shake choice (kept while Reduce motion overrides it, so turning Reduce motion off restores it).</summary>
         public bool ReduceShake => _prefs != null && _prefs.TryGet(KeyShake, out var v) && v;
+        /// <summary>07: Reduce motion implies Reduce shake. Use this for anything that decides whether to shake.</summary>
+        public bool ReduceShakeEffective => ReduceShake || ReduceMotion;
+        /// <summary>07 Settings UI: while Reduce motion is ON the Reduce shake row shows ON, greyed and locked.</summary>
+        public bool ReduceShakeLocked => ReduceMotion;
         public bool ReduceMotion => Resolve(_prefs != null && _prefs.TryGet(KeyMotion, out var v) ? v : (bool?)null, _osRemoveAnimations);
         public bool ReduceMotionIsAuto => !(_prefs != null && _prefs.TryGet(KeyMotion, out _)) && _osRemoveAnimations;
         public static bool Resolve(bool? explicitChoice, bool osRemoveAnimations) => explicitChoice ?? osRemoveAnimations;
@@ -82,7 +87,7 @@ namespace Crashverse.Feel
         public void SetReduceMotion(bool on) { _prefs?.Set(KeyMotion, on); Changed?.Invoke(); } // explicit: persists, beats auto-on
 
         /// <summary>Camera shake multiplier: 0 when either setting is on; low tier ×0.7 (07 Perf).</summary>
-        public float ShakeScale(QualityTier tier) => ReduceShake || ReduceMotion ? 0f : tier == QualityTier.Low ? 0.7f : 1f;
+        public float ShakeScale(QualityTier tier) => ReduceShakeEffective ? 0f : tier == QualityTier.Low ? 0.7f : 1f;
         /// <summary>07: cosmetic slow-mo never in Titan ranked, never during Time Fracture, off with Reduce motion (OQ-C3).</summary>
         public bool SlowMoAllowed(bool titanRanked, bool timeFractureActive) => !ReduceMotion && !titanRanked && !timeFractureActive;
         public float FlashScale => ReduceMotion ? 0.4f : 1f;
@@ -251,29 +256,86 @@ namespace Crashverse.Feel
         public const float MaxPos = 0.15f, MaxRot = 1.5f;
     }
 
-    /// <summary>Additive shakes with ease-out decay; summed amplitude capped at 0.15 m / 1.5°; scaled by MotionSettings (×0 when reduced).</summary>
+    /// <summary>
+    /// Additive shakes with ease-out-quad decay; summed amplitude capped at 0.15 m / 1.5° (07); scaled by MotionSettings (×0 when reduced).
+    /// Fixed-size pool, no allocation after construction: when full, a new shake replaces the live one with the least remaining energy.
+    /// </summary>
     public class ShakeStack
     {
-        class Live { public ShakeSpec s; public float t; }
-        readonly List<Live> _live = new List<Live>();
+        public const int Capacity = 8;
+        struct Live { public ShakeSpec s; public float t; }
+        readonly Live[] _live = new Live[Capacity];
+        int _count;
         public float Scale = 1f;
-        public void Add(ShakeSpec s) { if (Scale <= 0f) return; _live.Add(new Live { s = s }); }
-        public void Clear() => _live.Clear();
-        public int Count => _live.Count;
+        /// <summary>Amplitude-weighted frequency (Hz) of the live shakes from the last Tick; drives the noise rate.</summary>
+        public float Frequency { get; private set; }
+
+        public void Add(ShakeSpec s)
+        {
+            if (Scale <= 0f || s.durationMs <= 0f) return;
+            if (_count < Capacity) { _live[_count++] = new Live { s = s }; return; }
+            int weakest = 0; float wE = float.MaxValue;
+            for (int i = 0; i < _count; i++) { float e = Remaining(_live[i]); if (e < wE) { wE = e; weakest = i; } }
+            _live[weakest] = new Live { s = s };
+        }
+        static float Remaining(Live l) => l.s.pos * (1f - Ease.OutQuad(l.t / l.s.durationMs));
+        public void Clear() { _count = 0; Frequency = 0f; }
+        public int Count => _count;
 
         /// <summary>Advance (unscaled) and return the current (pos, rot) amplitude envelope after caps.</summary>
         public (float pos, float rot) Tick(float realDt)
         {
-            float p = 0f, r = 0f;
-            for (int i = _live.Count - 1; i >= 0; i--)
+            float p = 0f, r = 0f, fw = 0f;
+            for (int i = _count - 1; i >= 0; i--)
             {
-                var l = _live[i]; l.t += realDt * 1000f;
-                if (l.t >= l.s.durationMs) { _live.RemoveAt(i); continue; }
+                _live[i].t += realDt * 1000f;
+                var l = _live[i];
+                if (l.t >= l.s.durationMs) { _live[i] = _live[--_count]; continue; }
                 float k = 1f - Ease.OutQuad(l.t / l.s.durationMs);
-                p += l.s.pos * k; r += l.s.rot * k;
+                p += l.s.pos * k; r += l.s.rot * k; fw += l.s.freq * l.s.pos * k;
             }
+            Frequency = p > 0f ? fw / p : 0f;
             return (Math.Min(ShakeTable.MaxPos, p * Scale), Math.Min(ShakeTable.MaxRot, r * Scale));
         }
+    }
+
+    /// <summary>
+    /// 07 shake table keyed by the AnimEventBus event names (audio_sync_table), so any system that raises the spec event gets the matching
+    /// camera shake without referencing the camera. Returns false for events that don't shake.
+    /// </summary>
+    public static class ShakeRouter
+    {
+        public const string ImpactWood = "IMPACT_WOOD", BreakBrick = "BREAK_BRICK", BreakSteelJoint = "BREAK_STEEL_JOINT", ExplodeCrate = "EXPLODE_CRATE",
+            ExplodeBarrelAlias = "EXPLODE_BARREL", PuGravityBurst = "PU_GRAVITY_BURST", PuChainPulse = "PU_CHAIN_PULSE", BossTideArmsDrop = "BOSS_TIDE_ARMS_DROP";
+
+        public static bool TryGet(string evt, out ShakeSpec spec)
+        {
+            switch (evt)
+            {
+                case AnimEvents.WreckerFire: spec = ShakeTable.Fire; return true;
+                case ImpactWood: spec = ShakeTable.ImpactWood; return true;
+                case BreakBrick: spec = ShakeTable.BrickBreak; return true;
+                case BreakSteelJoint: spec = ShakeTable.JointBreak; return true;
+                case AnimEvents.CollapseLand: spec = ShakeTable.CollapseLand; return true;
+                case ExplodeCrate: case ExplodeBarrelAlias: case PuChainPulse: spec = ShakeTable.Explosion; return true;
+                case PuGravityBurst: spec = ShakeTable.GravityBurst; return true;
+                case BossTideArmsDrop: case AnimEvents.BossTideDefeat: case AnimEvents.BossTitanDefeat: spec = ShakeTable.BossPhase; return true; // boss phase change / defeat
+                default: spec = default; return false;
+            }
+        }
+
+        /// <summary>True for per-impact shakes, which are de-duplicated with Projectile.FirstImpact (one impact shake per frame).</summary>
+        public static bool IsImpact(string evt) => evt == ImpactWood;
+    }
+
+    /// <summary>Static entry point so VFX/physics code can request a spec shake directly. No-op when no run camera is active.</summary>
+    public static class CameraShake
+    {
+        static ShakeStack _active;
+        public static void Bind(ShakeStack s) => _active = s;
+        public static void Unbind(ShakeStack s) { if (_active == s) _active = null; }
+        public static void Add(ShakeSpec s) => _active?.Add(s);
+        public static bool Add(string animEvent) { if (_active == null || !ShakeRouter.TryGet(animEvent, out var s)) return false; _active.Add(s); return true; }
     }
 
     // ───────────── Hit stop / slow-mo (07) ─────────────
