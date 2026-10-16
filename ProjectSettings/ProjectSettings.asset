@@ -31,4 +31,6 @@ PlayerSettings:
   mobileMTRendering:
     Android: 1
   androidRenderOutsideSafeArea: 1
+  activeInputHandler: 0
+  playModeTestRunnerEnabled: 1
   androidUseCustomActivity: 0

@@ -95,11 +95,17 @@ namespace Crashverse.UI
                 var es = new GameObject("EventSystem");
                 DontDestroyOnLoad(es);
                 var sys = es.AddComponent<EventSystem>();
+                // BUG-20: Active Input Handling is the legacy Input Manager (activeInputHandler: 0, no com.unity.inputsystem),
+                // so StandaloneInputModule is the matching module. It needs the Submit/Cancel/Horizontal/Vertical axes in
+                // ProjectSettings/InputManager.asset; without them ShouldActivateModule throws every frame and no tap is processed.
                 es.AddComponent<StandaloneInputModule>();
                 sys.pixelDragThreshold = Mathf.RoundToInt(10f * (Screen.dpi > 1 ? Screen.dpi : 160f) / 160f); // map pan ≥10dp cancels tap
             }
             var r = go.AddComponent<UIRouter>();
             r.Theme = theme; r.Canvas = canvas;
+            // BUG-20 top bar: the app renders under the status bar/cutout (androidRenderOutsideSafeArea), so paint the area
+            // outside SafeArea with the app background instead of the camera clear colour. Never takes taps.
+            var under = UIFactory.Panel("UnderSafeArea", go.transform, theme.navy900); UIFactory.Stretch(under.rectTransform); under.raycastTarget = false;
             var safe = UIFactory.Rect("SafeArea", go.transform);
             UIFactory.Stretch(safe);
             safe.gameObject.AddComponent<SafeArea>();

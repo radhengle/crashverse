@@ -55,6 +55,17 @@ def check_config():
         bad.append("ProjectSettings: AndroidTargetArchitectures must be 3 (ARMv7 | ARM64)")
     if not re.search(r"scriptingBackend:\s*\n\s*Android:\s*1", ps_text()):
         bad.append("ProjectSettings: Android scripting backend must be IL2CPP (1)")
+    # BUG-20: UI input module must match Active Input Handling, and the legacy module needs its axes.
+    pkgs = (ROOT / "Packages/manifest.json").read_text()
+    uses_new = "com.unity.inputsystem" in pkgs or re.search(r"activeInputHandler:\s*[12]", ps_text())
+    ui = (ROOT / "Assets/_Project/Scripts/UI/UIFramework.cs").read_text()
+    if uses_new and "InputSystemUIInputModule" not in ui: bad.append("Input System active but UI does not use InputSystemUIInputModule")
+    if not uses_new:
+        if "StandaloneInputModule" not in ui: bad.append("Legacy Input Manager active but UI has no StandaloneInputModule")
+        im = ROOT / "ProjectSettings/InputManager.asset"
+        names = set(re.findall(r"m_Name:\s*(.+)", im.read_text())) if im.exists() else set()
+        for a in ("Horizontal", "Vertical", "Submit", "Cancel"):
+            if a not in {n.strip() for n in names}: bad.append(f"ProjectSettings/InputManager.asset missing axis '{a}' (StandaloneInputModule throws, all taps dead: BUG-20)")
     return bad
 
 def ps_text(): return (ROOT / "ProjectSettings/ProjectSettings.asset").read_text()

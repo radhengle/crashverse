@@ -731,7 +731,8 @@ namespace Crashverse.UI
         public static string Country() { try { return System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName; } catch { return ""; } }
 
         static readonly string[] Months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-        readonly Action<bool> _done; int _year, _month; Button _yearBtn, _monthBtn, _ok;
+        readonly Action<bool> _done; int _year, _month; Button _yearBtn, _monthBtn, _ok; Text _err;
+        public string Error => _err != null ? _err.text : "";
         public AgeGateScreen(Action<bool> done) { _done = done; }
         public override bool OnBack() => true; // must answer
         protected override void Build(RectTransform root)
@@ -743,6 +744,7 @@ namespace Crashverse.UI
             _monthBtn = UIFactory.Button(v, "Month", Th.navy500, PickMonth, Th, 56);
             _yearBtn = UIFactory.Button(v, "Year", Th.navy500, PickYear, Th, 56);
             _ok = UIFactory.Button(v, "Continue", Th.green, Confirm, Th, 56); _ok.interactable = false;
+            _err = UIFactory.Label(v, "Choose your birth month and year.", Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th);
             UIFactory.Label(v, "We only keep an age range, never your date of birth.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
         }
         void PickMonth()
@@ -757,7 +759,18 @@ namespace Crashverse.UI
             for (int y = now; y >= now - 100; y--) { int yy = y; items.Add((yy.ToString(), () => { _year = yy; _yearBtn.GetComponentInChildren<Text>().text = yy.ToString(); Validate(); })); } // newest first: no eligible-age default
             Router.Push(new ListModal("Year of birth", items));
         }
-        void Validate() => _ok.interactable = _year > 0 && _month > 0;
+        /// <summary>Continue stays disabled until both are picked and the date isn't in the future; the caption says what's missing.</summary>
+        void Validate()
+        {
+            var now = DateTime.UtcNow;
+            string e = _month == 0 && _year == 0 ? "Choose your birth month and year."
+                     : _month == 0 ? "Choose your birth month."
+                     : _year == 0 ? "Choose your birth year."
+                     : (_year == now.Year && _month > now.Month) ? "That date is in the future. Check the month and year." : "";
+            _err.text = e; _ok.interactable = e.Length == 0;
+        }
+        /// <summary>Test hooks (PlayMode tap tests).</summary>
+        public Button MonthButton => _monthBtn; public Button YearButton => _yearBtn; public Button ContinueButton => _ok;
         void Confirm()
         {
             var now = DateTime.UtcNow; // device date is fine here: no server contact is allowed before the gate
