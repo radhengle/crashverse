@@ -67,6 +67,9 @@ public sealed class ServerOptions
         o.EnableGemPacks = env("ENABLE_GEM_PACKS") == "true";
         o.TrustForwardedFor = env("TRUST_X_FORWARDED_FOR") == "true";
         if (int.TryParse(env("TRUSTED_PROXY_HOPS"), out var hops) && hops is >= 1 and <= 5) o.TrustedProxyHops = hops;
+        o.PurchaseBindingSecretVersion = env("SECRET_VERSION_PURCHASE_BINDING");
+        o.PurchaseBindingPreviousSecretVersion = env("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS") is { Length: > 0 } pv ? pv : null;
+        o.DeletionPepperSecretVersion = env("SECRET_VERSION_DELETION_PEPPER");
         if (int.TryParse(env("TAX_RETENTION_DAYS"), out var tax) && tax > 0) o.TaxRetentionDays = tax;
         // CRASHVERSE_ENV gates the run summary too: never honoured in prod, even in "Development" ASP.NET environment.
         if (o.Env == CrashverseEnv.Prod) o.AllowClientRunSummary = false;
@@ -74,6 +77,10 @@ public sealed class ServerOptions
     /// <summary>N2: purchase-binding secret (obfuscatedAccountId HMAC key), loaded from ISecretProvider "purchase-binding-pepper": Secret Manager in prod,
     /// a dev-generated value only in dev/test. Must be stable across restarts and instances in prod.</summary>
     public byte[] ObfuscationPepper; public string ObfuscationPepperVersion = "p1";
+    /// <summary>Low-3: previous purchase-binding secret, still accepted for existing bindings during rotation (new bindings use the current one).</summary>
+    public byte[] PreviousObfuscationPepper; public string PreviousObfuscationPepperVersion;
+    /// <summary>Low-3: pinned Secret Manager versions (SECRET_VERSION_PURCHASE_BINDING, _PURCHASE_BINDING_PREVIOUS, _DELETION_PEPPER).</summary>
+    public string PurchaseBindingSecretVersion, PurchaseBindingPreviousSecretVersion, DeletionPepperSecretVersion;
 }
 
 public static class RefundPolicies { public const string GemDebt = "gemDebt"; public const string FloorAtZero = "floorAtZero"; }
@@ -121,7 +128,7 @@ public sealed class AccountDoc
 }
 public sealed class AgeGateDoc { [System.Text.Json.Serialization.JsonIgnore] public string jti; [System.Text.Json.Serialization.JsonIgnore] public long exp; public string band; public string country; public bool requiresParentalConsent; public long ts; }
 public sealed class ConsentDoc { public string requestId; public string playerId; public string parentEmailHash; public string status = "none"; public long requestedUnixMs; public long decidedUnixMs; }
-public sealed class IdentityDoc { public string key; public string playerId; public long linkedUnixMs; }
+public sealed class IdentityDoc { public string key; public string playerId; public long linkedUnixMs; public long expiresUnixMs; } // Low-2: expiresUnixMs = ageTokenUses expiry (token exp); swept by Retention()
 public sealed class EmailCredDoc { public string email; public string playerId; public string salt; public string hash; public int iterations; public bool verified; public string verifyCodeHash; public string resetCodeHash; public long resetExpUnixMs; }
 public sealed class SessionDoc { public string familyId; public string playerId; public string currentHash; public bool revoked; public long expUnixMs; }
 public sealed class WalletDoc

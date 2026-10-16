@@ -103,7 +103,7 @@ public sealed class DataLifecycleService
         return counts;
     }
 
-    public sealed class RetentionReport { public int inputLogsCleared; public int purchasesExpired; }
+    public sealed class RetentionReport { public int inputLogsCleared; public int purchasesExpired; public int ageTokenUsesExpired; }
 
     /// <summary>S3: input logs are kept 90 days (InputLogRetentionDays), then stripped from the run. Pseudonymised purchase rows are
     /// deleted once their tax retention ends.</summary>
@@ -126,6 +126,13 @@ public sealed class DataLifecycleService
         {
             var p = JsonSerializer.Deserialize<PurchaseDoc>(json, new JsonSerializerOptions { IncludeFields = true });
             if (p.retainUntilUnixMs > 0 && p.retainUntilUnixMs <= _x.NowMs) { await _x.Db.LifecyclePurge("purchases", id); rep.purchasesExpired++; }
+        }
+        // Low-2: a used age token past its expiry can never be replayed (VerifyAgeToken rejects expired tokens), so its jti record goes.
+        foreach (var (id, json) in await _x.Db.ListRaw("ageTokenUses"))
+        {
+            var u = JsonSerializer.Deserialize<IdentityDoc>(json, new JsonSerializerOptions { IncludeFields = true });
+            long exp = u.expiresUnixMs > 0 ? u.expiresUnixMs : u.linkedUnixMs;
+            if (exp > 0 && exp <= _x.NowMs) { await _x.Db.LifecyclePurge("ageTokenUses", id); rep.ageTokenUsesExpired++; }
         }
         return rep;
     }

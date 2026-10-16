@@ -74,10 +74,15 @@ public static class ServerApp
         };
         if (a.Secrets != null)
         {
-            try { opt.ObfuscationPepper = a.Secrets.Get(SecretNames.PurchaseBinding).GetAwaiter().GetResult(); } catch (Exception) { opt.ObfuscationPepper = null; }
-            try { opt.DeletionPepper = a.Secrets.Get(SecretNames.DeletionPepper).GetAwaiter().GetResult(); } catch (Exception) { opt.DeletionPepper = null; }
+            static byte[] Load(ISecretProvider s, string name, string ver)
+            { if (!SecretVersions.IsPinned(ver)) return null; try { return s.Get(name, ver).GetAwaiter().GetResult(); } catch (Exception) { return null; } }
+            opt.ObfuscationPepper = Load(a.Secrets, SecretNames.PurchaseBinding, opt.PurchaseBindingSecretVersion);
+            opt.ObfuscationPepperVersion = "v" + opt.PurchaseBindingSecretVersion;
+            opt.DeletionPepper = Load(a.Secrets, SecretNames.DeletionPepper, opt.DeletionPepperSecretVersion);
+            opt.PreviousObfuscationPepper = opt.PurchaseBindingPreviousSecretVersion == null ? null : Load(a.Secrets, SecretNames.PurchaseBinding, opt.PurchaseBindingPreviousSecretVersion);
+            opt.PreviousObfuscationPepperVersion = opt.PurchaseBindingPreviousSecretVersion == null ? null : "v" + opt.PurchaseBindingPreviousSecretVersion;
         }
-        else { opt.ObfuscationPepper = null; opt.DeletionPepper = null; }
+        else { opt.ObfuscationPepper = null; opt.DeletionPepper = null; opt.PreviousObfuscationPepper = null; }
         ProdGuard.Validate(x); // before touching content/config files: fail fast with the full list
         opt.ContentRoot ??= FindContentRoot();
         x.Content = Content.Load(opt.ContentRoot);
@@ -399,10 +404,11 @@ public class Program
         var ctx = opt.Env == CrashverseEnv.Prod ? ServerApp.ProdContext(opt, ServerApp.ProdAdapters.FromEnvironment(env)) : ServerApp.DevContext(opt);
         if (opt.RankedPublicBoardEnabled && !ctx.Replay.Configured) Console.Error.WriteLine("RANKED_PUBLIC_BOARD_ENABLED=true ignored: no replay worker configured (board stays closed)");
         var app = ServerApp.Build(ctx, args: args);
+        if (opt.Env != CrashverseEnv.Prod) DevGuard.CheckConfiguredLoopbackOnly(app.Configuration); // Low-1: before binding
         app.Start();
         if (opt.Env != CrashverseEnv.Prod)
         {
-            try { DevGuard.CheckLoopbackOnly(app.Urls); } // N1: actual bound addresses, after Kestrel resolved --urls/ASPNETCORE_URLS/config
+            try { DevGuard.CheckLoopbackOnly(app.Urls); } // N1 backstop: actual bound addresses, after Kestrel resolved --urls/ASPNETCORE_URLS/config
             catch { app.StopAsync().GetAwaiter().GetResult(); throw; }
         }
         app.WaitForShutdown();

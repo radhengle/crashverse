@@ -195,7 +195,17 @@ public interface ICaptchaVerifier { Task<bool> Verify(string token, string remot
 [DevOnly] public sealed class FakeCaptchaVerifier : ICaptchaVerifier { public Task<bool> Verify(string t, string ip) => Task.FromResult(t == "ok"); }
 
 /// <summary>N2: server secrets. Prod: Google Secret Manager. Dev/test: values generated in-process (dev only; ProdGuard rejects it).</summary>
-public interface ISecretProvider { Task<byte[]> Get(string name); }
+public interface ISecretProvider
+{
+    Task<byte[]> Get(string name);
+    /// <summary>Low-3: fetch a pinned version. Dev providers ignore the version; Secret Manager requires a numeric pin (never "latest").</summary>
+    Task<byte[]> Get(string name, string version) => Get(name);
+}
+/// <summary>Low-3: Secret Manager versions are pinned through config (SECRET_VERSION_*), never "latest".</summary>
+public static class SecretVersions
+{
+    public static bool IsPinned(string v) => !string.IsNullOrEmpty(v) && v.All(char.IsDigit) && v != "0";
+}
 public static class SecretNames { public const string PurchaseBinding = "purchase-binding-pepper", DeletionPepper = "deletion-pepper"; }
 
 [DevOnly] public sealed class DevSecretProvider : ISecretProvider
@@ -204,16 +214,18 @@ public static class SecretNames { public const string PurchaseBinding = "purchas
     public Task<byte[]> Get(string name) => Task.FromResult(_v.GetOrAdd(name, _ => System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)));
 }
 
-/// <summary>Secret Manager (latest version) over REST with the runtime service account (ADC). Nothing is created or provisioned here.</summary>
+/// <summary>Secret Manager (pinned version, Low-3) over REST with the runtime service account (ADC). Nothing is created or provisioned here.</summary>
 public sealed class SecretManagerSecretProvider : ISecretProvider
 {
     readonly string _project; readonly HttpClient _http;
     public SecretManagerSecretProvider(string project, HttpClient http = null) { _project = project; _http = http ?? new HttpClient(); }
-    public async Task<byte[]> Get(string name)
+    public Task<byte[]> Get(string name) => throw new InvalidOperationException($"secret {name}: a pinned version is required (Low-3)");
+    public async Task<byte[]> Get(string name, string version)
     {
+        if (!SecretVersions.IsPinned(version)) throw new InvalidOperationException($"secret {name}: version '{version}' is not pinned");
         var cred = (await Google.Apis.Auth.OAuth2.GoogleCredential.GetApplicationDefaultAsync()).CreateScoped("https://www.googleapis.com/auth/cloud-platform");
         var token = await ((Google.Apis.Auth.OAuth2.ITokenAccess)cred).GetAccessTokenForRequestAsync();
-        using var req = new HttpRequestMessage(HttpMethod.Get, $"https://secretmanager.googleapis.com/v1/projects/{Uri.EscapeDataString(_project)}/secrets/{Uri.EscapeDataString(name)}/versions/latest:access");
+        using var req = new HttpRequestMessage(HttpMethod.Get, $"https://secretmanager.googleapis.com/v1/projects/{Uri.EscapeDataString(_project)}/secrets/{Uri.EscapeDataString(name)}/versions/{Uri.EscapeDataString(version)}:access");
         req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         using var res = await _http.SendAsync(req); res.EnsureSuccessStatusCode();
         using var doc = System.Text.Json.JsonDocument.Parse(await res.Content.ReadAsStringAsync());

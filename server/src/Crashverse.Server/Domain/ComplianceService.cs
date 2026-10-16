@@ -91,7 +91,7 @@ public sealed class ComplianceService
     /// <summary>N4: single use. Call after the rest of the request has been validated, right before the band is applied.</summary>
     public async Task ConsumeAgeToken(AgeGateDoc g)
     {
-        if (string.IsNullOrEmpty(g.jti) || !await _x.Db.TryCreate("ageTokenUses", g.jti, new IdentityDoc { key = g.jti, linkedUnixMs = g.exp * 1000 }))
+        if (string.IsNullOrEmpty(g.jti) || !await _x.Db.TryCreate("ageTokenUses", g.jti, new IdentityDoc { key = g.jti, linkedUnixMs = g.exp * 1000, expiresUnixMs = g.exp * 1000 }))
             throw new ApiError(403, "AGE_TOKEN_USED", "this age check was already used; complete it again");
         g.jti = null;
     }

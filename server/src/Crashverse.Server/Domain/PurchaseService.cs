@@ -53,7 +53,7 @@ public sealed class PurchaseService
         if (p == null) return await Rejected(pid, "purchase not found");
         if (p.purchaseState == 2) return new VerifyResponse { status = "pending", wallet = WalletService.View(await W.Get(pid)), season = await new SeasonService(_x).State(pid) };
         if (p.purchaseState != 0) return await Rejected(pid, "purchase not in purchased state");
-        if (p.obfuscatedExternalAccountId != new AuthService(_x).ObfuscatedId(pid)) throw new ApiError(403, "INVALID_PURCHASE", "purchase belongs to another account");
+        if (!new AuthService(_x).MatchesObfuscatedId(pid, p.obfuscatedExternalAccountId)) throw new ApiError(403, "INVALID_PURCHASE", "purchase belongs to another account");
         return await Grant(pid, item, r.purchaseToken, p);
     }
 
@@ -185,7 +185,7 @@ public sealed class PurchaseService
             if (p == null) return "unknown_token";
             if (type == 1 && p.purchaseState == 0) // ONE_TIME_PRODUCT_PURCHASED: grant if the client never called verify
             {
-                var owner = (await _x.Db.List<AccountDoc>("accounts")).FirstOrDefault(a => new AuthService(_x).ObfuscatedId(a.playerId) == p.obfuscatedExternalAccountId);
+                var owner = (await _x.Db.List<AccountDoc>("accounts")).FirstOrDefault(a => new AuthService(_x).MatchesObfuscatedId(a.playerId, p.obfuscatedExternalAccountId));
                 if (owner == null) return "unknown_account";
                 var r = await Grant(owner.playerId, RealMoneySku(sku), token, p); return r.status;
             }

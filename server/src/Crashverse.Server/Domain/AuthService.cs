@@ -31,6 +31,15 @@ public sealed class AuthService
 
     /// <summary>Play Billing obfuscatedAccountId = HMAC(pepper, playerId). The pepper is versioned, never rotated (review gap 7).</summary>
     public string ObfuscatedId(string pid) => _x.Opt.ObfuscationPepperVersion + "_" + Hash.HmacHex(_x.Opt.ObfuscationPepper, pid)[..40];
+    /// <summary>Low-3: a binding made with the current or the previous purchase-binding secret both match (rotation-safe).</summary>
+    public bool MatchesObfuscatedId(string pid, string id)
+    {
+        if (string.IsNullOrEmpty(id) || pid == null) return false;
+        if (id == ObfuscatedId(pid)) return true;
+        var o = _x.Opt;
+        return o.PreviousObfuscationPepper != null && o.PreviousObfuscationPepperVersion != null
+            && id == o.PreviousObfuscationPepperVersion + "_" + Hash.HmacHex(o.PreviousObfuscationPepper, pid)[..40];
+    }
 
     public string VerifyAccess(string bearer)
     {

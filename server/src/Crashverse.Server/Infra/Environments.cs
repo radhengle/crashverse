@@ -41,6 +41,15 @@ public static class ProdGuard
         Check("replay", x.Replay); Check("captcha", x.Captcha); Check("secrets", x.Secrets);
         if (x.Opt.ObfuscationPepper is not { Length: >= 32 }) bad.Add($"purchase-binding secret ({SecretNames.PurchaseBinding}) not loaded from the secret provider");
         if (x.Opt.DeletionPepper is not { Length: >= 32 }) bad.Add($"deletion pepper ({SecretNames.DeletionPepper}) not loaded from the secret provider"); Check("nonces", x.Nonces); Check("limits", x.Limits);
+        // Low-3: every Secret Manager version is pinned in config; a configured previous version must load too.
+        if (!SecretVersions.IsPinned(x.Opt.PurchaseBindingSecretVersion)) bad.Add("SECRET_VERSION_PURCHASE_BINDING must pin a numeric Secret Manager version (not 'latest')");
+        if (!SecretVersions.IsPinned(x.Opt.DeletionPepperSecretVersion)) bad.Add("SECRET_VERSION_DELETION_PEPPER must pin a numeric Secret Manager version (not 'latest')");
+        if (x.Opt.PurchaseBindingPreviousSecretVersion != null)
+        {
+            if (!SecretVersions.IsPinned(x.Opt.PurchaseBindingPreviousSecretVersion)) bad.Add("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS must be a numeric version");
+            else if (x.Opt.PreviousObfuscationPepper is not { Length: >= 32 }) bad.Add("previous purchase-binding secret version not loaded");
+            else if (x.Opt.PurchaseBindingPreviousSecretVersion == x.Opt.PurchaseBindingSecretVersion) bad.Add("previous purchase-binding version equals the current one");
+        }
         if (x.Opt.XEnabled) Check("x", x.X);
         if (x.Tokens == null) bad.Add("tokens: not configured");
         else foreach (var r in x.Tokens.Rings) Check($"signer[{r.Purpose}]", r.Active);
@@ -78,6 +87,22 @@ public static class DevGuard
             if (!IsLoopbackHost(host)) throw new ProdStartupException($"dev wiring refused: listening on {u}; bind to localhost/127.0.0.1/[::1] only");
         }
     }
+
+    /// <summary>Low-1: the listen URLs the host is configured with, read before Kestrel binds: --urls / ASPNETCORE_URLS / DOTNET_URLS
+    /// ("urls"), Kestrel:Endpoints:*:Url, and http_ports/https_ports (which bind every interface, so they are reported as wildcards).</summary>
+    public static List<string> ConfiguredUrls(Microsoft.Extensions.Configuration.IConfiguration c)
+    {
+        var l = new List<string>();
+        if (c["urls"] is { Length: > 0 } u) l.AddRange(u.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+        foreach (var ep in c.GetSection("Kestrel:Endpoints").GetChildren())
+            if (ep["Url"] is { Length: > 0 } eu) l.Add(eu);
+        foreach (var k in new[] { "http_ports", "https_ports" })
+            if (c[k] is { Length: > 0 } ports) foreach (var p in ports.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)) l.Add($"http://*:{p}");
+        return l;
+    }
+
+    /// <summary>Low-1: run before app.Start(). An empty list means Kestrel's default (localhost:5000), which is loopback.</summary>
+    public static void CheckConfiguredLoopbackOnly(Microsoft.Extensions.Configuration.IConfiguration c) => CheckLoopbackOnly(ConfiguredUrls(c));
 
     static string HostOf(string hostPort)
     {
