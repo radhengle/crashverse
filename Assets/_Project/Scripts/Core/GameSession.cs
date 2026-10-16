@@ -59,6 +59,7 @@ namespace Crashverse.Core
         /// <summary>Instant retry: authored layout, full shots and charges, no leftover debris (Contract §4).</summary>
         public void Retry()
         {
+            if (fire != null) fire.CancelPending(); // a launch still in its 66 ms anticipation never happens
             foreach (var p in Projectile.Alive.ToArray()) if (p != null) Destroy(p.gameObject);
             Projectile.Alive.Clear();
             builder.Build(Ctx.layout, structureBase, Ctx.mod);
@@ -81,6 +82,7 @@ namespace Crashverse.Core
             fire.CanFire = true;
             aim.inputEnabled = true;
             aim.SetAim(0f, WreckerSpec.RestElevation);
+            aim.SnapVisualNow(); // deterministic reset: no barrel catch-up after Retry
             SetupHint();
             Changed?.Invoke();
         }
@@ -101,10 +103,11 @@ namespace Crashverse.Core
         {
             if (State != SessionState.Aiming || ShotsLeft <= 0 || !Gate.Ready) return false;
             var mods = PowerUps.ConsumeForShot();
-            if (!fire.Fire(mods)) return false;
+            float yaw = aim.Yaw, elev = aim.Elevation; // frozen at the tap
+            // Anim Spec 01: launch is 66 ms after the tap (breech anticipation); record the tick of the REAL launch so a replay matches.
+            if (!fire.Fire(mods, () => Inputs.Record(Tick, "fire", yaw, elev))) return false;
             ShotsLeft--;
             tracker.OnShotFired();
-            Inputs.Record(Tick, "fire", aim.Yaw, aim.Elevation);
             Gate.OnShotFired();
             Crashverse.PowerUps.TimeFractureEffect.NotifyShotFired(); // OQ-P3: slow holds until this shot impacts
             State = SessionState.Resolving;

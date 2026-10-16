@@ -348,7 +348,7 @@ namespace Crashverse.Feel
         public bool Aiming { get; private set; }
         public bool GateReady { get; set; } = true;
         public MotionSettings Settings; public QualityTier Tier = QualityTier.Mid;
-        float _nextFidgetMs; readonly Random _rng = new Random(7); bool _smokeSent;
+        float _nextFidgetMs; readonly Random _rng = new Random(7); bool _smokeSent, _slotInSent;
         public bool Interruptible => State != WreckerState.FireAnticipation && State != WreckerState.Recoil && State != WreckerState.Recover;
 
         public WreckerAnimStateMachine() { Reset(); }
@@ -375,7 +375,7 @@ namespace Crashverse.Feel
                 case WreckerState.FireAnticipation: AnimEventBus.Raise(AnimEvents.WreckerFireAnticipate); break;
                 case WreckerState.Recoil: _smokeSent = false; AnimEventBus.Raise(AnimEvents.WreckerFire); break;
                 case WreckerState.ReArm: AnimEventBus.Raise(AnimEvents.WreckerReArm); break;
-                case WreckerState.SlotSwap: AnimEventBus.Raise(AnimEvents.WreckerSlotOut); break;
+                case WreckerState.SlotSwap: _slotInSent = false; AnimEventBus.Raise(AnimEvents.WreckerSlotOut); break;
                 case WreckerState.Win: AnimEventBus.Raise(AnimEvents.WreckerWin); break;
                 case WreckerState.Fail: AnimEventBus.Raise(AnimEvents.WreckerFail); break;
             }
@@ -392,13 +392,14 @@ namespace Crashverse.Feel
                 case WreckerState.Recoil: AnimEventBus.Raise(AnimEvents.WreckerRecoilLand); Go(WreckerState.Recover); break;
                 case WreckerState.Recover: Go(WreckerState.Cooldown); break;
                 case WreckerState.ReArm: Go(Aiming ? WreckerState.Aim : WreckerState.Idle); break;
-                case WreckerState.SlotSwap: AnimEventBus.Raise(AnimEvents.WreckerSlotIn); Go(Aiming ? WreckerState.Aim : WreckerState.Idle); break;
+                case WreckerState.SlotSwap: if (!_slotInSent) { _slotInSent = true; AnimEventBus.Raise(AnimEvents.WreckerSlotIn); } Go(Aiming ? WreckerState.Aim : WreckerState.Idle); break;
             }
         }
 
         protected override void OnTick(float dt)
         {
             if (State == WreckerState.Recoil && !_smokeSent && ElapsedMs >= 33f) { _smokeSent = true; AnimEventBus.Raise(AnimEvents.WreckerMuzzleSmoke); }
+            if (State == WreckerState.SlotSwap && !_slotInSent && ElapsedMs >= WreckerMotion.SwapOutMs) { _slotInSent = true; AnimEventBus.Raise(AnimEvents.WreckerSlotIn); } // 9 f / 150 ms (audio_sync_table)
             if (State == WreckerState.Cooldown && GateReady && ElapsedMs >= CooldownMinMs) Go(WreckerState.ReArm);
             if (State == WreckerState.Idle)
             {

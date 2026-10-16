@@ -144,7 +144,7 @@ namespace Crashverse.Core
             RunCamera.enabled = true;
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
-            levelGo.AddComponent<Crashverse.Feel.FeelDirector>().Bind(s, RunCamera, aim);
+            var feel = levelGo.AddComponent<Crashverse.Feel.FeelDirector>(); feel.Bind(s, RunCamera, aim); feel.BindWrecker(wb); // 01 cannon parts
             AppServices.Router.Push(new HudScreen(s));
         }
 

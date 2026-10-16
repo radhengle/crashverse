@@ -36,6 +36,9 @@ namespace Crashverse.Feel
         }
 
         GameSession _s; OrbitCamera _cam; AimController _aim; Transform _barrel; Vector3 _barrelRest;
+        // 01 cannon parts (WreckerBuilder): Module pod on the barrel top (slot swap + bob), Core orb (ready glow).
+        Transform _pod, _core; Vector3 _podRestPos, _podRestScale; Renderer _coreRenderer; MaterialPropertyBlock _coreMpb; Color _coreBase;
+        float _idleMs, _readyMs = -1f; bool[] _armedLast = new bool[3]; PowerUps.PowerUpRuntime _puSeen;
         readonly WreckerAnimStateMachine _wrecker = new WreckerAnimStateMachine();
         readonly CameraStateMachine _camSm = new CameraStateMachine();
         readonly ShakeStack _shake = new ShakeStack();
@@ -53,6 +56,20 @@ namespace Crashverse.Feel
             _seed = Random.value * 100f;
         }
 
+        /// <summary>Optional: hands the procedural Wrecker's slot parts to the director (cannon idle bob, slot swap, ready glow).</summary>
+        public void BindWrecker(WreckerBuilder wb)
+        {
+            if (wb == null) return;
+            _pod = wb.modulePod; _core = wb.coreOrb;
+            if (_pod != null) { _podRestPos = _pod.localPosition; _podRestScale = _pod.localScale; }
+            if (_core != null)
+            {
+                _coreRenderer = _core.GetComponent<Renderer>();
+                _coreMpb = new MaterialPropertyBlock(); // allocated once; reused every frame
+                _coreBase = Crashverse.Destruction.MaterialDefinition.Hex(WreckerSpec.Core);
+            }
+        }
+
         void OnEnable() { AnimEventBus.Raised += OnEvent; Projectile.FirstImpact += OnImpact; }
         void OnDisable() { AnimEventBus.Raised -= OnEvent; Projectile.FirstImpact -= OnImpact; Time.timeScale = 1f; }
 
@@ -62,7 +79,7 @@ namespace Crashverse.Feel
             {
                 case AnimEvents.ReloadStart: _wrecker.GateReady = false; _wrecker.Fire(); _camSm.Fire(); _time.OnShotFired(); break;
                 case AnimEvents.WreckerFire: _shake.Add(ShakeTable.Fire); break;
-                case AnimEvents.WreckerReady: _wrecker.GateReady = true; _camSm.Settled(_s != null && (_s.State == SessionState.Won || _s.State == SessionState.Failed)); break;
+                case AnimEvents.WreckerReady: _readyMs = 0f; _wrecker.GateReady = true; _camSm.Settled(_s != null && (_s.State == SessionState.Won || _s.State == SessionState.Failed)); break;
             }
         }
 
@@ -81,17 +98,8 @@ namespace Crashverse.Feel
             float ts = _time.Tick(rdt);
             if (!ranked) Time.timeScale = ts; // Titan ranked never alters time (OQ-C3)
 
-            // Barrel recoil: 0.15 m back, out-expo in, out-quad return (02); none under Reduce motion.
-            if (_barrel != null)
-            {
-                float k = 0f;
-                if (!m.ReduceMotion)
-                {
-                    if (_wrecker.State == WreckerState.Recoil) k = Ease.OutExpo(_wrecker.ElapsedMs / WreckerAnimStateMachine.RecoilMs);
-                    else if (_wrecker.State == WreckerState.Recover) k = 1f - Ease.OutQuad(_wrecker.ElapsedMs / WreckerAnimStateMachine.RecoverMs);
-                }
-                _barrel.localPosition = _barrelRest + Vector3.back * (0.15f * k);
-            }
+            bool rm = m.ReduceMotion;
+            TickCannon(rdt, rm);
 
             if (_cam != null)
             {
@@ -105,5 +113,52 @@ namespace Crashverse.Feel
                 if (follow) _cam.followTarget = Projectile.Latest.transform.position;
             }
         }
+        /// <summary>
+        /// 01 cannon motion, code-driven until rigs exist. Barrel slide (anticipation 0.03 → recoil 0.25 m → recover, overshoot ≤ 0.02 m),
+        /// pitch kick +4° (clamped to 70° by AimController), idle breathing ±0.6° / 2400 ms, Ready dip −1.5° + Core glow 1.0→1.4→1.0
+        /// (300 ms), Module pod slot swap 450 ms on arm/disarm. Reduce Motion: recoil kept without overshoot, breathing ×0.5, glow ×0.4.
+        /// </summary>
+        void TickCannon(float rdt, bool rm)
+        {
+            var st = _wrecker.State; float ms = _wrecker.ElapsedMs;
+            if (_barrel != null) _barrel.localPosition = _barrelRest + Vector3.back * WreckerMotion.SlideBack(st, ms, rm);
+
+            bool idle = st == WreckerState.Idle || st == WreckerState.Fidget;
+            _idleMs = idle ? _idleMs + rdt * 1000f : 0f;
+            float pitch = WreckerMotion.KickDeg(st, ms, rm) + (idle ? WreckerMotion.IdleBreathDeg(_idleMs, rm) : 0f);
+            if (_readyMs >= 0f)
+            {
+                pitch += WreckerMotion.ReadyDipDegAt(_readyMs, rm);
+                _readyMs += rdt * 1000f;
+                if (_readyMs >= WreckerMotion.ReadyMs) _readyMs = -1f;
+                SetCoreGlow(_readyMs < 0f ? 1f : WreckerMotion.ReadyGlow(_readyMs, MotionSettings.Current.FlashScale)); // ends exactly on the base colour
+            }
+            if (_aim != null) _aim.visualPitchOffsetDeg = pitch;
+
+            // Slot swap: any arm/disarm change on the power-up slots (PowerUpRuntime.ToggleArm) → 450 ms swap on the Module pod.
+            var pu = _s.PowerUps;
+            if (pu != _puSeen) { _puSeen = pu; for (int i = 0; i < _armedLast.Length; i++) _armedLast[i] = Armed(pu, i); } // Retry rebuilds the runtime: no swap
+            else if (pu != null)
+                for (int i = 0; i < _armedLast.Length; i++) { bool a = Armed(pu, i); if (a != _armedLast[i]) { _armedLast[i] = a; _wrecker.SlotSwap(); } }
+
+            if (_pod != null)
+            {
+                float sc = st == WreckerState.SlotSwap ? WreckerMotion.SlotSwapScale(ms, rm) : 1f;
+                _pod.localScale = _podRestScale * sc; // scales about the pod's own centre on the barrel top (silhouette rule 4)
+                _pod.localPosition = _podRestPos + Vector3.up * (idle ? WreckerMotion.PodBobMeters(_idleMs, rm) : 0f);
+            }
+        }
+
+        /// <summary>Core "glow" until a real emissive material exists: lerps the orb toward white (×(g−1)). Keeps WreckerBuilder's other block values.</summary>
+        void SetCoreGlow(float g)
+        {
+            if (_coreRenderer == null) return;
+            _coreRenderer.GetPropertyBlock(_coreMpb);
+            var c = Color.Lerp(_coreBase, Color.white, g - 1f);
+            _coreMpb.SetColor("_BaseColor", c); _coreMpb.SetColor("_Color", c);
+            _coreRenderer.SetPropertyBlock(_coreMpb);
+        }
+
+        static bool Armed(PowerUps.PowerUpRuntime pu, int i) => pu != null && pu.Slots != null && i < pu.Slots.Length && pu.Slots[i] != null && pu.Slots[i].armed;
     }
 }

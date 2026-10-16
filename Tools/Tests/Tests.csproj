@@ -21,6 +21,7 @@
     <Compile Include="../../Assets/_Project/Scripts/Core/CampaignResultQueue.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Core/AccountDeletion.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Feel/FeelCore.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Feel/AnimMotion.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/MusicCore.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -65,6 +65,8 @@ namespace UnityEngine
         public void SetParent(Transform p, bool world = true) { parent = p; }
         public Transform GetChild(int i) => null;
         public void LookAt(Vector3 t) { }
+        public Vector3 TransformPoint(Vector3 p) => position + rotation * p;
+        public Vector3 TransformDirection(Vector3 d) => rotation * d;
         public void SetAsLastSibling() { }
         public void RotateAround(Vector3 p, Vector3 a, float d) { }
         public System.Collections.IEnumerator GetEnumerator() { yield break; }
