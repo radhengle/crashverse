@@ -80,7 +80,7 @@ namespace Crashverse.Backend
         public const string Attempts = Prefix + "/attempts", Score = Prefix + "/score", Reauth = Prefix + "/auth/reauth",
             AccountDelete = Prefix + "/account/delete", AccountDeleteCancel = Prefix + "/account/delete/cancel", KeepActive = Prefix + "/account/keep-active",
             AgeGate = Prefix + "/agegate", ParentalConsentRequest = Prefix + "/consent/parental/request", ParentalConsentStatus = Prefix + "/consent/parental/status",
-            ProfileVisibility = Prefix + "/profile/visibility", PurchaseVerify = Prefix + "/purchase/verify";
+            ProfileVisibility = Prefix + "/profile/visibility", PurchaseVerify = Prefix + "/purchases/google/verify";
     }
 
     /// <summary>
