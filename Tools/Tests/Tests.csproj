@@ -23,4 +23,7 @@
     <Compile Include="../../Assets/_Project/Scripts/Feel/FeelCore.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/MusicCore.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
 </Project>

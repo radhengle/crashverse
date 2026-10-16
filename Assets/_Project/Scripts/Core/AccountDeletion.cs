@@ -17,9 +17,13 @@ namespace Crashverse.Core
 
         public enum Result { Scheduled, PendingOffline, ReauthRequired, Failed }
 
-        /// <summary>Send (or queue) the request. The caller must have done Reauthenticate for linked accounts (A3).</summary>
-        public static async Task<Result> Request(IBackendService backend)
+        /// <summary>Re-auth token from POST /auth/reauth: memory only (never persisted), valid 5 minutes.</summary>
+        static string _reauthToken;
+
+        /// <summary>Send (or queue) the request. Linked accounts pass the reauthToken from /auth/reauth (A3); guests pass null.</summary>
+        public static async Task<Result> Request(IBackendService backend, string reauthToken)
         {
+            _reauthToken = reauthToken;
             PlayerPrefs.SetInt(PendingKey, 1); PlayerPrefs.Save();
             return await Flush(backend);
         }
@@ -30,8 +34,9 @@ namespace Crashverse.Core
             if (!Pending) return Result.Failed;
             try
             {
-                var r = await backend.DeleteAccount();
-                if (!r.accepted) return Result.Failed;
+                var r = await backend.DeleteAccount(_reauthToken);
+                if (r.status != "scheduled") return Result.Failed;
+                _reauthToken = null;
                 WipeLocal();
                 return Result.Scheduled;
             }

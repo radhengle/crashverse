@@ -40,6 +40,10 @@ namespace Crashverse.Core
 
         /// <summary>Content Roadmap §5: FIRE unlocks when settled AND ≥ 1.0 s since the shot; raises GAME_WRECKER_READY (reload-beat hook).</summary>
         public readonly Crashverse.Feel.ReloadGate Gate = new Crashverse.Feel.ReloadGate();
+        /// <summary>Inputs for POST /score, fixed-point (1/1000) at capture; tick = physics step since Begin.</summary>
+        public readonly InputRecorder Inputs = new InputRecorder();
+        float _beginFixedTime;
+        int Tick => Mathf.RoundToInt((Time.fixedTime - _beginFixedTime) / Time.fixedDeltaTime);
         Vector3 _baseGravity = new Vector3(0f, -9.81f, 0f);
         DestructibleBlock _hintBlock;
         RankedJournal _journal; System.Threading.Tasks.Task _cpTask = System.Threading.Tasks.Task.CompletedTask;
@@ -71,7 +75,7 @@ namespace Crashverse.Core
             PowerUps = new PowerUpRuntime(Ctx.loadout, AppServices.Content, Ctx.extraChargeSlot);
             PowerUps.Changed += () => Changed?.Invoke();
             ShotsLeft = Ctx.ShotBudget;
-            Gate.Reset();
+            Gate.Reset(); Inputs.Clear(); _beginFixedTime = Time.fixedTime;
             Result = null;
             State = SessionState.Aiming;
             fire.CanFire = true;
@@ -100,6 +104,7 @@ namespace Crashverse.Core
             if (!fire.Fire(mods)) return false;
             ShotsLeft--;
             tracker.OnShotFired();
+            Inputs.Record(Tick, "fire", aim.Yaw, aim.Elevation);
             Gate.OnShotFired();
             Crashverse.PowerUps.TimeFractureEffect.NotifyShotFired(); // OQ-P3: slow holds until this shot impacts
             State = SessionState.Resolving;

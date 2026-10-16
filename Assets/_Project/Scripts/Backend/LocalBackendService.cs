@@ -37,7 +37,7 @@ namespace Crashverse.Backend
             public long testFixedUnixMs = -1; public long testOffsetMs; // QA clock override
             public AccountState account = new AccountState();
             public string authEmail = ""; public List<string> attempts = new List<string>();
-            public long reauthUnixMs, lastActiveUnix; public string country = "";
+            public long reauthUnixMs, lastActiveUnix; public string country = ""; public string reauthToken = ""; public string consentStatus = "none";
             public Wallet wallet = new Wallet();
             public List<InboxItem> inbox = new List<InboxItem>();
             public List<string> grantedFirstClears = new List<string>();
@@ -153,63 +153,75 @@ namespace Crashverse.Backend
             _s.lastActiveUnix = Unix(ServerNow);
             Save();
         }
-        bool FreshReauth => !_s.account.linked || (new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds() - _s.reauthUnixMs) <= 5 * 60 * 1000;
+        /// <summary>Guests need no re-auth (C1). Linked accounts need the token from /auth/reauth, under 5 minutes old.</summary>
+        bool FreshReauth(string token) => !_s.account.linked ||
+            (!string.IsNullOrEmpty(token) && token == _s.reauthToken && (new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds() - _s.reauthUnixMs) <= 5 * 60 * 1000);
         bool MinorNoConsent(Func<AccountState, bool> scope) => _s.account.ageBand == AgeBands.Minor && !scope(_s.account);
         public static string GeneratedName(string playerId) => "Wrecker #" + (Math.Abs((playerId ?? "").GetHashCode()) % 9000 + 1000);
 
-        public Task<bool> Reauthenticate(AuthProvider provider, string credential)
+        public Task<ReauthResponse> Reauthenticate(LinkCredential c)
         {
             Online();
-            if (string.IsNullOrEmpty(credential) || !_s.account.identities.Contains(provider.ToString())) throw new BackendException("REAUTH_FAILED", 401);
-            _s.reauthUnixMs = new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds(); Save();
-            return Task.FromResult(true);
+            if (c == null || string.IsNullOrEmpty(c.token) || !_s.account.identities.Contains(c.provider.ToString())) throw new BackendException("REAUTH_FAILED", 401);
+            _s.reauthUnixMs = new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds(); _s.reauthToken = "reauth_" + Guid.NewGuid().ToString("N"); Save();
+            return Task.FromResult(new ReauthResponse { reauthToken = _s.reauthToken, expiresAt = Unix(ServerNow.AddMinutes(5)) });
         }
-        public Task<AccountState> CancelAccountDeletion() { Online(); _s.account.pendingDeletionUnixUtc = 0; Save(); return Task.FromResult(_s.account); }
-        public Task<AccountState> KeepAccountActive() { Online(); _s.account.deletionWarningAtUnixUtc = 0; _s.account.guestPurgeAtUnixUtc = 0; Save(); return Task.FromResult(_s.account); }
-        public Task<AccountState> UnlinkAccount(AuthProvider provider)
+        public Task<StatusResponse> CancelAccountDeletion() { Online(); bool was = _s.account.pendingDeletionUnixUtc > 0; _s.account.pendingDeletionUnixUtc = 0; Save(); return Task.FromResult(new StatusResponse { status = was ? "cancelled" : "none" }); }
+        public Task<KeepActiveResponse> KeepAccountActive() { Online(); _s.account.deletionWarningAtUnixUtc = 0; _s.account.guestPurgeAtUnixUtc = 0; Save(); return Task.FromResult(new KeepActiveResponse { lastActiveAt = _s.lastActiveUnix }); }
+        public Task<AccountState> UnlinkAccount(AuthProvider provider, string reauthToken)
         {
             Online();
-            if (!FreshReauth) throw new BackendException("REAUTH_REQUIRED", 401);
+            if (!FreshReauth(reauthToken)) throw new BackendException("REAUTH_REQUIRED", 401);
             var a = _s.account; var p = provider.ToString();
             if (!a.identities.Contains(p)) throw new BackendException("NOT_LINKED", 404);
             if (a.identities.Count <= 1) throw new BackendException("LAST_LOGIN", 409);
             a.identities.Remove(p); a.provider = a.identities[0]; Save(); // F2 provider revoke: server-side, best-effort
             return Task.FromResult(a);
         }
-        public Task<AccountState> SetAgeGate(string band, string country)
+        /// <summary>POST /agegate: band computed server-side from year/month, DOB not stored (E3). Under-13 never reaches here (E2) → 403.</summary>
+        public Task<AgeGateResponse> SubmitAgeGate(int birthYear, int birthMonth, string country)
         {
             Online();
-            if (band != AgeBands.Minor && band != AgeBands.Adult) throw new BackendException("BAD_BAND", 400);
+            var now = ServerNow;
+            var b = Crashverse.Meta.AgeGate.Classify(birthYear, birthMonth, now.Year, now.Month);
+            if (b == Crashverse.Meta.AgeGate.Band.Unknown) throw new BackendException("BAD_DOB", 400);
+            if (b == Crashverse.Meta.AgeGate.Band.Under13) throw new BackendException("AGE_BLOCKED", 403);
+            var band = Crashverse.Meta.AgeGate.ToServer(b);
             var a = _s.account;
             if (a.ageBand != AgeBands.Minor) a.ageBand = band; // most restrictive wins; older band needs parental verification/support
             _s.country = country ?? ""; Save();
-            return Task.FromResult(a);
+            bool minor = a.ageBand == AgeBands.Minor;
+            return Task.FromResult(new AgeGateResponse { band = a.ageBand, requiresParentalConsent = minor && !(a.consentSocial && a.consentName && a.consentPurchases) }); // TODO(Legal): per-market consent ages
         }
-        public Task<bool> RequestParentalConsent(string parentEmail)
+        public Task<ConsentRequestResponse> RequestParentalConsent(string parentEmail)
         {
             Online();
             if (!ValidEmail(parentEmail)) throw new BackendException("invalid email");
-            _s.account.consentPending = true; Save(); return Task.FromResult(true);
+            _s.account.consentPending = true; _s.consentStatus = ConsentStatus.Pending; Save();
+            return Task.FromResult(new ConsentRequestResponse { status = ConsentStatus.Pending, requestId = "pc_" + Guid.NewGuid().ToString("N").Substring(0, 12) });
         }
+        public Task<ConsentStatusResponse> GetParentalConsentStatus() { Online(); return Task.FromResult(new ConsentStatusResponse { status = _s.consentStatus }); }
 #if CRASHVERSE_TESTS
-        public void GrantConsentForTests(bool social, bool name, bool purchases) { var a = _s.account; a.consentSocial = social; a.consentName = name; a.consentPurchases = purchases; a.consentPending = false; Save(); }
+        public void GrantConsentForTests(bool social, bool name, bool purchases) { var a = _s.account; a.consentSocial = social; a.consentName = name; a.consentPurchases = purchases; a.consentPending = false; _s.consentStatus = ConsentStatus.Granted; Save(); }
         public void SetLastActiveForTests(DateTime utc) { _s.lastActiveUnix = Unix(utc); Save(); }
 #endif
-        public Task<AccountState> SetHideName(bool hide) { Online(); _s.account.hideName = hide; Save(); return Task.FromResult(_s.account); }
+        public Task<VisibilityResponse> SetProfileVisibility(bool hideName) { Online(); _s.account.hideName = hideName; Save(); return Task.FromResult(new VisibilityResponse { hideName = hideName }); }
         public List<string> PurchaseAgeRestrictedMarkets = new List<string>(); // TODO(Legal): markets requiring 18+ for purchases
-        public Task<Wallet> VerifyPurchase(string sku, string receipt)
+        public Task<PurchaseVerifyResponse> VerifyPurchase(string sku, string receipt)
         {
             Online();
             if (MinorNoConsent(a => a.consentPurchases) && (PurchaseAgeRestrictedMarkets.Count == 0 || PurchaseAgeRestrictedMarkets.Contains(_s.country)))
                 throw new BackendException("AGE_RESTRICTED", 403); // E5: no purchases until consent (all markets); E6: 18+ markets
-            throw new BackendException("SERVER_ONLY", 501, "receipt verification is server-only");
+            // Dev stub never grants (entitlements are server-only): anything unverifiable is reported as pending.
+            return Task.FromResult(new PurchaseVerifyResponse { status = string.IsNullOrEmpty(receipt) ? PurchaseStatus.Rejected : PurchaseStatus.Pending, wallet = _s.wallet, season = GetSeasonState().Result });
         }
 
         /// <summary>Fake OAuth link. SG-19: guest scores on currently open boards become visible.</summary>
-        public Task<AccountState> LinkAccount(AuthProvider provider, string credential)
+        public Task<AccountState> LinkAccount(LinkCredential c)
         {
             Online();
-            if (string.IsNullOrEmpty(credential)) throw new BackendException("missing provider credential");
+            if (c == null || string.IsNullOrEmpty(c.token)) throw new BackendException("missing provider credential");
+            var provider = c.provider;
             if (provider == AuthProvider.X && !Flags.xLoginEnabled) throw new BackendException("X login disabled");
             if (MinorNoConsent(a => a.consentSocial)) throw new BackendException("MINOR_CONSENT_REQUIRED", 403); // E5
             if (!_s.account.identities.Contains(provider.ToString())) _s.account.identities.Add(provider.ToString());
@@ -225,8 +237,13 @@ namespace Crashverse.Backend
         public FeatureFlags Flags = new FeatureFlags(); // dev stub of the server flag set
         public Task<FeatureFlags> GetFeatureFlags() { Online(); return Task.FromResult(Flags); }
         static bool ValidEmail(string e) => !string.IsNullOrEmpty(e) && e.IndexOf('@') > 0 && e.LastIndexOf('.') > e.IndexOf('@');
-        AuthSession Session(string email) => new AuthSession { playerId = _s.account.playerId, email = email, sessionToken = "sess_" + Guid.NewGuid().ToString("N"), expiresUnixUtc = Unix(ServerNow.AddHours(1)) };
-        public Task<AuthSession> AuthEmailRegister(string email, string password)
+        AuthResponse Session(string email)
+        {
+            if (!_s.account.identities.Contains("Email")) _s.account.identities.Add("Email");
+            _s.account.linked = true; if (string.IsNullOrEmpty(_s.account.provider)) _s.account.provider = "Email"; Save();
+            return new AuthResponse { accessToken = "acc_" + Guid.NewGuid().ToString("N"), refreshToken = "ref_" + Guid.NewGuid().ToString("N"), account = _s.account };
+        }
+        public Task<AuthResponse> AuthEmailRegister(string email, string password)
         {
             Online();
             if (!Flags.emailAuthEnabled) throw new BackendException("email auth disabled");
@@ -235,7 +252,7 @@ namespace Crashverse.Backend
             _s.authEmail = email.Trim().ToLowerInvariant(); Save();
             return Task.FromResult(Session(_s.authEmail));
         }
-        public Task<AuthSession> AuthEmailLogin(string email, string password)
+        public Task<AuthResponse> AuthEmailLogin(string email, string password)
         {
             Online();
             if (!ValidEmail(email) || string.IsNullOrEmpty(password)) throw new BackendException("invalid credentials");
@@ -243,28 +260,29 @@ namespace Crashverse.Backend
             return Task.FromResult(Session(_s.authEmail));
         }
         public Task<bool> RequestPasswordReset(string email) { Online(); return Task.FromResult(true); } // always true: no account enumeration
-        public Task<DeleteAccountResponse> DeleteAccount()
+        public Task<DeleteAccountResponse> DeleteAccount(string reauthToken)
         {
             Online();
-            if (!FreshReauth) throw new BackendException("REAUTH_REQUIRED", 401); // A3
-            var when = Unix(ServerNow.AddDays(GraceDays));
-            if (_s.account.pendingDeletionUnixUtc == 0) _s.account.pendingDeletionUnixUtc = when; // idempotent
+            if (!FreshReauth(reauthToken)) throw new BackendException("REAUTH_REQUIRED", 401); // A3
+            if (_s.account.pendingDeletionUnixUtc == 0) _s.account.pendingDeletionUnixUtc = Unix(ServerNow.AddDays(GraceDays)); // idempotent
             Save();
-            return Task.FromResult(new DeleteAccountResponse { accepted = true, message = "scheduled", scheduledDeletionUnixUtc = _s.account.pendingDeletionUnixUtc });
+            return Task.FromResult(new DeleteAccountResponse { status = "scheduled", purgeAt = _s.account.pendingDeletionUnixUtc });
         }
         public Task<AttemptToken> BeginAttempt(string levelId)
         {
             Online();
-            var t = new AttemptToken { token = "att_" + Guid.NewGuid().ToString("N"), levelId = levelId, seed = new System.Random().Next(), issuedUnixUtc = Unix(ServerNow), expiresUnixUtc = Unix(ServerNow.AddHours(2)) };
+            var t = new AttemptToken { token = "att_" + Guid.NewGuid().ToString("N"), levelId = levelId, seed = ((long)new System.Random().Next() << 31) | (uint)new System.Random().Next(), issuedUnixUtc = Unix(ServerNow), expiresUnixUtc = Unix(ServerNow.AddHours(2)) };
             _s.attempts.Add(t.token); Save();
             return Task.FromResult(t);
         }
-        public Task<InputLogResponse> SubmitInputLog(InputLog log)
+        public Task<ScoreResponse> SubmitScore(ScoreSubmission sub)
         {
             Online();
-            if (log == null || !_s.attempts.Remove(log.attemptToken)) return Task.FromResult(new InputLogResponse { accepted = false, message = "unknown or used attempt token" });
+            if (sub == null || !_s.attempts.Remove(sub.attemptToken)) return Task.FromResult(new ScoreResponse { accepted = false, status = "rejected", message = "unknown or used attempt token" });
+            if (sub.inputs == null || sub.inputs.Length == 0) { Save(); return Task.FromResult(new ScoreResponse { accepted = false, status = "rejected", message = "no inputs" }); }
             Save();
-            return Task.FromResult(new InputLogResponse { accepted = true, message = "stored (replay validation is server-side TODO)" });
+            // Replay is server-side (TODO BE); the stub echoes the advisory client score clamped to 0..10000 bp.
+            return Task.FromResult(new ScoreResponse { accepted = true, status = "provisional", message = "replay validation is server-side", serverScoreBp = Math.Max(0, Math.Min(10000, sub.clientScoreBp)) });
         }
 
         public Task<Wallet> GetWallet() { Online(); return Task.FromResult(_s.wallet); }
