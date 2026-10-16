@@ -23,11 +23,11 @@ def frame(w,h,sill=True,bar=0.15,d=0.3,z=0.0):
 GABLE_CLIP=lambda W,H:[(Vector((-W/2,0,0)),Vector((-H,0,W/2)).normalized()),(Vector((W/2,0,0)),Vector((H,0,W/2)).normalized())]
 PIECES={  # name: (boxes, fracture grid hint per box (n along longest axes), clip planes, anchor mode)
  "Wall":lambda m:(wall(TH[m]),None,"ground"),
- "WallDoor":lambda m:(walldoor(TH[m],2.0 if m=="Steel" else 1.0,2.4 if m=="Steel" else 2.1),None,"ground"),
+ "WallDoor":lambda m:(walldoor(TH[m],2.0 if m=="Steel" else 1.0,2.5 if m=="Steel" else 2.0),None,"ground"),
  "WallWindow":lambda m:(wallwin(TH[m]),None,"ground"),
  "Floor":lambda m:([B(0,0,0,3,3,TH[m] if m!="Stone" else 0.3)],None,"support"),
  "Joint":lambda m:([B(0,0,0,{"Brick":0.4,"Stone":0.45}.get(m,0.3),{"Brick":0.4,"Stone":0.45}.get(m,0.3),3)],None,"ground"),
- "DoorFrame":lambda m:(frame(1.0,2.1,False),None,"ground"),
+ "DoorFrame":lambda m:(frame(1.0,2.0,False),None,"ground"),
  "WindowFrame":lambda m:(frame(1.0,1.0,True,z=0.15),None,"support"),
  "Gable":lambda m:([B(0,0,0,3.0,TH[m],1.05)],GABLE_CLIP(3.0,1.05),"support"),
  "Roof":lambda m:([B(0,0,0,3.6,2.3,0.16)],None,"support"),
@@ -61,7 +61,7 @@ def outer_uv(f,uv):
     n=f.normal; ax=max(range(3),key=lambda a:abs(n[a]))
     for l in f.loops:
         p=l.vert.co; l[uv].uv=((p[1] if ax==0 else p[0])/2,(p[1] if ax==2 else p[2])/2)
-def cells_bm(mat,b,lo,hi,frame_mi):
+def cells_bm(mat,b,lo,hi,frame_mi,small=False):
     """LOD0 detail for one sub-box: material cells proud of a core box (see v3 kit). Brick rows staggered to match T_Brick_A."""
     sx,sy,sz=b["s"]; D=[sx,sy,sz]; th=min(range(3),key=lambda a:D[a]); ax=[a for a in range(3) if a!=th]
     lng=max(ax,key=lambda a:D[a]); sh=[a for a in ax if a!=lng][0]
@@ -77,8 +77,19 @@ def cells_bm(mat,b,lo,hi,frame_mi):
     bm=box_bm(sx,sy,sz); off=[-sx/2,-sy/2,0]
     if mat=="Glass" or b["frame"]:
         if b["frame"] or mat=="Glass":
-            if b["frame"]: bevel_hard(bm,0.015,1)
+            if b["frame"]: bevel_hard(bm,0.012,3)
             for f in bm.faces: f.material_index=frame_mi if b["frame"] else 0
+            if b["frame"]:   # glazing-bead bolts on both faces of the frame (real LOD0 detail)
+                L=max(sx,sz); n=max(2,int(L/0.55)); vert=sz>sx
+                for i in range(n):
+                    t=(i+0.5)/n*L-L/2
+                    for side in (-1,1):
+                        bb=bmesh.new(); bmesh.ops.create_cone(bb,cap_ends=True,segments=6,radius1=0.018,radius2=0.014,depth=0.012)
+                        bmesh.ops.rotate(bb,verts=bb.verts,cent=(0,0,0),matrix=Matrix.Rotation(math.pi/2,3,'X'))
+                        pos=Vector((0,side*(sy/2+0.004),0)); pos.x= 0 if vert else t; pos.z=(t+sz/2) if vert else sz/2
+                        for v in bb.verts: v.co+=pos+Vector(off)*0+Vector((0,0,0))
+                        for f in bb.faces: f.material_index=frame_mi
+                        merge(bm,bb)
             return mv(bm,b["c"]-Vector((0,0,0)))
     # brick: texture rows start staggered at world z=0 (row 7 of the 8-row sheet), geometry follows world z
     bm2=bmesh.new()
@@ -102,14 +113,14 @@ def cells_bm(mat,b,lo,hi,frame_mi):
             c[th]=off[th]+D[th]/2; s[th]=D[th]+0.02
             bb=box_bm(*s)
             for v in bb.verts: v.co+=Vector((c[0],c[1],c[2]-s[2]/2))
-            if T==44: bevel_hard(bb,min(s)*0.15,1)
+            if T==44 or small: bevel_hard(bb,min(s)*0.15,1)
             merge(bm2,bb)
     merge(bm,bm2); return mv(bm,b["c"])
 def seeds_for(b,k,rnd):
     s=b["s"]; ax=sorted(range(3),key=lambda a:-s[a]); n=[1,1,1]
     while n[0]*n[1]*n[2]<k:
         a=max(ax[:2],key=lambda a:s[a]/(n[a]+1))
-        if s[a]/(n[a]+1)<0.3: break
+        if s[a]/(n[a]+1)<0.22: break
         n[a]+=1
     S=[]
     for i in range(n[0]):
@@ -117,6 +128,7 @@ def seeds_for(b,k,rnd):
             for kk in range(n[2]):
                 p=[(idx+0.5+(rnd.random()-0.5)*0.5)/n[a]*s[a] for a,idx in zip(range(3),(i,j,kk))]
                 S.append(Vector((p[0]-s[0]/2,p[1]-s[1]/2,p[2])))
+    if len(S)>k: S=rnd.sample(S,k)   # cap at the requested count (never above the material range top)
     return S
 def contact(oa,ob):
     """face contact between two fragment meshes (world space): opposite normals, coplanar, overlapping. Returns contact point or None."""
@@ -148,7 +160,7 @@ def build(mat,piece):
     for lod in (0,1,2):
         bm=bmesh.new()
         for b,a in zip(boxes,area):
-            if lod==0: sb=cells_bm(mat,b,max(1,math.ceil(560*a/At/T)),max(1,math.floor(1300*a/At/T)),1)
+            if lod==0: sb=cells_bm(mat,b,max(1,math.ceil(560*a/At/T)),max(1,math.floor(1300*a/At/T)),1,small=At<4.5)
             else:
                 sb=box_bm(*b["s"]); 
                 if lod==1: bevel_hard(sb,min(b["s"])*0.12,1)
@@ -180,6 +192,7 @@ def build(mat,piece):
             vs=[v.co for v in c.verts]; ext=[max(q[a] for q in vs)-min(q[a] for q in vs) for a in range(3)]
             if min(ext)<MINAX.get(mat,0.15)-1e-4 or abs(c.calc_volume())*dens<0.5: ok=False
         if ok: break
+    else: raise RuntimeError(f"fracture failed for {name}: no valid attempt in 300 (last count {len(cells)}, range {lo}-{hi})")
     reset(); M=material_pbr(f"M_{mat}",f"{texdir}/T_{mat}_A.png",f"{texdir}/T_{mat}_N.png",f"{texdir}/T_{mat}_ORM.png"); MI=material_pbr(f"M_{mat}_Inner",f"{texdir}/T_{mat}_Inner_A.png",rough=0.8)
     root=empty(name+"_Fractured"); frags=[]
     def on_sub(f,b):
@@ -188,7 +201,7 @@ def build(mat,piece):
             any(abs((f.calc_center_median()-co).dot(no))<1e-4 for co,no in clips)
     for i,(bm,b) in enumerate(cells):
         fn=f"{name}_frag_{i+1:02d}"; hull=bm.copy()
-        bevel_hard(bm,0.01 if mat=="Glass" else 0.025,1)
+        bevel_hard(bm,0.016 if mat=="Glass" else 0.025,1)
         uv=bm.loops.layers.uv.verify()
         for f in bm.faces:
             if on_sub(f,b): f.material_index=1 if b["frame"] else 0; outer_uv(f,uv)

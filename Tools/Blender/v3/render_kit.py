@@ -85,7 +85,14 @@ elif MODE=="hero":
     k=[]
     for i,(m,x,y,r) in enumerate((("Wood",-6,0,0.3),("Brick",-2,-2,0),("Steel",2,-2,0),("Stone",6,0,-0.3),("Glass",0,-5,0))):
         k+=load(f"{SRC}/Kit_{m}/Kit_{m}_Wall.blend",(x,y,0),lod0,rotz=r)
-    k+=load(f"{SRC}/Kit_Base/Kit_Base_Indestructible.blend",(-2,-2,-1.0),lod0)+load(f"{SRC}/Kit_Base/Kit_Base_Indestructible.blend",(2,-2,-1.0),lod0)
     rig.art_sky(sc)
     _upd(); rig.shoot(f"{OUT}/Hero_scene_gameplay.png",w+k,(0.25,1.0,0.42),lens=28,fill=1.25)
     _upd(); rig.shoot(f"{OUT}/Hero_scene_beauty.png",isl,(0.8,0.9,0.35),lens=40,dof=True,fill=0.8,fstop=5.6)
+elif MODE=="check":   # brick mortar vs texture alignment + glass crack visibility
+    O2="/workspace/wt/3d-modeler-v3/models/previews/v3_buildings"; os.makedirs(O2,exist_ok=True)
+    sc=rig.setup(64,res=(1280,900)); rig.art_sky(sc); rig.ground(5)
+    a=load(f"{SRC}/Kit_Brick/Kit_Brick_WallDoor.blend",(0,0,0),lod0)
+    _upd(); rig.shoot(f"{O2}/Check_Brick_mortar.png",a,(0.15,-1.0,0.1),lens=50,fill=0.9)
+    for o in a: o.hide_render=True
+    g=load(f"{SRC}/Kit_Glass/Kit_Glass_Wall_Fractured.blend",(0,0,0)); explode(g,0.12)
+    _upd(); rig.shoot(f"{O2}/Check_Glass_fracture.png",g,(0.3,-1.0,0.2),lens=50,fill=1.1)
