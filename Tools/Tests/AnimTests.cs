@@ -76,9 +76,24 @@ static class AnimTests
             T.True(d.Submit("BREAK_STEEL_JOINT", 3, 200f), "next frame allowed"); T.Eq(5, st.Count, "5 shakes in the pool");
             T.Eq(5, h.Calls, "haptics driven by the same accepted events"); T.Eq(HapticBuckets.For(0.4f), h.Last, "joint 0.06/0.6° → strength 0.4 bucket");
             m.SetReduceMotion(true); st.Scale = m.ShakeScale(QualityTier.Mid); d.Submit("EXPLODE_CRATE", 4, 300f);
-            T.Eq(6, h.Calls, "Reduce motion: no camera shake but haptics still fire (decision: 07 doesn't cover haptics)");
-            m.SetHaptics(false); d.Submit("EXPLODE_CRATE", 5, 400f); T.Eq(6, h.Calls, "Haptics OFF → no pulse");
+            T.Eq(5, h.Calls, "Reduce motion: no camera shake and no haptics (haptics.md)");
+            m.SetReduceMotion(false); m.SetHaptics(false); d.Submit("EXPLODE_CRATE", 5, 400f); T.Eq(5, h.Calls, "Haptics OFF → no pulse");
             T.True(new MotionSettings(new AnimMemPrefs(), true).HapticsEnabled, "Haptics default ON (even with OS reduce-animations)");
+        });
+        T.Add("HAPTICS_toggle_and_reduce_motion", () =>
+        {
+            var prefs = new AnimMemPrefs(); var m = new MotionSettings(prefs, false); var h = new RecHaptics();
+            var d = new ShakeDispatcher(new ShakeStack()) { Haptics = h, Settings = m };
+            T.True(m.HapticsEffective && d.Submit("EXPLODE_CRATE", 1, 0f), "defaults"); T.Eq(1, h.Calls, "fires normally"); T.Eq(3, h.Last, "explosion bucket 3");
+            m.SetReduceMotion(true); T.True(!m.HapticsEffective && m.HapticsEnabled && m.HapticsLockedByReduceMotion, "RM overrides, toggle preference kept");
+            d.Submit("EXPLODE_CRATE", 2, 100f); d.Submit("IMPACT_WOOD", 3, 200f); T.Eq(1, h.Calls, "suppressed while Reduce motion ON");
+            var auto = new MotionSettings(new AnimMemPrefs(), true); T.True(auto.ReduceMotionIsAuto && !auto.HapticsEffective, "Android auto Reduce motion also suppresses");
+            m.SetReduceMotion(false); m.SetHaptics(false); T.True(!m.HapticsEffective && !m.HapticsLockedByReduceMotion, "toggle OFF");
+            d.Submit("EXPLODE_CRATE", 4, 300f); T.Eq(1, h.Calls, "suppressed when Haptics toggle OFF");
+            m.SetHaptics(true); d.Submit("EXPLODE_CRATE", 5, 400f); T.Eq(2, h.Calls, "fires again when both allow");
+            var g = new GatedRec(); var d2 = new ShakeDispatcher(new ShakeStack()) { Haptics = g, Settings = new MotionSettings(new AnimMemPrefs(), false) };
+            d2.Submit("IMPACT_WOOD", 1, 0f); d2.Submit("BREAK_BRICK", 2, 10f); d2.Submit("IMPACT_BRICK", 3, 30f); T.Eq(2, g.Fired, "0 fires, 10 stronger cuts in, 30 dropped (<40 ms)");
+            d2.Submit("IMPACT_WOOD", 5, 49f); T.Eq(2, g.Fired, "still inside 40 ms of the last pulse"); d2.Submit("IMPACT_WOOD", 6, 50f); T.Eq(3, g.Fired, "40 ms rate limit still applies; fires again at +40 ms");
         });
         T.Add("HAPTICS_buckets_and_gate", () =>
         {
@@ -219,4 +234,5 @@ static class AnimTests
     }
 }
 
+sealed class GatedRec : Crashverse.Feel.IHaptics { Crashverse.Feel.HapticGate _g; public int Fired; public void Pulse(int bucket, float nowMs) { if (_g.Allow(bucket, nowMs)) Fired++; } }
 sealed class RecHaptics : Crashverse.Feel.IHaptics { public int Calls, Last; public void Pulse(int bucket, float nowMs) { Calls++; Last = bucket; } }

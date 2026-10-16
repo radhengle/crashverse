@@ -83,8 +83,12 @@ namespace Crashverse.Feel
         public bool ReduceMotionIsAuto => !(_prefs != null && _prefs.TryGet(KeyMotion, out _)) && _osRemoveAnimations;
         public static bool Resolve(bool? explicitChoice, bool osRemoveAnimations) => explicitChoice ?? osRemoveAnimations;
 
-        /// <summary>Haptics toggle, default ON. Independent of Reduce shake / Reduce motion (07 doesn't cover haptics; haptics.md has its own toggle).</summary>
+        /// <summary>Haptics toggle (user preference), default ON. Reduce motion overrides it at output time; see HapticsEffective.</summary>
         public bool HapticsEnabled => !(_prefs != null && _prefs.TryGet(KeyHaptics, out var v)) || v;
+        /// <summary>audio/haptics.md: haptics fire only when the Haptics toggle is ON and Reduce motion (explicit or Android auto) is OFF. PM-approved.</summary>
+        public bool HapticsEffective => HapticsEnabled && !ReduceMotion;
+        /// <summary>True when the Haptics toggle is ON but Reduce motion is suppressing it (Settings label).</summary>
+        public bool HapticsLockedByReduceMotion => HapticsEnabled && ReduceMotion;
         public void SetHaptics(bool on) { _prefs?.Set(KeyHaptics, on); Changed?.Invoke(); }
         public void SetReduceShake(bool on) { _prefs?.Set(KeyShake, on); Changed?.Invoke(); }
         public void SetReduceMotion(bool on) { _prefs?.Set(KeyMotion, on); Changed?.Invoke(); } // explicit: persists, beats auto-on
@@ -397,7 +401,7 @@ namespace Crashverse.Feel
             if (fam != ShakeFamily.None && _frame[i] == frame && k <= _strength[i]) return false; // same family, same frame, not stronger → drop
             if (fam != ShakeFamily.None) { _frame[i] = frame; _strength[i] = k; }
             _stack.Add(s); // ×0 under Reduce shake / Reduce motion via ShakeStack.Scale
-            if (Haptics != null && (Settings == null || Settings.HapticsEnabled)) Haptics.Pulse(HapticBuckets.For(k), nowMs);
+            if (Haptics != null && (Settings == null || Settings.HapticsEffective)) Haptics.Pulse(HapticBuckets.For(k), nowMs);
             return true;
         }
     }
