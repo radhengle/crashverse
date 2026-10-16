@@ -99,6 +99,15 @@ static class SfxTests
             var ui = new SfxVoicePool(1); ui.Acquire("ui", 200, 0, 1f, true); T.True(ui.Acquire("x", 0, 1) == null, "UI voices never stolen");
             pool.Resize(32); T.Eq(32, pool.Capacity); pool.Resize(12); T.Eq(12, pool.Capacity);
         });
+        T.Add("boss_tide_armor_hit_trigger", () =>
+        {
+            T.True(BossSfxRules.ArmorHit(1, true, false), "direct phase-1 armour hit plays");
+            T.True(!BossSfxRules.ArmorHit(1, false, false), "debris/indirect damage silent");
+            T.True(!BossSfxRules.ArmorHit(2, true, false), "phase-2 armour auto-break silent");
+            T.True(!BossSfxRules.ArmorHit(1, true, true), "after defeat silent");
+            var tw = File.ReadAllText(Path.Combine(Root, "Assets/_Project/Scripts/Boss/TidewardenController.cs"));
+            T.True(tw.Contains("x.Damaged += OnArmorDamaged") && tw.Contains("SfxPlayer.PlayCode(\"BOSS_TIDE_ARMOR_HIT\")"), "armour Damaged hooked to PlayCode");
+        });
         T.Add("audio_single_listener", () =>
         {
             T.Eq(ListenerRule.Action.AddToMainCamera, ListenerRule.Decide(0, true));

@@ -261,6 +261,13 @@ namespace Crashverse.Audio
         public static void ResetForTests() { _seen.Clear(); Sink = null; }
     }
 
+    /// <summary>Code-owned boss SFX triggers (sfx_routing.json owner "code").</summary>
+    public static class BossSfxRules
+    {
+        /// <summary>BOSS_TIDE_ARMOR_HIT: a direct hit on a Tidewarden armour plate during phase 1 (not the phase-2 auto-break, not debris, not after defeat).</summary>
+        public static bool ArmorHit(int phase, bool directHit, bool defeated) => phase == 1 && directHit && !defeated;
+    }
+
     /// <summary>Exactly-one AudioListener rule (P0 diagnosis item 1).</summary>
     public static class ListenerRule
     {
