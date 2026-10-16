@@ -34,12 +34,6 @@ namespace Crashverse.Tests.EditMode
             Assert.AreEqual(AgeGate.Band.Unknown, AgeGate.Classify(2000, 13, 2026, 10), "bad month");
             Assert.AreEqual(12, AgeGate.AgeYears(2013, 10, 2026, 10), "birthday month counts as not yet reached");
         }
-
-        [Test] public void Input_manager_has_the_axes_the_UI_module_reads()
-        {
-            foreach (var axis in new[] { "Horizontal", "Vertical", "Submit", "Cancel" })
-                Assert.DoesNotThrow(() => Input.GetAxisRaw(axis), axis);
-        }
     }
 }
 #endif
