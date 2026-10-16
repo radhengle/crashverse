@@ -17,5 +17,30 @@ gen_levels.py, sim.py, sim_results.json, chapter1_levels.json, layouts/*.json (1
 ## Open for Game designer
 - None blocking. The sim is still abstract (no Unity physics). The L2 tank-off-edge and L7 crown masteries need a playtest.
 
-## Fun pass (rev 3)
-Difficulty tags, a rhythm table, twist and aha lines, and 'why it's fun' notes were added to Ch1_Levels_v1.md. The levels already had a distinct twist and a chain collapse each, and they meet the 'every level solvable and 3★' constraint, so no layout numbers changed. Rhythm: E E M H B M H B H Boss.
+## Fun redesign (rev 4)
+Layouts were rebuilt for distinct silhouettes, domino moments and decoy/risk targets.
+- L1: T-shaped perch with cabins and a bell.
+- L2: adds a catwalk and pump shed.
+- L3: now two storeys, with an awning decoy.
+- L4: adds a brick annex.
+- L5: adds a water-wheel and a lantern string.
+- L6: becomes a tall 3-drum silo with a steel dome and hopper.
+- L7: unchanged (bound by the M1 contract and ruling 4).
+- L8: adds a clock arch over the steel sign.
+- L9: adds a bell tower and a catwalk tying both structures together.
+- L10: unchanged (bound by the boss rules).
+
+## Rulings 7a / 8 and gravity ×1.2 (rev 5)
+All three are modelled. Shot budgets were re-checked: no level's min shots, margin, stars or pass result changed. L7's crown stays 4/4 intact. Repeat the check in Unity once Physics PR #11 and PR #15 land.
+Assumption to confirm: the 7a material factor applies to the struck piece.
+### Debris cap-hit stats (4,000 random runs per level)
+- c1_l01: 0/19750 collisions hit the cap (0.0%)
+- c1_l02: 0/23892 collisions hit the cap (0.0%)
+- c1_l03: 0/23268 collisions hit the cap (0.0%)
+- c1_l04: 0/26512 collisions hit the cap (0.0%)
+- c1_l05: 0/15646 collisions hit the cap (0.0%)
+- c1_l06: 0/17059 collisions hit the cap (0.0%)
+- c1_l07: 0/18357 collisions hit the cap (0.0%)
+- c1_l08: 0/31105 collisions hit the cap (0.0%)
+- c1_l09: 0/23618 collisions hit the cap (0.0%)
+No collision reaches the 60 cap. The worst case is a 4 kg steel piece dropping about 10 m: 0.5 × 4 × (15.4 − 2) ≈ 27. So the cap doesn't bind in Ch1, and debris is supplementary rather than decisive.

@@ -14,7 +14,8 @@ Stars: ratio = shotsLeft/shots >= star3Pct / star2Pct (exact).
 """
 import json, sys, itertools, random, os
 HP={'wood':30,'brick':60,'steel':120}; MASS={'wood':1.0,'brick':2.5,'steel':4.0}
-DMG=60; SHOCK=40; SPLIT=0.5; G=9.81; DEBRIS_MIN_V=2.0; DEBRIS_CAP=60
+DMG=60; SHOCK=40; SPLIT=0.5; G=9.81*1.2;  # PR #15 gravity x1.2
+MATF={'wood':1.0,'brick':1.1,'steel':0.8}; CAPLOG={'hits':0,'capped':0}; DEBRIS_MIN_V=2.0; DEBRIS_CAP=60
 DEBRIS=True
 HERE=os.path.dirname(os.path.abspath(__file__))
 
@@ -55,7 +56,11 @@ class State:
             if yt>bot+1e-6: continue
             if all(abs(y['p'][k]-x['p'][k])*2 < y['s'][k]+x['s'][k] for k in (0,2)) and yt>=top: best,top=j,yt
         v=(2*G*max(0.0,bot-top))**.5
-        if best and v>DEBRIS_MIN_V: s.damage(best,min(DEBRIS_CAP,MASS[x['mat']]*v),False)
+        if best and v>DEBRIS_MIN_V:
+            raw=0.5*MASS[x['mat']]*(v-DEBRIS_MIN_V)   # ruling 7a
+            CAPLOG['hits']+=1
+            if raw>=DEBRIS_CAP: CAPLOG['capped']+=1
+            s.damage(best,min(DEBRIS_CAP,raw)*MATF[s.b[best]['mat']],False)  # factor = struck piece's material (assumed)
     def destroyed(s,i):
         x=s.b[i]
         if i in s.broken: return True
@@ -165,7 +170,9 @@ def main():
         pw=[f['powerup'] for f in L.get('forced',[])]
         n,seq=min_shots(lay,L['winThreshold'],B)
         npw,seqp=min_shots(lay,L['winThreshold'],B,pw) if pw else (n,seq)
+        CAPLOG['hits']=CAPLOG['capped']=0
         rp=random_play(lay,L['winThreshold'],B)
+        cap=(CAPLOG['hits'],CAPLOG['capped'])
         r3=sum(1 for u in rp if u is not None and u<=need3)/len(rp); rw=sum(1 for u in rp if u)/len(rp)
         fmt=lambda q:', '.join((f'{a}:' if a else '')+(t if isinstance(t,str) else '+'.join(t)) for a,t in q) if q else '-'
         fin=State(lay)
@@ -173,7 +180,7 @@ def main():
         crown=[i for i,x in fin.b.items() if x.get('role')=='crown']
         intact=(sum(1 for i in crown if i not in fin.broken)/len(crown)) if crown else None
         stone_on_weak=[i for i in lay_ids(seqp if npw<=n else seq) if fin.b[i].get('indestructible')]
-        rows.append(dict(id=L['id'],shots=B,crown_intact=intact,stone_on_weak=stone_on_weak,final_pct=round(fin.ratio(),3),min=n,min_pw=npw,need3=need3,stars=stars(B,min(n,npw),s3,s2),
+        rows.append(dict(id=L['id'],debris_hits=cap[0],debris_capped=cap[1],cap_rate=round(cap[1]/cap[0],3) if cap[0] else 0.0,shots=B,crown_intact=intact,stone_on_weak=stone_on_weak,final_pct=round(fin.ratio(),3),min=n,min_pw=npw,need3=need3,stars=stars(B,min(n,npw),s3,s2),
             margin=B-min(n,npw),rand3=round(r3,3),randwin=round(rw,3),seq=fmt(seqp if npw<=n else seq),one_shot=(n==1)))
     TAG={'c1_l01':('Easy',.15,.50),'c1_l02':('Easy',.08,.50),'c1_l03':('Medium',.05,.25),'c1_l04':('Hard',.005,.06),
          'c1_l05':('Breather',.20,.60),'c1_l06':('Medium',.02,.25),'c1_l07':('Hard',.002,.06),'c1_l08':('Breather',0,.60),
