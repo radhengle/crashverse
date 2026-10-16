@@ -6,7 +6,7 @@ HERE=os.path.dirname(os.path.abspath(__file__))
 def B(id,mat,p,s,sup=(),joint=False,role="",nonObj=False,color="",indestructible=False):
     return dict(id=id,mat=mat,p=list(p),s=list(s),sup=list(sup),joint=joint,role=role,nonObj=nonObj,color=color,
                 explosive=False,indestructible=indestructible,spinAxis=[],pivot=[],spinDps=0.0)
-ROCK=lambda id,p,s: B(id,"brick",p,s,nonObj=True,indestructible=True,color="6B5B4B",role="island")
+ROCK=lambda id,p,s: B(id,"brick",p,s,nonObj=True,indestructible=True,color="8A8A8A",role="island")
 
 def L1():  # lookout hut on one stilt: one clean shot on the post drops everything
     return [ROCK("rock",(0,.6,0),(4,1.2,4)),
@@ -48,7 +48,7 @@ def L3():  # bakery: brick on two wood props; brick faces take one shot each and
 
 def L4():  # windmill: brick drums on wooden ring-beams; hitting low beams chains everything above
     b=[ROCK("rock",(0,.6,0),(5,1.2,5)),
-       B("drum0","brick",(0,2.2,0),(2.8,2.0,2.8),["rock"],role="island",nonObj=True,indestructible=True,color="6B5B4B"),
+       B("drum0","brick",(0,2.2,0),(2.8,2.0,2.8),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
        B("beamL","wood",(-1.2,3.4,1.3),(1.0,.4,.6),["drum0"],role="support"),
        B("beamR","wood",(1.2,3.4,1.3),(1.0,.4,.6),["drum0"],role="support"),
        B("drum1F","brick",(0,4.6,.6),(2.4,2.0,1.2),["beamL","beamR"],role="wall"),
@@ -63,8 +63,8 @@ def L4():  # windmill: brick drums on wooden ring-beams; hitting low beams chain
 
 def L5():  # twin cottages on one bridge: the bridge plank is the shared support
     b=[ROCK("rockL",(-5,.6,0),(3,1.2,3)),ROCK("rockR",(5,.6,0),(3,1.2,3)),
-       B("pierL","brick",(-3.2,2.0,0),(.8,1.6,.8),["rockL"],role="island",nonObj=True,indestructible=True,color="6B5B4B"),
-       B("pierR","brick",(3.2,2.0,0),(.8,1.6,.8),["rockR"],role="island",nonObj=True,indestructible=True,color="6B5B4B"),
+       B("pierL","brick",(-3.2,2.0,0),(.8,1.6,.8),["rockL"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
+       B("pierR","brick",(3.2,2.0,0),(.8,1.6,.8),["rockR"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
        B("bridge","wood",(0,3.0,0),(7.2,.4,2.0),["pierL","pierR"],role="bridge")]
     for side,x in (("L",-2),("R",2)):
         b+=[B(f"floor{side}","wood",(x,3.4,0),(2.4,.4,2),["bridge"]),
@@ -76,7 +76,7 @@ def L5():  # twin cottages on one bridge: the bridge plank is the shared support
 def L6():  # granary on steel columns; gold steel braces (joints) are the efficient break
     b=[ROCK("rock",(0,.6,0),(6,1.2,4))]
     for s,x in (("L",-1.8),("R",1.8)):
-        b+=[B(f"col{s}","brick",(x,2.4,.9),(.6,2.4,.6),["rock"],role="island",nonObj=True,indestructible=True,color="6B5B4B"),
+        b+=[B(f"col{s}","brick",(x,2.4,.9),(.6,2.4,.6),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
             B(f"brace{s}","steel",(x,3.85,.9),(.9,.5,.9),[f"col{s}"],joint=True,role="brace")]
     b+=[B("braceM","steel",(0,3.85,-.9),(.9,.5,.9),["rock"],joint=True,role="brace"),
         B("deck","brick",(0,4.3,0),(4.6,.4,3),["braceL","braceR"]),
@@ -89,7 +89,7 @@ def L6():  # granary on steel columns; gold steel braces (joints) are the effici
     return b
 
 def L7():  # M1 Clockwork Tower (contract §7). Plinth indestructible, ring0 seated on plinth behind wood scaffold (REPORT A3/A4)
-    b=[B("plinth","brick",(0,.6,0),(4.5,1.2,4.5),indestructible=True),
+    b=[B("plinth","brick",(0,.6,0),(4.5,1.2,4.5),nonObj=True,indestructible=True,color="8A8A8A",role="island"),
        B("scaffold","wood",(0,1.9,1.7),(3.0,1.4,.3),["plinth"],role="wing"),
        B("wingL","wood",(-2.6,2.6,0),(.6,2.8,.5),["plinth"],role="wing"),
        B("wingR","wood",(2.6,2.6,0),(.6,2.8,.5),["plinth"],role="wing"),
@@ -111,7 +111,7 @@ def L7():  # M1 Clockwork Tower (contract §7). Plinth indestructible, ring0 sea
 
 def L8():  # market arcade: 4 wood keystones 1.5m apart hold 4 bays on stone piers -> Splitstrike takes 3 at once
     b=[ROCK("rock",(0,.6,0),(14,1.2,4))]
-    for i,x in enumerate([-6,-3,0,3,6]): b.append(B(f"pier{i}","brick",(x,2.6,0),(.8,2.8,.8),["rock"],role="island",nonObj=True,indestructible=True,color="6B5B4B"))
+    for i,x in enumerate([-6,-3,0,3,6]): b.append(B(f"pier{i}","brick",(x,2.6,0),(.8,2.8,.8),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"))
     for i,x in enumerate([-4.5,-1.5,1.5,4.5]):
         b+=[B(f"key{i}","wood",(-2.25+1.5*i,4.25,1.1),(.6,.5,.4),[f"pier{i}",f"pier{i+1}"],role="keystone"),
             B(f"bay{i}","brick",(x,4.7,0),(2.8,.5,2),[f"key{i}"]),
@@ -122,14 +122,14 @@ def L8():  # market arcade: 4 wood keystones 1.5m apart hold 4 bays on stone pie
 
 def L9():  # gauntlet: lighthouse on a steel ring + seawall on wood props hidden behind a brick breakwater
     b=[ROCK("rock",(0,.6,0),(12,1.2,6)),
-       B("lhBase","brick",(-3,2.2,-1),(2.6,2.0,2.6),["rock"],role="island",nonObj=True,indestructible=True,color="6B5B4B"),
+       B("lhBase","brick",(-3,2.2,-1),(2.6,2.0,2.6),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
        B("lhRing","steel",(-3,3.45,-1),(2.8,.5,2.8),["lhBase"],joint=True,role="steel_joint"),
        B("lhShaft0","brick",(-3,4.7,-1),(2.2,2.0,2.2),["lhRing"]),
        B("lhShaft1","brick",(-3,6.7,-1),(2.0,2.0,2.0),["lhShaft0"]),
        B("lhGallery","wood",(-3,7.9,-1),(2.8,.4,2.8),["lhShaft1"]),
        B("lhLantern","wood",(-3,8.8,-1),(1.6,1.4,1.6),["lhGallery"],role="lantern"),
        B("lhCap","brick",(-3,9.8,-1),(1.9,.6,1.9),["lhLantern"],color="4D7BC4"),
-       B("breakwater","brick",(3,2.0,2.0),(5.0,1.6,.6),["rock"],role="wall",nonObj=True,indestructible=True,color="6B5B4B"),
+       B("breakwater","brick",(3,2.0,2.0),(5.0,1.6,.6),["rock"],role="wall",nonObj=True,indestructible=True,color="8A8A8A"),
        B("propA","wood",(2,2.0,1.0),(.4,1.4,.4),["rock"],role="prop"),
        B("propB","wood",(4,2.0,1.0),(.4,1.4,.4),["rock"],role="prop"),
        B("seaDeck","brick",(3,3.0,.6),(4.4,.5,1.6),["propA","propB"])]
@@ -138,7 +138,7 @@ def L9():  # gauntlet: lighthouse on a steel ring + seawall on wood props hidden
     return b
 
 def L10():  # Tidewarden: Developer's boss layout (SG-05 rules live in TidewardenController)
-    return [B("stack","brick",(0,1.5,0),(5,3,4),nonObj=True,indestructible=True,color="5A2A20"),
+    return [B("stack","brick",(0,1.5,0),(5,3,4),nonObj=True,indestructible=True,color="8A8A8A",role="island"),
      B("hips","brick",(0,3.6,0),(3,1.2,2.2),["stack"]),
      B("torso","brick",(0,5.6,0),(3.4,2.8,2.4),["hips"]),
      B("shoulderL","steel",(-2.2,6.6,0),(1,1,1),["torso"],joint=True,role="shoulder"),
@@ -155,9 +155,9 @@ def L10():  # Tidewarden: Developer's boss layout (SG-05 rules live in Tidewarde
 LAYOUTS={1:("c1_l01_lookout_hut",L1),2:("c1_l02_stilt_tower",L2),3:("c1_l03_bakery",L3),4:("c1_l04_windmill",L4),
  5:("c1_l05_twin_cottages",L5),6:("c1_l06_granary",L6),7:("m1_clockwork_tower",L7),8:("c1_l08_market_arcade",L8),
  9:("c1_l09_lighthouse_gauntlet",L9),10:("c1_l10_tidewarden",L10)}
-OVR={1:dict(hintTarget="post"),2:dict(hintTarget="sill"),3:dict(hintTarget="propL"),4:dict(hintTarget="beamL"),
+OVR={1:dict(hintTarget="post",mastery=dict(type="DESTROYED_AT_LEAST",value=0.95,role="",text=">=95% destroyed")),2:dict(hintTarget="sill",mastery=dict(type="ROLE_BELOW_HEIGHT",value=0,role="tank",text="Topple the tank off the island edge")),3:dict(hintTarget="propL"),4:dict(hintTarget="beamL"),
  5:dict(hintTarget="bridge"),6:dict(hintTarget="braceL"),7:dict(hintTarget="scaffold"),8:dict(hintTarget="key1"),
- 9:dict(hintTarget="lhRing"),10:dict(star3Pct=0.28,star2Pct=0.14,hintTarget="shoulderL")}
+ 9:dict(hintTarget="lhRing"),10:dict(shots=8,star3Pct=0.375,star2Pct=0.25,hintTarget="shoulderL",mastery=dict(type="NO_CLOSED_SHUTTER_HIT",value=0,role="shutter",text="Defeat the Tidewarden without hitting the closed shutter"))}
 if __name__=="__main__":
     os.makedirs(os.path.join(HERE,"layouts"),exist_ok=True)
     for n,(lid,f) in LAYOUTS.items():

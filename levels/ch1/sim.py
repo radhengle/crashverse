@@ -14,7 +14,8 @@ Stars: ratio = shotsLeft/shots >= star3Pct / star2Pct (exact).
 """
 import json, sys, itertools, random, os
 HP={'wood':30,'brick':60,'steel':120}; MASS={'wood':1.0,'brick':2.5,'steel':4.0}
-DMG=60; SHOCK=40; SPLIT=0.5
+DMG=60; SHOCK=40; SPLIT=0.5; G=9.81; DEBRIS_MIN_V=2.0; DEBRIS_CAP=60
+DEBRIS=True
 HERE=os.path.dirname(os.path.abspath(__file__))
 
 class State:
@@ -31,7 +32,7 @@ class State:
     def damage(s,i,d,direct):
         x=s.b[i]
         if s.gone(i) or x.get('indestructible'): return
-        if direct and x.get('joint'): d*=2
+        if direct and x.get('joint'): d*=2  # debris/splash never multiplied
         s.hp[i]-=d
         if s.hp[i]<=0: s.broken.add(i); s.prop(i)
     def prop(s,i):
@@ -40,7 +41,21 @@ class State:
             sup=s.b[d].get('sup') or []
             if sup and all(s.gone(p) for p in sup):
                 if s.b[d].get('indestructible') and s.b[d].get('nonObj'): continue
-                s.coll.add(d); s.prop(d)
+                s.coll.add(d); s.debris(d); s.prop(d)
+    def debris(s,d):
+        """Level_Rulings_v1 #7 + DestructibleBlock.OnCollisionEnter: a collapsing (dynamic) piece that lands on the
+        highest intact (kinematic) piece under its footprint deals min(60, mass*v) splash to it if v>2 m/s,
+        v = sqrt(2*g*drop). The falling piece itself takes nothing (other body kinematic/static); stack-mates fall
+        together (relative v ~ 0)."""
+        if not DEBRIS: return
+        x=s.b[d]; bot=x['p'][1]-x['s'][1]/2; best=None; top=0.0
+        for j,y in s.b.items():
+            if j==d or s.gone(j): continue
+            yt=y['p'][1]+y['s'][1]/2
+            if yt>bot+1e-6: continue
+            if all(abs(y['p'][k]-x['p'][k])*2 < y['s'][k]+x['s'][k] for k in (0,2)) and yt>=top: best,top=j,yt
+        v=(2*G*max(0.0,bot-top))**.5
+        if best and v>DEBRIS_MIN_V: s.damage(best,min(DEBRIS_CAP,MASS[x['mat']]*v),False)
     def destroyed(s,i):
         x=s.b[i]
         if i in s.broken: return True
@@ -130,6 +145,11 @@ def random_play(blocks,win,budget,trials=4000,seed=1):
         res.append(used)
     return res
 
+def lay_ids(seq):
+    out=[]
+    for a,t in seq or []: out+= [t] if isinstance(t,str) else list(t)
+    return out
+
 def main():
     ch=json.load(open(os.path.join(HERE,'chapter1_levels.json')))
     rows=[]
@@ -138,7 +158,7 @@ def main():
         B,s3,s2=L['shots'],L['star3Pct'],L['star2Pct']
         need3=max(u for u in range(1,B+1) if stars(B,u,s3,s2)==3)
         if L.get('bossId'):
-            a=boss_min(lay,B,False); b=boss_min(lay,B,True)
+            a=boss_min(lay,B,False); b=boss_min(lay,B,True)  # a = spec (Level_Rulings #3), b = current code bug
             rows.append(dict(id=L['id'],shots=B,min=a,min_code=b,need3=need3,stars=stars(B,a,s3,s2) if a<=B else 0,
                  stars_code=stars(B,b,s3,s2) if b<=B else 0,margin=B-a,rand3=None,seq='shoulderL, shoulderR, core(open), any(closed), core(open)'))
             continue
@@ -150,7 +170,10 @@ def main():
         fmt=lambda q:', '.join((f'{a}:' if a else '')+(t if isinstance(t,str) else '+'.join(t)) for a,t in q) if q else '-'
         fin=State(lay)
         for a in (seqp if npw<=n else seq): fin=apply(fin,a)
-        rows.append(dict(id=L['id'],shots=B,final_pct=round(fin.ratio(),3),min=n,min_pw=npw,need3=need3,stars=stars(B,min(n,npw),s3,s2),
+        crown=[i for i,x in fin.b.items() if x.get('role')=='crown']
+        intact=(sum(1 for i in crown if i not in fin.broken)/len(crown)) if crown else None
+        stone_on_weak=[i for i in lay_ids(seqp if npw<=n else seq) if fin.b[i].get('indestructible')]
+        rows.append(dict(id=L['id'],shots=B,crown_intact=intact,stone_on_weak=stone_on_weak,final_pct=round(fin.ratio(),3),min=n,min_pw=npw,need3=need3,stars=stars(B,min(n,npw),s3,s2),
             margin=B-min(n,npw),rand3=round(r3,3),randwin=round(rw,3),seq=fmt(seqp if npw<=n else seq),one_shot=(n==1)))
     json.dump(rows,open(os.path.join(HERE,'sim_results.json'),'w'),indent=1)
     for r in rows: print(r)

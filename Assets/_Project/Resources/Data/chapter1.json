@@ -59,10 +59,10 @@
    ],
    "teaches": "Aim + fire, trajectory arc",
    "mastery": {
-    "type": "CLEAR_IN_SHOTS",
-    "value": 1,
+    "type": "DESTROYED_AT_LEAST",
+    "value": 0.95,
     "role": "",
-    "text": "Clear in 1 shot"
+    "text": ">=95% destroyed"
    },
    "forced": [],
    "lockedSlots": [],
@@ -94,7 +94,7 @@
     "type": "ROLE_BELOW_HEIGHT",
     "value": 0,
     "role": "tank",
-    "text": "Topple tank into sea (off the island)"
+    "text": "Topple the tank off the island edge"
    },
    "forced": [],
    "lockedSlots": [],
@@ -363,7 +363,7 @@
    "name": "The Tidewarden",
    "layout": "c1_l10_tidewarden",
    "objective": "BOSS",
-   "shots": 7,
+   "shots": 8,
    "winThreshold": 0.85,
    "materials": [
     "wood",
@@ -372,10 +372,10 @@
    ],
    "teaches": "Boss phases + weak points",
    "mastery": {
-    "type": "SHOTS_LEFT_AT_LEAST",
-    "value": 3,
-    "role": "",
-    "text": "Defeat with 3 shots left"
+    "type": "NO_CLOSED_SHUTTER_HIT",
+    "value": 0,
+    "role": "shutter",
+    "text": "Defeat the Tidewarden without hitting the closed shutter"
    },
    "forced": [],
    "lockedSlots": [],
@@ -398,8 +398,8 @@
      "id": "gearstorm_city"
     }
    ],
-   "star3Pct": 0.28,
-   "star2Pct": 0.14,
+   "star3Pct": 0.375,
+   "star2Pct": 0.25,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "shoulderL",
