@@ -509,7 +509,8 @@ namespace Crashverse.Backend
             var b = GetBoard(type, key);
             var me = b.subs.Find(x => x.playerId == _s.account.playerId);
             if (me == null) b.subs.Add(new Sub { playerId = _s.account.playerId, name = _s.account.displayName, score = score, ticks = now.Ticks });
-            else if (replace || score > me.score) { me.score = score; me.ticks = now.Ticks; }
+            else if (score > me.score) { me.score = score; me.ticks = now.Ticks; } // BUG-16: timestamp moves only when the score rises (ties = first to reach)
+            else if (replace && score < me.score) me.score = score;               // replace boards may correct downwards; never refresh the timestamp
         }
 
         bool IsClosed(Board b)
@@ -565,7 +566,7 @@ namespace Crashverse.Backend
             if (!string.IsNullOrEmpty(lvl.requires) && !_s.grantedFirstClears.Contains(lvl.requires)) return "prerequisite level not cleared on server";
             if (r.shotsLeft < 0 || r.shotsLeft > lvl.shots - 1) return "shots left out of range";
             if (float.IsNaN(r.destroyedRatio) || r.destroyedRatio < 0f || r.destroyedRatio > 1f) return "ratio out of range";
-            if (!lvl.IsBoss && r.destroyedRatio + 1e-4f < lvl.winThreshold) return "ratio below win threshold";
+            if (!lvl.IsBoss && !Crashverse.Meta.WinRule.Meets(r.destroyedRatio, lvl.winThreshold)) return "ratio below win threshold"; // BUG-17: exact, basis points
             int pieces = _db.GetLayout(lvl.layout)?.blocks?.Length ?? 0;
             if (r.bestCombo < 0 || r.bestCombo > pieces) return "combo out of range";
             return null;

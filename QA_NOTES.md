@@ -91,3 +91,10 @@ The stub's time source is an HTTP HEAD to `LocalBackendService.DefaultTimeUrl` (
 | Online cap | `ReportRankedCheckpoint` uses the same `offlineShotDamageCap` (5000/shot) as the offline tail | online_checkpoint_uses_plausibility_cap |
 
 Residual (needs the real server): reported campaign stats and mastery flags are bounds-checked, not simulated.
+
+## Build 40f5286 re-test: fixes
+| ID | Fix | Test |
+|---|---|---|
+| BUG-16 | Leaderboard timestamp changes only when the player's score/total rises (ties = first to reach) | BUG16_timestamp_only_on_increase |
+| BUG-17 | Win = destroyed basis points >= threshold bp (8500), integer compare, no tolerance; same `WinRule` on client and server | BUG17_win_exactly_85pct_bp |
+| BUG-18 | Not migrated by decision. Saves from builds before 40f5286 (`local_server_db.json`, `campaign_save.json`, queue/journal files) are **unsupported**: there is no migration. Clear app data (or reinstall) when upgrading test devices. | (doc) |

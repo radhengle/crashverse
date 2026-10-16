@@ -121,7 +121,7 @@ namespace Crashverse.Core
 
         void ResolveShot()
         {
-            bool won = Boss != null ? Boss.Defeated : tracker.DestroyedRatio + 1e-5f >= Ctx.level.winThreshold;
+            bool won = Boss != null ? Boss.Defeated : WinRule.Meets(tracker.DestroyedRatio, Ctx.level.winThreshold); // BUG-17: same rule as the server
             if (Ctx.mode == RunMode.TitanRanked) CheckpointTitan(won);
             if (won) { End(true); return; }
             if (ShotsLeft <= 0) { End(false); return; }

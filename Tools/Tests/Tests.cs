@@ -557,5 +557,25 @@ static class Tests
             b.ReportRankedCheckpoint(new RankedCheckpoint { token = t.token, shotIndex = 1, damageScore = 5000, shotsLeft = t.shotBudget - 1 }).Wait();
             T.True(Throws(() => b.ReportRankedCheckpoint(new RankedCheckpoint { token = t.token, shotIndex = 2, damageScore = 10001, shotsLeft = t.shotBudget - 2 }).Wait()), "second shot +5001 rejected");
         });
+        T.Add("BUG16_timestamp_only_on_increase", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount("Google").Wait();
+            Win(b, "c1_l01", 1f, 1, 0);
+            long t0 = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result.me.submittedTicks;
+            b.SetTestClock(U("2026-10-20T10:00:00")); Win(b, "c1_l01", 0.9f, 0, 0); // lower replay: total unchanged
+            var me = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result.me;
+            T.Eq(t0, me.submittedTicks, "timestamp kept when total doesn't rise");
+            b.SetTestClock(U("2026-10-21T10:00:00")); Win(b, "c1_l01", 1f, 3, 0);   // higher: total rises
+            T.True(b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result.me.submittedTicks > t0, "timestamp moves on increase");
+        });
+        T.Add("BUG17_win_exactly_85pct_bp", () =>
+        {
+            T.Eq(8500, WinRule.ToBp(0.85f), "0.85 → 8500"); T.Eq(8500, WinRule.ToBp(0.84999996f), "float noise of a real 85% → 8500");
+            T.True(!WinRule.Meets(0.8499f, 0.85f), "84.99% fails"); T.True(WinRule.Meets(0.85f, 0.85f), "85% passes");
+            T.True(WinRule.Meets(17f / 20f, 0.85f), "17/20 mass passes"); T.True(!WinRule.Meets(0.84995f, 0.85f), "84.995% fails");
+            var b = NewBackend("2026-10-16T10:00:00");
+            T.True(!Win(b, "c1_l01", 0.8499f, 1, 0).accepted, "server rejects 84.99%");
+            T.True(Win(b, "c1_l01", 0.85f, 1, 0).accepted, "server accepts 85%");
+        });
     }
 }

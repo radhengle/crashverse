@@ -68,6 +68,6 @@ Namespaces: `Crashverse.Core`, `.Destruction`, `.Weapons`, `.Level`, `.UI`, `.Pe
   `UI/UITheme.cs`; **Crashverse ▸ Create UI Theme** bakes `Resources/UITheme.asset`. Import Lilita One / Nunito ExtraBold into
   `Assets/_Project/Fonts/` first, or the built-in font is used.
 - Content: `python3 Tools/ContentGen/gen_content.py` regenerates all JSON (levels, layouts, Titan templates, season, store).
-- Tests: `~/.dotnet/dotnet run --project Tools/Tests` (59 cases) covers logic (stars SG-01/24, backend/test clock, season, combo/score/hint, store validator, Wrecker v2 dims).
+- Tests: `~/.dotnet/dotnet run --project Tools/Tests` (61 cases) covers logic (stars SG-01/24, backend/test clock, season, combo/score/hint, store validator, Wrecker v2 dims).
   `dotnet build Tools/CompileCheck` compiles all runtime scripts against minimal Unity stubs. This is **not** a substitute for a Unity compile.
 - Editor-only tasks still open: URP Volume/post effects, font import, first open in Unity to import the generated .meta files.
