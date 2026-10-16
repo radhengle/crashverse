@@ -32,7 +32,41 @@ public sealed class DataLifecycleService
         return rep;
     }
 
-    static bool Mentions(string id, string json, string pid) => id.Contains(pid, StringComparison.Ordinal) || json.Contains(pid, StringComparison.Ordinal);
+    /// <summary>Ownership, never substring: the doc id is the pid, starts with "pid:" (per-player sub-keys), is a board entry
+    /// "boardKey|pid", or its top-level playerId/ownerId field equals the pid. Other players' docs that merely mention the pid
+    /// (e.g. a friends list) are not owned and are never deleted.</summary>
+    public static bool Owns(string col, string id, string json, string pid)
+    {
+        if (string.IsNullOrEmpty(pid)) return false;
+        if (id == pid || id.StartsWith(pid + ":", StringComparison.Ordinal)) return true;
+        if ((col == "boards" || col == "shadowBoards") && id.EndsWith("|" + pid, StringComparison.Ordinal)) return true;
+        if (col == "replayQueue") return false; // its playerId field holds the queue reason; handled by run id
+        try
+        {
+            if (JsonNode.Parse(json) is JsonObject o)
+                foreach (var f in new[] { "playerId", "ownerId" })
+                    if (o.TryGetPropertyValue(f, out var v) && v is JsonValue jv && jv.TryGetValue<string>(out var sv) && sv == pid) return true;
+        }
+        catch (JsonException) { }
+        return false;
+    }
+
+    /// <summary>Top-100 by public rank: shadow entries, inactive accounts and hidden guests don't take a slot (the subject's own
+    /// deleted_pending status is treated as active).</summary>
+    async Task<bool> InPublicTop100(string boardKey, string pid)
+    {
+        var cal = new Calendar(_x); bool closed = cal.IsClosed(boardKey, _x.Now); int pos = 0;
+        foreach (var e in await new Leaderboards(_x).Entries(boardKey))
+        {
+            if (e.shadow) continue;
+            var acc = await _x.Db.Get<AccountDoc>("accounts", e.playerId);
+            if (acc == null || (acc.status != "active" && e.playerId != pid)) continue;
+            if (acc.isGuest || (e.guestAtSubmit && closed)) continue; // hidden
+            if (++pos > 100) return false;
+            if (e.playerId == pid) return true;
+        }
+        return false;
+    }
 
     /// <summary>D2–D7 for one player. Idempotent: a second run finds nothing to do.</summary>
     public async Task<Dictionary<string, int>> PurgeAccount(string pid)
@@ -40,17 +74,14 @@ public sealed class DataLifecycleService
         var counts = new Dictionary<string, int>();
         void Count(string c) => counts[c] = counts.GetValueOrDefault(c) + 1;
         var acc = await _x.Db.Get<AccountDoc>("accounts", pid);
-        var name = acc?.displayName;
         var tomb = "tomb_" + Hash.NewId();
         var pseudo = _x.Pseudo(pid);
 
         // D3: top-100 runs kept for anti-cheat are detached (tombstone id, no name); the board entries themselves are deleted.
         var keepRuns = new HashSet<string>();
-        var lb = new Leaderboards(_x);
-        foreach (var e in (await _x.Db.List<BoardEntryDoc>("boards")).Where(e => e.playerId == pid))
+        foreach (var e in (await _x.Db.List<BoardEntryDoc>("boards")).Where(e => e.playerId == pid && !e.shadow))
         {
-            var top = (await lb.Entries(e.boardKey)).Take(100).Select(t => t.playerId).ToHashSet();
-            if (!top.Contains(pid)) continue;
+            if (!await InPublicTop100(e.boardKey, pid)) continue;
             foreach (var r in (await _x.Db.List<RunDoc>("runs")).Where(r => r.playerId == pid && r.boardKeys.Contains(e.boardKey))) keepRuns.Add(r.runId);
         }
 
@@ -66,6 +97,7 @@ public sealed class DataLifecycleService
             });
         }
 
+        var myRuns = (await _x.Db.List<RunDoc>("runs")).Where(r => r.playerId == pid).Select(r => r.runId).ToHashSet();
         foreach (var col in Collections.PlayerData)
         {
             foreach (var (id, json) in await _x.Db.ListRaw(col))
@@ -73,14 +105,21 @@ public sealed class DataLifecycleService
                 if (col == "audit")
                 {
                     // Audit rows hold only the pseudonym; strip any detail that names the player (D6: no PII in audit).
-                    if (!json.Contains(pseudo) && !Mentions(id, json, pid) && (name == null || !json.Contains(name))) continue;
+                    // Matched by pid only: display names are shared ("Guest Wrecker") and would redact other players' rows.
                     var ae = JsonSerializer.Deserialize<AuditEntry>(json, new JsonSerializerOptions { IncludeFields = true });
-                    if (ae.detail == null || (!ae.detail.Contains(pid) && (name == null || !ae.detail.Contains(name)))) continue;
+                    if (ae.detail == null || !ae.detail.Contains(pid, StringComparison.Ordinal)) continue;
                     await _x.Db.LifecyclePurge(col, id);
                     ae.detail = "[redacted: account deleted]";
                     await _x.Db.TryCreate(col, id, ae); Count(col); continue;
                 }
-                if (!Mentions(id, json, pid)) continue;
+                if (col == "friends" && !Owns(col, id, json, pid))
+                {
+                    // Another player's friends doc: drop the deleted player from it, never delete it.
+                    var f = JsonSerializer.Deserialize<FriendDoc>(json, new JsonSerializerOptions { IncludeFields = true });
+                    if (f?.added == null || f.added.RemoveAll(o => o == pid) == 0) continue;
+                    await _x.Db.Put(col, id, f); Count("friends_unlinked"); continue;
+                }
+                if (col == "replayQueue" ? !myRuns.Contains(id) : !Owns(col, id, json, pid)) continue;
                 if (col == "purchases")
                 {
                     // D4: kept pseudonymised for tax; deleted by the retention job after TaxRetentionDays (NEEDS LEGAL REVIEW).
