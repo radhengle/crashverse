@@ -51,3 +51,5 @@ Tools/CompileCheck/obj/
 *.zip
 Tools/Tests/bin/
 Tools/Tests/obj/
+*.blend
+*.blend1
