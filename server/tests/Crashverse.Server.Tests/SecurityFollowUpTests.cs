@@ -69,4 +69,32 @@ public class SecurityFollowUpTests
         Assert.True((await life.Retention()).ageTokenUsesExpired >= 1);
         Assert.Null(await h.X.Db.Get<IdentityDoc>("ageTokenUses", "j1"));
     }
+
+    [Fact] // Security condition (a): ACCEPT_UNTIL is capped at startup (default 400 days, configurable)
+    public void AcceptUntil_CappedAtStartup()
+    {
+        var now = new DateTime(2026, 10, 16, 12, 0, 0, DateTimeKind.Utc);
+        Assert.DoesNotContain("ACCEPT_UNTIL", ProdErrors(Env("2027-11-19"), now));                 // ~399 days
+        Assert.Contains("more than 400 days away", ProdErrors(Env("2027-11-21"), now));            // ~401 days
+        var tight = Env("2027-01-31"); tight["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS"] = "90";
+        Assert.Contains("more than 90 days away", ProdErrors(tight, now));
+        var bad = Env("2027-11-21"); bad["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS"] = "abc"; // invalid = default 400
+        Assert.Contains("more than 400 days away", ProdErrors(bad, now));
+    }
+
+    [Fact] // Security condition (b): the runtime check fails closed without ACCEPT_UNTIL
+    public async Task PreviousSecret_NeverAcceptedWithoutAcceptUntil()
+    {
+        await using var h = await Harness.Start();
+        var logs = new List<string>(); h.X.SecurityLog = logs.Add;
+        var auth = new AuthService(h.X); var s = await h.Guest();
+        var oldId = auth.ObfuscatedId(s.pid);
+        h.X.Opt.PreviousObfuscationPepper = h.X.Opt.ObfuscationPepper; h.X.Opt.PreviousObfuscationPepperVersion = h.X.Opt.ObfuscationPepperVersion;
+        h.X.Opt.ObfuscationPepper = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32); h.X.Opt.ObfuscationPepperVersion = "v9";
+        h.X.Opt.PreviousAcceptUntilUnixMs = null;
+        Assert.False(auth.MatchesObfuscatedId(s.pid, oldId)); Assert.Empty(logs);
+        Assert.True(auth.MatchesObfuscatedId(s.pid, auth.ObfuscatedId(s.pid))); // current secret unaffected
+        h.X.Opt.PreviousAcceptUntilUnixMs = h.X.NowMs + 60_000;
+        Assert.True(auth.MatchesObfuscatedId(s.pid, oldId)); Assert.Single(logs);
+    }
 }

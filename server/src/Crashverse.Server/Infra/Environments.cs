@@ -51,6 +51,7 @@ public static class ProdGuard
             else if (x.Opt.PurchaseBindingPreviousSecretVersion == x.Opt.PurchaseBindingSecretVersion) bad.Add("previous purchase-binding version equals the current one");
             if (x.Opt.PreviousAcceptUntilUnixMs is not long until) bad.Add("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL must be set (ISO UTC date) when _PREVIOUS is set");
             else if (until <= x.NowMs) bad.Add("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL has passed: remove SECRET_VERSION_PURCHASE_BINDING_PREVIOUS");
+            else if (until - x.NowMs > (long)x.Opt.PreviousAcceptUntilMaxDays * 86_400_000L) bad.Add($"SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL is more than {x.Opt.PreviousAcceptUntilMaxDays} days away (cap: SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS)");
         }
         if (x.Opt.XEnabled) Check("x", x.X);
         if (x.Tokens == null) bad.Add("tokens: not configured");
