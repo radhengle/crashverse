@@ -52,7 +52,7 @@ namespace Crashverse.Sim
             [Tooltip("Audio re-tier: impulse ≥ this is Medium (N·s).")] public float mediumMinImpulse;
             [Tooltip("Audio re-tier: impulse > this is Heavy (N·s).")] public float heavyMinImpulse;
             [Tooltip("Base pitch offset in semitones (glass is brittle/high).")] public float pitchOffsetSemitones;
-            [Tooltip("Higher wins a mixed pair. Default steel 4 > brick 3 > glass 2 > wood 1 > terrain 0.")] public int hardness;
+            [Tooltip("Higher wins a mixed pair. Default steel 5 > stone 4 > brick 3 > glass 2 > wood 1 > terrain 0.")] public int hardness;
             [Tooltip("Max voices for this material on Low/Mid/High device tiers (within voicesLow/Mid/High).")] public int voiceCapLow, voiceCapMid, voiceCapHigh;
             [Tooltip("Sample bank / mixer path for this material.")] public string bank;
             [Tooltip("COLLAPSE_LAND sfx id for this material (empty = no collapse sound).")] public string collapseSfx;
@@ -63,10 +63,11 @@ namespace Crashverse.Sim
         {
             new MaterialAudio { material = MaterialType.Wood,  mediumMinImpulse = 30f, heavyMinImpulse = 120f, pitchOffsetSemitones = 0f, hardness = 1, voiceCapLow = 4, voiceCapMid = 8, voiceCapHigh = 10, bank = "SFX/Destruction/Wood",  collapseSfx = "sfx_wood_collapse" },
             new MaterialAudio { material = MaterialType.Brick, mediumMinImpulse = 40f, heavyMinImpulse = 150f, pitchOffsetSemitones = 0f, hardness = 3, voiceCapLow = 4, voiceCapMid = 8, voiceCapHigh = 10, bank = "SFX/Destruction/Brick", collapseSfx = "sfx_brick_collapse" },
-            new MaterialAudio { material = MaterialType.Steel, mediumMinImpulse = 60f, heavyMinImpulse = 200f, pitchOffsetSemitones = 0f, hardness = 4, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8,  bank = "SFX/Destruction/Steel", collapseSfx = "sfx_steel_collapse" },
+            new MaterialAudio { material = MaterialType.Steel, mediumMinImpulse = 60f, heavyMinImpulse = 200f, pitchOffsetSemitones = 0f, hardness = 5, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8,  bank = "SFX/Destruction/Steel", collapseSfx = "sfx_steel_collapse" },
             new MaterialAudio { material = MaterialType.Glass, mediumMinImpulse = 15f, heavyMinImpulse = 80f,  pitchOffsetSemitones = 3f, hardness = 2, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8,  bank = "SFX/Destruction/Glass", collapseSfx = "sfx_glass_collapse" },
-            // Stone: PLACEHOLDER defaults (heavier/lower than brick) until Sound Manager tunes them and adds the bank.
-            new MaterialAudio { material = MaterialType.Stone, mediumMinImpulse = 50f, heavyMinImpulse = 180f, pitchOffsetSemitones = -2f, hardness = 3, voiceCapLow = 4, voiceCapMid = 8, voiceCapHigh = 10, bank = "SFX/Destruction/Stone", collapseSfx = "sfx_stone_collapse" },
+            // Stone: tuned by Sound Manager 2026-10-16 (bank: sfx_stone_{impact,crack,break}_{s,m,l}_0{1..3}, sfx_stone_collapse_{s,m,l}_0{1,2}, sfx_stone_debris_0{1..4}).
+            // Heavier/lower than brick; hardness between brick (3) and steel (now 5) so steel > stone > brick in mixed pairs.
+            new MaterialAudio { material = MaterialType.Stone, mediumMinImpulse = 50f, heavyMinImpulse = 180f, pitchOffsetSemitones = -2f, hardness = 4, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8, bank = "SFX/Destruction/Stone", collapseSfx = "sfx_stone_collapse" },
             new MaterialAudio { material = MaterialType.Terrain, mediumMinImpulse = 40f, heavyMinImpulse = 150f, pitchOffsetSemitones = 0f, hardness = 0, voiceCapLow = 2, voiceCapMid = 3, voiceCapHigh = 4, bank = "SFX/Destruction/Impacts", collapseSfx = "" },
         };
 
