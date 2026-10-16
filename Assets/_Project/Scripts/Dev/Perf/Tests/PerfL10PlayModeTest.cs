@@ -60,43 +60,43 @@ namespace Crashverse.DevTools.Perf.Tests
         // per frame in batchmode (pre-existing, reported to Developer). It doesn't touch the sim. Set in SetUp too: the previous
         // test's scene keeps logging until the next scene load, before the test body runs (CI run 38952901718).
         [SetUp] public void IgnoreLegacyInputLogs() => LogAssert.ignoreFailingMessages = true;
+        [UnityTearDown] public IEnumerator Unload() { LogAssert.ignoreFailingMessages = true; yield return null; }
 
         static T F<T>(object r, string n) => (T)r.GetType().GetField(n).GetValue(r);
 
-        [UnityTest, Timeout(400000)]
-        public IEnumerator L10_FullBudget_Mid_HitsCapsAndIsDeterministic()
+        /// <summary>
+        /// One test on purpose: the UI router is DontDestroyOnLoad and logs the legacy-Input exception every frame, so any frame
+        /// between two tests is charged to the next test before its body can ignore it (CI runs 38952901718, 38954261200).
+        /// </summary>
+        [UnityTest, Timeout(1500000)]
+        public IEnumerator L10_FullBudget_Mid_HitsCapsAndIsDeterministic_PlusRetryVariants()
         {
-            // Game UI/aim scripts call legacy UnityEngine.Input while the project runs the Input System, which logs an exception per
-            // frame in batchmode (pre-existing, reported to Developer). It doesn't touch the sim; don't let it fail the perf check.
-            LogAssert.ignoreFailingMessages = true;
-            var o = new Outcome();
-            yield return Run("Reload", false, o);
-            Assert.IsTrue(o.done, $"finished {Runs} runs within {TimeoutSec}s (got {o.results.Count})");
-            for (int i = 0; i < o.results.Count; i++)
+            var failures = new System.Collections.Generic.List<string>();
+            var main = new Outcome();
+            yield return Run("Reload", false, main);
+            if (!main.done) failures.Add($"auto_reload: finished {main.results.Count}/{Runs} runs within {TimeoutSec}s");
+            for (int i = 0; i < main.results.Count; i++)
             {
-                var r = o.results[i];
-                Assert.IsTrue(F<bool>(r, "hit"), $"run {i}: scripted shot hits the curtain");
-                Assert.That(F<int>(r, "hitRow"), Is.InRange(0, 5), $"run {i}: hit on a lower/middle row");
-                Assert.GreaterOrEqual(F<int>(r, "saturatedMs"), 1000, $"run {i}: 3 breaks/100 ms saturated ≥ 1 s");
-                Assert.GreaterOrEqual(F<int>(r, "peakDebris"), 60, $"run {i}: ≥ 60 debris rigidbodies on Mid");
+                var r = main.results[i];
+                if (!F<bool>(r, "hit")) failures.Add($"run {i}: scripted shot missed the curtain");
+                if (F<int>(r, "hitRow") < 0 || F<int>(r, "hitRow") > 5) failures.Add($"run {i}: hit row {F<int>(r, "hitRow")} not in 0..5");
+                if (F<int>(r, "saturatedMs") < 1000) failures.Add($"run {i}: saturated_ms {F<int>(r, "saturatedMs")} < 1000");
+                if (F<int>(r, "peakDebris") < 60) failures.Add($"run {i}: peak_debris {F<int>(r, "peakDebris")} < 60");
             }
-            Assert.IsTrue(o.det, "scene reload between runs: identical PHYS_* hash");
-        }
+            if (!main.det) failures.Add("auto_reload: hashes differ across scene reloads");
 
-        [UnityTest, Timeout(1200000)]
-        public IEnumerator L10_RetryVariants_Determinism()
-        {
-            LogAssert.ignoreFailingMessages = true;
-            var table = new System.Text.StringBuilder("PERFL10_VARIANTS");
+            // Retry-divergence diagnosis: {auto-simulation, ranked Script/Physics.Simulate} x {InPlace Retry, Restart, Reload}.
+            var table = new System.Text.StringBuilder($"PERFL10_VARIANTS,{main.variant}={(main.det ? "MATCH" : "MISMATCH")}");
             foreach (var ranked in new[] { false, true })
                 foreach (var mode in new[] { "InPlace", "Restart", "Reload" })
                 {
+                    if (!ranked && mode == "Reload") continue; // = main
                     var o = new Outcome();
                     yield return Run(mode, ranked, o);
                     table.Append($",{o.variant}={(o.done ? (o.det ? "MATCH" : "MISMATCH") : "TIMEOUT")}");
                 }
             Debug.Log(table.ToString());
-            // Diagnosis only for now: the result table is the output. Ranked assertions are added once the fix lands.
+            Assert.IsEmpty(failures, string.Join("; ", failures));
         }
     }
 }
