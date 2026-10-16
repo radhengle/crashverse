@@ -11,6 +11,7 @@ namespace UnityEngine
         public static void DestroyImmediate(Object obj) { }
         public static void DontDestroyOnLoad(Object o) { }
         public static T FindObjectOfType<T>() where T : Object => null;
+        public static T[] FindObjectsOfType<T>() where T : Object => new T[0];
         public static Object Instantiate(Object original) => original is GameObject g ? new GameObject(g.name) : original;
         public static Object Instantiate(Object original, Transform parent) => Instantiate(original);
     }
@@ -136,6 +137,7 @@ namespace UnityEngine
 
     public static class Time
     {
+        public static double unscaledTimeAsDouble;
         public static float unscaledTime;
         public static float deltaTime = 0.016f;
         public static float fixedDeltaTime = 0.02f;
@@ -279,6 +281,7 @@ namespace UnityEngine
     public static class Debug { public static void Log(object m) { } public static void LogError(object m) { System.Console.WriteLine("ERR " + m); } public static void LogWarning(object m) { } }
     public static class Random
     {
+        public static int Range(int min, int max) => min;
         public static float value => 0.5f;
         public static Vector3 insideUnitSphere => Vector3.one;
         public static Quaternion rotation => Quaternion.identity;
@@ -347,7 +350,7 @@ namespace UnityEngine
     {
         public AudioClip clip; public bool loop, playOnAwake, isPlaying; public float volume = 1f, spatialBlend; public int priority, timeSamples;
         public UnityEngine.Audio.AudioMixerGroup outputAudioMixerGroup;
-        public void PlayScheduled(double t) { isPlaying = true; } public void SetScheduledEndTime(double t) { } public void Stop() { isPlaying = false; }
+        public void PlayScheduled(double t) { isPlaying = true; } public void Play() { isPlaying = true; } public void SetScheduledEndTime(double t) { } public void Stop() { isPlaying = false; }
     }
 
 }
@@ -356,4 +359,4 @@ namespace UnityEngine.Rendering
 {
     public enum AmbientMode { Skybox, Trilight, Flat, Custom }
 }
-namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } }
+namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } public class AudioMixer : UnityEngine.Object { public AudioMixerGroup[] FindMatchingGroups(string subPath) => new AudioMixerGroup[0]; } }
