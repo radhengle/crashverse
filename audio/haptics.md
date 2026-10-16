@@ -29,19 +29,23 @@ Each bucket is a single `VibrationEffect.createOneShot(ms, amp)`, built once and
 | `IMPACT_WOOD`, `BREAK_WOOD`, `IMPACT_GLASS`, `BREAK_GLASS` | ImpactWood 0.02 / 0.2° | 0.13 | 1 `light_tick` 12 ms / 60 |
 | `IMPACT_BRICK` | BrickHit 0.02 / 0.2° | 0.13 | 1 `light_tick` |
 | `IMPACT_STEEL`, `IMPACT_STEEL_JOINT`, `PU_PHASE_HIT` | SteelRing 0.01 / 0.1° | 0.067 | 1 `light_tick` |
-| `IMPACT_TERRAIN` | Terrain 0.01 / 0.1° (provisional) | 0.067 | 1 `light_tick` |
+| `IMPACT_TERRAIN` | Terrain 0.01 / 0.1°, 80 ms (final) | 0.067 | **none** (shake only) ✅ Animator |
+| `BREAK_STEEL` (non-joint) | SteelBreak 0.03 / 0.3°, 150 ms, Break family | 0.20 | 1 `light_tick` (override) ✅ Animator |
 | `BREAK_BRICK`, `PHYS_BREAK` (unknown material) | BrickBreak 0.04 / 0.4° | 0.27 | 2 `impact` |
 | `BOSS_TIDE_CORE_HIT`, `BOSS_TITAN_HIT` | BrickBreak | 0.27 | 2 `impact` |
 | `BREAK_STEEL_JOINT`, `BOSS_TIDE_JOINT_BREAK`, `PHYS_JOINT_SNAP` | JointBreak 0.06 / 0.6° | 0.40 | 2 `impact` |
 | `COLLAPSE_LAND`, `PHYS_COLLAPSE_END`, `BOSS_TIDE_ARMS_LAND` | CollapseLand 0.08 / 0.8° | 0.53 | merged per 40 ms window (§4): wood/glass 2, brick/stone/unknown 3 `break_med`, steel 4. ✅ Sound Manager |
-| `PU_GRAVITY_BURST` | GravityBurst 0.08 / 0.8° | 0.53 | 3 `break_med` |
-| `EXPLODE_CRATE` (alias `EXPLODE_BARREL`), `PU_CHAIN_PULSE` | Explosion 0.10 / 1.0° | 0.67 | 3 `break_med` |
+| `PU_GRAVITY_BURST` | GravityBurst 0.08 / 0.8° | 0.53 | 1 `light_tick` at implode start (1500 ms) + 3 `break_med` at burst-ring peak (+100 ms, minus lead → +80 ms) ✅ Animator |
+| `EXPLODE_CRATE` (alias `EXPLODE_BARREL`) | Explosion 0.10 / 1.0° | 0.67 | 3 `break_med` |
+| `PU_CHAIN_PULSE` | Explosion 0.10 / 1.0° | 0.67 | 2 `impact` (medium override) ✅ Animator |
+| `PU_CHAIN_LINK` | none (haptic only) | — | 1 `light_tick` per link, 80 ms stagger, max 5 per activation (count resets on PULSE) ✅ Animator |
+| `BOSS_TIDE_DEFEAT_COLLAPSE` (new, +210 f / 3500 ms) | none (haptic only) | — | 2 `impact` (medium) ✅ Animator. **Animator must raise this event from the defeat clip** |
 | `BOSS_TIDE_PHASE2`, `BOSS_TIDE_DEFEAT`, `BOSS_TITAN_STAGE`, `BOSS_TITAN_DEFEAT` | BossPhase 0.12 / 1.2° | 0.80 | 4 `boom` 60 ms / 255 ★ |
-| `PHYS_IMPACT` medium/heavy | by material: wood/glass → ImpactWood, brick → BrickHit, steel → SteelRing, terrain → Terrain | | 1 `light_tick` |
+| `PHYS_IMPACT` medium/heavy | by material: wood/glass → ImpactWood, brick → BrickHit, steel → SteelRing, terrain → Terrain | | 1 `light_tick` (terrain: none) |
 | `PHYS_IMPACT` light, `PHYS_CRACK`, `PHYS_COLLAPSE_START` | none | — | none |
 | `PHYS_BREAK` by material | wood/glass → ImpactWood (1), brick → BrickBreak (2), steel → JointBreak (2) | | as listed |
 
-Not routed today, so no haptic: `BREAK_STEEL` (non-joint), UI events (`UI_*`, chest), `PU_TIME_*`, `ANIM_WRECKER_RECOIL_LAND`. A UI-tap haptic is out of scope for v1.
+Not routed, so no haptic: UI events (`UI_*`, chest), `PU_TIME_*`, `ANIM_WRECKER_RECOIL_LAND`. A UI-tap haptic is out of scope for v1.
 
 ## 3. Toggle rules
 
@@ -66,7 +70,7 @@ Enforced at one point (`ShakeDispatcher.Submit`), so every caller (`CameraShake.
 
 ## 5. Timing alignment with SFX / animation
 
-Status: rows marked ✅ were **confirmed by Sound Manager**. Rows marked ⏳ are **pending Animator confirmation**.
+Status: **all rows confirmed.** Rows 1/2/3/7 by Sound Manager; rows 4/5/6/8 by Animator (also recorded in `animation/07` 'Haptics timing').
 
 The pulse fires on the **same frame** as the routed event, which is the SFX transient (all `0 / 0` offsets in `audio_sync_table.md` unless noted).
 
@@ -75,11 +79,11 @@ The pulse fires on the **same frame** as the routed event, which is the SFX tran
 | 1 | `ANIM_WRECKER_FIRE` | at launch = +4 f / 66 ms after FIRE tap | pulse at launch with the cannon boom, **not** on the tap (raised on WreckerState.Recoil) | ✅ Sound Manager |
 | 2 | `EXPLODE_CRATE` | 6 / 100 after swell start | the event is raised at the peak, so the pulse lands on the 100 ms peak, not at swell start | ✅ Sound Manager |
 | 3 | `COLLAPSE_LAND` | 0 / 0 per segment contact | landings within 40 ms → one pulse, strongest material (§4) | ✅ Sound Manager |
-| 4 | `PU_GRAVITY_BURST` | 90 / 1500 | does the peak sit at BURST start? | ⏳ Animator |
-| 5 | `PU_CHAIN_PULSE` | 0; links +5 f (80 ms) each | only PULSE vibrates. Should each `PU_CHAIN_LINK` tick? | ⏳ Animator |
-| 6 | `BOSS_TIDE_DEFEAT` | 0 / 0 (clip 4.0 s) | single `boom` at start. Second pulse at the final collapse? | ⏳ Animator |
+| 4 | `PU_GRAVITY_BURST` | 90 / 1500; peak 1600 | light tick at 1500 ms (implode start), `break_med` at 1600 ms burst ring (scheduled, lead −20 → 1580 ms) | ✅ Animator |
+| 5 | `PU_CHAIN_PULSE` / `PU_CHAIN_LINK` | 0; links +5 f (80 ms) each | medium on PULSE; light tick per LINK, max 5 per activation | ✅ Animator |
+| 6 | `BOSS_TIDE_DEFEAT` / `BOSS_TIDE_DEFEAT_COLLAPSE` | 0 / 0; +210 f / 3500 ms (clip 4.0 s) | strong `boom` at start, medium at the new DEFEAT_COLLAPSE event (Animator raises it from the clip) | ✅ Animator |
 | 7 | Haptic lead offset | `HapticTiming.LeadMs`, default **−20 ms** | see below | ✅ Sound Manager |
-| 8 | `BREAK_STEEL` (unrouted → no haptic); `IMPACT_TERRAIN` provisional shake | — | intended? | ⏳ Animator |
+| 8 | `BREAK_STEEL`; `IMPACT_TERRAIN` | 0 / 0 | BREAK_STEEL routed: shake 0.03 m / 0.3° 150 ms + light tick. IMPACT_TERRAIN final 0.01 m 80 ms, no haptic | ✅ Animator |
 | — | `BOSS_TIDE_ARMS_LAND` 36 / 600, `BOSS_TIDE_PHASE2` 75 / 1250, `IMPACT_*`/`BREAK_*` 0 / 0 | | on the event | as routed |
 
 **Lead offset (row 7):** config field `HapticTiming.LeadMs` (default −20 ms, negative = before the audio peak). Scheduled time = `eventMs + max(0, peakDelayMs + LeadMs)`, so a pulse **never fires before its triggering event**. Every routed event is raised at its own transient today (peakDelay 0), so the −20 ms lead clamps to 0 and pulses stay synchronous. The lead only shifts a pulse if an event later carries a known delay to its peak, e.g. 100 ms → fires at +80 ms. Android vibrator latency (~10–30 ms) is otherwise not compensated.

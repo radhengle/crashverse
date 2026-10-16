@@ -86,4 +86,39 @@ namespace Crashverse.Feel
         public static float FireAtMs(float eventMs, float peakDelayMs, float leadMs) => eventMs + Math.Max(0f, peakDelayMs + leadMs);
         public static float FireAtMs(float eventMs, float peakDelayMs = 0f) => FireAtMs(eventMs, peakDelayMs, LeadMs);
     }
+
+    /// <summary>Per-event haptic overrides on top of the shake-derived bucket (Animator answers on #37, haptics.md §2/§5).</summary>
+    public static class HapticRouter
+    {
+        public const int MaxChainLinks = 5;
+        /// <summary>Bucket replacing the shake-derived one (0 = no haptic).</summary>
+        public static bool Override(string evt, out int bucket)
+        {
+            switch (evt)
+            {
+                case "PU_GRAVITY_BURST": bucket = 1; return true;  // light tick at implode start (1500 ms); peak follows via Delayed
+                case "PU_CHAIN_PULSE": bucket = 2; return true;    // medium
+                case "BREAK_STEEL": bucket = 1; return true;       // light
+                case "IMPACT_TERRAIN": bucket = 0; return true;    // shake only
+                case "BOSS_TIDE_DEFEAT": bucket = 4; return true;  // strong at defeat start
+                default: bucket = 0; return false;
+            }
+        }
+        /// <summary>Events with no camera shake that still pulse.</summary>
+        public static bool HapticOnly(string evt, out int bucket)
+        {
+            switch (evt)
+            {
+                case "PU_CHAIN_LINK": bucket = 1; return true;               // per link, 80 ms stagger, max 5 per activation
+                case "BOSS_TIDE_DEFEAT_COLLAPSE": bucket = 2; return true;   // medium, +210 f / 3500 ms
+                default: bucket = 0; return false;
+            }
+        }
+        /// <summary>Second pulse scheduled after the event at its audio/visual peak (lead offset applied via HapticTiming).</summary>
+        public static bool Delayed(string evt, out int bucket, out float peakDelayMs)
+        {
+            if (evt == "PU_GRAVITY_BURST") { bucket = 3; peakDelayMs = 100f; return true; } // burst ring at 1600 ms
+            bucket = 0; peakDelayMs = 0f; return false;
+        }
+    }
 }

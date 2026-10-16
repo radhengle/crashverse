@@ -118,6 +118,24 @@ static class AnimTests
             T.Eq(1000f, HapticTiming.FireAtMs(1000f, 10f), "peak 10 ms after event: clamped to the event");
             T.Eq(1030f, HapticTiming.FireAtMs(1000f, 0f, 30f), "positive lead (lag) honoured");
         });
+        T.Add("HAPTICS_animator_timing", () =>
+        {
+            RecHapticsLog h; ShakeDispatcher D() { h = new RecHapticsLog(); return new ShakeDispatcher(new ShakeStack()) { Haptics = h, Settings = new MotionSettings(new AnimMemPrefs(), false) }; }
+            var d = D(); d.Submit("PU_GRAVITY_BURST", 1, 1500f); T.Eq("1@1500", h.Log, "gravity: light tick at implode start");
+            d.Tick(1560f); T.Eq("1@1500", h.Log, "peak not yet"); d.Tick(1580f); T.Eq("1@1500 3@1580", h.Log, "peak 1600 ms with −20 ms lead → 1580");
+            d.Tick(2000f); T.Eq("1@1500 3@1580", h.Log, "peak once");
+            d = D(); d.Submit("PU_CHAIN_PULSE", 1, 0f); for (int i = 1; i <= 7; i++) d.Submit("PU_CHAIN_LINK", 1 + i, i * 80f);
+            T.Eq("2@0 1@80 1@160 1@240 1@320 1@400", h.Log, "chain: medium pulse + light tick per link, max 5");
+            d.Submit("PU_CHAIN_PULSE", 20, 1000f); d.Submit("PU_CHAIN_LINK", 21, 1080f); T.True(h.Log.EndsWith("2@1000 1@1080"), "link cap resets per activation");
+            d = D(); T.True(d.Submit("BOSS_TIDE_DEFEAT", 1, 0f) && d.Submit(AnimEvents.BossTideDefeatCollapse, 2, 3500f), "defeat + new collapse event routed");
+            T.Eq("4@0 2@3500", h.Log, "boss defeat: strong then medium at +3500 ms");
+            T.True(ShakeRouter.TryGet("BREAK_STEEL", out var s, out var f) && s.pos == 0.03f && s.rot == 0.3f && s.durationMs == 150 && f == ShakeFamily.Break, "BREAK_STEEL route 0.03 m / 0.3° 150 ms");
+            d = D(); d.Submit("BREAK_STEEL", 1, 0f); T.Eq("1@0", h.Log, "BREAK_STEEL light haptic");
+            var st = new ShakeStack(); var d2 = new ShakeDispatcher(st) { Haptics = h = new RecHapticsLog(), Settings = new MotionSettings(new AnimMemPrefs(), false) };
+            T.True(d2.Submit("IMPACT_TERRAIN", 1, 0f) && st.Count == 1 && ShakeRouter.TryGet("IMPACT_TERRAIN", out s) && s.pos == 0.01f && s.durationMs == 80, "terrain still shakes 0.01 m 80 ms");
+            T.True(d2.SubmitPhys("PHYS_IMPACT", ShakeRouter.MatTerrain, 2, 2, 100f), "phys terrain shakes"); T.Eq("", h.Log, "terrain: no haptic");
+            T.True(!Src("Assets/_Project/Scripts/Feel/FeelCore.cs").Contains("flagged for Animator"), "terrain no longer provisional");
+        });
         T.Add("HAPTICS_buckets_and_gate", () =>
         {
             T.Eq(1, HapticBuckets.For(ShakeDispatcher.Strength(ShakeTable.ImpactWood))); T.Eq(2, HapticBuckets.For(ShakeDispatcher.Strength(ShakeTable.Fire)));
@@ -258,4 +276,5 @@ static class AnimTests
 }
 
 sealed class GatedRec : Crashverse.Feel.IHaptics { Crashverse.Feel.HapticGate _g; public int Fired; public void Pulse(int bucket, float nowMs) { if (_g.Allow(bucket, nowMs)) Fired++; } }
+sealed class RecHapticsLog : Crashverse.Feel.IHaptics { public string Log = ""; public void Pulse(int b, float t) { Log += (Log.Length > 0 ? " " : "") + b + "@" + t; } }
 sealed class RecHaptics : Crashverse.Feel.IHaptics { public int Calls, Last; public void Pulse(int bucket, float nowMs) { Calls++; Last = bucket; } }
