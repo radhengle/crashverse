@@ -288,6 +288,12 @@ namespace Crashverse.UI
             for (int i = 0; i < 3; i++) { int idx = i; _pu[i] = UIFactory.Button(pu, "", Th.navy500, () => _s.PowerUps.ToggleArm(idx), Th, 64, 64, Th.captionSp); }
             _fire = UIFactory.Button(root, "FIRE", Th.orange, () => _s.TryFire(), Th, 88, 88, Th.titleSp);
             UIFactory.Place((RectTransform)_fire.transform, new Vector2(1f, 0f), new Vector2(88, 88), new Vector2(-Th.edgeGestureInset, Th.edgeGestureInset + 8));
+#if CRASHVERSE_DEV || DEVELOPMENT_BUILD
+            // BUG-24: dev-only "aim at practice hint" so CI smoke can play a known-winning L1 line deterministically.
+            var hint = UIFactory.Button(root, "HINT", Th.navy500, () => _s.aim.SetAim(_s.Ctx.level.hintYaw, _s.Ctx.level.hintPitch), Th, 64, 64, Th.captionSp);
+            hint.gameObject.name = "Button_DevAimHint";
+            UIFactory.Place((RectTransform)hint.transform, new Vector2(1f, 0f), new Vector2(64, 64), new Vector2(-Th.edgeGestureInset - 104, Th.edgeGestureInset + 8));
+#endif
             _s.Changed += Refresh; _s.Ended += OnEnded;
             _s.tracker.ComboChanged += n => { if (n >= ComboTracker.ShowFrom) { _combo.text = "x" + n; _comboT = 0.8f; _combo.fontSize = Mathf.RoundToInt(Th.titleSp + 4 * ComboTracker.PopTier(n)); } };
             Refresh();

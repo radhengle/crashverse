@@ -43,8 +43,8 @@ namespace UnityEngine
         public Material sharedMaterial, material;
         public void SetPosition(int i, Vector3 p) { } public void SetPositions(Vector3[] p) { }
     }
-    public class Material : Object { public Material(Shader s) { } public Color color; public void SetColor(string n, Color c) { } }
-    public class Shader : Object { public static Shader Find(string n) => new Shader(); }
+    public class Material : Object { public Material(Shader s) { } public Shader shader; public Color color; public void SetColor(string n, Color c) { } }
+    public class Shader : Object { public static Shader Find(string n) => new Shader(); public bool isSupported = true; }
     public enum TouchPhase { Began, Moved, Stationary, Ended, Canceled }
     public struct Touch { public int fingerId; public Vector2 position; public Vector2 deltaPosition; public TouchPhase phase; }
     public enum KeyCode { Escape, Space, Return }
@@ -111,3 +111,4 @@ namespace UnityEngine
 
     public class RectOffset { public RectOffset() { } public RectOffset(int l, int r, int t, int b) { } }
 }
+namespace UnityEngine { public class ParticleSystemRenderer : Renderer { } public static class GameObjectExt2 { } }

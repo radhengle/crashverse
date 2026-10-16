@@ -4,6 +4,7 @@ name: Unity EditMode tests
 
 on:
   pull_request:
+  push:
     branches: [ main ]
   workflow_dispatch:
 
@@ -59,6 +60,26 @@ jobs:
 
       - name: EditMode + PlayMode tests
         id: tests
+        continue-on-error: true # run 38945007534: editor SIGSEGV (exit 139, burst_signal_handler) during domain load before any test; retried below
+        uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1 (docker-based; v4.3.2 needs an unauthenticated CLI download that 403s)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.50f1
+          testMode: all
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: EditMode test results
+
+      - name: Clear crashed run state
+        if: steps.tests.outcome == 'failure' && hashFiles('test-results/*.xml') == ''
+        run: sudo rm -rf test-results Library/ScriptAssemblies Library/Bee || true
+
+      - name: EditMode + PlayMode tests (retry after editor crash)
+        id: tests_retry
+        if: steps.tests.outcome == 'failure' && hashFiles('test-results/*.xml') == ''
         uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1 (docker-based; v4.3.2 needs an unauthenticated CLI download that 403s)
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}

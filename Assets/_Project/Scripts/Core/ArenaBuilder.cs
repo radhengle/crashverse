@@ -27,7 +27,7 @@ namespace Crashverse.Core
             rock.AddComponent<MeshFilter>().sharedMesh = ProceduralMesh.Cone(IslandLength * 0.5f, IslandWidth * 0.5f, -0.6f, -16f, 48);
             Paint(rock.AddComponent<MeshRenderer>(), vc.cliffHex, vc.cliffSmoothness); // cliff colour (indestructible, Art v2)
 
-            var pad = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            var pad = GameObject.CreatePrimitive(PrimitiveType.Cylinder); RenderMaterials.Apply(pad);
             pad.name = "WreckerPad";
             pad.transform.SetParent(transform, false);
             pad.transform.position = new Vector3(Crashverse.Weapons.WreckerSpec.WreckerX, 0.02f, 0f);
@@ -65,6 +65,7 @@ namespace Crashverse.Core
 
         static void Paint(Renderer r, string hex, float smooth)
         {
+            RenderMaterials.Apply(r);
             var b = new MaterialPropertyBlock();
             var c = MaterialDefinition.Hex(hex);
             b.SetColor("_BaseColor", c); b.SetColor("_Color", c); b.SetFloat("_Smoothness", smooth);

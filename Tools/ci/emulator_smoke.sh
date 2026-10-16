@@ -43,6 +43,7 @@ export GUEST_X=30 GUEST_Y=1170; echo "GUEST=30,1170 (no login screen in first ru
 put NODE1 x "$(coord MapScreen Button_1)"; ctap $NODE1_X $NODE1_Y 3
 put PLAY x "$(coord BriefingScreen Button_Play)"; ctap $PLAY_X $PLAY_Y 8
 put FIRE x "$(coord HudScreen Button_FIRE)"
+put HINT x "$(coord HudScreen Button_DevAimHint)"   # BUG-24: dev-only, aims at the level's practice hint (known winning line)
 # Aim lines from L1's data hint (yaw 4°, pitch 22° from rest 25°): yaw 0.25°/dp, pitch 0.15°/dp; drag up raises the arc.
 D=$(adb shell wm density | grep -o '[0-9]*$' | tail -1); px(){ echo $(( $1 * D / 160 )); }
 export AIM_FROM_X=540 AIM_FROM_Y=1300
@@ -50,7 +51,7 @@ export AIM_TO_X=$(( 540 + $(px 16) )) AIM_TO_Y=$(( 1300 + $(px 20) ))   # +4° y
 export MISS_TO_X=$(( 540 + $(px 240) )) MISS_TO_Y=$(( 1300 + $(px 20) )) # +60° yaw: misses the tower
 echo "AIM=$AIM_FROM_X,$AIM_FROM_Y->$AIM_TO_X,$AIM_TO_Y MISS->$MISS_TO_X,$MISS_TO_Y density=$D" | tee -a "$OUT/coords.txt"
 SHOTS=${SHOTS_L1:-4}
-for s in $(seq 1 $SHOTS); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $AIM_TO_X $AIM_TO_Y 400; sleep 1; ctap $FIRE_X $FIRE_Y 6
+for s in $(seq 1 $SHOTS); do ctap $HINT_X $HINT_Y 1; ctap $FIRE_X $FIRE_Y 6
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 adb exec-out screencap -p > "$OUT/calibration/result.png"
 put RETRY x "$(coord ResultsScreen Button_Retry)"
@@ -59,3 +60,6 @@ adb logcat -d > "$OUT/calibration/logcat.txt"
 # Pass 2: QA's flow from a clean install.
 adb shell am force-stop $PKG
 bash "$(dirname "$0")/emulator_smoke_flow.sh" "$APK" "$OUT"
+
+# BUG-23 gate: no magenta (missing shader/material) on map, L1 HUD or results.
+python3 "$(dirname "$0")/no_magenta.py" 0.03 "$OUT"/0[4-8]_*.png

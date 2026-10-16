@@ -84,11 +84,14 @@ namespace Crashverse.Tests.PlayMode
 
             yield return Tap(gate.ContinueButton);
             yield return WaitFor(() => AppServices.Router.Top is MapScreen, "map after the age gate");
+            AssertNoBrokenRenderers("world map");
 
             yield return TapNamed("Button_1");
             yield return WaitFor(() => AppServices.Router.Top is BriefingScreen, "L1 briefing");
             yield return TapNamed("Button_Play");
             yield return WaitFor(() => AppServices.Router.Top is HudScreen, "L1 HUD (run started)");
+            yield return null;
+            AssertNoBrokenRenderers("L1 arena + structure");
         }
 
         [UnityTest]
@@ -144,6 +147,21 @@ namespace Crashverse.Tests.PlayMode
             float y = -content.InverseTransformPoint(item.TransformPoint(item.rect.center)).y - content.rect.height * (1 - content.pivot.y);
             float top = Mathf.Clamp(y - vp.rect.height / 2f, 0, overflow);
             sr.verticalNormalizedPosition = 1f - top / overflow;
+        }
+
+        // BUG-23: magenta on device = renderer with no material / unsupported shader. Must find none after map and L1 build.
+        static void AssertNoBrokenRenderers(string where)
+        {
+            Assert.IsNotNull(UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline, "BUG-23: no URP pipeline asset assigned (Graphics/Quality)");
+            int broken = 0; var names = new System.Collections.Generic.List<string>();
+            foreach (var r in UnityEngine.Object.FindObjectsOfType<Renderer>())
+            {
+                if (r is LineRenderer || r is ParticleSystemRenderer) continue;
+                var m = r.sharedMaterial;
+                if (m == null || m.shader == null || !m.shader.isSupported || m.shader.name.StartsWith("Hidden/InternalErrorShader") || m.shader.name == "Standard")
+                { broken++; if (names.Count < 10) names.Add(r.name + ":" + (m == null ? "null" : m.shader == null ? "noshader" : m.shader.name)); }
+            }
+            Assert.AreEqual(0, broken, $"BUG-23: {broken} renderers without a usable URP material in {where}: {string.Join(", ", names)}");
         }
 
         static IEnumerator WaitFor(Func<bool> cond, string what, float seconds = 10f)

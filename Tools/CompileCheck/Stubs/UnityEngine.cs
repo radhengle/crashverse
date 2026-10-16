@@ -17,7 +17,7 @@ namespace UnityEngine
 
     public class GameObject : Object
     {
-        public Transform transform { get; } = new Transform();
+        public Transform transform { get; } = new Transform(); public T[] GetComponentsInChildren<T>(bool inc = false) => new T[0];
         public string tag;
         public int layer;
         public bool activeSelf = true;
@@ -240,7 +240,7 @@ namespace UnityEngine
     public class MeshCollider : Collider { public Mesh sharedMesh; public bool convex; }
     public class Renderer : Component
     {
-        public bool enabled = true;
+        public bool enabled = true; public Material sharedMaterial; public Material material;
         public void GetPropertyBlock(MaterialPropertyBlock b) { }
         public void SetPropertyBlock(MaterialPropertyBlock b) { }
     }
