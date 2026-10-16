@@ -57,7 +57,13 @@ def check_config():
     m = re.search(r"^\s*AndroidTargetSdkVersion:\s*(\d+)", ps, re.M)
     if not m or int(m.group(1)) < MIN_TARGET_SDK:
         bad.append(f"AndroidTargetSdkVersion must be >= {MIN_TARGET_SDK} (Play requirement, release/VERSIONING_AND_SIGNING.md)")
+    if not re.search(r"^\s*AndroidTargetArchitectures:\s*3\s*$", ps_text(), re.M):
+        bad.append("ProjectSettings: AndroidTargetArchitectures must be 3 (ARMv7 | ARM64)")
+    if not re.search(r"scriptingBackend:\s*\n\s*Android:\s*1", ps_text()):
+        bad.append("ProjectSettings: Android scripting backend must be IL2CPP (1)")
     return bad
+
+def ps_text(): return (ROOT / "ProjectSettings/ProjectSettings.asset").read_text()
 
 def main():
     files = [p for p in (ROOT / "Assets").rglob("*.cs") if "Editor" not in p.parts]

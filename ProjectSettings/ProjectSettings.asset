@@ -27,7 +27,7 @@ PlayerSettings:
     Android: com.crashverse.game
   scriptingBackend:
     Android: 1
-  androidTargetArchitectures: 3
+  AndroidTargetArchitectures: 3
   mobileMTRendering:
     Android: 1
   androidRenderOutsideSafeArea: 1
