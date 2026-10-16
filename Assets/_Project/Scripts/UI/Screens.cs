@@ -804,8 +804,11 @@ namespace Crashverse.UI
             var oc = _ok.colors; oc.disabledColor = Color.white; oc.normalColor = Color.white; _ok.colors = oc; // alpha-free disabled art: colour comes from the Image itself
             _hint = UIFactory.Label(v, "Choose both to continue", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th);
             UIFactory.Spacer(col, 16f);
-            var priv = UIFactory.Button(col, "Privacy Policy", new Color(0, 0, 0, 0), OpenPrivacy, Th, 48, 200, Th.bodySp); // ≥48dp tap area
-            priv.GetComponentInChildren<Text>().color = AgeGateStyle.Muted;
+            if (PrivacyConfig.HasUrl) // Security Admin: URL from Resources/PrivacyConfig.json; hidden when empty, never a dead link
+            {
+                var priv = UIFactory.Button(col, "Privacy Policy", new Color(0, 0, 0, 0), PrivacyConfig.Open, Th, 48, 200, Th.bodySp); // ≥48dp tap area
+                priv.GetComponentInChildren<Text>().color = AgeGateStyle.Muted;
+            }
             UIFactory.Label(col, "We only keep an age range, never your date of birth.", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th);
             ApplyVisualState(false);
         }
@@ -828,9 +831,6 @@ namespace Crashverse.UI
             AgeGateStyle.SetOutline(_monthBtn.gameObject, error ? AgeGateStyle.Error : _month != 0 ? AgeGateStyle.Gold : AgeGateStyle.GoldDark);
             AgeGateStyle.SetOutline(_yearBtn.gameObject, error ? AgeGateStyle.Error : _year != 0 ? AgeGateStyle.Gold : AgeGateStyle.GoldDark);
         }
-        /// <summary>TODO(Security Admin/Legal): final privacy policy URL. No-op until set (no network before the gate otherwise).</summary>
-        public static string PrivacyUrl = "";
-        static void OpenPrivacy() { if (!string.IsNullOrEmpty(PrivacyUrl)) Application.OpenURL(PrivacyUrl); }
         void PickMonth()
         {
             var items = new List<(string, Action)>();
@@ -882,9 +882,12 @@ namespace Crashverse.UI
             var mle = med.gameObject.AddComponent<LayoutElement>(); mle.minHeight = mle.preferredHeight = 100f; mle.preferredWidth = 100f;
             UIFactory.Label(v, "THANKS FOR STOPPING BY!", Th.headingSp, AgeGateStyle.Gold, TextAnchor.MiddleCenter, Th, true);
             UIFactory.Label(v, "CRASHVERSE isn't available for your age right now. We hope to see you again when you're older!", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th).GetComponent<LayoutElement>().minHeight = 80f;
-            var priv = UIFactory.Button(v, "Privacy Policy", new Color(0, 0, 0, 0), () => { if (!string.IsNullOrEmpty(AgeGateScreen.PrivacyUrl)) Application.OpenURL(AgeGateScreen.PrivacyUrl); }, Th, 48, 200, Th.bodySp);
-            priv.GetComponentInChildren<Text>().color = AgeGateStyle.Muted;
-            UIFactory.Label(v, "For grown-ups", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th);
+            if (PrivacyConfig.HasUrl) // hidden when the config URL is empty: never a dead link
+            {
+                var priv = UIFactory.Button(v, "Privacy Policy", new Color(0, 0, 0, 0), PrivacyConfig.Open, Th, 48, 200, Th.bodySp);
+                priv.GetComponentInChildren<Text>().color = AgeGateStyle.Muted;
+                UIFactory.Label(v, "For grown-ups", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th);
+            }
             // E2 / spec 05: no back, retry or edit control.
         }
     }

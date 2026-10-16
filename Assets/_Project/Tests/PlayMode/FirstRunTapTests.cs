@@ -161,7 +161,7 @@ namespace Crashverse.Tests.PlayMode
             yield return Tap(gate.ContinueButton);
             yield return WaitFor(() => AppServices.Router.Top is BlockedScreen, "block screen");
             var names = UnityEngine.Object.FindObjectsOfType<Button>().Where(b => b.isActiveAndEnabled && b.transform.IsChildOf(AppServices.Router.Top.Root)).Select(b => b.name).ToArray();
-            CollectionAssert.AreEquivalent(new[] { "Button_Privacy Policy" }, names, "only the Privacy Policy link");
+            CollectionAssert.AreEquivalent(PrivacyConfig.HasUrl ? new[] { "Button_Privacy Policy" } : new string[0], names, "no back/retry/edit; privacy link only when a URL is configured");
             Assert.True(AgeGateScreen.Blocked);
         }
 
