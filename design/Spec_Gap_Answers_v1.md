@@ -25,3 +25,6 @@ Owner: Game designer · Applies to Design Pack v1 (DP) and M1 contract v0.2 · A
 - **SG-21** L2 mastery now reads "Topple the tank off the island edge". It ticks when the tank piece's centre falls below the island's kill plane (y < islandKillY, set in the level data), checked after settle. The DP table is updated to match.
 - **SG-22** The cutoff is inclusive. A submission stamped by the server at exactly 00:15:00.000 UTC is accepted, and anything after that is rejected and refunded as practice.
 - **SG-23** The cap applies to the best run: an event level contributes its best single run's stars, at most 3, and runs are never added together. Season XP only counts stars above the previous best.
+- **SG-34** "Highest combo" means the largest combo from any single shot in the winning run. Combos from different shots are never added together, and earlier failed attempts don't count.
+- **SG-35** Yes. The hint fail counter is kept only on the device, so reinstalling or moving to a new device resets it to 0. That's intentional: the hint is free and low-stakes.
+- **SG-36** Yes. Guests have to link an account before they're listed on the campaign leaderboard (same as SG-19). Because this leaderboard is all-time, all of a guest's best scores from validated wins carry over when they link.
