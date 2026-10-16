@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Crashverse.Data;
 using UnityEngine;
 
-#if CRASHVERSE_DEV // Security Review §1: dev/QA only. Never compiled into release builds.
+#if CRASHVERSE_DEV || (UNITY_EDITOR && UNITY_INCLUDE_TESTS) // Security Review §1: dev/QA only. Never compiled into release builds (UNITY_EDITOR is never defined in a player build; the editor-only branch lets EditMode tests reach it).
 namespace Crashverse.Backend
 {
     /// <summary>
