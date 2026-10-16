@@ -109,8 +109,8 @@ namespace Crashverse.VFX
                     Sparks("sparks", 7, 0.3f, 0xFFD27A, 0xFF9A3A), Debris("bits", VfxSheet.DebrisChunks, 3, 0.3f, 0x3A3F48, 0x6A7380, 0.06f));
                 case VfxIds.SparksJoint: return R(id, 0.4f, Ring("gold_ring", 0.066f, 1.2f, 0xE8B04B, 1f),
                     Sparks("sparks", 24, 0.3f, 0xFFD27A, 0xE8B04B));
-                // Glass (new material family, ImpactEvent MaterialType.Glass): glossy shards with a white glint edge + tiny glint puff.
-                case VfxIds.GlassShards: return R(id, 0.7f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.4f, 0xFFFFFF, 1.2f),
+                // Glass (new material family, ImpactEvent MaterialType.Glass): glossy shards with a white glint edge + tiny glint puff. Art: no glow, intensity < bloom threshold 1.0.
+                case VfxIds.GlassShards: return R(id, 0.7f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.4f, 0xFFFFFF, 0.9f),
                     Debris("shards", VfxSheet.DebrisShards, 10, 0.55f, 0x9FD8EE, 0xE6FAFF, 0.12f), Puff("glint", 4, 0.3f, 0.25f, 0xFFFFFF, 0xE6F7FF, 0xBFE3F2, speed: 0.6f));
                 // ANIM_WRECKER_FIRE f0: 3 frames (50 ms) scale 0.6->1.3, additive quad + 6 sparks (01). Art: Core cyan body, white-hot centre, gold rim.
                 case VfxIds.MuzzleFlash:
