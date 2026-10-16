@@ -11,7 +11,7 @@ public sealed class ServerOptions
     public CrashverseEnv Env = CrashverseEnv.Test;     // CRASHVERSE_ENV; missing/unknown = prod (Main)
     public string Flavor => Envs.Flavor(Env);
     public string ContentRoot;                       // Assets/_Project/Resources/Data
-    public string PackageName = "com.radhengle.crashverse";
+    public string PackageName = "com.crashverse.game";
     public string[] CertDigests = { "dev-cert-sha256" };
     public string SimVersion = "dev";
     public int PhysicsHz = 50;                       // P9 / D3
