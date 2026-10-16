@@ -7,7 +7,7 @@ Style sources: `art/v2` (FINAL board, bright glossy toy look) and `art/m1b` (Wre
 ## 1. Budgets per asset class (APPROVED by PM, 16 Oct 2026)
 | Class | Tris (LOD0) | LOD1 | Texture | Materials |
 |---|---|---|---|---|
-| Hero: Wrecker (incl. wheels + slot parts) | **≤ 12,000** (v3; LOD1/LOD2 per-file) | optional | 2048 set (Albedo/ORM/Emissive) target ~256 px/m | 2 (M_Wrecker + M_Wrecker_Emissive) |
+| Hero: Wrecker (incl. wheels + slot parts) | **≤ 12,000** (v3) | LOD1 + LOD2 required (per-file) | 2048 set (Albedo/ORM/Emissive) target ~256 px/m | 2 (M_Wrecker + M_Wrecker_Emissive) |
 | Wrecker slot parts (Core, Module, Booster) | inside hero 3k (guide ≤ 400 each) | – | shared | shared |
 | Building kit piece, intact (wall / floor / joint) | **500–1,500** (v3) | ≤ 50% of LOD0 | 512 tiling sheet per material (Albedo/Normal/ORM, 256 px/m) + 256 inner | M_<Mat> (+ M_<Mat>_Inner on fragments) |
 | Fracture fragment | **< 400** (v3; optional _lo skipped) | – | same as parent | same as parent |
@@ -34,7 +34,7 @@ All hard edges get a 1–2 segment bevel (Art v2), counted inside these budgets.
 2. Fragment count per object: wood 8–16, brick 12–24, steel 4–10, hard cap 32.
 3. `JNT_<FragA>__<FragB>` empties at contacts between adjacent fragments, with custom props `break_force_N` and `break_torque_Nm` left blank (""). `ANCHOR_<Frag>` empties where a fragment touches the ground (`anchor_to`="Ground"). Anchors to other kit pieces are set at level-assembly time.
 4. Fragment breakup edges get a 1-segment 0.025 m bevel. Inner and bevel faces use the M_<Material>_Inner slot (a slightly darker shade of the same material), each face on its own 0–1 UV island. Outer faces use M_Palette.
-5. Intact pieces have `_LOD0` and `_LOD1`. Fragments are < 400 tris (v3). `_frag_##_lo` versions are skipped (approved): every fragment is ≤ 28 tris.
+5. Intact kit pieces (and Kit_Base_Indestructible) require in-file `_LOD0`, `_LOD1` and `_LOD2`; the Wrecker and island use per-file `<Asset>_LOD0|1|2.fbx`. Fractured sets are LOD0 only (LOD-exempt in #28 @723ccb3). Fragments < 400 tris (#28); we keep them < 300. Each fractured set totals ≤ 1,500 tris. No `_frag_##_lo` versions.
 6. Each fragment's pivot is at its own centre of mass. Units are m, +Y up (Unity).
 7. `mass_kg` = density × volume, with wood 600, brick 1900, and **steel 800 kg/m³ (hollow effective density, Physics change)**. The custom property `density_kg_m3` is also exported.
 
@@ -48,8 +48,14 @@ Wood #E3A766, Brick #D2664C / mortar #7A3326, Steel #AEB6C2, Barrel navy #3E4C6E
 - **Brick:** face pattern lives in the M_Brick tiling sheet (0.5 × 0.25 m bricks, 0.04 m mortar groove + normal). It is **not** in a shared palette atlas any more (VFX tiling-sheet rule). It batches by sharing one M_Brick material across all brick pieces (SRP Batcher).
 - **Texel density targets:** Wrecker ≈256 px/m on one 1024/2048 set. Kit 128–256 px/m via tiling sheets. Island: unique 1024 macro + tiling grass/rock/sand detail.
 - **Vertex colour (Col, linear):** R = damage mask (default 0), G = B = 0, A = wind/flex weight (1 on tree canopies and bushes, 0 elsewhere).
-- **UVs:** UV0 = texture UVs. **UV2 lightmap** (second channel, `UV2_Lightmap`, non-overlapping) on static meshes: island meshes and intact kit `_LOD0/_LOD1`. Fragments are dynamic and have none.
+- **UVs:** UV0 = texture UVs. **UV2 lightmap** (second channel, `UV2_Lightmap`, non-overlapping) on static meshes: island meshes and intact kit `_LOD0/_LOD1/_LOD2`. Fragments are dynamic and have none.
 - **Wrecker sockets** (empties flat under root, `attach_to`): Socket_Muzzle, Socket_Core, Socket_Module, Socket_Booster (attach_to=Barrel), Socket_WheelDust (attach_to=Wrecker_v2, on the ground under the front axle). They replace the old Muzzle_Spawn.
 - **Emissive:** Core/Module/Booster glow faces use material slot M_Wrecker_Emissive with T_Wrecker_Emissive_2048.
 - **VFX_Waterfall_Placeholder:** 1.5 m ribbon + splash puff with its own M_VFX_Placeholder; V runs down the fall. VFX replaces it.
 - **Preview lighting:** sun warm white from the upper back-left with soft shadows, gradient ambient (#8CC8FF / #DCEFFF / #6FAE5A), Filmic exposure 0 (Blender has no built-in ACES), bloom threshold 1.0, raytraced AO/reflections. Gameplay views have no DoF; beauty shots use light DoF.
+
+## v3 import contract (PR #28 @723ccb3, vfx/IMPORT_PIPELINE.md)
+- Kit files only under `Assets/_Project/Models/BuildingKit/Kit_<Mat>/`. The validation walls are the kit walls (`Kit_<Mat>_Wall[_Fractured].fbx`) for Wood, Brick, Steel, Glass and Stone.
+- Textures `T_<X>_A|_N|_ORM|_E`. `M_<Mat>_Inner` reads `T_<Mat>_Inner_*` (`T_<Mat>_Inner_A.png` shipped).
+- Hulls: `UCX_<Piece>_frag_##` exact per fragment; other `UCX_<Name>_##` resolves to `<Name>`. Joints `JNT_<FragA>__<FragB>[_##]` with `break_force_N`/`break_torque_Nm` (blank = Physics default). Anchors `ANCHOR_<Frag>` with `anchor_to="Ground"`.
+- `Kit_Base_Indestructible` (Art #10): intact only, no fracture set, no `_Crack` map; M_Granite + M_Gold. Named with the `Kit_` prefix so #28 classifies it as Kit (a bare `Base_` prefix is an unknown class).
