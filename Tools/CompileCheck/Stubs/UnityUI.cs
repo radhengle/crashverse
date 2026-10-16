@@ -91,7 +91,7 @@ namespace UnityEngine.UI
         public bool resizeTextForBestFit; public int resizeTextMinSize, resizeTextMaxSize;
     }
     public struct ColorBlock { public Color normalColor, highlightedColor, pressedColor, selectedColor, disabledColor; }
-    public class Selectable : UIBehaviour { public bool interactable = true; public ColorBlock colors; public Image image; public Graphic targetGraphic; }
+    public class Selectable : UIBehaviour { public bool interactable = true; public ColorBlock colors; public Image image; public Graphic targetGraphic; public bool IsInteractable() => interactable; }
     public class Button : Selectable { public class ButtonClickedEvent : UnityEngine.Events.UnityEvent { } public ButtonClickedEvent onClick = new ButtonClickedEvent(); }
     public class CanvasScaler : UIBehaviour { public enum ScaleMode { ConstantPixelSize, ScaleWithScreenSize, ConstantPhysicalSize } public ScaleMode uiScaleMode; public float scaleFactor = 1f; }
     public class GraphicRaycaster : UIBehaviour { }
@@ -107,5 +107,7 @@ namespace UnityEngine.UI
 
 namespace UnityEngine
 {
+    public static class RectTransformUtility { public static Vector2 WorldToScreenPoint(Camera c, Vector3 p) => new Vector2(p.x, p.y); }
+
     public class RectOffset { public RectOffset() { } public RectOffset(int l, int r, int t, int b) { } }
 }
