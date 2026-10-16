@@ -21,10 +21,25 @@ namespace Crashverse.VFX.Tests
             Assert.IsTrue(f.Exists(s => s.StartsWith("particles")));
         }
 
-        [Test] public void MissingGpuTimingIsReported()
+        [Test] public void MissingGpuTiming_FallsBackToFrameTime()
         {
-            var s = new VfxPerfStats(33.4); s.Add(16, 8, 0, 10, 10, 10);
-            Assert.Contains("NO_GPU_TIMING", s.Evaluate(VfxPerfTargets.For(1)));
+            var t = VfxPerfTargets.For(1);
+            var ok = new VfxPerfStats(t.HitchMs); for (int i = 0; i < 50; i++) ok.Add(16.6, 8, 0, 10, 10, 10);
+            Assert.IsEmpty(ok.Evaluate(t)); StringAssert.Contains("gpu_p95=n/a", ok.Summary(1, t));
+            var slow = new VfxPerfStats(t.HitchMs); for (int i = 0; i < 50; i++) slow.Add(25, 8, 0, 10, 10, 10);
+            Assert.IsTrue(slow.Evaluate(t).Exists(x => x.Contains("GPU n/a")));
+        }
+
+        [Test] public void ArgsAndRollingWindow()
+        {
+            var a = VfxPerfArgs.Parse(new[] { "x", "-perfTier", "High", "-perfRuns", "3", "-perfNoPowerUpLane" });
+            Assert.AreEqual(2, a.Tier); Assert.AreEqual(3, a.Runs); Assert.IsTrue(a.NoPowerUpLane);
+            Assert.AreEqual(-1, VfxPerfArgs.Parse(new string[0]).Tier);
+            var w = new VfxRollingWindow(20); for (int i = 1; i <= 40; i++) w.Add(i);
+            Assert.AreEqual(20, w.Count); Assert.AreEqual(39, w.Percentile(95)); Assert.AreEqual(21, w.Percentile(0));
+            var sb = new System.Text.StringBuilder();
+            VfxPerfOverlayText.Live(sb, 1, true, 1, 3, 0, 16.6, 0, 17, 200, 230, 80, 120, 40);
+            StringAssert.Contains("GPU n/a", sb.ToString()); StringAssert.Contains("lane 80", sb.ToString());
         }
     }
 }

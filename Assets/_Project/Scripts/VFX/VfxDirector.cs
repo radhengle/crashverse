@@ -44,7 +44,11 @@ namespace Crashverse.VFX
         public int BudgetUsed => _budget?.Used ?? 0;
         static bool Rm => MotionSettings.Current != null && MotionSettings.Current.ReduceMotion;
 
-        void Awake() { Build(); }
+        void Awake()
+        {
+            if (assets == null || assets.particleShader == null) { var set = VfxAssetSet.Load(); if (set != null) assets = set.assets; }
+            Build();
+        }
 
         void Build()
         {
