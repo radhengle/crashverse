@@ -72,7 +72,7 @@ adb shell pm clear "$PKG" >/dev/null 2>&1 || true
 adb install -r -g "$APK"; adb logcat -G 16M || true; adb logcat -c
 adb shell monkey -p "$PKG" -c android.intent.category.LAUNCHER 1 >/dev/null
 t=0; until cv | grep -qE '^CVTAP\|META\|screen\|'; do t=$((t+1)); [ $t -gt 90 ] && die "launch: no CVTAP|META (not a dev APK with UITapProbe?)"; sleep 1; done
-check launch; cv | grep -E '^CVTAP\|META\|' | tail -1 | tee "$OUT/screen_meta.txt"
+check launch; snap launch; cv | grep -E '^CVTAP\|META\|' | tail -1 | tee "$OUT/screen_meta.txt"
 
 # ---- 1. Age gate ----
 wait_cv "BEGIN|AgeGateScreen"; sleep 1; check agegate; snap agegate
