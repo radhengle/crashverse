@@ -175,6 +175,14 @@ def main():
         stone_on_weak=[i for i in lay_ids(seqp if npw<=n else seq) if fin.b[i].get('indestructible')]
         rows.append(dict(id=L['id'],shots=B,crown_intact=intact,stone_on_weak=stone_on_weak,final_pct=round(fin.ratio(),3),min=n,min_pw=npw,need3=need3,stars=stars(B,min(n,npw),s3,s2),
             margin=B-min(n,npw),rand3=round(r3,3),randwin=round(rw,3),seq=fmt(seqp if npw<=n else seq),one_shot=(n==1)))
+    TAG={'c1_l01':('Easy',.15,.50),'c1_l02':('Easy',.08,.50),'c1_l03':('Medium',.05,.25),'c1_l04':('Hard',.005,.06),
+         'c1_l05':('Breather',.20,.60),'c1_l06':('Medium',.02,.25),'c1_l07':('Hard',.002,.06),'c1_l08':('Breather',0,.60),
+         'c1_l09':('Hard',.005,.06),'c1_l10':('Boss',None,None)}
+    for r in rows:
+        tag,lo,hi=TAG[r['id']]; r['tag']=tag
+        ok=r['min'] is not None and (r.get('margin',0)>=0) and r['stars']==3
+        if lo is not None: ok = ok and lo<=r['rand3']<=hi
+        r['pass']=ok
     json.dump(rows,open(os.path.join(HERE,'sim_results.json'),'w'),indent=1)
     for r in rows: print(r)
 if __name__=='__main__': main()

@@ -576,24 +576,102 @@
    "spinDps": 0.0
   },
   {
+   "id": "archL",
+   "mat": "wood",
+   "p": [
+    -0.9,
+    7.3,
+    0
+   ],
+   "s": [
+    0.3,
+    1.4,
+    0.3
+   ],
+   "sup": [
+    "stall1"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "archR",
+   "mat": "wood",
+   "p": [
+    0.9,
+    7.3,
+    0
+   ],
+   "s": [
+    0.3,
+    1.4,
+    0.3
+   ],
+   "sup": [
+    "stall2"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
    "id": "sign",
    "mat": "steel",
    "p": [
     0,
-    7.2,
+    8.1,
     0
    ],
    "s": [
-    1.4,
-    0.6,
+    2.2,
+    0.5,
     0.3
    ],
    "sup": [
-    "stall1",
-    "stall2"
+    "archL",
+    "archR"
    ],
    "joint": true,
    "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "clock",
+   "mat": "wood",
+   "p": [
+    0,
+    8.8,
+    0
+   ],
+   "s": [
+    1.0,
+    1.0,
+    0.3
+   ],
+   "sup": [
+    "sign"
+   ],
+   "joint": false,
+   "role": "",
    "nonObj": false,
    "color": "",
    "explosive": false,

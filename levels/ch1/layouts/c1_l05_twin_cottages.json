@@ -337,6 +337,85 @@
    "spinAxis": [],
    "pivot": [],
    "spinDps": 0.0
+  },
+  {
+   "id": "wheelAxle",
+   "mat": "wood",
+   "p": [
+    0,
+    2.4,
+    0.9
+   ],
+   "s": [
+    0.4,
+    0.8,
+    0.4
+   ],
+   "sup": [
+    "bridge"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wheel",
+   "mat": "wood",
+   "p": [
+    0,
+    1.6,
+    1.2
+   ],
+   "s": [
+    1.8,
+    1.8,
+    0.3
+   ],
+   "sup": [
+    "wheelAxle"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "lanterns",
+   "mat": "wood",
+   "p": [
+    0,
+    4.4,
+    0
+   ],
+   "s": [
+    1.4,
+    0.2,
+    0.2
+   ],
+   "sup": [
+    "roofL",
+    "roofR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
   }
  ]
 }

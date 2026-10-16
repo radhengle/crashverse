@@ -224,7 +224,7 @@
     "rock"
    ],
    "joint": false,
-   "role": "wall",
+   "role": "island",
    "nonObj": true,
    "color": "8A8A8A",
    "explosive": false,
@@ -410,6 +410,59 @@
    ],
    "joint": false,
    "role": "seawall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "bellTower",
+   "mat": "wood",
+   "p": [
+    3,
+    6.0,
+    0.6
+   ],
+   "s": [
+    1.0,
+    1.5,
+    1.0
+   ],
+   "sup": [
+    "seaCrest"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "catwalk",
+   "mat": "wood",
+   "p": [
+    0,
+    7.9,
+    -0.2
+   ],
+   "s": [
+    4.6,
+    0.3,
+    0.8
+   ],
+   "sup": [
+    "lhGallery",
+    "bellTower"
+   ],
+   "joint": false,
+   "role": "",
    "nonObj": false,
    "color": "",
    "explosive": false,

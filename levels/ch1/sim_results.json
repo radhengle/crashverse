@@ -10,10 +10,12 @@
   "need3": 1,
   "stars": 3,
   "margin": 3,
-  "rand3": 0.278,
-  "randwin": 0.852,
+  "rand3": 0.222,
+  "randwin": 0.847,
   "seq": "post",
-  "one_shot": true
+  "one_shot": true,
+  "tag": "Easy",
+  "pass": true
  },
  {
   "id": "c1_l02",
@@ -26,26 +28,30 @@
   "need3": 1,
   "stars": 3,
   "margin": 3,
-  "rand3": 0.112,
-  "randwin": 0.541,
+  "rand3": 0.098,
+  "randwin": 0.496,
   "seq": "sill",
-  "one_shot": true
+  "one_shot": true,
+  "tag": "Easy",
+  "pass": true
  },
  {
   "id": "c1_l03",
   "shots": 5,
   "crown_intact": null,
   "stone_on_weak": [],
-  "final_pct": 1.0,
+  "final_pct": 0.927,
   "min": 2,
   "min_pw": 2,
   "need3": 2,
   "stars": 3,
   "margin": 3,
-  "rand3": 0.128,
-  "randwin": 0.682,
+  "rand3": 0.065,
+  "randwin": 0.575,
   "seq": "propL, propR",
-  "one_shot": false
+  "one_shot": false,
+  "tag": "Medium",
+  "pass": true
  },
  {
   "id": "c1_l04",
@@ -58,42 +64,48 @@
   "need3": 2,
   "stars": 3,
   "margin": 3,
-  "rand3": 0.029,
-  "randwin": 0.663,
+  "rand3": 0.017,
+  "randwin": 0.366,
   "seq": "beamL, beamR",
-  "one_shot": false
+  "one_shot": false,
+  "tag": "Hard",
+  "pass": true
  },
  {
   "id": "c1_l05",
   "shots": 5,
   "crown_intact": null,
   "stone_on_weak": [],
-  "final_pct": 1.0,
+  "final_pct": 0.944,
   "min": 1,
   "min_pw": 1,
   "need3": 2,
   "stars": 3,
   "margin": 4,
-  "rand3": 0.385,
-  "randwin": 0.96,
+  "rand3": 0.234,
+  "randwin": 0.723,
   "seq": "bridge",
-  "one_shot": true
+  "one_shot": true,
+  "tag": "Breather",
+  "pass": true
  },
  {
   "id": "c1_l06",
   "shots": 5,
   "crown_intact": null,
   "stone_on_weak": [],
-  "final_pct": 0.864,
+  "final_pct": 0.871,
   "min": 2,
   "min_pw": 2,
   "need3": 2,
   "stars": 3,
   "margin": 3,
-  "rand3": 0.031,
-  "randwin": 0.647,
+  "rand3": 0.026,
+  "randwin": 0.762,
   "seq": "braceL, braceR",
-  "one_shot": false
+  "one_shot": false,
+  "tag": "Medium",
+  "pass": true
  },
  {
   "id": "c1_l07",
@@ -109,7 +121,9 @@
   "rand3": 0.004,
   "randwin": 0.116,
   "seq": "scaffold, ring0",
-  "one_shot": false
+  "one_shot": false,
+  "tag": "Hard",
+  "pass": true
  },
  {
   "id": "c1_l08",
@@ -123,25 +137,29 @@
   "stars": 3,
   "margin": 3,
   "rand3": 0.0,
-  "randwin": 0.227,
+  "randwin": 0.132,
   "seq": "key0, splitstrike:key1+key2+key3",
-  "one_shot": false
+  "one_shot": false,
+  "tag": "Breather",
+  "pass": true
  },
  {
   "id": "c1_l09",
   "shots": 6,
   "crown_intact": null,
   "stone_on_weak": [],
-  "final_pct": 0.929,
+  "final_pct": 0.933,
   "min": 2,
   "min_pw": 2,
   "need3": 2,
   "stars": 3,
   "margin": 4,
-  "rand3": 0.037,
-  "randwin": 0.728,
+  "rand3": 0.026,
+  "randwin": 0.655,
   "seq": "lhRing, seaDeck",
-  "one_shot": false
+  "one_shot": false,
+  "tag": "Hard",
+  "pass": true
  },
  {
   "id": "c1_l10",
@@ -153,6 +171,8 @@
   "stars_code": 2,
   "margin": 3,
   "rand3": null,
-  "seq": "shoulderL, shoulderR, core(open), any(closed), core(open)"
+  "seq": "shoulderL, shoulderR, core(open), any(closed), core(open)",
+  "tag": "Boss",
+  "pass": true
  }
 ]

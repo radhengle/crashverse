@@ -60,9 +60,9 @@
     0
    ],
    "s": [
-    3,
+    6,
     0.4,
-    3
+    2.4
    ],
    "sup": [
     "post"
@@ -78,69 +78,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "wallF",
+   "id": "cabinL",
    "mat": "wood",
    "p": [
-    0,
-    4.3,
-    1.3
-   ],
-   "s": [
-    2.6,
-    1.4,
-    0.2
-   ],
-   "sup": [
-    "deck"
-   ],
-   "joint": false,
-   "role": "wall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "wallB",
-   "mat": "wood",
-   "p": [
-    0,
-    4.3,
-    -1.3
-   ],
-   "s": [
-    2.6,
-    1.4,
-    0.2
-   ],
-   "sup": [
-    "deck"
-   ],
-   "joint": false,
-   "role": "wall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "wallL",
-   "mat": "wood",
-   "p": [
-    -1.3,
-    4.3,
+    -2.1,
+    4.2,
     0
    ],
    "s": [
-    0.2,
-    1.4,
-    2.4
+    1.6,
+    1.2,
+    1.8
    ],
    "sup": [
     "deck"
@@ -156,17 +104,43 @@
    "spinDps": 0.0
   },
   {
-   "id": "wallR",
+   "id": "cabinR",
    "mat": "wood",
    "p": [
-    1.3,
-    4.3,
+    2.1,
+    4.2,
     0
    ],
    "s": [
-    0.2,
-    1.4,
-    2.4
+    1.6,
+    1.2,
+    1.8
+   ],
+   "sup": [
+    "deck"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "hut",
+   "mat": "wood",
+   "p": [
+    0,
+    4.4,
+    0
+   ],
+   "s": [
+    2.0,
+    1.6,
+    2.0
    ],
    "sup": [
     "deck"
@@ -186,19 +160,16 @@
    "mat": "wood",
    "p": [
     0,
-    5.3,
+    5.5,
     0
    ],
    "s": [
-    3.2,
-    0.4,
-    3.2
+    2.6,
+    0.6,
+    2.6
    ],
    "sup": [
-    "wallF",
-    "wallB",
-    "wallL",
-    "wallR"
+    "hut"
    ],
    "joint": false,
    "role": "roof",
@@ -211,11 +182,63 @@
    "spinDps": 0.0
   },
   {
-   "id": "flag",
+   "id": "bellFrame",
    "mat": "wood",
    "p": [
     0,
-    6.0,
+    6.4,
+    0
+   ],
+   "s": [
+    0.8,
+    1.2,
+    0.3
+   ],
+   "sup": [
+    "roof"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "bell",
+   "mat": "wood",
+   "p": [
+    0,
+    6.3,
+    0.25
+   ],
+   "s": [
+    0.4,
+    0.5,
+    0.4
+   ],
+   "sup": [
+    "bellFrame"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "flag",
+   "mat": "wood",
+   "p": [
+    2.1,
+    5.3,
     0
    ],
    "s": [
@@ -224,7 +247,7 @@
     0.1
    ],
    "sup": [
-    "roof"
+    "cabinR"
    ],
    "joint": false,
    "role": "",

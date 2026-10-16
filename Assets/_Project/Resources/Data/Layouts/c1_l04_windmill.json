@@ -263,6 +263,85 @@
    "spinDps": 0.0
   },
   {
+   "id": "annexBeam",
+   "mat": "wood",
+   "p": [
+    2.3,
+    5.8,
+    0
+   ],
+   "s": [
+    2.2,
+    0.4,
+    1.2
+   ],
+   "sup": [
+    "drum1F",
+    "drum1B"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "annex",
+   "mat": "brick",
+   "p": [
+    2.8,
+    6.6,
+    0
+   ],
+   "s": [
+    1.4,
+    1.2,
+    1.4
+   ],
+   "sup": [
+    "annexBeam"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "annexRoof",
+   "mat": "wood",
+   "p": [
+    2.8,
+    7.4,
+    0
+   ],
+   "s": [
+    1.6,
+    0.4,
+    1.6
+   ],
+   "sup": [
+    "annex"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
    "id": "sail0",
    "mat": "wood",
    "p": [
