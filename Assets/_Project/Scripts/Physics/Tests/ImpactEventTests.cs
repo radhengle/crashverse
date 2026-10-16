@@ -93,3 +93,41 @@ namespace Crashverse.Sim.Tests
         }
     }
 }
+
+namespace Crashverse.Sim.Tests
+{
+    public class ImpactReviewFixTests
+    {
+        [Test] public void TickTag_RankedInsideBody_UsesCurrentTick() => Assert.AreEqual(7, ImpactTickPolicy.Tag(7, true));
+        [Test] public void TickTag_AutoSimCallback_UsesTickThatStepped()
+        {
+            // Non-ranked: SimRunner tick 7 body ran (Tick now 8), then Unity's auto step fires OnCollision → tagged 7.
+            Assert.AreEqual(7, ImpactTickPolicy.Tag(8, false));
+            Assert.AreEqual(0, ImpactTickPolicy.Tag(0, false));
+        }
+        [Test] public void FlushPoint_ExactlyOnePerMode()
+        {
+            Assert.IsTrue(ImpactTickPolicy.FlushOnStepped(true)); Assert.IsFalse(ImpactTickPolicy.FlushOnTickBegin(true));
+            Assert.IsFalse(ImpactTickPolicy.FlushOnStepped(false)); Assert.IsTrue(ImpactTickPolicy.FlushOnTickBegin(false));
+        }
+        [Test] public void MaterialCounts_DominantAndTies()
+        {
+            var c = new MaterialCounts();
+            Assert.AreEqual(MaterialType.Terrain, c.Dominant);
+            c.Add(MaterialType.Steel, 2); c.Add(MaterialType.Brick, 2);
+            Assert.AreEqual(MaterialType.Brick, c.Dominant); // tie → lower enum value
+            c.Add(MaterialType.Steel); Assert.AreEqual(MaterialType.Steel, c.Dominant); Assert.AreEqual(5, c.Total);
+        }
+        [Test] public void Cascade_PerMaterialCounts()
+        {
+            var t = new CascadeTracker(); int id = t.Begin();
+            t.RecordBreak(id, MaterialType.Wood); t.RecordBreak(id, MaterialType.Wood); t.RecordBreak(id, MaterialType.Glass);
+            Assert.AreEqual(3, t.End(id, out var c)); Assert.AreEqual(2, c.wood); Assert.AreEqual(1, c.glass); Assert.AreEqual(MaterialType.Wood, c.Dominant);
+        }
+        [Test] public void Make_DefaultsMaterialTypesToTerrain()
+        {
+            var e = ImpactEvent.Make(1, ImpactKind.Impact, 10f, 1f, ImpactTierThresholds.Default);
+            Assert.AreEqual(MaterialType.Terrain, e.materialTypeA); Assert.AreEqual(MaterialType.Terrain, e.materialTypeB);
+        }
+    }
+}
