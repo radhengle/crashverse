@@ -6,24 +6,28 @@
 set -euo pipefail
 APK=$1; OUT=${2:-smoke_out}; PKG=com.crashverse.game; mkdir -p "$OUT/calibration"
 adb wait-for-device; until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1 ]; do sleep 2; done
-adb shell wm size 1080x2340; adb shell wm density 420; adb shell settings put global window_animation_scale 0 || true
+adb shell wm size 1080x2340; adb shell wm density 420
+# no "Viewing full screen" bubble, no ANR/crash dialogs from a slow software-rendered System UI over the app
+adb shell settings put secure immersive_mode_confirmations confirmed || true
+adb shell settings put global hide_error_dialogs 1 || true
+sleep 20 # let System UI settle on the software GPU
 adb install -r -g "$APK"; adb shell pm clear $PKG >/dev/null; adb logcat -c
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null
 
 # coord <Screen> <Button> -> "x y" from the newest probe dump of that screen (waits up to 40 s)
-coord(){ local i l; for i in $(seq 1 40); do
+coord(){ local i l; for i in $(seq 1 120); do
     l=$(adb logcat -d -s Unity | grep -o "CVTAP|$1|$2|[0-9]*|[0-9]*|[01]" | tail -1 || true)
     if [ -n "$l" ]; then echo "$l" | awk -F'|' '{print $4" "$5}'; return 0; fi; sleep 1; done
   echo "calibration: $1/$2 not found" >&2; adb logcat -d > "$OUT/calibration/logcat.txt"; adb exec-out screencap -p > "$OUT/calibration/missing_$2.png"; exit 1; }
 put(){ read -r x y <<<"$3"; export "$1_X=$x" "$1_Y=$y"; echo "$1=$x,$y" | tee -a "$OUT/coords.txt"; }
-ctap(){ adb shell input tap "$1" "$2"; sleep "${3:-2}"; }
+ctap(){ adb logcat -c; adb shell input tap "$1" "$2"; sleep "${3:-3}"; } # fresh log: next coord sees only the new screen
 
 M=March; YR=$(( $(date -u +%Y) - 25 ))
 put MONTH AgeGateScreen "$(coord AgeGateScreen Button_Month)"; ctap $MONTH_X $MONTH_Y
 put MONTH_OPT AgeGateScreen "$(coord ListModal Button_$M)";   ctap $MONTH_OPT_X $MONTH_OPT_Y
 put YEAR AgeGateScreen "$(coord AgeGateScreen Button_Year)";  ctap $YEAR_X $YEAR_Y
 # the year list scrolls: swipe up until the wanted year is logged on screen
-for i in $(seq 1 12); do adb logcat -d -s Unity | grep -q "CVTAP|ListModal|Button_$YR|" && break; adb shell input swipe 540 1500 540 900 300; sleep 1; done
+for i in $(seq 1 20); do adb logcat -d -s Unity | grep -q "CVTAP|ListModal|Button_$YR|" && break; adb shell input swipe 540 1300 540 1000 400; sleep 2; done
 put YEAR_OPT x "$(coord ListModal Button_$YR)"; ctap $YEAR_OPT_X $YEAR_OPT_Y
 put CONTINUE x "$(coord AgeGateScreen Button_Continue)"; ctap $CONTINUE_X $CONTINUE_Y 5
 # First run has no login screen yet (guest sign-in is automatic in AccountLifecycle): GUEST taps the status bar, a no-op.

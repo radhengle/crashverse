@@ -21,12 +21,15 @@ namespace Crashverse.UI
             foreach (var b in btns) { var q = b.transform.position; sig = unchecked(sig * 31 + (b.IsInteractable() ? 1 : 0) + Mathf.RoundToInt(q.x) * 7 + Mathf.RoundToInt(q.y) * 13); }
             if (ReferenceEquals(top, _lastTop) && sig == _lastCount) return;
             _lastTop = top; _lastCount = sig;
+            Canvas.ForceUpdateCanvases(); // log settled layout, not the pre-layout frame
             string name = top != null ? top.GetType().Name : "none";
             Debug.Log("CVTAP|BEGIN|" + name);
             foreach (var b in btns)
             {
                 var rt = (RectTransform)b.transform; var p = RectTransformUtility.WorldToScreenPoint(null, rt.TransformPoint(rt.rect.center));
-                if (p.x < 0 || p.y < 0 || p.x > Screen.width || p.y > Screen.height) continue; // scrolled out of view
+                if (p.x < 0 || p.y < 0 || p.x > Screen.width || p.y > Screen.height) continue; // off screen
+                var sr = b.GetComponentInParent<ScrollRect>(); // scrolled out of a list's viewport (masked)
+                if (sr != null && !RectTransformUtility.RectangleContainsScreenPoint(sr.viewport != null ? sr.viewport : (RectTransform)sr.transform, p, null)) continue;
                 Debug.Log($"CVTAP|{name}|{b.name}|{Mathf.RoundToInt(p.x)}|{Mathf.RoundToInt(Screen.height - p.y)}|{(b.IsInteractable() ? 1 : 0)}");
             }
         }

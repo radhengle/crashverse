@@ -16,6 +16,7 @@ tap(){ adb shell input tap "$1" "$2"; sleep "${3:-2}"; }
 # Developer (PR #23): a drag only aims; FIRE is a button (OQ-A2). FIRE_X/FIRE_Y come from the dev tap probe.
 fire(){ if [ -n "${FIRE_X:-}" ]; then adb shell input tap "$FIRE_X" "$FIRE_Y"; fi; }
 adb wait-for-device; until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1 ]; do sleep 2; done
+adb shell settings put secure immersive_mode_confirmations confirmed || true; adb shell settings put global hide_error_dialogs 1 || true
 adb install -r -g "$APK"; adb shell pm clear $PKG >/dev/null 2>&1 || true; adb logcat -c
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null
 for i in $(seq 1 30); do adb shell pidof $PKG >/dev/null && break; sleep 2; done

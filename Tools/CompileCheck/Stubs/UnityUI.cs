@@ -107,7 +107,7 @@ namespace UnityEngine.UI
 
 namespace UnityEngine
 {
-    public static class RectTransformUtility { public static Vector2 WorldToScreenPoint(Camera c, Vector3 p) => new Vector2(p.x, p.y); }
+    public static class RectTransformUtility { public static Vector2 WorldToScreenPoint(Camera c, Vector3 p) => new Vector2(p.x, p.y); public static bool RectangleContainsScreenPoint(RectTransform r, Vector2 p, Camera c) => true; }
 
     public class RectOffset { public RectOffset() { } public RectOffset(int l, int r, int t, int b) { } }
 }
