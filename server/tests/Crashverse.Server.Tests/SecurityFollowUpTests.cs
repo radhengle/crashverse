@@ -80,6 +80,10 @@ public class SecurityFollowUpTests
         Assert.Contains("more than 90 days away", ProdErrors(tight, now));
         var bad = Env("2027-11-21"); bad["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS"] = "abc"; // invalid = default 400
         Assert.Contains("more than 400 days away", ProdErrors(bad, now));
+        var huge = Env("2028-11-01"); huge["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS"] = "5000"; // clamped to 730
+        Assert.Contains("more than 730 days away", ProdErrors(huge, now));
+        var under = Env("2028-09-01"); under["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS"] = "5000"; // ~686 days: allowed
+        Assert.DoesNotContain("ACCEPT_UNTIL", ProdErrors(under, now));
     }
 
     [Fact] // Security condition (b): the runtime check fails closed without ACCEPT_UNTIL

@@ -72,7 +72,7 @@ public sealed class ServerOptions
         o.DeletionPepperSecretVersion = env("SECRET_VERSION_DELETION_PEPPER");
         o.PreviousAcceptUntilRaw = env("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL") is { Length: > 0 } au ? au : null;
         o.PreviousAcceptUntilUnixMs = ParseUtcDate(o.PreviousAcceptUntilRaw);
-        if (int.TryParse(env("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS"), out var md) && md > 0) o.PreviousAcceptUntilMaxDays = md;
+        if (int.TryParse(env("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS"), out var md) && md > 0) o.PreviousAcceptUntilMaxDays = Math.Min(md, PreviousAcceptUntilHardCeilingDays); // hard ceiling, whatever is configured
         if (int.TryParse(env("TAX_RETENTION_DAYS"), out var tax) && tax > 0) o.TaxRetentionDays = tax;
         // CRASHVERSE_ENV gates the run summary too: never honoured in prod, even in "Development" ASP.NET environment.
         if (o.Env == CrashverseEnv.Prod) o.AllowClientRunSummary = false;
@@ -93,6 +93,8 @@ public sealed class ServerOptions
     /// <summary>SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS (default 400): prod refuses to start if ACCEPT_UNTIL is further
     /// than this from now. Keep it at the Play refund window plus a margin, so an old secret can't be kept alive indefinitely.</summary>
     public int PreviousAcceptUntilMaxDays = 400;
+    /// <summary>Hard ceiling for _ACCEPT_UNTIL_MAX_DAYS: a configured value above it is clamped to it.</summary>
+    public const int PreviousAcceptUntilHardCeilingDays = 730;
     public static long? ParseUtcDate(string s)
     {
         if (string.IsNullOrEmpty(s)) return null;
