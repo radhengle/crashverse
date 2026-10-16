@@ -107,7 +107,8 @@ public sealed class WalletService
     /// <summary>Coin/gem store purchase of a cosmetic (SG-33). Gem spending is locked while in gem debt.</summary>
     public Task<WalletDoc> Buy(string pid, string sku) => Locked(pid, async () =>
     {
-        var item = _x.Content.Sku(sku) ?? throw new ApiError(404, "UNKNOWN_SKU", "unknown sku");
+        var item = _x.Sku(sku) ?? throw new ApiError(404, "UNKNOWN_SKU", "unknown sku");
+        if (item.type == "season_pass") throw new ApiError(400, "USE_SEASON_UNLOCK", "the season pass is unlocked only through /v1/season/premium/unlock");
         if (item.priceType != "gems" && item.priceType != "coins") throw new ApiError(400, "REAL_MONEY_SKU", "buy via Google Play");
         var w = await Get(pid);
         if (w.cosmetics.Contains(sku)) return w;

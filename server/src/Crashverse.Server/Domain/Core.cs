@@ -9,7 +9,7 @@ namespace Crashverse.Server.Domain;
 public sealed class Content
 {
     public ChapterData Chapter1; public TitanTemplates Titan; public SeasonData Season; public DailyRewardsData DailyRewards;
-    public StoreCatalog Store; public List<StoreItem> AcceptedStore; public Dictionary<string, int> LayoutPieces = new();
+    public StoreCatalog Store; public List<StoreItem> AcceptedStore; public Dictionary<string, string> RequiresFlag = new(); public Dictionary<string, int> LayoutPieces = new();
     static readonly JsonSerializerOptions O = new() { IncludeFields = true, PropertyNameCaseInsensitive = false };
 
     public static Content Load(string root)
@@ -20,6 +20,10 @@ public sealed class Content
             Chapter1 = R<ChapterData>("chapter1.json"), Titan = R<TitanTemplates>("titan_templates.json"), Season = R<SeasonData>("season_s1.json"),
             DailyRewards = R<DailyRewardsData>("daily_rewards.json"), Store = R<StoreCatalog>("store_catalog.json")
         };
+        // requiresFlag (client PR #10 catalog) is read from the raw JSON so it applies whether or not StoreItem has the field yet.
+        if (System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(Path.Combine(root, "store_catalog.json")))?["items"] is System.Text.Json.Nodes.JsonArray items)
+            foreach (var it in items)
+                if (it?["sku"]?.GetValue<string>() is string s && it?["requiresFlag"] is System.Text.Json.Nodes.JsonValue rf && rf.TryGetValue<string>(out var f) && f.Length > 0) c.RequiresFlag[s] = f;
         Crashverse.Meta.StoreValidator.Validate(c.Store, out c.AcceptedStore); // server re-runs the cosmetics-only rule (review §5.7)
         var ld = Path.Combine(root, "Layouts");
         if (Directory.Exists(ld))
@@ -47,6 +51,16 @@ public sealed class Ctx
     public IPushAuthVerifier PushAuth; public IReplayWorker Replay; public ISampler Sampler;
 
     public DateTime Now => Clock.UtcNow;
+    /// <summary>Store SKU as sold right now: catalog-accepted AND its feature flag on. Gem packs (catalog requiresFlag "enableGemPacks",
+    /// or ServerOptions.GemPackSkus) resolve only with ENABLE_GEM_PACKS; an unknown requiresFlag fails closed.</summary>
+    public StoreItem Sku(string sku)
+    {
+        var i = Content?.Sku(sku); if (i == null) return null;
+        string flag = Content.RequiresFlag.TryGetValue(sku, out var f) ? f : Array.IndexOf(ServerOptions.GemPackSkus, sku) >= 0 ? "enableGemPacks" : null;
+        if (flag == null) return i;
+        return flag == "enableGemPacks" && Opt.EnableGemPacks ? i : null;
+    }
+
     public long NowMs => new DateTimeOffset(DateTime.SpecifyKind(Clock.UtcNow, DateTimeKind.Utc)).ToUnixTimeMilliseconds();
     public static long Unix(DateTime d) => new DateTimeOffset(DateTime.SpecifyKind(d, DateTimeKind.Utc)).ToUnixTimeSeconds();
     public static string Iso(DateTime d) => DateTime.SpecifyKind(d, DateTimeKind.Utc).ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'");

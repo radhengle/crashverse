@@ -22,7 +22,7 @@ public sealed class PurchaseService
 
     StoreItem RealMoneySku(string productId)
     {
-        var i = _x.Content.Sku(productId);
+        var i = _x.Sku(productId);
         if (i == null || i.priceType != "real") throw new ApiError(400, "INVALID_PURCHASE", "unknown product");
         return i;
     }

@@ -178,9 +178,9 @@ public class ReReviewTests
     {
         await using var h = await Harness.Start();
         var s = await h.Guest(); await Debt(h, s, -300, coins: 100_000);
-        Assert.Equal(HttpStatusCode.OK, (await h.Post("/v1/store/buy", new { sku = "frame_tidebreaker" }, s)).status);
+        Assert.Equal(HttpStatusCode.OK, (await h.Post("/v1/store/buy", new { sku = "deco_lighthouse" }, s)).status);
         var w = await h.Wallet(s);
-        Assert.Equal(-300, w.gems); Assert.True(w.coins < 100_000); Assert.Contains("frame_tidebreaker", w.cosmetics);
+        Assert.Equal(-300, w.gems); Assert.True(w.coins < 100_000); Assert.Contains("deco_lighthouse", w.cosmetics);
     }
 
     [Fact]
