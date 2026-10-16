@@ -105,14 +105,8 @@ jobs:
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
 
-      - name: Assert 64-bit native libs (arm64-v8a libil2cpp.so + libunity.so)
-        run: |
-          set -e
-          f=$(ls build/Android/*.apk | head -1)
-          unzip -l "$f" | grep -E 'lib/(arm64-v8a|armeabi-v7a)/' | tee native_libs.txt
-          for lib in libil2cpp.so libunity.so; do
-            grep -q "lib/arm64-v8a/$lib" native_libs.txt || { echo "::error::$f is missing lib/arm64-v8a/$lib"; exit 1; }
-          done
+      - name: Assert built APK (arm64 libs, allowBackup=false, portrait-only, release non-debuggable)
+        run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" "$CRASHVERSE_BUILD_PROFILE"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
