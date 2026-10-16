@@ -13,10 +13,3 @@ namespace UnityEngine
     }
     public class ParticleSystemRenderer : Renderer { public Material sharedMaterial; }
 }
-namespace UnityEngine.SceneManagement
-{
-    public struct Scene { public string name, path; public int buildIndex; }
-    public enum LoadSceneMode { Single, Additive }
-    public struct LoadSceneParameters { public LoadSceneParameters(LoadSceneMode m) { } }
-    public static class SceneManager { public static Scene GetActiveScene() => new Scene { name = "Bootstrap", path = "" }; public static void LoadScene(int buildIndex) { } }
-}
