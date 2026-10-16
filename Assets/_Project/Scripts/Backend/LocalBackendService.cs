@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Crashverse.Data;
 using UnityEngine;
 
+#if CRASHVERSE_DEV // Security Review §1: dev/QA only. Never compiled into release builds.
 namespace Crashverse.Backend
 {
     /// <summary>
@@ -35,6 +36,7 @@ namespace Crashverse.Backend
         {
             public long testFixedUnixMs = -1; public long testOffsetMs; // QA clock override
             public AccountState account = new AccountState();
+            public string authEmail = ""; public List<string> attempts = new List<string>();
             public Wallet wallet = new Wallet();
             public List<InboxItem> inbox = new List<InboxItem>();
             public List<string> grantedFirstClears = new List<string>();
@@ -124,15 +126,63 @@ namespace Crashverse.Backend
         public Task<AccountState> GetAccount() { Online(); return Task.FromResult(_s.account); }
 
         /// <summary>Fake OAuth link. SG-19: guest scores on currently open boards become visible.</summary>
-        public Task<AccountState> LinkAccount(string provider)
+        public Task<AccountState> LinkAccount(AuthProvider provider, string credential)
         {
             Online();
-            _s.account.linked = true; _s.account.provider = provider;
+            if (string.IsNullOrEmpty(credential)) throw new BackendException("missing provider credential");
+            if (provider == AuthProvider.X && !Flags.xLoginEnabled) throw new BackendException("X login disabled");
+            _s.account.linked = true; _s.account.provider = provider.ToString();
             _s.account.displayName = provider + " Wrecker";
             foreach (var b in _s.boards)
                 if (!IsClosed(b)) foreach (var x in b.subs) if (x.playerId == _s.account.playerId) x.name = _s.account.displayName;
             Save();
             return Task.FromResult(_s.account);
+        }
+
+        // ---- Email auth stub: stores the email only; the password is checked for policy then discarded (never persisted). ----
+        public FeatureFlags Flags = new FeatureFlags(); // dev stub of the server flag set
+        public Task<FeatureFlags> GetFeatureFlags() { Online(); return Task.FromResult(Flags); }
+        static bool ValidEmail(string e) => !string.IsNullOrEmpty(e) && e.IndexOf('@') > 0 && e.LastIndexOf('.') > e.IndexOf('@');
+        AuthSession Session(string email) => new AuthSession { playerId = _s.account.playerId, email = email, sessionToken = "sess_" + Guid.NewGuid().ToString("N"), expiresUnixUtc = Unix(ServerNow.AddHours(1)) };
+        public Task<AuthSession> AuthEmailRegister(string email, string password)
+        {
+            Online();
+            if (!Flags.emailAuthEnabled) throw new BackendException("email auth disabled");
+            if (!ValidEmail(email)) throw new BackendException("invalid email");
+            if (string.IsNullOrEmpty(password) || password.Length < 8) throw new BackendException("password too short"); // TODO(Security Admin): real policy
+            _s.authEmail = email.Trim().ToLowerInvariant(); Save();
+            return Task.FromResult(Session(_s.authEmail));
+        }
+        public Task<AuthSession> AuthEmailLogin(string email, string password)
+        {
+            Online();
+            if (!ValidEmail(email) || string.IsNullOrEmpty(password)) throw new BackendException("invalid credentials");
+            if (email.Trim().ToLowerInvariant() != _s.authEmail) throw new BackendException("invalid credentials");
+            return Task.FromResult(Session(_s.authEmail));
+        }
+        public Task<bool> RequestPasswordReset(string email) { Online(); return Task.FromResult(true); } // always true: no account enumeration
+        public Task<DeleteAccountResponse> DeleteAccount()
+        {
+            Online();
+            var keepClock = (_s.testFixedUnixMs, _s.testOffsetMs);
+            _s = new ServerDb { testFixedUnixMs = keepClock.Item1, testOffsetMs = keepClock.Item2 };
+            _s.account.playerId = "guest_" + Guid.NewGuid().ToString("N").Substring(0, 8); _s.account.displayName = "Guest Wrecker";
+            Save();
+            return Task.FromResult(new DeleteAccountResponse { accepted = true, message = "deleted", scheduledUnixUtc = Unix(ServerNow) });
+        }
+        public Task<AttemptToken> BeginAttempt(string levelId)
+        {
+            Online();
+            var t = new AttemptToken { token = "att_" + Guid.NewGuid().ToString("N"), levelId = levelId, seed = new System.Random().Next(), issuedUnixUtc = Unix(ServerNow), expiresUnixUtc = Unix(ServerNow.AddHours(2)) };
+            _s.attempts.Add(t.token); Save();
+            return Task.FromResult(t);
+        }
+        public Task<InputLogResponse> SubmitInputLog(InputLog log)
+        {
+            Online();
+            if (log == null || !_s.attempts.Remove(log.attemptToken)) return Task.FromResult(new InputLogResponse { accepted = false, message = "unknown or used attempt token" });
+            Save();
+            return Task.FromResult(new InputLogResponse { accepted = true, message = "stored (replay validation is server-side TODO)" });
         }
 
         public Task<Wallet> GetWallet() { Online(); return Task.FromResult(_s.wallet); }
@@ -194,17 +244,14 @@ namespace Crashverse.Backend
         }
         static int Mod(int a, int n) => ((a % n) + n) % n;
 
-        /// <summary>Optional server push: a JSON file named daily_titan_override_{dayKey}.json in persistentData replaces the rotation without a build.</summary>
+        /// <summary>Dev stub of the server's daily config. A live override is a server concern; set DevOverride (QA) to simulate one.
+        /// No local-file override path exists in any build (Security Review §3).</summary>
+        public DailyTitanConfig DevOverride;
         public Task<DailyTitanConfig> GetDailyTitan()
         {
             Online();
             var now = ServerNow;
-            var overridePath = Path.Combine(Path.GetDirectoryName(_path) ?? ".", $"daily_titan_override_{UtcDay.Key(now)}.json");
-            if (File.Exists(overridePath))
-            {
-                var o = JsonUtility.FromJson<DailyTitanConfig>(File.ReadAllText(overridePath));
-                if (o != null) { o.dayKey = UtcDay.Key(now); o.resetsAtUnixUtc = Unix(UtcDay.NextReset(now)); return Task.FromResult(o); }
-            }
+            if (DevOverride != null) { DevOverride.dayKey = UtcDay.Key(now); DevOverride.resetsAtUnixUtc = Unix(UtcDay.NextReset(now)); return Task.FromResult(DevOverride); }
             return Task.FromResult(BuildDailyConfig(_db.Titan, now));
         }
 
@@ -345,11 +392,7 @@ namespace Crashverse.Backend
         }
 
         /// <summary>DP §3: damage dealt (0..10000) + 500 per shot left, bonus only on a kill.</summary>
-        public static int TitanScore(int damageScore, int shotsLeft, bool killed, TitanTemplates t)
-        {
-            int d = Math.Max(0, Math.Min(t.maxDamageScore, damageScore));
-            return d + (killed ? t.perShotLeftBonus * Math.Max(0, shotsLeft) : 0);
-        }
+        public static int TitanScore(int damageScore, int shotsLeft, bool killed, TitanTemplates t) => TitanScoring.Score(damageScore, shotsLeft, killed, t);
 
         // ---------------- Daily rewards ----------------
         public Task<DailyRewardState> GetDailyRewardState()
@@ -462,7 +505,10 @@ namespace Crashverse.Backend
         public Task<int> SubmitEventScore(string eventLevelId, int stars) { ReportEventStars(eventLevelId, stars); return Task.FromResult(WeeklyStars(ServerNow)); }
 
         /// <summary>Store stub: the premium season track is cosmetic-only (VM-13). Per season; cleared on rollover.</summary>
-        public void GrantPremiumPassStub() { _s.premium = true; Save(); }
+#if CRASHVERSE_TESTS
+        // Test-only stand-in for IServerEntitlements.GrantPremiumPass (server-only). Not present in any player build.
+        public void GrantPremiumPassForTests() { _s.premium = true; Save(); }
+#endif
 
         public Task<SeasonState> ClaimSeasonTier(int tier, bool premium)
         {
@@ -655,3 +701,4 @@ namespace Crashverse.Backend
         }
     }
 }
+#endif

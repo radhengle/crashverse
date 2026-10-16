@@ -203,7 +203,7 @@ namespace Crashverse.Core
                         if (won) await backend.ReportEventStars(lvl.id, stars); // SG-23: best single run, server-side
                         break;
                     case RunMode.TitanRanked:
-                        res.titanScore = LocalBackendService.TitanScore(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
+                        res.titanScore = TitanScoring.Score(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
                         await _cpTask;
                         _journal.final = true; TitanRunJournal.Write(_journal); // if offline, the next launch finalizes it as-is
                         res.titanSubmit = await backend.FinalizeRanked(_journal);
@@ -212,7 +212,7 @@ namespace Crashverse.Core
                         break;
                     case RunMode.TitanPractice:
                         AppServices.Save.RecordHintAttempt(lvl.id, won); // BUG-08
-                        res.titanScore = LocalBackendService.TitanScore(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
+                        res.titanScore = TitanScoring.Score(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
                         res.note = "Practice run (not ranked)";
                         break;
                 }

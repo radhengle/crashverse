@@ -20,7 +20,13 @@ namespace Crashverse.Core
             QualityController.ApplyMid();
             AppServices.Content = ContentDatabase.LoadBundled();
             AppServices.Save = new CampaignSave();
+#if CRASHVERSE_DEV
             AppServices.Backend = BackendLocator.Current ?? new LocalBackendService(AppServices.Content);
+#else
+            // Security Review §1: release builds never fall back to the local stub.
+            if (BackendLocator.Current == null) throw new System.InvalidOperationException("Release build has no server backend (BackendLocator.Current unset); local fallback is dev-only.");
+            AppServices.Backend = BackendLocator.Current;
+#endif
             BackendLocator.Current = AppServices.Backend;
             AppServices.StoreErrors = StoreValidator.Validate(AppServices.Content.Store, out AppServices.StoreItems);
             foreach (var e in AppServices.StoreErrors) Debug.LogError("[Store] rejected " + e);
@@ -31,6 +37,7 @@ namespace Crashverse.Core
             new GameObject("Quality").AddComponent<QualityController>();
             GameplayDirector.ShowMap();
             await AppServices.SyncServerTime();
+            if (Crashverse.UI.AgeGateScreen.Needed) AppServices.Router.Push(new Crashverse.UI.AgeGateScreen(null)); // B6 first-launch age gate (placeholder rules)
             var pending = await TitanRunJournal.FlushPending(AppServices.Backend);
             await CampaignResultQueue.Flush(AppServices.Backend); // BUG-14
             if (pending != null) AppServices.Router.Toast("Interrupted ranked run: " + pending.message, 4f);

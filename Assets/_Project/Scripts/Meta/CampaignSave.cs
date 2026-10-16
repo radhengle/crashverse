@@ -26,10 +26,11 @@ namespace Crashverse.Meta
     {
         public CampaignSaveData Data { get; private set; } = new CampaignSaveData();
         readonly string _path;
+        public static string DefaultPath => Path.Combine(Application.persistentDataPath, "campaign_save.json");
 
         public CampaignSave(string path = null)
         {
-            _path = path ?? Path.Combine(Application.persistentDataPath, "campaign_save.json");
+            _path = path ?? DefaultPath;
             Load();
         }
 

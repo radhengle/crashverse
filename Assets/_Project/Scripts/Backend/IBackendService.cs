@@ -16,13 +16,28 @@ namespace Crashverse.Backend
         bool IsOnline { get; }
         Task<DateTime> GetServerTimeUtc();
         Task<AccountState> GetAccount();
-        Task<AccountState> LinkAccount(string provider);
+        /// <summary>Link the current (guest) player to a provider using a provider-issued token (OAuth id token, or email session token).</summary>
+        Task<AccountState> LinkAccount(AuthProvider provider, string credential);
+
+        // Email auth. Passwords go to the server over TLS and are never stored client-side (not in saves, prefs or logs).
+        Task<AuthSession> AuthEmailRegister(string email, string password);
+        Task<AuthSession> AuthEmailLogin(string email, string password);
+        Task<bool> RequestPasswordReset(string email);
+        /// <summary>B6: permanent account deletion (server-side erase of player data).</summary>
+        Task<DeleteAccountResponse> DeleteAccount();
+        /// <summary>Server feature flags (e.g. xLoginEnabled).</summary>
+        Task<FeatureFlags> GetFeatureFlags();
+
+        /// <summary>Security Review §4: single-use token per attempt; reports reference it.</summary>
+        Task<AttemptToken> BeginAttempt(string levelId);
+        Task<InputLogResponse> SubmitInputLog(InputLog log);
 
         Task<Wallet> GetWallet();
         Task<bool> ConsumeExtraCharge();
         Task<List<InboxItem>> GetInbox();
         Task<Wallet> ClaimInbox(string itemId);
 
+        /// <summary>Daily config incl. any live override: release builds take overrides only from here (server), never a local file.</summary>
         Task<DailyTitanConfig> GetDailyTitan();
         Task<RankedStatus> GetRankedStatus();
         Task<RankedTicket> BeginRankedRun();

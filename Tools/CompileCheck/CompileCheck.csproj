@@ -6,6 +6,7 @@
     <LangVersion>9</LangVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <OutputType>Library</OutputType>
+    <DefineConstants Condition="'$(CrashverseDev)'=='true'">$(DefineConstants);CRASHVERSE_DEV</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Stubs/**/*.cs" />

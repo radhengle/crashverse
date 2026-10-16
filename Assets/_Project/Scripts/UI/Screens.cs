@@ -52,7 +52,10 @@ namespace Crashverse.UI
             _stars = UIFactory.Label(tr, "", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
             _wallet = UIFactory.Label(tr, "", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
             UIFactory.Button(tr, "Store", Th.violet, () => Router.Push(new StoreScreen()), Th, 48, 80, Th.bodySp);
-            UIFactory.Button(tr, "⚙", Th.navy500, () => Router.Push(new QADebugModal()), Th, 48, 48, Th.bodySp);
+            UIFactory.Button(tr, "Settings", Th.navy500, () => Router.Push(new SettingsModal()), Th, 48, 96, Th.captionSp);
+#if CRASHVERSE_DEV || DEVELOPMENT_BUILD
+            UIFactory.Button(tr, "⚙", Th.navy500, () => Router.Push(new QADebugModal()), Th, 48, 48, Th.bodySp); // SEC-02: dev builds only
+#endif
             // bottom dock
             var dock = UIFactory.Panel("Dock", root, new Color(Th.navy900.r, Th.navy900.g, Th.navy900.b, 0.85f));
             UIFactory.Band(dock.rectTransform, false, 64f);
@@ -555,6 +558,7 @@ namespace Crashverse.UI
     public class SettingsModal : UIScreen
     {
         public override bool IsModal => true; Text _shake, _motion;
+        // SettingsModal ships in every build; QA tools do not (SEC-02).
         protected override void Build(RectTransform root)
         {
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
@@ -564,8 +568,25 @@ namespace Crashverse.UI
             var m = Crashverse.Feel.MotionSettings.Current;
             _shake = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceShake(!m.ReduceShake); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
             _motion = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceMotion(!m.ReduceMotion); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
+            UIFactory.Button(v, "Delete account", Th.red, () => Router.Push(new ConfirmModal("Delete account?",
+                "This permanently deletes your account, progress, wallet and leaderboard entries on our servers and this device. This can't be undone.",
+                "Delete", DeleteAccount)), Th, 48); // B6
             UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
             Refresh();
+        }
+        async void DeleteAccount()
+        {
+            try
+            {
+                var flags = await AppServices.Backend.GetFeatureFlags();
+                if (!flags.accountDeletionEnabled) { Router.Toast("Account deletion is unavailable right now. Please try again later."); return; }
+                var r = await AppServices.Backend.DeleteAccount();
+                if (!r.accepted) { Router.Toast("Couldn't delete: " + r.message); return; }
+                AccountDeletion.WipeLocal();
+                Router.Toast("Your account was deleted.", 4f);
+                GameplayDirector.ShowMap();
+            }
+            catch (BackendException) { Router.Toast("You need to be online to delete your account."); }
         }
         void Refresh()
         {
@@ -575,7 +596,42 @@ namespace Crashverse.UI
         }
     }
 
-    // ───────────────────────────── QA / debug panel ─────────────────────────────
+    // ───────────────────────────── Age gate (B6, placeholder rules) ─────────────────────────────
+    public class AgeGateScreen : UIScreen
+    {
+        public const string PrefKey = "cv_age_band_v" ; // + AgeGate.Version; stores the band only, never the birth date
+        public static bool Needed => UnityEngine.PlayerPrefs.GetInt(PrefKey + AgeGate.Version, 0) == 0;
+        public static AgeGate.Band Current => (AgeGate.Band)UnityEngine.PlayerPrefs.GetInt(PrefKey + AgeGate.Version, 0);
+        readonly System.Action _done; int _year; Text _yearText; Button _ok;
+        public AgeGateScreen(System.Action done) { _done = done; }
+        public override bool OnBack() => true; // must answer
+        protected override void Build(RectTransform root)
+        {
+            var bg = UIFactory.Panel("Bg", root, Th.navy900); UIFactory.Stretch(bg.rectTransform);
+            var v = UIFactory.VStack(root, Th.gap * 2, 24f); UIFactory.Place(v, new Vector2(0.5f, 0.5f), new Vector2(320, 360), Vector2.zero);
+            UIFactory.Label(v, "What year were you born?", Th.headingSp, Th.white, TextAnchor.MiddleCenter, Th, true);
+            _year = AppServices.ServerNow.Year > 2000 ? AppServices.ServerNow.Year - 10 : System.DateTime.UtcNow.Year - 10; // neutral start, no "adult" default
+            var row = UIFactory.HStack(v, Th.gap, 56);
+            UIFactory.Button(row, "−10", Th.navy500, () => Step(-10), Th, 48, 64, Th.captionSp);
+            UIFactory.Button(row, "−1", Th.navy500, () => Step(-1), Th, 48, 56, Th.captionSp);
+            _yearText = UIFactory.Label(row, "", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Button(row, "+1", Th.navy500, () => Step(1), Th, 48, 56, Th.captionSp);
+            _ok = UIFactory.Button(v, "Continue", Th.green, Confirm, Th, 56);
+            UIFactory.Label(v, "Used only to set up age-appropriate features. Only an age range is stored on this device.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            Step(0);
+        }
+        void Step(int d) { int now = System.DateTime.UtcNow.Year; _year = Mathf.Clamp(_year + d, now - 100, now); _yearText.text = _year.ToString(); }
+        void Confirm()
+        {
+            var band = AgeGate.Classify(_year, AppServices.TimeSynced ? AppServices.ServerNow.Year : System.DateTime.UtcNow.Year);
+            if (band == AgeGate.Band.Unknown) { Router.Toast("Please pick a valid year"); return; }
+            UnityEngine.PlayerPrefs.SetInt(PrefKey + AgeGate.Version, (int)band); UnityEngine.PlayerPrefs.Save();
+            Router.Pop(); _done?.Invoke();
+        }
+    }
+
+    // ───────────────────────────── QA / debug panel (SEC-02: dev builds only) ─────────────────────────────
+#if CRASHVERSE_DEV || DEVELOPMENT_BUILD
     /// <summary>Test clock override (server stub), offline toggle, quality toggle. Development builds and editor only in production.</summary>
     public class QADebugModal : UIScreen
     {
@@ -587,6 +643,7 @@ namespace Crashverse.UI
             var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
             UIFactory.Label(v, "QA Tools", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
             _clock = UIFactory.Label(v, "", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+#if CRASHVERSE_DEV
             var lb = AppServices.LocalBackend;
             if (lb != null)
             {
@@ -598,13 +655,20 @@ namespace Crashverse.UI
                 UIFactory.Button(v, "Clear test clock", Th.navy500, () => { lb.ClearTestClock(); Sync(); }, Th, 48, 0, Th.captionSp);
                 UIFactory.Button(v, "Toggle offline", Th.red, () => { lb.SimulateOffline = !lb.SimulateOffline; Router.Toast(lb.SimulateOffline ? "Backend offline" : "Backend online"); }, Th, 48, 0, Th.captionSp);
             }
-            UIFactory.Button(v, "Settings", Th.navy500, () => Router.Push(new SettingsModal()), Th, 48, 0, Th.captionSp);
+#endif
             UIFactory.Button(v, "Toggle quality", Th.navy500, () => Crashverse.Perf.QualityController.Toggle(), Th, 48, 0, Th.captionSp);
             UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
         }
+#if CRASHVERSE_DEV
         void Adv(TimeSpan t) { AppServices.LocalBackend.AdvanceTestClock(t); Sync(); }
+#endif
         async void Sync() { await AppServices.SyncServerTime(); }
+#if CRASHVERSE_DEV
         public override void Tick() { _clock.text = $"Server {AppServices.ServerNow:yyyy-MM-dd HH:mm:ss} UTC" + (AppServices.LocalBackend?.TestClockActive == true ? " (TEST)" : ""); }
+#else
+        public override void Tick() { _clock.text = $"Server {AppServices.ServerNow:yyyy-MM-dd HH:mm:ss} UTC"; }
+#endif
         public override void OnHide() { (Router.Top as MapScreen)?.OnShow(); }
     }
+#endif
 }

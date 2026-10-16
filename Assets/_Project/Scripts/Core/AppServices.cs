@@ -13,7 +13,9 @@ namespace Crashverse.Core
         public static ContentDatabase Content;
         public static CampaignSave Save;
         public static IBackendService Backend;
+#if CRASHVERSE_DEV
         public static LocalBackendService LocalBackend => Backend as LocalBackendService; // QA panel only
+#endif
         public static UIRouter Router;
         public static UITheme Theme;
         public static System.Collections.Generic.List<StoreItem> StoreItems = new System.Collections.Generic.List<StoreItem>();

@@ -278,7 +278,7 @@ static class Tests
             var p = b.GetLeaderboard(BoardType.DailyTitan, BoardPeriod.Current, false).Result;
             T.True(p.meIsGuestHidden && p.me == null, "guest stored but hidden");
             T.True(p.top.Count == 100, "top 100");
-            b.LinkAccount("Google").Wait();
+            b.LinkAccount(AuthProvider.Google, "test-id-token").Wait();
             p = b.GetLeaderboard(BoardType.DailyTitan, BoardPeriod.Current, false).Result;
             T.True(p.me != null && p.me.score == 10000 + 500 * (t.shotBudget - 2), "linked player listed with own score");
             for (int i = 1; i < p.top.Count; i++)
@@ -445,7 +445,7 @@ static class Tests
         });
         T.Add("BUG06_season_rollover", () =>
         {
-            var b = NewBackend("2026-11-08T10:00:00"); b.LinkAccount("Google").Wait(); b.GrantPremiumPassStub();
+            var b = NewBackend("2026-11-08T10:00:00"); b.LinkAccount(AuthProvider.Google, "test-id-token").Wait(); b.GrantPremiumPassForTests();
             foreach (var l in Db.Season.weeks[3].levels) b.ReportEventStars(l.id, 3).Wait(); // 150 xp → tier 1
             var s0 = b.GetSeasonState().Result; T.Eq("s1_wrecking_frontier", s0.seasonId, "season 1"); T.Eq(3, s0.weekIndex, "last week");
             b.SetTestClock(U("2026-11-09T00:00:00"));
@@ -460,7 +460,7 @@ static class Tests
         });
         T.Add("BUG07_previous_season_board_is_real", () =>
         {
-            var b = NewBackend("2026-10-20T10:00:00"); b.LinkAccount("Google").Wait();
+            var b = NewBackend("2026-10-20T10:00:00"); b.LinkAccount(AuthProvider.Google, "test-id-token").Wait();
             var pre = b.GetLeaderboard(BoardType.Season, BoardPeriod.Previous, false).Result;
             T.True(pre.closed && pre.top.Count == 0, "no fake archive before season 1");
             foreach (var l in Db.Season.weeks[1].levels) b.ReportEventStars(l.id, 3).Wait();
@@ -505,7 +505,7 @@ static class Tests
         });
         T.Add("SC13_campaign_leaderboard", () =>
         {
-            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount("Google").Wait();
+            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount(AuthProvider.Google, "test-id-token").Wait();
             var r1 = Win(b, "c1_l01", 1f, 1, 0); T.True(r1.accepted && r1.firstClear, "validated first clear");
             Win(b, "c1_l01", 0.9f, 0, 0);                                    // worse run doesn't lower the best
             var r2 = Win(b, "c1_l02", 0.9f, 2, 3);
@@ -561,7 +561,7 @@ static class Tests
         });
         T.Add("BUG16_timestamp_only_on_increase", () =>
         {
-            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount("Google").Wait();
+            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount(AuthProvider.Google, "test-id-token").Wait();
             Win(b, "c1_l01", 1f, 1, 0);
             long t0 = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result.me.submittedTicks;
             b.SetTestClock(U("2026-10-20T10:00:00")); Win(b, "c1_l01", 0.9f, 0, 0); // lower replay: total unchanged
@@ -681,6 +681,90 @@ static class Tests
             T.True(!src.Contains("fieldOfView = 50f"), "no hard-coded FOV");
             var arena = File.ReadAllText(Path.Combine(UnityEngine.Resources.Root, "../../../Assets/_Project/Scripts/Core/ArenaBuilder.cs"));
             T.True(arena.Contains("VisualConfig.Current") && !arena.Contains("\"FFF2D6\""), "lighting from VisualConfig");
+        });
+
+        // ───── Security Review v1 + SEC-02 + B1 + B6 ─────
+        string Src(string rel) => File.ReadAllText(Path.Combine(UnityEngine.Resources.Root, "../../../", rel));
+        T.Add("SEC_local_backend_dev_only", () =>
+        {
+            var lb = Src("Assets/_Project/Scripts/Backend/LocalBackendService.cs");
+            T.True(lb.Contains("#if CRASHVERSE_DEV") && lb.TrimEnd().EndsWith("#endif"), "whole LocalBackendService behind CRASHVERSE_DEV");
+            var boot = Src("Assets/_Project/Scripts/Core/GameBootstrap.cs");
+            T.True(boot.Contains("#else") && boot.Contains("InvalidOperationException"), "release build throws instead of local fallback");
+        });
+        T.Add("SEC02_qa_tools_dev_only", () =>
+        {
+            var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
+            int gear = sc.IndexOf("new QADebugModal()"); int guard = sc.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", gear);
+            T.True(guard > 0 && sc.IndexOf("#endif", guard) > gear, "gear button guarded");
+            int cls = sc.IndexOf("public class QADebugModal"); int g2 = sc.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", cls);
+            T.True(g2 > 0 && sc.IndexOf("#endif", g2) > cls, "QADebugModal class guarded");
+        });
+        T.Add("B1_release_guard_script_passes_and_ci_runs_it", () =>
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo("python3", Path.Combine(UnityEngine.Resources.Root, "../../../Tools/ci/check_release_guards.py")) { RedirectStandardOutput = true, UseShellExecute = false };
+            using (var pr = System.Diagnostics.Process.Start(psi)) { pr.WaitForExit(); T.Eq(0, pr.ExitCode, "guard check passes on tree"); }
+            var wf = Src(".github/workflows/android-apk.yml");
+            T.True(wf.Contains("check_release_guards.py") && wf.Contains("needs: guards"), "CI runs guard before Unity build");
+            T.True(!wf.Contains("allowDirtyBuild"), "no dirty builds");
+            T.True(!System.Text.RegularExpressions.Regex.IsMatch(wf, @"uses: [^@\s]+@v\d"), "actions pinned to SHAs");
+            T.True(wf.Contains("permissions:") && wf.Contains("default: dev"), "least privilege + dev default");
+            int sec = wf.IndexOf("secrets.UNITY_LICENSE"), build = wf.IndexOf("\n  build:");
+            T.True(sec > build && wf.IndexOf("refs/heads/main", build) < sec, "Unity secrets only in main-only build job");
+        });
+        T.Add("SEC_premium_grant_not_on_client", () =>
+        {
+            T.True(typeof(LocalBackendService).GetMethod("GrantPremiumPassStub") == null, "client premium grant removed");
+            T.True(typeof(IServerEntitlements).IsInterface, "server-only entitlement interface present");
+            foreach (var f in Directory.GetFiles(Path.Combine(UnityEngine.Resources.Root, "../../../Assets"), "*.cs", SearchOption.AllDirectories))
+                T.True(!File.ReadAllText(f).Contains(": IServerEntitlements"), Path.GetFileName(f) + " doesn't implement server entitlements");
+        });
+        T.Add("SEC_titan_override_server_only", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            var dir = Path.GetDirectoryName(typeof(LocalBackendService).GetField("_path", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(b) as string);
+            var normal = b.GetDailyTitan().Result.arenaId;
+            File.WriteAllText(Path.Combine(dir, "daily_titan_override_2026-10-16.json"), "{\"arenaId\":\"HACKED\"}");
+            T.Eq(normal, b.GetDailyTitan().Result.arenaId, "local override file ignored");
+            b.DevOverride = new DailyTitanConfig { arenaId = "server_push" }; T.Eq("server_push", b.GetDailyTitan().Result.arenaId, "server-side override path");
+        });
+        T.Add("SEC_attempt_token_and_input_log", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            var t = b.BeginAttempt("c1_l01").Result; T.True(t.token.StartsWith("att_") && t.levelId == "c1_l01", "token issued");
+            var log = new InputLog { attemptToken = t.token, levelId = "c1_l01" }; log.events.Add(new InputEvent { t = 1.2f, kind = "fire", yaw = 3, elevation = 30 });
+            T.True(b.SubmitInputLog(log).Result.accepted, "log accepted once"); T.True(!b.SubmitInputLog(log).Result.accepted, "token single-use");
+            T.True(!b.SubmitInputLog(new InputLog { attemptToken = "forged" }).Result.accepted, "unknown token rejected");
+        });
+        T.Add("SEC_email_auth_and_link", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            T.True(Throws(() => b.AuthEmailRegister("bad", "longenough1").Wait()), "invalid email rejected");
+            T.True(Throws(() => b.AuthEmailRegister("a@b.co", "short").Wait()), "short password rejected (placeholder policy)");
+            var s = b.AuthEmailRegister("Pat@Example.com", "correct-horse-1").Result; T.True(s.sessionToken.StartsWith("sess_"), "session");
+            T.True(b.AuthEmailLogin("pat@example.com", "whatever-1").Result != null, "login");
+            T.True(b.RequestPasswordReset("nobody@example.com").Result, "reset never reveals account existence");
+            var acc = b.LinkAccount(AuthProvider.Email, s.sessionToken).Result; T.True(acc.linked && acc.provider == "Email", "link with Email credential");
+            var dbText = File.ReadAllText(typeof(LocalBackendService).GetField("_path", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(b) as string);
+            T.True(!dbText.Contains("correct-horse-1"), "password never persisted");
+            T.True(Throws(() => b.LinkAccount(AuthProvider.Google, "").Wait()), "credential required");
+        });
+        T.Add("SEC_x_login_flag_from_server", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            T.True(!b.GetFeatureFlags().Result.xLoginEnabled, "X off unless server enables");
+            T.True(Throws(() => b.LinkAccount(AuthProvider.X, "tok").Wait()), "X link refused while flag off");
+            b.Flags.xLoginEnabled = true; T.True(b.LinkAccount(AuthProvider.X, "tok").Result.linked, "X link once server flag on");
+        });
+        T.Add("B6_delete_account_and_age_gate", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount(AuthProvider.Google, "tok").Wait(); Win(b, "c1_l01");
+            var old = b.GetAccount().Result.playerId;
+            T.True(b.DeleteAccount().Result.accepted, "deleted");
+            var acc = b.GetAccount().Result; T.True(acc.playerId != old && !acc.linked, "fresh guest after deletion");
+            T.Eq(AgeGate.Band.Under13, AgeGate.Classify(2014, 2026)); T.Eq(AgeGate.Band.Teen, AgeGate.Classify(2012, 2026));
+            T.Eq(AgeGate.Band.Adult, AgeGate.Classify(2007, 2026)); T.Eq(AgeGate.Band.Unknown, AgeGate.Classify(2030, 2026));
+            T.True(!AgeGate.CanLinkAccount(AgeGate.Band.Under13) && AgeGate.CanLinkAccount(AgeGate.Band.Teen), "placeholder restrictions");
         });
     }
 }

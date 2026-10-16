@@ -21,3 +21,10 @@ Android 3D destruction puzzle game (Unity 2022.3.50f1 LTS + URP 14). Chapter 1 "
 - Settings ▸ Reduce shake / Reduce motion (persisted; Reduce motion auto-on from OS animator scale, explicit choice wins).
 - Pure logic in `Scripts/Feel/FeelCore.cs` (tested); Unity glue in `FeelDirector`.
 - **Look is data:** `VisualConfig` (colours, materials, lighting, fog) and `CameraConfig` (FOV, angles, offsets, map camera) ScriptableObjects, loaded from `Resources/VisualConfig` / `Resources/CameraConfig` (code defaults = Art v2 if absent). Create via Assets ▸ Create ▸ Crashverse.
+
+## Security (Security Review v1, SEC-02, B1, B6)
+- **Build profiles:** `CRASHVERSE_DEV` gates `LocalBackendService`, the test clock, offline toggle and Titan dev override. The QA tools (gear + `QADebugModal`) exist only with `CRASHVERSE_DEV || DEVELOPMENT_BUILD`. Release builds throw at boot if no server backend is registered (`BackendLocator.Current`), and `ReleaseBuildGuard` fails the Unity build if no non-local `IBackendService` exists.
+- **CI** (`android-apk.yml`): the `guards` job runs `Tools/ci/check_release_guards.py` (B1: unguarded dev symbols fail), compile checks for release and dev defines, and the logic tests, then the Unity build (main only, secrets scoped to that job). The default profile is `dev`; use `workflow_dispatch` with profile=`release` for release. Actions are pinned to SHAs, with `contents: read` and no dirty builds.
+- **Server-only:** premium/purchase grants (`IServerEntitlements`, no client implementation). The Daily Titan override comes only via `GetDailyTitan()` from the server; no local file path exists.
+- **Interfaces:** `BeginAttempt`/`SubmitInputLog` (single-use attempt tokens), `LinkAccount(provider, credential)`, `AuthEmailRegister/AuthEmailLogin/RequestPasswordReset` (passwords never persisted client-side), `GetFeatureFlags` (X login gated server-side), `DeleteAccount`.
+- **B6 (placeholder rules, TODO Security Admin):** Settings ▸ Delete account → confirm → `DeleteAccount` → local wipe. First-launch age gate stores only an age band (`Meta/AgeGate.cs`).
