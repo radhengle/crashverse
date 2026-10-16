@@ -16,3 +16,6 @@ gen_levels.py, sim.py, sim_results.json, chapter1_levels.json, layouts/*.json (1
 - Already accepted: star-band test becomes a range check, gen_content.py reads levels/ch1, and hint angles are scripted.
 ## Open for Game designer
 - None blocking. The sim is still abstract (no Unity physics). The L2 tank-off-edge and L7 crown masteries need a playtest.
+
+## Fun pass (rev 3)
+Difficulty tags, a rhythm table, twist and aha lines, and 'why it's fun' notes were added to Ch1_Levels_v1.md. The levels already had a distinct twist and a chain collapse each, and they meet the 'every level solvable and 3★' constraint, so no layout numbers changed. Rhythm: E E M H B M H B H Boss.

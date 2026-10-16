@@ -22,7 +22,39 @@ Min = the fewest shots to win, found by exhaustive BFS. Need3 = the most shots y
 | 9 | Gauntlet: lighthouse + seawall | 6 | .60/.30 | 2 | 2 | lhRing, seaDeck | 92.9 | 4 | 4% | 73% |
 | 10 | Tidewarden boss (defeat to win) | 8 | **.375/.25** | 5 (spec); current code needs 6 | 5 | shoulderL, shoulderR, core (open), non-shutter target (closed), core (open) | n/a | 3 | n/a | n/a |
 
-Curve: learn by hitting one obvious support (L1–2) → two supports needed (L3–4) → a shared support as a breather (L5) → steel joints (L6) → hidden joint plus sequencing (L7) → 3★ only with the right power-up (L8) → two structures with a tight 3★ (L9) → boss.
+Old linear curve note (superseded by the fun-pass table below): learn by hitting one obvious support (L1–2) → two supports needed (L3–4) → a shared support as a breather (L5) → steel joints (L6) → hidden joint plus sequencing (L7) → 3★ only with the right power-up (L8) → two structures with a tight 3★ (L9) → boss.
+
+
+## Fun pass: rhythm, twists and "aha" moments (rev 3)
+Difficulty follows an easy/medium/hard rhythm with a breather after each spike, not a straight climb. A level's tag comes from its new idea plus the sim numbers: Rand3 (how often random play gets 3★) and the gap between the minimum and the shot budget.
+
+### Difficulty curve
+| L | Tag | New idea / twist | Chain-collapse "aha" | Shape | Materials | Rand3 | RandWin |
+|---|---|---|---|---|---|---|---|
+| 1 | Easy | First shot: one post holds the whole hut | Post snaps → deck, 4 walls and roof all drop | Hut on a single stilt | wood | 28% | 85% |
+| 2 | Easy | Hit low, not high: the tank is a decoy target | Sill breaks → 4 stilts and the 3-piece tank topple, and can roll off the edge | Tall, thin tower | wood | 11% | 54% |
+| 3 | Medium | Brick won't break cheaply; take away its legs | Two wood props → the whole brick shell and chimney fall | Squat box on stilts | wood + brick | 13% | 68% |
+| 4 | **Hard (spike)** | A wall you shouldn't shoot: the wood beams are the key | Beams → drum → cap → top drum → sails spin off (the longest chain so far) | Tall stacked cylinder with sails | wood + brick | 3% | 66% |
+| 5 | **Breather** | One shot, two targets | Bridge snaps → both cottages fall together | Wide horizontal span between islands | wood + brick | 39% | 96% |
+| 6 | Medium | Steel is tough, but gold joints take 2× | Two braces → the deck, 4 bins, loft and roof all drop | Box on legs with a decoy joint | brick + steel | 3% | 65% |
+| 7 | **Hard (spike)** | A hidden weak point: open the scaffold first | Ring0 → the whole 3-tier tower and crown drop as one stack; the crown can land intact | Tallest vertical tower | wood + brick + steel | 0.4% | 12% |
+| 8 | **Breather** (with the guided power-up) | A forced power-up: Splitstrike breaks 3 keystones at once | One split shot → 3 market bays fall in a ripple | Long, low arcade | all 3 | 0% random / guided | 23% |
+| 9 | Hard | Two structures, exact order, no power-ups for 3★ | Ring → lighthouse topples; deck → seawall and its crest fold | Two-part scene (tall + wide) | all 3 | 4% | 73% |
+| 10 | Boss | Phases, timing and a readable tell | Both shoulders → arms fall off and the chest opens; core ×2 → collapse cinematic | Humanoid automaton on a sea-stack | all 3 | n/a | n/a |
+
+The rhythm is E E M **H** B M **H** B H Boss. Breathers follow the L4 and L7 spikes. L8 counts as a breather because the briefing forces Splitstrike and the hint points at the keystones: once the player sees the idea, it's a 2-shot clear. A random player still fails it, so 3★ isn't free. Shapes alternate tall, wide and boxy, and materials step from wood → wood+brick → brick+steel → all 3.
+
+### Why it's fun (one line each)
+1. A single shot drops the whole hut, so you get a big payoff in the first second.
+2. The tank looks like the obvious target, but a low hit sends it toppling, maybe off the cliff.
+3. Shooting brick feels useless until you knock the props out and it all slumps at once.
+4. Following the chain down the windmill and watching the sails fly off is the chapter's first "whoa".
+5. A relief level: one clean bridge shot clears two houses.
+6. The gold joints teach you to spot weak points; steel columns that won't break make the joints feel clever.
+7. A puzzle within a puzzle: open the scaffold, find the hidden ring and drop the whole tower, with a bonus for keeping the crown intact.
+8. A power-up showcase where one split shot does three shots' work.
+9. A real exam: two structures, two exact shots, and no crutches for 3★.
+10. A boss you read rather than grind: break the shoulders, time the shutter and land two core hits.
 
 ## Per-level intent and mastery
 1. **Lookout hut** (Harbor). Teaches aim and fire. One centre post holds the deck, walls and roof. Mastery (ruling 5): ≥95% destroyed. The post line gives 100%.
