@@ -1,4 +1,5 @@
 # CRASHVERSE — Feature Test Cases v1.2 (QA)
+Change log: v1.2 rev d (2026-10-16): SC-12 corrected (QA arithmetic error; L2 max with 2 left is 3,450) and re-checked against Art v2: FAIL.
 Change log: v1.2 rev c (2026-10-16): SG-34/35/36 closed per `design/Spec_Gap_Answers_v1.md` (cited **GA SG-xx**); added CMB-11/11a, HINT-16/16a, SC-13f/g.
 Change log: v1.2 (2026-10-16) adds sections I–L from `design/Design_Addendum_v1.1_Hint_Combo_Score_Store.md` (cited **ADD §x**); PM decisions: store = currency packs + cosmetics only; Free Hint, Combo and Score stay; stars stay on % of shots left. New gaps SG-25…SG-33. 🎨 = re-review against Art painted v2 screens.
 Change log: v1.2 rev b (2026-10-16): SG-25…SG-33 closed per ADD "Spec gap answers" (cited **ADD-GA SG-xx**); hint/combo/score/leaderboard/coin boundary cases added; worked examples re-checked (floor, cap 1.0, integer maths); SC-12 answered (formula right, art wrong), kept open vs Art v2.
@@ -226,7 +227,7 @@ Formula (ADD §3 + ADD-GA SG-31, integer maths): score = floor(1000 × min(settl
 | SC-09 | Two runs: score 4,100 with 2★ vs 2,770 with 3★ | Stars come only from % shots left; score never changes stars, unlocks or rewards |
 | SC-10 | Bridge/node unlocks | Not gated on score anywhere |
 | SC-11 | Daily Titan | Uses the DP v1 formula (damage + 500/shot left), not this one |
-| SC-12 🎨 **OPEN vs Art v2** | Win screen | Formula is right, art is wrong (ADD-GA SC-12). L2 (4 shots) max = 1000 + 1500 + 1000 + 50 × combo ≈ 3,500 + combo bonus; 48,750 impossible. Art v2 should use a realistic value (e.g. 3,850 = 3,500 + x7) |
+| SC-12 🎨 **OPEN vs Art v2 (FAIL)** | Win screen | Formula is right, art is wrong (ADD-GA SC-12). L2 (4 shots, 9 pieces) with 2 shots left: max = 1000 + 1000 + 50×9 + 1000 = **3,450**. Art v2 shows 3,850, which is impossible. *Correction: rev b's "3,850 = 3,500 + x7" wrongly assumed 3 shots left (QA error).* Realistic example: 3,250 (100%, 2 left, x5, mastery). See Reference_Screen_Parity_v2 |
 | SC-13 | Campaign leaderboard total | Sum of each level's best score from **server-validated wins only** (ADD-GA SG-32) |
 | SC-13a | Practice / Titan / event runs with high scores | Excluded from the campaign total |
 | SC-13b | Unvalidated or tampered win | Not counted; previous best kept |
