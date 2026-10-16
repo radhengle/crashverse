@@ -235,16 +235,26 @@ namespace Crashverse.UI
     /// <summary>Simple vertical picker modal.</summary>
     public class ListModal : UIScreen
     {
-        readonly string _title; readonly List<(string label, Action act)> _items;
+        readonly string _title; readonly List<(string label, Action act)> _items; readonly int _start; ScrollRect _sr;
         public override bool IsModal => true;
-        public ListModal(string title, List<(string, Action)> items) { _title = title; _items = items; }
+        /// <param name="startIndex">item scrolled to the top when the list opens (the whole list stays reachable)</param>
+        public ListModal(string title, List<(string, Action)> items, int startIndex = 0) { _title = title; _items = items; _start = startIndex; }
+        public override void OnShow()
+        {
+            if (_sr == null || _start <= 0) return;
+            Canvas.ForceUpdateCanvases();
+            var vp = _sr.viewport != null ? _sr.viewport : (RectTransform)_sr.transform;
+            float overflow = _sr.content.rect.height - vp.rect.height; if (overflow <= 0) return;
+            float per = _sr.content.rect.height / Mathf.Max(1, _items.Count);
+            _sr.verticalNormalizedPosition = 1f - Mathf.Clamp01(_start * per / overflow);
+        }
         protected override void Build(RectTransform root)
         {
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
             var p = UIFactory.TrimPanel("List", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(300, 420), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
             UIFactory.Label(v, _title, Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
-            var list = UIFactory.Scroll(v, Th.gap, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1;
+            var list = UIFactory.Scroll(v, Th.gap, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1; _sr = sr;
             foreach (var it in _items) { var a = it.act; UIFactory.Button(list, it.label, Th.navy500, () => { Router.Pop(); a(); }, Th, 48, 0, Th.bodySp); }
             UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
         }
@@ -342,6 +352,7 @@ namespace Crashverse.UI
     // ───────────────────────────── Results (mockups 05/06) ─────────────────────────────
     public class ResultsScreen : UIScreen
     {
+        public bool Won => _r != null && _r.won; // dev tap probe / smoke script
         readonly GameSession _s; readonly RunResult _r;
         public override bool IsModal => true;
         public ResultsScreen(GameSession s, RunResult r) { _s = s; _r = r; }
@@ -731,7 +742,8 @@ namespace Crashverse.UI
         public static string Country() { try { return System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName; } catch { return ""; } }
 
         static readonly string[] Months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-        readonly Action<bool> _done; int _year, _month; Button _yearBtn, _monthBtn, _ok;
+        readonly Action<bool> _done; int _year, _month; Button _yearBtn, _monthBtn, _ok; Text _err;
+        public string Error => _err != null ? _err.text : "";
         public AgeGateScreen(Action<bool> done) { _done = done; }
         public override bool OnBack() => true; // must answer
         protected override void Build(RectTransform root)
@@ -743,6 +755,7 @@ namespace Crashverse.UI
             _monthBtn = UIFactory.Button(v, "Month", Th.navy500, PickMonth, Th, 56);
             _yearBtn = UIFactory.Button(v, "Year", Th.navy500, PickYear, Th, 56);
             _ok = UIFactory.Button(v, "Continue", Th.green, Confirm, Th, 56); _ok.interactable = false;
+            _err = UIFactory.Label(v, "Choose your birth month and year.", Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th);
             UIFactory.Label(v, "We only keep an age range, never your date of birth.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
         }
         void PickMonth()
@@ -755,9 +768,20 @@ namespace Crashverse.UI
         {
             var items = new List<(string, Action)>(); int now = DateTime.UtcNow.Year;
             for (int y = now; y >= now - 100; y--) { int yy = y; items.Add((yy.ToString(), () => { _year = yy; _yearBtn.GetComponentInChildren<Text>().text = yy.ToString(); Validate(); })); } // newest first: no eligible-age default
-            Router.Push(new ListModal("Year of birth", items));
+            Router.Push(new ListModal("Year of birth", items, 18)); // V-02: opens at current year − 18; all 100 years still scroll
         }
-        void Validate() => _ok.interactable = _year > 0 && _month > 0;
+        /// <summary>Continue stays disabled until both are picked and the date isn't in the future; the caption says what's missing.</summary>
+        void Validate()
+        {
+            var now = DateTime.UtcNow;
+            string e = _month == 0 && _year == 0 ? "Choose your birth month and year."
+                     : _month == 0 ? "Choose your birth month."
+                     : _year == 0 ? "Choose your birth year."
+                     : (_year == now.Year && _month > now.Month) ? "That date is in the future. Check the month and year." : "";
+            _err.text = e; _ok.interactable = e.Length == 0;
+        }
+        /// <summary>Test hooks (PlayMode tap tests).</summary>
+        public Button MonthButton => _monthBtn; public Button YearButton => _yearBtn; public Button ContinueButton => _ok;
         void Confirm()
         {
             var now = DateTime.UtcNow; // device date is fine here: no server contact is allowed before the gate
