@@ -1,0 +1,16 @@
+{
+    "name": "Crashverse.DevHooks",
+    "rootNamespace": "Crashverse.DevHooks",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "CRASHVERSE_DEV"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

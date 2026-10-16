@@ -32,6 +32,10 @@ namespace Crashverse.Core
         public TidewardenController Boss { get; private set; }
         public RunResult Result { get; private set; }
         public bool HintVisible { get; private set; }
+#if CRASHVERSE_DEV
+        /// <summary>Set by the dev aim hook; such a session is never ranked (Security Admin #3).</summary>
+        public bool DevHookUsed { get; set; }
+#endif
         public int TitanDamageScore => Ctx != null && Ctx.titan != null && tracker.TotalObjectiveHp > 0
             ? Mathf.Min(Ctx.titan.maxDamageScore, Mathf.RoundToInt(Ctx.titan.maxDamageScore * tracker.DamageDealt / tracker.TotalObjectiveHp)) : 0;
 
@@ -176,6 +180,9 @@ namespace Crashverse.Core
         async void End(bool won)
         {
             State = won ? SessionState.Won : SessionState.Failed;
+#if CRASHVERSE_DEV
+            Crashverse.DevHooks.DevAimHook.ReportDevAimResult(won); // CVTAP|RESULT|win|fail (opt-in only)
+#endif
             fire.CanFire = false;
             aim.inputEnabled = false;
             var lvl = Ctx.level;

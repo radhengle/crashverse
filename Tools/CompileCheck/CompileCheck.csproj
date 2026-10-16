@@ -25,6 +25,7 @@
     <Compile Include="../../Assets/_Project/Scripts/LiveOps/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Feel/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/DevHooks/**/*.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
