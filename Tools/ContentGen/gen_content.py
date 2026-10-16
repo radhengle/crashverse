@@ -5,6 +5,11 @@ Output: Assets/_Project/Resources/Data/**.json (loaded via Resources at runtime)
 import json, os
 OUT = os.path.join(os.path.dirname(__file__), "../../Assets/_Project/Resources/Data")
 LAY = os.path.join(OUT, "Layouts")
+# Level Rulings (developer-levels 60ba5d1) are canonical for chapter1.json and season_s1.json (shots, star bands, win
+# thresholds). This script never overwrites them once they exist; pass --regenerate-level-data only to rebuild from scratch.
+import sys as _sys
+LEVEL_RULINGS_OWNED = {"chapter1", "season_s1"}
+REGEN_LEVEL_DATA = "--regenerate-level-data" in _sys.argv
 os.makedirs(LAY, exist_ok=True)
 
 def B(id, mat, p, s, sup=(), joint=False, role="", nonObj=False, color="", explosive=False,
@@ -300,6 +305,8 @@ store = {"allowedTypes": ["currency_pack", "wrecker_skin", "paint", "decal", "tr
 wrecker = {"defaultDamage": 60, "launchSpeed": 28, "projectileMass": 0.8, "projectileScale": 0.45, "splitSpreadDeg": 8, "aimYawDegPerDp": 0.25, "aimPitchDegPerDp": 0.15}
 for name, obj in [("wrecker", wrecker), ("store_catalog", store), ("chapter1", chapter), ("powerups", powerups), ("titan_templates", titan),
                   ("daily_rewards", daily), ("season_s1", season)]:
+    if name in LEVEL_RULINGS_OWNED and not REGEN_LEVEL_DATA and os.path.exists(os.path.join(OUT, name + ".json")):
+        continue  # Level Rulings data: never regressed by regeneration
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(obj, f, indent=1)
 print("content generated")

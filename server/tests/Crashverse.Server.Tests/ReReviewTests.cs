@@ -219,7 +219,7 @@ public class ReReviewTests
 
     // ---------------- BE-06 (GD ruling) ----------------
     [Fact]
-    public async Task BE06_TotalDrop_ResetsTieTimestamp_RiseUpdatesIt()
+    public async Task LB30_BE06_TotalDrop_SetsTimestampToRecalcTime_RiseUpdatesIt()
     {
         await using var h = await Harness.Start();
         var lb = new Leaderboards(h.X); const string B = "campaign:c1_alltime";
@@ -237,5 +237,38 @@ public class ReReviewTests
         long t1 = h.X.NowMs;
         await lb.Submit(B, a.pid, 1200, null, replace: true);
         Assert.Equal(t1, (await h.X.Db.List<BoardEntryDoc>("boards")).Single(e => e.playerId == a.pid).reachedUnixMs);
+    }
+
+    [Fact] // LB-31: after a drop, a player tied with someone who reached that total earlier ranks below them (campaign replace path)
+    public async Task LB31_AfterDrop_TiedPlayerRanksBelowEarlierReacher()
+    {
+        await using var h = await Harness.Start();
+        var lb = new Leaderboards(h.X); const string B = "campaign:c1_alltime";
+        var a = await h.Guest(); var b = await h.Guest();
+        await lb.Submit(B, a.pid, 1000, null, replace: true);   // a reached 1000 first
+        h.Advance(TimeSpan.FromMinutes(1));
+        await lb.Submit(B, b.pid, 900, null, replace: true);    // b reached 900 before a's drop
+        h.Advance(TimeSpan.FromMinutes(1));
+        await lb.Submit(B, a.pid, 900, null, replace: true);    // a drops to 900: tie
+        var order = (await lb.Entries(B)).Select(e => e.playerId).ToList();
+        Assert.Equal(new[] { b.pid, a.pid }, order);
+        Assert.Equal(1, await lb.Position(B, b.pid)); Assert.Equal(2, await lb.Position(B, a.pid));
+    }
+
+    [Fact] // LB-31 via Titan replay correction (Leaderboards.OnReplay): a corrected-down score ties and ranks below the earlier reacher
+    public async Task LB31_TitanReplayCorrection_TiedPlayerRanksBelowEarlierReacher()
+    {
+        await using var h = await Harness.Start();
+        var lb = new Leaderboards(h.X); const string B = "titan:2026-10-16";
+        var a = await h.Guest(); var b = await h.Guest();
+        await lb.Submit(B, a.pid, 1000, "run-a");
+        h.Advance(TimeSpan.FromMinutes(1));
+        await lb.Submit(B, b.pid, 900, null);
+        h.Advance(TimeSpan.FromMinutes(1));
+        long t = h.X.NowMs;
+        await lb.OnReplay(new RunDoc { runId = "run-a", playerId = a.pid, boardKeys = new() { B } }, passed: true, correctedScore: 900);
+        var ea = (await lb.Entries(B)).Single(e => e.playerId == a.pid);
+        Assert.Equal(900, ea.score); Assert.Equal(t, ea.reachedUnixMs); Assert.Empty(ea.pendingRuns);
+        Assert.Equal(new[] { b.pid, a.pid }, (await lb.Entries(B)).Select(e => e.playerId).ToList());
     }
 }
