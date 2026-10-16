@@ -63,11 +63,62 @@ static class Tests
         {
             var ch = Db.Chapter1;
             T.Eq(10, ch.levels.Length, "10 levels");
-            int[] shots = { 4, 4, 5, 5, 5, 5, 5, 5, 6, 7 };
-            for (int i = 0; i < 10; i++) { T.Eq(shots[i], ch.levels[i].shots, "shots L" + (i + 1)); T.Eq(0.6f, ch.levels[i].star3Pct, "star3 L" + (i + 1)); }
+            // Star bands are per-level data (SG-01): range + monotonic, not a fixed 0.6.
+            foreach (var l in ch.levels)
+            {
+                T.True(l.shots > 0, l.id + " shots > 0");
+                T.True(l.star3Pct > 0f && l.star3Pct <= 1f && l.star2Pct > 0f && l.star2Pct <= 1f, l.id + " bands in (0,1]");
+                T.True(l.star2Pct < l.star3Pct, l.id + " bands monotonic (2★ < 3★)");
+            }
+            var l10 = ch.levels[9]; // Level_Rulings_v1 §1–2 (values live in the Level Designer's data)
+            T.Eq(8, l10.shots, "L10 budget 8"); T.Eq(0.375f, l10.star3Pct, "L10 3★ 0.375"); T.Eq(0.25f, l10.star2Pct, "L10 2★ 0.25");
+            T.Eq("NO_CLOSED_SHUTTER_HIT", l10.mastery.type, "L10 mastery");
+            T.Eq(3, StarRules.Compute(true, 3, l10.shots, l10.star3Pct, l10.star2Pct), "perfect 5-shot run (3 left of 8) = 3★");
+            T.Eq(2, StarRules.Compute(true, 2, l10.shots, l10.star3Pct, l10.star2Pct), "2 left = 2★");
             T.Eq("m1_clockwork_tower", ch.levels[6].layout, "L7 = M1 tower");
             T.Eq("tidewarden", ch.levels[9].bossId, "L10 boss");
             T.Eq(2, ch.levels[8].starCapIfPowerupUsed, "L9 cap");
+        });
+        T.Add("LEVEL_tidewarden_shutter_SG05", () =>
+        {
+            var r = new TideShutterRule();
+            r.OnShotFired(); T.True(!r.OnShotResolved(), "phase 1 shot: no toggle");
+            r.OnShotFired(); r.EnterPhase2(); T.True(r.Open, "phase 2 starts OPEN");
+            T.True(!r.OnShotResolved() && r.Open, "the shot that ended phase 1 does not toggle");
+            r.OnShotFired(); T.True(r.OnShotResolved() && !r.Open, "1st phase-2 shot → closed");
+            r.OnDirectHit(); T.Eq(1, r.ClosedShutterHits, "hit while closed counted");
+            r.OnShotFired(); T.True(r.OnShotResolved() && r.Open, "2nd phase-2 shot → open");
+            r.OnDirectHit(); T.Eq(1, r.ClosedShutterHits, "hit while open not counted");
+            var p1 = new TideShutterRule(); p1.OnDirectHit(); T.Eq(0, p1.ClosedShutterHits, "phase 1 (parked shutter) never counts");
+        });
+        T.Add("LEVEL_mastery_no_closed_shutter_hit", () =>
+        {
+            var g = new MasteryGoal { type = "NO_CLOSED_SHUTTER_HIT", role = "shutter" };
+            T.True(MasteryEvaluator.Evaluate(g, new RunStats { won = true, closedShutterHits = 0 }), "clean run passes");
+            T.True(!MasteryEvaluator.Evaluate(g, new RunStats { won = true, closedShutterHits = 1 }), "closed-shutter hit fails");
+            T.True(!MasteryEvaluator.Evaluate(g, new RunStats { won = false }), "loss never passes");
+            var tw = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs"); T.True(tw.Contains("_rule.OnShotResolved()") && tw.Contains("OnShutterDamaged"), "controller uses the rule");
+        });
+        T.Add("LEVEL_objective_mass_excludes_stone_bases", () =>
+        {
+            T.True(!StructureRules.CountsTowardObjectiveMass(true, true), "Indestructible+NonObjective excluded");
+            T.True(StructureRules.CountsTowardObjectiveMass(false, true), "indestructible objective (boss core) still counts");
+            T.Eq(5f, StructureRules.TotalObjectiveMass(new[] { (5f, false, false), (100f, true, true) }), "stone base mass ignored");
+            int bases = 0;
+            foreach (var l in Db.Chapter1.levels)
+                foreach (var b in Db.GetLayout(l.layout).blocks)
+                    if (b.indestructible && b.nonObj) bases++;
+            T.True(bases > 0, "stone bases tagged Indestructible+NonObjective in Ch1 data");
+            var tr = Src("Assets/_Project/Scripts/Destruction/DestructionTracker.cs"); T.True(tr.Contains("StructureRules.CountsTowardObjectiveMass"), "tracker uses the rule");
+        });
+        T.Add("LEVEL_collapse_only_when_all_supports_gone", () =>
+        {
+            T.True(!StructureRules.SupportLost(new bool[0]), "no supports = grounded");
+            T.True(!StructureRules.SupportLost(new[] { true, false }), "one support left holds the piece");
+            T.True(!StructureRules.SupportLost(new[] { false, false }), "all supports intact");
+            T.True(StructureRules.SupportLost(new[] { true, true }), "ALL supports gone → collapse");
+            T.True(StructureRules.SupportLost(new[] { true }), "single support gone → collapse");
+            T.True(Src("Assets/_Project/Scripts/Destruction/DestructibleBlock.cs").Contains("StructureRules.SupportLost"), "DestructibleBlock uses the rule");
         });
         T.Add("layouts_valid", () =>
         {

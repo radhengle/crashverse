@@ -15,7 +15,11 @@ namespace Crashverse.Boss
     {
         public const float TellSeconds = 1f;
         public const int CoreHitsToWin = 2;
-        public int Phase { get; private set; } = 1;
+        public int Phase => _rule.Phase;
+        readonly Crashverse.Meta.TideShutterRule _rule = new Crashverse.Meta.TideShutterRule();
+        public int ClosedShutterHits => _rule.ClosedShutterHits;
+        /// <summary>GameSession calls this when a shot is actually fired (before it resolves).</summary>
+        public void OnShotFired() => _rule.OnShotFired();
         public bool ShutterOpen { get; private set; }
         public int CoreHits { get; private set; }
         public bool Defeated { get; private set; }
@@ -39,7 +43,7 @@ namespace Crashverse.Boss
                     case "shoulder": _shoulders.Add(x); x.Broken += _ => CheckPhase(); break;
                     case "armor": _armor.Add(x); break;
                     case "core": _core = x; x.Damaged += OnCoreDamaged; break;
-                    case "shutter": _shutter = x; _shutterClosedPos = x.transform.position; break;
+                    case "shutter": _shutter = x; _shutterClosedPos = x.transform.position; x.Damaged += OnShutterDamaged; break;
                 }
             }
             SetShutter(false); // phase 1: chest is covered by armour; shutter parked closed
@@ -49,15 +53,18 @@ namespace Crashverse.Boss
         {
             if (Phase != 1) return;
             foreach (var s in _shoulders) if (!s.IsBroken) return;
-            Phase = 2;
+            _rule.EnterPhase2();
             foreach (var a in _armor) if (!a.IsBroken) a.Break(); // chest opens
             Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTidePhase2); // music: stinger at bar end → P2
             SetShutter(true); // SG-05: phase 2 opens with the shutter open
             Changed?.Invoke();
         }
 
+        void OnShutterDamaged(DestructibleBlock b, float _, bool direct) { if (direct) { _rule.OnDirectHit(); Changed?.Invoke(); } }
+
         void OnCoreDamaged(DestructibleBlock b, float _, bool direct)
         {
+            if (direct && Phase == 2 && !ShutterOpen) _rule.OnDirectHit();
             if (!direct || Phase != 2 || !ShutterOpen || Defeated) return;
             CoreHits++;
             if (CoreHits >= CoreHitsToWin) Defeat();
@@ -75,7 +82,8 @@ namespace Crashverse.Boss
         public float OnShotResolved()
         {
             if (Phase != 2 || Defeated) return 0f;
-            if (ShutterOpen) { _tellTimer = TellSeconds; _tellT = 0f; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideTell); return TellSeconds + Crashverse.Feel.TideShutter.CloseMs / 1000f; } // tell 1 s, then 300 ms close tween
+            if (!_rule.OnShotResolved()) return 0f; // SG-05: the shot that ended phase 1 doesn't toggle the shutter
+            if (!_rule.Open) { _tellTimer = TellSeconds; _tellT = 0f; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideTell); return TellSeconds + Crashverse.Feel.TideShutter.CloseMs / 1000f; } // tell 1 s, then 300 ms close tween
             SetShutter(true);
             return 0f;
         }

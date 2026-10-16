@@ -40,7 +40,7 @@ namespace Crashverse.Destruction
             {
                 if (b == null) continue;
                 b.Damaged += OnDamaged;
-                if (!b.isObjectivePiece) continue;
+                if (!b.isObjectivePiece || !Crashverse.Meta.StructureRules.CountsTowardObjectiveMass(!b.isObjectivePiece, b.indestructible)) continue; // stone bases excluded (§6)
                 _pieces.Add(b);
                 _totalMass += b.Mass;
                 if (!b.indestructible) _totalHp += b.MaxHp;

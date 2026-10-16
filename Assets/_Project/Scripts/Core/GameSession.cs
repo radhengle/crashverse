@@ -103,6 +103,7 @@ namespace Crashverse.Core
             var mods = PowerUps.ConsumeForShot();
             if (!fire.Fire(mods)) return false;
             ShotsLeft--;
+            if (Boss != null) Boss.OnShotFired();
             tracker.OnShotFired();
             Inputs.Record(Tick, "fire", aim.Yaw, aim.Elevation);
             Gate.OnShotFired();
@@ -183,7 +184,7 @@ namespace Crashverse.Core
                                           PowerUps.AnyUsed ? lvl.starCapIfPowerupUsed : 3);
             var music = Crashverse.Audio.MusicPlayer.Instance; // victory/fail stops level music (fade via Results snapshot) + stinger
             if (music != null && !(won && (Boss != null || Ctx.titan != null))) { music.StopAll(); music.PlayStinger(won ? (stars >= 3 ? "stinger_win_3star" : "stinger_win") : "stinger_fail"); }
-            var stats = new RunStats { won = won, shotsUsed = Ctx.ShotBudget - ShotsLeft, shotsLeft = ShotsLeft, stars = stars,
+            var stats = new RunStats { closedShutterHits = Boss != null ? Boss.ClosedShutterHits : 0, won = won, shotsUsed = Ctx.ShotBudget - ShotsLeft, shotsLeft = ShotsLeft, stars = stars,
                                        destroyedRatio = tracker.DestroyedRatio, powerUpUsed = PowerUps.AnyUsed, islandKillY = lvl.islandKillY };
             tracker.FillRoleStats(stats, builder.Blocks);
             bool mastery = MasteryEvaluator.Evaluate(lvl.mastery, stats);

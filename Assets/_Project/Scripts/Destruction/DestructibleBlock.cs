@@ -165,9 +165,9 @@ namespace Crashverse.Destruction
         {
             get
             {
-                if (_supports.Count == 0) return false; // grounded
-                foreach (var s in _supports) if (s != null && !s._broken && !s._collapsed && !s._outOfBounds) return false;
-                return true;
+                var gone = new List<bool>(_supports.Count);
+                foreach (var s in _supports) gone.Add(s == null || s._broken || s._collapsed || s._outOfBounds);
+                return Crashverse.Meta.StructureRules.SupportLost(gone); // ALL supports gone (grounded if none)
             }
         }
 

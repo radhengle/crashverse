@@ -74,8 +74,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "post",
-   "hintYaw": 4,
-   "hintPitch": 22
+   "hintYaw": 1.0,
+   "hintPitch": 11.0
   },
   {
    "id": "c1_l02",
@@ -106,8 +106,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "sill",
-   "hintYaw": 3,
-   "hintPitch": 20
+   "hintYaw": 0.5,
+   "hintPitch": 9.5
   },
   {
    "id": "c1_l03",
@@ -139,8 +139,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "propL",
-   "hintYaw": -2,
-   "hintPitch": 18
+   "hintYaw": 3.0,
+   "hintPitch": 10.0
   },
   {
    "id": "c1_l04",
@@ -172,8 +172,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "beamL",
-   "hintYaw": 2,
-   "hintPitch": 28
+   "hintYaw": 2.5,
+   "hintPitch": 13.0
   },
   {
    "id": "c1_l05",
@@ -205,8 +205,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "bridge",
-   "hintYaw": -6,
-   "hintPitch": 16
+   "hintYaw": 0.0,
+   "hintPitch": 12.5
   },
   {
    "id": "c1_l06",
@@ -238,8 +238,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "braceL",
-   "hintYaw": 0,
-   "hintPitch": 24
+   "hintYaw": 2.0,
+   "hintPitch": 14.0
   },
   {
    "id": "c1_l07",
@@ -280,8 +280,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "scaffold",
-   "hintYaw": 0,
-   "hintPitch": 24
+   "hintYaw": 3.0,
+   "hintPitch": 10.5
   },
   {
    "id": "c1_l08",
@@ -319,8 +319,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "key1",
-   "hintYaw": 0,
-   "hintPitch": 26
+   "hintYaw": 2.0,
+   "hintPitch": 15.0
   },
   {
    "id": "c1_l09",
@@ -353,8 +353,8 @@
    "starCapIfPowerupUsed": 2,
    "islandKillY": -2.0,
    "hintTarget": "lhRing",
-   "hintYaw": 0,
-   "hintPitch": 26
+   "hintYaw": -2.0,
+   "hintPitch": 12.5
   },
   {
    "id": "c1_l10",
@@ -403,8 +403,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "shoulderL",
-   "hintYaw": 0,
-   "hintPitch": 0
+   "hintYaw": 0.0,
+   "hintPitch": 19.5
   }
  ]
 }
