@@ -38,11 +38,15 @@ namespace Crashverse.Tests.PlayMode
             AgeGateScreen.PendingDob = null;
             Time.timeScale = 1f;
             yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/Bootstrap.unity", LoadSceneMode.Single);
+            // AutoBootstrap's RuntimeInitializeOnLoad only fires for the first scene of the session.
+            if (UnityEngine.Object.FindObjectOfType<GameBootstrap>() == null) new GameObject("GameBootstrap").AddComponent<GameBootstrap>();
             yield return WaitFor(() => AppServices.Router != null && AppServices.Router.Top is AgeGateScreen, "age gate shown");
             var module = EventSystem.current.GetComponent<StandaloneInputModule>();
             Assert.NotNull(module, "UI uses StandaloneInputModule (legacy Input Manager is the active handler)");
             _fake = EventSystem.current.gameObject.AddComponent<FakeTouchInput>();
             module.inputOverride = _fake;
+            // Batchmode editor has no window focus; StandaloneInputModule drops all events while unfocused in the editor.
+            EventSystem.current.SendMessage("OnApplicationFocus", true);
         }
 
         [UnityTearDown]
@@ -50,7 +54,7 @@ namespace Crashverse.Tests.PlayMode
         {
             foreach (var go in UnityEngine.Object.FindObjectsOfType<GameObject>().Where(g => g.transform.parent == null)) UnityEngine.Object.Destroy(go);
             AppServices.Router = null; PlayerPrefs.DeleteAll();
-            yield return null;
+            yield return null; yield return null;
         }
 
         [Test]
