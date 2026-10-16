@@ -23,7 +23,7 @@ namespace Crashverse.Meta
             switch (g.type)
             {
                 case "CLEAR_IN_SHOTS": return r.shotsUsed <= (int)g.value;
-                case "DESTROYED_AT_LEAST": return r.destroyedRatio + 1e-6f >= g.value;
+                case "DESTROYED_AT_LEAST": return WinRule.Meets(r.destroyedRatio, g.value); // BUG-19: basis points, no tolerance
                 case "STARS": return r.stars >= (int)g.value;
                 case "NO_POWERUP": return !r.powerUpUsed;
                 case "SHOTS_LEFT_AT_LEAST": return r.shotsLeft >= (int)g.value;
@@ -34,7 +34,7 @@ namespace Crashverse.Meta
                 case "ROLE_INTACT": // >= value fraction of role pieces unbroken (HP > 0) when win fires
                     if (!r.RoleTotal.TryGetValue(g.role, out var tot) || tot == 0) return false;
                     r.RoleBroken.TryGetValue(g.role, out var br);
-                    return (tot - br) / (float)tot + 1e-6f >= (g.value <= 0 ? 0.8f : g.value);
+                    return WinRule.MeetsFraction(tot - br, tot, g.value <= 0 ? 0.8f : g.value); // BUG-19: integer bp
                 case "ROLE_BELOW_HEIGHT": // SG-21: every role piece centre below level.islandKillY after settle
                     return r.RoleMaxCentreY.TryGetValue(g.role, out var y) && y < r.islandKillY;
                 default: return false;

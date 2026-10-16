@@ -15,5 +15,11 @@ namespace Crashverse.Meta
         }
 
         public static bool Meets(float destroyedRatio, float winThreshold) => ToBp(destroyedRatio) >= ToBp(winThreshold);
+
+        /// <summary>Exact count ratio in basis points (integer floor, no float): 4/5 → 8000, 2/3 → 6666.</summary>
+        public static int FractionBp(int part, int whole) => whole <= 0 ? 0 : (int)(System.Math.Max(0L, (long)part) * 10000L / whole);
+
+        /// <summary>Count-based goals (BUG-19): part/whole >= threshold, both in basis points.</summary>
+        public static bool MeetsFraction(int part, int whole, float threshold) => FractionBp(part, whole) >= ToBp(threshold);
     }
 }

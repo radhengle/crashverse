@@ -577,5 +577,19 @@ static class Tests
             T.True(!Win(b, "c1_l01", 0.8499f, 1, 0).accepted, "server rejects 84.99%");
             T.True(Win(b, "c1_l01", 0.85f, 1, 0).accepted, "server accepts 85%");
         });
+        T.Add("BUG19_mastery_bp_no_tolerance", () =>
+        {
+            var d = new MasteryGoal { type = "DESTROYED_AT_LEAST", value = 0.95f };
+            T.True(MasteryEvaluator.Evaluate(d, new RunStats { won = true, destroyedRatio = 0.95f }), "95% meets 95%");
+            T.True(MasteryEvaluator.Evaluate(d, new RunStats { won = true, destroyedRatio = 0.94999996f }), "float noise of 95% still meets");
+            T.True(!MasteryEvaluator.Evaluate(d, new RunStats { won = true, destroyedRatio = 0.9499f }), "94.99% fails (no tolerance)");
+            var g = new MasteryGoal { type = "ROLE_INTACT", role = "crown", value = 0.8f };
+            var r = new RunStats { won = true }; r.RoleTotal["crown"] = 5; r.RoleBroken["crown"] = 1;
+            T.True(MasteryEvaluator.Evaluate(g, r), "4/5 = 8000bp meets 80% exactly");
+            var g2 = new MasteryGoal { type = "ROLE_INTACT", role = "crown", value = 0.6667f };
+            var r2 = new RunStats { won = true }; r2.RoleTotal["crown"] = 3; r2.RoleBroken["crown"] = 1;
+            T.True(!MasteryEvaluator.Evaluate(g2, r2), "2/3 = 6666bp < 6667bp");
+            T.Eq(6666, WinRule.FractionBp(2, 3), "integer floor"); T.Eq(WinRule.ToBp(0.8f), WinRule.FractionBp(4, 5), "same scale as WinRule");
+        });
     }
 }
