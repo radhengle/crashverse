@@ -85,6 +85,12 @@ Mipmaps and mip streaming are on, Read/Write is off, alpha is none, and aniso is
 **Tiers:** Unity has one texture import per platform, so High and Mid share the Android override above (spec §4). **Low** gets half resolution through `QualitySettings.globalTextureMipmapLimit = 1` on the Low quality level (Developer-owned; requested). Low also skips N and ORM sampling through the shader's LOD 150 SubShader.
 
 ## 3 · Prefabs (menu: Build Prefabs)
+**Hard gate (QA review of #28): the builder refuses to build, logs an error and writes no prefab when:**
+- the LOD0 triangle total is over budget (Wrecker > 12,000, island > 10,000, kit piece > 1,500);
+- or a Wrecker/Hero, island/Environment or kit (intact or fractured) asset is missing any of LOD0, LOD1 or LOD2 (per-file or in-file).
+
+The validator reports the same conditions as errors (`gate`). Kit pieces under 500 triangles are only a warning.
+
 - There is one prefab per model group, as a plain unlinked copy, so re-run the menu after a model changes. Output goes to `Assets/_Project/Prefabs/Models/<Folder>/<Asset>.prefab`.
 - **LODGroup:** per-file LODs become children `LOD1`/`LOD2` with hulls and helpers stripped, while in-file `_LODn` renderers are grouped. There is no cross-fade. Screen-relative heights (LOD0→1, LOD1→2, cull):
 
@@ -116,9 +122,9 @@ Checks per model group:
 
 | Budget (LOD0 triangles, PM decision) | Value | Validator |
 |---|---|---|
-| Hero (Wrecker) | **≤ 12,000** total | error above |
-| Environment (island) | **≤ 10,000** total | error above |
-| Kit piece (intact, and fractured total) | **500–1,500** | error above 1,500, warning below 500 |
+| Hero (Wrecker) | **≤ 12,000** total | error above, prefab refused |
+| Environment (island) | **≤ 10,000** total | error above, prefab refused |
+| Kit piece (intact, and fractured total) | **500–1,500** | error above 1,500 (prefab refused), warning below 500 |
 | Fragment | ≤ 300 per fragment | error above |
 | Other | ≤ 3,000 | error above |
 
@@ -133,7 +139,7 @@ Texel density hint = sqrt(UV area × albedo w × h / world area) over the LOD0 m
 - **Unity EditMode** (`Assets/_Project/Editor/Import/Tests`, asmdef `Crashverse.Import.Tests`, Editor-only, `UNITY_INCLUDE_TESTS`, same layout as `Crashverse.Rules.Tests`):
   - **Naming:** hull targets, fragment, joint, socket and kit-path rules.
   - **Hints:** `ImportedPhysicsHints` (SI values, blank and missing never overwrite).
-  - **Prefab build:** builds a procedural fractured piece at test time under `BuildingKit/__ImportTest`, then deletes it. It checks one convex collider per fragment, the `COL_` child, no root fallback, the error on a missing target, the LODGroup, kept sockets, joints and anchors, ordinal order, and that no physics components are added.
+  - **Prefab build:** builds a procedural fractured piece at test time under `BuildingKit/__ImportTest`, then deletes it. It checks one convex collider per fragment, the `COL_` child, no root fallback, the error on a missing target, the LODGroup, kept sockets, joints and anchors, ordinal order, and that no physics components are added. **Gate:** over-budget kit and Wrecker are rejected with no prefab, a kit at exactly 1,500 builds, and a missing LOD on kit, island or Wrecker is rejected.
   - **Material wiring:** checks GlossyPBR maps, `_InnerFace`, no keywords, and texture import (NormalMap, sRGB, Android ASTC and size).
 - Assemblies: `Crashverse.Import` (runtime marker) and `Crashverse.Import.Editor` (Editor-only pipeline).
 

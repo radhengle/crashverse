@@ -37,7 +37,6 @@ namespace Crashverse.EditorTools.Import
                 string lod0 = files.TryGetValue(0, out var a0) ? a0 : files.TryGetValue(-1, out var s1) ? s1 : null;
                 if (lod0 == null) { Err(baseName, "LOD", "LOD1/LOD2 file without _LOD0"); continue; }
                 if (files.ContainsKey(-1) && files.Keys.Any(k => k >= 0)) Warn(baseName, "LOD", "both a plain FBX and _LODn files; plain one is ignored");
-                if (files.ContainsKey(2) && !files.ContainsKey(1)) Warn(baseName, "LOD", "LOD2 without LOD1");
                 var cls = C.Classify(lod0);
                 if (cls == C.AssetClass.Unknown) Warn(baseName, "naming", "prefix not Wrecker*/Hero_/Island_/Env_/Kit_: default budgets used");
 
@@ -95,8 +94,8 @@ namespace Crashverse.EditorTools.Import
                     if (C.IsFragment(mf.name) && tris > C.FragmentTriBudget) Err(baseName, "tris", $"{mf.name} {tris} > {C.FragmentTriBudget} per fragment");
                 }
                 int budget = C.TriBudget(cls, baseName), min = C.TriMin(cls);
-                if (total > budget) Err(baseName, "tris", $"LOD0 total {total} > {budget}");
-                else if (total < min) Warn(baseName, "tris", $"LOD0 total {total} < {min} (kit pieces 500-1.5k)");
+                foreach (var ge in CrashversePrefabBuilder.GateErrors(files, go, cls, out _)) Err(baseName, "gate", ge + " (prefab build refused)");
+                if (total < min) Warn(baseName, "tris", $"LOD0 total {total} < {min} (kit pieces 500-1.5k)");
                 sb.Append($"| info | {baseName} | tris | LOD0 {total} (budget {(min > 0 ? min + "-" : "<=")}{budget}), LOD files: {string.Join(",", files.Keys.OrderBy(k => k))} |\n");
 
                 // Materials + maps

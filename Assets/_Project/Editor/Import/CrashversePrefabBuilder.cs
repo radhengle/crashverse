@@ -64,6 +64,13 @@ namespace Crashverse.EditorTools.Import
             var cls = C.Classify(lod0Path);
 
             var src = AssetDatabase.LoadAssetAtPath<GameObject>(lod0Path);
+            var gate = GateErrors(files, src, cls, out _);
+            if (gate.Count > 0)
+            {
+                // QA: reject, don't warn. No prefab is written (an existing one is left untouched).
+                foreach (var e in gate) Debug.LogError($"[CrashverseImport] {baseName}: {e}. Prefab NOT built.");
+                return null;
+            }
             var root = (GameObject)Object.Instantiate(src);
             root.name = baseName;
             try
@@ -114,6 +121,30 @@ namespace Crashverse.EditorTools.Import
             }
             finally { Object.DestroyImmediate(root); }
         }
+
+        /// <summary>Hard gate shared by the prefab builder and the validator (QA review of #28):
+        /// LOD0 triangle total over the class budget, and missing LOD0/LOD1/LOD2 for Hero, Environment and Kit classes.</summary>
+        public static List<string> GateErrors(Dictionary<int, string> files, GameObject lod0, C.AssetClass cls, out int lod0Tris)
+        {
+            var errs = new List<string>();
+            lod0Tris = 0;
+            var levels = new HashSet<int>(files.Keys.Where(k => k >= 0));
+            if (lod0 != null)
+                foreach (var mf in lod0.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    if (mf.sharedMesh == null || C.ColliderTarget(mf.name) != null) continue;
+                    int lvl = C.LodLevel(mf.name, out _);
+                    levels.Add(lvl < 0 ? 0 : lvl);
+                    if (lvl <= 0) LodSum(mf.sharedMesh, ref lod0Tris);
+                }
+            int budget = C.TriBudget(cls, lod0 != null ? lod0.name : "");
+            if (lod0Tris > budget) errs.Add($"LOD0 {lod0Tris} tris over budget {budget}");
+            if (C.RequiresLodChain(cls))
+                for (int i = 0; i < 3; i++) if (!levels.Contains(i)) errs.Add($"LOD{i} missing (LOD0-LOD2 required for {cls})");
+            return errs;
+        }
+
+        static void LodSum(Mesh m, ref int tris) { long n = 0; for (int i = 0; i < m.subMeshCount; i++) n += m.GetIndexCount(i); tris += (int)(n / 3); }
 
         /// <summary>LOD1/LOD2 copies keep only renderers: hulls, sockets and joints live on the LOD0 hierarchy.</summary>
         static void StripNonRender(Transform t)

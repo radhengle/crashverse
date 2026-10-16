@@ -172,6 +172,8 @@ namespace Crashverse.EditorTools.Import
                 default: return OtherTriMax;
             }
         }
+        /// <summary>QA: Wrecker (Hero), island (Environment) and kit pieces must ship LOD0, LOD1 and LOD2.</summary>
+        public static bool RequiresLodChain(AssetClass c) => c != AssetClass.Unknown;
         public static int TriMin(AssetClass c) => c == AssetClass.Kit || c == AssetClass.KitFractured ? KitTriMin : 0;
 
         /// <summary>Texel density target band in px/m (spec section 4b).</summary>

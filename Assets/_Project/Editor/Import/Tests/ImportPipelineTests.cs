@@ -131,6 +131,8 @@ namespace Crashverse.Tests
                 Part("Wall_frag_02_LOD1", root.transform, new Vector3(1, 0, 0));
                 Part("Wall_frag_01", root.transform, Vector3.zero);
                 Part("Wall_frag_01_LOD1", root.transform, Vector3.zero);
+                Part("Wall_frag_01_LOD2", root.transform, Vector3.zero);
+                Part("Wall_frag_02_LOD2", root.transform, new Vector3(1, 0, 0));
                 Part("UCX_Wall_frag_01", root.transform, Vector3.zero);                 // same pose -> on the fragment
                 Part("UCX_Wall_frag_02", root.transform, new Vector3(1, 0.25f, 0));     // pivot differs -> COL_Wall_frag_02 child
                 Part("UCX_Missing_frag_09", root.transform, Vector3.zero);              // no target -> error, skipped
@@ -164,10 +166,11 @@ namespace Crashverse.Tests
             var lg = built.GetComponent<LODGroup>();
             Assert.IsNotNull(lg);
             var lods = lg.GetLODs();
-            Assert.AreEqual(2, lods.Length);
+            Assert.AreEqual(3, lods.Length);
             CollectionAssert.AreEquivalent(new[] { "Wall_frag_01", "Wall_frag_02" }, lods[0].renderers.Select(r => r.name).ToArray());
             CollectionAssert.AreEquivalent(new[] { "Wall_frag_01_LOD1", "Wall_frag_02_LOD1" }, lods[1].renderers.Select(r => r.name).ToArray());
-            Assert.AreEqual(C.LodHeights(C.AssetClass.KitFractured)[2], lods[1].screenRelativeTransitionHeight, 1e-5f);
+            CollectionAssert.AreEquivalent(new[] { "Wall_frag_01_LOD2", "Wall_frag_02_LOD2" }, lods[2].renderers.Select(r => r.name).ToArray());
+            Assert.AreEqual(C.LodHeights(C.AssetClass.KitFractured)[2], lods[2].screenRelativeTransitionHeight, 1e-5f);
 
             // Helpers kept.
             Assert.IsNotNull(F("Socket_Muzzle"));
@@ -181,6 +184,79 @@ namespace Crashverse.Tests
             // No physics components.
             Assert.IsEmpty(built.GetComponentsInChildren<Rigidbody>(true));
             Assert.IsEmpty(built.GetComponentsInChildren<Joint>(true));
+        }
+
+        /// <summary>Saves a procedural model prefab named <paramref name="name"/> with meshes of the given triangle counts per LOD name.</summary>
+        static string SaveModel(string name, params (string obj, int tris)[] parts)
+        {
+            var root = new GameObject(name);
+            try
+            {
+                foreach (var (obj, tris) in parts)
+                {
+                    var mesh = new Mesh { name = obj + "_mesh" };
+                    var v = new Vector3[tris * 3]; var idx = new int[tris * 3];
+                    for (int i = 0; i < tris; i++)
+                    {
+                        float x = i * 0.01f;
+                        v[i * 3] = new Vector3(x, 0, 0); v[i * 3 + 1] = new Vector3(x, 1, 0); v[i * 3 + 2] = new Vector3(x + 0.005f, 0, 1);
+                        idx[i * 3] = i * 3; idx[i * 3 + 1] = i * 3 + 1; idx[i * 3 + 2] = i * 3 + 2;
+                    }
+                    mesh.vertices = v; mesh.triangles = idx;
+                    AssetDatabase.CreateAsset(mesh, $"{Dir}/{obj}_mesh.asset");
+                    var go = new GameObject(obj);
+                    go.transform.SetParent(root.transform, false);
+                    go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                    go.AddComponent<MeshRenderer>();
+                }
+                string path = $"{Dir}/{name}.prefab";
+                PrefabUtility.SaveAsPrefabAsset(root, path);
+                return path;
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
+
+        static GameObject BuildOne(string name, string path) =>
+            CrashversePrefabBuilder.Build($"{Dir}/{name}", new System.Collections.Generic.Dictionary<int, string> { { -1, path } });
+
+        [Test]
+        public void OverBudgetKitPieceIsRejectedAndNoPrefabWritten()
+        {
+            string path = SaveModel("Kit_Test_Big", ("Big_LOD0", 1600), ("Big_LOD1", 400), ("Big_LOD2", 100));
+            LogAssert.Expect(LogType.Error, new Regex(@"Kit_Test_Big: LOD0 1600 tris over budget 1500\. Prefab NOT built"));
+            Assert.IsNull(BuildOne("Kit_Test_Big", path));
+            Assert.IsNull(AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabDir}/Kit_Test_Big.prefab"));
+        }
+
+        [Test]
+        public void WithinBudgetKitPieceBuilds()
+        {
+            string path = SaveModel("Kit_Test_Ok", ("Ok_LOD0", 1500), ("Ok_LOD1", 400), ("Ok_LOD2", 100));
+            var built = BuildOne("Kit_Test_Ok", path);
+            Assert.IsNotNull(built);
+            Assert.AreEqual(3, built.GetComponent<LODGroup>().GetLODs().Length);
+        }
+
+        [TestCase("Kit_Test_NoLod2", "LOD2")]
+        [TestCase("Island_Test_NoLod1", "LOD1")]
+        [TestCase("Wrecker_Test_NoLods", "LOD1")]
+        public void MissingLodIsRejected(string name, string missing)
+        {
+            string path = missing == "LOD2" ? SaveModel(name, ("P_LOD0", 600), ("P_LOD1", 200))
+                        : name.StartsWith("Island") ? SaveModel(name, ("P_LOD0", 600), ("P_LOD2", 100))
+                        : SaveModel(name, ("Body", 600));
+            LogAssert.Expect(LogType.Error, new Regex($"{name}: {missing} missing.*Prefab NOT built"));
+            if (name.StartsWith("Wrecker")) LogAssert.Expect(LogType.Error, new Regex($"{name}: LOD2 missing.*Prefab NOT built"));
+            Assert.IsNull(BuildOne(name, path));
+            Assert.IsNull(AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabDir}/{name}.prefab"));
+        }
+
+        [Test]
+        public void OverBudgetWreckerIsRejected()
+        {
+            string path = SaveModel("Wrecker_Test_Big", ("W_LOD0", 12001), ("W_LOD1", 4000), ("W_LOD2", 1000));
+            LogAssert.Expect(LogType.Error, new Regex(@"LOD0 12001 tris over budget 12000"));
+            Assert.IsNull(BuildOne("Wrecker_Test_Big", path));
         }
 
         static void WritePng(string path, Color c)
