@@ -8,7 +8,8 @@ namespace Crashverse.Destruction
     public class StructuralIntegrity : MonoBehaviour
     {
         DestructibleBlock[] _blocks;
-        float _timer;
+        int _ticks;
+        public int everyTicks = 5; // 0.1 s at 50 Hz; integer counter, not float time
 
         public void Bind(DestructibleBlock[] blocks)
         {
@@ -18,9 +19,8 @@ namespace Crashverse.Destruction
         void FixedUpdate()
         {
             if (_blocks == null) return;
-            _timer += Time.fixedDeltaTime;
-            if (_timer < 0.1f) return;
-            _timer = 0f;
+            if (++_ticks < everyTicks) return;
+            _ticks = 0;
             for (int i = 0; i < _blocks.Length; i++)
             {
                 var b = _blocks[i];

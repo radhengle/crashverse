@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Crashverse.Destruction;
 using Crashverse.PowerUps;
+using Crashverse.Sim;
 using UnityEngine;
 
 namespace Crashverse.Weapons
@@ -68,10 +69,10 @@ namespace Crashverse.Weapons
                 float ang = (i % 2 == 0 ? 1 : -1) * splitSpreadDeg * (1 + i / 2);
                 var go = FireController.CreateProjectileObject(transform.localScale.x);
                 var p = go.GetComponent<Projectile>();
-                p.splitSpreadDeg = splitSpreadDeg;
+                p.splitSpreadDeg = splitSpreadDeg; p._isSplitChild = true;
                 p.Launch(transform.position, Quaternion.AngleAxis(ang, Vector3.up) * _rb.velocity, d, child);
             }
-            damage = d; mods = child;
+            damage = d; mods = child; _isSplitChild = true;
         }
 
         void OnTriggerEnter(Collider other)
@@ -91,8 +92,16 @@ namespace Crashverse.Weapons
         void OnCollisionEnter(Collision c)
         {
             if (_spent) return;
-            Impact(c.collider.GetComponentInParent<DestructibleBlock>(), c.contacts.Length > 0 ? c.contacts[0].point : transform.position);
+            var hb = c.collider.GetComponentInParent<DestructibleBlock>();
+            Vector3 cp = c.contactCount > 0 ? c.GetContact(0).point : transform.position, cn = c.contactCount > 0 ? c.GetContact(0).normal : -transform.forward;
+            if (hb != null) ImpactReport.Collision(hb, null, c.collider, c.impulse.magnitude, c.relativeVelocity.magnitude, cp, cn, ShotSource, ShotSourceId);
+            Impact(hb, cp);
         }
+
+        /// <summary>Direct-hit source: Cannon for plain shots; PowerUp+id when the hit itself is a power-up effect (Phase Piercer 3rd piece, Splitstrike child).</summary>
+        ImpactSourceKind ShotSource => mods.pierce || _isSplitChild ? ImpactSourceKind.PowerUp : ImpactSourceKind.Cannon;
+        int ShotSourceId => mods.pierce ? PowerUpIds.PhasePiercer : _isSplitChild ? PowerUpIds.Splitstrike : PowerUpIds.None;
+        bool _isSplitChild;
 
         void Impact(DestructibleBlock hit, Vector3 at)
         {
@@ -101,10 +110,12 @@ namespace Crashverse.Weapons
             FirstImpact?.Invoke(this);
             if (hit != null)
             {
-                hit.ApplyDamage(damage, directHit: true); // steel joints take 2x here
-                if (mods.shockwave) Shockwave(hit);
+                if (_pierced.Count > 0 && mods.pierce && _rb != null) // trigger hit: no contact impulse, use momentum
+                    ImpactReport.Collision(hit, null, null, _rb.mass * _rb.velocity.magnitude, _rb.velocity.magnitude, at, -_rb.velocity.normalized, ShotSource, ShotSourceId);
+                using (ImpactSourceScope.Push(ShotSource, ShotSourceId)) hit.ApplyDamage(damage, directHit: true); // steel joints take 2x here
+                if (mods.shockwave) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.Shockwave)) Shockwave(hit);
             }
-            if (mods.chainReactor) ChainReactor(at);
+            if (mods.chainReactor) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.ChainReactor)) ChainReactor(at);
             if (mods.gravityWell) GravityWellEffect.Spawn(at, mods.gwRadius, mods.gwDuration, mods.gwBurst);
             Despawn();
         }
