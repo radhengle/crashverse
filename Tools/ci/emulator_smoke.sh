@@ -22,7 +22,9 @@ coord(){ local i l; for i in $(seq 1 120); do
     l=$(adb logcat -d -s Unity | grep -o "CVTAP|$1|$2|[0-9]*|[0-9]*|[01]" | tail -1 || true)
     if [ -n "$l" ]; then echo "$l" | awk -F'|' '{print $4" "$5}'; return 0; fi; sleep 1; done
   echo "calibration: $1/$2 not found" >&2; adb logcat -d > "$OUT/calibration/logcat.txt"; adb exec-out screencap -p > "$OUT/calibration/missing_$2.png"; exit 1; }
-put(){ read -r x y <<<"$3"; export "$1_X=$x" "$1_Y=$y"; echo "$1=$x,$y" | tee -a "$OUT/coords.txt"; }
+put(){ # $(coord …) runs in a subshell, so its exit can't stop us: fail here with a clear message instead
+  if [ -z "${3:-}" ] || [ "${3// /}" = "" ]; then echo "::error::calibration failed: no coordinates for $1 (see calibration/ screenshots + logcat)"; exit 1; fi
+  read -r x y <<<"$3"; export "$1_X=$x" "$1_Y=$y"; echo "$1=$x,$y" | tee -a "$OUT/coords.txt"; }
 dcheck(){ if adb logcat -d | grep -E "FATAL EXCEPTION|Fatal signal|ANR in $PKG|Unity +: .*Exception" > "$OUT/calibration/err_$1.txt"; then
     adb exec-out screencap -p > "$OUT/calibration/FAIL_$1.png"; adb logcat -d > "$OUT/calibration/logcat.txt"; echo "FAIL (discovery) at $1"; exit 1; fi
   adb shell pidof $PKG >/dev/null || { adb logcat -d > "$OUT/calibration/logcat.txt"; echo "FAIL (discovery): app died at $1"; exit 1; }; }
