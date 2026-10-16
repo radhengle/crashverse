@@ -352,6 +352,16 @@ static class Tests
                 new StoreItem { sku = "gr", name = "Gems?", type = Db.Store.allowedTypes[0], cosmetic = true, priceType = "iap", price = 99, grants = "extra_charges:3" } } };
             T.Eq(3, StoreValidator.Validate(bad, out var ok2).Count, "all 3 rejected"); T.Eq(0, ok2.Count, "none accepted");
         });
+        T.Add("store_gem_packs_flagged_off_v1", () =>
+        {
+            T.True(!Db.Store.flags.enableGemPacks, "enableGemPacks=false in v1 data");
+            StoreValidator.Validate(Db.Store, out var ok);
+            T.True(!ok.Exists(i => i.sku == "gems_small" || i.sku == "gems_large" || i.type == "currency_pack"), "Pouch (99) / Chest (499) hidden: no UI, not purchasable");
+            T.True(ok.Exists(i => i.sku == "s1_premium_track"), "cosmetic premium track still listed");
+            var on = new StoreCatalog { flags = new StoreFlags { enableGemPacks = true }, allowedTypes = Db.Store.allowedTypes, items = Db.Store.items };
+            StoreValidator.Validate(on, out var ok3); T.True(ok3.Exists(i => i.sku == "gems_small"), "flag on → listed");
+            var gen = Src("Tools/ContentGen/gen_content.py"); T.True(gen.Contains("\"enableGemPacks\": False") && gen.Contains("\"requiresFlag\": \"enableGemPacks\""), "generator keeps the flag off");
+        });
         // ── Art v2 Wrecker / UI QA ──
         T.Add("wrecker_v2_dimensions", () =>
         {

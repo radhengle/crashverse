@@ -109,9 +109,17 @@ namespace Crashverse.Data
     {
         public string sku; public string name; public string type; public bool cosmetic; public string priceType; public int price;
         public string grants; public string[] contents;
+        /// <summary>Optional catalog flag that must be on for the item to exist at all (e.g. "enableGemPacks").</summary>
+        public string requiresFlag;
     }
 
-    [Serializable] public class StoreCatalog { public string[] allowedTypes; public StoreItem[] items; }
+    /// <summary>Catalog-level release flags. enableGemPacks is false in v1: gems are earned only (design/Economy_v1_Earned_Gems.md).</summary>
+    [Serializable] public class StoreFlags
+    {
+        public bool enableGemPacks;
+        public bool IsOn(string flag) => string.IsNullOrEmpty(flag) || (flag == "enableGemPacks" && enableGemPacks); // unknown flags = off
+    }
+    [Serializable] public class StoreCatalog { public StoreFlags flags = new StoreFlags(); public string[] allowedTypes; public StoreItem[] items; }
 
     /// <summary>Default shot tuning (designer data, not code).</summary>
     [Serializable] public class WreckerTuning { public float defaultDamage = 60; public float launchSpeed = 28; public float projectileMass = 0.8f; public float projectileScale = 0.45f; public float splitSpreadDeg = 8;  public float aimYawDegPerDp = 0.25f; public float aimPitchDegPerDp = 0.15f; }
