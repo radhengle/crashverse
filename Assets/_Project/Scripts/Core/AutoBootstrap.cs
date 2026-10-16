@@ -14,6 +14,8 @@ namespace Crashverse.Core
         static void Boot()
         {
             if (SuppressForDevScene) return;
+            // Unity Test Framework PlayMode init scene: tests load their own scene (e.g. the L10 perf scene); don't boot the game.
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.StartsWith("InitTestScene", System.StringComparison.Ordinal)) return;
             if (Object.FindObjectOfType<GameBootstrap>() != null) return;
             var go = new GameObject("GameBootstrap");
             go.AddComponent<GameBootstrap>();

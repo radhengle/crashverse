@@ -21,12 +21,18 @@ namespace Crashverse.DevTools.Perf
     /// PERFL10_DETERMINISM (MATCH/MISMATCH across runs). Compiled out of release players (whole file guarded); the scene is dev-build-only.
     /// Command line: -perfTier Low|Mid|High, -perfRuns N, -perfFillPowerUpLane.
     /// </summary>
+    /// <summary>One run's result (PlayMode test / CI).</summary>
+    public struct PerfL10Run { public bool hit; public int hitRow; public float hitY; public int saturatedMs, peakDebris, breaks; public ulong hash; }
+
     public class PerfL10Stage : MonoBehaviour
     {
         public enum TierChoice { Mid, High, Low }
         public TierChoice tier = TierChoice.Mid;
         [Tooltip("Runs (Retry between runs, same seed and inputs). 1 for on-device timing runs; 3+ for determinism checks.")]
-        public int runs = 1;
+        public int runs = 1; // NOTE: read by VFX by reflection (vfx/perf-l10-integration). Keep the name stable.
+        /// <summary>Set before the scene loads (PlayMode test / CI) to override runs and tier. 0 / null = use inspector + command line.</summary>
+        public static int RunsOverride; public static string TierOverride;
+        public bool Determinism => !_mismatch;
         [Tooltip("Fill the 80-particle power-up lane with dummy particles (PerfDummyPowerUpLane) while power-up FX are unbuilt.")]
         public bool fillPowerUpLane = true;
         [Tooltip("Ticks after the last PHYS_COLLAPSE_END before a run is closed (150 = 3 s, matches the VFX probe window).")]
@@ -35,7 +41,10 @@ namespace Crashverse.DevTools.Perf
         public int maxTicksAfterShot = 750;
 
         public static bool Active { get; private set; }
-        public PerfL10Stats Stats { get; } = new PerfL10Stats();
+        public PerfL10Stats Stats { get; } = new PerfL10Stats(); // NOTE: VFX reads Stats.Hash by reflection; keep names stable.
+        /// <summary>Per-run summaries (for PlayMode tests / CI).</summary>
+        public readonly System.Collections.Generic.List<string> Summaries = new System.Collections.Generic.List<string>();
+        public readonly System.Collections.Generic.List<PerfL10Run> Results = new System.Collections.Generic.List<PerfL10Run>();
         public int RunIndex { get; private set; }
         public bool Done { get; private set; }
 
@@ -46,6 +55,8 @@ namespace Crashverse.DevTools.Perf
             Active = true;
             AutoBootstrap.SuppressForDevScene = true; // no map / age gate / backend flow in this scene
             ReadCommandLine();
+            if (RunsOverride > 0) runs = RunsOverride;
+            if (!string.IsNullOrEmpty(TierOverride) && System.Enum.TryParse(TierOverride, true, out TierChoice to)) tier = to;
             switch (tier) { case TierChoice.Low: QualityController.ApplyLow(); break; case TierChoice.High: QualityController.ApplyHigh(); break; default: QualityController.ApplyMid(); break; }
             AppServices.Content = ContentDatabase.LoadBundled();
             AppServices.Save = new CampaignSave();
@@ -108,6 +119,7 @@ namespace Crashverse.DevTools.Perf
             if (!(payload is ImpactEvent ev) || _sim == null) return;
             Stats.OnEvent(ev.tick, (int)ev.kind, ev.pieceId, ev.cascadeId, ev.materialTypeA.ToString(), PerfL10Fixture.FireTick);
             if (ev.kind == ImpactKind.CollapseEnd) _lastCollapseEndTick = ev.tick;
+            if (ev.kind == ImpactKind.Impact && ev.source == ImpactSourceKind.Cannon) Stats.OnCannonImpact(ev.tick, ev.position.y);
         }
 
         void OnTick(int tick)
@@ -117,7 +129,9 @@ namespace Crashverse.DevTools.Perf
             int since = tick - PerfL10Fixture.FireTick;
             bool tailDone = _lastCollapseEndTick >= 0 && tick - _lastCollapseEndTick >= tailTicks;
             if (since < 0 || !(tailDone || since >= maxTicksAfterShot)) return;
-            Debug.Log(Stats.Summary(RunIndex, PerfL10Fixture.Seed, tier.ToString()));
+            string sum = Stats.Summary(RunIndex, PerfL10Fixture.Seed, tier.ToString());
+            Debug.Log(sum); Summaries.Add(sum);
+            Results.Add(new PerfL10Run { hit = Stats.Hit, hitRow = Stats.HitRow, hitY = Stats.HitY, saturatedMs = Stats.SaturatedMs, peakDebris = Stats.PeakDebris, hash = Stats.Hash, breaks = Stats.Breaks });
             if (RunIndex == 0) _firstHash = Stats.Hash; else if (Stats.Hash != _firstHash) _mismatch = true;
             RunIndex++;
             if (RunIndex < runs) { _session.Retry(); _session.aim.launchSpeed = PerfL10Fixture.LaunchSpeed; BeginRun(); return; }
