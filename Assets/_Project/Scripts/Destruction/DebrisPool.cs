@@ -3,12 +3,16 @@ using UnityEngine;
 
 namespace Crashverse.Destruction
 {
-    /// <summary>Pooled debris with fade/despawn and a hard cap for mobile perf.</summary>
+    /// <summary>
+    /// Pooled debris (03). Caps by tier 25 low / 60 mid / 90 high simulated rigidbodies (OQ-D1); at cap the OLDEST SETTLED chunk is
+    /// recycled first (else the oldest). Chunks are visual only: destroyed mass is counted on the source piece (OQ-D2).
+    /// </summary>
     public class DebrisPool : MonoBehaviour
     {
         public static DebrisPool Instance { get; private set; }
 
-        [SerializeField] int maxActiveDebris = 48;
+        int maxActiveDebris => Crashverse.Feel.DebrisBudget.Cap(Crashverse.Perf.QualityController.FeelTier);
+        readonly Crashverse.Feel.DebrisLedger<DebrisPiece> _ledger = new Crashverse.Feel.DebrisLedger<DebrisPiece>(60);
         [SerializeField] int prewarm = 24;
 
         readonly Queue<DebrisPiece> _free = new Queue<DebrisPiece>();
@@ -47,8 +51,8 @@ namespace Crashverse.Destruction
         {
             for (int i = 0; i < count; i++)
             {
-                while (_active.Count >= maxActiveDebris)
-                    DespawnOldest();
+                _ledger.Cap = maxActiveDebris;
+                while (_active.Count >= maxActiveDebris) { var v = _ledger.PickVictim(); if (v == null) { DespawnOldest(); continue; } _active.Remove(v); _ledger.Remove(v); Recycle(v); }
 
                 var piece = _free.Count > 0 ? _free.Dequeue() : CreatePiece();
                 float s = Mathf.Clamp(Mathf.Min(parentScale.x, Mathf.Min(parentScale.y, parentScale.z)) * 0.35f, 0.15f, 0.55f);
@@ -56,7 +60,7 @@ namespace Crashverse.Destruction
                 piece.transform.rotation = Random.rotation;
                 piece.transform.localScale = Vector3.one * s;
                 piece.Activate(mat, mat != null ? mat.debrisLifetimeSeconds : 2.5f);
-                _active.Add(piece);
+                _active.Add(piece); _ledger.Add(piece);
             }
         }
 
@@ -64,20 +68,20 @@ namespace Crashverse.Destruction
         {
             for (int i = _active.Count - 1; i >= 0; i--)
                 Recycle(_active[i]);
-            _active.Clear();
+            _active.Clear(); _ledger.Clear();
         }
 
         void DespawnOldest()
         {
             if (_active.Count == 0) return;
             var oldest = _active[0];
-            _active.RemoveAt(0);
+            _active.RemoveAt(0); _ledger.Remove(oldest);
             Recycle(oldest);
         }
 
         internal void NotifyFinished(DebrisPiece piece)
         {
-            _active.Remove(piece);
+            _active.Remove(piece); _ledger.Remove(piece);
             Recycle(piece);
         }
 
@@ -92,10 +96,11 @@ namespace Crashverse.Destruction
         {
             for (int i = _active.Count - 1; i >= 0; i--)
             {
+                _ledger.MarkSettled(_active[i], _active[i].IsSettled);
                 if (_active[i].Tick(Time.deltaTime))
                 {
                     var p = _active[i];
-                    _active.RemoveAt(i);
+                    _active.RemoveAt(i); _ledger.Remove(p);
                     Recycle(p);
                 }
             }
@@ -126,6 +131,8 @@ namespace Crashverse.Destruction
             block.SetColor("_Color", _color);
             _rend.SetPropertyBlock(block);
         }
+
+        public bool IsSettled => _rb != null && (_rb.isKinematic || _rb.velocity.sqrMagnitude < 0.15f * 0.15f);
 
         public void Deactivate()
         {

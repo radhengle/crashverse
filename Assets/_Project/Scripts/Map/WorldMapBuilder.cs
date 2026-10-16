@@ -30,11 +30,12 @@ namespace Crashverse.Map
                 top.transform.SetParent(transform, false);
                 top.transform.position = c;
                 top.AddComponent<MeshFilter>().sharedMesh = ProceduralMesh.IslandTop(8f, 6f, 0.5f, 32);
-                Paint(top.AddComponent<MeshRenderer>(), storm ? "5E7A4A" : "7ED957");
+                var vc = VisualConfig.Current;
+                Paint(top.AddComponent<MeshRenderer>(), storm ? vc.stormGrassHex : vc.grassHex);
                 var rock = new GameObject("Rock");
                 rock.transform.SetParent(top.transform, false);
                 rock.AddComponent<MeshFilter>().sharedMesh = ProceduralMesh.Cone(8f, 6f, -0.5f, -9f, 32);
-                Paint(rock.AddComponent<MeshRenderer>(), "C98A4B");
+                Paint(rock.AddComponent<MeshRenderer>(), vc.cliffHex);
                 if (storm)
                     for (int i = 0; i < 16; i++)
                     {
@@ -44,7 +45,7 @@ namespace Crashverse.Map
                         cloud.transform.SetParent(top.transform, false);
                         cloud.transform.localPosition = new Vector3(Mathf.Cos(a) * 10f, 3f + Mathf.Sin(a * 3f), Mathf.Sin(a) * 8f);
                         cloud.transform.localScale = Vector3.one * 2.2f;
-                        Paint(cloud.GetComponent<Renderer>(), "3A3F48");
+                        Paint(cloud.GetComponent<Renderer>(), vc.stormCloudHex);
                     }
                 if (!string.IsNullOrEmpty(isl.gateAfterLevel)) GatePositions[isl.id] = c + new Vector3(-11f, 0.5f, 0f);
             }
@@ -59,7 +60,7 @@ namespace Crashverse.Map
                 br.transform.position = (a + b) * 0.5f;
                 br.transform.localScale = new Vector3((b - a).magnitude - 14f, 0.2f, 1.2f);
                 br.transform.rotation = Quaternion.FromToRotation(Vector3.right, (b - a).normalized);
-                Paint(br.GetComponent<Renderer>(), "A8743F");
+                Paint(br.GetComponent<Renderer>(), VisualConfig.Current.bridgeHex);
             }
             // nodes: spread along each island in level order
             var perIsland = new Dictionary<string, List<LevelEntry>>();
@@ -78,7 +79,7 @@ namespace Crashverse.Map
                     m.transform.SetParent(transform, false);
                     m.transform.position = p - new Vector3(0f, 0.45f, 0f);
                     m.transform.localScale = new Vector3(1.6f, 0.1f, 1.6f);
-                    Paint(m.GetComponent<Renderer>(), kv.Value[i].IsBoss ? "E5484D" : "F5C451");
+                    Paint(m.GetComponent<Renderer>(), kv.Value[i].IsBoss ? VisualConfig.Current.bossNodeHex : VisualConfig.Current.nodeHex);
                 }
             }
             minX = V(ch.islands[0].pos).x; maxX = V(ch.islands[ch.islands.Length - 1].pos).x;
@@ -91,15 +92,16 @@ namespace Crashverse.Map
             Apply();
         }
 
-        public void Pan(float dx) { camX = Mathf.Clamp(camX + dx, minX - 4f, maxX + 4f); Apply(); }
+        public void Pan(float dx) { var pad = CameraConfig.Current.mapPanPadding; camX = Mathf.Clamp(camX + dx, minX - pad, maxX + pad); Apply(); }
 
         void Apply()
         {
             if (_cam == null) _cam = Camera.main;
             if (_cam == null) return;
-            _cam.transform.position = new Vector3(camX, 26f, -30f);
-            _cam.transform.rotation = Quaternion.Euler(38f, 0f, 0f);
-            _cam.fieldOfView = 50f;
+            var cc = CameraConfig.Current;
+            _cam.transform.position = new Vector3(camX, cc.mapHeight, cc.mapBack);
+            _cam.transform.rotation = Quaternion.Euler(cc.mapPitch, 0f, 0f);
+            _cam.fieldOfView = cc.mapFov;
         }
 
         static Vector3 V(float[] a) => a != null && a.Length == 3 ? new Vector3(a[0], a[1], a[2]) : Vector3.zero;

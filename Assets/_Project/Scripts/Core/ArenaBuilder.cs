@@ -18,13 +18,14 @@ namespace Crashverse.Core
             island.transform.SetParent(transform, false);
             var mesh = ProceduralMesh.IslandTop(IslandLength * 0.5f, IslandWidth * 0.5f, 0.6f, 48);
             island.AddComponent<MeshFilter>().sharedMesh = mesh;
-            Paint(island.AddComponent<MeshRenderer>(), "7ED957", 0.5f);
+            var vc = VisualConfig.Current;
+            Paint(island.AddComponent<MeshRenderer>(), vc.grassHex, vc.grassSmoothness);
             island.AddComponent<MeshCollider>().sharedMesh = mesh;
 
             var rock = new GameObject("IslandRock");
             rock.transform.SetParent(transform, false);
             rock.AddComponent<MeshFilter>().sharedMesh = ProceduralMesh.Cone(IslandLength * 0.5f, IslandWidth * 0.5f, -0.6f, -16f, 48);
-            Paint(rock.AddComponent<MeshRenderer>(), "C98A4B", 0.15f); // cliff colour (indestructible, Art v2)
+            Paint(rock.AddComponent<MeshRenderer>(), vc.cliffHex, vc.cliffSmoothness); // cliff colour (indestructible, Art v2)
 
             var pad = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             pad.name = "WreckerPad";
@@ -32,7 +33,7 @@ namespace Crashverse.Core
             pad.transform.position = new Vector3(Crashverse.Weapons.WreckerSpec.WreckerX, 0.02f, 0f);
             pad.transform.localScale = new Vector3(6f, 0.02f, 5f);
             Destroy(pad.GetComponent<Collider>());
-            Paint(pad.GetComponent<Renderer>(), "E6C88F", 0.3f);
+            Paint(pad.GetComponent<Renderer>(), vc.padHex, 0.3f);
 
             var kp = new GameObject("KillPlane").AddComponent<KillPlane>();
             kp.transform.SetParent(transform, false);
@@ -43,22 +44,23 @@ namespace Crashverse.Core
 
         public static void Lighting()
         {
+            var vc = VisualConfig.Current; // PM: lighting is data (VisualConfig)
             var key = new GameObject("KeyLight").AddComponent<Light>();
-            key.type = LightType.Directional; key.color = MaterialDefinition.Hex("FFF2D6"); key.intensity = 1.4f;
-            key.shadows = LightShadows.Soft; key.shadowStrength = 0.6f;
-            key.transform.rotation = Quaternion.Euler(50f, -35f, 0f);
+            key.type = LightType.Directional; key.color = VisualConfig.C(vc.keyLightHex); key.intensity = vc.keyIntensity;
+            key.shadows = LightShadows.Soft; key.shadowStrength = vc.keyShadowStrength;
+            key.transform.rotation = Quaternion.Euler(vc.keyEuler.x, vc.keyEuler.y, vc.keyEuler.z);
             var rim = new GameObject("RimLight").AddComponent<Light>();
-            rim.type = LightType.Directional; rim.color = Color.white; rim.intensity = 0.35f; rim.shadows = LightShadows.None;
-            rim.transform.rotation = Quaternion.Euler(25f, 150f, 0f); // back-left
+            rim.type = LightType.Directional; rim.color = VisualConfig.C(vc.rimLightHex); rim.intensity = vc.rimIntensity; rim.shadows = LightShadows.None;
+            rim.transform.rotation = Quaternion.Euler(vc.rimEuler.x, vc.rimEuler.y, vc.rimEuler.z);
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = MaterialDefinition.Hex("8CC8FF");
-            RenderSettings.ambientEquatorColor = MaterialDefinition.Hex("DCEFFF");
-            RenderSettings.ambientGroundColor = MaterialDefinition.Hex("6FAE5A");
-            RenderSettings.ambientIntensity = 1.15f;
-            RenderSettings.fog = true; RenderSettings.fogMode = FogMode.Linear;
-            RenderSettings.fogColor = MaterialDefinition.Hex("CFEAFF");
-            RenderSettings.fogStartDistance = 80f; RenderSettings.fogEndDistance = 250f;
-            if (Camera.main != null) { Camera.main.clearFlags = CameraClearFlags.SolidColor; Camera.main.backgroundColor = MaterialDefinition.Hex("7CC4FF"); }
+            RenderSettings.ambientSkyColor = VisualConfig.C(vc.ambientSkyHex);
+            RenderSettings.ambientEquatorColor = VisualConfig.C(vc.ambientEquatorHex);
+            RenderSettings.ambientGroundColor = VisualConfig.C(vc.ambientGroundHex);
+            RenderSettings.ambientIntensity = vc.ambientIntensity;
+            RenderSettings.fog = vc.fog; RenderSettings.fogMode = FogMode.Linear;
+            RenderSettings.fogColor = VisualConfig.C(vc.fogHex);
+            RenderSettings.fogStartDistance = vc.fogStart; RenderSettings.fogEndDistance = vc.fogEnd;
+            if (Camera.main != null) { Camera.main.clearFlags = CameraClearFlags.SolidColor; Camera.main.backgroundColor = VisualConfig.C(vc.skyClearHex); }
         }
 
         static void Paint(Renderer r, string hex, float smooth)

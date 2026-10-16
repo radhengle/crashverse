@@ -6,12 +6,13 @@ namespace Crashverse.Weapons
     /// <summary>
     /// Touch drag to aim (mouse fallback). Elevation 5–70°, yaw ±60° (Wrecker brief, unchanged in v2).
     /// QA-UI-003: a press that starts over any UI element (EventSystem raycast) never starts an aim drag.
+    /// Fixed shot power, no charge (OQ-A1). Releasing a drag never fires; FIRE is a button tap (OQ-A2). Aim stays live during reload.
     /// Aim/cancel is free (Contract §2). Draws the trajectory arc and, when a hint is armed, a ghost arc (Addendum §1).
     /// </summary>
     public class AimController : MonoBehaviour
     {
         public Transform yawPivot, pitchPivot, projectileSpawn;
-        public float degreesPerDp = 0.35f;
+        public float yawDegPerDp = 0.25f, pitchDegPerDp = 0.15f; // OQ-A3 (data: wrecker.json aimYawDegPerDp/aimPitchDegPerDp)
         public float launchSpeed = 28f;
         public bool inputEnabled = true;
 
@@ -21,6 +22,7 @@ namespace Crashverse.Weapons
         Vector2 _last;
         LineRenderer _arc, _ghost;
 
+        public bool Dragging => _dragging;
         public float Yaw => _yaw;
         public float Elevation => _elevation;
 
@@ -115,7 +117,7 @@ namespace Crashverse.Weapons
         void Drag(Vector2 deltaPx)
         {
             var dp = deltaPx * DpPerPixel;
-            SetAim(_yaw + dp.x * degreesPerDp, _elevation + dp.y * degreesPerDp);
+            SetAim(_yaw + dp.x * yawDegPerDp, _elevation + dp.y * pitchDegPerDp);
         }
 
         void Apply()
@@ -124,13 +126,30 @@ namespace Crashverse.Weapons
             if (pitchPivot != null) pitchPivot.localRotation = Quaternion.Euler(0f, 0f, _elevation);
         }
 
+        /// <summary>Seconds from launch to the first impact of the current aim (used by Splitstrike's 70% rule). 0 if none found.</summary>
+        public float PredictedFlightTime { get; private set; }
+        static readonly Vector3[] _pts = new Vector3[64];
+
+        /// <summary>OQ-A3: arc up to the first impact point only (no bounces, nothing after impact).</summary>
         void DrawArc(LineRenderer lr)
         {
             if (lr == null || projectileSpawn == null) return;
-            const int n = 40; const float dt = 0.06f;
-            lr.positionCount = n;
-            Vector3 p = SpawnPosition, v = LaunchVelocity;
-            for (int i = 0; i < n; i++) { lr.SetPosition(i, p); v += Physics.gravity * dt; p += v * dt; }
+            const int n = 64; const float dt = 0.05f;
+            Vector3 p = SpawnPosition, v = LaunchVelocity; int count = 0; float t = 0f; PredictedFlightTime = 0f;
+            _pts[count++] = p;
+            for (int i = 1; i < n; i++)
+            {
+                var next = p + v * dt + Physics.gravity * (0.5f * dt * dt);
+                var seg = next - p;
+                if (Physics.Raycast(p, seg.normalized, out var hit, seg.magnitude) && !hit.collider.isTrigger)
+                {
+                    _pts[count++] = hit.point; PredictedFlightTime = t + dt * (hit.distance / Mathf.Max(1e-4f, seg.magnitude)); break;
+                }
+                v += Physics.gravity * dt; p = next; t += dt; _pts[count++] = p;
+                if (p.y < -6f) { PredictedFlightTime = t; break; }
+            }
+            lr.positionCount = count;
+            for (int i = 0; i < count; i++) lr.SetPosition(i, _pts[i]);
         }
     }
 }

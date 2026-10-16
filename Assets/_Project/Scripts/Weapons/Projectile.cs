@@ -18,7 +18,10 @@ namespace Crashverse.Weapons
         Rigidbody _rb;
         Collider _col;
         float _life;
-        bool _spent, _splitDone;
+        bool _spent, _splitDone; float _age, _splitAt;
+        /// <summary>First impact of any projectile (Time Fracture hold-until-impact, camera ImpactFrame).</summary>
+        public static event System.Action<Projectile> FirstImpact;
+        public static Projectile Latest;
         readonly HashSet<DestructibleBlock> _pierced = new HashSet<DestructibleBlock>();
 
         void Awake()
@@ -32,8 +35,10 @@ namespace Crashverse.Weapons
         void OnEnable() { Alive.Add(this); }
         void OnDisable() { Alive.Remove(this); }
 
-        public void Launch(Vector3 pos, Vector3 vel, float dmg, ShotModifiers m)
+        /// <param name="splitAtSeconds">OQ-P2: min(apex, 70% predicted flight); &lt;0 = use apex.</param>
+        public void Launch(Vector3 pos, Vector3 vel, float dmg, ShotModifiers m, float splitAtSeconds = -1f)
         {
+            _age = 0f; _splitAt = splitAtSeconds; Latest = this;
             if (_rb == null) Awake();
             transform.position = pos;
             damage = dmg; mods = m ?? new ShotModifiers();
@@ -46,13 +51,15 @@ namespace Crashverse.Weapons
         {
             _life -= Time.deltaTime;
             if (_life <= 0f || (KillPlane.Instance != null && transform.position.y < KillPlane.Instance.killY)) { Despawn(); return; }
-            if (!_splitDone && _rb.velocity.y <= 0f) Split();
+            _age += Time.deltaTime;
+            if (!_splitDone && (_splitAt >= 0f ? _age >= _splitAt : _rb.velocity.y <= 0f)) Split();
         }
 
         /// <summary>Splitstrike: at apex, 3 projectiles each doing 50% of the shot's final damage (SG-08).</summary>
         void Split()
         {
             _splitDone = true;
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.PuSplitApex);
             float d = damage * mods.splitDamageMult;
             var child = mods.CloneWithoutSplit();
             int extra = Mathf.Max(0, mods.splitCount - 1);
@@ -85,6 +92,8 @@ namespace Crashverse.Weapons
         void Impact(DestructibleBlock hit, Vector3 at)
         {
             _spent = true;
+            _splitDone = true; // OQ-P2: hit before the split point → no split, full single-shot damage (charge already spent at fire)
+            FirstImpact?.Invoke(this);
             if (hit != null)
             {
                 hit.ApplyDamage(damage, directHit: true); // steel joints take 2x here

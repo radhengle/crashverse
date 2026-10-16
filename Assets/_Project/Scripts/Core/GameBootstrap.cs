@@ -27,6 +27,7 @@ namespace Crashverse.Core
             AppServices.Theme = UITheme.Load();
             AppServices.Router = UIRouter.Create(AppServices.Theme);
             if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); c.AddComponent<AudioListener>(); }
+            Crashverse.Feel.FeelDirector.InitSettings(); // persisted Reduce shake / Reduce motion (+ OS auto-on)
             new GameObject("Quality").AddComponent<QualityController>();
             GameplayDirector.ShowMap();
             await AppServices.SyncServerTime();
@@ -83,7 +84,7 @@ namespace Crashverse.Core
             var wb = wreckerGo.AddComponent<Weapons.WreckerBuilder>(); wb.Build();
             var aim = wreckerGo.AddComponent<Weapons.AimController>(); aim.Bind(wb.yawPivot, wb.pitchPivot, wb.projectileSpawn);
             var tune = AppServices.Content.Wrecker;
-            aim.launchSpeed = tune.launchSpeed;
+            aim.launchSpeed = tune.launchSpeed; aim.yawDegPerDp = tune.aimYawDegPerDp; aim.pitchDegPerDp = tune.aimPitchDegPerDp;
             var fire = wreckerGo.AddComponent<Weapons.FireController>();
             fire.aim = aim; fire.defaultDamage = tune.defaultDamage; fire.projectileScale = tune.projectileScale;
             fire.projectileMass = tune.projectileMass; fire.splitSpreadDeg = tune.splitSpreadDeg;
@@ -104,12 +105,14 @@ namespace Crashverse.Core
             RunCamera.enabled = true;
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
+            levelGo.AddComponent<Crashverse.Feel.FeelDirector>().Bind(s, RunCamera, aim);
             AppServices.Router.Push(new HudScreen(s));
         }
 
         public static void EndRun()
         {
             if (_runRoot != null) Object.Destroy(_runRoot);
+            Time.timeScale = 1f;
             _runRoot = null; Session = null;
             if (RunCamera != null) RunCamera.enabled = false;
             MovingPart.GlobalSpeedScale = 1f;

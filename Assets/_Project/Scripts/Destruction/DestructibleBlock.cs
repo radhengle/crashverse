@@ -111,7 +111,10 @@ namespace Crashverse.Destruction
             currentHp = 0f;
             DestroyOwnJoints();
             if (DebrisPool.Instance != null && material != null)
-                DebrisPool.Instance.SpawnBurst(transform.position, transform.localScale, material, Mathf.Clamp(material.maxDebrisChunks, 1, 8));
+                {
+                int chunks = Crashverse.Feel.DebrisBudget.Chunks(material.kind == MaterialKind.Wood ? "wood" : material.kind == MaterialKind.Brick ? "brick" : "steel", Crashverse.Perf.QualityController.FeelTier);
+                if (chunks > 0) DebrisPool.Instance.SpawnBurst(transform.position, transform.localScale, material, Mathf.Min(chunks, material.maxDebrisChunks)); // visual only; mass counted on this piece
+            }
             if (_renderer != null) _renderer.enabled = false;
             var col = GetComponent<Collider>();
             if (col != null) col.enabled = false;

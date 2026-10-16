@@ -51,7 +51,7 @@ namespace Crashverse.Destruction
                     def.jointBreakForce = 450f;
                     def.jointBreakTorque = 450f;
                     def.maxDebrisChunks = 6;
-                    def.baseColor = Hex("E3A766");
+                    def.baseColor = Hex(Crashverse.Core.VisualConfig.Current.woodHex);
                     def.darkColor = Hex("A8743F");
                     def.breakFxColor = Hex("E3B07A");
                     break;
@@ -63,7 +63,7 @@ namespace Crashverse.Destruction
                     def.jointBreakForce = 900f;
                     def.jointBreakTorque = 900f;
                     def.maxDebrisChunks = 4;
-                    def.baseColor = Hex("D2664C");
+                    def.baseColor = Hex(Crashverse.Core.VisualConfig.Current.brickHex);
                     def.darkColor = Hex("7A3326");
                     def.breakFxColor = Hex("D9A37E");
                     break;
@@ -75,7 +75,7 @@ namespace Crashverse.Destruction
                     def.jointBreakForce = 2200f;
                     def.jointBreakTorque = 2200f;
                     def.maxDebrisChunks = 3;
-                    def.baseColor = Hex("AEB6C2");
+                    def.baseColor = Hex(Crashverse.Core.VisualConfig.Current.steelHex);
                     def.darkColor = Hex("6B7684");
                     def.breakFxColor = Hex("FFD27A");
                     break;

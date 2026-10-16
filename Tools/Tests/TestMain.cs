@@ -8,6 +8,7 @@ using Crashverse.Meta;
 static class T
 {
     static int _pass, _fail;
+    public static void Eq<X>(X exp, X act) => Eq(exp, act, $"{exp}");
     public static void Eq<X>(X exp, X act, string name)
     {
         if (EqualityComparer<X>.Default.Equals(exp, act)) _pass++;

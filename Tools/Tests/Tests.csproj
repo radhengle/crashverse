@@ -18,5 +18,6 @@
     <Compile Include="../../Assets/_Project/Scripts/UI/UITheme.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Core/TitanRunJournal.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Core/CampaignResultQueue.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Feel/FeelCore.cs" />
   </ItemGroup>
 </Project>

@@ -14,7 +14,9 @@ namespace Crashverse.Meta
             return (int)decimal.Floor((decimal)ratio * 10000m);
         }
 
-        public static bool Meets(float destroyedRatio, float winThreshold) => ToBp(destroyedRatio) >= ToBp(winThreshold);
+        public const float DefaultWinThreshold = 0.85f;
+        /// <summary>Per-level threshold (OQ-X1); missing/0 → 0.85. Always compared in basis points.</summary>
+        public static bool Meets(float destroyedRatio, float winThreshold) => ToBp(destroyedRatio) >= ToBp(winThreshold > 0f ? winThreshold : DefaultWinThreshold);
 
         /// <summary>Exact count ratio in basis points (integer floor, no float): 4/5 → 8000, 2/3 → 6666.</summary>
         public static int FractionBp(int part, int whole) => whole <= 0 ? 0 : (int)(System.Math.Max(0L, (long)part) * 10000L / whole);

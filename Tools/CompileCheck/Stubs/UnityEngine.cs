@@ -77,6 +77,7 @@ namespace UnityEngine
         public static Vector3 zero => new Vector3(0, 0, 0);
         public static Vector3 one => new Vector3(1, 1, 1);
         public static Vector3 up => new Vector3(0, 1, 0);
+        public static Vector3 back => new Vector3(0, 0, -1);
         public static Vector3 forward => new Vector3(0, 0, 1);
         public static Vector3 right => new Vector3(1, 0, 0);
         public float sqrMagnitude => x * x + y * y + z * z;
@@ -98,6 +99,7 @@ namespace UnityEngine
         public static Quaternion FromToRotation(Vector3 a, Vector3 b) => identity;
         public static Quaternion AngleAxis(float d, Vector3 a) => identity;
         public static Vector3 operator *(Quaternion q, Vector3 v) => v;
+        public static Quaternion operator *(Quaternion a, Quaternion b) => a;
     }
 
     public struct Color
@@ -117,6 +119,7 @@ namespace UnityEngine
 
     public static class Mathf
     {
+        public static float PerlinNoise(float x, float y) => 0.5f;
         public static float Clamp(float v, float min, float max) => Math.Min(max, Math.Max(min, v));
         public static int Clamp(int v, int min, int max) => Math.Min(max, Math.Max(min, v));
         public static float Max(float a, float b) => Math.Max(a, b);
@@ -132,6 +135,7 @@ namespace UnityEngine
 
     public static class Time
     {
+        public static float unscaledTime;
         public static float deltaTime = 0.016f;
         public static float fixedDeltaTime = 0.02f;
         public static float timeScale = 1f, time, unscaledDeltaTime = 0.016f;
@@ -183,8 +187,10 @@ namespace UnityEngine
         public static string[] names = { "Low", "Mid" };
         public static void SetQualityLevel(int i, bool a) { }
     }
+    public struct RaycastHit { public Vector3 point; public float distance; public Collider collider; }
     public static class Physics
     {
+        public static bool Raycast(Vector3 o, Vector3 d, out RaycastHit hit, float max) { hit = default; return false; }
         public static Vector3 gravity = new Vector3(0, -9.81f, 0);
         public static float sleepThreshold;
         public static int defaultSolverIterations;
@@ -271,11 +277,13 @@ namespace UnityEngine
     public static class Debug { public static void Log(object m) { } public static void LogError(object m) { System.Console.WriteLine("ERR " + m); } public static void LogWarning(object m) { } }
     public static class Random
     {
+        public static float value => 0.5f;
         public static Vector3 insideUnitSphere => Vector3.one;
         public static Quaternion rotation => Quaternion.identity;
     }
     public static class PlayerPrefs
     {
+        public static bool HasKey(string k) => false;
         static Dictionary<string, int> _i = new Dictionary<string, int>();
         public static int GetInt(string k, int d = 0) => _i.TryGetValue(k, out var v) ? v : d;
         public static void SetInt(string k, int v) => _i[k] = v;

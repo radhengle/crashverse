@@ -64,8 +64,9 @@ namespace Crashverse.PowerUps
         {
             var s = Slots[i];
             if (s == null) return;
-            if (s.armed) { s.armed = false; Changed?.Invoke(); return; }
+            if (s.armed) { s.armed = false; Changed?.Invoke(); return; } // OQ-P1: free disarm before FIRE, charge kept
             if (s.charges <= 0) return;
+            if (s.data.effect == "TIME_FRACTURE" && TimeFractureEffect.IsActive) return; // running; can't stack or un-arm
             if (s.data.effect == "TIME_FRACTURE")
             {
                 s.charges--; AnyUsed = true;
@@ -118,22 +119,31 @@ namespace Crashverse.PowerUps
         }
     }
 
-    /// <summary>Time Fracture: moving parts run at slowFactor for duration seconds.</summary>
+    /// <summary>
+    /// Time Fracture (OQ-P3): starts on ARM (charge spent then; cannot be un-armed), 4 s REAL time at 25% for moving parts only
+    /// (not global timeScale). If a shot is fired during the slow it lasts until that shot's first impact.
+    /// </summary>
     public class TimeFractureEffect : MonoBehaviour
     {
         static TimeFractureEffect _active;
-        float _t;
+        public static readonly Crashverse.Feel.TimeFractureTimer Timer = new Crashverse.Feel.TimeFractureTimer();
+        public static bool IsActive => Timer.Active;
         public static void Activate(float duration, float slow)
         {
+            Timer.Arm(duration > 0 ? duration : 4f, slow > 0 ? slow : 0.25f);
             if (_active == null) _active = new GameObject("TimeFracture").AddComponent<TimeFractureEffect>();
-            _active._t = duration;
-            MovingPart.GlobalSpeedScale = slow;
+            MovingPart.GlobalSpeedScale = Timer.SpeedScale;
         }
+        public static void NotifyShotFired() => Timer.OnShotFired();
+        void OnEnable() { Crashverse.Weapons.Projectile.FirstImpact += OnImpact; }
+        void OnDisable() { Crashverse.Weapons.Projectile.FirstImpact -= OnImpact; }
+        void OnImpact(Crashverse.Weapons.Projectile p) => Timer.OnShotImpact();
         void Update()
         {
-            _t -= Time.deltaTime;
-            if (_t <= 0f) { MovingPart.GlobalSpeedScale = 1f; _active = null; Destroy(gameObject); }
+            Timer.Tick(Time.unscaledDeltaTime);
+            MovingPart.GlobalSpeedScale = Timer.SpeedScale;
+            if (!Timer.Active) { _active = null; Destroy(gameObject); }
         }
-        void OnDestroy() { MovingPart.GlobalSpeedScale = 1f; }
+        void OnDestroy() { MovingPart.GlobalSpeedScale = 1f; if (_active == this) { _active = null; Timer.Cancel(); } }
     }
 }

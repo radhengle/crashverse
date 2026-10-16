@@ -38,7 +38,8 @@ namespace Crashverse.Core
         public event System.Action Changed;
         public event System.Action<RunResult> Ended;
 
-        float _sinceFire;
+        /// <summary>Content Roadmap §5: FIRE unlocks when settled AND ≥ 1.0 s since the shot; raises GAME_WRECKER_READY (reload-beat hook).</summary>
+        public readonly Crashverse.Feel.ReloadGate Gate = new Crashverse.Feel.ReloadGate();
         Vector3 _baseGravity = new Vector3(0f, -9.81f, 0f);
         DestructibleBlock _hintBlock;
         RankedJournal _journal; System.Threading.Tasks.Task _cpTask = System.Threading.Tasks.Task.CompletedTask;
@@ -68,6 +69,7 @@ namespace Crashverse.Core
             PowerUps = new PowerUpRuntime(Ctx.loadout, AppServices.Content, Ctx.extraChargeSlot);
             PowerUps.Changed += () => Changed?.Invoke();
             ShotsLeft = Ctx.ShotBudget;
+            Gate.Reset();
             Result = null;
             State = SessionState.Aiming;
             fire.CanFire = true;
@@ -91,12 +93,13 @@ namespace Crashverse.Core
 
         public bool TryFire()
         {
-            if (State != SessionState.Aiming || ShotsLeft <= 0) return false;
+            if (State != SessionState.Aiming || ShotsLeft <= 0 || !Gate.Ready) return false;
             var mods = PowerUps.ConsumeForShot();
             if (!fire.Fire(mods)) return false;
             ShotsLeft--;
             tracker.OnShotFired();
-            _sinceFire = 0f;
+            Gate.OnShotFired();
+            Crashverse.PowerUps.TimeFractureEffect.NotifyShotFired(); // OQ-P3: slow holds until this shot impacts
             State = SessionState.Resolving;
             fire.CanFire = false;
             if (HintVisible) { HintVisible = false; aim.HideGhost(); if (_hintBlock != null) _hintBlock.ClearHighlight(); }
@@ -114,8 +117,7 @@ namespace Crashverse.Core
                 return;
             }
             if (State != SessionState.Resolving) return;
-            _sinceFire += Time.deltaTime;
-            if (_sinceFire < 0.3f || FireController.ActiveProjectiles > 0 || !tracker.IsSettled) return;
+            if (!Gate.Tick(Time.deltaTime, FireController.ActiveProjectiles == 0 && tracker.IsSettled)) return; // aim stays live; only FIRE waits
             ResolveShot();
         }
 

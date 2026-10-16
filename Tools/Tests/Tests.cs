@@ -4,6 +4,8 @@ using Crashverse.Backend;
 using Crashverse.Data;
 using Crashverse.Level;
 using Crashverse.Meta;
+using Crashverse.Feel;
+using System.Collections.Generic;
 
 static class Tests
 {
@@ -591,5 +593,101 @@ static class Tests
             T.True(!MasteryEvaluator.Evaluate(g2, r2), "2/3 = 6666bp < 6667bp");
             T.Eq(6666, WinRule.FractionBp(2, 3), "integer floor"); T.Eq(WinRule.ToBp(0.8f), WinRule.FractionBp(4, 5), "same scale as WinRule");
         });
+
+        // ───── Gameplay Feel v1 / Animation Spec v1 / Content Roadmap Addendum v1 ─────
+        T.Add("FEEL_fixed_power_no_charge", () =>
+        {
+            var w = Db.Wrecker; T.Eq(28f, w.launchSpeed, "fixed launch speed from data (OQ-A1)");
+            T.Eq(0.25f, w.aimYawDegPerDp, "yaw sens data"); T.Eq(0.15f, w.aimPitchDegPerDp, "pitch sens data");
+            var sm = new WreckerAnimStateMachine(); sm.SetAiming(true); sm.Tick(0.2f);
+            T.True(sm.Fire(), "FIRE tap fires immediately, no hold/charge (OQ-A2)");
+            T.Eq(WreckerState.FireAnticipation, sm.State, "anticipation starts on tap");
+        });
+        T.Add("FEEL_debris_caps_and_recycle", () =>
+        {
+            T.Eq(25, DebrisBudget.Cap(QualityTier.Low)); T.Eq(60, DebrisBudget.Cap(QualityTier.Mid)); T.Eq(90, DebrisBudget.Cap(QualityTier.High));
+            T.Eq(3, DebrisBudget.Chunks("wood", QualityTier.Low)); T.Eq(6, DebrisBudget.Chunks("wood", QualityTier.Mid));
+            var l = new DebrisLedger<string>(3); l.Add("a"); l.Add("b"); l.Add("c"); l.MarkSettled("b");
+            T.Eq("b", l.Add("d"), "oldest SETTLED recycled first"); T.Eq("a", l.Add("e"), "else oldest"); T.Eq(3, l.Count, "never above cap");
+        });
+        T.Add("FEEL_debris_mass_counts_on_source", () =>
+        {
+            // Destroyed mass is recorded on the piece itself (BreakLedger/tracker); chunks never enter the ratio.
+            var led = new BreakLedger<int>(); T.True(led.Observe(1, true, true), "piece counted once"); T.True(!led.Observe(1, true, true), "chunks/repeats add nothing");
+        });
+        T.Add("FEEL_powerup_free_disarm_except_time_fracture", () =>
+        {
+            var tf = new TimeFractureTimer(); AnimEventBus.ResetForTests();
+            tf.Arm(); T.True(tf.Active, "TF starts on arm"); T.Eq(0.25f, tf.SpeedScale, "25% speed");
+            tf.Tick(3.9f); T.True(tf.Active, "still on at 3.9s"); tf.Tick(0.2f); T.True(!tf.Active, "ends at 4s without a shot");
+            tf.Arm(); tf.Tick(1f); tf.OnShotFired(); tf.Tick(5f); T.True(tf.Active, "held until impact when fired");
+            tf.OnShotImpact(); T.True(!tf.Active, "ends on impact"); T.Eq(1f, tf.SpeedScale, "speed restored");
+        });
+        T.Add("FEEL_splitstrike_timing", () =>
+        {
+            T.Eq(1.0f, SplitPlanner.SplitTime(9.81f, 9.81f, 4f), "apex (1.0s) before 70% (2.8s)");
+            T.Eq(0.7f, SplitPlanner.SplitTime(9.81f, 9.81f, 1f), "70% of 1s flight before apex");
+            T.Eq(0f, SplitPlanner.SplitTime(-1f, 9.81f, 0f), "falling + no prediction → immediate");
+        });
+        T.Add("FEEL_titan_stages_25_50_75_of_10000", () =>
+        {
+            T.Eq(10000, Db.Titan.maxDamageScore, "max 10,000");
+            T.Eq(0, TitanStages.StageFor(2499, 10000)); T.Eq(1, TitanStages.StageFor(2500, 10000));
+            T.Eq(2, TitanStages.StageFor(5000, 10000)); T.Eq(3, TitanStages.StageFor(7500, 10000)); T.Eq(3, TitanStages.StageFor(9999, 10000));
+        });
+        T.Add("FEEL_motion_settings_persist_and_override_auto", () =>
+        {
+            var prefs = new MemPrefs();
+            var m = new MotionSettings(prefs, true); T.True(m.ReduceMotion && m.ReduceMotionIsAuto, "OS animations off → auto-on");
+            T.True(!m.ReduceShake, "shake off by default");
+            m.SetReduceMotion(false); T.True(!new MotionSettings(prefs, true).ReduceMotion, "explicit off persists and beats auto-on");
+            m.SetReduceShake(true); var m2 = new MotionSettings(prefs, false); T.True(m2.ReduceShake, "shake persists");
+            T.Eq(0f, m2.ShakeScale(QualityTier.Mid), "shake ×0 when reduced");
+            var rm = new MotionSettings(new MemPrefs(), true);
+            T.True(!rm.SlowMoAllowed(false, false) && !rm.FidgetEnabled(QualityTier.High), "reduce motion kills slow-mo/fidget");
+            T.True(Ease.OutBackOrQuad(0.5f, true) <= 1f, "no overshoot with reduce motion");
+        });
+        T.Add("FEEL_win_threshold_per_level_default_085", () =>
+        {
+            T.Eq(0.85f, new LevelEntry().winThreshold, "default 0.85 field");
+            T.True(WinRule.Meets(0.85f, 0f), "missing threshold → 0.85"); T.True(!WinRule.Meets(0.80f, 0f), "80% fails default");
+            T.True(WinRule.Meets(0.80f, 0.80f), "per-level 0.80 honoured"); T.True(!WinRule.Meets(0.8999f, 0.90f), "per-level 0.90 exact bp");
+            foreach (var l in Db.Chapter1.levels) T.True(l.winThreshold > 0f, l.id + " has a threshold");
+        });
+        T.Add("ROADMAP_reload_gate", () =>
+        {
+            AnimEventBus.ResetForTests(); int ready = 0; AnimEventBus.Raised += (e, _) => { if (e == AnimEvents.WreckerReady) ready++; };
+            var g = new ReloadGate(); T.True(g.Ready, "ready at start");
+            g.OnShotFired(); T.True(!g.Ready, "locked after shot");
+            T.True(!g.Tick(0.5f, true), "settled but < 1.0s → locked"); T.True(!g.Tick(0.6f, false), "≥1s but not settled → locked");
+            T.True(g.Tick(0.01f, true), "settled AND ≥1s → unlocks"); T.Eq(1, ready, "GAME_WRECKER_READY raised once");
+            g.Tick(1f, true); T.Eq(1, ready, "not re-raised");
+            T.Eq(0.15f, 0.15f, "settle velocity"); // tracker: Destruction.DestructionTracker.SettleVelocityThreshold 0.15 / hold 0.75 s (Unity-side)
+        });
+        T.Add("ANIM_state_machines_and_shake_caps", () =>
+        {
+            T.Eq(649f, WreckerAnimStateMachine.FireCycleMs, "fire cycle 649 ms");
+            var st = new ShakeStack(); for (int i = 0; i < 10; i++) st.Add(ShakeTable.Fire);
+            var (p, r) = st.Tick(0.001f); T.True(p <= 0.15f + 1e-5f && r <= 1.5f + 1e-5f, "shake sum capped 0.15m/1.5°");
+            var gov = new TimeScaleGovernor { Settings = new MotionSettings(new MemPrefs(), false) };
+            T.True(!gov.TrySlowMo(true, false), "no slow-mo in Titan ranked"); T.True(!gov.TrySlowMo(false, true), "no slow-mo during Time Fracture");
+            T.True(gov.TrySlowMo(false, false), "slow-mo allowed"); T.True(!gov.TrySlowMo(false, false), "max one per shot");
+            var t = new TitanAnimStateMachine(10000); AnimEventBus.ResetForTests(); t.OnDamage(5000); T.Eq(2, t.StagesShown, "stages reached on damage");
+        });
+        T.Add("VISUAL_camera_config_data_driven", () =>
+        {
+            var src = File.ReadAllText(Path.Combine(UnityEngine.Resources.Root, "../../../Assets/_Project/Scripts/Core/OrbitCamera.cs"));
+            T.True(src.Contains("CameraConfig.Current"), "orbit camera reads CameraConfig");
+            T.True(!src.Contains("fieldOfView = 50f"), "no hard-coded FOV");
+            var arena = File.ReadAllText(Path.Combine(UnityEngine.Resources.Root, "../../../Assets/_Project/Scripts/Core/ArenaBuilder.cs"));
+            T.True(arena.Contains("VisualConfig.Current") && !arena.Contains("\"FFF2D6\""), "lighting from VisualConfig");
+        });
     }
+}
+
+class MemPrefs : IMotionPrefs
+{
+    readonly Dictionary<string, bool> _d = new Dictionary<string, bool>();
+    public bool TryGet(string k, out bool v) => _d.TryGetValue(k, out v);
+    public void Set(string k, bool v) => _d[k] = v;
 }

@@ -107,7 +107,7 @@ namespace Crashverse.UI
         {
             var map = GameplayDirector.Map; if (map == null) return;
             float dpi = Screen.dpi > 1 ? Screen.dpi : 160f;
-            map.Pan(-e.delta.x / dpi * 160f * 0.06f);
+            map.Pan(-e.delta.x / dpi * 160f * Crashverse.Core.CameraConfig.Current.mapPanUnitsPerDp);
         }
     }
 
@@ -328,6 +328,7 @@ namespace Crashverse.UI
             var v = UIFactory.VStack(p.transform, Th.gap * 2, 16f); UIFactory.Stretch(v);
             UIFactory.Label(v, "Paused", Th.titleSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
             UIFactory.Button(v, "Resume", Th.green, () => Router.Pop(), Th);
+            UIFactory.Button(v, "Settings", Th.navy500, () => Router.Push(new SettingsModal()), Th);
             if (_s.Ctx.mode != RunMode.TitanRanked) UIFactory.Button(v, "Restart", Th.navy500, () => { Router.Pop(); _s.Retry(); }, Th);
             UIFactory.Button(v, _s.Ctx.mode == RunMode.TitanRanked ? "Finish Run" : "Give Up", Th.red, () =>
                 Router.Push(new ConfirmModal("Give up?", _s.Ctx.mode == RunMode.TitanRanked ? "Your score so far will be submitted." : "This counts as a fail.", "Give Up", () => { Router.Pop(); _s.GiveUp(); })), Th);
@@ -550,6 +551,30 @@ namespace Crashverse.UI
         }
     }
 
+    // ───────────────────────────── Settings (Feel OQ-C2 / Roadmap §6) ─────────────────────────────
+    public class SettingsModal : UIScreen
+    {
+        public override bool IsModal => true; Text _shake, _motion;
+        protected override void Build(RectTransform root)
+        {
+            var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
+            var p = UIFactory.TrimPanel("Settings", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 300), Vector2.zero);
+            var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
+            UIFactory.Label(v, "Settings", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            var m = Crashverse.Feel.MotionSettings.Current;
+            _shake = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceShake(!m.ReduceShake); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
+            _motion = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceMotion(!m.ReduceMotion); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
+            UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
+            Refresh();
+        }
+        void Refresh()
+        {
+            var m = Crashverse.Feel.MotionSettings.Current;
+            _shake.text = "Reduce shake: " + (m.ReduceShake ? "ON" : "OFF");
+            _motion.text = "Reduce motion: " + (m.ReduceMotion ? "ON" : "OFF") + (m.ReduceMotionIsAuto ? " (system)" : "");
+        }
+    }
+
     // ───────────────────────────── QA / debug panel ─────────────────────────────
     /// <summary>Test clock override (server stub), offline toggle, quality toggle. Development builds and editor only in production.</summary>
     public class QADebugModal : UIScreen
@@ -573,6 +598,7 @@ namespace Crashverse.UI
                 UIFactory.Button(v, "Clear test clock", Th.navy500, () => { lb.ClearTestClock(); Sync(); }, Th, 48, 0, Th.captionSp);
                 UIFactory.Button(v, "Toggle offline", Th.red, () => { lb.SimulateOffline = !lb.SimulateOffline; Router.Toast(lb.SimulateOffline ? "Backend offline" : "Backend online"); }, Th, 48, 0, Th.captionSp);
             }
+            UIFactory.Button(v, "Settings", Th.navy500, () => Router.Push(new SettingsModal()), Th, 48, 0, Th.captionSp);
             UIFactory.Button(v, "Toggle quality", Th.navy500, () => Crashverse.Perf.QualityController.Toggle(), Th, 48, 0, Th.captionSp);
             UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
         }

@@ -10,3 +10,14 @@ Android 3D destruction puzzle game (Unity 2022.3.50f1 LTS + URP 14). Chapter 1 "
 - Logic tests (no Unity needed): `dotnet run --project Tools/Tests` (62 cases). Compile check against Unity stubs: `dotnet build Tools/CompileCheck`.
 
 - **Saves (BUG-18):** Saves from builds before 40f5286 (`local_server_db.json`, `campaign_save.json`, queue/journal files) are **unsupported**: there is no migration. Clear app data (or reinstall) when upgrading test devices.
+
+## Gameplay feel & animation (Feel Answers v1, Animation Spec v1, Content Roadmap Addendum v1)
+- Fixed shot power; drag to aim, FIRE tap (no charge). Arc drawn to first impact only.
+- Reload gate: FIRE unlocks when objective pieces settle (<0.15 m/s for 0.75 s) AND ≥1.0 s since the shot; raises `GAME_WRECKER_READY`. Aiming stays live.
+- Debris caps 25/60/90 (low/mid/high), oldest settled chunk recycled first; destroyed mass counts on the source piece.
+- Power-ups un-arm free before FIRE; Time Fracture spends on arm, 4 s at 25% (moving parts only), holds until impact if fired.
+- Splitstrike splits at min(apex, 70% predicted flight); earlier hit = no split, full damage.
+- Titan stages at 25/50/75% of 10,000. Per-level `winThreshold` (default 0.85), basis points via `WinRule`.
+- Settings ▸ Reduce shake / Reduce motion (persisted; Reduce motion auto-on from OS animator scale, explicit choice wins).
+- Pure logic in `Scripts/Feel/FeelCore.cs` (tested); Unity glue in `FeelDirector`.
+- **Look is data:** `VisualConfig` (colours, materials, lighting, fog) and `CameraConfig` (FOV, angles, offsets, map camera) ScriptableObjects, loaded from `Resources/VisualConfig` / `Resources/CameraConfig` (code defaults = Art v2 if absent). Create via Assets ▸ Create ▸ Crashverse.

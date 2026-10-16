@@ -24,7 +24,10 @@ namespace Crashverse.Weapons
             go.GetComponent<Rigidbody>().mass = projectileMass;
             var p = go.GetComponent<Projectile>();
             p.splitSpreadDeg = splitSpreadDeg;
-            p.Launch(aim.SpawnPosition, aim.LaunchVelocity, defaultDamage, mods);
+            var v = aim.LaunchVelocity; // fixed power (OQ-A1)
+            float splitAt = mods.split ? Crashverse.Feel.SplitPlanner.SplitTime(v.y, -Physics.gravity.y, aim.PredictedFlightTime) : -1f;
+            p.Launch(aim.SpawnPosition, v, defaultDamage, mods, splitAt);
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.ProjLaunch);
             aim.CancelAim();
             Fired?.Invoke();
             return true;

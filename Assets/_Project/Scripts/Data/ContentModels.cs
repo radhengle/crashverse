@@ -23,7 +23,7 @@ namespace Crashverse.Data
     public class LevelEntry
     {
         public string id; public int number; public string island; public string name; public string layout;
-        public string objective; public int shots; public float winThreshold; public string[] materials;
+        public string objective; public int shots; public float winThreshold = 0.85f; public string[] materials; // winThreshold: OQ-X1 per-level, default 0.85
         public string teaches; public MasteryGoal mastery; public SlotRule[] forced; public string[] lockedSlots;
         public string requires; public string bossId; public Reward[] reward;
         public float star3Pct = 0.60f; public float star2Pct = 0.30f; public int starCapIfPowerupUsed = 3; public float islandKillY = -2f; // SG-21
@@ -114,5 +114,5 @@ namespace Crashverse.Data
     [Serializable] public class StoreCatalog { public string[] allowedTypes; public StoreItem[] items; }
 
     /// <summary>Default shot tuning (designer data, not code).</summary>
-    [Serializable] public class WreckerTuning { public float defaultDamage = 60; public float launchSpeed = 28; public float projectileMass = 0.8f; public float projectileScale = 0.45f; public float splitSpreadDeg = 8; }
+    [Serializable] public class WreckerTuning { public float defaultDamage = 60; public float launchSpeed = 28; public float projectileMass = 0.8f; public float projectileScale = 0.45f; public float splitSpreadDeg = 8;  public float aimYawDegPerDp = 0.25f; public float aimPitchDegPerDp = 0.15f; }
 }

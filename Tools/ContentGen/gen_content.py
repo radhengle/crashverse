@@ -297,7 +297,7 @@ store = {"allowedTypes": ["currency_pack", "wrecker_skin", "paint", "decal", "tr
   {"sku": "s1_premium_track", "name": "Wrecking Frontier Premium Track (cosmetics)", "type": "season_pass", "cosmetic": True, "priceType": "real", "price": 499, "grants": "", "contents": []},
   {"sku": "bundle_harbor", "name": "Harbor Look Bundle", "type": "cosmetic_bundle", "cosmetic": True, "priceType": "gems", "price": 400, "grants": "", "contents": ["skin_brass_baron", "trail_confetti"]},
   {"sku": "emote_salute", "name": "Captain's Salute", "type": "emote", "cosmetic": True, "priceType": "gems", "price": 80, "grants": "", "contents": []}]}
-wrecker = {"defaultDamage": 60, "launchSpeed": 28, "projectileMass": 0.8, "projectileScale": 0.45, "splitSpreadDeg": 8}
+wrecker = {"defaultDamage": 60, "launchSpeed": 28, "projectileMass": 0.8, "projectileScale": 0.45, "splitSpreadDeg": 8, "aimYawDegPerDp": 0.25, "aimPitchDegPerDp": 0.15}
 for name, obj in [("wrecker", wrecker), ("store_catalog", store), ("chapter1", chapter), ("powerups", powerups), ("titan_templates", titan),
                   ("daily_rewards", daily), ("season_s1", season)]:
     with open(os.path.join(OUT, name + ".json"), "w") as f:
