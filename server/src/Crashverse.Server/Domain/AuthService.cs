@@ -62,8 +62,9 @@ public sealed class AuthService
 
     public async Task<AuthResponse> Guest(string deviceInstallId, string ageToken)
     {
-        var g = new ComplianceService(_x).VerifyAgeToken(ageToken);
         if (string.IsNullOrWhiteSpace(deviceInstallId) || deviceInstallId.Length > 128) throw new ApiError(400, "BAD_REQUEST", "deviceInstallId required");
+        var g = new ComplianceService(_x).VerifyAgeToken(ageToken, deviceInstallId);
+        await new ComplianceService(_x).ConsumeAgeToken(g);
         var a = await CreateAccount(deviceInstallId);
         await new ComplianceService(_x).ApplyAge(a, g); await _x.Db.Put("accounts", a.playerId, a);
         return await NewSession(a);
@@ -196,9 +197,10 @@ public sealed class AuthService
 
     public async Task<AuthResponse> SignIn(string provider, LinkCredential c, string device, string ageToken = null)
     {
-        var g = new ComplianceService(_x).VerifyAgeToken(ageToken);
+        var g = new ComplianceService(_x).VerifyAgeToken(ageToken, device);
         provider = Providers.Norm(provider ?? c?.provider);
         var id = await VerifyProvider(null, provider, c);
+        await new ComplianceService(_x).ConsumeAgeToken(g); // only after the provider token checked out
         var key = $"{provider}:{id.subject}";
         var existing = await _x.Db.Get<IdentityDoc>("identities", key);
         if (existing != null)

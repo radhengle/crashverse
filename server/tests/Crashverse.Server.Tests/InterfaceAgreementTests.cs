@@ -226,7 +226,7 @@ public class InterfaceAgreementTests
     public async Task AgeGate_Bands_AndConsentByCountry_NoAuth(int y, int m, string c, string band, bool consent)
     {
         await using var h = await Harness.Start();
-        var r = await h.Post("/v1/agegate", new { birthYear = y, birthMonth = m, country = c }, null);
+        var r = await h.Post("/v1/agegate", new { birthYear = y, birthMonth = m, country = c, deviceInstallId = "d" }, null);
         Assert.Equal(HttpStatusCode.OK, r.status);
         Assert.Equal(band, r["band"].GetString()); Assert.Equal(consent, r["requiresParentalConsent"].GetBoolean());
     }
@@ -235,12 +235,12 @@ public class InterfaceAgreementTests
     public async Task AgeGate_RejectsBadInput_StoresNothing_IsRateLimited()
     {
         await using var h = await Harness.Start(o => o.AuthPerMinute = 2);
-        Assert.Equal("BAD_REQUEST", (await h.Post("/v1/agegate", new { birthYear = 2010, birthMonth = 13, country = "US" }, null)).Code);
-        Assert.Equal("BAD_REQUEST", (await h.Post("/v1/agegate", new { birthYear = 2010, birthMonth = 1, country = "USA" }, null)).Code);
-        Assert.Equal("BAD_REQUEST", (await h.Post("/v1/agegate", new { birthYear = 2027, birthMonth = 1, country = "US" }, null)).Code);
+        Assert.Equal("BAD_REQUEST", (await h.Post("/v1/agegate", new { birthYear = 2010, birthMonth = 13, country = "US", deviceInstallId = "d" }, null)).Code);
+        Assert.Equal("BAD_REQUEST", (await h.Post("/v1/agegate", new { birthYear = 2010, birthMonth = 1, country = "USA", deviceInstallId = "d" }, null)).Code);
+        Assert.Equal("BAD_REQUEST", (await h.Post("/v1/agegate", new { birthYear = 2027, birthMonth = 1, country = "US", deviceInstallId = "d" }, null)).Code);
         Assert.Empty(await h.X.Db.List<AccountDoc>("accounts"));
         Assert.Empty(await h.X.Db.List<ConsentDoc>("consents"));
-        Resp last = null; for (int i = 0; i < 3; i++) last = await h.Post("/v1/agegate", new { birthYear = 2000, birthMonth = 1, country = "US" }, null);
+        Resp last = null; for (int i = 0; i < 3; i++) last = await h.Post("/v1/agegate", new { birthYear = 2000, birthMonth = 1, country = "US", deviceInstallId = "d" }, null);
         Assert.Equal(HttpStatusCode.TooManyRequests, last.status);
     }
 

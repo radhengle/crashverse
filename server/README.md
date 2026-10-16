@@ -123,6 +123,13 @@ All boolean flags are strict: only the exact string `true` turns them on (H2).
 
 Consent ages per market: `server/config/consent_ages.json` (**NEEDS LEGAL REVIEW**, `legalReviewed:false`). While unreviewed, unknown markets use 18. Gem grants: `server/config/economy_v1.json`.
 
+## Startup guards (Security re-review f3fc100)
+
+- **N1:** `DevContext` refuses to start when it finds a cloud runtime: `K_SERVICE`, `K_REVISION`, `K_CONFIGURATION`, `CLOUD_RUN_JOB`, `FUNCTION_TARGET`, `FUNCTION_NAME`, `GAE_SERVICE` or `GAE_APPLICATION` is set, or `GOOGLE_CLOUD_PROJECT`/`GCLOUD_PROJECT`/`GCP_PROJECT` is set without a loopback `FIRESTORE_EMULATOR_HOST`. After Kestrel starts, any listen address that isn't localhost or loopback stops the dev server.
+- **N2:** the purchase-binding secret (`purchase-binding-pepper`) and the deletion pepper (`deletion-pepper`) come from `ISecretProvider`. In prod that is Secret Manager, with `SECRET_MANAGER_PROJECT` read through the runtime service account. In dev the values are generated in-process. ProdGuard fails if either is missing.
+- **N3:** while holding a lease, every Firestore write runs in a transaction that re-reads the lease. It commits only if we still own it and it hasn't expired; otherwise it throws `LeaseLostException`.
+- **N4/N5:** `/v1/agegate` needs `deviceInstallId`. The age token is bound to that install and works once. Accounts without a stored band get 403 `AGE_GATE_REQUIRED` on restricted features until they call `POST /v1/account/agegate {ageToken}`.
+
 ## Jobs (Cloud Scheduler → OIDC push)
 
 | Job | What it does |

@@ -194,6 +194,33 @@ public interface ICaptchaVerifier { Task<bool> Verify(string token, string remot
 /// <summary>DEV/TEST: accepts "ok".</summary>
 [DevOnly] public sealed class FakeCaptchaVerifier : ICaptchaVerifier { public Task<bool> Verify(string t, string ip) => Task.FromResult(t == "ok"); }
 
+/// <summary>N2: server secrets. Prod: Google Secret Manager. Dev/test: values generated in-process (dev only; ProdGuard rejects it).</summary>
+public interface ISecretProvider { Task<byte[]> Get(string name); }
+public static class SecretNames { public const string PurchaseBinding = "purchase-binding-pepper", DeletionPepper = "deletion-pepper"; }
+
+[DevOnly] public sealed class DevSecretProvider : ISecretProvider
+{
+    readonly System.Collections.Concurrent.ConcurrentDictionary<string, byte[]> _v = new();
+    public Task<byte[]> Get(string name) => Task.FromResult(_v.GetOrAdd(name, _ => System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)));
+}
+
+/// <summary>Secret Manager (latest version) over REST with the runtime service account (ADC). Nothing is created or provisioned here.</summary>
+public sealed class SecretManagerSecretProvider : ISecretProvider
+{
+    readonly string _project; readonly HttpClient _http;
+    public SecretManagerSecretProvider(string project, HttpClient http = null) { _project = project; _http = http ?? new HttpClient(); }
+    public async Task<byte[]> Get(string name)
+    {
+        var cred = (await Google.Apis.Auth.OAuth2.GoogleCredential.GetApplicationDefaultAsync()).CreateScoped("https://www.googleapis.com/auth/cloud-platform");
+        var token = await ((Google.Apis.Auth.OAuth2.ITokenAccess)cred).GetAccessTokenForRequestAsync();
+        using var req = new HttpRequestMessage(HttpMethod.Get, $"https://secretmanager.googleapis.com/v1/projects/{Uri.EscapeDataString(_project)}/secrets/{Uri.EscapeDataString(name)}/versions/latest:access");
+        req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        using var res = await _http.SendAsync(req); res.EnsureSuccessStatusCode();
+        using var doc = System.Text.Json.JsonDocument.Parse(await res.Content.ReadAsStringAsync());
+        return Convert.FromBase64String(doc.RootElement.GetProperty("payload").GetProperty("data").GetString());
+    }
+}
+
 public interface IReplayWorker { Task<ReplayResult> Replay(RunRecordView run); bool Configured => false; }
 /// <summary>Replay contract (Physics PR #6): integer ticks at physicsHz (50). For tick t = 0, 1, …: first apply every InputEvent with
 /// tick == t in list order, then Physics.Simulate(1/physicsHz). `seed` is the attempt/run token seed (long), the client's RunContext.seed.</summary>

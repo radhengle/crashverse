@@ -132,17 +132,17 @@ public sealed class CampaignService
             }
             await _x.Db.Put("runs", runId, run);
             var rec = await Best(pid, lvl.id) ?? new LevelBestDoc { levelId = lvl.id };
-            if (score > rec.best) { rec.best = score; rec.runId = runId; rec.validated = false; }
+            int gain = Math.Max(0, score - rec.best);
+            if (score > rec.best && score > rec.provisionalBest) { rec.provisionalBest = score; rec.provisionalRunId = runId; } // BE-01: never touches the validated best
             await _x.Db.Put("campaignBest", pid + ":" + lvl.id, rec);
-            int total = await Total(pid);
+            int total = await Total(pid); // validated only; the board changes when replay validates
             var lb = new Leaderboards(_x);
-            await lb.Submit("campaign:c1_alltime", pid, total, runId, replace: true);
             var rs = new ReplayService(_x);
-            bool top = await lb.Position("campaign:c1_alltime", pid) <= _x.Opt.TopN;
+            bool top = await lb.WouldRank("campaign:c1_alltime", pid, total + gain) <= _x.Opt.TopN; // replay sampling uses the claimed total
             if (await rs.ShouldReplay(run, top || first && lvl.IsBoss)) await rs.Enqueue(runId, "campaign");
             prog.processedReports.Add(r.reportId);
             await _x.Db.Put("campaignProgress", pkey, prog);
-            return new CampaignSubmitResponseEx { accepted = true, message = "Campaign result synced (pending validation)", levelBest = rec.best, total = total, firstClear = first, validation = "pending", rewardDeferred = deferred, serverScoreBp = score };
+            return new CampaignSubmitResponseEx { accepted = true, message = "Campaign result synced (pending validation)", levelBest = rec.best, provisionalBest = rec.provisionalBest, total = total, firstClear = first, validation = "pending", rewardDeferred = deferred, serverScoreBp = score };
         });
     }
 
@@ -187,6 +187,7 @@ public sealed class CampaignService
             await _x.Db.Put("campaignProgress", run.playerId, prog);
             var rec = await Best(run.playerId, lvl.id) ?? new LevelBestDoc { levelId = lvl.id };
             if (score > rec.best) { rec.best = score; rec.runId = run.runId; rec.validated = true; }
+            if (rec.provisionalRunId == run.runId || rec.provisionalBest <= rec.best) { rec.provisionalBest = 0; rec.provisionalRunId = null; }
             await _x.Db.Put("campaignBest", run.playerId + ":" + lvl.id, rec);
             await new Leaderboards(_x).Submit("campaign:c1_alltime", run.playerId, await Total(run.playerId), run.runId, replace: true);
             return 0;
@@ -202,10 +203,11 @@ public sealed class CampaignService
         await _x.Db.Atomic("campaign:" + pid, async () =>
         {
             var rec = await Best(pid, run.key);
-            if (rec != null && rec.runId == run.runId)
+            if (rec != null && rec.provisionalRunId == run.runId)
             {
-                if (ok) { rec.best = run.finalScore; rec.validated = true; }
-                else { rec.best = 0; rec.runId = null; }
+                // BE-01: promote only if the replayed score beats the validated best; a failed replay leaves the validated best untouched.
+                if (ok && run.finalScore > rec.best) { rec.best = run.finalScore; rec.runId = run.runId; rec.validated = true; }
+                rec.provisionalBest = 0; rec.provisionalRunId = null;
                 await _x.Db.Put("campaignBest", pid + ":" + run.key, rec);
                 if (ok && run.campaign != null && _x.Content.Level(run.key) is { } lv0) await new EconomyService(_x).OnCampaignValidated(pid, lv0, run.campaign.won, run.campaign.shotsLeft);
                 await new Leaderboards(_x).Submit("campaign:c1_alltime", pid, await Total(pid), null, replace: true);
@@ -236,7 +238,7 @@ public sealed class CampaignService
     }
 
     async Task<LevelBestDoc> Best(string pid, string lvl) => await _x.Db.Get<LevelBestDoc>("campaignBest", pid + ":" + lvl);
-    public async Task<int> Total(string pid) => (await _x.Db.List<LevelBestDoc>("campaignBest", pid + ":")).Sum(b => b.best);
+    public async Task<int> Total(string pid) => (await _x.Db.List<LevelBestDoc>("campaignBest", pid + ":")).Where(b => b.validated).Sum(b => b.best); // BE-01
 
     /// <summary>Event stars (P4): attempt token + inputs; the server caps stars by what the shots used allow (StarRules).</summary>
     public async Task<SeasonState> EventStars(string pid, string eventLevelId, EventStarsRequest r)
@@ -248,7 +250,7 @@ public sealed class CampaignService
         int used = InputRules.Fires(r.inputs);
         if (used < 1 || used > lvl.shots) throw new ApiError(422, "RESULT_REJECTED", "input log does not match the level");
         var p = InputsPlausible(r.inputs, used); if (p != null) throw new ApiError(422, "RESULT_REJECTED", p);
-        int maxStars = Crashverse.Meta.StarRules.ComputeInt(true, lvl.shots - used, lvl.shots);
+        int maxStars = Crashverse.Meta.StarRules.Compute(true, lvl.shots - used, lvl.shots, lvl.star3Pct, lvl.star2Pct); // BE-02: per-level bands
         int stars = Math.Max(0, Math.Min(Math.Min(_x.Content.Season.eventStarCapPerLevel, maxStars), r.stars));
         var runId = Hash.NewId();
         await _x.Db.Put("runs", runId, new RunDoc { runId = runId, playerId = pid, mode = "event", key = lvl.id, seed = attempt.seed, simVersion = r.simVersion, eventStars = stars, finalScore = stars, clientScore = stars,

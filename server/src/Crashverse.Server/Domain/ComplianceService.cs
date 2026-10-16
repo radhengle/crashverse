@@ -50,7 +50,7 @@ public sealed class ComplianceService
 
     public int ConsentAgeFor(string country) => _x.ConsentAges.For(country);
 
-    public sealed class AgeGateReq { public int birthYear; public int birthMonth; public string country; }
+    public sealed class AgeGateReq { public int birthYear; public int birthMonth; public string country; public string deviceInstallId; }
 
     /// <summary>Unauthenticated (it runs before any account exists). Age is counted in whole months against server UTC "now";
     /// the birth day is not collected, so a player is treated as having their birthday at the end of the birth month (conservative).</summary>
@@ -66,7 +66,9 @@ public sealed class ComplianceService
         string band = age < 13 ? "under13" : age < 16 ? "13to15" : age < 18 ? "16to17" : "adult"; // PM decision on PR #1
         bool consent = age < 13 || age < ConsentAgeFor(country);
         // The date of birth is used only for this calculation and is never stored or put in the token (E3).
-        var tok = _x.Tokens.Issue("age", new System.Text.Json.Nodes.JsonObject { ["band"] = band, ["ctry"] = country, ["pc"] = consent }, TimeSpan.FromMinutes(30));
+        // N4: bound to the install (hash) and single use (jti consumed at account creation / sign-in / re-gate).
+        if (string.IsNullOrWhiteSpace(r.deviceInstallId) || r.deviceInstallId.Length > 128) throw new ApiError(400, "BAD_REQUEST", "deviceInstallId required");
+        var tok = _x.Tokens.Issue("age", new System.Text.Json.Nodes.JsonObject { ["band"] = band, ["ctry"] = country, ["pc"] = consent, ["ins"] = Hash.Sha256Hex(r.deviceInstallId), ["jti"] = Hash.NewId() }, TimeSpan.FromMinutes(30));
         return new AgeGateResponseEx { band = band, requiresParentalConsent = consent, ageToken = band == "under13" ? null : tok };
     }
 
@@ -76,13 +78,22 @@ public sealed class ComplianceService
     public static string MostRestrictive(string a, string b) => a == null ? b : b == null ? a : Array.IndexOf(BandOrder, a) <= Array.IndexOf(BandOrder, b) ? a : b;
 
     /// <summary>Verifies the signed age token from /agegate. Account creation requires it; under-13 is refused (E2).</summary>
-    public AgeGateDoc VerifyAgeToken(string token)
+    public AgeGateDoc VerifyAgeToken(string token, string deviceInstallId)
     {
         var c = string.IsNullOrEmpty(token) ? null : _x.Tokens.Verify("age", token, out _);
         if (c == null) throw new ApiError(403, "AGE_GATE_REQUIRED", "complete the age check first");
+        if (string.IsNullOrEmpty(deviceInstallId) || (string)c["ins"] != Hash.Sha256Hex(deviceInstallId)) throw new ApiError(403, "AGE_GATE_REQUIRED", "age check was done on another install"); // N4
         var band = (string)c["band"];
         if (band == "under13" || Array.IndexOf(BandOrder, band) < 0) throw new ApiError(403, "AGE_RESTRICTED", "CRASHVERSE isn't available");
-        return new AgeGateDoc { band = band, country = (string)c["ctry"], requiresParentalConsent = (bool)c["pc"], ts = _x.NowMs };
+        return new AgeGateDoc { band = band, country = (string)c["ctry"], requiresParentalConsent = (bool)c["pc"], ts = _x.NowMs, jti = (string)c["jti"], exp = (long)c["exp"] };
+    }
+
+    /// <summary>N4: single use. Call after the rest of the request has been validated, right before the band is applied.</summary>
+    public async Task ConsumeAgeToken(AgeGateDoc g)
+    {
+        if (string.IsNullOrEmpty(g.jti) || !await _x.Db.TryCreate("ageTokenUses", g.jti, new IdentityDoc { key = g.jti, linkedUnixMs = g.exp * 1000 }))
+            throw new ApiError(403, "AGE_TOKEN_USED", "this age check was already used; complete it again");
+        g.jti = null;
     }
 
     /// <summary>Applies an age result to an account, keeping the most restrictive band seen for the account and for the install.</summary>
@@ -104,7 +115,9 @@ public sealed class ComplianceService
     /// <summary>E5/E6 server enforcement. scope: link | name | friends | purchase.</summary>
     public static void Enforce(AccountDoc a, string scope, ConsentAgeTable table)
     {
-        if (a?.ageGate == null) return; // pre-age-gate legacy accounts are handled by the client re-gate
+        if (a == null) return;
+        // N5: fail closed. Accounts created before the age gate (no stored band) are treated as minors until they re-gate.
+        if (a.ageGate?.band == null) throw new ApiError(403, "AGE_GATE_REQUIRED", "complete the age check (POST /v1/account/agegate)");
         if (a.minorRestricted) throw new ApiError(403, "CONSENT_REQUIRED", "parental consent is required for this feature");
         if (scope == "purchase" && a.ageGate.band != "adult" && table.PurchaseAdultMarkets.Contains(a.ageGate.country ?? "") && a.ageGate.requiresParentalConsent == false)
             throw new ApiError(403, "AGE_RESTRICTED", "purchases need an adult account in this market");

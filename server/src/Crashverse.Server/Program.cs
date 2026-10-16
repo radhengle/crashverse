@@ -13,9 +13,12 @@ public static class ServerApp
     public static readonly JsonSerializerOptions Json = new() { IncludeFields = true };
 
     /// <summary>Default dev wiring: in-memory store (or Firestore emulator if CRASHVERSE_STORE=firestore), local ES256/HMAC keys, fakes for every external API.</summary>
-    public static Ctx DevContext(ServerOptions opt, IClock clock = null)
+    public static Ctx DevContext(ServerOptions opt, IClock clock = null, Func<string, string> env = null)
     {
         if (opt.Env == CrashverseEnv.Prod) throw new ProdStartupException("DevContext is dev/test only; CRASHVERSE_ENV is prod (or missing)");
+        DevGuard.CheckNotCloud(env ?? Environment.GetEnvironmentVariable); // N1
+        var secrets = new DevSecretProvider();
+        opt.ObfuscationPepper ??= secrets.Get(SecretNames.PurchaseBinding).Result; opt.DeletionPepper ??= secrets.Get(SecretNames.DeletionPepper).Result;
         clock ??= new SystemClock();
         IDocStore db = Environment.GetEnvironmentVariable("CRASHVERSE_STORE") == "firestore"
             ? new FirestoreDocStore(Environment.GetEnvironmentVariable("FIRESTORE_PROJECT") ?? "demo-crashverse") : new InMemoryDocStore();
@@ -29,7 +32,7 @@ public static class ServerApp
             Receipts = new ReceiptService(clock, "receipt-dev-1"),
             Nonces = new StoreNonceCache(db, clock), Limits = new StoreRateLimiter(db, clock),
             Integrity = new FakeIntegrityVerifier(), Google = new FakeGoogleVerifier(), Facebook = new FakeFacebookVerifier(), X = new FakeXClient(),
-            Email = new FakeEmailSender(), ConsentMailer = new FakeParentalConsentMailer(), ConsentAges = ConsentAgeTable.Load(opt.ConsentAgesPath ?? ConsentAgeTable.FindPath()), Economy = EconomyConfig.Load(opt.EconomyPath ?? ConsentAgeTable.FindPath("economy_v1.json")), Captcha = new FakeCaptchaVerifier(), Play = new FakePlayApi(), PushAuth = new FakePushAuthVerifier(), Replay = new StubReplayWorker(), Sampler = new SystemSampler()
+            Email = new FakeEmailSender(), ConsentMailer = new FakeParentalConsentMailer(), ConsentAges = ConsentAgeTable.Load(opt.ConsentAgesPath ?? ConsentAgeTable.FindPath()), Economy = EconomyConfig.Load(opt.EconomyPath ?? ConsentAgeTable.FindPath("economy_v1.json")), Captcha = new FakeCaptchaVerifier(), Secrets = secrets, Play = new FakePlayApi(), PushAuth = new FakePushAuthVerifier(), Replay = new StubReplayWorker(), Sampler = new SystemSampler()
         };
     }
 
@@ -39,7 +42,7 @@ public static class ServerApp
         public IDocStore Db; public IClock Clock; public Func<string, ISigner> Signer; public byte[] ReceiptMaster; public string ReceiptKid;
         public IIntegrityVerifier Integrity; public IPlayDeveloperApi Play; public IPushAuthVerifier PushAuth; public IGoogleTokenVerifier Google;
         public IFacebookTokenVerifier Facebook; public IXAuthClient X; public IEmailSender Email; public IParentalConsentMailer ConsentMailer;
-        public IReplayWorker Replay; public ICaptchaVerifier Captcha; public ISampler Sampler;
+        public IReplayWorker Replay; public ICaptchaVerifier Captcha; public ISampler Sampler; public ISecretProvider Secrets;
         public INonceCache Nonces; public IRateLimiter Limits;
 
         /// <summary>Builds what can be built from environment config. Store, KMS signer, Secret Manager receipt master, Play,
@@ -47,6 +50,7 @@ public static class ServerApp
         public static ProdAdapters FromEnvironment(Func<string, string> env)
         {
             var a = new ProdAdapters { Clock = new SystemClock(), Sampler = new SystemSampler() };
+            if (env("SECRET_MANAGER_PROJECT") is { Length: > 0 } sp) a.Secrets = new SecretManagerSecretProvider(sp);
             if (env("GOOGLE_OAUTH_CLIENT_ID") is { Length: > 0 } gid) a.Google = new GoogleIdTokenVerifier(gid);
             if (env("FACEBOOK_APP_ID") is { Length: > 0 } fid && env("FACEBOOK_APP_SECRET") is { Length: > 0 } fs) a.Facebook = new FacebookDebugTokenVerifier(new HttpClient(), fid, fs);
             if (env("INTERNAL_OIDC_AUDIENCE") is { Length: > 0 } aud && env("INTERNAL_OIDC_SERVICE_ACCOUNTS") is { Length: > 0 } sas)
@@ -66,8 +70,14 @@ public static class ServerApp
             Receipts = a.ReceiptMaster == null ? null : new ReceiptService(clock, a.ReceiptKid ?? "r1", a.ReceiptMaster),
             Nonces = a.Nonces ?? (a.Db == null ? null : new StoreNonceCache(a.Db, clock)), Limits = a.Limits ?? (a.Db == null ? null : new StoreRateLimiter(a.Db, clock)),
             Integrity = a.Integrity, Google = a.Google, Facebook = a.Facebook, X = a.X, Email = a.Email, ConsentMailer = a.ConsentMailer, Play = a.Play,
-            PushAuth = a.PushAuth, Replay = a.Replay, Sampler = a.Sampler ?? new SystemSampler(), Captcha = a.Captcha,
+            PushAuth = a.PushAuth, Replay = a.Replay, Sampler = a.Sampler ?? new SystemSampler(), Captcha = a.Captcha, Secrets = a.Secrets,
         };
+        if (a.Secrets != null)
+        {
+            try { opt.ObfuscationPepper = a.Secrets.Get(SecretNames.PurchaseBinding).GetAwaiter().GetResult(); } catch (Exception) { opt.ObfuscationPepper = null; }
+            try { opt.DeletionPepper = a.Secrets.Get(SecretNames.DeletionPepper).GetAwaiter().GetResult(); } catch (Exception) { opt.DeletionPepper = null; }
+        }
+        else { opt.ObfuscationPepper = null; opt.DeletionPepper = null; }
         ProdGuard.Validate(x); // before touching content/config files: fail fast with the full list
         opt.ContentRoot ??= FindContentRoot();
         x.Content = Content.Load(opt.ContentRoot);
@@ -228,6 +238,14 @@ public static class ServerApp
         Post("/account/delete", async (h, pid) => await auth.DeleteAccount(pid, (await Body<DeleteReq>(h))?.reauthToken));
         MP("/v1/account/delete/cancel", async h => Ok(await auth.CancelDelete(await Auth(x, auth, h, true, allowPendingDeletion: true))));
         Post("/account/keep-active", async (h, pid) => await auth.KeepActive(pid));
+        // N5: re-gate for accounts with no stored band (created before the age gate). The token must come from this account's install.
+        Post("/account/agegate", async (h, pid) => await x.Db.Atomic("account:" + pid, async () =>
+        {
+            var a = await auth.Account(pid); var c = new ComplianceService(x);
+            var g = c.VerifyAgeToken((await Body<AgeTokenReq>(h))?.ageToken, a.deviceInstallId);
+            await c.ConsumeAgeToken(g); await c.ApplyAge(a, g); await x.Db.Put("accounts", pid, a);
+            return (object)new AgeGateResponse { band = a.ageGate.band, requiresParentalConsent = a.ageGate.requiresParentalConsent };
+        }));
         Post("/profile/visibility", async (h, pid) => await auth.SetVisibility(pid, (await Body<VisibilityReq>(h))?.hideName ?? false));
 
         // ---- age gate (unauthenticated, strict IP limit) + parental consent ----
@@ -363,6 +381,8 @@ public static class ServerApp
     sealed class FriendReq { public string friendCode; }
 }
 
+public sealed class AgeTokenReq { public string ageToken; }
+
 public class Program
 {
     public static void Main(string[] args)
@@ -379,6 +399,12 @@ public class Program
         var ctx = opt.Env == CrashverseEnv.Prod ? ServerApp.ProdContext(opt, ServerApp.ProdAdapters.FromEnvironment(env)) : ServerApp.DevContext(opt);
         if (opt.RankedPublicBoardEnabled && !ctx.Replay.Configured) Console.Error.WriteLine("RANKED_PUBLIC_BOARD_ENABLED=true ignored: no replay worker configured (board stays closed)");
         var app = ServerApp.Build(ctx, args: args);
-        app.Run();
+        app.Start();
+        if (opt.Env != CrashverseEnv.Prod)
+        {
+            try { DevGuard.CheckLoopbackOnly(app.Urls); } // N1: actual bound addresses, after Kestrel resolved --urls/ASPNETCORE_URLS/config
+            catch { app.StopAsync().GetAwaiter().GetResult(); throw; }
+        }
+        app.WaitForShutdown();
     }
 }

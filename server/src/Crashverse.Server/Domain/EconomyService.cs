@@ -68,7 +68,7 @@ public sealed class EconomyService
     public async Task OnCampaignValidated(string pid, LevelEntry lvl, bool won, int shotsLeft)
     {
         if (!won) return;
-        int stars = Crashverse.Meta.StarRules.Compute(true, shotsLeft, lvl.shots);
+        int stars = Crashverse.Meta.StarRules.Compute(true, shotsLeft, lvl.shots, lvl.star3Pct, lvl.star2Pct);
         var key = pid + ":" + lvl.id;
         var rec = await _x.Db.Get<LevelBestDoc>("campaignBest", key);
         if (rec != null && stars > rec.stars) { rec.stars = stars; await _x.Db.Put("campaignBest", key, rec); }

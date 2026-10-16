@@ -20,7 +20,7 @@ public class PrDecisionsTests
     public async Task Bands_Under13_13to15_16to17_Adult(int y, int m, string c, string band, bool consent)
     {
         await using var h = await Harness.Start();
-        var r = await h.Post("/v1/agegate", new { birthYear = y, birthMonth = m, country = c }, null);
+        var r = await h.Post("/v1/agegate", new { birthYear = y, birthMonth = m, country = c, deviceInstallId = "d" }, null);
         Assert.Equal(band, r["band"].GetString()); Assert.Equal(consent, r["requiresParentalConsent"].GetBoolean());
     }
 
@@ -42,7 +42,7 @@ public class PrDecisionsTests
         var good = Path.Combine(dir, "c.json");
         File.WriteAllText(good, "{\"_status\":\"NEEDS LEGAL REVIEW\",\"default\":13,\"markets\":{\"US\":16}}");
         await using (var h = await Harness.Start(o => o.ConsentAgesPath = good))
-            Assert.True((await h.Post("/v1/agegate", new { birthYear = 2011, birthMonth = 1, country = "US" }, null))["requiresParentalConsent"].GetBoolean());
+            Assert.True((await h.Post("/v1/agegate", new { birthYear = 2011, birthMonth = 1, country = "US", deviceInstallId = "d" }, null))["requiresParentalConsent"].GetBoolean());
         var bad = Path.Combine(dir, "bad.json");
         File.WriteAllText(bad, "{\"default\":13,\"markets\":{\"US\":9}}");
         await Assert.ThrowsAsync<InvalidDataException>(() => Harness.Start(o => o.ConsentAgesPath = bad));

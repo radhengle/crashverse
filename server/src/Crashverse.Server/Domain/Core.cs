@@ -43,7 +43,7 @@ public sealed class Ctx
 {
     public IDocStore Db; public IClock Clock; public ServerOptions Opt; public Content Content; public TokenService Tokens; public ReceiptService Receipts;
     public INonceCache Nonces; public IRateLimiter Limits; public IIntegrityVerifier Integrity; public IGoogleTokenVerifier Google;
-    public IFacebookTokenVerifier Facebook; public IXAuthClient X; public IEmailSender Email; public IParentalConsentMailer ConsentMailer; public ConsentAgeTable ConsentAges; public EconomyConfig Economy; public ICaptchaVerifier Captcha; public IPlayDeveloperApi Play;
+    public IFacebookTokenVerifier Facebook; public IXAuthClient X; public IEmailSender Email; public IParentalConsentMailer ConsentMailer; public ConsentAgeTable ConsentAges; public EconomyConfig Economy; public ICaptchaVerifier Captcha; public ISecretProvider Secrets; public IPlayDeveloperApi Play;
     public IPushAuthVerifier PushAuth; public IReplayWorker Replay; public ISampler Sampler;
 
     public DateTime Now => Clock.UtcNow;

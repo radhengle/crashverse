@@ -66,6 +66,32 @@ public class FirestoreEmulatorTests
     }
 
     [EmulatorFact]
+    public async Task N3_LeaseLost_WritesCannotCommit()
+    {
+        var db = new FirestoreDocStore(Project);
+        var raw = new Google.Cloud.Firestore.FirestoreDbBuilder { ProjectId = Project, EmulatorDetection = Google.Api.Gax.EmulatorDetection.EmulatorOnly }.Build();
+        var key = "fence" + Guid.NewGuid().ToString("N"); var id = "n3/" + key;
+        // taken over by another instance mid-body → our write is refused
+        await Assert.ThrowsAsync<FirestoreDocStore.LeaseLostException>(() => db.Atomic(key, async () =>
+        {
+            await raw.Collection("_locks").Document(key).SetAsync(new Dictionary<string, object> { ["owner"] = "thief", ["expireAt"] = DateTime.UtcNow.AddSeconds(30) });
+            await db.Put("wallets", id, new WalletDoc { playerId = "late" }); return 0;
+        }));
+        Assert.Null(await db.Get<WalletDoc>("wallets", id));
+        // body outlives the TTL → refused even though nobody took the lease
+        var ttl = FirestoreDocStore.LeaseTtl; FirestoreDocStore.LeaseTtl = TimeSpan.FromSeconds(1);
+        try
+        {
+            await Assert.ThrowsAsync<FirestoreDocStore.LeaseLostException>(() => db.Atomic(key + "b", async () =>
+            { await Task.Delay(1500); return await db.TryCreate("wallets", id, new WalletDoc { playerId = "slow" }); }));
+        }
+        finally { FirestoreDocStore.LeaseTtl = ttl; }
+        Assert.Null(await db.Get<WalletDoc>("wallets", id));
+        Assert.Equal(1, await db.Atomic(key + "c", async () => { await db.Put("wallets", id, new WalletDoc { playerId = "ok" }); return 1; })); // normal path still works
+        Assert.Equal("ok", (await db.Get<WalletDoc>("wallets", id)).playerId);
+    }
+
+    [EmulatorFact]
     public async Task ServerRunsEndToEnd_OnFirestore()
     {
         // pass the Firestore store explicitly (no process-wide env var: other test classes run in parallel)

@@ -59,7 +59,7 @@ public class FollowUpTests
     {
         await using var h = await Harness.Start();
         Assert.Equal("AGE_GATE_REQUIRED", (await h.Post("/v1/auth/guest", new { deviceInstallId = "d1" }, null)).Code);
-        var u13 = await h.Post("/v1/agegate", new { birthYear = 2018, birthMonth = 1, country = "US" }, null);
+        var u13 = await h.Post("/v1/agegate", new { birthYear = 2018, birthMonth = 1, country = "US", deviceInstallId = "d" }, null);
         Assert.Equal("under13", u13["band"].GetString());
         Assert.False(u13.json.TryGetProperty("ageToken", out var at) && at.ValueKind == System.Text.Json.JsonValueKind.String);
         var s = await h.Guest();
@@ -73,7 +73,7 @@ public class FollowUpTests
     public async Task Minor_LimitsEnforcedOnServer()
     {
         await using var h = await Harness.Start();
-        var tok = await h.AgeToken(2011, 1, "NL"); // 15 in NL (consent age 16)
+        var tok = await h.AgeToken(2011, 1, "NL", device: "m1"); // 15 in NL (consent age 16)
         var r = await h.Post("/v1/auth/guest", new { deviceInstallId = "m1", ageToken = tok }, null);
         var s = new Session { access = r["accessToken"].GetString(), pid = r["account"].GetProperty("playerId").GetString() };
         Assert.True((await h.X.Db.Get<AccountDoc>("accounts", s.pid)).minorRestricted);

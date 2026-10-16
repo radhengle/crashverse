@@ -70,16 +70,17 @@ public sealed class Harness : IAsyncDisposable
 
     public async Task<Session> Guest(string device = null)
     {
-        var r = await Post("/v1/auth/guest", new { deviceInstallId = device ?? Guid.NewGuid().ToString("N"), ageToken = await AgeToken() }, null);
+        device ??= Guid.NewGuid().ToString("N");
+        var r = await Post("/v1/auth/guest", new { deviceInstallId = device, ageToken = await AgeToken(device: device) }, null);
         Assert.Equal(HttpStatusCode.OK, r.status);
         return new Session { pid = r["account"].GetProperty("playerId").GetString(), access = r["accessToken"].GetString(), refresh = r["refreshToken"].GetString(),
             friendCode = r["account"].GetProperty("friendCode").GetString() };
     }
 
     /// <summary>Passes the age gate (adult, US by default) and returns the signed age token account creation needs.</summary>
-    public async Task<string> AgeToken(int birthYear = 1990, int birthMonth = 1, string country = "US")
+    public async Task<string> AgeToken(int birthYear = 1990, int birthMonth = 1, string country = "US", string device = "d")
     {
-        var r = await Post("/v1/agegate", new { birthYear, birthMonth, country }, null);
+        var r = await Post("/v1/agegate", new { birthYear, birthMonth, country, deviceInstallId = device }, null);
         Assert.Equal(HttpStatusCode.OK, r.status);
         return r["ageToken"].GetString();
     }

@@ -316,10 +316,10 @@ public class H1_CampaignTests
         await using var h = await Harness.Start();
         var s = await h.Linked(); var viewer = await h.Linked();
         await h.ClearPrereqs(s, "c1_l10");
-        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 2, 7, 0.9f, 2), s);
+        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 3, 8, 0.9f, 2), s);
         Assert.True(r["firstClear"].GetBoolean());
         Assert.Equal(500, (await h.Wallet(s)).coins); // provisional first-clear reward (capped per day)
-        h.Replay.Fn = _ => new ReplayResult { won = true, shotsLeft = 2, destroyedRatio = 0.5f, bestCombo = 2 }; // far off
+        h.Replay.Fn = _ => new ReplayResult { won = true, shotsLeft = 3, destroyedRatio = 0.5f, bestCombo = 2 }; // far off
         await h.Job("/internal/jobs/replay");
         Assert.Equal(0, (await h.Wallet(s)).coins); // clawed back, floor at 0
         Assert.Equal(0, (await h.Get("/v1/leaderboards/3", viewer))["top"].GetArrayLength());
@@ -334,10 +334,10 @@ public class H1_CampaignTests
         await using var h = await Harness.Start(o => o.FirstClearDailyCap = 0);
         var s = await h.Guest();
         await h.ClearPrereqs(s, "c1_l10");
-        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 2, 7, 0.9f, 2), s);
+        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 3, 8, 0.9f, 2), s);
         Assert.True(r["rewardDeferred"].GetBoolean()); Assert.Equal(0, (await h.Wallet(s)).coins);
         await new ReplayService(h.X).Enqueue((await h.X.Db.List<RunDoc>("runs")).Single().runId, "test");
-        h.Replay.Fn = _ => new ReplayResult { won = true, shotsLeft = 2, destroyedRatio = 0.9f, bestCombo = 2 };
+        h.Replay.Fn = _ => new ReplayResult { won = true, shotsLeft = 3, destroyedRatio = 0.9f, bestCombo = 2 };
         await h.Job("/internal/jobs/replay");
         Assert.Equal(500, (await h.Wallet(s)).coins);
     }
@@ -348,7 +348,7 @@ public class H1_CampaignTests
         await using var h = await Harness.Start();
         var s = await h.Guest();
         var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l01", await h.Attempt(s, "c1_l01"), 1, 4, 0.95f, 3), s);
-        Assert.Equal(950 + 500 + 150, r["levelBest"].GetInt32());
+        Assert.Equal(950 + 500 + 150, r["provisionalBest"].GetInt32()); Assert.Equal(0, r["levelBest"].GetInt32()); // BE-01: validated best unchanged until replay
         await new ReplayService(h.X).Enqueue((await h.X.Db.List<RunDoc>("runs")).Single().runId, "test");
         h.Replay.Fn = _ => new ReplayResult { won = true, shotsLeft = 1, destroyedRatio = 0.94f, bestCombo = 2 };
         await h.Job("/internal/jobs/replay");

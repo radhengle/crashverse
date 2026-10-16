@@ -59,10 +59,10 @@
    ],
    "teaches": "Aim + fire, trajectory arc",
    "mastery": {
-    "type": "CLEAR_IN_SHOTS",
-    "value": 1,
+    "type": "DESTROYED_AT_LEAST",
+    "value": 0.95,
     "role": "",
-    "text": "Clear in 1 shot"
+    "text": ">=95% destroyed"
    },
    "forced": [],
    "lockedSlots": [],
@@ -73,9 +73,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "post0",
-   "hintYaw": 4,
-   "hintPitch": 22
+   "hintTarget": "post",
+   "hintYaw": 1.0,
+   "hintPitch": 11.0
   },
   {
    "id": "c1_l02",
@@ -94,7 +94,7 @@
     "type": "ROLE_BELOW_HEIGHT",
     "value": 0,
     "role": "tank",
-    "text": "Topple tank into sea (off the island)"
+    "text": "Topple the tank off the island edge"
    },
    "forced": [],
    "lockedSlots": [],
@@ -105,9 +105,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "stilt2",
-   "hintYaw": 3,
-   "hintPitch": 20
+   "hintTarget": "sill",
+   "hintYaw": 0.5,
+   "hintPitch": 9.5
   },
   {
    "id": "c1_l03",
@@ -139,8 +139,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "propL",
-   "hintYaw": -2,
-   "hintPitch": 18
+   "hintYaw": 3.0,
+   "hintPitch": 10.0
   },
   {
    "id": "c1_l04",
@@ -171,9 +171,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "cap",
-   "hintYaw": 2,
-   "hintPitch": 28
+   "hintTarget": "beamL",
+   "hintYaw": 2.5,
+   "hintPitch": 13.0
   },
   {
    "id": "c1_l05",
@@ -204,9 +204,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "pierL",
-   "hintYaw": -6,
-   "hintPitch": 16
+   "hintTarget": "bridge",
+   "hintYaw": 0.0,
+   "hintPitch": 12.5
   },
   {
    "id": "c1_l06",
@@ -237,9 +237,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "brace0",
-   "hintYaw": 0,
-   "hintPitch": 24
+   "hintTarget": "braceL",
+   "hintYaw": 2.0,
+   "hintPitch": 14.0
   },
   {
    "id": "c1_l07",
@@ -279,9 +279,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "ring0",
-   "hintYaw": 0,
-   "hintPitch": 24
+   "hintTarget": "scaffold",
+   "hintYaw": 3.0,
+   "hintPitch": 10.5
   },
   {
    "id": "c1_l08",
@@ -318,9 +318,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "joint",
-   "hintYaw": 0,
-   "hintPitch": 26
+   "hintTarget": "key1",
+   "hintYaw": 2.0,
+   "hintPitch": 15.0
   },
   {
    "id": "c1_l09",
@@ -353,8 +353,8 @@
    "starCapIfPowerupUsed": 2,
    "islandKillY": -2.0,
    "hintTarget": "lhRing",
-   "hintYaw": 0,
-   "hintPitch": 26
+   "hintYaw": -2.0,
+   "hintPitch": 12.5
   },
   {
    "id": "c1_l10",
@@ -363,7 +363,7 @@
    "name": "The Tidewarden",
    "layout": "c1_l10_tidewarden",
    "objective": "BOSS",
-   "shots": 7,
+   "shots": 8,
    "winThreshold": 0.85,
    "materials": [
     "wood",
@@ -372,10 +372,10 @@
    ],
    "teaches": "Boss phases + weak points",
    "mastery": {
-    "type": "SHOTS_LEFT_AT_LEAST",
-    "value": 3,
-    "role": "",
-    "text": "Defeat with 3 shots left"
+    "type": "NO_CLOSED_SHUTTER_HIT",
+    "value": 0,
+    "role": "shutter",
+    "text": "Defeat the Tidewarden without hitting the closed shutter"
    },
    "forced": [],
    "lockedSlots": [],
@@ -398,13 +398,13 @@
      "id": "gearstorm_city"
     }
    ],
-   "star3Pct": 0.6,
-   "star2Pct": 0.3,
+   "star3Pct": 0.375,
+   "star2Pct": 0.25,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "",
-   "hintYaw": 0,
-   "hintPitch": 0
+   "hintTarget": "shoulderL",
+   "hintYaw": 0.0,
+   "hintPitch": 19.5
   }
  ]
 }

@@ -30,6 +30,10 @@ public sealed class Leaderboards
     public async Task<List<BoardEntryDoc>> Entries(string boardKey) => (await _x.Db.List<BoardEntryDoc>("boards", boardKey + "|"))
         .OrderByDescending(e => e.score).ThenBy(e => e.reachedUnixMs).ToList();
 
+    /// <summary>Rank the player would have with this score (others strictly above + 1). Used for replay sampling of pending runs.</summary>
+    public async Task<int> WouldRank(string boardKey, string pid, int score) =>
+        (await Entries(boardKey)).Count(e => !e.shadow && e.playerId != pid && e.score >= score) + 1;
+
     /// <summary>Rank (1-based) of a player among non-shadow entries, or 0.</summary>
     public async Task<int> Position(string boardKey, string pid)
     {

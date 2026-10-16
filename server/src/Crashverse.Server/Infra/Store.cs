@@ -118,6 +118,27 @@ static class StoreJson
     }
 
     static string Esc(string id) => Uri.EscapeDataString(id);
+
+    /// <summary>N3 fencing: leases held by this async flow. Every write made while holding one runs in a transaction that re-reads the
+    /// lease and commits only if we still own it and it has not expired, so work that outlives LeaseTtl cannot commit after a takeover.</summary>
+    static readonly AsyncLocal<System.Collections.Immutable.ImmutableList<(DocumentReference lease, string owner)>> HeldLeases = new();
+    public sealed class LeaseLostException : InvalidOperationException { public LeaseLostException(string k) : base("lock lease lost before commit: " + k) { } }
+
+    async Task Fenced(Action<Transaction> write, Func<Transaction, Task> read = null)
+    {
+        var held = HeldLeases.Value;
+        if (held == null || held.IsEmpty) { await _db.RunTransactionAsync(async tx => { if (read != null) await read(tx); write(tx); return 0; }); return; }
+        await _db.RunTransactionAsync(async tx =>
+        {
+            foreach (var (lease, owner) in held)
+            {
+                var s = await tx.GetSnapshotAsync(lease);
+                if (!s.Exists || s.GetValue<string>("owner") != owner || s.GetValue<DateTime>("expireAt") <= DateTime.UtcNow) throw new LeaseLostException(lease.Id);
+            }
+            if (read != null) await read(tx);
+            write(tx); return 0;
+        });
+    }
     DocumentReference Ref(string c, string id) => _db.Collection(c).Document(Esc(id));
 
     public async Task<T> Get<T>(string collection, string id) where T : class
@@ -128,21 +149,25 @@ static class StoreJson
 
     public async Task<bool> TryCreate<T>(string collection, string id, T doc) where T : class
     {
-        try { await Ref(collection, id).CreateAsync(new Dictionary<string, object> { ["id"] = id, ["json"] = StoreJson.Ser(doc) }); return true; }
-        catch (Grpc.Core.RpcException e) when (e.StatusCode == Grpc.Core.StatusCode.AlreadyExists) { return false; }
+        var r = Ref(collection, id); bool exists = false;
+        await Fenced(tx => { if (!exists) tx.Create(r, new Dictionary<string, object> { ["id"] = id, ["json"] = StoreJson.Ser(doc) }); },
+            async tx => exists = (await tx.GetSnapshotAsync(r)).Exists);
+        return !exists;
     }
 
     public async Task Put<T>(string collection, string id, T doc) where T : class
     {
         if (Collections.AppendOnly.Contains(collection)) throw new AppendOnlyViolation(collection);
-        await Ref(collection, id).SetAsync(new Dictionary<string, object> { ["id"] = id, ["json"] = StoreJson.Ser(doc) });
+        var r = Ref(collection, id);
+        await Fenced(tx => tx.Set(r, new Dictionary<string, object> { ["id"] = id, ["json"] = StoreJson.Ser(doc) }));
     }
 
     public async Task<bool> Delete(string collection, string id)
     {
         if (Collections.AppendOnly.Contains(collection)) throw new AppendOnlyViolation(collection);
-        var r = Ref(collection, id); var s = await r.GetSnapshotAsync();
-        if (!s.Exists) return false; await r.DeleteAsync(); return true;
+        var r = Ref(collection, id); bool exists = false;
+        await Fenced(tx => { if (exists) tx.Delete(r); }, async tx => exists = (await tx.GetSnapshotAsync(r)).Exists);
+        return exists;
     }
 
     public async Task<List<T>> List<T>(string collection, string idPrefix = "") where T : class
@@ -160,8 +185,9 @@ static class StoreJson
     }
     public async Task<bool> LifecyclePurge(string collection, string id)
     {
-        var r = Ref(collection, id); var s = await r.GetSnapshotAsync();
-        if (!s.Exists) return false; await r.DeleteAsync(); return true;
+        var r = Ref(collection, id); bool exists = false;
+        await Fenced(tx => { if (exists) tx.Delete(r); }, async tx => exists = (await tx.GetSnapshotAsync(r)).Exists);
+        return exists;
     }
 
     /// <summary>Lease lifetime. Bodies are short (one player's read-modify-write); a crashed holder's lease expires and is taken over.</summary>
@@ -187,7 +213,8 @@ static class StoreJson
             if (i > 400) throw new TimeoutException("lock " + lockKey);
             await Task.Delay(10 + Random.Shared.Next(20));
         }
-        try { using (Reentrancy.Enter(lockKey)) return await body(); }
+        var prevLeases = HeldLeases.Value ?? System.Collections.Immutable.ImmutableList<(DocumentReference, string)>.Empty;
+        try { using (Reentrancy.Enter(lockKey)) { HeldLeases.Value = prevLeases.Add((lease, owner)); try { return await body(); } finally { HeldLeases.Value = prevLeases; } } }
         finally
         {
             await _db.RunTransactionAsync(async tx =>

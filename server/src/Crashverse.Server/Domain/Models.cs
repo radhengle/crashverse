@@ -46,7 +46,7 @@ public sealed class ServerOptions
     public int InputLogRetentionDays = 90;
     /// <summary>NEEDS LEGAL REVIEW: how long pseudonymised purchase rows are kept for tax (TAX_RETENTION_DAYS). Placeholder 8 years.</summary>
     public int TaxRetentionDays = 8 * 365;
-    public byte[] DeletionPepper = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32);                   // null = server/config/consent_ages.json (or CONSENT_AGES_PATH)
+    public byte[] DeletionPepper;      // N2: loaded from ISecretProvider ("deletion-pepper") by the context; never generated in prod                   // null = server/config/consent_ages.json (or CONSENT_AGES_PATH)
     /// <summary>ALLOW_CLIENT_RUN_SUMMARY: accept the client's won/ratio/shotsLeft/combo claims. Development only; elsewhere forced false
     /// and campaign results wait for the server replay.</summary>
     public bool AllowClientRunSummary = false;
@@ -71,7 +71,9 @@ public sealed class ServerOptions
         // CRASHVERSE_ENV gates the run summary too: never honoured in prod, even in "Development" ASP.NET environment.
         if (o.Env == CrashverseEnv.Prod) o.AllowClientRunSummary = false;
     }                   // break-glass admin header; null = admin endpoints disabled
-    public byte[] ObfuscationPepper = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32); public string ObfuscationPepperVersion = "p1";
+    /// <summary>N2: purchase-binding secret (obfuscatedAccountId HMAC key), loaded from ISecretProvider "purchase-binding-pepper": Secret Manager in prod,
+    /// a dev-generated value only in dev/test. Must be stable across restarts and instances in prod.</summary>
+    public byte[] ObfuscationPepper; public string ObfuscationPepperVersion = "p1";
 }
 
 public static class RefundPolicies { public const string GemDebt = "gemDebt"; public const string FloorAtZero = "floorAtZero"; }
@@ -96,7 +98,7 @@ public sealed class RankedCheckpointEx : RankedCheckpoint { public List<InputEve
 public sealed class RankedJournalEx { public string token; public bool final; public string simVersion; public List<RankedCheckpointEx> checkpoints = new(); }
 public sealed class CampaignRunReportEx : CampaignRunReport { public string attemptToken; public string simVersion; public List<InputEvent> inputs = new(); public int clientScoreBp; public string buildHash; }
 /// <summary>Also satisfies the agreed ScoreResponse {accepted, status, message, serverScoreBp}.</summary>
-public sealed class CampaignSubmitResponseEx : CampaignSubmitResponse { public string validation; public bool rewardDeferred; public string status; public int serverScoreBp; }
+public sealed class CampaignSubmitResponseEx : CampaignSubmitResponse { public int provisionalBest; public string validation; public bool rewardDeferred; public string status; public int serverScoreBp; }
 public sealed class LeaderboardEntryEx : LeaderboardEntry { public long submittedUnixMs; public bool provisional; }
 /// <summary>Same fields as BackendModels.LeaderboardPage, typed with the extended entry so the extra fields serialise.</summary>
 public sealed class LeaderboardPageEx
@@ -117,7 +119,7 @@ public sealed class AccountDoc
     public List<long> refundTimesUnixMs = new(); public string status = "active"; public long purgeAtUnixMs; public long lastActiveUnixMs; public bool hideName; public bool minorRestricted; public long deletionWarningAtUnixMs;
     public AgeGateDoc ageGate; public string friendCode; public string deviceInstallId;
 }
-public sealed class AgeGateDoc { public string band; public string country; public bool requiresParentalConsent; public long ts; }
+public sealed class AgeGateDoc { [System.Text.Json.Serialization.JsonIgnore] public string jti; [System.Text.Json.Serialization.JsonIgnore] public long exp; public string band; public string country; public bool requiresParentalConsent; public long ts; }
 public sealed class ConsentDoc { public string requestId; public string playerId; public string parentEmailHash; public string status = "none"; public long requestedUnixMs; public long decidedUnixMs; }
 public sealed class IdentityDoc { public string key; public string playerId; public long linkedUnixMs; }
 public sealed class EmailCredDoc { public string email; public string playerId; public string salt; public string hash; public int iterations; public bool verified; public string verifyCodeHash; public string resetCodeHash; public long resetExpUnixMs; }
@@ -157,7 +159,9 @@ public sealed class RunDoc
 }
 public sealed class ReplayResult_ { public int damageScore; public bool killed; public float destroyedRatio; public int bestCombo; public bool mastery; public bool won; public int shotsLeft; public int score; }
 public sealed class AttemptDoc { public string attemptId; public string playerId; public string mode; public string levelId; public string levelVersion; public long seed; public long expUnixMs; public bool used; }
-public sealed class LevelBestDoc { public string levelId; public int best; public string runId; public bool validated; public int stars; }
+/// <summary>BE-01: best/runId are the last *validated* best (the only value totals and boards use). A pending run's score lives in
+/// provisionalBest/provisionalRunId and never overwrites the validated best; replay promotes or drops it.</summary>
+public sealed class LevelBestDoc { public string levelId; public int best; public string runId; public bool validated; public int stars; public int provisionalBest; public string provisionalRunId; }
 public sealed class CampaignProgressDoc { public List<string> cleared = new(); public List<string> rewarded = new(); public Dictionary<string, int> firstClearsByDay = new(); public List<string> processedReports = new(); public Dictionary<string, string> reportResponses = new(); }
 public sealed class SeasonProgressDoc { public string seasonId; public int xp; public List<int> claimedFree = new(); public List<int> claimedPremium = new(); public Dictionary<string, int> eventBest = new(); public List<string> titanClearDays = new(); public bool endProcessed; public int titanXp; }
 public sealed class BoardEntryDoc
