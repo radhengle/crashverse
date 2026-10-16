@@ -38,9 +38,13 @@ namespace Crashverse.Tests.PlayMode
             AgeGateScreen.PendingDob = null;
             Time.timeScale = 1f;
             yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/Bootstrap.unity", LoadSceneMode.Single);
-            // AutoBootstrap's RuntimeInitializeOnLoad only fires for the first scene of the session.
-            if (UnityEngine.Object.FindObjectOfType<GameBootstrap>() == null) new GameObject("GameBootstrap").AddComponent<GameBootstrap>();
+            // Bootstrap.unity carries a GameBootstrap, which boots on every load. Spawning another one doubles the UI
+            // (two routers, two age gates) and taps land on the hidden copy, so only spawn if the scene really had none.
+            yield return null;
+            if (UnityEngine.Object.FindObjectsOfType<GameBootstrap>().Length == 0) new GameObject("GameBootstrap").AddComponent<GameBootstrap>();
             yield return WaitFor(() => AppServices.Router != null && AppServices.Router.Top is AgeGateScreen, "age gate shown");
+            Assert.AreEqual(1, UnityEngine.Object.FindObjectsOfType<UIRouter>().Length, "exactly one UI router");
+            Assert.AreEqual(1, UnityEngine.Object.FindObjectsOfType<EventSystem>().Length, "exactly one EventSystem");
             var module = EventSystem.current.GetComponent<StandaloneInputModule>();
             Assert.NotNull(module, "UI uses StandaloneInputModule (legacy Input Manager is the active handler)");
             _fake = EventSystem.current.gameObject.AddComponent<FakeTouchInput>();
