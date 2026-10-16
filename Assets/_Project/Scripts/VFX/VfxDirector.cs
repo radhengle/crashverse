@@ -34,6 +34,13 @@ namespace Crashverse.VFX
         ParticleBudget _budget; int _nextId; bool _physSeen; bool _builtRm; MotionSettings _motion;
 
         public int LiveCount => _live.Count;
+        /// <summary>Live particles across active effects (perf probe; O(live systems), call once per frame at most).</summary>
+        public int LiveParticleCount()
+        {
+            int n = 0;
+            foreach (var f in _live) if (f.Systems != null) foreach (var s in f.Systems) if (s != null) n += s.particleCount;
+            return n;
+        }
         public int BudgetUsed => _budget?.Used ?? 0;
         static bool Rm => MotionSettings.Current != null && MotionSettings.Current.ReduceMotion;
 
