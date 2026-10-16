@@ -9,6 +9,7 @@ Stacked on `vfx/v1-foundation` (PR #2), which holds the `Crashverse/GlossyPBR` s
 | `CrashverseImportPostprocessor.cs` | **The only** model and texture `AssetPostprocessor`: FBX settings, texture import with Android ASTC, material hookup, `attach_to` |
 | `MaterialWiring.cs` | Creates and wires `M_*` materials to GlossyPBR. Menu: **Crashverse ▸ Import ▸ Rewire Materials** |
 | `CrashversePrefabBuilder.cs` | Menus: **Build Prefabs (all / selected)** |
+| `Assets/_Project/Scripts/Import/ImportedPhysicsHints.cs` | Runtime **data-only** marker: `mass` (kg) and `breakForce` (N) from FBX user properties |
 | `CrashverseImportValidator.cs` | Menu: **Validation Report**. Writes `Logs/CrashverseImportReport.md` and never modifies assets |
 
 ## Ownership (one owner per concern)
@@ -19,7 +20,7 @@ Stacked on `vfx/v1-foundation` (PR #2), which holds the `Crashverse/GlossyPBR` s
 | Rigidbody, joints from `JNT_*`, mass and break forces, destruction components on fragments | Physics |
 | `Fragment` tag in TagManager, Low-tier `globalTextureMipmapLimit` in QualitySettings | Developer (ProjectSettings) |
 
-The 3D Modeler has a draft, `Assets/_Project/Editor/CrashverseModelPostprocessor.cs`, in its uncommitted models-v3 worktree. It covers texture type and sRGB, material wiring, and some FBX flags. This pipeline uses **the same rules** (paths, naming, External material location, `_InnerFace`, optional `_CrackMap`). While that class exists in the project, this pipeline **skips** texture type/sRGB and material wiring and logs one warning, so the two never fight. The proposal is to drop the draft once this PR merges, so that one postprocessor owns the whole concern.
+**PM decision (PR #28):** this pipeline is the **only** model and texture postprocessor owner. The 3D Modeler draft `CrashverseModelPostprocessor` is retired and the yield-to-draft branch is removed; its texture paths and material naming are kept.
 
 ## Folder and naming conventions
 ```
@@ -47,6 +48,7 @@ Assets/_Project/Prefabs/Models/<Folder>/<Asset>.prefab          built by menu
 | Off | blend shapes, cameras, lights, visibility, auto collider |
 | Materials | ImportStandard, External, BasedOnMaterialName, Local search |
 | `attach_to` user property | the object is reparented under the named object, keeping its world pose (models README) |
+| `mass_kg`, `break_force_N` user properties | stored on `ImportedPhysicsHints` (`mass`, `breakForce`) on that object as **authoring defaults**. Physics Developer owns the final values and their use; no physics logic is added |
 
 ## 2 · Materials and textures
 - Every `M_*` gets `Crashverse/GlossyPBR` with these maps: `T_<Asset>_A` to `_BaseMap`, `_N` to `_BumpMap`, `_ORM` to `_ORMMap`, `_E` to `_EmissionMap`, and `_Crack` to `_CrackMap` if present. `M_X_Emissive` and `M_X_Inner` read `T_X_*`.
@@ -76,7 +78,7 @@ Mipmaps and mip streaming are on, Read/Write is off, alpha is none, and aniso is
 | Kit / fractured | 0.20 | 0.08 | 0.015 |
 | Other | 0.25 | 0.10 | 0.02 |
 
-- **Colliders:** each `UCX_`/`_COL` hull becomes a **convex MeshCollider** on its target, or on a `COL_<Target>` child when the pivot differs, and the hull renderer object is removed. Fallbacks: a fragment without a hull gets a convex collider from its own mesh, and a model with no collider at all gets one root BoxCollider from the renderer bounds.
+- **Colliders:** each `UCX_`/`_COL` hull becomes a **convex MeshCollider** on its target, or on a `COL_<Target>` child when the pivot differs (**approved by PM**), and the hull renderer object is removed. Fallbacks: a fragment without a hull gets a convex collider from its own mesh, and a model with no collider at all gets one root BoxCollider from the renderer bounds.
 - **Sockets**, `JNT_*` and the other helpers are preserved with their transforms.
 - **Fragments** are flagged only by the `Fragment` tag, if it exists in TagManager; the `_frag_##` name stays the marker in any case. No Rigidbody, joint or destruction component is added.
 - Static classes get the static flags ContributeGI, BatchingStatic, OccludeeStatic and ReflectionProbeStatic.
@@ -89,15 +91,16 @@ Checks per model group:
 - Missing hulls
 - Missing A/N/ORM maps (errors; warnings for `_Inner`), `_E` for `_Emissive`, and `_InnerFace`
 - Texture import: NormalMap type, sRGB, and the Android ASTC override
-- Triangle budgets
+- Triangle budgets (table below)
 - Texel density hint
 
-| Budget (LOD0) | Value | Source |
+| Budget (LOD0 triangles, PM decision) | Value | Validator |
 |---|---|---|
-| Hero (Wrecker) | 12,000 total | v3 LP is about 11k. **v1 README said ≤3,000: PM to confirm** |
-| Environment (island) | 10,000 total | v1 said 2,500 before the v3 unique macro map: **confirm** |
-| Kit intact | 300 per mesh | models README |
-| Fragment | 300 per fragment | models README |
+| Hero (Wrecker) | **≤ 12,000** total | error above |
+| Environment (island) | **≤ 10,000** total | error above |
+| Kit piece (intact, and fractured total) | **500–1,500** | error above 1,500, warning below 500 |
+| Fragment | ≤ 300 per fragment | error above |
+| Other | ≤ 3,000 | error above |
 
 Texel density hint = sqrt(UV area × albedo w × h / world area) over the LOD0 meshes. Targets: Hero 180–360 px/m (≈256), Kit 128–256, Environment 16–256 (macro map). The check warns below 0.75× min or above 1.5× max.
 

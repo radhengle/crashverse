@@ -13,30 +13,14 @@ namespace Crashverse.EditorTools.Import
     /// Concerns owned here: FBX import settings, texture import + Android ASTC overrides, material creation/wiring to
     /// Crashverse/GlossyPBR, attach_to reparenting. Prefabs are built by the menu tool (CrashversePrefabBuilder), not on import.
     ///
-    /// Compatibility with the 3D Modeler draft (Crashverse.EditorTools.CrashverseModelPostprocessor, models-v3, uncommitted):
-    /// same texture paths (&lt;ModelDir&gt;/textures/T_&lt;Asset&gt;_*), same material naming, same External material location.
-    /// While that class is present in the project, the duplicated concerns (texture type/sRGB, material wiring) are skipped
-    /// here and a warning is logged once, so the two never fight. See vfx/IMPORT_PIPELINE.md "Ownership".
+    /// PM decision: this is the only postprocessor owner for these concerns (the 3D Modeler draft
+    /// CrashverseModelPostprocessor is retired; its texture paths and material naming are kept). See vfx/IMPORT_PIPELINE.md.
     /// </summary>
     public class CrashverseImportPostprocessor : AssetPostprocessor
     {
         // Run after any generic project postprocessors so these settings win.
         public override int GetPostprocessOrder() => 100;
-        public override uint GetVersion() => 1;
-
-        static bool? _draft;
-        internal static bool ModelerDraftPresent
-        {
-            get
-            {
-                if (_draft == null)
-                {
-                    _draft = AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetType("Crashverse.EditorTools.CrashverseModelPostprocessor", false) != null);
-                    if (_draft.Value) Debug.LogWarning("[CrashverseImport] 3D Modeler postprocessor draft found: material wiring + texture type are left to it. Remove the draft once vfx/import-pipeline merges (one owner per concern).");
-                }
-                return _draft.Value;
-            }
-        }
+        public override uint GetVersion() => 2;
 
         // ---------------- FBX ----------------
         void OnPreprocessModel()
@@ -77,7 +61,6 @@ namespace Crashverse.EditorTools.Import
             }
 
             // Materials: External M_*.mat beside the FBX, reused across LOD files (same as the 3D Modeler draft).
-            if (!ModelerDraftPresent)
             {
                 mi.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
                 mi.materialLocation = ModelImporterMaterialLocation.External;
@@ -88,21 +71,43 @@ namespace Crashverse.EditorTools.Import
 
         Material OnAssignMaterialModel(Material source, Renderer renderer)
         {
-            if (!C.InScope(assetPath) || ModelerDraftPresent) return null;
+            if (!C.InScope(assetPath)) return null;
             string dir = Path.GetDirectoryName(assetPath).Replace('\\', '/');
             return MaterialWiring.CreateOrWire(source.name, dir, source.shader);
         }
 
-        /// <summary>models README: objects with attach_to=&lt;Sibling&gt; are reparented keeping their world pose.</summary>
+        /// <summary>FBX user properties. attach_to=&lt;Object&gt; reparents keeping world pose (models README).
+        /// mass_kg / break_force_N are stored as authoring defaults on ImportedPhysicsHints (data only; Physics owns use).</summary>
         void OnPostprocessGameObjectWithUserProperties(GameObject go, string[] names, object[] values)
         {
             if (!C.InScope(assetPath)) return;
+            float mass = Num(names, values, "mass_kg"), brk = Num(names, values, "break_force_N");
+            if (mass > 0f || brk > 0f)
+            {
+                var h = go.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
+                if (h == null) h = go.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
+                h.mass = mass; h.breakForce = brk;
+            }
             int i = Array.IndexOf(names, "attach_to");
             if (i < 0 || !(values[i] is string target) || string.IsNullOrEmpty(target)) return;
             var root = go.transform.root;
             var parent = FindDeep(root, target);
             if (parent != null && parent != go.transform) go.transform.SetParent(parent, true);
             else Debug.LogWarning($"[CrashverseImport] {assetPath}: attach_to '{target}' not found for {go.name}");
+        }
+
+        static float Num(string[] names, object[] values, string key)
+        {
+            int i = Array.IndexOf(names, key);
+            if (i < 0 || values[i] == null) return 0f;
+            switch (values[i])
+            {
+                case float f: return f;
+                case double d: return (float)d;
+                case int n: return n;
+                case string str when float.TryParse(str, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v): return v;
+                default: return 0f;
+            }
         }
 
         internal static Transform FindDeep(Transform t, string name)
@@ -121,7 +126,6 @@ namespace Crashverse.EditorTools.Import
             var ti = (TextureImporter)assetImporter;
             var p = C.PolicyFor(stem, assetPath);
 
-            if (!ModelerDraftPresent)
             {
                 ti.textureType = p.normal ? TextureImporterType.NormalMap : TextureImporterType.Default;
                 ti.sRGBTexture = p.sRGB;
@@ -156,7 +160,6 @@ namespace Crashverse.EditorTools.Import
         /// <summary>Textures often land after the FBX; re-wire existing materials in the same model folder.</summary>
         static void OnPostprocessAllAssets(string[] imported, string[] deleted, string[] moved, string[] movedFrom)
         {
-            if (ModelerDraftPresent) return;
             var dirs = imported.Where(p => C.InScope(p) && p.EndsWith(".png", StringComparison.OrdinalIgnoreCase) && C.MapSuffix(C.FileStem(p)) != null)
                                .Select(p => Path.GetDirectoryName(Path.GetDirectoryName(p)).Replace('\\', '/')).Distinct().ToArray();
             foreach (var d in dirs) MaterialWiring.RewireFolder(d);

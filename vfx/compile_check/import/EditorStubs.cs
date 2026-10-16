@@ -6,6 +6,9 @@ namespace UnityEngine
         public static Object Instantiate(Object o) => o; public static Object Instantiate(Object o, Transform p) => o; public static void DestroyImmediate(Object o) { } }
     public class Component : Object { public GameObject gameObject; public Transform transform => null; public T GetComponent<T>() => default; }
     public class Behaviour : Component { }
+    public class MonoBehaviour : Behaviour { }
+    [AttributeUsage(AttributeTargets.Class)] public class DisallowMultipleComponent : Attribute { }
+    [AttributeUsage(AttributeTargets.Field)] public class TooltipAttribute : Attribute { public TooltipAttribute(string t) { } }
     public class GameObject : Object { public GameObject(string n) { } public Transform transform => null; public string tag;
         public T GetComponent<T>() => default; public T AddComponent<T>() where T : Component => default; public T[] GetComponentsInChildren<T>(bool inc) => null; }
     public class Transform : Component { public Vector3 position; public Quaternion rotation; public Vector3 localScale; public Vector3 lossyScale => default; public int childCount => 0;

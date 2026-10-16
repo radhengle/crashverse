@@ -62,18 +62,18 @@ namespace Crashverse.EditorTools.Import
                 bool anyHull = all.Any(t => C.ColliderTarget(t.name) != null);
                 if (!anyHull) Warn(baseName, "collider", cls == C.AssetClass.KitFractured ? "no UCX_ hulls: fragments fall back to convex own-mesh" : "no UCX_/_COL hull: BoxCollider fallback");
 
-                // Triangles (LOD0 renderers only, excluding hulls)
+                // Triangles (LOD0 renderers only, excluding hulls). Budgets: CrashverseImportConventions (PM decision).
                 int total = 0;
                 foreach (var mf in go.GetComponentsInChildren<MeshFilter>(true))
                 {
                     if (mf.sharedMesh == null || C.ColliderTarget(mf.name) != null || C.LodLevel(mf.name, out _) > 0) continue;
                     int tris = Tris(mf.sharedMesh); total += tris;
                     if (C.IsFragment(mf.name) && tris > C.FragmentTriBudget) Err(baseName, "tris", $"{mf.name} {tris} > {C.FragmentTriBudget} per fragment");
-                    else if (cls == C.AssetClass.Kit && tris > C.TriBudget(cls, baseName)) Err(baseName, "tris", $"{mf.name} {tris} > {C.TriBudget(cls, baseName)}");
                 }
-                int budget = C.TriBudget(cls, baseName);
-                if (cls != C.AssetClass.KitFractured && cls != C.AssetClass.Kit && total > budget) Err(baseName, "tris", $"LOD0 total {total} > {budget}");
-                sb.Append($"| info | {baseName} | tris | LOD0 {total} (budget {(cls == C.AssetClass.KitFractured ? C.FragmentTriBudget + "/frag" : budget.ToString())}), LOD files: {string.Join(",", files.Keys.OrderBy(k => k))} |\n");
+                int budget = C.TriBudget(cls, baseName), min = C.TriMin(cls);
+                if (total > budget) Err(baseName, "tris", $"LOD0 total {total} > {budget}");
+                else if (total < min) Warn(baseName, "tris", $"LOD0 total {total} < {min} (kit pieces 500-1.5k)");
+                sb.Append($"| info | {baseName} | tris | LOD0 {total} (budget {(min > 0 ? min + "-" : "<=")}{budget}), LOD files: {string.Join(",", files.Keys.OrderBy(k => k))} |\n");
 
                 // Materials + maps
                 var mats = go.GetComponentsInChildren<Renderer>(true).SelectMany(r => r.sharedMaterials).Where(m => m != null).Distinct().ToArray();

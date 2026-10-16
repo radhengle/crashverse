@@ -136,19 +136,20 @@ namespace Crashverse.EditorTools.Import
         }
 
         // ---------- budgets ----------
-        /// <summary>LOD0 triangle budget per prefab (models README v1 table; Wrecker v3 hero build is ~11k LP, pending PM sign-off).</summary>
+        /// <summary>LOD0 triangle budgets (PM decision, PR #28): Wrecker &lt;= 12k, island &lt;= 10k, kit pieces 500-1.5k.
+        /// Kit range applies to each intact piece and to each fractured piece's total; fragments keep &lt;= 300 each.</summary>
+        public const int HeroTriMax = 12000, EnvTriMax = 10000, KitTriMin = 500, KitTriMax = 1500, FragmentTriBudget = 300, OtherTriMax = 3000;
         public static int TriBudget(AssetClass c, string stem)
         {
             switch (c)
             {
-                case AssetClass.Hero: return 12000;
-                case AssetClass.Environment: return 2500 * 4;   // v3 island with unique macro map; v1 budget was 2,500
-                case AssetClass.Kit: return 300;
-                case AssetClass.KitFractured: return 300;       // per fragment, checked per renderer
-                default: return 3000;
+                case AssetClass.Hero: return HeroTriMax;
+                case AssetClass.Environment: return EnvTriMax;
+                case AssetClass.Kit: case AssetClass.KitFractured: return KitTriMax;
+                default: return OtherTriMax;
             }
         }
-        public static int FragmentTriBudget = 300;
+        public static int TriMin(AssetClass c) => c == AssetClass.Kit || c == AssetClass.KitFractured ? KitTriMin : 0;
 
         /// <summary>Texel density target band in px/m (spec section 4b).</summary>
         public static void TexelTarget(AssetClass c, out float min, out float max)
