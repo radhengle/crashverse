@@ -14,6 +14,7 @@
     <Compile Include="../../Assets/_Project/Scripts/Destruction/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Weapons/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Level/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Gameplay/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/UI/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Perf/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Data/**/*.cs" />
