@@ -31,7 +31,7 @@ jobs:
           haskell: true
           large-packages: true
           docker-images: false
-          swap-storage: false
+          swap-storage: true   # was false; rule out OOM (exit 139 in run 38945007534)
 
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -50,11 +50,14 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: Library
-          key: Library-EditMode-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-v2-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-EditMode-
+            Library-v2-
 
-      - name: EditMode tests
+      - name: Prepare log dir
+        run: mkdir -p unity-logs
+
+      - name: EditMode tests (-nographics)
         id: tests
         uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1 (docker-based; v4.3.2 needs an unauthenticated CLI download that 403s)
         env:
@@ -64,13 +67,45 @@ jobs:
         with:
           unityVersion: 2022.3.50f1
           testMode: editmode
-          artifactsPath: test-results
+          artifactsPath: test-results/editmode
+          customParameters: -nographics -logFile /github/workspace/unity-logs/Editor-editmode.log
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: EditMode test results
 
-      - name: Guard - fail on 0 tests / skipped / inconclusive / failed
+      - name: Guard EditMode - fail on 0 tests / skipped / inconclusive / failed
         if: always() && steps.tests.outcome != 'skipped'
-        run: python3 qa/ci/assert_unity_results.py test-results
+        run: python3 qa/ci/assert_unity_results.py test-results/editmode
+
+      # PlayMode runs as its own step (separate editor process) so a PlayMode crash can't zero out EditMode results.
+      # Enabled once PlayMode tests exist (Assets/**/Tests/PlayMode/); then its guard requires >0 PlayMode tests.
+      - name: PlayMode tests
+        id: playmode
+        if: always() && hashFiles('Assets/**/Tests/PlayMode/**') != ''
+        uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.50f1
+          testMode: playmode
+          artifactsPath: test-results/playmode
+          customParameters: -logFile /github/workspace/unity-logs/Editor-playmode.log
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: PlayMode test results
+
+      - name: Guard PlayMode - fail on 0 tests / skipped / inconclusive / failed
+        if: always() && steps.playmode.outcome != 'skipped'
+        run: python3 qa/ci/assert_unity_results.py test-results/playmode --require-playmode
+
+      - name: Upload Editor.log on failure
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: unity-editor-logs
+          path: unity-logs
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Upload test results
         if: always()
@@ -78,5 +113,5 @@ jobs:
         with:
           name: editmode-test-results
           path: test-results
-          if-no-files-found: ignore
+          if-no-files-found: warn
           retention-days: 14
