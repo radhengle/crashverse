@@ -54,3 +54,7 @@ Surveyed from the local checkout `/workspace/crashverse` (branch `vfx/v1-foundat
 - Tasks 1-3 (fixed-step lock, SimRunner, seeded RNG) plus deterministic DebrisPool: branch `physics/fixed-step-lock`.
 - `Crashverse.Rules` asmdef (WinRule, StarRules): branch `physics/rules-asmdef`.
 - Sim code uses namespace `Crashverse.Sim`, not `Crashverse.Physics`. That name would shadow `UnityEngine.Physics` inside every `Crashverse.*` namespace.
+- Debris and determinism (PR #6 review):
+  - Debris is not purely visual. Chunks sit on the fixed `Debris` layer (9) and collide with pieces (Default/Structure) and with each other, never with projectiles. `SimLayers.ApplyRankedMatrix` re-applies these rows of the matrix at the start of every ranked run.
+  - In ranked runs the colliding debris cap is a single tier-independent `DebrisRules.RankedSimCap = 60` (the Mid baseline), and chunk counts use the Mid tier. Tier caps of 25/60/90 apply only outside ranked play.
+  - At every `SimRunner.BeginRun` (fresh start and Retry, tracked by `RunId` and `RunStarted`), DebrisPool recycles everything, rebuilds the free list in creation order, and re-seeds from `DebrisRules.RngSeed(RunContext.seed)`.
