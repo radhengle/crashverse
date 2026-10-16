@@ -55,6 +55,10 @@ def check_config():
         bad.append("ProjectSettings: AndroidTargetArchitectures must be 3 (ARMv7 | ARM64)")
     if not re.search(r"scriptingBackend:\s*\n\s*Android:\s*1", ps_text()):
         bad.append("ProjectSettings: Android scripting backend must be IL2CPP (1)")
+    # BUG-24: IL2CPP engine stripping removed BoxCollider/SphereCollider (only added via CreatePrimitive).
+    lx = ROOT / "Assets/link.xml"
+    if not lx.exists() or not re.search(r'<assembly\s+fullname="UnityEngine\.PhysicsModule"\s+preserve="all"', lx.read_text()):
+        bad.append("Assets/link.xml must preserve UnityEngine.PhysicsModule (BUG-24: colliders stripped from the player)")
     return bad
 
 def ps_text(): return (ROOT / "ProjectSettings/ProjectSettings.asset").read_text()
