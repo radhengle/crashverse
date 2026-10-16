@@ -85,3 +85,38 @@ namespace Crashverse.Sim.Tests
         }
     }
 }
+
+namespace Crashverse.Sim.Tests
+{
+    public class DebrisRulesTests
+    {
+        [Test] public void RetryReseed_GivesSameSequence()
+        {
+            const long runSeed = 987654321012L;
+            var fresh = new SimRng(DebrisRules.RngSeed(runSeed));
+            var first = new ulong[64];
+            for (int i = 0; i < first.Length; i++) first[i] = fresh.NextULong();
+            // Retry: same run seed, reseeded regardless of how many draws or ticks happened before.
+            var retry = new SimRng(DebrisRules.RngSeed(runSeed));
+            for (int i = 0; i < first.Length; i++) Assert.AreEqual(first[i], retry.NextULong());
+        }
+
+        [Test] public void DebrisStream_DiffersFromMainStream()
+        {
+            Assert.AreNotEqual(new SimRng(5).NextULong(), new SimRng(DebrisRules.RngSeed(5)).NextULong());
+        }
+
+        [Test] public void RankedCap_SameAcrossTiers()
+        {
+            foreach (int tierCap in new[] { 25, 60, 90 })
+                Assert.AreEqual(DebrisRules.RankedSimCap, DebrisRules.SimCap(true, tierCap));
+            Assert.AreEqual(60, DebrisRules.RankedSimCap);
+        }
+
+        [Test] public void NonRanked_UsesTierCap()
+        {
+            Assert.AreEqual(25, DebrisRules.SimCap(false, 25));
+            Assert.AreEqual(90, DebrisRules.SimCap(false, 90));
+        }
+    }
+}
