@@ -27,6 +27,9 @@ namespace Crashverse.Sim
         public event Action<int, InputEvent> InputApplied;
         /// <summary>Called once per tick after inputs, before Physics.Simulate.</summary>
         public event Action<int> Ticked;
+        /// <summary>Called once per tick after Physics.Simulate (collision callbacks for this tick have run). Used to flush
+        /// ImpactEvents in deterministic order. Presentation listeners must never write back into the sim.</summary>
+        public event Action<int> Stepped;
 
         readonly TickInputQueue<InputEvent> _inputs = new TickInputQueue<InputEvent>();
         SimulationMode _prevMode = SimulationMode.FixedUpdate;
@@ -55,6 +58,7 @@ namespace Crashverse.Sim
         public void BeginRun(long seed, bool ranked)
         {
             Seed = seed; Ranked = ranked; Tick = 0; Running = true;
+            if (ImpactEventEmitter.Instance != null) ImpactEventEmitter.Instance.ResetRun();
             Rng = new SimRng(seed);
             _inputs.Clear();
             Time.fixedDeltaTime = Step;
@@ -78,6 +82,7 @@ namespace Crashverse.Sim
             _inputs.Drain(t, (tick, e) => InputApplied?.Invoke(tick, e));
             Ticked?.Invoke(t);
             if (Ranked) Physics.Simulate(Step);
+            Stepped?.Invoke(t);
             Tick = t + 1;
         }
 
