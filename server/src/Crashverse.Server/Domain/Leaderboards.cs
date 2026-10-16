@@ -20,7 +20,7 @@ public sealed class Leaderboards
         var e = await _x.Db.Get<BoardEntryDoc>("boards", Id(boardKey, pid)) ?? new BoardEntryDoc { boardKey = boardKey, playerId = pid, score = -1 };
         if (e.score < 0) { e.score = score; e.reachedUnixMs = _x.NowMs; }
         else if (score > e.score) { e.score = score; e.reachedUnixMs = _x.NowMs; }
-        else if (replace && score < e.score) e.score = score;
+        else if (replace && score < e.score) { e.score = score; e.reachedUnixMs = _x.NowMs; } // BE-06 (GD, Spec_Gap_Answers_v1): a drop resets the tie-break to the recalculation time
         e.guestAtSubmit = a?.isGuest ?? true;
         if (runId != null && !e.pendingRuns.Contains(runId)) e.pendingRuns.Add(runId);
         await _x.Db.Put("boards", Id(boardKey, pid), e);
@@ -50,7 +50,7 @@ public sealed class Leaderboards
                 var e = await _x.Db.Get<BoardEntryDoc>("boards", Id(key, run.playerId));
                 if (e == null) return 0;
                 e.pendingRuns.Remove(run.runId);
-                if (passed) { e.hasValidated = true; if (correctedScore.HasValue && key.StartsWith("titan:") && correctedScore < e.score) e.score = correctedScore.Value; }
+                if (passed) { e.hasValidated = true; if (correctedScore.HasValue && key.StartsWith("titan:") && correctedScore < e.score) { e.score = correctedScore.Value; e.reachedUnixMs = _x.NowMs; } } /* BE-06 */
                 else
                 {
                     e.shadow = true; // no auto-ban (S1): reviewed by a human

@@ -216,4 +216,26 @@ public class ReReviewTests
         Assert.Equal(before, (await h.X.Db.List<BoardEntryDoc>("boards")).Single(e => e.playerId == a.pid).reachedUnixMs);
         Assert.Equal(a.pid, (await lb.Entries(B)).First().playerId); // earlier timestamp wins the tie
     }
+
+    // ---------------- BE-06 (GD ruling) ----------------
+    [Fact]
+    public async Task BE06_TotalDrop_ResetsTieTimestamp_RiseUpdatesIt()
+    {
+        await using var h = await Harness.Start();
+        var lb = new Leaderboards(h.X); const string B = "campaign:c1_alltime";
+        var a = await h.Guest(); var b = await h.Guest();
+        await lb.Submit(B, a.pid, 1000, null, replace: true);
+        h.Advance(TimeSpan.FromMinutes(5));
+        await lb.Submit(B, b.pid, 900, null, replace: true);
+        h.Advance(TimeSpan.FromMinutes(5));
+        long t0 = h.X.NowMs;
+        await lb.Submit(B, a.pid, 900, null, replace: true); // drop (refund/invalidation recalculation)
+        var ea = (await h.X.Db.List<BoardEntryDoc>("boards")).Single(e => e.playerId == a.pid);
+        Assert.Equal(900, ea.score); Assert.Equal(t0, ea.reachedUnixMs);
+        Assert.Equal(b.pid, (await lb.Entries(B)).First().playerId); // b reached 900 earlier
+        h.Advance(TimeSpan.FromMinutes(5));
+        long t1 = h.X.NowMs;
+        await lb.Submit(B, a.pid, 1200, null, replace: true);
+        Assert.Equal(t1, (await h.X.Db.List<BoardEntryDoc>("boards")).Single(e => e.playerId == a.pid).reachedUnixMs);
+    }
 }
