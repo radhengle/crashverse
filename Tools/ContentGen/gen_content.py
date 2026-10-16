@@ -5,6 +5,11 @@ Output: Assets/_Project/Resources/Data/**.json (loaded via Resources at runtime)
 import json, os
 OUT = os.path.join(os.path.dirname(__file__), "../../Assets/_Project/Resources/Data")
 LAY = os.path.join(OUT, "Layouts")
+# Level Designer owns Chapter 1 (levels/ch1, branch level-designer/ch1-levels). When that folder exists this script never
+# writes chapter1.json or any Ch1 layout; Ch1 data comes only from the Level Designer's pipeline.
+LD_CH1 = os.path.join(os.path.dirname(__file__), "../../levels/ch1")
+LD_OWNS_CH1 = os.path.isdir(LD_CH1)
+LD_LAYOUTS = set(os.path.splitext(f)[0] for f in os.listdir(os.path.join(LD_CH1, "layouts"))) if os.path.isdir(os.path.join(LD_CH1, "layouts")) else set()
 os.makedirs(LAY, exist_ok=True)
 
 def B(id, mat, p, s, sup=(), joint=False, role="", nonObj=False, color="", explosive=False,
@@ -17,6 +22,8 @@ def B(id, mat, p, s, sup=(), joint=False, role="", nonObj=False, color="", explo
     return b
 
 def save_layout(id, blocks):
+    if LD_OWNS_CH1 and (id in LD_LAYOUTS or id.startswith("c1_") or id == "m1_clockwork_tower"):
+        return  # Level Designer's file: never overwritten
     ids = {b["id"] for b in blocks}
     for b in blocks:
         for s in b["sup"]:
@@ -300,6 +307,11 @@ store = {"allowedTypes": ["currency_pack", "wrecker_skin", "paint", "decal", "tr
 wrecker = {"defaultDamage": 60, "launchSpeed": 28, "projectileMass": 0.8, "projectileScale": 0.45, "splitSpreadDeg": 8, "aimYawDegPerDp": 0.25, "aimPitchDegPerDp": 0.15}
 for name, obj in [("wrecker", wrecker), ("store_catalog", store), ("chapter1", chapter), ("powerups", powerups), ("titan_templates", titan),
                   ("daily_rewards", daily), ("season_s1", season)]:
+    if name == "chapter1" and LD_OWNS_CH1:
+        continue  # Level Designer's file: never overwritten
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(obj, f, indent=1)
-print("content generated")
+# Hint angles are always derived from the target pieces (never the hand-typed HINTS above).
+import subprocess, sys
+subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), "derive_hints.py")] + (["--season-only"] if LD_OWNS_CH1 else []), check=True)
+print("content generated" + (" (Ch1 skipped: owned by levels/ch1)" if LD_OWNS_CH1 else ""))
