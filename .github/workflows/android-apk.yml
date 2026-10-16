@@ -77,6 +77,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           lfs: false
+          fetch-depth: 0 # full history: GameCI never needs to `git fetch` (credentials are not persisted)
           persist-credentials: false
 
       - name: Cache Library
@@ -100,6 +101,9 @@ jobs:
           buildName: CRASHVERSE
           buildsPath: build
           buildMethod: Crashverse.EditorTools.BuildScript.BuildAndroid
+          versioning: Custom # no git-derived versioning (it ran `git fetch`, which fails without persisted credentials)
+          version: 0.1.${{ github.run_number }}
+          androidVersionCode: ${{ github.run_number }}
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
