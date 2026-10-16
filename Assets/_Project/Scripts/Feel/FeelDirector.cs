@@ -42,16 +42,18 @@ namespace Crashverse.Feel
         readonly WreckerAnimStateMachine _wrecker = new WreckerAnimStateMachine();
         readonly CameraStateMachine _camSm = new CameraStateMachine();
         readonly ShakeStack _shake = new ShakeStack();
+        ShakeDispatcher _dispatch; static IHaptics _haptics; // one vibrator wrapper per app
+        static readonly System.Func<int> FrameFn = () => Time.frameCount; static readonly System.Func<float> NowFn = () => Time.unscaledTime * 1000f;
         readonly TimeScaleGovernor _time = new TimeScaleGovernor();
         TitanAnimStateMachine _titan;
-        float _seed, _noisePhase; int _lastTitanDmg, _impactShakeFrame = -1;
+        float _seed, _noisePhase; int _lastTitanDmg;
 
         public void Bind(GameSession s, OrbitCamera cam, AimController aim)
         {
             _s = s; _cam = cam; _aim = aim;
             _barrel = aim != null ? aim.pitchPivot : null; if (_barrel != null) _barrelRest = _barrel.localPosition;
             var m = MotionSettings.Current;
-            _wrecker.Settings = m; _camSm.Settings = m; _time.Settings = m;
+            _wrecker.Settings = m; _camSm.Settings = m; _time.Settings = m; Dispatch.Settings = m;
             _titan = s.Ctx != null && s.Ctx.titan != null ? new TitanAnimStateMachine(s.Ctx.titan.maxDamageScore) : null;
             _seed = Random.value * 100f;
         }
@@ -70,17 +72,27 @@ namespace Crashverse.Feel
             }
         }
 
-        void OnEnable() { AnimEventBus.Raised += OnEvent; Projectile.FirstImpact += OnImpact; CameraShake.Bind(_shake); }
-        void OnDisable() { AnimEventBus.Raised -= OnEvent; Projectile.FirstImpact -= OnImpact; CameraShake.Unbind(_shake); _shake.Clear(); Time.timeScale = 1f; }
+        ShakeDispatcher Dispatch
+        {
+            get
+            {
+                if (_dispatch == null)
+                {
+                    if (_haptics == null) _haptics = Application.platform == RuntimePlatform.Android ? (IHaptics)new AndroidHaptics() : NullHaptics.Instance;
+                    _dispatch = new ShakeDispatcher(_shake) { Haptics = _haptics, Settings = MotionSettings.Current };
+                }
+                return _dispatch;
+            }
+        }
+
+        void OnEnable() { AnimEventBus.Raised += OnEvent; Projectile.FirstImpact += OnImpact; CameraShake.Frame = FrameFn; CameraShake.NowMs = NowFn; CameraShake.Bind(Dispatch); }
+        void OnDisable() { AnimEventBus.Raised -= OnEvent; Projectile.FirstImpact -= OnImpact; CameraShake.Unbind(_dispatch); _shake.Clear(); Time.timeScale = 1f; }
 
         void OnEvent(string e, object _)
         {
             // 07 shake table, routed by event name (fire, impacts, breaks, collapse, explosions, gravity burst, boss phase/defeat).
-            if (ShakeRouter.TryGet(e, out var spec) && !(ShakeRouter.IsImpact(e) && _impactShakeFrame == Time.frameCount))
-            {
-                _shake.Add(spec);
-                if (ShakeRouter.IsImpact(e)) _impactShakeFrame = Time.frameCount;
-            }
+            // PHYS_* with payloads should come via CameraShake.AddPhys (tier/material aware); name-only PHYS rows are still routed here, deduped by family per frame.
+            Dispatch.Submit(e, Time.frameCount, Time.unscaledTime * 1000f);
             switch (e)
             {
                 case AnimEvents.ReloadStart: _wrecker.GateReady = false; _wrecker.Fire(); _camSm.Fire(); _time.OnShotFired(); break;
@@ -91,7 +103,7 @@ namespace Crashverse.Feel
         void OnImpact(Projectile p)
         {
             _camSm.FirstImpact(); _time.HitStop(50f);
-            if (_impactShakeFrame != Time.frameCount) { _shake.Add(ShakeTable.ImpactWood); _impactShakeFrame = Time.frameCount; } // one impact shake per frame (IMPACT_* events may also arrive)
+            Dispatch.Submit(ShakeTable.ImpactWood, ShakeFamily.Impact, Time.frameCount, Time.unscaledTime * 1000f); // one impact shake per frame (IMPACT_* / PHYS_IMPACT may also arrive; strongest wins)
         }
 
         void Update()

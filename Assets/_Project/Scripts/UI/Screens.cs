@@ -559,7 +559,7 @@ namespace Crashverse.UI
     // SettingsModal ships in every build; QA tools do not (SEC-02). Map → Settings → Delete account = 2 taps (A1).
     public class SettingsModal : UIScreen
     {
-        public override bool IsModal => true; Text _shake, _motion, _hide; Button _shakeBtn;
+        public override bool IsModal => true; Text _shake, _motion, _haptics, _hide; Button _shakeBtn;
         protected override void Build(RectTransform root)
         {
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
@@ -570,6 +570,7 @@ namespace Crashverse.UI
             _shakeBtn = UIFactory.Button(v, "", Th.navy500, () => { if (!m.ReduceShakeLocked) m.SetReduceShake(!m.ReduceShake); Refresh(); }, Th, 48);
             _shake = _shakeBtn.GetComponentInChildren<Text>();
             _motion = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceMotion(!m.ReduceMotion); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
+            _haptics = UIFactory.Button(v, "", Th.navy500, () => { m.SetHaptics(!m.HapticsEnabled); Refresh(); }, Th, 48).GetComponentInChildren<Text>(); // default ON; independent of Reduce shake/motion
             UIFactory.Label(v, "Privacy", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
             _hide = UIFactory.Button(v, "", Th.navy500, ToggleHide, Th, 48).GetComponentInChildren<Text>();
             UIFactory.Label(v, "Account", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
@@ -590,6 +591,7 @@ namespace Crashverse.UI
             _shake.text = "Reduce shake: " + (m.ReduceShakeEffective ? "ON" : "OFF") + (m.ReduceShakeLocked ? " (included in Reduce motion)" : "");
             _shakeBtn.interactable = !m.ReduceShakeLocked;
             _motion.text = "Reduce motion: " + (m.ReduceMotion ? "ON" : "OFF") + (m.ReduceMotionIsAuto ? " (system)" : "");
+            _haptics.text = "Haptics: " + (m.HapticsEnabled ? "ON" : "OFF");
             _hide.text = "Hide my name on leaderboards: " + ((AppServices.Account?.hideName ?? false) ? "ON" : "OFF");
         }
     }
