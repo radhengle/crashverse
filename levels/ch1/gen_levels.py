@@ -163,10 +163,15 @@ def L10():  # Tidewarden: Developer's boss layout (SG-05 rules live in Tidewarde
      B("armR","brick",(2.4,4.9,0),(.8,2.4,.8),["shoulderR"],role="arm",nonObj=True),
      B("armorTop","wood",(0,6.3,1.35),(3.2,.9,.3),["torso"],role="armor"),
      B("armorBot","wood",(0,5.1,1.35),(3.2,.9,.3),["torso"],role="armor"),
-     B("core","steel",(0,5.7,1.0),(1,1,.4),["torso"],role="core",indestructible=True,color="FFB347"),
+     B("core","steel",(0,5.7,1.4),(1,1,.4),["torso"],role="core",indestructible=True,color="FFB347"),
      B("shutter","brick",(0,5.7,1.75),(1.4,1.4,.25),[],role="shutter",nonObj=True,indestructible=True),
      B("head","wood",(0,7.6,0),(1.6,1.2,1.6),["torso"]),
      B("lamp","wood",(0,8.5,0),(1,.6,1),["head"],color="E8B04B")]
+
+def face_wrecker(b):
+    """BUG-24: the Wrecker sits at x=-20 and fires along +x, so the authored front (+z) is turned to face -x
+    (rotate -90 deg about Y): (x,y,z) -> (-z,y,x), sizes swap x/z. Authoring above stays in the readable +z-front frame."""
+    x,y,z=b["p"]; sx,sy,sz=b["s"]; b=dict(b); b["p"]=[round(-z,4),y,x]; b["s"]=[sz,sy,sx]; return b
 
 LAYOUTS={1:("c1_l01_lookout_hut",L1),2:("c1_l02_stilt_tower",L2),3:("c1_l03_bakery",L3),4:("c1_l04_windmill",L4),
  5:("c1_l05_twin_cottages",L5),6:("c1_l06_granary",L6),7:("m1_clockwork_tower",L7),8:("c1_l08_market_arcade",L8),
@@ -177,7 +182,8 @@ OVR={1:dict(hintTarget="post",mastery=dict(type="DESTROYED_AT_LEAST",value=0.95,
 if __name__=="__main__":
     os.makedirs(os.path.join(HERE,"layouts"),exist_ok=True)
     for n,(lid,f) in LAYOUTS.items():
-        json.dump({"id":lid,"blocks":f()},open(os.path.join(HERE,"layouts",lid+".json"),"w"),indent=1)
+        blocks=[face_wrecker(b) for b in f()]
+        json.dump({"id":lid,"blocks":blocks},open(os.path.join(HERE,"layouts",lid+".json"),"w"),indent=1)
     src=os.path.join(HERE,"../../Assets/_Project/Resources/Data/chapter1.json")
     ch=json.load(open(src))
     for L in ch["levels"]: L.update(OVR.get(L["number"],{}))

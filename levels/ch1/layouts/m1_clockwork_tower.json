@@ -29,14 +29,14 @@
    "id": "scaffold",
    "mat": "wood",
    "p": [
-    0,
+    -1.7,
     1.9,
-    1.7
+    0
    ],
    "s": [
-    3.0,
+    0.3,
     1.4,
-    0.3
+    3.0
    ],
    "sup": [
     "plinth"
@@ -55,14 +55,14 @@
    "id": "wingL",
    "mat": "wood",
    "p": [
-    -2.6,
+    0,
     2.6,
-    0
+    -2.6
    ],
    "s": [
-    0.6,
+    0.5,
     2.8,
-    0.5
+    0.6
    ],
    "sup": [
     "plinth"
@@ -81,14 +81,14 @@
    "id": "wingR",
    "mat": "wood",
    "p": [
+    0,
     2.6,
-    2.6,
-    0
+    2.6
    ],
    "s": [
-    0.6,
+    0.5,
     2.8,
-    0.5
+    0.6
    ],
    "sup": [
     "plinth"
@@ -133,14 +133,14 @@
    "id": "wallF1",
    "mat": "brick",
    "p": [
-    0,
+    -1.1,
     2.825,
-    1.1
+    0
    ],
    "s": [
-    2.2,
+    0.35,
     2.25,
-    0.35
+    2.2
    ],
    "sup": [
     "ring0"
@@ -157,6 +157,32 @@
   },
   {
    "id": "wallB1",
+   "mat": "brick",
+   "p": [
+    1.1,
+    2.825,
+    0
+   ],
+   "s": [
+    0.35,
+    2.25,
+    2.2
+   ],
+   "sup": [
+    "ring0"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallL1",
    "mat": "brick",
    "p": [
     0,
@@ -182,43 +208,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "wallL1",
-   "mat": "brick",
-   "p": [
-    -1.1,
-    2.825,
-    0
-   ],
-   "s": [
-    0.35,
-    2.25,
-    2.2
-   ],
-   "sup": [
-    "ring0"
-   ],
-   "joint": false,
-   "role": "wall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
    "id": "wallR1",
    "mat": "brick",
    "p": [
-    1.1,
+    0,
     2.825,
-    0
+    1.1
    ],
    "s": [
-    0.35,
+    2.2,
     2.25,
-    2.2
+    0.35
    ],
    "sup": [
     "ring0"
@@ -266,14 +266,14 @@
    "id": "wallF2",
    "mat": "brick",
    "p": [
-    0,
+    -1.1,
     5.575,
-    1.1
+    0
    ],
    "s": [
-    2.2,
+    0.35,
     2.25,
-    0.35
+    2.2
    ],
    "sup": [
     "ring1"
@@ -290,6 +290,32 @@
   },
   {
    "id": "wallB2",
+   "mat": "brick",
+   "p": [
+    1.1,
+    5.575,
+    0
+   ],
+   "s": [
+    0.35,
+    2.25,
+    2.2
+   ],
+   "sup": [
+    "ring1"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallL2",
    "mat": "brick",
    "p": [
     0,
@@ -315,43 +341,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "wallL2",
-   "mat": "brick",
-   "p": [
-    -1.1,
-    5.575,
-    0
-   ],
-   "s": [
-    0.35,
-    2.25,
-    2.2
-   ],
-   "sup": [
-    "ring1"
-   ],
-   "joint": false,
-   "role": "wall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
    "id": "wallR2",
    "mat": "brick",
    "p": [
-    1.1,
+    0,
     5.575,
-    0
+    1.1
    ],
    "s": [
-    0.35,
+    2.2,
     2.25,
-    2.2
+    0.35
    ],
    "sup": [
     "ring1"
@@ -503,9 +503,9 @@
    "id": "barrelDecor",
    "mat": "wood",
    "p": [
-    5.5,
+    -2,
     0.6,
-    2
+    5.5
    ],
    "s": [
     0.8,

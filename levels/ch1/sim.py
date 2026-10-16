@@ -8,7 +8,7 @@ Rules mirrored from Contract v0.2 §3-5, SG-01/05/08, and Developer code (Destru
 - Shockwave: +40 splash (no joint bonus) to pieces 1 link deep (supports+dependents) of the hit piece.
 - Splitstrike: 3 sub-hits of 30 (x2 on joints) on up to 3 hittable blocks within 3.5m of each other.
 - Hittable: not indestructible, not broken/collapsed, and not hidden behind an intact block that is in front
-  (+z = camera side) and overlaps it in x and y. Falling-debris impact damage is IGNORED (conservative).
+  (-x = Wrecker side; it fires along +x) and overlaps it in y and z. Falling-debris impact damage is IGNORED (conservative).
 - Win: destroyed objective mass / total >= winThreshold after the shot. Boss (L10): SG-05 model.
 Stars: ratio = shotsLeft/shots >= star3Pct / star2Pct (exact).
 """
@@ -77,7 +77,8 @@ class State:
             hid=False
             for j,y in s.b.items():
                 if j==i or s.gone(j) or y.get('role')=='shutter': continue
-                if y['p'][2]-y['s'][2]/2 >= x['p'][2]+x['s'][2]/2-1e-6 and all(abs(y['p'][k]-x['p'][k])*2 < (y['s'][k]-x['s'][k])+1e-6 for k in (0,1)):
+                # Wrecker fires from -x: a block is hidden when an intact block lies fully on its -x side and covers it in y and z
+                if y['p'][0]+y['s'][0]/2 <= x['p'][0]-x['s'][0]/2+1e-6 and all(abs(y['p'][k]-x['p'][k])*2 < (y['s'][k]-x['s'][k])+1e-6 for k in (1,2)):
                     hid=True;break   # fully covered in x/y by a block strictly in front
             if not hid: out.append(i)
         return out
