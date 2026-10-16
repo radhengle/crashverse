@@ -28,7 +28,7 @@ dcheck(){ if adb logcat -d | grep -E "FATAL EXCEPTION|Fatal signal|ANR in $PKG|U
   adb shell pidof $PKG >/dev/null || { adb logcat -d > "$OUT/calibration/logcat.txt"; echo "FAIL (discovery): app died at $1"; exit 1; }; }
 ctap(){ dcheck "before_tap_$1_$2"; adb logcat -c; adb shell input tap "$1" "$2"; sleep "${3:-3}"; dcheck "after_tap_$1_$2"; } # fresh log for the next coord
 
-M=March; YR=$(( $(date -u +%Y) - 25 ))
+M=March; YR=$(( $(date -u +%Y) - 20 )) # adult band, visible when the list opens at now−18 (V-02); no scrolling needed
 put MONTH AgeGateScreen "$(coord AgeGateScreen Button_Month)"; ctap $MONTH_X $MONTH_Y
 put MONTH_OPT AgeGateScreen "$(coord ListModal Button_$M)";   ctap $MONTH_OPT_X $MONTH_OPT_Y
 put YEAR AgeGateScreen "$(coord AgeGateScreen Button_Year)";  ctap $YEAR_X $YEAR_Y
