@@ -158,6 +158,14 @@ jobs:
             --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --out "$f" aligned.apk
           rm -f aligned.apk "$f.idsig"
           "$BT/zipalign" -c -P 16 -v 4 "$f" | tail -1
+          # Phone A/B variant (BUG-22): same build without lib/x86_64 (dev-build-3 had arm only and installs on the user's phone)
+          arm="${f%.apk}-arm-only.apk"; cp "$f" stripped.apk
+          zip -q -d stripped.apk 'lib/x86_64/*' 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/MANIFEST.MF'
+          "$BT/zipalign" -f -P 16 4 stripped.apk aligned.apk
+          "$BT/apksigner" sign --ks build-secrets/dev.keystore --ks-pass env:KS_PASS --ks-key-alias "$KA_NAME" --key-pass env:KA_PASS \
+            --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --out "$arm" aligned.apk
+          rm -f stripped.apk aligned.apk "$arm.idsig"
+          "$BT/apksigner" verify -v "$arm" | head -5
 
       - name: Remove keystore from the workspace
         if: always()
@@ -168,7 +176,7 @@ jobs:
           EXPECTED_VC: ${{ github.run_number }}
         run: |
           set -e
-          f=$(ls build/Android/*.apk | head -1)
+          for f in build/Android/*.apk; do
           "$BT/apksigner" verify --print-certs -v "$f" | tee sig.txt
           for v in "v1 scheme (JAR signing)" "v2 scheme (APK Signature Scheme v2)" "v3 scheme (APK Signature Scheme v3)"; do
             grep -qF "Verified using $v: true" sig.txt || { echo "::error::not signed with $v"; exit 1; }
@@ -179,7 +187,8 @@ jobs:
           "$BT/aapt2" dump badging "$f" | tee badging.txt | head -3
           grep -q "versionCode='$EXPECTED_VC'" badging.txt || { echo "::error::versionCode is not run_number $EXPECTED_VC"; exit 1; }
           if "$BT/aapt2" dump xmltree --file AndroidManifest.xml "$f" | grep -qi testOnly; then echo "::error::testOnly set"; exit 1; fi
-          echo "OK cert=$sha versionCode=$EXPECTED_VC"
+          echo "OK $f cert=$sha versionCode=$EXPECTED_VC"
+          done
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -223,7 +232,7 @@ jobs:
           cores: 4
           ram-size: 4096M
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340
-          script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | head -1)" smoke_out
+          script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
