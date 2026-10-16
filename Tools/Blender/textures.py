@@ -42,6 +42,11 @@ def sheet(kind,out,N=512):
         n=0.6*noise(N,24,15)+0.4*noise(N,3,16); sp=(noise(N,1,17)>0.82)
         alb=hx("#2E3340")[None,None]*(1-n[...,None])+hx("#4A4F5C")[None,None]*n[...,None]; alb=np.where(sp[...,None],alb*1.25,alb)
         h=0.05*n; rough=0.5+0.05*n; metal=np.zeros_like(h); ao=np.ones_like(h)*0.95; nstr=2
+    elif kind=="Roof":   # blue clay shingles (art board roofs), 0.3 x 0.25 m staggered tiles
+        bw,bh=int(0.3*ppm),int(0.25*ppm); row=y//bh; xo=(x+(row%2)*bw//2)%N; lx=xo%bw; ly=y%bh
+        h=np.clip(np.minimum(lx,bw-1-lx)/3,0,1)*np.clip(ly/(bh*0.85),0,1); tint=rng.uniform(0.9,1.1,(N//bh+2,N//bw+3))[row,xo//bw]
+        alb=hx("#4D7BC4")[None,None]*(tint*(0.8+0.25*ly/bh))[...,None]; alb=np.where((h<0.15)[...,None],hx("#2C4A7E"),alb)
+        rough=0.45+0.1*noise(N,8,19); metal=np.zeros_like(h); ao=0.6+0.4*h; nstr=6
     elif kind=="Gold":   # Art #10 trim #E8B53A metallic 1
         n=noise(N,16,18); h=0.03*n; alb=hx("#E8B53A")[None,None]*(0.95+0.08*n[...,None]); rough=0.28+0.05*n; metal=np.ones_like(h); ao=np.ones_like(h); nstr=1
     else:               # Steel: 1 m plates, seams + rivets, brushed
@@ -53,7 +58,7 @@ def sheet(kind,out,N=512):
     save(alb,f"{out}/T_{kind}_A.png"); save(normal_from_height(h.astype(float),nstr),f"{out}/T_{kind}_N.png")
     save(np.dstack([ao,rough,metal]),f"{out}/T_{kind}_ORM.png")
 def inner(kind,out,N=256):
-    base={"Wood":"#C68A52","Brick":"#B0533D","Steel":"#949CA8","Glass":"#D8F6FF","Stone":"#A8916A"}[kind]
+    base={"Wood":"#C68A52","Brick":"#B0533D","Steel":"#949CA8","Glass":"#EEF3F7","Roof":"#7F96B8","Stone":"#A8916A"}[kind]
     n=noise(N,8,7)*0.6+noise(N,32,8)*0.4; alb=hx(base)[None,None]*(0.82+0.25*n[...,None])
     save(alb,f"{out}/T_{kind}_Inner_A.png")
 def detail(out,N=256):

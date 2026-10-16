@@ -17,7 +17,7 @@ PAL=["#E3A766","#A8703A","#D2664C","#7A3326","#AEB6C2","#5B6472","#3E4C6E","#E8B
 CELL={n:i for i,n in enumerate(NAMES)}
 SRC="/workspace/crashverse/models_src"   # .blend sources live outside git (PM rule)
 GRID=8; CPX=256//GRID
-DENS = {"Wood":600,"Brick":1900,"Steel":800,"Glass":2500,"Stone":2500}  # steel = hollow effective density (Physics sign-off)
+DENS = {"Wood":600,"Brick":1900,"Steel":800,"Glass":2500,"Stone":2500,"Roof":1800}  # steel = hollow effective density (Physics sign-off)
 def hexrgb(h): return tuple(int(h[i:i+2],16)/255 for i in (1,3,5))
 def write_palette(path):
     try: import PIL
