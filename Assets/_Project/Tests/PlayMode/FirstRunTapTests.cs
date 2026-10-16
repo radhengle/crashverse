@@ -34,6 +34,13 @@ namespace Crashverse.Tests.PlayMode
         [UnitySetUp]
         public IEnumerator Boot()
         {
+            // The test runner's first play-mode scene already booted the game once (AutoBootstrap), and the router and
+            // EventSystem are DontDestroyOnLoad: clear them so the Bootstrap scene below starts from one clean copy.
+            foreach (var o in UnityEngine.Object.FindObjectsOfType<UIRouter>()) UnityEngine.Object.Destroy(o.gameObject);
+            foreach (var o in UnityEngine.Object.FindObjectsOfType<EventSystem>()) UnityEngine.Object.Destroy(o.gameObject);
+            foreach (var o in UnityEngine.Object.FindObjectsOfType<GameBootstrap>()) UnityEngine.Object.Destroy(o.gameObject);
+            AppServices.Router = null;
+            yield return null;
             PlayerPrefs.DeleteAll();
             AgeGateScreen.PendingDob = null;
             Time.timeScale = 1f;

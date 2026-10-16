@@ -26,17 +26,20 @@ namespace Crashverse.EditorTools
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64 | (release ? 0 : AndroidArchitecture.X86_64);
             // BUG-21: every dev build must be signed with the same persistent dev key (GameCI otherwise makes a fresh debug
             // keystore per runner, so a new build can't update the old one) and carry an increasing versionCode.
-            var vc = Environment.GetEnvironmentVariable("CRASHVERSE_VERSION_CODE");
+            // GameCI's docker only forwards its own variables (ANDROID_*), so read those first, then ours.
+            string Env(params string[] names) { foreach (var n in names) { var v = Environment.GetEnvironmentVariable(n); if (!string.IsNullOrEmpty(v)) return v; } return null; }
+            var vc = Env("ANDROID_VERSION_CODE", "CRASHVERSE_VERSION_CODE");
             if (int.TryParse(vc, out var code) && code > 0) PlayerSettings.Android.bundleVersionCode = code;
             else if (Environment.GetEnvironmentVariable("CI") != null) { Debug.LogError("CRASHVERSE_VERSION_CODE missing in CI"); EditorApplication.Exit(1); }
-            var ks = Environment.GetEnvironmentVariable("CRASHVERSE_KEYSTORE_PATH");
+            var ks = Env("ANDROID_KEYSTORE_NAME", "CRASHVERSE_KEYSTORE_PATH");
             if (!string.IsNullOrEmpty(ks))
             {
+                Debug.Log("[BuildScript] signing with keystore " + ks + ", versionCode " + PlayerSettings.Android.bundleVersionCode);
                 PlayerSettings.Android.useCustomKeystore = true;
                 PlayerSettings.Android.keystoreName = System.IO.Path.GetFullPath(ks);
-                PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable("CRASHVERSE_KEYSTORE_PASS");
-                PlayerSettings.Android.keyaliasName = Environment.GetEnvironmentVariable("CRASHVERSE_KEYALIAS_NAME");
-                PlayerSettings.Android.keyaliasPass = Environment.GetEnvironmentVariable("CRASHVERSE_KEYALIAS_PASS");
+                PlayerSettings.Android.keystorePass = Env("ANDROID_KEYSTORE_PASS", "CRASHVERSE_KEYSTORE_PASS");
+                PlayerSettings.Android.keyaliasName = Env("ANDROID_KEYALIAS_NAME", "CRASHVERSE_KEYALIAS_NAME");
+                PlayerSettings.Android.keyaliasPass = Env("ANDROID_KEYALIAS_PASS", "CRASHVERSE_KEYALIAS_PASS");
             }
             else if (Environment.GetEnvironmentVariable("CI") != null) { Debug.LogError("CRASHVERSE_KEYSTORE_PATH missing in CI: refusing a throwaway debug key"); EditorApplication.Exit(1); }
             var opts = new BuildPlayerOptions
