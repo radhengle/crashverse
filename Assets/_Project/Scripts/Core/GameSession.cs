@@ -68,6 +68,10 @@ namespace Crashverse.Core
         /// <summary>Instant retry: authored layout, full shots and charges, no leftover debris (Contract §4).</summary>
         public void Retry()
         {
+            // Ranked: never rebuild in place; restart in a freshly loaded scene (GameplayDirector.ReloadForRanked).
+            if (_built && Ctx.mode == RunMode.TitanRanked) { GameplayDirector.ReloadForRanked(Ctx); return; }
+            if (_built) RebuildPerRunObjects();
+            _built = true;
             foreach (var p in Projectile.Alive.ToArray()) if (p != null) Destroy(p.gameObject);
             Projectile.Alive.Clear();
             builder.Build(Ctx.layout, structureBase, Ctx.mod);
@@ -93,6 +97,21 @@ namespace Crashverse.Core
             aim.SetAim(0f, WreckerSpec.RestElevation);
             SetupHint();
             Changed?.Invoke();
+        }
+
+        bool _built;
+
+        /// <summary>
+        /// Casual Retry: per-run objects are rebuilt, not recycled, so a Retry starts like a fresh run. The debris pool is
+        /// replaced (new pieces, new PhysX actors, creation-order free list) instead of re-using the previous run's pieces.
+        /// </summary>
+        void RebuildPerRunObjects()
+        {
+            var old = DebrisPool.Instance;
+            Transform parent = old != null ? old.transform.parent : transform.parent;
+            if (old != null) DestroyImmediate(old.gameObject); // immediate: the new pool's Awake must own DebrisPool.Instance
+            new GameObject("DebrisPool").AddComponent<DebrisPool>().transform.SetParent(parent);
+            Physics.SyncTransforms();
         }
 
         void SetupHint()

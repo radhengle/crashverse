@@ -192,6 +192,7 @@ namespace UnityEngine
     public struct RaycastHit { public Vector3 point; public float distance; public Collider collider; }
     public static class Physics
     {
+        public static void SyncTransforms() { }
         public static bool Raycast(Vector3 o, Vector3 d, out RaycastHit hit, float max) { hit = default; return false; }
         public static Vector3 gravity = new Vector3(0, -9.81f, 0);
         public static float sleepThreshold;
