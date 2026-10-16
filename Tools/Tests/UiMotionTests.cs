@@ -22,7 +22,9 @@ static class UiMotionTests
             T.True(Near(300f, UiMotionMath.StarStartMs) && Near(300f, UiMotionMath.StarStaggerMs), "first star after the 300 ms ribbon, 300 ms stagger");
             T.Eq(0f, UiMotionMath.MsIntoStar(300f, 0)); T.Eq(0f, UiMotionMath.MsIntoStar(900f, 2));
             T.True(Near(0f, UiMotionMath.StarScale(0f, true, false)) && Near(1.3f, UiMotionMath.StarScale(150f, true, false)) && Near(1f, UiMotionMath.StarScale(250f, true, false)), "0 → 1.3 (150 ms) → 1 (250 ms)");
-            float pk = 0; for (int i = 0; i <= 250; i += 2) pk = Math.Max(pk, UiMotionMath.StarScale(i, true, false)); T.True(pk >= 1.3f && pk <= 1.45f, "peak ≥1.3; existing out-back on main overshoots to ~1.43 (flagged)");
+            float pk = 0; for (int i = 0; i <= 250; i += 2) pk = Math.Max(pk, UiMotionMath.StarScale(i, true, false)); T.True(Near(1.3f, pk, 1e-4f), "peak exactly 1.3 (no overshoot)");
+            float mx = 0; for (int i = 0; i <= 2500; i++) mx = Math.Max(mx, UiMotionMath.StarScale(i * 0.1f, true, false)); T.True(mx <= 1.3f + 1e-5f, "never above 1.3 at 0.1 ms resolution");
+            float prv = -1; bool up = true; for (int i = 0; i <= 150; i++) { float v = UiMotionMath.StarScale(i, true, false); if (v < prv - 1e-6f) up = false; prv = v; } T.True(up, "monotonic 0 → 1.3 over the first 150 ms");
             float pkRm = 0; for (int i = 0; i <= 250; i += 2) pkRm = Math.Max(pkRm, UiMotionMath.StarScale(i, true, true)); T.True(pkRm <= 1.1f + 1e-4f, "Reduce Motion pop capped 1.1");
             T.True(Near(1f, UiMotionMath.StarScale(10f, false, false)) && Near(1f, UiMotionMath.EmptyStarAlpha(150f)) && Near(0f, UiMotionMath.EmptyStarAlpha(0f)), "unearned star: no pop, fades in 150 ms");
         });
