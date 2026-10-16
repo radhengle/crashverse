@@ -66,7 +66,7 @@ namespace Crashverse.Feel
     /// </summary>
     public class MotionSettings
     {
-        public const string KeyShake = "cv_reduce_shake", KeyMotion = "cv_reduce_motion";
+        public const string KeyShake = "cv_reduce_shake", KeyMotion = "cv_reduce_motion", KeyHaptics = "haptics_enabled"; // haptics key per audio/haptics.md
         public static MotionSettings Current = new MotionSettings(null, false);
         readonly IMotionPrefs _prefs; readonly bool _osRemoveAnimations;
         public event Action Changed;
@@ -83,6 +83,9 @@ namespace Crashverse.Feel
         public bool ReduceMotionIsAuto => !(_prefs != null && _prefs.TryGet(KeyMotion, out _)) && _osRemoveAnimations;
         public static bool Resolve(bool? explicitChoice, bool osRemoveAnimations) => explicitChoice ?? osRemoveAnimations;
 
+        /// <summary>Haptics toggle, default ON. Independent of Reduce shake / Reduce motion (07 doesn't cover haptics; haptics.md has its own toggle).</summary>
+        public bool HapticsEnabled => !(_prefs != null && _prefs.TryGet(KeyHaptics, out var v)) || v;
+        public void SetHaptics(bool on) { _prefs?.Set(KeyHaptics, on); Changed?.Invoke(); }
         public void SetReduceShake(bool on) { _prefs?.Set(KeyShake, on); Changed?.Invoke(); }
         public void SetReduceMotion(bool on) { _prefs?.Set(KeyMotion, on); Changed?.Invoke(); } // explicit: persists, beats auto-on
 
@@ -252,7 +255,10 @@ namespace Crashverse.Feel
         public static readonly ShakeSpec Fire = new ShakeSpec(0.06f, 0.6f, 9, 180), ImpactWood = new ShakeSpec(0.02f, 0.2f, 14, 100),
             BrickBreak = new ShakeSpec(0.04f, 0.4f, 12, 150), JointBreak = new ShakeSpec(0.06f, 0.6f, 12, 150),
             CollapseLand = new ShakeSpec(0.08f, 0.8f, 8, 250), Explosion = new ShakeSpec(0.10f, 1.0f, 10, 300),
-            GravityBurst = new ShakeSpec(0.08f, 0.8f, 10, 250), BossPhase = new ShakeSpec(0.12f, 1.2f, 6, 600);
+            GravityBurst = new ShakeSpec(0.08f, 0.8f, 10, 250), BossPhase = new ShakeSpec(0.12f, 1.2f, 6, 600),
+            BrickHit = new ShakeSpec(0.02f, 0.2f, 12, 120),   // 02 brick: ±0.02 m 120 ms
+            SteelRing = new ShakeSpec(0.01f, 0.1f, 6, 200),   // 02 steel face: ring 6 Hz 200 ms, 0.01 m
+            Terrain = new ShakeSpec(0.01f, 0.1f, 14, 80);     // not in 07 (02 says no piece reaction): minimal thud, flagged for Animator/Designer
         public const float MaxPos = 0.15f, MaxRot = 1.5f;
     }
 
@@ -303,39 +309,108 @@ namespace Crashverse.Feel
     /// 07 shake table keyed by the AnimEventBus event names (audio_sync_table), so any system that raises the spec event gets the matching
     /// camera shake without referencing the camera. Returns false for events that don't shake.
     /// </summary>
+    /// <summary>Dedupe family: within one frame only the strongest shake of a family is applied (e.g. IMPACT_* + Projectile.FirstImpact, BREAK_STEEL_JOINT + PHYS_JOINT_SNAP, COLLAPSE_LAND + PHYS_COLLAPSE_END).</summary>
+    public enum ShakeFamily : byte { None, Fire, Impact, Break, Joint, Collapse, Explosion, PowerUp, Boss }
+
+    /// <summary>
+    /// Maps event names to the 07 shake table (+ 02 per-material rows). Covers fire, wood/brick/steel-face/joint/terrain impacts and breaks,
+    /// explosive crate, collapse land, power-ups, boss events, and the physics PHYS_* events (PR #18/#20).
+    /// </summary>
     public static class ShakeRouter
     {
-        public const string ImpactWood = "IMPACT_WOOD", BreakBrick = "BREAK_BRICK", BreakSteelJoint = "BREAK_STEEL_JOINT", ExplodeCrate = "EXPLODE_CRATE",
-            ExplodeBarrelAlias = "EXPLODE_BARREL", PuGravityBurst = "PU_GRAVITY_BURST", PuChainPulse = "PU_CHAIN_PULSE", BossTideArmsDrop = "BOSS_TIDE_ARMS_DROP";
+        public const string ImpactWood = "IMPACT_WOOD", BreakWood = "BREAK_WOOD", ImpactBrick = "IMPACT_BRICK", BreakBrick = "BREAK_BRICK",
+            ImpactSteel = "IMPACT_STEEL", ImpactSteelJoint = "IMPACT_STEEL_JOINT", BreakSteelJoint = "BREAK_STEEL_JOINT", ImpactTerrain = "IMPACT_TERRAIN",
+            ExplodeCrate = "EXPLODE_CRATE", ExplodeBarrelAlias = "EXPLODE_BARREL", PuGravityBurst = "PU_GRAVITY_BURST", PuChainPulse = "PU_CHAIN_PULSE", PuPhaseHit = "PU_PHASE_HIT",
+            BossTideJointBreak = "BOSS_TIDE_JOINT_BREAK", BossTideArmsLand = "BOSS_TIDE_ARMS_LAND";
+        // Physics events (physics/impact-feel #18, physics/impact-wiring #20; ImpactEvents.*). Names duplicated here so this compiles without those PRs.
+        public const string PhysImpact = "PHYS_IMPACT", PhysCrack = "PHYS_CRACK", PhysBreak = "PHYS_BREAK", PhysJointSnap = "PHYS_JOINT_SNAP",
+            PhysCollapseStart = "PHYS_COLLAPSE_START", PhysCollapseEnd = "PHYS_COLLAPSE_END";
+        /// <summary>Mirrors Physics MaterialType / ImpactTier byte values (#18) so physics code can pass (int)e.materialTypeB, (int)e.tier.</summary>
+        public const int MatWood = 0, MatBrick = 1, MatSteel = 2, MatGlass = 3, MatTerrain = 4, TierLight = 0, TierMedium = 1, TierHeavy = 2;
 
-        public static bool TryGet(string evt, out ShakeSpec spec)
+        public static bool TryGet(string evt, out ShakeSpec spec) => TryGet(evt, out spec, out _);
+
+        public static bool TryGet(string evt, out ShakeSpec spec, out ShakeFamily fam)
         {
             switch (evt)
             {
-                case AnimEvents.WreckerFire: spec = ShakeTable.Fire; return true;
-                case ImpactWood: spec = ShakeTable.ImpactWood; return true;
-                case BreakBrick: spec = ShakeTable.BrickBreak; return true;
-                case BreakSteelJoint: spec = ShakeTable.JointBreak; return true;
-                case AnimEvents.CollapseLand: spec = ShakeTable.CollapseLand; return true;
-                case ExplodeCrate: case ExplodeBarrelAlias: case PuChainPulse: spec = ShakeTable.Explosion; return true;
-                case PuGravityBurst: spec = ShakeTable.GravityBurst; return true;
-                case BossTideArmsDrop: case AnimEvents.BossTideDefeat: case AnimEvents.BossTitanDefeat: spec = ShakeTable.BossPhase; return true; // boss phase change / defeat
-                default: spec = default; return false;
+                case AnimEvents.WreckerFire: spec = ShakeTable.Fire; fam = ShakeFamily.Fire; return true;
+                case ImpactWood: case BreakWood: spec = ShakeTable.ImpactWood; fam = ShakeFamily.Impact; return true;
+                case ImpactBrick: spec = ShakeTable.BrickHit; fam = ShakeFamily.Impact; return true;
+                case ImpactSteel: case ImpactSteelJoint: spec = ShakeTable.SteelRing; fam = ShakeFamily.Impact; return true;
+                case ImpactTerrain: spec = ShakeTable.Terrain; fam = ShakeFamily.Impact; return true;
+                case BreakBrick: spec = ShakeTable.BrickBreak; fam = ShakeFamily.Break; return true;
+                case BreakSteelJoint: case BossTideJointBreak: case PhysJointSnap: spec = ShakeTable.JointBreak; fam = ShakeFamily.Joint; return true;
+                case AnimEvents.CollapseLand: case PhysCollapseEnd: case BossTideArmsLand: spec = ShakeTable.CollapseLand; fam = ShakeFamily.Collapse; return true;
+                case ExplodeCrate: case ExplodeBarrelAlias: case PuChainPulse: spec = ShakeTable.Explosion; fam = ShakeFamily.Explosion; return true;
+                case PuGravityBurst: spec = ShakeTable.GravityBurst; fam = ShakeFamily.PowerUp; return true;
+                case PuPhaseHit: spec = ShakeTable.SteelRing; fam = ShakeFamily.Impact; return true;
+                case AnimEvents.BossTidePhase2: case AnimEvents.BossTideDefeat: case AnimEvents.BossTitanStage: case AnimEvents.BossTitanDefeat:
+                    spec = ShakeTable.BossPhase; fam = ShakeFamily.Boss; return true; // 07: boss phase change / defeat
+                case AnimEvents.BossTideCoreHit: case AnimEvents.BossTitanHit: spec = ShakeTable.BrickBreak; fam = ShakeFamily.Impact; return true;
+                case PhysBreak: spec = ShakeTable.BrickBreak; fam = ShakeFamily.Break; return true; // material unknown on the bus → use TryGetPhys for exact rows
+                default: spec = default; fam = ShakeFamily.None; return false; // PHYS_IMPACT / PHYS_CRACK need tier+material → TryGetPhys
             }
         }
 
-        /// <summary>True for per-impact shakes, which are de-duplicated with Projectile.FirstImpact (one impact shake per frame).</summary>
-        public static bool IsImpact(string evt) => evt == ImpactWood;
+        /// <summary>Physics events with their payload (material family + impact tier). Light PHYS_IMPACTs and cracks don't shake (avoids rattle).</summary>
+        public static bool TryGetPhys(string evt, int material, int tier, out ShakeSpec spec, out ShakeFamily fam)
+        {
+            switch (evt)
+            {
+                case PhysImpact:
+                    fam = ShakeFamily.Impact;
+                    if (tier <= TierLight) { spec = default; return false; }
+                    spec = material == MatBrick ? ShakeTable.BrickHit : material == MatSteel ? ShakeTable.SteelRing : material == MatTerrain ? ShakeTable.Terrain : ShakeTable.ImpactWood;
+                    return true;
+                case PhysBreak:
+                    fam = ShakeFamily.Break;
+                    spec = material == MatBrick ? ShakeTable.BrickBreak : material == MatSteel ? ShakeTable.JointBreak : ShakeTable.ImpactWood;
+                    return true;
+                case PhysCrack: case PhysCollapseStart: spec = default; fam = ShakeFamily.None; return false;
+                default: return TryGet(evt, out spec, out fam);
+            }
+        }
+
+        /// <summary>True for per-impact shakes (one per frame, shared with Projectile.FirstImpact).</summary>
+        public static bool IsImpact(string evt) => TryGet(evt, out _, out var f) && f == ShakeFamily.Impact;
+    }
+
+    /// <summary>
+    /// One place every shake request goes through: routes, dedupes per family per frame (strongest wins), adds to the ShakeStack and
+    /// drives haptics from the same accepted event. Engine-free; no allocation.
+    /// </summary>
+    public class ShakeDispatcher
+    {
+        readonly ShakeStack _stack; readonly int[] _frame = new int[9]; readonly float[] _strength = new float[9];
+        public IHaptics Haptics; public MotionSettings Settings;
+        public ShakeDispatcher(ShakeStack stack) { _stack = stack; for (int i = 0; i < _frame.Length; i++) _frame[i] = int.MinValue; }
+
+        public static float Strength(in ShakeSpec s) => Math.Min(1f, Math.Max(s.pos / ShakeTable.MaxPos, s.rot / ShakeTable.MaxRot));
+
+        public bool Submit(string evt, int frame, float nowMs) => ShakeRouter.TryGet(evt, out var s, out var f) && Submit(s, f, frame, nowMs);
+        public bool SubmitPhys(string evt, int material, int tier, int frame, float nowMs) => ShakeRouter.TryGetPhys(evt, material, tier, out var s, out var f) && Submit(s, f, frame, nowMs);
+
+        public bool Submit(in ShakeSpec s, ShakeFamily fam, int frame, float nowMs)
+        {
+            int i = (int)fam; float k = Strength(s);
+            if (fam != ShakeFamily.None && _frame[i] == frame && k <= _strength[i]) return false; // same family, same frame, not stronger → drop
+            if (fam != ShakeFamily.None) { _frame[i] = frame; _strength[i] = k; }
+            _stack.Add(s); // ×0 under Reduce shake / Reduce motion via ShakeStack.Scale
+            if (Haptics != null && (Settings == null || Settings.HapticsEnabled)) Haptics.Pulse(HapticBuckets.For(k), nowMs);
+            return true;
+        }
     }
 
     /// <summary>Static entry point so VFX/physics code can request a spec shake directly. No-op when no run camera is active.</summary>
     public static class CameraShake
     {
-        static ShakeStack _active;
-        public static void Bind(ShakeStack s) => _active = s;
-        public static void Unbind(ShakeStack s) { if (_active == s) _active = null; }
-        public static void Add(ShakeSpec s) => _active?.Add(s);
-        public static bool Add(string animEvent) { if (_active == null || !ShakeRouter.TryGet(animEvent, out var s)) return false; _active.Add(s); return true; }
+        static ShakeDispatcher _active; public static Func<int> Frame = () => 0; public static Func<float> NowMs = () => 0f;
+        public static void Bind(ShakeDispatcher d) => _active = d;
+        public static void Unbind(ShakeDispatcher d) { if (_active == d) _active = null; }
+        public static bool Add(string animEvent) => _active != null && _active.Submit(animEvent, Frame(), NowMs());
+        /// <summary>Physics: CameraShake.AddPhys(ImpactEvents.NameOf(e.kind), (int)e.materialTypeB, (int)e.tier).</summary>
+        public static bool AddPhys(string physEvent, int material, int tier) => _active != null && _active.SubmitPhys(physEvent, material, tier, Frame(), NowMs());
     }
 
     // ───────────── Hit stop / slow-mo (07) ─────────────

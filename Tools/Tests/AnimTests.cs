@@ -46,8 +46,50 @@ static class AnimTests
             T.True(ShakeRouter.TryGet(AnimEvents.CollapseLand, out s) && s.durationMs == 250, "collapse land");
             T.True(ShakeRouter.TryGet("EXPLODE_CRATE", out s) && s.pos == 0.10f && ShakeRouter.TryGet("EXPLODE_BARREL", out _) && ShakeRouter.TryGet("PU_CHAIN_PULSE", out _), "explosion / chain reactor (+ deprecated barrel alias)");
             T.True(ShakeRouter.TryGet("PU_GRAVITY_BURST", out s) && s.pos == 0.08f, "gravity burst");
-            T.True(ShakeRouter.TryGet("BOSS_TIDE_ARMS_DROP", out s) && s.durationMs == 600 && ShakeRouter.TryGet(AnimEvents.BossTitanDefeat, out _), "boss phase / defeat");
+            T.True(ShakeRouter.TryGet(AnimEvents.BossTidePhase2, out s) && s.durationMs == 600 && ShakeRouter.TryGet(AnimEvents.BossTitanDefeat, out _), "boss phase / defeat");
             T.True(!ShakeRouter.TryGet(AnimEvents.UiBtnPress, out _) && !ShakeRouter.TryGet(AnimEvents.WreckerFireAnticipate, out _), "UI / anticipation don't shake");
+        });
+        T.Add("SHAKE_router_covers_all_impacts", () =>
+        {
+            ShakeSpec s; ShakeFamily f;
+            string[] all = { "IMPACT_WOOD", "BREAK_WOOD", "IMPACT_BRICK", "BREAK_BRICK", "IMPACT_STEEL", "IMPACT_STEEL_JOINT", "BREAK_STEEL_JOINT", "IMPACT_TERRAIN", "EXPLODE_CRATE",
+                AnimEvents.CollapseLand, "PU_CHAIN_PULSE", "PU_GRAVITY_BURST", "PU_PHASE_HIT", AnimEvents.BossTidePhase2, AnimEvents.BossTideDefeat, "BOSS_TIDE_JOINT_BREAK",
+                AnimEvents.BossTideCoreHit, AnimEvents.BossTitanStage, AnimEvents.BossTitanHit, AnimEvents.BossTitanDefeat, "PHYS_JOINT_SNAP", "PHYS_COLLAPSE_END", "PHYS_BREAK" };
+            foreach (var e in all) T.True(ShakeRouter.TryGet(e, out s, out f) && f != ShakeFamily.None && s.pos > 0f, "routed: " + e);
+            T.True(ShakeRouter.TryGet("IMPACT_BRICK", out s) && s.pos == 0.02f && s.durationMs == 120, "02 brick ±0.02 m 120 ms");
+            T.True(ShakeRouter.TryGet("IMPACT_STEEL", out s) && s.pos == 0.01f && s.freq == 6 && s.durationMs == 200, "02 steel ring 6 Hz 200 ms 0.01 m");
+            T.True(!ShakeRouter.TryGetPhys("PHYS_IMPACT", ShakeRouter.MatWood, ShakeRouter.TierLight, out _, out _), "light physics impacts don't rattle");
+            T.True(ShakeRouter.TryGetPhys("PHYS_IMPACT", ShakeRouter.MatSteel, ShakeRouter.TierHeavy, out s, out f) && s.freq == 6 && f == ShakeFamily.Impact, "phys impact by material");
+            T.True(ShakeRouter.TryGetPhys("PHYS_BREAK", ShakeRouter.MatBrick, ShakeRouter.TierMedium, out s, out _) && s.pos == 0.04f, "phys break by material");
+            T.True(!ShakeRouter.TryGetPhys("PHYS_CRACK", 0, 2, out _, out _) && !ShakeRouter.TryGetPhys("PHYS_COLLAPSE_START", 0, 2, out _, out _), "crack / collapse start silent");
+            T.True(ShakeRouter.IsImpact("IMPACT_TERRAIN") && !ShakeRouter.IsImpact("BREAK_STEEL_JOINT"), "impact family");
+        });
+        T.Add("SHAKE_dispatcher_dedupe_and_haptics", () =>
+        {
+            var st = new ShakeStack(); var h = new RecHaptics(); var prefs = new AnimMemPrefs(); var m = new MotionSettings(prefs, false);
+            var d = new ShakeDispatcher(st) { Haptics = h, Settings = m };
+            T.True(d.Submit("BREAK_STEEL_JOINT", 1, 0f), "joint shake"); T.True(!d.Submit("PHYS_JOINT_SNAP", 1, 0f), "PHYS_JOINT_SNAP same frame deduped");
+            T.True(d.Submit(AnimEvents.CollapseLand, 1, 0f) && !d.Submit("PHYS_COLLAPSE_END", 1, 0f), "COLLAPSE_LAND + PHYS_COLLAPSE_END → one");
+            T.True(d.Submit("IMPACT_WOOD", 2, 100f) && d.Submit(AnimEvents.BossTideCoreHit, 2, 100f) && !d.Submit("IMPACT_WOOD", 2, 100f), "impact family: stronger may replace, weaker dropped");
+            T.True(d.Submit("BREAK_STEEL_JOINT", 3, 200f), "next frame allowed"); T.Eq(5, st.Count, "5 shakes in the pool");
+            T.Eq(5, h.Calls, "haptics driven by the same accepted events"); T.Eq(HapticBuckets.For(0.4f), h.Last, "joint 0.06/0.6° → strength 0.4 bucket");
+            m.SetReduceMotion(true); st.Scale = m.ShakeScale(QualityTier.Mid); d.Submit("EXPLODE_CRATE", 4, 300f);
+            T.Eq(6, h.Calls, "Reduce motion: no camera shake but haptics still fire (decision: 07 doesn't cover haptics)");
+            m.SetHaptics(false); d.Submit("EXPLODE_CRATE", 5, 400f); T.Eq(6, h.Calls, "Haptics OFF → no pulse");
+            T.True(new MotionSettings(new AnimMemPrefs(), true).HapticsEnabled, "Haptics default ON (even with OS reduce-animations)");
+        });
+        T.Add("HAPTICS_buckets_and_gate", () =>
+        {
+            T.Eq(1, HapticBuckets.For(ShakeDispatcher.Strength(ShakeTable.ImpactWood))); T.Eq(2, HapticBuckets.For(ShakeDispatcher.Strength(ShakeTable.Fire)));
+            T.Eq(3, HapticBuckets.For(ShakeDispatcher.Strength(ShakeTable.Explosion))); T.Eq(4, HapticBuckets.For(ShakeDispatcher.Strength(ShakeTable.BossPhase)));
+            T.Eq(0, HapticBuckets.For(0f), "no pulse at 0");
+            for (int b = 1; b < HapticBuckets.Count; b++) T.True(HapticBuckets.Amplitude(b) < HapticBuckets.Amplitude(b + 1) && HapticBuckets.DurationMs(b) <= HapticBuckets.DurationMs(b + 1), "scales with strength");
+            T.True(HapticBuckets.Amplitude(4) <= 255 && HapticBuckets.Amplitude(1) >= 1, "Android amplitude 1–255");
+            var g = new HapticGate(); T.True(g.Allow(2, 0f), "first pulse"); T.True(!g.Allow(2, 20f), "40 ms rate limit"); T.True(g.Allow(4, 25f), "stronger cuts in"); T.True(g.Allow(1, 70f), "after 40 ms");
+            var src = Src("Assets/_Project/Scripts/Feel/AndroidHaptics.cs");
+            T.True(src.Contains("#if UNITY_ANDROID && !UNITY_EDITOR") && src.Contains("createOneShot") && src.Contains("_args[bucket]"), "device-only JNI, cached per-bucket effects + args");
+            T.True(Src("Assets/Plugins/Android/AndroidManifest.xml").Contains("android.permission.VIBRATE"), "VIBRATE permission");
+            T.True(Src("Assets/_Project/Scripts/UI/Screens.cs").Contains("\"Haptics: \""), "Settings Haptics row");
         });
         T.Add("SHAKE_settings_reduce_shake_vs_motion", () =>
         {
@@ -174,3 +216,5 @@ static class AnimTests
         });
     }
 }
+
+sealed class RecHaptics : Crashverse.Feel.IHaptics { public int Calls, Last; public void Pulse(int bucket, float nowMs) { Calls++; Last = bucket; } }
