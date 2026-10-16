@@ -102,8 +102,40 @@ namespace Crashverse.Data.Dev
                     indestructible = false, spinAxis = new float[0], pivot = new float[0], spinDps = 0f,
                 });
             }
+            for (int i = 0; i < AnvilPairs; i++)
+            {
+                int side = i % 2 == 0 ? 1 : -1, k = i / 2; // alternate sides so neighbouring landing times are far apart
+                float x = AnvilX0 + (k % AnvilCols) * AnvilStep, z = side * (AnvilZ0 + (k / AnvilCols) * AnvilStep);
+                list.Add(new BlockData
+                {
+                    id = AnvilId(i), mat = "glass", p = new[] { x, AnvilH * 0.5f, z }, s = new[] { 0.7f, AnvilH, 0.7f },
+                    sup = new string[0], joint = false, role = "anvil", nonObj = true, color = "", explosive = false, // grounded: kinematic until broken
+                    indestructible = false, spinAxis = new float[0], pivot = new float[0], spinDps = 0f,
+                });
+                list.Add(new BlockData
+                {
+                    id = HammerId(i), mat = "steel", p = new[] { x, AnvilH + HammerH * 0.5f + HammerFall(i), z }, s = new[] { 0.5f, HammerH, 0.5f },
+                    sup = new[] { CurtainId(0, 0, i % Columns) }, joint = false, role = "hammer", nonObj = true, color = "", explosive = false,
+                    indestructible = false, spinAxis = new float[0], pivot = new float[0], spinDps = 0f,
+                });
+            }
             return new LayoutData { id = LayoutId, blocks = list.ToArray() };
         }
+
+        /// <summary>
+        /// Hammer/anvil pairs (tuning after CI run 38950649389: the fuse burst ends in window 9, the curtain tail is patchy).
+        /// Each steel hammer hangs from a fuse block over a grounded glass anvil, beside the curtain (|z| ≥ 5.2 m: > 2.5 m explosion radius from every fuse, off the
+        /// shot line). When the fuses go, hammer i lands after HammerT(i) s and breaks its anvil. Debris damage (ruling #7a)
+        /// = 0.5 × 4 kg × (v − 2 m/s) × 1.5 (glass) ≥ 12 HP needs v ≥ 6 m/s, i.e. ≥ 0.61 s of fall, so a break by falling can't
+        /// land earlier than ~0.6 s after the fuse (windows 10–14 can't be filled by gravity drops; see PERF_L10_STAGING.md).
+        /// HammerT spans [0.7, 2.2] s: 60 pairs over 1.5 s = 4 breaks per 100 ms on top of the drop panes and rubble.
+        /// </summary>
+        public const int AnvilPairs = 60, AnvilCols = 6;
+        public const float HammerT0 = 0.7f, HammerT1 = 2.2f, AnvilH = 0.12f, HammerH = 0.25f, AnvilX0 = -5.2f, AnvilZ0 = 5.2f, AnvilStep = 0.8f;
+        public static float HammerT(int i) => HammerT0 + (HammerT1 - HammerT0) * i / (AnvilPairs - 1);
+        public static float HammerFall(int i) { float t = HammerT(i); return 0.5f * G * t * t; }
+        public static string AnvilId(int i) => $"perf_anvil_{i:00}";
+        public static string HammerId(int i) => $"perf_hammer_{i:00}";
 
         /// <summary>
         /// Drop panes (tuning after CI run 38949077290: the fuse burst gives ~110 breaks in 2 windows, then a patchy tail).

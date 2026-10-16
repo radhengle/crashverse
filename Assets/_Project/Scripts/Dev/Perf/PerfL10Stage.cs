@@ -32,6 +32,22 @@ namespace Crashverse.DevTools.Perf
         public int runs = 1; // NOTE: read by VFX by reflection (vfx/perf-l10-integration). Keep the name stable.
         /// <summary>Set before the scene loads (PlayMode test / CI) to override runs and tier. 0 / null = use inspector + command line.</summary>
         public static int RunsOverride; public static string TierOverride;
+        /// <summary>How the next run is started. Reload (default): reload this scene, so every run is a fresh boot like an
+        /// on-device timing launch. InPlace: GameSession.Retry() in the same scene (what the game does on Retry). Restart:
+        /// GameplayDirector.StartRun again (new run tree, same scene and PhysX scene).</summary>
+        public enum RetryMode { Reload, InPlace, Restart }
+        public RetryMode retryMode = RetryMode.Reload;
+        [Tooltip("Ranked stepping: Physics.simulationMode = Script, SimRunner calls Physics.Simulate (as TitanRanked). Off = auto-simulation.")]
+        public bool rankedSim;
+        /// <summary>Set before the scene loads (tests / CI). Null = inspector / command line.</summary>
+        public static RetryMode? RetryModeOverride; public static bool? RankedOverride;
+        /// <summary>Clears the cross-reload carry and overrides (tests call this before each variant).</summary>
+        public static void ResetStatics() { s_carry = false; s_summaries.Clear(); s_results.Clear(); s_runIndex = 0; s_firstHash = 0; s_mismatch = false; RunsOverride = 0; TierOverride = null; RetryModeOverride = null; RankedOverride = null; }
+        // Results carried across scene reloads (Reload mode).
+        static bool s_carry; static readonly System.Collections.Generic.List<string> s_summaries = new System.Collections.Generic.List<string>();
+        static readonly System.Collections.Generic.List<PerfL10Run> s_results = new System.Collections.Generic.List<PerfL10Run>();
+        static int s_runIndex; static ulong s_firstHash; static bool s_mismatch;
+        public string Variant => $"{(rankedSim ? "ranked" : "auto")}_{retryMode.ToString().ToLowerInvariant()}";
         public bool Determinism => !_mismatch;
         [Tooltip("Fill the 80-particle power-up lane with dummy particles (PerfDummyPowerUpLane) while power-up FX are unbuilt.")]
         public bool fillPowerUpLane = true;
@@ -57,11 +73,18 @@ namespace Crashverse.DevTools.Perf
             ReadCommandLine();
             if (RunsOverride > 0) runs = RunsOverride;
             if (!string.IsNullOrEmpty(TierOverride) && System.Enum.TryParse(TierOverride, true, out TierChoice to)) tier = to;
+            if (RetryModeOverride.HasValue) retryMode = RetryModeOverride.Value;
+            if (RankedOverride.HasValue) rankedSim = RankedOverride.Value;
+            if (s_carry)
+            {
+                s_carry = false; Summaries.AddRange(s_summaries); Results.AddRange(s_results);
+                RunIndex = s_runIndex; _firstHash = s_firstHash; _mismatch = s_mismatch;
+            }
             switch (tier) { case TierChoice.Low: QualityController.ApplyLow(); break; case TierChoice.High: QualityController.ApplyHigh(); break; default: QualityController.ApplyMid(); break; }
             AppServices.Content = ContentDatabase.LoadBundled();
             AppServices.Save = new CampaignSave();
             AppServices.Theme = UITheme.Load();
-            AppServices.Router = UIRouter.Create(AppServices.Theme);
+            if (AppServices.Router == null) AppServices.Router = UIRouter.Create(AppServices.Theme); // DontDestroyOnLoad: once per process
 #if CRASHVERSE_DEV
             AppServices.Backend = BackendLocator.Current ?? new LocalBackendService(AppServices.Content);
             BackendLocator.Current = AppServices.Backend;
@@ -83,11 +106,12 @@ namespace Crashverse.DevTools.Perf
                 seed = PerfL10Fixture.Seed,
             };
             ctx.loadout.Tiles[PerfL10Fixture.PowerUpSlot] = PerfL10Fixture.PowerUpId;
-            AnimEventBus.Raised += OnBus;
+            AnimEventBus.Raised -= OnBus; AnimEventBus.Raised += OnBus;
             GameplayDirector.StartRun(ctx);
             _session = GameplayDirector.Session;
             _sim = SimRunner.Instance;
             _session.aim.launchSpeed = PerfL10Fixture.LaunchSpeed;
+            if (rankedSim) _sim.BeginRun(PerfL10Fixture.Seed, true); // tick 0 again, Script mode + ranked matrix and debris cap
             _sim.InputApplied += OnInput;
             _sim.Ticked += OnTick;
             BeginRun();
@@ -96,7 +120,7 @@ namespace Crashverse.DevTools.Perf
         void OnDestroy()
         {
             AnimEventBus.Raised -= OnBus;
-            if (_sim != null) { _sim.InputApplied -= OnInput; _sim.Ticked -= OnTick; }
+            if (_sim != null) { _sim.InputApplied -= OnInput; _sim.Ticked -= OnTick; _sim.EndRun(); } // restores auto-simulation
             Active = false;
         }
 
@@ -104,15 +128,39 @@ namespace Crashverse.DevTools.Perf
         {
             Stats.Reset(); _lastCollapseEndTick = -1;
             foreach (var e in PerfL10Fixture.Script()) _sim.Enqueue(e); // after BeginRun (tick 0); GameSession consumes "fire"
-            Debug.Log($"PERFL10_RUN_START,run={RunIndex},seed=0x{PerfL10Fixture.Seed:X16},tier={tier},blocks={_session.builder.Blocks.Count}");
+            Debug.Log($"PERFL10_RUN_START,variant={Variant},run={RunIndex},seed=0x{PerfL10Fixture.Seed:X16},tier={tier},blocks={_session.builder.Blocks.Count}");
         }
 
         bool _retryPending;
+        bool _startPending;
         void Update()
         {
+            if (_startPending) { _startPending = false; Start(); return; }
             if (!_retryPending) return;
             _retryPending = false;
-            _session.Retry(); _session.aim.launchSpeed = PerfL10Fixture.LaunchSpeed; BeginRun();
+            switch (retryMode)
+            {
+                case RetryMode.Reload: ReloadScene(); return;
+                case RetryMode.Restart:
+                    _sim.InputApplied -= OnInput; _sim.Ticked -= OnTick; _sim.EndRun();
+                    GameplayDirector.EndRun(); _startPending = true; return; // Destroy is deferred: StartRun next frame
+                default:
+                    _session.Retry(); _session.aim.launchSpeed = PerfL10Fixture.LaunchSpeed;
+                    if (rankedSim) _sim.BeginRun(PerfL10Fixture.Seed, true);
+                    BeginRun(); return;
+            }
+        }
+
+        void ReloadScene()
+        {
+            s_carry = true; s_summaries.Clear(); s_summaries.AddRange(Summaries); s_results.Clear(); s_results.AddRange(Results);
+            s_runIndex = RunIndex; s_firstHash = _firstHash; s_mismatch = _mismatch;
+            var sc = gameObject.scene;
+            GameplayDirector.Reset();
+#if UNITY_EDITOR
+            if (sc.buildIndex < 0) { UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(sc.path, new UnityEngine.SceneManagement.LoadSceneParameters(UnityEngine.SceneManagement.LoadSceneMode.Single)); return; }
+#endif
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sc.buildIndex);
         }
 
         void OnInput(int tick, InputEvent e)
@@ -137,7 +185,7 @@ namespace Crashverse.DevTools.Perf
             int since = tick - PerfL10Fixture.FireTick;
             bool tailDone = _lastCollapseEndTick >= 0 && tick - _lastCollapseEndTick >= tailTicks;
             if (since < 0 || !(tailDone || since >= maxTicksAfterShot)) return;
-            string sum = Stats.Summary(RunIndex, PerfL10Fixture.Seed, tier.ToString());
+            string sum = Stats.Summary(RunIndex, PerfL10Fixture.Seed, tier.ToString()).Replace("PERFL10_SUMMARY,", $"PERFL10_SUMMARY,variant={Variant},");
             Debug.Log(sum); Summaries.Add(sum);
             Results.Add(new PerfL10Run { hit = Stats.Hit, hitRow = Stats.HitRow, hitY = Stats.HitY, saturatedMs = Stats.SaturatedMs, peakDebris = Stats.PeakDebris, hash = Stats.Hash, breaks = Stats.Breaks });
             if (RunIndex == 0) _firstHash = Stats.Hash; else if (Stats.Hash != _firstHash) _mismatch = true;
@@ -145,7 +193,7 @@ namespace Crashverse.DevTools.Perf
             // Retry outside the sim tick: SimRunner.FixedUpdate sets Tick = t + 1 after Ticked, which would overwrite BeginRun's 0.
             if (RunIndex < runs) { _retryPending = true; return; }
             Done = true;
-            if (runs > 1) Debug.Log($"PERFL10_DETERMINISM,runs={runs},result={(_mismatch ? "MISMATCH" : "MATCH")},hash={_firstHash:X16}");
+            if (runs > 1) Debug.Log($"PERFL10_DETERMINISM,variant={Variant},runs={runs},result={(_mismatch ? "MISMATCH" : "MATCH")},hash={_firstHash:X16}");
         }
 
         void ReadCommandLine()
@@ -157,6 +205,8 @@ namespace Crashverse.DevTools.Perf
                 else if (a[i] == "-perfRuns" && i + 1 < a.Length && int.TryParse(a[i + 1], out int n)) runs = Mathf.Max(1, n);
                 else if (a[i] == "-perfFillPowerUpLane") fillPowerUpLane = true;
                 else if (a[i] == "-perfNoPowerUpLane") fillPowerUpLane = false;
+                else if (a[i] == "-perfRetry" && i + 1 < a.Length && System.Enum.TryParse(a[i + 1], true, out RetryMode m)) retryMode = m;
+                else if (a[i] == "-perfRanked") rankedSim = true;
             }
         }
     }
