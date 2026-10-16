@@ -285,11 +285,12 @@ for t in range(1, 31):
 season = {"id": "s1_wrecking_frontier", "name": "The Wrecking Frontier - Season 1", "startUtc": "2026-10-12T00:00:00Z",
           "weekDays": 7, "xpPerEventStar": 10, "xpPerTitanClear": 50, "eventStarCapPerLevel": 3, "bonusChestEveryXp": 300, "bonusChestCap": 10, "unclaimedInboxDays": 30, "weeks": weeks, "finale": fin, "tiers": tiers}
 
-store = {"allowedTypes": ["currency_pack", "wrecker_skin", "paint", "decal", "trail", "vfx_skin", "avatar", "frame", "title",
+# Gem packs are off in v1 (gems are earned only); flip enableGemPacks only with PM + server flag.
+store = {"flags": {"enableGemPacks": False}, "allowedTypes": ["currency_pack", "wrecker_skin", "paint", "decal", "trail", "vfx_skin", "avatar", "frame", "title",
                          "map_decoration", "season_pass", "cosmetic_bundle", "emote", "victory_animation"],
          "items": [
-  {"sku": "gems_small", "name": "Pouch of Gems", "type": "currency_pack", "cosmetic": True, "priceType": "real", "price": 99, "grants": "gems:100", "contents": []},
-  {"sku": "gems_large", "name": "Chest of Gems", "type": "currency_pack", "cosmetic": True, "priceType": "real", "price": 499, "grants": "gems:600", "contents": []},
+  {"sku": "gems_small", "name": "Pouch of Gems", "type": "currency_pack", "cosmetic": True, "priceType": "real", "price": 99, "grants": "gems:100", "contents": [], "requiresFlag": "enableGemPacks"},
+  {"sku": "gems_large", "name": "Chest of Gems", "type": "currency_pack", "cosmetic": True, "priceType": "real", "price": 499, "grants": "gems:600", "contents": [], "requiresFlag": "enableGemPacks"},
   {"sku": "skin_brass_baron", "name": "Brass Baron Wrecker", "type": "wrecker_skin", "cosmetic": True, "priceType": "gems", "price": 300, "grants": "", "contents": []},
   {"sku": "trail_confetti", "name": "Confetti Trail", "type": "trail", "cosmetic": True, "priceType": "gems", "price": 120, "grants": "", "contents": []},
   {"sku": "frame_tidebreaker", "name": "Tidebreaker Frame", "type": "frame", "cosmetic": True, "priceType": "coins", "price": 800, "grants": "", "contents": []},

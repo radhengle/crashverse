@@ -1,4 +1,7 @@
 {
+ "flags": {
+  "enableGemPacks": false
+ },
  "allowedTypes": [
   "currency_pack",
   "wrecker_skin",
@@ -24,7 +27,8 @@
    "priceType": "real",
    "price": 99,
    "grants": "gems:100",
-   "contents": []
+   "contents": [],
+   "requiresFlag": "enableGemPacks"
   },
   {
    "sku": "gems_large",
@@ -34,7 +38,8 @@
    "priceType": "real",
    "price": 499,
    "grants": "gems:600",
-   "contents": []
+   "contents": [],
+   "requiresFlag": "enableGemPacks"
   },
   {
    "sku": "skin_brass_baron",
