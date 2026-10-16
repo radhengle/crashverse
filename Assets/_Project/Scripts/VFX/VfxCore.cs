@@ -60,6 +60,9 @@ namespace Crashverse.VFX
             float u = t / RmShockwaveTintSec; return RmMaxAlpha * (1f - (1f - (1f - u) * (1f - u)));
         }
 
+        /// <summary>Shader.globalMaximumLOD per tier: GlossyPBR SubShader LOD 300 (High/Mid) vs 150 (Low). Applied by bootstrap (OPEN_QUESTIONS Q-D6).</summary>
+        public static int ShaderLod(int tier) => tier == 0 ? 150 : 300;
+
         /// <summary>Break FX spawn stagger: max 3 per 100 ms, extra queued ≤200 ms then dropped (03 beat 4).</summary>
         public const int MaxSpawnsPer100Ms = 3; public const float MaxQueueSec = 0.2f;
     }

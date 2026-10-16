@@ -19,3 +19,7 @@ Updated 16 Oct 2026 IST.
 - **Q-D2** Impact/break events need position + material payload; proposed `Crashverse.VFX.VfxHit`.
 - **Q-D3** GameBootstrap/AppServices should spawn `VfxDirector` and give it the `QualityTier`.
 - **Q-D5** PU_PHASE_PASS/HIT have no code hook yet.
+- **Q-D6** Bootstrap should set `Shader.globalMaximumLOD = VfxRules.ShaderLod(tier)` and switch the URP asset per tier (no `Shader` in CompileCheck stubs, so VFX didn't call it).
+- **Q-D7** GlossyPBR is untested in Unity (no licence on box); API calls follow URP 14 Lighting.hlsl. Needs an Editor import + device check when the licence/APK arrive.
+- **Q-M1** 3D Modeler: please deliver per §4b (1024 A/N/ORM, OpenGL normals, vertex R/A, UV2, `M_Wrecker_Emissive`, `M_<Mat>_Inner`, sockets) and one test prop (steel joint + brick piece) for the v3 render checklist.
+- **Q-P1** Mid-tier SSAO is on at half res with a GPU deny-list; PM/Developer to confirm the device list.

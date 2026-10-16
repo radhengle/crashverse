@@ -23,17 +23,36 @@ Art v2 is referenced by path only (`/workspace/art/v2`), never copied into the r
 ## 2 · Shaders (delivered: `Assets/_Project/VFX/Shaders/`)
 | Shader | Use | Notes |
 |---|---|---|
-| `Crashverse/GlossyToon` | all opaque gameplay meshes (structures, Wrecker, props) | Toon band (threshold/softness), shade tint, stepped Blinn spec (gloss + band cut), rim, emission, SH ambient. **Damage 2 steps**: `_DamageStep` 0/1/2 darkens and blends crack mask (R=step1, G=step2). `_HitFlash` lerp. ShadowCaster + DepthOnly passes. |
+| `Crashverse/GlossyPBR` (**primary**, v1.1) | all opaque gameplay meshes on High/Mid; Low via SubShader LOD 150 | URP GGX BRDF (`InitializeBRDFData`, `DirectBRDFSpecular`, `GlobalIllumination` → `GlossyEnvironmentReflection` with box projection/blending), normal map, ORM, soft shadows, baked AO + SSAO, lightmaps (UV2), emissive, stylised terminator, shade tint, back-left rim, damage cracks (× vertex R), hit flash, flex (× vertex A), `_InnerFace` for M_<Mat>_Inner. Passes: ForwardLit, ShadowCaster, DepthOnly, DepthNormals (SSAO). |
+| `Crashverse/GlossyToon` | Low-tier/fallback, stylised previews | Toon band (threshold/softness), shade tint, stepped Blinn spec (gloss + band cut), rim, emission, SH ambient. **Damage 2 steps**: `_DamageStep` 0/1/2 darkens and blends crack mask (R=step1, G=step2). `_HitFlash` lerp. ShadowCaster + DepthOnly passes. |
 | `Crashverse/VfxParticle` | impact sprites, dust, sparks, smoke | Unlit, blend via material (alpha or additive), vertex-colour fade, alpha-clip floor to cut invisible overdraw, `_Intensity` = flash cap hook. No depth texture needed. |
 | Dissolve/crack + power-up fresnel | — | **Deferred to v2 PR** (PM scope). Planned as variants of the above using the same CBUFFER layout. |
 
 SRP Batcher: every material property is in `UnityPerMaterial`; no per-object MaterialPropertyBlocks. Damage step and hit flash use **3 shared material instances per material type** (step 0/1/2) + one flash material swapped for the flash duration, so batching survives. Variants: GlossyToon = `_MAIN_LIGHT_SHADOWS` × fog × instancing (≤8 per pass); VfxParticle = fog only. Strip unused URP variants via URP asset (additional lights off, no SSAO, no decals keyword).
 
-## 3 · Lighting & post (URP mobile)
-- Key directional #FFF2D6, intensity 1.4, rotation (50°, -35°, 0), soft shadows strength 0.6. Rim: second directional #FFFFFF 0.35 from back-left is emulated in-shader (`_RimDirWS`) so no extra realtime light. Shadows: 1 cascade, distance 35 m, 1024 (High) / 512 (Mid) / off→blob (Low). Additional lights: off (per-pixel) on all tiers.
-- Ambient: gradient sky #8CC8FF, equator #DCEFFF, ground #6FAE5A, intensity 1.15 (in `VisualConfig`). Fog linear #CFEAFF, 80–250.
-- Post (one Volume, values in VisualConfig): High = Bloom (threshold 1.0, intensity 0.6, HQ off), Tonemapping Neutral, Colour Adjustments (saturation +15, contrast +10), no vignette. Mid = Bloom low-res + tonemapping. Low = no post (colour grading baked into albedo/ramp).
-- No motion blur, no chromatic aberration, no DoF in gameplay (07 perf + readability). HDR on High/Mid only. MSAA 2× High, off Mid/Low; render scale 1.0/0.85/0.7.
+## 3 · Lighting & post (URP 14 mobile), v1.1 "real, top-quality objects"
+Reference: `/workspace/art/m1b/arena_brief_v2.md` (key #FFF2D6 1.4 at (50°, -35°, 0); gradient ambient sky #8CC8FF / equator #DCEFFF / ground #6FAE5A ×1.15; fog linear #CFEAFF 80–250). Values live in `VisualConfig`.
+
+### URP asset per tier (3 assets: `URP_High`, `URP_Mid`, `URP_Low`, switched by QualitySettings)
+| Setting | High | Mid | Low |
+|---|---|---|---|
+| Render scale / MSAA / HDR | 1.0 / 2× / on (R11G11B10) | 0.85 / off / on | 0.7 / off / off |
+| Main light shadows | 2 cascades (split 25%), distance 40 m, 2048 | 1 cascade, 35 m, 1024 | hard, 1 cascade, 25 m, 512 (or off → blob under Wrecker) |
+| Soft shadows | on | on | off |
+| Additional lights | off (per-vertex for FX glows if needed) | off | off |
+| SSAO (Renderer Feature) | on: Depth Normals source, radius 0.3, intensity 0.6, direct lighting strength 0.25, half res off, falloff 40 m | on, **half res**, radius 0.25, intensity 0.5, sample count low (decision: Mid gets SSAO at half res; disable on GPUs below Adreno 6xx/Mali-G7x via device list) | off (baked AO from ORM only) |
+| Reflection probes | probe blending + box projection on | box projection on, blending off | off (SH only; matcap-like stepped spec) |
+| Depth texture / Opaque texture | on (SSAO) / off | on / off | off / off |
+| Shader LOD | 300 | 300 | 150 |
+
+### Reflection probes per arena
+1 baked box-projected probe covering the play diorama (bounds = island top + 6 m up), resolution 256 (High) / 128 (Mid), HDR, box projection on; 1 lower-priority probe for the sky/satellite islands at 64. Re-bake when arena layout changes. Wrecker gets its own anchor override to the arena probe. No realtime probes.
+
+### Post (one global Volume per tier)
+- Tonemapping **ACES**, post-exposure **0** (Modeler preview rig matches). Colour grade that keeps the bright palette: Colour Adjustments saturation +15, contrast +10 (compensates ACES desaturation), White Balance temperature +5; Lift/Gamma/Gain neutral; Shadows-Midtones-Highlights: shadows tinted slightly to #5B6FA8 (≤5%).
+- Bloom: threshold 1.0, intensity 0.4 (High; Mid same, low-quality filtering), scatter 0.6; Core emissive ≈2.5 so only Core/power-ups bloom.
+- No vignette, no DoF in gameplay, no motion blur, no chromatic aberration. Low: no post; ACES look approximated by authored albedo.
+- Preview rig (Modeler, agreed): sun ≈1.2 from upper back-left, gradient ambient, one reflection probe, ACES exposure 0, bloom threshold 1 / intensity 0.4, SSAO on, no DoF.
 
 ## 4 · Mobile budgets per quality tier (`QualityTier` Low/Mid/High)
 | Budget | Low | Mid | High |
@@ -44,10 +63,32 @@ SRP Batcher: every material property is in `UnityPerMaterial`; no per-object Mat
 | Transparent overdraw target (avg / worst) | 1.5× / 3× | 2× / 4× | 2.5× / 5× |
 | Full-screen passes | 0 (TF tint via UI image) | 1 | 1 |
 | FX texture size | 256, atlas | 512 atlas | 512 atlas (1024 for TF crack) |
-| Prop textures | 512 ASTC 8×8 | 1024 ASTC 6×6 | 1024 ASTC 6×6 |
-| Shader variants (game total) | ≤64 | | |
+| Prop textures (albedo/normal/ORM) | 512 (mip-bias import) ASTC 8×8, normal/ORM not sampled | 1024 ASTC 6×6 (normal ASTC 5×5) | 1024 ASTC 6×6 (normal 5×5) |
+| Shader variants | GlossyPBR High/Mid ForwardLit ≤ 96 before stripping, target ≤ 32 shipped per tier after URP stripping; Low SubShader ≤ 8; game total ≤ 128 | | |
 | Draw calls / SetPass gameplay | ≤120 / ≤40 | ≤150 / ≤50 | ≤200 / ≤60 |
 Debris fade = scale to 0 (no alpha) per 03. Dust = 1 flipbook quad on Low.
+
+## 4b · Texture & mesh authoring conventions (agreed with 3D Modeler)
+- **Per asset:** 1024² albedo (sRGB), normal (**OpenGL Y+**, linear, Unity "Normal map" import), ORM (linear: **R occlusion, G roughness, B metallic**). Low tier gets the same files with Max Size 512 via platform override.
+- **Texel density:** 512 px/m for structures and props (1024 for 2 m pieces), 1024 px/m for the Wrecker hero; fragments share their parent's texture.
+- **Material values:** steel metallic 1, roughness 0.3; wood/brick metallic 0, roughness 0.55–0.75; gold trim metallic 1, roughness 0.25. Albedo stays bright (sRGB 50–240), no baked lighting in albedo except AO in ORM.R.
+- **Vertex colour:** R = damage mask (cracks/darken only where R>0), A = flex weight (hit wobble). G/B free.
+- **UVs:** UV0 unique, non-overlapping; UV2 lightmap UVs on static pieces (Unity "Generate Lightmap UVs" allowed).
+- **Slots:** separate emissive slot `M_Wrecker_Emissive` (Core/Module/Booster glow; HDR emission ≈2.5). Fragments carry an `M_<Mat>_Inner` slot → same shader with `_InnerFace = 1`, `_InnerColor` (the material's dark colour), roughness 0.9.
+- **Wrecker sockets (empties):** `Muzzle`, `Core`, `Module`, `Booster`, `WheelDust` (VFX attach points).
+- **Crack masks:** VFX authors per material (R step1, G step2) on UV0, 512².
+- **Naming:** `T_<Asset>_A`, `T_<Asset>_N`, `T_<Asset>_ORM`, `M_<Mat>`, `M_<Mat>_Inner`.
+
+## 4c · v3 hero render checklist (sign-off before an asset ships)
+1. Rendered in the preview rig (above) on URP_High and URP_Low.
+2. Albedo-only view: no baked shadows/highlights; values in range.
+3. Normal map: green up (OpenGL); no seams across UV islands; bevels read at gameplay distance (≈18 m).
+4. ORM: AO not crushed (min ≥0.35), steel reads metallic with sharp sky reflection from the probe, wood/brick read rough.
+5. Silhouette and toon terminator read in the shade tint (#5B6FA8), rim visible from back-left.
+6. Damage steps 1/2 look right with vertex R mask; inner faces show `M_<Mat>_Inner`.
+7. Core emissive blooms, environment never cyan.
+8. Low tier: still readable without normal/ORM; triangle and texture budgets met.
+9. Turntable + gameplay-camera screenshot attached to the PR.
 
 ## 5 · Impacts, materials, dust (delivered: `Scripts/VFX/VfxCore.cs`, `VfxDirector.cs`)
 Timings in ms (frames @60). Event column = audio/anim_audio_map.csv; VFX fire on the same event at frame 0 unless stated.
@@ -85,6 +126,6 @@ Time Fracture slows moving parts only; FX on those parts use their local speed, 
 - Gameplay tells (shutter tell, armed pulses) stay visible as colour changes.
 
 ## 8 · Delivered files
-`vfx/VFX_Shader_Spec_v1.md`, `vfx/OPEN_QUESTIONS.md`, `vfx/compile_check/VfxCompileCheck.csproj`, `Assets/_Project/VFX/Shaders/CrashverseGlossyToon.shader`, `.../CrashverseVfxParticle.shader`, `Assets/_Project/Scripts/VFX/VfxCore.cs`, `VfxDirector.cs`. Compile check: `dotnet build vfx/compile_check` (stubs; not a Unity compile; shaders need a Unity import to validate).
+`vfx/VFX_Shader_Spec_v1.md`, `vfx/OPEN_QUESTIONS.md`, `vfx/compile_check/VfxCompileCheck.csproj`, `Assets/_Project/VFX/Shaders/CrashverseGlossyPBR.shader`, `.../CrashverseGlossyToon.shader` (fallback), `.../CrashverseVfxParticle.shader`, `Assets/_Project/Scripts/VFX/VfxCore.cs`, `VfxDirector.cs`. Compile check: `dotnet build vfx/compile_check` (stubs; not a Unity compile; shaders need a Unity import to validate).
 
 Device testing (Mali/Adreno) waits for the Unity licence and the CI APK. VFX owns crack masks and FX sprite sheets (original, free tools: Krita/Blender).
