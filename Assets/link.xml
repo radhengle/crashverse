@@ -1,5 +1,5 @@
 <linker>
-  <!-- Components added only at runtime via AddComponent; IL2CPP managed stripping removes them otherwise (BUG-24). -->
+  <!-- Components created at runtime (CreatePrimitive/AddComponent) with no C# type reference; IL2CPP managed stripping removes them otherwise (BUG-24). -->
   <assembly fullname="UnityEngine.PhysicsModule" preserve="all"/>
   <assembly fullname="UnityEngine.CoreModule">
     <type fullname="UnityEngine.MeshRenderer" preserve="all"/>
