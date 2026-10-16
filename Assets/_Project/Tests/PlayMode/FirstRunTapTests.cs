@@ -102,6 +102,69 @@ namespace Crashverse.Tests.PlayMode
             Assert.True(AgeGateScreen.Blocked);
         }
 
+        [UnityTest]
+        public IEnumerator Art_v2_age_gate_keeps_smoke_hooks_and_tap_targets()
+        {
+            var gate = (AgeGateScreen)AppServices.Router.Top;
+            foreach (var n in new[] { "Button_Month", "Button_Year", "Button_Continue" })
+                Assert.NotNull(UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(b => b.name == n && b.isActiveAndEnabled), n + " (smoke-script hook) present");
+            Assert.AreEqual("Button_Month", gate.MonthButton.name); Assert.AreEqual("Button_Year", gate.YearButton.name);
+            Canvas.ForceUpdateCanvases();
+            var safe = AppServices.Router.SafeRoot;
+            foreach (var b in new[] { gate.MonthButton, gate.YearButton, gate.ContinueButton })
+            {
+                var rt = (RectTransform)b.transform;
+                Assert.GreaterOrEqual(rt.rect.height, 48f - 0.01f, b.name + " tap target ≥ 48dp");
+                Assert.True(RectTransformUtility.RectangleContainsScreenPoint(safe, RectTransformUtility.WorldToScreenPoint(null, rt.TransformPoint(rt.rect.center)), null), b.name + " inside the safe area");
+            }
+            Assert.False(gate.ContinueButton.interactable, "no preselection: Continue starts disabled");
+            Assert.AreEqual("Tap to choose", gate.MonthButton.GetComponentInChildren<Text>().text);
+            Assert.AreEqual("Tap to choose", gate.YearButton.GetComponentInChildren<Text>().text);
+
+            yield return Tap(gate.YearButton);
+            yield return WaitFor(() => AppServices.Router.Top is ListModal, "year sheet (ListModal)");
+            var sheet = (ListModal)AppServices.Router.Top;
+            Assert.IsNull(sheet.SelectedLabel, "no year preselected on first open");
+            foreach (var row in UnityEngine.Object.FindObjectsOfType<Button>().Where(b => b.GetComponentInParent<ScrollRect>() != null))
+                Assert.GreaterOrEqual(((RectTransform)row.transform).rect.height, 48f - 0.01f, row.name + " row ≥ 48dp");
+            yield return TapNamed("Button_" + (DateTime.UtcNow.Year - 30));
+            Assert.False(gate.ContinueButton.interactable, "year alone keeps Continue disabled");
+            Assert.AreEqual((DateTime.UtcNow.Year - 30).ToString(), gate.YearButton.GetComponentInChildren<Text>().text);
+
+            yield return Tap(gate.YearButton); // reopen: chosen row shown as selected
+            yield return WaitFor(() => AppServices.Router.Top is ListModal, "year sheet reopened");
+            Assert.AreEqual((DateTime.UtcNow.Year - 30).ToString(), ((ListModal)AppServices.Router.Top).SelectedLabel);
+            yield return TapNamed("Button_Close");
+            Assert.True(AppServices.Router.Top is AgeGateScreen);
+        }
+
+        [UnityTest]
+        public IEnumerator Future_date_shows_error_and_keeps_Continue_disabled()
+        {
+            var now = DateTime.UtcNow;
+            if (now.Month == 12) Assert.Ignore("no future month in December");
+            var gate = (AgeGateScreen)AppServices.Router.Top;
+            yield return Tap(gate.MonthButton); yield return TapNamed("Button_December");
+            yield return Tap(gate.YearButton); yield return TapNamed("Button_" + now.Year);
+            Assert.False(gate.ContinueButton.interactable, "future date: Continue disabled");
+            StringAssert.Contains("future", gate.Error);
+            yield return Tap(gate.YearButton); yield return TapNamed("Button_" + (now.Year - 20));
+            Assert.True(gate.ContinueButton.interactable, "changing the value clears the error");
+        }
+
+        [UnityTest]
+        public IEnumerator Block_screen_has_no_back_retry_or_edit()
+        {
+            var gate = (AgeGateScreen)AppServices.Router.Top;
+            yield return Tap(gate.MonthButton); yield return TapNamed("Button_June");
+            yield return Tap(gate.YearButton); yield return TapNamed("Button_" + (DateTime.UtcNow.Year - 10));
+            yield return Tap(gate.ContinueButton);
+            yield return WaitFor(() => AppServices.Router.Top is BlockedScreen, "block screen");
+            var names = UnityEngine.Object.FindObjectsOfType<Button>().Where(b => b.isActiveAndEnabled && b.transform.IsChildOf(AppServices.Router.Top.Root)).Select(b => b.name).ToArray();
+            CollectionAssert.AreEquivalent(new[] { "Button_Privacy Policy" }, names, "only the Privacy Policy link");
+            Assert.True(AgeGateScreen.Blocked);
+        }
+
         // ---- helpers ----
         IEnumerator TapNamed(string name)
         {

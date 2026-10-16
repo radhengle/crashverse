@@ -239,6 +239,11 @@ namespace Crashverse.UI
         public override bool IsModal => true;
         /// <param name="startIndex">item scrolled to the top when the list opens (the whole list stays reachable)</param>
         public ListModal(string title, List<(string, Action)> items, int startIndex = 0) { _title = title; _items = items; _start = startIndex; }
+        /// <summary>Art v2 age-gate bottom sheet (age_gate_spec.md): full-width sheet over a 66% navy dim, 48dp rows, gold title.
+        /// Row/close objects keep the Button_&lt;label&gt; names and the same tap behaviour; nothing is preselected unless <paramref name="selected"/> was already picked.</summary>
+        public ListModal(string title, List<(string, Action)> items, int startIndex, bool sheet, string selected = null) : this(title, items, startIndex) { _sheet = sheet; _selected = selected; }
+        readonly bool _sheet; readonly string _selected;
+        public string SelectedLabel => _selected;
         public override void OnShow()
         {
             if (_sr == null || _start <= 0) return;
@@ -250,6 +255,7 @@ namespace Crashverse.UI
         }
         protected override void Build(RectTransform root)
         {
+            if (_sheet) { BuildSheet(root); return; }
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
             var p = UIFactory.TrimPanel("List", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(300, 420), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
@@ -257,6 +263,24 @@ namespace Crashverse.UI
             var list = UIFactory.Scroll(v, Th.gap, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1; _sr = sr;
             foreach (var it in _items) { var a = it.act; UIFactory.Button(list, it.label, Th.navy500, () => { Router.Pop(); a(); }, Th, 48, 0, Th.bodySp); }
             UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
+        }
+        void BuildSheet(RectTransform root)
+        {
+            var dim = UIFactory.Panel("Dim", root, AgeGateStyle.Dim); UIFactory.Stretch(dim.rectTransform);
+            var p = UIFactory.Panel("List", root, AgeGateStyle.PanelTop);
+            var prt = p.rectTransform; prt.anchorMin = new Vector2(0, 0); prt.anchorMax = new Vector2(1, 0.56f); prt.offsetMin = Vector2.zero; prt.offsetMax = Vector2.zero; // ~y 1030 → bottom, so the smoke script's swipe band (y 1000–1300 px) stays on the list
+            AgeGateStyle.Outline(p.gameObject, 2f);
+            var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
+            UIFactory.Label(v, _title.ToUpperInvariant(), Th.headingSp, AgeGateStyle.Gold, TextAnchor.MiddleCenter, Th, true);
+            var list = UIFactory.Scroll(v, 0f, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1; _sr = sr;
+            foreach (var it in _items)
+            {
+                var a = it.act; bool sel = _selected != null && it.label == _selected;
+                var b = UIFactory.Button(list, it.label, sel ? AgeGateStyle.RowSelected : AgeGateStyle.Row, () => { Router.Pop(); a(); }, Th, 48, 0, Th.headingSp);
+                var c = b.colors; c.pressedColor = AgeGateStyle.RowPressedTint; b.colors = c;
+                if (sel) AgeGateStyle.Outline(b.gameObject, 2f);
+            }
+            UIFactory.Button(v, "Close", AgeGateStyle.Charcoal, () => Router.Pop(), Th, 48);
         }
     }
 
@@ -746,29 +770,78 @@ namespace Crashverse.UI
         public string Error => _err != null ? _err.text : "";
         public AgeGateScreen(Action<bool> done) { _done = done; }
         public override bool OnBack() => true; // must answer
+        Text _hint;
+        /// <summary>Art v2 final layout (art/v2/age_gate/age_gate_spec.md). Built as live UI inside the router's SafeArea root.
+        /// Object names Button_Month / Button_Year / Button_Continue and the ListModal pickers are unchanged (smoke script + tap tests).</summary>
         protected override void Build(RectTransform root)
         {
-            var bg = UIFactory.Panel("Bg", root, Th.navy900); UIFactory.Stretch(bg.rectTransform);
-            var v = UIFactory.VStack(root, Th.gap * 2, 24f); UIFactory.Place(v, new Vector2(0.5f, 0.5f), new Vector2(320, 380), Vector2.zero);
-            UIFactory.Label(v, "Welcome to CRASHVERSE", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
-            UIFactory.Label(v, "Please enter your date of birth.", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
-            _monthBtn = UIFactory.Button(v, "Month", Th.navy500, PickMonth, Th, 56);
-            _yearBtn = UIFactory.Button(v, "Year", Th.navy500, PickYear, Th, 56);
-            _ok = UIFactory.Button(v, "Continue", Th.green, Confirm, Th, 56); _ok.interactable = false;
-            _err = UIFactory.Label(v, "Choose your birth month and year.", Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th);
-            UIFactory.Label(v, "We only keep an age range, never your date of birth.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            AgeGateStyle.Background(root);
+            var col = UIFactory.VStack(root, 0f, 0f, TextAnchor.UpperCenter); UIFactory.Stretch(col);
+            col.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(20, 20, 20, 24); // ≥ spec side/bottom minimums on top of Screen.safeArea
+            var title = UIFactory.Label(col, "CRASHVERSE", 44f, AgeGateStyle.Gold, TextAnchor.MiddleCenter, Th, true); title.name = "TitleLogo";
+            title.gameObject.AddComponent<Outline>().effectColor = AgeGateStyle.GoldDark; title.GetComponent<LayoutElement>().minHeight = 96f;
+            UIFactory.Spacer(col, 24f);
+            // panel (navy, gold frame) with the violet ribbon riding on its top edge
+            var panel = UIFactory.Panel("Panel", col, AgeGateStyle.PanelTop); AgeGateStyle.Outline(panel.gameObject, 3f);
+            var ple = panel.gameObject.AddComponent<LayoutElement>(); ple.minHeight = 393f; ple.flexibleHeight = 0f;
+            var ribbon = UIFactory.Panel("Ribbon", panel.transform, AgeGateStyle.Violet); ribbon.raycastTarget = false;
+            UIFactory.Place(ribbon.rectTransform, new Vector2(0.5f, 1f), new Vector2(200, 32), new Vector2(0, 0)); AgeGateStyle.Outline(ribbon.gameObject, 2f);
+            var rl = UIFactory.Label(ribbon.transform, "BEFORE YOU PLAY", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th, true); UIFactory.Stretch(rl.rectTransform);
+            var v = UIFactory.VStack(panel.transform, 0f, 16f); UIFactory.Stretch(v); v.GetComponent<VerticalLayoutGroup>().padding.top = 28;
+            UIFactory.Label(v, "Enter your birth month and year", 15f, Th.white, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Label(v, "This helps us set up the right game for you.", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th);
+            UIFactory.Spacer(v, 10f);
+            var labels = UIFactory.HStack(v, 12f, 20f);
+            UIFactory.Label(labels, "MONTH", Th.captionSp, AgeGateStyle.Muted, TextAnchor.LowerLeft, Th);
+            UIFactory.Label(labels, "YEAR", Th.captionSp, AgeGateStyle.Muted, TextAnchor.LowerLeft, Th);
+            var fields = UIFactory.HStack(v, 12f, 56f);
+            _monthBtn = Field(fields, "Month", PickMonth);
+            _yearBtn = Field(fields, "Year", PickYear);
+            _err = UIFactory.Label(v, "Choose your birth month and year.", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th, true);
+            var ele = _err.GetComponent<LayoutElement>(); ele.minHeight = ele.preferredHeight = 28f; _err.name = "ErrorSlot"; // reserved: layout never jumps
+            UIFactory.Spacer(v, 8f);
+            _ok = UIFactory.Button(v, "Continue", AgeGateStyle.CtaDisabled, Confirm, Th, 50, 0, Th.titleSp); _ok.interactable = false;
+            var oc = _ok.colors; oc.disabledColor = Color.white; oc.normalColor = Color.white; _ok.colors = oc; // alpha-free disabled art: colour comes from the Image itself
+            _hint = UIFactory.Label(v, "Choose both to continue", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th);
+            UIFactory.Spacer(col, 16f);
+            var priv = UIFactory.Button(col, "Privacy Policy", new Color(0, 0, 0, 0), OpenPrivacy, Th, 48, 200, Th.bodySp); // ≥48dp tap area
+            priv.GetComponentInChildren<Text>().color = AgeGateStyle.Muted;
+            UIFactory.Label(col, "We only keep an age range, never your date of birth.", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th);
+            ApplyVisualState(false);
         }
+        Button Field(Transform parent, string name, UnityEngine.Events.UnityAction pick)
+        {
+            var b = UIFactory.Button(parent, name, AgeGateStyle.FieldFill, pick, Th, 56, 0, Th.headingSp); // object name Button_<name> is a smoke-script hook
+            UIFactory.SetLabel(b, "Tap to choose"); b.GetComponentInChildren<Text>().color = AgeGateStyle.Placeholder;
+            AgeGateStyle.Outline(b.gameObject, 2f);
+            return b;
+        }
+        void SetField(Button b, string value) { UIFactory.SetLabel(b, value); b.GetComponentInChildren<Text>().color = Th.white; }
+        /// <summary>Navy-and-gold states from the mockups: empty / filled (gold) / error (red) fields, disabled vs orange CTA, hint only while disabled.</summary>
+        void ApplyVisualState(bool error)
+        {
+            if (_ok == null) return;
+            ((Image)_ok.targetGraphic).color = _ok.interactable ? AgeGateStyle.Cta : AgeGateStyle.CtaDisabled;
+            _ok.GetComponentInChildren<Text>().color = _ok.interactable ? Th.white : AgeGateStyle.CtaDisabledText;
+            if (_hint != null) _hint.gameObject.SetActive(!_ok.interactable && !error);
+            if (_err != null) _err.color = error ? AgeGateStyle.Error : AgeGateStyle.Muted;
+            AgeGateStyle.SetOutline(_monthBtn.gameObject, error ? AgeGateStyle.Error : _month != 0 ? AgeGateStyle.Gold : AgeGateStyle.GoldDark);
+            AgeGateStyle.SetOutline(_yearBtn.gameObject, error ? AgeGateStyle.Error : _year != 0 ? AgeGateStyle.Gold : AgeGateStyle.GoldDark);
+        }
+        /// <summary>TODO(Security Admin/Legal): final privacy policy URL. No-op until set (no network before the gate otherwise).</summary>
+        public static string PrivacyUrl = "";
+        static void OpenPrivacy() { if (!string.IsNullOrEmpty(PrivacyUrl)) Application.OpenURL(PrivacyUrl); }
         void PickMonth()
         {
             var items = new List<(string, Action)>();
-            for (int i = 0; i < 12; i++) { int m = i + 1; items.Add((Months[i], () => { _month = m; _monthBtn.GetComponentInChildren<Text>().text = Months[m - 1]; Validate(); })); }
-            Router.Push(new ListModal("Month of birth", items));
+            for (int i = 0; i < 12; i++) { int m = i + 1; items.Add((Months[i], () => { _month = m; SetField(_monthBtn, Months[m - 1]); Validate(); })); }
+            Router.Push(new ListModal("Birth month", items, 0, true, _month > 0 ? Months[_month - 1] : null));
         }
         void PickYear()
         {
             var items = new List<(string, Action)>(); int now = DateTime.UtcNow.Year;
-            for (int y = now; y >= now - 100; y--) { int yy = y; items.Add((yy.ToString(), () => { _year = yy; _yearBtn.GetComponentInChildren<Text>().text = yy.ToString(); Validate(); })); } // newest first: no eligible-age default
-            Router.Push(new ListModal("Year of birth", items, 18)); // V-02: opens at current year − 18; all 100 years still scroll
+            for (int y = now; y >= now - 100; y--) { int yy = y; items.Add((yy.ToString(), () => { _year = yy; SetField(_yearBtn, yy.ToString()); Validate(); })); } // newest first: no eligible-age default
+            Router.Push(new ListModal("Birth year", items, _year > 0 ? now - _year : 18, true, _year > 0 ? _year.ToString() : null)); // V-02: opens at current year − 18; all 100 years still scroll
         }
         /// <summary>Continue stays disabled until both are picked and the date isn't in the future; the caption says what's missing.</summary>
         void Validate()
@@ -779,6 +852,7 @@ namespace Crashverse.UI
                      : _year == 0 ? "Choose your birth year."
                      : (_year == now.Year && _month > now.Month) ? "That date is in the future. Check the month and year." : "";
             _err.text = e; _ok.interactable = e.Length == 0;
+            ApplyVisualState(_month != 0 && _year != 0 && e.Length > 0);
         }
         /// <summary>Test hooks (PlayMode tap tests).</summary>
         public Button MonthButton => _monthBtn; public Button YearButton => _yearBtn; public Button ContinueButton => _ok;
@@ -800,9 +874,18 @@ namespace Crashverse.UI
         public override bool OnBack() => true;
         protected override void Build(RectTransform root)
         {
-            var bg = UIFactory.Panel("Bg", root, Th.navy900); UIFactory.Stretch(bg.rectTransform);
-            var l = UIFactory.Label(root, "CRASHVERSE isn't available.", Th.headingSp, Th.white, TextAnchor.MiddleCenter, Th, true);
-            UIFactory.Place(l.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 120), Vector2.zero);
+            AgeGateStyle.Background(root);
+            var panel = UIFactory.Panel("Panel", root, AgeGateStyle.PanelTop); AgeGateStyle.Outline(panel.gameObject, 3f);
+            UIFactory.Place(panel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 420), Vector2.zero);
+            var v = UIFactory.VStack(panel.transform, 12f, 20f, TextAnchor.MiddleCenter); UIFactory.Stretch(v);
+            var med = UIFactory.Panel("Medallion", v, AgeGateStyle.Violet); med.raycastTarget = false; AgeGateStyle.Outline(med.gameObject, 4f);
+            var mle = med.gameObject.AddComponent<LayoutElement>(); mle.minHeight = mle.preferredHeight = 100f; mle.preferredWidth = 100f;
+            UIFactory.Label(v, "THANKS FOR STOPPING BY!", Th.headingSp, AgeGateStyle.Gold, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Label(v, "CRASHVERSE isn't available for your age right now. We hope to see you again when you're older!", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th).GetComponent<LayoutElement>().minHeight = 80f;
+            var priv = UIFactory.Button(v, "Privacy Policy", new Color(0, 0, 0, 0), () => { if (!string.IsNullOrEmpty(AgeGateScreen.PrivacyUrl)) Application.OpenURL(AgeGateScreen.PrivacyUrl); }, Th, 48, 200, Th.bodySp);
+            priv.GetComponentInChildren<Text>().color = AgeGateStyle.Muted;
+            UIFactory.Label(v, "For grown-ups", Th.captionSp, AgeGateStyle.Muted, TextAnchor.MiddleCenter, Th);
+            // E2 / spec 05: no back, retry or edit control.
         }
     }
 
