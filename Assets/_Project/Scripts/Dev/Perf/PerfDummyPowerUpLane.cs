@@ -16,6 +16,7 @@ namespace Crashverse.DevTools.Perf
         static PerfDummyPowerUpLane _instance;
         ParticleSystem _ps; int _target;
         /// <summary>Live dummy particles (0 when the toggle is off). For VfxPerfProbe's particle total.</summary>
+        /// NOTE: read by VFX by reflection (vfx/perf-l10-integration). Keep the name and type stable.
         public static int LiveParticles => _instance != null && _instance._ps != null ? _instance._ps.particleCount : 0;
 
         public void Bind(bool lowTier)

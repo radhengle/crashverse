@@ -113,12 +113,21 @@ namespace Crashverse.Data.Dev
         public int CollapseStarts { get; private set; }
         public int CollapseEnds { get; private set; }
         public readonly SortedDictionary<string, int> BreaksByMaterial = new SortedDictionary<string, int>(StringComparer.Ordinal);
+        /// <summary>NOTE: read by VFX by reflection (vfx/perf-l10-integration). Keep the name and type stable.</summary>
         public ulong Hash => _hash;
+        /// <summary>First cannon PHYS_IMPACT of the scripted shot (tick, height in local metres, curtain row). -1 = no hit yet.</summary>
+        public int HitTick { get; private set; } = -1;
+        public float HitY { get; private set; }
+        public int HitRow => HitTick < 0 ? -1 : (int)Math.Floor(HitY / (PerfL10Fixture.PieceH + PerfL10Fixture.Gap));
+        public bool Hit => HitTick >= 0;
+
+        /// <summary>Record the first cannon impact (source Cannon = 0). y is world height (ground at 0).</summary>
+        public void OnCannonImpact(int tick, float y) { if (HitTick < 0) { HitTick = tick; HitY = y; } }
 
         public void Reset()
         {
             _breaksPerWindow.Clear(); BreaksByMaterial.Clear(); _hash = 14695981039346656037UL;
-            Breaks = Events = PeakDebris = CollapseStarts = CollapseEnds = 0;
+            Breaks = Events = PeakDebris = CollapseStarts = CollapseEnds = 0; HitTick = -1; HitY = 0f;
         }
 
         /// <summary>Fold one PHYS_* event (kind as its enum byte) into the hash; count breaks per window from the fire tick.</summary>
@@ -159,7 +168,7 @@ namespace Crashverse.Data.Dev
         void Mix(int v) { unchecked { for (int i = 0; i < 4; i++) { _hash ^= (byte)(v >> (8 * i)); _hash *= 1099511628211UL; } } }
 
         public string Summary(int run, long seed, string tier) =>
-            $"PERFL10_SUMMARY,run={run},seed=0x{seed:X16},tier={tier},hash={_hash:X16},events={Events},breaks={Breaks},saturated_ms={SaturatedMs}," +
+            $"PERFL10_SUMMARY,run={run},seed=0x{seed:X16},tier={tier},hit={(Hit ? 1 : 0)},hit_tick={HitTick},hit_y={HitY:0.00},hit_row={HitRow},hash={_hash:X16},events={Events},breaks={Breaks},saturated_ms={SaturatedMs}," +
             $"peak_debris={PeakDebris},collapse_start={CollapseStarts},collapse_end={CollapseEnds},mats={string.Join("|", Mats())}";
 
         IEnumerable<string> Mats() { foreach (var kv in BreaksByMaterial) yield return kv.Key + ":" + kv.Value; }

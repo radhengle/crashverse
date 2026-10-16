@@ -671,6 +671,18 @@ static class Tests
             T.True(!lvl.IsBoss && lvl.layout == lay.id && Array.IndexOf(lvl.materials, "glass") >= 0, "perf level: no boss, dev layout, glass allowed");
             T.True(Array.IndexOf(l10.materials, "glass") < 0, "shipped c1_l10 still has no glass");
         });
+        T.Add("PERF_L10_scripted_shot_hits_curtain_analytic", () =>
+        {
+            // Same step as PhysX/aim preview at 50 Hz (v += g dt; p += v dt). Gravity 9.81 x RuleModifiers (0 = unchanged; the
+            // x1.2 gravity ruling is not applied in code yet). Spawn = Wrecker (WreckerX, 0) + pivot (PivotY) + SpawnAlong along elevation.
+            double th = PerfL10Fixture.AimElevationDeg * Math.PI / 180.0, dt = 0.02, g = 9.81, r = 0.45 * 0.5;
+            double x = Crashverse.Weapons.WreckerSpec.WreckerX + Crashverse.Weapons.WreckerSpec.SpawnAlong * Math.Cos(th), y = Crashverse.Weapons.WreckerSpec.PivotY + Crashverse.Weapons.WreckerSpec.SpawnAlong * Math.Sin(th);
+            double vx = PerfL10Fixture.LaunchSpeed * Math.Cos(th), vy = PerfL10Fixture.LaunchSpeed * Math.Sin(th);
+            double face = 10.0 + PerfL10Fixture.CurtainX - PerfL10Fixture.PieceW * 0.5; int steps = 0; // structureBase x = 10
+            while (x + r < face && y > -6 && steps < 500) { vy -= g * dt; x += vx * dt; y += vy * dt; steps++; }
+            int row = (int)Math.Floor(y / (PerfL10Fixture.PieceH + PerfL10Fixture.Gap));
+            T.True(y > 0 && row >= 1 && row <= 3, $"8 deg / 28 m/s reaches the curtain face at y={y:0.00} (row {row}) after {steps} ticks");
+        });
         T.Add("PERF_L10_stats_saturation_and_hash", () =>
         {
             var st = new PerfL10Stats(); int fire = 50;
