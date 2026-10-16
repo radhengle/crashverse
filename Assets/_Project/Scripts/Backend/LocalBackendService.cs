@@ -156,7 +156,9 @@ namespace Crashverse.Backend
         /// <summary>Guests need no re-auth (C1). Linked accounts need the token from /auth/reauth, under 5 minutes old.</summary>
         bool FreshReauth(string token) => !_s.account.linked ||
             (!string.IsNullOrEmpty(token) && token == _s.reauthToken && (new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds() - _s.reauthUnixMs) <= 5 * 60 * 1000);
-        bool MinorNoConsent(Func<AccountState, bool> scope) => _s.account.ageBand == AgeBands.Minor && !scope(_s.account);
+        // Dev stub only: the pre-four-band client still sends "13to17"; the four-band client migration lands in PR #3.
+        const string LegacyMinorBand = "13to17";
+        bool MinorNoConsent(Func<AccountState, bool> scope) => _s.account.ageBand == LegacyMinorBand && !scope(_s.account);
         public static string GeneratedName(string playerId) => "Wrecker #" + (Math.Abs((playerId ?? "").GetHashCode()) % 9000 + 1000);
 
         public Task<ReauthResponse> Reauthenticate(LinkCredential c)
@@ -188,9 +190,9 @@ namespace Crashverse.Backend
             if (b == Crashverse.Meta.AgeGate.Band.Under13) throw new BackendException("AGE_BLOCKED", 403);
             var band = Crashverse.Meta.AgeGate.ToServer(b);
             var a = _s.account;
-            if (a.ageBand != AgeBands.Minor) a.ageBand = band; // most restrictive wins; older band needs parental verification/support
+            if (a.ageBand != LegacyMinorBand) a.ageBand = band; // most restrictive wins; older band needs parental verification/support
             _s.country = country ?? ""; Save();
-            bool minor = a.ageBand == AgeBands.Minor;
+            bool minor = a.ageBand == LegacyMinorBand;
             return Task.FromResult(new AgeGateResponse { band = a.ageBand, requiresParentalConsent = minor && !(a.consentSocial && a.consentName && a.consentPurchases) }); // TODO(Legal): per-market consent ages
         }
         public Task<ConsentRequestResponse> RequestParentalConsent(string parentEmail)
