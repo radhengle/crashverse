@@ -57,7 +57,7 @@ No Charge state: shot power is fixed for every shot (Gameplay_Feel_Answers_v1 OQ
 Slot swap scales each part about its own centre inside its own volume (silhouette rule 4); Module pod scale pivot = pod centre on the barrel top, so the pod never pops off the carriage.
 Gameplay must not depend on animation events for correctness: the shot is spawned by `WreckerController.Fire()`; the event only drives VFX/SFX (ensures Animator culling can't eat a shot).
 
-Muzzle flash: Booster-orange #FF7A1A core + white, 3 frames (50 ms) scale 0.6→1.3, additive quad + 6 sparks. Inner tint may follow equipped Core (brief: "inner glow tints per core type allowed, outer orb stays cyan").
+Muzzle flash: **Core cyan #22D3EE** core + white (PM/Art decision 2026-10-16; OQ-X3 resolved — not Booster orange), 3 frames (50 ms) scale 0.6→1.3, additive quad + 6 sparks. Inner tint may follow equipped Core (brief: "inner glow tints per core type allowed, outer orb stays cyan").
 
 ## Unity Animator
 Layers: `Base` (body), `Slots` (additive, emissive/scale), `Aim` driven by script (yaw/pitch bones set procedurally in LateUpdate, not by clips).

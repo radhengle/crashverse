@@ -41,6 +41,13 @@ namespace Crashverse.Feel
             UiWin = "UI_WIN", UiShotSpend = "UI_SHOT_SPEND", UiThresholdHit = "UI_THRESHOLD_HIT", CamSlowMoStart = "CAM_SLOWMO_START";
     }
 
+    /// <summary>Animation Spec 02 projectile Animator `Material` int. 0–5 unchanged; Glass appended as 6. (Physics MaterialType #18 is a separate list where glass = 3.)</summary>
+    public static class AnimMaterial
+    {
+        public const int Wood = 0, Brick = 1, Steel = 2, Joint = 3, Terrain = 4, Explosive = 5, Glass = 6;
+        public const string ImpactGlass = "IMPACT_GLASS", BreakGlass = "BREAK_GLASS";
+    }
+
     /// <summary>Global VFX/SFX event bus. Never drives gameplay (Animation Spec global rules).</summary>
     public static class AnimEventBus
     {

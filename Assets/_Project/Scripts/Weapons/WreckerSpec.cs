@@ -29,6 +29,8 @@ namespace Crashverse.Weapons
         public const float MinElevation = 5f, MaxElevation = 70f, MaxYaw = 60f, RestElevation = 25f;
         // Colours
         public const string Core = "22D3EE", Module = "8B5CF6", Booster = "FF7A1A";
+        /// <summary>Muzzle flash colour = Core cyan (PM/Art 2026-10-16, Animation Spec 01, OQ-X3 resolved) — not Booster orange.</summary>
+        public const string MuzzleFlash = Core;
         public const string BarrelNavy = "3E4C6E", CarriageWood = "D9965A", Gold = "E8B04B", Outline = "101828", Tyre = "1B1B1F";
         public const float WreckerX = -20f;
     }

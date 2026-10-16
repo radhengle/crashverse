@@ -21,6 +21,8 @@ Frame = @60 fps from the start of the named state/trigger (negative = before). m
 | ANIM_PROJ_SPLIT_POINT | apex or 70% predicted flight time, whichever first | Flight | Splitstrike split cue (only with Splitstrike armed) |
 | IMPACT_WOOD / BRICK / STEEL / STEEL_JOINT / TERRAIN | 0 / 0 | Impact | material hit (velocity → volume) |
 | BREAK_WOOD / BREAK_BRICK / BREAK_STEEL_JOINT | 0 / 0 | piece HP 0 | snap / crumble / metal pop |
+| IMPACT_GLASS | 0 / 0 | Impact (material int 6) | glass hit tink (velocity → volume) |
+| BREAK_GLASS | 0 / 0 | glass piece HP 0 (shatter, one step) | glass shatter |
 | EXPLODE_CRATE (alias, deprecated: EXPLODE_BARREL) | 6 / 100 | after swell | explosion |
 | BREAK_STEEL | 0 / 0 | non-joint steel HP 0 | metal tear |
 | DAMAGE_STEP | 0 / 0 | darken+crack step applied (payload material, step 1/2) | material crack |

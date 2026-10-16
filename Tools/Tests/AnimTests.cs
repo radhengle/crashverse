@@ -49,6 +49,11 @@ static class AnimTests
             foreach (var f in System.IO.Directory.GetFiles(System.IO.Path.Combine(root, "Assets"), "*.cs", System.IO.SearchOption.AllDirectories))
             { var t = System.IO.File.ReadAllText(f); T.True(!t.Contains("ANIM_PROJ_APEX") && !t.Contains("PU_SPLIT_APEX") && !t.Contains("\"BOSS_TITAN_SURVIVE\""), "no retired event names in " + System.IO.Path.GetFileName(f)); }
         });
+        T.Add("ANIM_spec_constants_muzzle_glass", () =>
+        {
+            T.Eq("22D3EE", Crashverse.Weapons.WreckerSpec.MuzzleFlash, "muzzle flash = Core cyan");
+            T.Eq(0, AnimMaterial.Wood); T.Eq(5, AnimMaterial.Explosive, "0–5 unchanged"); T.Eq(6, AnimMaterial.Glass, "glass appended as 6");
+        });
         T.Add("ANIM_aim_spring_critically_damped", () =>
         {
             float x = 0f, v = 0f; var w = AimSpring.OmegaMid; float prev = 0f; bool mono = true;

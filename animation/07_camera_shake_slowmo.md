@@ -6,7 +6,7 @@ Implementation: Cinemachine Impulse (or equivalent), perlin noise, all values da
 | Trigger | Amplitude pos / rot | Freq | Duration (ms / f) | Decay |
 |---|---|---|---|---|
 | Fire | 0.06 m / 0.6° | 9 Hz | 180 / 11 | ease-out quad |
-| Impact wood | 0.02 / 0.2° | 14 | 100 / 6 | out |
+| Impact wood / glass | 0.02 / 0.2° | 14 | 100 / 6 | out |
 | Impact brick break | 0.04 / 0.4° | 12 | 150 / 9 | out |
 | Steel joint break | 0.06 / 0.6° | 12 | 150 / 9 | out |
 | Segment collapse land | 0.08 / 0.8° | 8 | 250 / 15 | out cubic |
