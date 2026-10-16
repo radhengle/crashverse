@@ -88,8 +88,33 @@ namespace Crashverse.Data.Dev
                             indestructible = false, spinAxis = new float[0], pivot = new float[0], spinDps = 0f,
                         });
                     }
+            float zSpan = (Columns - 1) * (PieceD + Gap);
+            for (int i = 0; i < DropPanes; i++)
+            {
+                int col = i % Columns; // held by layer-0 fuse block in this column
+                list.Add(new BlockData
+                {
+                    id = DropId(i), mat = "glass",
+                    p = new[] { CurtainX + (i % Layers) * LayerStep, DropHeight(i), z0 + zSpan * ((i * 7) % DropPanes) / (DropPanes - 1f) },
+                    s = new[] { 0.7f, 0.12f, 0.7f },
+                    sup = new[] { CurtainId(0, 0, col) },
+                    joint = false, role = "drop", nonObj = true, color = "", explosive = false,
+                    indestructible = false, spinAxis = new float[0], pivot = new float[0], spinDps = 0f,
+                });
+            }
             return new LayoutData { id = LayoutId, blocks = list.ToArray() };
         }
+
+        /// <summary>
+        /// Drop panes (tuning after CI run 38949077290: the fuse burst gives ~110 breaks in 2 windows, then a patchy tail).
+        /// Glass panes float over the curtain, each held by one fuse block; when the fuse goes they fall onto the dynamic rubble.
+        /// Heights h = g t^2 / 2 spread the landing times evenly over [DropT0, DropT1] s, so breaks keep coming at about
+        /// DropPanes / (DropT1 - DropT0) per second (48 / 1.2 s = 4 per 100 ms). Ground has no rigidbody, so panes must land on rubble.
+        /// </summary>
+        public const int DropPanes = 48;
+        public const float DropT0 = 0.9f, DropT1 = 2.1f, G = 9.81f;
+        public static float DropHeight(int i) { float t = DropT0 + (DropT1 - DropT0) * i / (DropPanes - 1); return 0.5f * G * t * t; }
+        public static string DropId(int i) => $"perf_drop_{i:00}";
 
         public static string CurtainId(int layer, int row, int col) => $"perf_L{layer}_R{row:00}_C{col}";
         public static bool IsDevLayout(string id) => id != null && id.StartsWith(DevPrefix, StringComparison.Ordinal);

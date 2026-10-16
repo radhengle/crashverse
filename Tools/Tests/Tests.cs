@@ -650,7 +650,9 @@ static class Tests
             var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId);
             var lay = PerfL10Fixture.Layout(Db.GetLayout(l10.layout));
             T.True(PerfL10Fixture.IsDevLayout(lay.id), "dev_ layout id");
-            T.Eq(13 + PerfL10Fixture.Layers * PerfL10Fixture.Rows * PerfL10Fixture.Columns, lay.blocks.Length, "L10 + curtain");
+            T.Eq(13 + PerfL10Fixture.Layers * PerfL10Fixture.Rows * PerfL10Fixture.Columns + PerfL10Fixture.DropPanes, lay.blocks.Length, "L10 + curtain + drop panes");
+            T.True(PerfL10Fixture.DropHeight(0) > 3.5f && PerfL10Fixture.DropHeight(PerfL10Fixture.DropPanes - 1) < 25f, "drop heights 4..22 m");
+            T.True(PerfL10Fixture.DropPanes / (PerfL10Fixture.DropT1 - PerfL10Fixture.DropT0) >= 30f, ">= 3 landings per 100 ms over >= 1 s");
             var ids = new HashSet<string>(); foreach (var bl in lay.blocks) T.True(ids.Add(bl.id), "unique id " + bl.id);
             foreach (var bl in lay.blocks) if (bl.sup != null) foreach (var s in bl.sup) T.True(ids.Contains(s), "support exists " + s);
             var mats = new HashSet<string>(); int midChunks = 0, breakable = 0, fuse = 0;
