@@ -1,8 +1,8 @@
-# CRASHVERSE Physics Feel & Systems Proposal v1 (for design review)
+# CRASHVERSE Physics Feel & Systems Proposal v1.1 (APPROVED)
 
-Owner: Physics & Performance Developer. Status: **proposal**, nothing here is approved design. **Every number is a starting tunable (T)** and lives in data (`MaterialDefinition`, a new `FeelProfile` and `PhysicsTunables` ScriptableObjects), not in code.
+Owner: Physics & Performance Developer. Status: **v1.1, approved by Game designer with changes** (review: `design/Physics_Feel_Review_v1.md`). v1.1 changes: Time Fracture = 200 ticks at 0.25x in every mode; gravity x1.2 approved; no new power-ups at launch; glass Neon-only; Env Set A approved but not in Ch1. **Every number is a starting tunable (T)** and lives in data (`MaterialDefinition`, a new `FeelProfile` and `PhysicsTunables` ScriptableObjects), not in code.
 Fits: `physics/Physics_Perf_Plan_v1.md` (on `physics/fixed-step-lock`, PR #6), `design/Gameplay_Feel_Answers_v1.md`, `design/Design_Pack_v1_Ch1_Powerups_LiveOps.md`, `Feel/FeelCore.cs` (`AnimEventBus`, `MotionSettings`), `Perf/QualityController.cs`, `Destruction/*`.
-Note: `design/Level_Rulings_v1.md` isn't on any branch yet. The debris-damage and collapse rulings below are quoted from Developer's relay of it.
+Debris-damage and collapse rulings: `design/Level_Rulings_v1.md` items #7 and #8.
 
 ## 0. Ground rules (non-negotiable)
 - **Sim layer** (affects score/replay): 50 Hz integer tick from `SimRunner`, `Physics.Simulate(0.02f)` with manual stepping, one seeded `SimRng` (from `AttemptToken.seed`, split into streams), inputs applied by tick. Everything that can change damage, breaks, % destroyed or stars belongs here, keyed by tick, never by `Time.*`.
@@ -38,7 +38,7 @@ Sibling events: `PIECE_CRACK_STAGE {tick, pieceId, stage 0-3, material, position
 | Wood | 600 | 30 | 450 / 800 | 0.25 | 0.5 / 0.6 | **Splinters**: elongated shards, 8–16 frags, 2–3 crack stages, snapping crack sound, low ejection |
 | Brick | 1900 | 60 | 900 / 900 | 0.1 | 0.7 / 0.8 | **Crumbles and chains**: frags break on first heavy impact, mortar dust, neighbours take 25% overflow damage (1 link) for chain rubble |
 | Steel | ~200 kg per panel (hollow effective density, agreed with 3D Modeler) | 120 | 2200 / 2200, joint dmg ×2.0 (Contract) | 0.3 | 0.4 / 0.5 | **Dents → bends → tears**: stage 1 dent (decal/blend shape), stage 2 joint softens (break force ×0.6), stage 3 tears at 4–10 frags. Sparks, metal groan |
-| Glass (Neon District, not M1) | 2500 | 8 | 150 / 150 | 0.05 | 0.3 / 0.4 | **Shatters**: breaks on any medium hit, max 6 sim frags, rest is cosmetic shard VFX, 0 debris damage (shards are cosmetic) |
+| Glass (**Neon District and later only**; not M1/Ch1) | 2500 | 8 | 150 / 150 | 0.05 | 0.3 / 0.4 | **Shatters**: breaks on any medium hit, max 6 sim frags, rest is cosmetic shard VFX, 0 debris damage (shards are cosmetic) |
 
 Combined restitution uses Minimum and friction uses Average, with bounce threshold 2 m/s (already the PhysicsManager value, which matches the damage ruling). Mass ratio between touching rigidbodies stays ≤ 10:1 to keep the solver stable.
 
@@ -56,12 +56,12 @@ Shot power is fixed (OQ-A1). Launch is `v0` along the aim direction, with no cha
 | Projectile | Mass | v0 (m/s) | Gravity scale | Linear drag | Notes |
 |---|---|---|---|---|---|
 | Standard ball | 8 kg | 28 | 1.0 | 0.02 | baseline |
-| Heavy shot | 24 kg | 22 | 1.3 | 0.0 | flatter range, 2.4× momentum |
+| Heavy shot (backlog) | 24 kg | 22 | 1.3 | 0.0 | flatter range, 2.4× momentum |
 | Piercing bolt | 4 kg | 40 | 0.6 | 0.0 | near-flat, see §6 |
 | Splitstrike child | 4 kg each | inherits | 1.0 | 0.02 | splits at apex or 70% of flight time (OQ-P2) |
 
-- Global gravity is −9.81 × 1.2 (T) for a snappier arc, applied as a per-body extra force on tick (not by changing `Physics.gravity` per level).
-- **Projectiles are kinematic-integrated by `SimRunner`** (semi-implicit Euler at 0.02 s with explicit gravity and drag, followed by a sphere-cast per tick) until first contact, and only then become dynamic bodies. **The aim preview runs the exact same integrator function** (`Ballistics.Step(ref state, tunables)`) for up to 150 ticks against a static-geometry snapshot, so the preview matches the sim bit-for-bit on the same device. It stops at the first impact (OQ-A3). The preview never uses PhysX `Simulate` or scene clones (cheap: ~150 sphere-casts per aim change, throttled to 15 Hz).
+- Global gravity is −9.81 × 1.2 (**approved**; Level Designer re-checks Ch1 shot budgets/star bands) for a snappier arc, applied as a per-body extra force on tick (not by changing `Physics.gravity` per level).
+- **Projectiles are kinematic-integrated by `SimRunner`** (semi-implicit Euler at 0.02 s with explicit gravity and drag, followed by a sphere-cast per tick) until first contact, and only then become dynamic bodies. **The aim preview runs the exact same integrator function** (`Ballistics.Step(ref state, tunables)`) for up to 150 ticks against a static-geometry snapshot, (**required by review**) so the preview matches the sim bit-for-bit on the same device. It stops at the first impact (OQ-A3). The preview never uses PhysX `Simulate` or scene clones (cheap: ~150 sphere-casts per aim change, throttled to 15 Hz).
 - `Projectile.Update` life/age moves to ticks (Perf Plan task 3).
 
 ## 5. Environment physics concepts
@@ -83,15 +83,16 @@ All forces are applied in `SimRunner` per tick, in a fixed order (zones sorted b
 
 Time Fracture's slowing of moving parts (OQ-P3) already counts as an environment effect: see §6.
 
+**Review status:** Set A (ice, wind, low-g, springs, barrels) is approved as engine features but **not used in Ch1** (Ch1 teaches materials only). Barrels arrive with Chain Reactor in Gearstorm, ice mainly in Crystal Frontier, wind/low-g/springs in Ch2+ and events. Set B is scheduled by PM. Chain lightning is now a Neon level mechanic (see §6).
+
 ## 6. Power-ups grounded in physics
-Existing design names are kept; the physics models extend them and need Game designer sign-off.
+The six launch power-ups are final (Content Roadmap §2); **no new power-ups at launch**. The physics models below extend the existing six.
 - **Shockwave Core:** keep the 40 dmg 1-link rule, and add a radial impulse `J(r) = 600·(1 − r/R)²`, R = 4 m, plus an upward bias of 0.3. Falloff is computed sim-side from the body centre. Presentation: ring distortion and heavy-tier shake.
 - **Gravity Well:** pulls loose debris within 4 m with `F = 120·m/max(r,0.5)` for 75 ticks (1.5 s), capped at 8 m/s, then releases as a burst of 60 dmg + outward impulse 300. Implemented as a force zone (§5).
-- **Time Fracture in ranked runs:** time is **not** slowed. The *timestep never changes* (0.02 s, same tick count). Instead, "moving parts" (MovingPart, pendulums, conveyors) advance their scripted phase at 0.25× per tick for exactly 200 ticks (4 s at 50 Hz; the "real time" in OQ-P3 is redefined as sim ticks for ranked runs), or until the fired shot's impact tick. Projectile and debris physics run at normal speed. Presentation adds desaturation, audio low-pass and a slowed music tempo. Because the effect is a fixed function of ticks, server replay reproduces it. Variable `Time.timeScale` is forbidden in ranked runs. Cosmetic slow-mo stays off during it (`SlowMoAllowed`).
-- **Heavy shot (new, proposed Booster):** projectile ×3 mass (24 kg), ×0.8 v0, damage ×1.5, brick chain overflow 50%.
-- **Piercing shot / Phase Piercer:** passes through the first 2 pieces, each costing 15% speed and dealing 0 dmg (design: full damage to the third). Implemented as a sim-side sphere-cast with an ignore list, not by disabling colliders.
-- **Ricochet (new):** up to 2 bounces off steel/stone, restitution 0.8, damage ×0.7 per bounce. The preview still shows only the first segment (OQ-A3).
-- **Chain lightning for steel (new, Neon "energy chains"):** on a steel hit, it jumps to the nearest steel piece within 3 m, up to 4 jumps, 25 dmg ×0.8 per jump, 2 ticks per jump. Ordered by distance then pieceId. No physics force, so it's cheap and deterministic.
+- **Time Fracture (every mode, not only ranked):** the timestep never changes (0.02 s). From the **arm tick** (OQ-P3), moving parts (MovingPart, pendulums, conveyors) advance their scripted phase at 0.25x per tick; it ends at **200 ticks** after arm or at the fired shot's **impact tick**, whichever comes first. Projectiles and debris run at normal speed. Presentation adds desaturation, audio low-pass and slowed music. Real-time slow-mo / variable `Time.timeScale` stays forbidden in ranked runs, and cosmetic slow-mo stays off during it (`SlowMoAllowed`).
+- **Piercing shot / Phase Piercer:** passes through the first 2 pieces, each costing 15% speed and dealing 0 dmg (design: full damage to the third). Sim-side sphere-cast with an ignore list, not by disabling colliders.
+- **Backlog (not at launch):** Heavy shot (x3 mass, x0.8 v0, dmg x1.5) and Ricochet (2 bounces off steel/stone, restitution 0.8, dmg x0.7/bounce) are candidates for event-only or Season 2 power-ups.
+- **Chain lightning → Neon District level mechanic** (energy conduits on steel), not a power-up: on a steel hit next to a conduit it jumps to the nearest steel piece within 3 m, up to 4 jumps, 25 dmg x0.8/jump, 2 ticks/jump, ordered by distance then pieceId.
 - **Splitstrike, Chain Reactor:** as designed. Splitstrike's children use §4, and Chain Reactor uses the barrel model.
 
 ## 7. Sound mapping (for Sound Manager)
@@ -131,8 +132,8 @@ Disabled on Low: lingering dust clouds, chromatic pop, FOV kick, debris sparks, 
 | 5 | Sound events + rattle throttling + voice limits | high | **Sound Manager** |
 | 6 | Ballistics integrator + exact aim preview | high (trust) | Game designer (gravity ×1.2, v0) |
 | 7 | Material tuning pass on validation walls (wood/brick/steel) | medium | 3D Modeler, Game designer |
-| 8 | Power-up physics models (Shockwave impulse, Gravity Well, Time Fracture tick model) | medium | **Game designer** (Time Fracture ranked change) |
-| 9 | Env set A: ice, wind, low-g, spring, explosive barrel | medium, cheap | Game designer, Level Designer |
-| 10 | Env set B: water, magnets, conveyors, pendulum, rope, fire; new power-ups (Heavy, Ricochet, Chain lightning); glass | later chapters | Game designer, PM scheduling |
+| 8 | Power-up physics models (Shockwave impulse, Gravity Well, Time Fracture tick model) | medium | approved |
+| 9 | Env set A: ice, wind, low-g, spring, explosive barrel (approved; not Ch1) | medium, cheap | PM scheduling |
+| 10 | Env set B: water, magnets, conveyors, pendulum, rope, fire; Neon chain-lightning conduits; glass (Neon); backlog Heavy/Ricochet (events/S2) | later chapters | PM scheduling |
 
-Open questions: (a) Time Fracture as 200 ticks in ranked instead of 4 s real time? (b) Is gravity ×1.2 acceptable for existing levels? (c) Should new power-ups replace or join the six? (d) Should glass go in Neon only?
+Resolved by review: Time Fracture = 200 ticks in every mode; gravity x1.2 approved; no new launch power-ups; glass Neon+ only.
