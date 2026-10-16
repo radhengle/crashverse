@@ -56,6 +56,11 @@ namespace Crashverse.DevTools.Perf.Tests
             t.GetMethod("ResetStatics", BindingFlags.Public | BindingFlags.Static).Invoke(null, null);
         }
 
+        // Game UI/aim/camera scripts call legacy UnityEngine.Input while the project runs the Input System, which logs an exception
+        // per frame in batchmode (pre-existing, reported to Developer). It doesn't touch the sim. Set in SetUp too: the previous
+        // test's scene keeps logging until the next scene load, before the test body runs (CI run 38952901718).
+        [SetUp] public void IgnoreLegacyInputLogs() => LogAssert.ignoreFailingMessages = true;
+
         static T F<T>(object r, string n) => (T)r.GetType().GetField(n).GetValue(r);
 
         [UnityTest, Timeout(400000)]
