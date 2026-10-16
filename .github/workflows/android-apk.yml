@@ -177,7 +177,7 @@ jobs:
         run: |
           set -e
           for f in build/Android/*.apk; do
-          "$BT/apksigner" verify --print-certs -v "$f" | tee sig.txt
+          "$BT/apksigner" verify --print-certs -v --min-sdk-version 23 "$f" | tee sig.txt  # v1 is only reported when checked below API 24
           for v in "v1 scheme (JAR signing)" "v2 scheme (APK Signature Scheme v2)" "v3 scheme (APK Signature Scheme v3)"; do
             grep -qF "Verified using $v: true" sig.txt || { echo "::error::not signed with $v"; exit 1; }
           done
