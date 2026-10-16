@@ -1,0 +1,202 @@
+{
+ "source": "audio/music/loop_points.md + README.md (generated)",
+ "excluded": [
+  "season2_stormfront_hub",
+  "titan_preview_obsidian_full",
+  "main_theme_alt_piano"
+ ],
+ "tracks": [
+  {
+   "id": "gameplay_clocktower_isle",
+   "totalSamples": 2998800,
+   "loopStart": 176400,
+   "loopEnd": 2998800,
+   "bpm": 120.0,
+   "oneShot": false
+  },
+  {
+   "id": "gameplay_harbor_isle",
+   "totalSamples": 3271418,
+   "loopStart": 192436,
+   "loopEnd": 3271418,
+   "bpm": 110.0,
+   "oneShot": false
+  },
+  {
+   "id": "gameplay_loop",
+   "totalSamples": 2822400,
+   "loopStart": 0,
+   "loopEnd": 2822400,
+   "bpm": 120.0,
+   "oneShot": false
+  },
+  {
+   "id": "gameplay_mill_isle",
+   "totalSamples": 3102207,
+   "loopStart": 182483,
+   "loopEnd": 3102207,
+   "bpm": 116.0,
+   "oneShot": false
+  },
+  {
+   "id": "gameplay_storm_isle",
+   "totalSamples": 2205000,
+   "loopStart": 441000,
+   "loopEnd": 2205000,
+   "bpm": 96.0,
+   "oneShot": false
+  },
+  {
+   "id": "main_theme",
+   "totalSamples": 3402000,
+   "loopStart": 378000,
+   "loopEnd": 3402000,
+   "bpm": 112.0,
+   "oneShot": false
+  },
+  {
+   "id": "results_loop",
+   "totalSamples": 846720,
+   "loopStart": 0,
+   "loopEnd": 846720,
+   "bpm": 100.0,
+   "oneShot": false
+  },
+  {
+   "id": "season1_wrecking_frontier_hub",
+   "totalSamples": 2919724,
+   "loopStart": 0,
+   "loopEnd": 2919724,
+   "bpm": 116.0,
+   "oneShot": false
+  },
+  {
+   "id": "stinger_boss_defeat",
+   "totalSamples": 245858,
+   "loopStart": 0,
+   "loopEnd": 245858,
+   "bpm": 144.0,
+   "oneShot": true
+  },
+  {
+   "id": "stinger_boss_phase2",
+   "totalSamples": 118335,
+   "loopStart": 0,
+   "loopEnd": 118335,
+   "bpm": 144.0,
+   "oneShot": true
+  },
+  {
+   "id": "stinger_chapter_clear",
+   "totalSamples": 229320,
+   "loopStart": 0,
+   "loopEnd": 229320,
+   "bpm": 100.0,
+   "oneShot": true
+  },
+  {
+   "id": "stinger_fail",
+   "totalSamples": 132300,
+   "loopStart": 0,
+   "loopEnd": 132300,
+   "bpm": 100.0,
+   "oneShot": true
+  },
+  {
+   "id": "stinger_win",
+   "totalSamples": 176400,
+   "loopStart": 0,
+   "loopEnd": 176400,
+   "bpm": 100.0,
+   "oneShot": true
+  },
+  {
+   "id": "stinger_win_3star",
+   "totalSamples": 211680,
+   "loopStart": 0,
+   "loopEnd": 211680,
+   "bpm": 100.0,
+   "oneShot": true
+  },
+  {
+   "id": "sunnyville_map_loop",
+   "totalSamples": 3256615,
+   "loopStart": 0,
+   "loopEnd": 3256615,
+   "bpm": 104.0,
+   "oneShot": false
+  },
+  {
+   "id": "tidewarden_p1",
+   "totalSamples": 2646000,
+   "loopStart": 294000,
+   "loopEnd": 2646000,
+   "bpm": 144.0,
+   "oneShot": false
+  },
+  {
+   "id": "tidewarden_p2",
+   "totalSamples": 2352000,
+   "loopStart": 0,
+   "loopEnd": 2352000,
+   "bpm": 144.0,
+   "oneShot": false
+  },
+  {
+   "id": "titan_ash_citadel",
+   "totalSamples": 2257920,
+   "loopStart": 0,
+   "loopEnd": 2257920,
+   "bpm": 150.0,
+   "oneShot": false
+  },
+  {
+   "id": "titan_cinder_bridge",
+   "totalSamples": 2257920,
+   "loopStart": 0,
+   "loopEnd": 2257920,
+   "bpm": 150.0,
+   "oneShot": false
+  },
+  {
+   "id": "titan_foundry_crater",
+   "totalSamples": 2257920,
+   "loopStart": 0,
+   "loopEnd": 2257920,
+   "bpm": 150.0,
+   "oneShot": false
+  },
+  {
+   "id": "titan_int25",
+   "totalSamples": 2257920,
+   "loopStart": 0,
+   "loopEnd": 2257920,
+   "bpm": 150.0,
+   "oneShot": false
+  },
+  {
+   "id": "titan_int50",
+   "totalSamples": 2257920,
+   "loopStart": 0,
+   "loopEnd": 2257920,
+   "bpm": 150.0,
+   "oneShot": false
+  },
+  {
+   "id": "titan_int75",
+   "totalSamples": 2257920,
+   "loopStart": 0,
+   "loopEnd": 2257920,
+   "bpm": 150.0,
+   "oneShot": false
+  },
+  {
+   "id": "titan_obsidian_forge",
+   "totalSamples": 2257920,
+   "loopStart": 0,
+   "loopEnd": 2257920,
+   "bpm": 150.0,
+   "oneShot": false
+  }
+ ]
+}

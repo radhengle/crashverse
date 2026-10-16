@@ -27,7 +27,7 @@ Set these in the Facebook SDK settings / `AndroidManifest.xml` **before** the fi
 | D | Deletion job (detach/pseudonymise/audit/backups): **BE**. The stub only does a full wipe incl. all board entries | — |
 | E1 | `AgeGateScreen` runs first, before any backend call; month + year pickers with no default, newest year first, no age hint | — |
 | E2 | Under 13 → `BlockedScreen` ("CRASHVERSE isn't available."), local `cv_age_blocked` flag, no DOB stored, no server calls | — |
-| E3 | Band (`13to17`/`adult`) + locale country → `SetAgeGate` | Most restrictive band kept |
+| E3 | Year+month (memory only) + locale country → `POST /v1/agegate` → server band `under13`/`13to15`/`16to17`/`adult` + `requiresParentalConsent` | Most restrictive band kept; client acts only on the server answer (no client age→consent rules) |
 | E4 | Interface `RequestParentalConsent(parentEmail)`; parent UI/web verification **TODO [[LEGAL]]** | consent flags on `AccountState` |
 | E5 | Store buy buttons, link buttons hidden for minors without consent; generated name | `LinkAccount` 403 `MINOR_CONSENT_REQUIRED`; leaderboard returns generated name; `VerifyPurchase` 403 `AGE_RESTRICTED` |
 | E6 | Buy hidden without purchase consent | `PurchaseAgeRestrictedMarkets` **TODO [[LEGAL]]** |

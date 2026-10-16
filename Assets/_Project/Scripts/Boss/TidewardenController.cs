@@ -75,12 +75,28 @@ namespace Crashverse.Boss
         public float OnShotResolved()
         {
             if (Phase != 2 || Defeated) return 0f;
-            if (ShutterOpen) { _tellTimer = TellSeconds; _tellT = 0f; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideTell); return TellSeconds + Crashverse.Feel.TideShutter.CloseMs / 1000f; } // tell 1 s, then 300 ms close tween
+            if (ShutterOpen)
+            {
+                // Tell start quantized to the next beat (60/144 s) of the music's DSP clock; Time.time when no music.
+                double now = Clock(out bool dsp), start = now;
+                var mp = Crashverse.Audio.MusicPlayer.Instance;
+                if (dsp && mp.TryBeatClock(out _, out var s0, out var bpm)) start = Crashverse.Audio.BarClock.NextBeat(s0, now, bpm);
+                _tellStart = start; _tellUsesDsp = dsp; float delay = (float)(start - now);
+                _tellTimer = delay + TellSeconds;
+                Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideTell);
+                return _tellTimer + Crashverse.Feel.TideShutter.CloseMs / 1000f; // (beat wait) + tell 1 s, then 300 ms close tween
+            }
             SetShutter(true);
             return 0f;
         }
 
-        float _tellT, _tweenMs = -1f; bool _tweenOpening;
+        float _tweenMs = -1f; bool _tweenOpening; double _tellStart; bool _tellUsesDsp;
+        static double Clock(out bool dsp)
+        {
+            var mp = Crashverse.Audio.MusicPlayer.Instance;
+            dsp = mp != null && mp.TryBeatClock(out _, out _, out _);
+            return dsp ? AudioSettings.dspTime : Time.time;
+        }
 
         void Update()
         {
@@ -88,8 +104,10 @@ namespace Crashverse.Boss
             bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
             if (_tellTimer > 0f)
             {
-                _tellTimer -= Time.deltaTime; _tellT += Time.deltaTime;
-                _shutter.SetHighlight(MaterialDefinition.Hex("FF7A1A"), Crashverse.Feel.TideShutter.TellIntensity(_tellT, rm)); // exactly 2 Hz
+                _tellTimer -= Time.deltaTime;
+                double t = _tellUsesDsp ? AudioSettings.dspTime : Time.time;
+                float hz = Crashverse.Core.VisualConfig.Current.tideShutterPulseHz;
+                if (t >= _tellStart) _shutter.SetHighlight(MaterialDefinition.Hex("FF7A1A"), Crashverse.Feel.TideShutter.TellIntensity(t - _tellStart, rm, hz)); // sin((t − tellStart)·2π·pulseHz)
                 if (_tellTimer <= 0f) { _shutter.ClearHighlight(); SetShutter(false); }
             }
             if (_tweenMs >= 0f)

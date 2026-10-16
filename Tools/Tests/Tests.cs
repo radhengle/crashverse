@@ -47,6 +47,7 @@ static class Tests
     public static void Register()
     {
         // ---------- SG-24 / SG-01 stars (qa/M1_Test_Cases_v0.3 + Feature_Test_Cases_v1 §A) ----------
+        Crashverse.Audio.MusicTracks.JsonSource = () => File.ReadAllText(Path.Combine(UnityEngine.Resources.Root, "../../../Assets/_Project/Resources/Audio/music_tracks.json"));
         T.Add("stars_budget4", () => { int[] e = { 1, 1, 2, 3, 3 }; for (int l = 0; l <= 4; l++) T.Eq(e[l], StarRules.Compute(true, l, 4), $"4 shots, {l} left"); });
         T.Add("stars_budget5", () => { int[] e = { 1, 1, 2, 3, 3, 3 }; for (int l = 0; l <= 5; l++) T.Eq(e[l], StarRules.Compute(true, l, 5), $"5 shots, {l} left"); });
         T.Add("stars_budget6", () => { int[] e = { 1, 1, 2, 2, 3, 3, 3 }; for (int l = 0; l <= 6; l++) T.Eq(e[l], StarRules.Compute(true, l, 6), $"6 shots, {l} left"); });
@@ -818,13 +819,16 @@ static class Tests
         T.Add("REQ_E_age_gate_bands", () =>
         {
             T.Eq(AgeGate.Band.Under13, AgeGate.Classify(2013, 10, 2026, 10), "turns 13 this month → still under 13 (conservative)");
-            T.Eq(AgeGate.Band.Minor13to17, AgeGate.Classify(2013, 9, 2026, 10), "13 last month");
-            T.Eq(AgeGate.Band.Minor13to17, AgeGate.Classify(2008, 10, 2026, 10), "17 (18 this month, not yet)");
+            T.Eq(AgeGate.Band.Age13to15, AgeGate.Classify(2013, 9, 2026, 10), "13 last month");
+            T.Eq(AgeGate.Band.Age16to17, AgeGate.Classify(2010, 9, 2026, 10), "16"); T.Eq(AgeGate.Band.Age13to15, AgeGate.Classify(2010, 10, 2026, 10), "16 this month → 13to15");
+            T.Eq(AgeGate.Band.Age16to17, AgeGate.Classify(2008, 10, 2026, 10), "17 (18 this month, not yet)");
             T.Eq(AgeGate.Band.Adult, AgeGate.Classify(2008, 9, 2026, 10), "18");
             T.Eq(AgeGate.Band.Unknown, AgeGate.Classify(2027, 1, 2026, 10), "future"); T.Eq(AgeGate.Band.Unknown, AgeGate.Classify(2000, 13, 2026, 10), "bad month");
-            T.True(!AgeGate.CanPurchase(AgeGate.Band.Minor13to17, false) && AgeGate.CanPurchase(AgeGate.Band.Minor13to17, true), "purchases need consent");
-            T.True(!AgeGate.ShowLinkPrompt(AgeGate.Band.Minor13to17, false, false), "no link prompt to minors without consent (C3)");
-            T.True(!AgeGate.AllowTracking(AgeGate.Band.Adult) && !AgeGate.AllowTracking(AgeGate.Band.Minor13to17), "no tracking");
+            T.True(!AgeGate.Allowed(true, false) && AgeGate.Allowed(true, true) && AgeGate.Allowed(false, false), "acts only on server requiresParentalConsent + consent flag");
+            foreach (var bs in new[] { "under13", "13to15", "16to17", "adult" }) T.Eq(bs, AgeGate.ToServer(AgeGate.FromServer(bs)), "band string " + bs);
+            T.True(!Src("Assets/_Project/Scripts/Meta/AgeGate.cs").Contains("13to17"), "no 3-band strings");
+            T.True(!AgeGate.ShowLinkPrompt(false, true, false), "no link prompt while server requires consent (C3)");
+            T.True(!AgeGate.AllowTracking(), "no tracking");
             var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
             int g = sc.IndexOf("public class AgeGateScreen"), e = sc.IndexOf("public class BlockedScreen");
             var gate = sc.Substring(g, e - g);
@@ -838,9 +842,11 @@ static class Tests
         T.Add("REQ_E3_E5_E6_server_enforcement", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            var ag = b.SubmitAgeGate(2012, 1, "IN").Result; T.True(ag.band == "13to17" && ag.requiresParentalConsent, "minor band + consent required");
-            T.Eq("13to17", b.SubmitAgeGate(1990, 5, "IN").Result.band, "most restrictive band kept (E3)");
-            T.Eq("AGE_BLOCKED", Catch(() => b.SubmitAgeGate(2018, 1, "IN").Wait())?.Code, "under-13 refused");
+            var ag = b.SubmitAgeGate(2012, 1, "IN", "inst-1").Result; T.True(ag.band == "13to15" && ag.requiresParentalConsent, "13to15 + server says consent required");
+            T.Eq("13to15", b.SubmitAgeGate(1990, 5, "IN", "inst-1").Result.band, "most restrictive band kept (E3)");
+            var b2 = NewBackend("2026-10-16T10:00:00"); var a2 = b2.SubmitAgeGate(1990, 5, "IN", "inst-1").Result; T.True(a2.band == "adult" && !a2.requiresParentalConsent, "adult, no consent");
+            var b3 = NewBackend("2026-10-16T10:00:00"); b3.ConsentRequiredBands.Remove("16to17"); T.True(!b3.SubmitAgeGate(2009, 1, "IN", "inst-1").Result.requiresParentalConsent, "consent is server config, not client age math");
+            T.Eq("AGE_BLOCKED", Catch(() => b.SubmitAgeGate(2018, 1, "IN", "inst-1").Wait())?.Code, "under-13 refused");
             T.Eq("MINOR_CONSENT_REQUIRED", Catch(() => b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "t" }).Wait())?.Code, "link 403 without consent");
             T.Eq("AGE_RESTRICTED", Catch(() => b.VerifyPurchase("gems_100", "r").Wait())?.Code, "purchase 403 AGE_RESTRICTED");
             var cr = b.RequestParentalConsent("parent@example.com").Result; T.True(cr.status == "pending" && cr.requestId.Length > 0 && b.GetAccount().Result.consentPending, "consent request recorded");
@@ -864,6 +870,22 @@ static class Tests
             var lb = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result;
             T.True(lb.me.name.StartsWith("Wrecker #") && lb.top.TrueForAll(e => !e.isMe || e.name.StartsWith("Wrecker #")), "real name never returned when hidden");
         });
+        T.Add("AGEGATE_install_id_token_and_legacy_regate", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            T.Eq(400, Catch(() => b.SubmitAgeGate(1990, 5, "IN", "").Wait())?.Status ?? 0, "deviceInstallId required (N4)");
+            var ag = b.SubmitAgeGate(1990, 5, "IN", "inst-9").Result; T.True(!string.IsNullOrEmpty(ag.ageToken), "ageToken issued");
+            T.Eq("adult", b.SubmitAccountAgeGate(ag.ageToken).Result.ageBand, "account re-gated with the token");
+            T.Eq("BAD_AGE_TOKEN", Catch(() => b.SubmitAccountAgeGate(ag.ageToken).Wait())?.Code, "token single use");
+            var legacy = NewBackend("2026-10-16T10:00:00"); legacy.RequireAgeGateForLegacyAccounts = true;
+            var ex = Catch(() => legacy.GetAccount().Wait()); T.True(ex?.Code == "AGE_GATE_REQUIRED" && ex.Status == 403, "older account → 403 AGE_GATE_REQUIRED");
+            legacy.SubmitAccountAgeGate(legacy.SubmitAgeGate(2011, 3, "IN", "inst-2").Result.ageToken).Wait();
+            T.Eq("13to15", legacy.GetAccount().Result.ageBand, "after re-gate the account works");
+            var lc = Src("Assets/_Project/Scripts/Core/AccountLifecycle.cs"); T.True(lc.Contains("\"AGE_GATE_REQUIRED\"") && lc.Contains("SubmitAccountAgeGate") && lc.Contains("InstallId.Get()"), "client handles the legacy path");
+            var id = Src("Assets/_Project/Scripts/Core/InstallId.cs"); T.True(id.Contains("Guid.NewGuid()") && id.Contains("EncryptedSharedPreferences") && !id.Contains("ANDROID_ID") && !id.Contains("getDeviceId"), "random UUID in Keystore prefs, never a hardware ID");
+            T.True(AgeBands.IsMinor("13to15") && AgeBands.IsMinor("16to17") && !AgeBands.IsMinor("adult"), "IsMinor");
+            T.True(!Src("Assets/_Project/Scripts/Backend/ServerContracts.cs").Contains("13to17"), "legacy 13to17 band removed");
+        });
         T.Add("SECADMIN_unity_services_off_and_no_ad_id", () =>
         {
             var uc = Src("ProjectSettings/UnityConnectSettings.asset");
@@ -881,9 +903,13 @@ static class Tests
             T.Eq("ANIM_WRECKER_READY", AnimEvents.WreckerReady, "ready event name matches anim_audio_map");
             var pj = Src("Assets/_Project/Scripts/Weapons/Projectile.cs");
             T.True(pj.Contains("AnimEvents.PuPhasePass") && pj.Contains("AnimEvents.PuPhaseHit"), "Phase Piercer pass/3rd-hit events");
-            T.Eq(0.6f + 0.4f * 0.5f, TideShutter.TellIntensity(0f, false), "tell starts mid");
-            T.True(Math.Abs(TideShutter.TellIntensity(0.125f, false) - 1.0f) < 1e-4, "peak at 1/8 s"); T.True(Math.Abs(TideShutter.TellIntensity(0.625f, false) - 1.0f) < 1e-4, "next peak 0.5 s later → 2 Hz");
-            T.True(TideShutter.TellIntensity(0.125f, true) <= 0.8f + 1e-4, "reduce motion halves amplitude");
+            T.Eq(0.6f + 0.4f * 0.5f, TideShutter.TellIntensity(0.0, false), "tell starts mid");
+            double pk = 1 / (4 * 2.4); T.True(Math.Abs(TideShutter.TellIntensity(pk, false) - 1.0f) < 1e-4, "first peak at 1/(4*2.4) s"); T.True(Math.Abs(TideShutter.TellIntensity(pk + 1 / 2.4, false) - 1.0f) < 1e-4, "next peak 1/2.4 s later = 2.4 Hz");
+            T.True(Math.Abs(25 / 60.0 - 1 / 2.4) < 1e-9 && Math.Abs(60.0 / 144 - 1 / 2.4) < 1e-9, "2.4 Hz = 25 f @60 = one 144 BPM beat");
+            T.Eq(0f, TideShutter.TellIntensity(-0.1, false), "dark before quantized start");
+            T.True(Src("Assets/_Project/Scripts/Core/VisualConfig.cs").Contains("tideShutterPulseHz = 2.4f"), "pulse rate in config");
+            T.True(Math.Abs(Crashverse.Audio.BarClock.NextBeat(10, 10.5, 144) - (10 + 2 * 60.0 / 144)) < 1e-9 && Crashverse.Audio.BarClock.NextBeat(10, 10, 144) == 10, "tell quantized to next 144 BPM beat");
+            T.True(TideShutter.TellIntensity(pk, true) <= 0.8f + 1e-4, "reduce motion halves amplitude");
             T.Eq(1.7f, TideShutter.Height(false, 0f, false)); T.Eq(0f, TideShutter.Height(false, 300f, false), "closed at 300 ms");
             T.True(TideShutter.Height(false, 150f, false) > 1.4f, "ease-in cubic (slow start, slam)"); T.True(!TideShutter.Done(false, 299f) && TideShutter.Done(false, 300f), "300 ms");
             var tw = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs");
@@ -894,12 +920,24 @@ static class Tests
         {
             var mt = Crashverse.Audio.MusicTracks.Get("main_theme"); T.True(mt.HasIntro && mt.loopStart == 378000, "main_theme intro split at 378000");
             T.Eq(377999L, mt.SampleAt(377999 / 44100.0)); T.Eq(378000L + 10, mt.SampleAt((3402000 + 10) / 44100.0), "wraps into loop region");
-            var p1 = Crashverse.Audio.MusicTracks.Get("tidewarden_p1"); T.Eq(330750, p1.loopStart); T.True(Math.Abs(p1.BarSeconds - 1.875) < 1e-9, "128 BPM bar");
-            T.True(!Crashverse.Audio.MusicTracks.All.ContainsKey("season2_stormfront_hub") && !Crashverse.Audio.MusicTracks.All.ContainsKey("titan_preview_obsidian_full"), "excluded tracks");
+            var p1 = Crashverse.Audio.MusicTracks.Get("tidewarden_p1"); T.Eq(294000, p1.loopStart); T.Eq(2646000, p1.loopEnd); T.Eq(144.0, p1.bpm);
+            T.True(Math.Abs(p1.BarSeconds * 44100 - 73500) < 1e-6, "144 BPM bar = 73500 samples");
+            var p2 = Crashverse.Audio.MusicTracks.Get("tidewarden_p2"); T.True(p2.loopStart == 0 && p2.loopEnd == 2352000, "P2 loop 0-2352000");
+            foreach (var id in new[] { "titan_foundry_crater", "titan_int25", "titan_int50", "titan_int75" }) { var t = Crashverse.Audio.MusicTracks.Get(id); T.True(t.loopEnd == 2257920 && t.bpm == 150, id + " 150 BPM 51.2 s"); }
+            foreach (var x in new[] { "season2_stormfront_hub", "titan_preview_obsidian_full", "main_theme_alt_piano" }) T.True(!Crashverse.Audio.MusicTracks.All.ContainsKey(x), "excluded " + x);
+            var lpPath = Path.Combine(UnityEngine.Resources.Root, "../../../audio/music/loop_points.md");
+            if (File.Exists(lpPath)) foreach (var ln in File.ReadAllText(lpPath).Split('\n'))
+            {
+                if (!ln.StartsWith("|") || !ln.Contains(".ogg")) continue;
+                var c = ln.Trim('|').Split('|').Select(x => x.Trim()).ToArray(); var id = Path.GetFileNameWithoutExtension(c[0]);
+                if (Crashverse.Audio.MusicTracks.Excluded.Contains(id)) continue; var t = Crashverse.Audio.MusicTracks.Get(id);
+                T.True(t != null && t.totalSamples == int.Parse(c[1]) && (c[2] == "–" || (t.loopStart == int.Parse(c[2]) && t.loopEnd == int.Parse(c[3]))), "loop_points.md row " + id);
+            }
+            T.True(!Src("Assets/_Project/Scripts/Audio/MusicCore.cs").Contains("2257920"), "no hard-coded sample offsets");
             T.Eq("titan_int25", Crashverse.Audio.MusicTracks.TitanLayer(1)); T.Eq("titan_int75", Crashverse.Audio.MusicTracks.TitanLayer(3)); T.Eq(null, Crashverse.Audio.MusicTracks.TitanLayer(0));
             T.True(Math.Abs(Crashverse.Audio.BarClock.NextBar(10, 11.0, 1.875) - 11.875) < 1e-9, "next bar line");
             var plan = Crashverse.Audio.TidewardenMusic.Plan(100.0, 101.0);
-            T.True(Math.Abs(plan.stingerDsp - 101.875) < 1e-9 && Math.Abs(plan.p2StartDsp - 103.75) < 1e-9 && plan.p1StopDsp == plan.stingerDsp, "stinger at P1 bar end, P2 next bar");
+            double bar = 4 * 60.0 / 144; T.True(Math.Abs(plan.stingerDsp - (100 + bar)) < 1e-9 && Math.Abs(plan.p2StartDsp - (100 + 2 * bar)) < 1e-9 && plan.p1StopDsp == plan.stingerDsp, "stinger at P1 bar end, P2 next bar (144 BPM)");
         });
         T.Add("AUDIO_voice_rule_and_crossfade", () =>
         {

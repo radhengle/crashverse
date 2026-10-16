@@ -24,25 +24,20 @@ namespace Crashverse.Audio
 
     public static class MusicTracks
     {
-        static MusicTrack L(string id, int total, int ls, int le, double bpm) => new MusicTrack { id = id, totalSamples = total, loopStart = ls, loopEnd = le, bpm = bpm };
-        static MusicTrack S(string id, int total) => new MusicTrack { id = id, totalSamples = total, loopStart = 0, loopEnd = total, oneShot = true };
-        public static readonly Dictionary<string, MusicTrack> All = new Dictionary<string, MusicTrack>();
-        static MusicTracks()
+        /// <summary>Raw JSON of Resources/Audio/music_tracks.json (generated from loop_points.md by Tools/audio/gen_music_tracks.py).
+        /// MusicPlayer sets this to the TextAsset; tests read the file. No sample offsets are hard-coded here.</summary>
+        public static Func<string> JsonSource;
+        static Dictionary<string, MusicTrack> _all; static List<string> _excluded = new List<string>();
+        public static Dictionary<string, MusicTrack> All { get { if (_all == null) Load(JsonSource?.Invoke()); return _all; } }
+        public static IReadOnlyList<string> Excluded { get { var _ = All; return _excluded; } }
+        class Doc { public List<MusicTrack> tracks; public List<string> excluded; }
+        public static void Load(string json)
         {
-            foreach (var t in new[] {
-                L("main_theme", 3402000, 378000, 3402000, 112), L("sunnyville_map_loop", 3256615, 0, 3256615, 104), L("gameplay_loop", 2822400, 0, 2822400, 120),
-                L("season1_wrecking_frontier_hub", 2919724, 0, 2919724, 116),
-                L("tidewarden_p1", 2976750, 330750, 2976750, 128), L("tidewarden_p2", 2646000, 0, 2646000, 128),
-                L("gameplay_harbor_isle", 3271418, 192436, 3271418, 110), L("gameplay_mill_isle", 3102207, 182483, 3102207, 0),
-                L("gameplay_clocktower_isle", 2998800, 176400, 2998800, 0), L("gameplay_storm_isle", 2205000, 441000, 2205000, 0),
-                L("results_loop", 846720, 0, 846720, 100),
-                L("titan_foundry_crater", 2646000, 0, 2646000, 128), L("titan_cinder_bridge", 2646000, 0, 2646000, 128),
-                L("titan_ash_citadel", 2646000, 0, 2646000, 128), L("titan_obsidian_forge", 2646000, 0, 2646000, 128),
-                L("titan_int25", 2646000, 0, 2646000, 128), L("titan_int50", 2646000, 0, 2646000, 128), L("titan_int75", 2646000, 0, 2646000, 128),
-                S("stinger_win", 166778), S("stinger_fail", 132300), S("stinger_win_3star", 186824), S("stinger_boss_defeat", 274522),
-                S("stinger_boss_phase2", 109148), S("stinger_chapter_clear", 224910) })
-                All[t.id] = t;
-            // Excluded from the base APK (DLC / not shipped): season2_stormfront_hub, titan_preview_obsidian_full.
+            _all = new Dictionary<string, MusicTrack>();
+            if (string.IsNullOrEmpty(json)) return; // silent: no data → no music, never wrong loop points
+            var d = Newtonsoft.Json.JsonConvert.DeserializeObject<Doc>(json);
+            _excluded = d?.excluded ?? new List<string>();
+            foreach (var t in d?.tracks ?? new List<MusicTrack>()) if (!_excluded.Contains(t.id)) _all[t.id] = t;
         }
         public static MusicTrack Get(string id) => All.TryGetValue(id, out var t) ? t : null;
         public static string TitanArena(string arenaId) => "titan_" + arenaId;
@@ -59,6 +54,13 @@ namespace Crashverse.Audio
 
     public static class BarClock
     {
+        /// <summary>DSP time of the next beat (60/bpm) of a track started at startDsp, at or after now.</summary>
+        public static double NextBeat(double startDsp, double nowDsp, double bpm)
+        {
+            if (bpm <= 0) return nowDsp;
+            double beat = 60.0 / bpm, n = Math.Ceiling((nowDsp - startDsp) / beat - 1e-9);
+            return startDsp + Math.Max(0, n) * beat;
+        }
         /// <summary>DSP time of the next bar line of a track that started at startDsp (min lead time so scheduling is safe).</summary>
         public static double NextBar(double startDsp, double nowDsp, double barSeconds, double minLead = 0.05)
         {

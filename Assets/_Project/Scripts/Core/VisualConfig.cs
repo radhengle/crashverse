@@ -22,6 +22,9 @@ namespace Crashverse.Core
         public string ambientSkyHex = "8CC8FF", ambientEquatorHex = "DCEFFF", ambientGroundHex = "6FAE5A"; public float ambientIntensity = 1.15f;
         public bool fog = true; public string fogHex = "CFEAFF"; public float fogStart = 80f, fogEnd = 250f;
         public string skyClearHex = "7CC4FF";
+        [Header("Boss tells (animation/05_bosses.md)")]
+        [Tooltip("Tidewarden shutter tell pulse rate. 2.4 Hz = one pulse per 25 frames, beat-locked to 144 BPM.")]
+        public float tideShutterPulseHz = 2.4f;
 
         static VisualConfig _current;
         public static VisualConfig Current

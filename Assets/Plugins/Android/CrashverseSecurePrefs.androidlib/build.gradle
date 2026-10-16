@@ -1,0 +1,9 @@
+// AndroidX Security (EncryptedSharedPreferences, Keystore-backed) for Core/InstallId.cs.
+apply plugin: 'com.android.library'
+android {
+    compileSdkVersion 34
+    defaultConfig { minSdkVersion 24 }
+}
+dependencies {
+    implementation 'androidx.security:security-crypto:1.0.0'
+}

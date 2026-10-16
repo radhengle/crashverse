@@ -9,16 +9,16 @@
 - **Wiring:** the map plays `sunnyville_map_loop`. Campaign levels play `gameplay_loop`, the boss level `tidewarden_p1`, and Titan its arena loop. Win/fail stops level music and plays `stinger_win` / `stinger_win_3star` / `stinger_fail`; boss defeats play `stinger_boss_defeat`.
 - **Assets:** the OGGs are still in `audio/music/` (audio team) and are **not yet copied into `Assets/_Project/Resources/Music/`**. Until they are, the player is silent (it no-ops on missing clips).
 
-## Audio budget verdict (2026-10-16)
-Scope: base APK. Season 2 hub (`season2_stormfront_hub`, 1.05 MB) and `titan_preview_obsidian_full` (0.83 MB) are excluded.
+## Audio budget verdict (2026-10-16, v2 music drop)
+Scope: base APK. Excluded (Sound Manager, 16 Oct): `season2_stormfront_hub` (remote download), `titan_preview_obsidian_full`, `main_theme_alt_piano`. Loop points/BPM are data (`Resources/Audio/music_tracks.json`, generated from `audio/music/loop_points.md` by `Tools/audio/gen_music_tracks.py`).
 
 | Bucket | Budget | Measured / estimated | Verdict |
 |---|---|---|---|
-| Music in APK (streamed OGG, 24 files incl. 6 stingers) | ~12 MB planned | **13.50 MB** measured (source OGG sizes) | ~1.5 MB over the 12 MB plan, but fits the total |
+| Music in APK (streamed OGG, 24 files incl. 6 stingers) | Sound Manager figure ~15.5 MB | **15.99 MB** measured (15.25 MiB, source OGG sizes) | Over the old ~12 MB plan; fits the total |
 | SFX resident when loaded (Decompress On Load PCM) | ≤ 12 MB | **≈ 5.2 MB** (sfx_list.csv, 108 rows, worst-case lengths × variations) | PASS |
 | SFX compressed in memory (medium) | ≤ 4 MB | ≈ 0.9 MB | PASS |
 | SFX in APK (compressed) | — | ≈ 1.5 MB estimate | — |
-| **Total audio in APK** | **≤ 25 MB** | **≈ 15.0 MB** (13.5 music + ~1.5 SFX) | **PASS** (~10 MB headroom) |
+| **Total audio in APK** | **≤ 25 MB** | **≈ 17.5 MB** (16.0 music + ~1.5 SFX); 17.0 MB using the 15.5 MB figure | **PASS** (~7.5 MB headroom) |
 | Streaming buffers | ≤ 2 MB | 5 sources, at most 3 audible (4 only during the sample-exact intro→loop handover) | PASS |
 
 Notes: no SFX assets exist yet, so the SFX figures are estimates from `sfx_list.csv` and must be re-measured once the assets land. Unity re-encodes the music at the import qualities above, so the final music size may differ by ±20%. Check on a low-tier device with Profiler ▸ Audio and the Memory Profiler.

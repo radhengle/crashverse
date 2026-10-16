@@ -286,6 +286,9 @@ namespace UnityEngine
     public static class PlayerPrefs
     {
         public static bool HasKey(string k) => false;
+        static readonly System.Collections.Generic.Dictionary<string, string> _s = new System.Collections.Generic.Dictionary<string, string>();
+        public static string GetString(string k, string d = "") => _s.TryGetValue(k, out var v) ? v : d;
+        public static void SetString(string k, string v) => _s[k] = v;
         public static void DeleteAll() { }
         public static void DeleteKey(string k) { }
         static Dictionary<string, int> _i = new Dictionary<string, int>();

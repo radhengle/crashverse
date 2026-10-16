@@ -37,7 +37,11 @@ namespace Crashverse.Backend
         /// <summary>F1: unlink with a fresh reauthToken; the last login method cannot be removed (LAST_LOGIN 409).</summary>
         Task<AccountState> UnlinkAccount(AuthProvider provider, string reauthToken);
         /// <summary>POST /agegate {birthYear, birthMonth, country} → {band, requiresParentalConsent}. Only sent for 13+ (E2); the server must not store the DOB.</summary>
-        Task<AgeGateResponse> SubmitAgeGate(int birthYear, int birthMonth, string country);
+        /// <summary>POST /v1/agegate {birthYear, birthMonth, country, deviceInstallId} → {band, requiresParentalConsent, ageToken}. Only for 13+ (E2);
+        /// the server stores only band + country. ageToken is bound to the install and single use.</summary>
+        Task<AgeGateResponse> SubmitAgeGate(int birthYear, int birthMonth, string country, string deviceInstallId);
+        /// <summary>POST /v1/account/agegate {ageToken}: attach a band to an older account after 403 AGE_GATE_REQUIRED.</summary>
+        Task<AccountState> SubmitAccountAgeGate(string ageToken);
         /// <summary>POST /consent/parental/request {parentEmail} → {status, requestId}.</summary>
         Task<ConsentRequestResponse> RequestParentalConsent(string parentEmail);
         /// <summary>GET /consent/parental/status → {status}.</summary>
