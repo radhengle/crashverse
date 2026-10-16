@@ -63,10 +63,23 @@ def check_config():
     if not uses_new:
         if "StandaloneInputModule" not in ui: bad.append("Legacy Input Manager active but UI has no StandaloneInputModule")
         im = ROOT / "ProjectSettings/InputManager.asset"
-        names = set(re.findall(r"m_Name:\s*(.+)", im.read_text())) if im.exists() else set()
+        names = input_axes(im) if im.exists() else set()
         for a in ("Horizontal", "Vertical", "Submit", "Cancel"):
-            if a not in {n.strip() for n in names}: bad.append(f"ProjectSettings/InputManager.asset missing axis '{a}' (StandaloneInputModule throws, all taps dead: BUG-20)")
+            if a not in names: bad.append(f"ProjectSettings/InputManager.asset missing axis '{a}' (StandaloneInputModule throws, all taps dead: BUG-20)")
     return bad
+
+def input_axes(path):
+    """M1: parse InputManager.asset structurally: only m_Name entries that are list items directly under m_Axes count."""
+    names, in_axes, item_indent = set(), False, None
+    for line in path.read_text().splitlines():
+        if re.match(r"^\s*m_Axes:\s*$", line): in_axes = True; continue
+        if not in_axes: continue
+        if re.match(r"^\S", line) or re.match(r"^  \S", line) and not line.startswith("  -"): break  # left m_Axes
+        m = re.match(r"^(\s*)- (\w+):\s*(.*)$", line)
+        if m: item_indent = len(m.group(1)); cur = {m.group(2): m.group(3)}
+        m2 = re.match(r"^(\s*)m_Name:\s*(.+?)\s*$", line)
+        if m2 and item_indent is not None and len(m2.group(1)) == item_indent + 2: names.add(m2.group(2))
+    return names
 
 def ps_text(): return (ROOT / "ProjectSettings/ProjectSettings.asset").read_text()
 

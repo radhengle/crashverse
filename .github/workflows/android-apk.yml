@@ -10,6 +10,10 @@ on:
         type: choice
         options: [dev, release]
         default: dev
+      publish_tag:
+        description: "If set (e.g. dev-build-5), publish a prerelease after every gate passes"
+        type: string
+        default: ""
   push:
     branches: [ main ]
     paths:
@@ -55,7 +59,9 @@ jobs:
   build:
     name: GameCI Unity Android (${{ github.event.inputs.profile || 'dev' }})
     needs: guards
-    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'  # dispatch needs repo write; lets QA builds come from a PR branch
+    # M2: signed builds only from main, or a dispatch on main / dev/* (dispatch needs repo write).
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/dev/'))
+    environment: dev-signing
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -164,12 +170,21 @@ jobs:
           retention-days: 14
 
   emulator-smoke:
-    name: Install + launch on x86_64 emulator (publish gate)
+    name: Emulator smoke API ${{ matrix.api }} x86_64 1080x2340 (publish gate)
     needs: build
     runs-on: ubuntu-24.04
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [34, 36] # 36 = Android 16, the user's Nothing Phone 3a. arm64 images can't boot on x86 runners.
     steps:
+      - name: Checkout (scripts only)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: Tools/ci
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -178,24 +193,41 @@ jobs:
         with:
           name: crashverse-android-apk
           path: apk
-      - name: adb install + launch, assert process alive and no fatal crash
+      - name: QA first-run flow (age gate → map → L1 → win → retry → fail)
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
-          api-level: 34
+          api-level: ${{ matrix.api }}
           arch: x86_64
           target: google_apis
           disable-animations: true
-          script: |
-            adb install -r "$(ls apk/*.apk | head -1)"
-            adb logcat -c
-            adb shell monkey -p com.crashverse.game -c android.intent.category.LAUNCHER 1
-            sleep 30
-            adb shell pidof com.crashverse.game || { adb logcat -d | tail -200; echo "::error::app not running 30 s after launch"; exit 1; }
-            if adb logcat -d | grep -E "FATAL EXCEPTION|Fatal signal|ANR in com.crashverse"; then echo "::error::crash/ANR"; exit 1; fi
-            adb exec-out screencap -p > launch.png
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340
+          script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | head -1)" smoke_out
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: emulator-launch-screenshot
-          path: launch.png
-          if-no-files-found: warn
+          name: emulator-smoke-api${{ matrix.api }}
+          path: smoke_out
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: Publish prerelease (only after signing gate + emulator smoke on every API)
+    needs: [build, emulator-smoke]
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_tag != ''
+    runs-on: ubuntu-24.04
+    environment: dev-builds
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: crashverse-android-apk
+          path: apk
+      - name: Create prerelease (pending QA review)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.inputs.publish_tag }}
+        run: |
+          gh release create "$TAG" apk/*.apk -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "$TAG (pending QA review)" \
+            --notes "Built from $GITHUB_SHA, run $GITHUB_RUN_ID. Signed with the persistent dev key (cert pinned in Tools/ci/dev_cert_sha256.txt), versionCode $GITHUB_RUN_NUMBER. Passed apksigner + emulator smoke (API 34/36). Pending QA review."
