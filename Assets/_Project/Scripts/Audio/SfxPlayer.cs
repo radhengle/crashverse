@@ -28,27 +28,23 @@ namespace Crashverse.Audio
         }
     }
 
-    /// <summary>Ensures exactly one AudioListener in the loaded scenes (P0: Bootstrap.unity camera had none).</summary>
+    /// <summary>Ensures exactly one AudioListener (P0: Bootstrap.unity camera had none). Idempotent. Re-runs on every scene load
+    /// (SceneManager.sceneLoaded, event-driven, no per-frame scan) so a scene/camera that brings its own listener collapses back to one,
+    /// and a listener lost with an unloaded camera is replaced. Code that adds a camera at runtime can call Ensure() again (cheap no-op if 1).</summary>
     public static class AudioListenerGuard
     {
+        static bool _hooked;
         public static AudioListener Ensure()
         {
+            if (!_hooked) { _hooked = true; UnityEngine.SceneManagement.SceneManager.sceneLoaded += (_, __) => Ensure(); }
             var all = Object.FindObjectsOfType<AudioListener>();
-            switch (ListenerRule.Decide(all.Length, Camera.main != null))
-            {
-                case ListenerRule.Action.AddToMainCamera: return Camera.main.gameObject.AddComponent<AudioListener>();
-                case ListenerRule.Action.AddToNewObject: { var go = new GameObject("AudioListener"); Object.DontDestroyOnLoad(go); return go.AddComponent<AudioListener>(); }
-                case ListenerRule.Action.RemoveExtras:
-                {
-                    AudioListener keep = null;
-                    foreach (var l in all) if (Camera.main != null && l.gameObject == Camera.main.gameObject) { keep = l; break; }
-                    if (keep == null) keep = all[0];
-                    foreach (var l in all) if (l != keep) Object.Destroy(l);
-                    Debug.LogWarning($"[Audio] {all.Length} AudioListeners found; kept the one on '{keep.gameObject.name}'");
-                    return keep;
-                }
-                default: return all[0];
-            }
+            var main = Camera.main;
+            var kept = ListenerRule.Apply<AudioListener>(all, l => main != null && l.gameObject == main.gameObject, main != null,
+                () => main.gameObject.AddComponent<AudioListener>(),
+                () => { var go = new GameObject("AudioListener"); Object.DontDestroyOnLoad(go); return go.AddComponent<AudioListener>(); },
+                l => { l.enabled = false; Object.Destroy(l); }); // disable now: Destroy is deferred to end of frame
+            if (all.Length > 1) Debug.LogWarning($"[Audio] {all.Length} AudioListeners found; kept the one on '{kept.gameObject.name}'");
+            return kept;
         }
     }
 

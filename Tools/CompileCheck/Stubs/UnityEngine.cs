@@ -360,3 +360,10 @@ namespace UnityEngine.Rendering
     public enum AmbientMode { Skybox, Trilight, Flat, Custom }
 }
 namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } public class AudioMixer : UnityEngine.Object { public AudioMixerGroup[] FindMatchingGroups(string subPath) => new AudioMixerGroup[0]; } }
+
+namespace UnityEngine.SceneManagement
+{
+    public struct Scene { }
+    public enum LoadSceneMode { Single, Additive }
+    public static class SceneManager { public static event System.Action<Scene, LoadSceneMode> sceneLoaded; static void Touch() => sceneLoaded?.Invoke(default, default); }
+}

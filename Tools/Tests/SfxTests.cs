@@ -28,6 +28,7 @@ static class SfxTests
  ]}";
 
     class FakeImpact { public string kind = "Impact"; public string materialA = "Wood"; public string materialB = "Steel"; public string sizeClass = "S"; public string tier = "Heavy"; public string source = "Cannon"; }
+    class FakeListener { public bool OnMainCamera; }
     class FakeCollapse { public string dominantMaterial = "Wood"; public int cascadeCount = 30; }
 
     public static void Register()
@@ -107,6 +108,26 @@ static class SfxTests
             T.True(!BossSfxRules.ArmorHit(1, true, true), "after defeat silent");
             var tw = File.ReadAllText(Path.Combine(Root, "Assets/_Project/Scripts/Boss/TidewardenController.cs"));
             T.True(tw.Contains("x.Damaged += OnArmorDamaged") && tw.Contains("SfxPlayer.PlayCode(\"BOSS_TIDE_ARMOR_HIT\")"), "armour Damaged hooked to PlayCode");
+        });
+        T.Add("audio_listener_guard_idempotent_and_collapses", () =>
+        {
+            var scene = new List<FakeListener>(); bool hasCam = true;
+            FakeListener Ensure() => ListenerRule.Apply(scene, l => l.OnMainCamera, hasCam,
+                () => { var l = new FakeListener { OnMainCamera = true }; scene.Add(l); return l; },
+                () => { var l = new FakeListener(); scene.Add(l); return l; },
+                l => scene.Remove(l));
+            var first = Ensure(); T.Eq(1, scene.Count, "first Ensure adds one");
+            for (int i = 0; i < 5; i++) T.True(ReferenceEquals(first, Ensure()), "repeated Ensure returns the same listener");
+            T.Eq(1, scene.Count, "repeated Ensure leaves 1 listener");
+            scene.Add(new FakeListener()); scene.Add(new FakeListener());          // a later scene/camera brings its own
+            T.True(ReferenceEquals(first, Ensure()), "keeps the main-camera listener"); T.Eq(1, scene.Count, "late listeners collapse to 1");
+            scene.Clear(); var late = new FakeListener(); scene.Add(late);         // camera unloaded, new scene has one (not main)
+            T.True(ReferenceEquals(late, Ensure()), "single existing listener untouched"); T.Eq(1, scene.Count);
+            scene.Clear(); hasCam = false; Ensure(); T.Eq(1, scene.Count, "no camera → standalone listener");
+            var src = File.ReadAllText(Path.Combine(Root, "Assets/_Project/Scripts/Audio/SfxPlayer.cs"));
+            T.True(src.Contains("SceneManager.sceneLoaded += "), "re-Ensure on scene load");
+            int upd = src.IndexOf("void Update()"); T.True(upd < 0 || src.IndexOf("FindObjectsOfType", upd) < 0, "no per-frame FindObjectsOfType");
+            T.True(src.Contains("if (Instance != null) return Instance;"), "SfxPlayer.Ensure idempotent");
         });
         T.Add("audio_single_listener", () =>
         {

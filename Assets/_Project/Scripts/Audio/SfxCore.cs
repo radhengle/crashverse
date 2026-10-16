@@ -274,5 +274,25 @@ namespace Crashverse.Audio
         public enum Action { None, AddToMainCamera, AddToNewObject, RemoveExtras }
         public static Action Decide(int listenerCount, bool hasMainCamera)
             => listenerCount == 0 ? (hasMainCamera ? Action.AddToMainCamera : Action.AddToNewObject) : listenerCount > 1 ? Action.RemoveExtras : Action.None;
+
+        /// <summary>Applies the rule to the current listeners and returns the one kept. Idempotent: with exactly one listener it changes nothing.
+        /// Extras collapse to the main camera's listener if it has one, else the first; <paramref name="remove"/> is called for each extra.</summary>
+        public static T Apply<T>(IList<T> listeners, Func<T, bool> onMainCamera, bool hasMainCamera, Func<T> addToMainCamera, Func<T> addToNewObject, Action<T> remove) where T : class
+        {
+            switch (Decide(listeners.Count, hasMainCamera))
+            {
+                case Action.AddToMainCamera: return addToMainCamera();
+                case Action.AddToNewObject: return addToNewObject();
+                case Action.RemoveExtras:
+                {
+                    T keep = null;
+                    foreach (var l in listeners) if (onMainCamera(l)) { keep = l; break; }
+                    keep ??= listeners[0];
+                    foreach (var l in new List<T>(listeners)) if (!ReferenceEquals(l, keep)) remove(l);
+                    return keep;
+                }
+                default: return listeners[0];
+            }
+        }
     }
 }
