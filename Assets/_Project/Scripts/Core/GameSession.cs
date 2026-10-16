@@ -66,6 +66,8 @@ namespace Crashverse.Core
             if (Boss != null) Destroy(Boss);
             Boss = null;
             if (Ctx.level.IsBoss) { Boss = gameObject.AddComponent<TidewardenController>(); Boss.Bind(builder); Boss.Changed += () => Changed?.Invoke(); }
+            var mp = Crashverse.Audio.MusicPlayer.Ensure();
+            if (Ctx.titan != null) mp.PlayTitan(Ctx.titan.arenaId); else if (Boss != null) mp.PlayBase("tidewarden_p1"); else mp.PlayBase("gameplay_loop");
             PowerUps = new PowerUpRuntime(Ctx.loadout, AppServices.Content, Ctx.extraChargeSlot);
             PowerUps.Changed += () => Changed?.Invoke();
             ShotsLeft = Ctx.ShotBudget;
@@ -174,6 +176,8 @@ namespace Crashverse.Core
             var lvl = Ctx.level;
             int stars = StarRules.Compute(won, ShotsLeft, Ctx.ShotBudget, lvl.star3Pct, lvl.star2Pct,
                                           PowerUps.AnyUsed ? lvl.starCapIfPowerupUsed : 3);
+            var music = Crashverse.Audio.MusicPlayer.Instance; // victory/fail stops level music (fade via Results snapshot) + stinger
+            if (music != null && !(won && (Boss != null || Ctx.titan != null))) { music.StopAll(); music.PlayStinger(won ? (stars >= 3 ? "stinger_win_3star" : "stinger_win") : "stinger_fail"); }
             var stats = new RunStats { won = won, shotsUsed = Ctx.ShotBudget - ShotsLeft, shotsLeft = ShotsLeft, stars = stars,
                                        destroyedRatio = tracker.DestroyedRatio, powerUpUsed = PowerUps.AnyUsed, islandKillY = lvl.islandKillY };
             tracker.FillRoleStats(stats, builder.Blocks);

@@ -80,7 +80,12 @@ namespace Crashverse.Weapons
             var b = other.GetComponentInParent<DestructibleBlock>();
             if (b == null) { Impact(null, transform.position); return; } // ground
             if (b.IsBroken || !_pierced.Add(b)) return;
-            if (_pierced.Count > mods.pierceCount) Impact(b, transform.position); // full damage to the 3rd piece
+            if (_pierced.Count > mods.pierceCount)
+            {
+                Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.PuPhaseHit, b); // 3rd piece: solidify + full damage (04)
+                Impact(b, transform.position);
+            }
+            else Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.PuPhasePass, b); // pass-through 1 & 2: ripple + shimmer, no hit stop
         }
 
         void OnCollisionEnter(Collision c)

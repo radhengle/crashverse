@@ -24,19 +24,19 @@ namespace Crashverse.Feel
         static float Clamp01(float t) => t < 0f ? 0f : t > 1f ? 1f : t;
     }
 
-    /// <summary>Event names from animation/audio_sync_table.md (+ GAME_WRECKER_READY, Content Roadmap §5).</summary>
+    /// <summary>Event names from animation/audio_sync_table.md + anim_audio_map.csv (ANIM_WRECKER_READY = Content Roadmap §5 reload-beat hook).</summary>
     public static class AnimEvents
     {
         public const string WreckerIdleFidget = "ANIM_WRECKER_IDLE_FIDGET", WreckerAimStart = "ANIM_WRECKER_AIM_START", WreckerAimEnd = "ANIM_WRECKER_AIM_END",
             WreckerAimClamp = "ANIM_WRECKER_AIM_CLAMP", WreckerFireAnticipate = "ANIM_WRECKER_FIRE_ANTICIPATE", WreckerFire = "ANIM_WRECKER_FIRE",
             WreckerMuzzleSmoke = "ANIM_WRECKER_MUZZLE_SMOKE", WreckerRecoilLand = "ANIM_WRECKER_RECOIL_LAND", WreckerReArm = "ANIM_WRECKER_REARM",
             WreckerSlotOut = "ANIM_WRECKER_SLOT_OUT", WreckerSlotIn = "ANIM_WRECKER_SLOT_IN", WreckerWin = "ANIM_WRECKER_WIN", WreckerFail = "ANIM_WRECKER_FAIL",
-            WreckerReady = "GAME_WRECKER_READY", ReloadStart = "GAME_WRECKER_RELOAD_START",
-            ProjLaunch = "ANIM_PROJ_LAUNCH", ProjApex = "ANIM_PROJ_APEX", PuSplitApex = "PU_SPLIT_APEX",
+            WreckerReady = "ANIM_WRECKER_READY", ReloadStart = "GAME_WRECKER_RELOAD_START", // READY name per anim_audio_map.csv
+            ProjLaunch = "ANIM_PROJ_LAUNCH", ProjApex = "ANIM_PROJ_APEX", PuSplitApex = "PU_SPLIT_APEX", PuPhasePass = "PU_PHASE_PASS", PuPhaseHit = "PU_PHASE_HIT",
             PuTimeStart = "PU_TIME_START", PuTimeWarn = "PU_TIME_WARN", PuTimeEnd = "PU_TIME_END",
             CollapseLand = "COLLAPSE_LAND", DebrisFallOff = "DEBRIS_FALL_OFF",
             BossTitanStage = "BOSS_TITAN_STAGE", BossTitanDefeat = "BOSS_TITAN_DEFEAT", BossTitanSurvive = "BOSS_TITAN_SURVIVE", BossTitanHit = "BOSS_TITAN_HIT",
-            BossTideTell = "BOSS_TIDE_TELL", BossTideCoreHit = "BOSS_TIDE_CORE_HIT", BossTideDefeat = "BOSS_TIDE_DEFEAT",
+            BossTideTell = "BOSS_TIDE_TELL", BossTideShutterClose = "BOSS_TIDE_SHUTTER_CLOSE", BossTideShutterOpen = "BOSS_TIDE_SHUTTER_OPEN", BossTidePhase2 = "BOSS_TIDE_PHASE2", BossTideCoreHit = "BOSS_TIDE_CORE_HIT", BossTideDefeat = "BOSS_TIDE_DEFEAT",
             UiBtnPress = "UI_BTN_PRESS", UiComboUp = "UI_COMBO_UP", UiComboTier = "UI_COMBO_TIER", UiStar = "UI_STAR_", UiMasteryTick = "UI_MASTERY_TICK",
             UiWin = "UI_WIN", UiShotSpend = "UI_SHOT_SPEND", UiThresholdHit = "UI_THRESHOLD_HIT", CamSlowMoStart = "CAM_SLOWMO_START";
     }
@@ -196,6 +196,27 @@ namespace Crashverse.Feel
             if (Remaining <= 0f && !_holdForImpact) End();
         }
         void End() { Active = false; Remaining = 0f; _holdForImpact = false; AnimEventBus.Raise(AnimEvents.PuTimeEnd); Ended?.Invoke(); }
+    }
+
+    // ───────────── Tidewarden shutter (05_bosses) ─────────────
+    /// <summary>Shutter tell (exactly 2 Hz over the last 1 s before close) and open/close tweens (close 300 ms ease-in cubic, open 350 ms ease-out-back).</summary>
+    public static class TideShutter
+    {
+        public const float TellSeconds = 1f, CloseMs = 300f, OpenMs = 350f, Travel = 1.7f;
+        /// <summary>0.6 + 0.4·(0.5 + 0.5·sin(4π·t)). Reduce Motion keeps the tell as colour with amplitude ×0.5 (07).</summary>
+        public static float TellIntensity(float tSinceStart, bool reduceMotion)
+        {
+            float p = 0.5f + 0.5f * (float)Math.Sin(4.0 * Math.PI * tSinceStart);
+            return 0.6f + 0.4f * (reduceMotion ? 0.5f : 1f) * p;
+        }
+        /// <summary>Height above the closed pose for a tween: closing goes Travel→0 with ease-in cubic; opening 0→Travel with ease-out-back (quad under Reduce Motion).</summary>
+        public static float Height(bool opening, float elapsedMs, bool reduceMotion)
+        {
+            if (opening) return Travel * Ease.OutBackOrQuad(elapsedMs / OpenMs, reduceMotion);
+            float t = Math.Min(1f, Math.Max(0f, elapsedMs / CloseMs));
+            return Travel * (1f - t * t * t);
+        }
+        public static bool Done(bool opening, float elapsedMs) => elapsedMs >= (opening ? OpenMs : CloseMs);
     }
 
     // ───────────── Titan stages (OQ-B3) ─────────────

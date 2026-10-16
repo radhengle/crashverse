@@ -339,9 +339,20 @@ namespace UnityEngine
         public static bool Button(Rect r, string s, GUIStyle st) => false;
     }
     public class GUISkin { public GUIStyle label = new GUIStyle(); public GUIStyle button = new GUIStyle(); }
+    public enum AudioClipLoadType { DecompressOnLoad, CompressedInMemory, Streaming }
+    public class AudioClip : Object { public int samples; public int frequency = 44100; public AudioClipLoadType loadType; }
+    public static class AudioSettings { public static double dspTime; }
+    public class AudioSource : Behaviour
+    {
+        public AudioClip clip; public bool loop, playOnAwake, isPlaying; public float volume = 1f, spatialBlend; public int priority, timeSamples;
+        public UnityEngine.Audio.AudioMixerGroup outputAudioMixerGroup;
+        public void PlayScheduled(double t) { isPlaying = true; } public void SetScheduledEndTime(double t) { } public void Stop() { isPlaying = false; }
+    }
+
 }
 
 namespace UnityEngine.Rendering
 {
     public enum AmbientMode { Skybox, Trilight, Flat, Custom }
 }
+namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } }

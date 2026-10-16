@@ -51,6 +51,7 @@ namespace Crashverse.Boss
             foreach (var s in _shoulders) if (!s.IsBroken) return;
             Phase = 2;
             foreach (var a in _armor) if (!a.IsBroken) a.Break(); // chest opens
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTidePhase2); // music: stinger at bar end → P2
             SetShutter(true); // SG-05: phase 2 opens with the shutter open
             Changed?.Invoke();
         }
@@ -74,24 +75,45 @@ namespace Crashverse.Boss
         public float OnShotResolved()
         {
             if (Phase != 2 || Defeated) return 0f;
-            if (ShutterOpen) { _tellTimer = TellSeconds; return TellSeconds; } // glow, then close
+            if (ShutterOpen) { _tellTimer = TellSeconds; _tellT = 0f; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideTell); return TellSeconds + Crashverse.Feel.TideShutter.CloseMs / 1000f; } // tell 1 s, then 300 ms close tween
             SetShutter(true);
             return 0f;
         }
 
+        float _tellT, _tweenMs = -1f; bool _tweenOpening;
+
         void Update()
         {
-            if (_tellTimer <= 0f || _shutter == null) return;
-            _tellTimer -= Time.deltaTime;
-            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 18f);
-            _shutter.SetHighlight(MaterialDefinition.Hex("FF7A1A"), 0.6f + 0.4f * pulse);
-            if (_tellTimer <= 0f) { _shutter.ClearHighlight(); SetShutter(false); }
+            if (_shutter == null) return;
+            bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
+            if (_tellTimer > 0f)
+            {
+                _tellTimer -= Time.deltaTime; _tellT += Time.deltaTime;
+                _shutter.SetHighlight(MaterialDefinition.Hex("FF7A1A"), Crashverse.Feel.TideShutter.TellIntensity(_tellT, rm)); // exactly 2 Hz
+                if (_tellTimer <= 0f) { _shutter.ClearHighlight(); SetShutter(false); }
+            }
+            if (_tweenMs >= 0f)
+            {
+                _tweenMs += Time.deltaTime * 1000f;
+                _shutter.transform.position = _shutterClosedPos + new Vector3(0f, Crashverse.Feel.TideShutter.Height(_tweenOpening, _tweenMs, rm), 0f);
+                if (Crashverse.Feel.TideShutter.Done(_tweenOpening, _tweenMs))
+                {
+                    _tweenMs = -1f;
+                    if (!_tweenOpening) Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideShutterClose); // thunk at end of 300 ms slam
+                }
+            }
         }
 
+        /// <summary>Gameplay state flips immediately; the visual pose tweens (no teleport). Phase 1 parks it closed without a tween.</summary>
         void SetShutter(bool open)
         {
+            bool tween = Phase == 2 && open != ShutterOpen;
             ShutterOpen = open;
-            if (_shutter != null) _shutter.transform.position = _shutterClosedPos + (open ? new Vector3(0f, 1.7f, 0f) : Vector3.zero);
+            if (_shutter != null)
+            {
+                if (tween) { _tweenOpening = open; _tweenMs = 0f; if (open) Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideShutterOpen); }
+                else _shutter.transform.position = _shutterClosedPos + (open ? new Vector3(0f, Crashverse.Feel.TideShutter.Travel, 0f) : Vector3.zero);
+            }
             Changed?.Invoke();
         }
     }

@@ -100,6 +100,7 @@ namespace Crashverse.Core
                 Map.Build(AppServices.Content.Chapter1);
             }
             _mapRoot.SetActive(true);
+            Crashverse.Audio.MusicPlayer.Ensure().PlayBase("sunnyville_map_loop");
             Map.FocusLevel(AppServices.Save.Data.lastPlayedLevel);
             var r = AppServices.Router;
             if (r.Top is MapScreen) return;

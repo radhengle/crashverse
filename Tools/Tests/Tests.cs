@@ -863,6 +863,49 @@ static class Tests
             var doc = Src("docs/Privacy_And_Account.md");
             T.True(doc.Contains("AutoLogAppEventsEnabled = false") && doc.Contains("AdvertiserIDCollectionEnabled = false"), "Facebook SDK note");
         });
+
+        // ───── Audio: anim hooks + MusicPlayer (mixing_unity.md, loop_points.md) ─────
+        T.Add("AUDIO_anim_hooks_done", () =>
+        {
+            T.Eq("ANIM_WRECKER_READY", AnimEvents.WreckerReady, "ready event name matches anim_audio_map");
+            var pj = Src("Assets/_Project/Scripts/Weapons/Projectile.cs");
+            T.True(pj.Contains("AnimEvents.PuPhasePass") && pj.Contains("AnimEvents.PuPhaseHit"), "Phase Piercer pass/3rd-hit events");
+            T.Eq(0.6f + 0.4f * 0.5f, TideShutter.TellIntensity(0f, false), "tell starts mid");
+            T.True(Math.Abs(TideShutter.TellIntensity(0.125f, false) - 1.0f) < 1e-4, "peak at 1/8 s"); T.True(Math.Abs(TideShutter.TellIntensity(0.625f, false) - 1.0f) < 1e-4, "next peak 0.5 s later → 2 Hz");
+            T.True(TideShutter.TellIntensity(0.125f, true) <= 0.8f + 1e-4, "reduce motion halves amplitude");
+            T.Eq(1.7f, TideShutter.Height(false, 0f, false)); T.Eq(0f, TideShutter.Height(false, 300f, false), "closed at 300 ms");
+            T.True(TideShutter.Height(false, 150f, false) > 1.4f, "ease-in cubic (slow start, slam)"); T.True(!TideShutter.Done(false, 299f) && TideShutter.Done(false, 300f), "300 ms");
+            var tw = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs");
+            T.True(!tw.Contains("Time.time * 18f") && tw.Contains("BossTideShutterClose"), "no 2.9 Hz glow, close event at tween end");
+            var fd = Src("Assets/_Project/Scripts/Feel/FeelDirector.cs"); T.True(fd.Contains("_lastTitanDmg"), "Titan OnDamage only on change");
+        });
+        T.Add("AUDIO_loop_points_and_bars", () =>
+        {
+            var mt = Crashverse.Audio.MusicTracks.Get("main_theme"); T.True(mt.HasIntro && mt.loopStart == 378000, "main_theme intro split at 378000");
+            T.Eq(377999L, mt.SampleAt(377999 / 44100.0)); T.Eq(378000L + 10, mt.SampleAt((3402000 + 10) / 44100.0), "wraps into loop region");
+            var p1 = Crashverse.Audio.MusicTracks.Get("tidewarden_p1"); T.Eq(330750, p1.loopStart); T.True(Math.Abs(p1.BarSeconds - 1.875) < 1e-9, "128 BPM bar");
+            T.True(!Crashverse.Audio.MusicTracks.All.ContainsKey("season2_stormfront_hub") && !Crashverse.Audio.MusicTracks.All.ContainsKey("titan_preview_obsidian_full"), "excluded tracks");
+            T.Eq("titan_int25", Crashverse.Audio.MusicTracks.TitanLayer(1)); T.Eq("titan_int75", Crashverse.Audio.MusicTracks.TitanLayer(3)); T.Eq(null, Crashverse.Audio.MusicTracks.TitanLayer(0));
+            T.True(Math.Abs(Crashverse.Audio.BarClock.NextBar(10, 11.0, 1.875) - 11.875) < 1e-9, "next bar line");
+            var plan = Crashverse.Audio.TidewardenMusic.Plan(100.0, 101.0);
+            T.True(Math.Abs(plan.stingerDsp - 101.875) < 1e-9 && Math.Abs(plan.p2StartDsp - 103.75) < 1e-9 && plan.p1StopDsp == plan.stingerDsp, "stinger at P1 bar end, P2 next bar");
+        });
+        T.Add("AUDIO_voice_rule_and_crossfade", () =>
+        {
+            for (float t = 0; t <= 1f; t += 0.1f) { float o = Crashverse.Audio.EqualPower.Out(t), i = Crashverse.Audio.EqualPower.In(t); T.True(Math.Abs(o * o + i * i - 1f) < 1e-5, "equal power"); }
+            var v = new Crashverse.Audio.MusicVoiceState { Base = "titan_foundry_crater" };
+            v.SetLayer("titan_int25", 0); T.True(!v.Crossfading(0) || v.Voices(0) <= 3, "≤3");
+            v.Tick(1.1, out _); v.SetLayer("titan_int50", 2.0);
+            T.Eq(3, v.Voices(2.5), "base + 2 layers mid-crossfade");
+            T.True(!v.RequestStinger("stinger_win", 2.5, 3.0), "stinger waits for the crossfade"); T.Eq(3, v.Voices(2.5), "still 3");
+            T.Eq(null, v.Tick(2.9, out _), "not before end");
+            T.Eq("stinger_win", v.Tick(3.0, out var len), "starts once crossfade ends"); T.Eq(3.0, len);
+            T.Eq(3, v.Voices(3.1), "base + layer + stinger = 3");
+            T.True(!v.SetLayer("titan_int50", 3.2), "same layer → no-op (never stacks)");
+            var mp = Src("Assets/_Project/Scripts/Audio/MusicPlayer.cs");
+            T.True(mp.Contains("PlayScheduled") && mp.Contains("timeSamples") && mp.Contains("dspTime"), "sample-synced scheduling");
+            var imp = Src("Assets/_Project/Scripts/Editor/MusicImportRules.cs"); T.True(imp.Contains("AudioClipLoadType.Streaming"), "all music streamed");
+        });
     }
 }
 

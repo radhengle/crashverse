@@ -41,7 +41,7 @@ namespace Crashverse.Feel
         readonly ShakeStack _shake = new ShakeStack();
         readonly TimeScaleGovernor _time = new TimeScaleGovernor();
         TitanAnimStateMachine _titan;
-        float _seed;
+        float _seed; int _lastTitanDmg;
 
         public void Bind(GameSession s, OrbitCamera cam, AimController aim)
         {
@@ -75,7 +75,7 @@ namespace Crashverse.Feel
             _wrecker.Tier = tier;
             if (_aim != null) _wrecker.SetAiming(_aim.Dragging);
             _wrecker.Tick(rdt); _camSm.Tick(rdt);
-            if (_titan != null) _titan.OnDamage(_s.TitanDamageScore);
+            if (_titan != null && _s.TitanDamageScore != _lastTitanDmg) { _lastTitanDmg = _s.TitanDamageScore; _titan.OnDamage(_lastTitanDmg); } // only on change (was raising HIT every frame)
 
             bool ranked = _s.Ctx != null && _s.Ctx.mode == RunMode.TitanRanked;
             float ts = _time.Tick(rdt);

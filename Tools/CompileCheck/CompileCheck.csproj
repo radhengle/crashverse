@@ -24,5 +24,6 @@
     <Compile Include="../../Assets/_Project/Scripts/Map/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/LiveOps/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Feel/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Audio/**/*.cs" />
   </ItemGroup>
 </Project>
