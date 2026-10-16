@@ -63,8 +63,14 @@ static class Tests
         {
             var ch = Db.Chapter1;
             T.Eq(10, ch.levels.Length, "10 levels");
-            int[] shots = { 4, 4, 5, 5, 5, 5, 5, 5, 6, 7 };
-            for (int i = 0; i < 10; i++) { T.Eq(shots[i], ch.levels[i].shots, "shots L" + (i + 1)); T.Eq(0.6f, ch.levels[i].star3Pct, "star3 L" + (i + 1)); }
+            // Level Rulings (60ba5d1): star bands are per-level data, range + monotonic, not a fixed 0.6.
+            int[] shots = { 4, 4, 5, 5, 5, 5, 5, 5, 6, 8 };
+            for (int i = 0; i < 10; i++)
+            {
+                var l = ch.levels[i]; T.Eq(shots[i], l.shots, "shots L" + (i + 1));
+                T.True(l.star3Pct > 0f && l.star3Pct <= 1f && l.star2Pct > 0f && l.star2Pct < l.star3Pct, l.id + " bands in (0,1], 2★ < 3★");
+            }
+            T.Eq(0.375f, ch.levels[9].star3Pct, "L10 3★ 0.375"); T.Eq(0.25f, ch.levels[9].star2Pct, "L10 2★ 0.25");
             T.Eq("m1_clockwork_tower", ch.levels[6].layout, "L7 = M1 tower");
             T.Eq("tidewarden", ch.levels[9].bossId, "L10 boss");
             T.Eq(2, ch.levels[8].starCapIfPowerupUsed, "L9 cap");
