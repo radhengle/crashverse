@@ -1,0 +1,4 @@
+Kit_Steel_Floor_Fractured.fbx: frags=6 (spec 4-10) tris max=20 total=88 mass 167.9-238.3 kg UCX=6 JNT=9 ANCHOR=6 -> PASS
+Kit_Steel_Joint_Fractured.fbx: frags=5 (spec 4-10) tris max=12 total=60 mass 36.4-48.8 kg UCX=5 JNT=4 ANCHOR=1 -> PASS
+Kit_Steel_Wall_Fractured.fbx: frags=6 (spec 4-10) tris max=16 total=88 mass 159.1-230.1 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
+RESULT: ALL PASS

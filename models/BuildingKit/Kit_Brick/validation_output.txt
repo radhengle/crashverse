@@ -1,0 +1,4 @@
+Kit_Brick_Floor_Fractured.fbx: frags=16 (spec 12-24) tris max=24 total=264 mass 209.4-314.9 kg UCX=16 JNT=33 ANCHOR=16 -> PASS
+Kit_Brick_Joint_Fractured.fbx: frags=12 (spec 12-24) tris max=20 total=168 mass 57.7-92.6 kg UCX=12 JNT=12 ANCHOR=1 -> PASS
+Kit_Brick_Wall_Fractured.fbx: frags=18 (spec 12-24) tris max=28 total=300 mass 186.1-317.1 kg UCX=18 JNT=38 ANCHOR=5 -> PASS
+RESULT: ALL PASS
