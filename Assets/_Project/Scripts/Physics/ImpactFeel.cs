@@ -281,7 +281,12 @@ namespace Crashverse.Sim
         /// <summary>Add a fully built event to this tick's buffer (wiring helpers in ImpactReport).</summary>
         public void Add(ImpactEvent e) => _buffer.Add(e);
         SimRunner _runner;
-        static readonly Action<ImpactEvent> Emit = e => AnimEventBus.Raise(ImpactEvents.NameOf(e.kind), e);
+        static readonly Action<ImpactEvent> Emit = e =>
+        {
+            string name = ImpactEvents.NameOf(e.kind);
+            AnimEventBus.Raise(name, e);
+            PhysShakeHook.Submit(name, e); // camera shake only via CameraShake.AddPhys (#29); never moves the camera here
+        };
 
         public ImpactTierThresholds Thresholds => audioProfile != null ? audioProfile.thresholds : ImpactTierThresholds.Default;
         int CurrentTick => _runner != null ? ImpactTickPolicy.Tag(_runner.Tick, _runner.InTick) : 0;
@@ -289,6 +294,9 @@ namespace Crashverse.Sim
 
         void OnEnable()
         {
+#if CRASHVERSE_CAMERASHAKE
+            if (PhysShakeHook.Sink == null) PhysShakeHook.Sink = Crashverse.Feel.CameraShake.AddPhys; // TODO(#29): make unconditional once #29 merges
+#endif
             Instance = this; if (Session == null) Session = new CascadeSession(Cascades);
             _runner = SimRunner.Instance != null ? SimRunner.Instance : FindObjectOfType<SimRunner>();
             if (_runner != null) { _runner.Stepped += OnStepped; _runner.TickBegin += OnTickBegin; }
