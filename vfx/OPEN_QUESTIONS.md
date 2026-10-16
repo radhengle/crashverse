@@ -1,21 +1,21 @@
 # VFX open questions / conflicts v1 (for PM, Animator, Art, Developer)
+Updated 16 Oct 2026 IST.
 
-## Animator
-- **Q-A1** 02 brick "red chunks": no hex given. VFX uses #C0392B placeholder. Confirm or supply from arena_brief_v2.
-- **Q-A2** 04 Perf says Mid ≤80 particles per power-up; 02 says ≤150 live impact particles. Gravity Well + child impacts can coexist: is the 150 cap shared or additive? VFX assumes separate budgets (§4).
-- **Q-A3** Reduce motion "flashes ≥100 ms ramps": does this also stretch Shockwave's 1-f link flashes (12×16 ms stagger = 192 ms) or replace them with a single tint? VFX proposes single 100 ms tint.
-- **Q-A4** Time Fracture under Reduce motion: is the 30% env desaturation kept with the static 25% tint?
-- **Q-A5** Uncommitted local edits exist in animation/05, 07, audio_sync_table.md and design/Spec_Gap_Answers_v1.md on the checkout; VFX did not touch or commit them. Spec built from the working-tree text.
+## Resolved
+- **Q-A1** Brick colours: body #D2664C, chipped #E9997C, dust #D9A37E (PM). Applied in spec + VfxCore.
+- **Q-A2** Particle budget: one global pool, 150 impacts + 80 active power-up, oldest culled first. `ParticleBudget` in VfxCore.
+- **Q-A3** RM Shockwave: one 100 ms ease-out tint per activation, alpha ≤0.5.
+- **Q-A4** RM Time Fracture: static 30 % desat under static 25 % tint, tint fades out 300 ms, no crack animation.
+- **Q-R1** Shading: Art approved GlossyToon values (threshold 0.45, softness 0.08–0.12, shade #5B6FA8 55–65 %, spec #FFF6E0, rim #FFFFFF 0.35 back-left). Applied.
+- **Q-R2** VFX owns crack masks and sprite sheets.
+- **Q-R3** Art v2 is never copied into the repo; referenced at `/workspace/art/v2` (lighting: `/workspace/art/m1b/arena_brief_v2.md`).
+- **Q-R4** Cyan #22D3EE is Core/Wrecker only and never appears in the environment (Art).
+- **Q-D4** Device testing waits for the Unity licence and APK.
 
-## Art
-- **Q-R1** Art v2 is a painted screen target (Canva) with no material/lighting sheet. Confirm toon band softness, shade tint (proposed cool #8C99D9) and spec "candy" highlight vs. a softer PBR look.
-- **Q-R2** Crack mask textures (R=step1, G=step2) per material and FX flipbooks (dust, splinter, spark) are not in repo; who authors them (VFX can make originals in Krita/Blender)?
-- **Q-R3** Art v2 lives at /workspace/art/v2, not in repo docs/; should a copy/link land in `Assets/_Project/ArtReference/`?
-- **Q-R4** Cyan reserved for Core/Wrecker: Chain Reactor arcs and Shockwave ring are Core so stay cyan—confirm no clash with water/sky in Sunnyville.
-
-## Developer / PM
-- **Q-D1** `Tools/CompileCheck/CompileCheck.csproj` lists folders explicitly and does not include `Scripts/VFX`; VFX did not edit it (Developer-owned) and added `vfx/compile_check` instead. Please add `Scripts/VFX/**/*.cs` to CompileCheck and CI.
-- **Q-D2** Impact/break events currently carry unknown payloads; VFX needs position + material. Proposed `Crashverse.VFX.VfxHit` payload or an agreed struct in FeelCore.
-- **Q-D3** VfxDirector must be spawned by GameBootstrap/AppServices (no prefabs). Also needs current `QualityTier` source.
-- **Q-D4** URP asset/Volume settings (§3) are Editor-only; requires someone with Unity to apply and validate shaders on device (Mali/Adreno).
-- **Q-D5** PU_PHASE_PASS/HIT have no code hook (anim_audio_map) — VFX blocked on same hook.
+## Open
+- **Q-A5** Other teams' uncommitted edits exist in the shared checkout; VFX works in its own worktree and never touches them.
+- **Q-R5** Inverted-hull outline (0.02 u #101828) is optional: which hero props get it? (adds a pass per prop)
+- **Q-D1** Please add `Scripts/VFX/**/*.cs` to `Tools/CompileCheck` and CI (VFX uses `vfx/compile_check` meanwhile).
+- **Q-D2** Impact/break events need position + material payload; proposed `Crashverse.VFX.VfxHit`.
+- **Q-D3** GameBootstrap/AppServices should spawn `VfxDirector` and give it the `QualityTier`.
+- **Q-D5** PU_PHASE_PASS/HIT have no code hook yet.

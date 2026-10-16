@@ -22,10 +22,12 @@ namespace Crashverse.VFX
         readonly Dictionary<int, RingPool<GameObject>> _pools = new Dictionary<int, RingPool<GameObject>>();
         readonly List<GameObject> _live = new List<GameObject>(); readonly List<float> _until = new List<float>();
         readonly SpawnLimiter _limiter = new SpawnLimiter();
+        ParticleBudget _budget; readonly int[] _culled = new int[16]; readonly List<int> _liveIds = new List<int>(); int _nextId;
         const int DustKey = 100;
 
         void Awake()
         {
+            _budget = new ParticleBudget(VfxRules.GlobalParticleBudget((int)tier));
             for (int m = 0; m < 6; m++) { int k = m; _pools[k] = MakePool(k < impactPrefabs.Length ? impactPrefabs[k] : null, "vfx_impact_" + k); }
             _pools[DustKey] = MakePool(dustPrefab, "vfx_dust");
         }
@@ -58,15 +60,18 @@ namespace Crashverse.VFX
         void Spawn(VfxMaterial m, object payload, bool isBreak)
         {
             if (payload is VfxHit h) m = h.Material;
-            SpawnPool((int)m, payload, VfxRules.Impact(m).LifetimeSec, isBreak);
+            SpawnPool((int)m, payload, VfxRules.Impact(m).LifetimeSec, isBreak, VfxRules.ParticleCount(VfxRules.Impact(m).Particles, (int)tier));
         }
 
-        void SpawnPool(int key, object payload, float life, bool rateLimited)
+        void SpawnPool(int key, object payload, float life, bool rateLimited, int particles = 6)
         {
             if (rateLimited && !_limiter.TryAcquire(Time.unscaledTime)) return; // 03 beat 4: VFX dropped, sound still plays
             var g = _pools[key].Get(); if (g == null) return;
             g.transform.position = payload is VfxHit h ? h.Position : transform.position;
-            _live.Add(g); _until.Add(Time.unscaledTime + life);
+            int id = ++_nextId;
+            int n = _budget.Request(id, particles, _culled);
+            for (int c = 0; c < n && c < _culled.Length; c++) { int idx = _liveIds.IndexOf(_culled[c]); if (idx >= 0) _until[idx] = 0f; } // oldest culled first
+            _live.Add(g); _until.Add(Time.unscaledTime + life); _liveIds.Add(id);
         }
 
         void Update()
@@ -75,7 +80,7 @@ namespace Crashverse.VFX
             for (int i = _live.Count - 1; i >= 0; i--)
             {
                 if (now < _until[i]) continue;
-                var g = _live[i]; _live.RemoveAt(i); _until.RemoveAt(i);
+                var g = _live[i]; _budget.Release(_liveIds[i]); _live.RemoveAt(i); _until.RemoveAt(i); _liveIds.RemoveAt(i);
                 foreach (var p in _pools.Values) p.Release(g);
             }
         }

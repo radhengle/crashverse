@@ -1,6 +1,6 @@
 // CRASHVERSE glossy toon/PBR-lite lit shader (URP 14, mobile). Original. SRP-Batcher compatible:
 // all material properties live in UnityPerMaterial; no per-material keywords except _DAMAGE (shared by destructibles).
-// Look (Art v2): bright saturated albedo, 2-band toon diffuse with soft edge, tight glossy spec highlight, cool rim.
+// Look: Art-approved values (16 Oct 2026). Lighting ref /workspace/art/m1b/arena_brief_v2.md. Hero props: softness 0.15. Steel: gloss 0.7, spec 0.9; props gloss 0.4-0.5, spec 0.5.
 // Damage: darken + crack mask in 2 steps (art bible: damage shown in <=2 steps), driven by _DamageStep (0,1,2) via MaterialPropertyBlock-free
 // per-instance approach: destructibles swap to one of 3 shared materials per step (keeps batching) -- see VFX_Shader_Spec_v1.md §3.
 Shader "Crashverse/GlossyToon"
@@ -9,22 +9,25 @@ Shader "Crashverse/GlossyToon"
     {
         _BaseMap ("Albedo", 2D) = "white" {}
         _BaseColor ("Base Colour", Color) = (1,1,1,1)
-        _ShadeColor ("Shade Tint", Color) = (0.55,0.6,0.85,1)
-        _ToonThreshold ("Toon Threshold", Range(-1,1)) = 0.1
-        _ToonSoftness ("Toon Softness", Range(0.001,0.5)) = 0.06
-        _Gloss ("Gloss (spec power)", Range(8,256)) = 96
-        _SpecIntensity ("Spec Intensity", Range(0,2)) = 0.8
-        _SpecSize ("Spec Band Cut", Range(0,1)) = 0.55
-        _RimColor ("Rim Colour", Color) = (0.75,0.9,1,1)
+        _ShadeColor ("Shade Tint (#5B6FA8; wood/brick may drift to #7A4A6A)", Color) = (0.357,0.435,0.659,1)
+        _ShadeStrength ("Shade Strength (0.55-0.65)", Range(0,1)) = 0.6
+        _ToonThreshold ("Toon Threshold", Range(-1,1)) = 0.45
+        _ToonSoftness ("Toon Softness", Range(0.001,0.5)) = 0.1
+        _Gloss ("Gloss 0-1 (Art: 0.75-0.8)", Range(0,1)) = 0.78
+        _SpecColor ("Spec Colour", Color) = (1,0.965,0.878,1)
+        _SpecIntensity ("Spec Intensity", Range(0,2)) = 0.5
+        _SpecSize ("Spec Band Cut", Range(0,1)) = 0.5
+        _RimColor ("Rim Colour", Color) = (1,1,1,1)
+        _RimDirWS ("Rim Light Dir (toward light, back-left)", Vector) = (-0.6,0.35,0.7,0)
         _RimPower ("Rim Power", Range(0.5,8)) = 3
-        _RimIntensity ("Rim Intensity", Range(0,2)) = 0.5
+        _RimIntensity ("Rim Intensity", Range(0,2)) = 0.35
         _EmissionColor ("Emission", Color) = (0,0,0,1)
         [NoScaleOffset] _CrackMap ("Crack Mask (R=step1, G=step2)", 2D) = "black" {}
-        _CrackColor ("Crack Colour", Color) = (0.12,0.08,0.06,1)
+        _CrackColor ("Crack Colour (wood #6B4226, mortar #7A3326, steel #3A3F48)", Color) = (0.42,0.259,0.149,1)
         _DamageStep ("Damage Step 0-2", Range(0,2)) = 0
-        _DarkenPerStep ("Darken per Step", Range(0,0.5)) = 0.15
+        _DarkenPerStep ("Darken per Step", Range(0,0.5)) = 0.1
         _HitFlash ("Hit Flash (0-1)", Range(0,1)) = 0
-        _HitFlashColor ("Hit Flash Colour", Color) = (1,0.96,0.88,1)
+        _HitFlashColor ("Hit Flash Colour (warm, capped)", Color) = (1,0.96,0.88,1)
     }
     SubShader
     {
@@ -35,8 +38,8 @@ Shader "Crashverse/GlossyToon"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _BaseMap_ST;
-            half4 _BaseColor, _ShadeColor, _RimColor, _EmissionColor, _CrackColor, _HitFlashColor;
-            half _ToonThreshold, _ToonSoftness, _Gloss, _SpecIntensity, _SpecSize, _RimPower, _RimIntensity;
+            half4 _BaseColor, _ShadeColor, _SpecColor, _RimDirWS, _RimColor, _EmissionColor, _CrackColor, _HitFlashColor;
+            half _ShadeStrength, _ToonThreshold, _ToonSoftness, _Gloss, _SpecIntensity, _SpecSize, _RimPower, _RimIntensity;
             half _DamageStep, _DarkenPerStep, _HitFlash;
         CBUFFER_END
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -86,15 +89,17 @@ Shader "Crashverse/GlossyToon"
 
                 half ndl = dot(n, L.direction);
                 half band = smoothstep(_ToonThreshold - _ToonSoftness, _ToonThreshold + _ToonSoftness, ndl * atten);
-                half3 diffuse = albedo.rgb * lerp(_ShadeColor.rgb, L.color, band);
+                half3 shade = lerp(1.0h, _ShadeColor.rgb, _ShadeStrength); // multiplied into albedo
+                half3 diffuse = albedo.rgb * L.color * lerp(shade, 1.0h, band);
 
                 half3 h = normalize(L.direction + v);
-                half spec = pow(saturate(dot(n, h)), _Gloss);
+                half spec = pow(saturate(dot(n, h)), exp2(_Gloss * 10.0h + 1.0h));
                 spec = smoothstep(_SpecSize - 0.05, _SpecSize + 0.05, spec) * band * _SpecIntensity; // glossy "candy" highlight
-                half rim = pow(1.0h - saturate(dot(n, v)), _RimPower) * _RimIntensity;
+                half rim = pow(1.0h - saturate(dot(n, v)), _RimPower) * _RimIntensity
+                         * saturate(dot(n, normalize(_RimDirWS.xyz)) + 0.25h); // back-left rim light
 
-                half3 ambient = SampleSH(n) * albedo.rgb * 0.5h;
-                half3 col = diffuse + ambient + spec * L.color + rim * _RimColor.rgb + _EmissionColor.rgb;
+                half3 ambient = SampleSH(n) * albedo.rgb * 0.5h; // gradient ambient sky #8CC8FF / equator #DCEFFF / ground #6FAE5A, x1.15
+                half3 col = diffuse + ambient + spec * _SpecColor.rgb + rim * _RimColor.rgb + _EmissionColor.rgb;
 
                 // Damage: 2 steps (darken + crack decal)
                 half2 crack = SAMPLE_TEXTURE2D(_CrackMap, sampler_CrackMap, i.uv).rg;
@@ -103,7 +108,7 @@ Shader "Crashverse/GlossyToon"
                 half crackMask = max(crack.r * step1, crack.g * step2);
                 col = lerp(col, _CrackColor.rgb, crackMask);
 
-                col = lerp(col, _HitFlashColor.rgb, _HitFlash); // flash peak capped x0.4 by C# under Reduce motion
+                col = lerp(col, _HitFlashColor.rgb, min(_HitFlash, 0.85h)); // white flashes capped (Art); x0.4 under Reduce motion // flash peak capped x0.4 by C# under Reduce motion
                 col = MixFog(col, i.fog);
                 return half4(col, 1);
             }

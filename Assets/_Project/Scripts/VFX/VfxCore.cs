@@ -9,8 +9,8 @@ namespace Crashverse.VFX
     /// <summary>One impact/dust recipe row (VFX_Shader_Spec_v1 §5). Pure data, tier/motion scaling in VfxRules.</summary>
     public struct ImpactRecipe
     {
-        public int Particles; public float LifetimeSec; public int FlashFrames; public uint ColorA, ColorB;
-        public ImpactRecipe(int p, float life, int flash, uint a, uint b) { Particles = p; LifetimeSec = life; FlashFrames = flash; ColorA = a; ColorB = b; }
+        public int Particles; public float LifetimeSec; public int FlashFrames; public uint ColorA, ColorB, ColorC;
+        public ImpactRecipe(int p, float life, int flash, uint a, uint b, uint c = 0) { Particles = p; LifetimeSec = life; FlashFrames = flash; ColorA = a; ColorB = b; ColorC = c == 0 ? a : c; }
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace Crashverse.VFX
             switch (m)
             {
                 case VfxMaterial.Wood: return new ImpactRecipe(12, 0.40f, 2, 0xF5C994, 0xCFA779);
-                case VfxMaterial.Brick: return new ImpactRecipe(16, 0.60f, 2, 0xC0392B, 0xD9A37E);
+                case VfxMaterial.Brick: return new ImpactRecipe(16, 0.60f, 2, 0xD2664C, 0xD9A37E, 0xE9997C) /* body, dust, chipped faces */;
                 case VfxMaterial.Steel: return new ImpactRecipe(10, 0.30f, 2, 0xFFD27A, 0x3A3F48);
                 case VfxMaterial.SteelJoint: return new ImpactRecipe(24, 0.30f, 4, 0xFFD27A, 0xE8B04B);
                 case VfxMaterial.Terrain: return new ImpactRecipe(6, 0.40f, 0, 0xC98A4B, 0xC98A4B);
@@ -45,8 +45,20 @@ namespace Crashverse.VFX
             return reduceMotion && frames > 0 ? Math.Max(0.1f, s) : s;
         }
 
-        /// <summary>Live impact particle budget (02 Perf: Mid ≤150; Low ×0.5; High 220 per VFX spec §4).</summary>
-        public static int LiveParticleBudget(int tier) => tier == 0 ? 75 : tier == 1 ? 150 : 220;
+        /// <summary>One global particle pool (PM 16 Oct): 150 impacts + 80 for the active power-up = 230; Low tier ×0.5. Oldest culled first.</summary>
+        public const int ImpactBudget = 150, PowerUpBudget = 80;
+        public static int GlobalParticleBudget(int tier) => tier == 0 ? (ImpactBudget + PowerUpBudget) / 2 : ImpactBudget + PowerUpBudget;
+
+        /// <summary>Reduce motion Shockwave: link flashes replaced by one 100 ms ease-out tint per activation, alpha ≤0.5.</summary>
+        public const float RmShockwaveTintSec = 0.1f, RmMaxAlpha = 0.5f;
+        /// <summary>Reduce motion Time Fracture: static 30% env desaturation under a static 25% tint; tint fades out 300 ms; no crack animation.</summary>
+        public const float RmTimeDesat = 0.30f, RmTimeTint = 0.25f, RmTimeTintFadeOutSec = 0.3f;
+        /// <summary>Alpha of the RM Shockwave tint at t seconds after activation (ease-out quad from 0.5 to 0).</summary>
+        public static float RmShockwaveTintAlpha(float t)
+        {
+            if (t <= 0f) return RmMaxAlpha; if (t >= RmShockwaveTintSec) return 0f;
+            float u = t / RmShockwaveTintSec; return RmMaxAlpha * (1f - (1f - (1f - u) * (1f - u)));
+        }
 
         /// <summary>Break FX spawn stagger: max 3 per 100 ms, extra queued ≤200 ms then dropped (03 beat 4).</summary>
         public const int MaxSpawnsPer100Ms = 3; public const float MaxQueueSec = 0.2f;
@@ -84,5 +96,42 @@ namespace Crashverse.VFX
             _active.AddLast(t); _onGet?.Invoke(t); return t;
         }
         public void Release(T t) { if (_active.Remove(t)) { _onRelease?.Invoke(t); _free.Push(t); } }
+    }
+
+    /// <summary>
+    /// Global particle budget shared by impacts and the active power-up. Emitters register their particle count; when over budget the
+    /// oldest live emitters are culled first (ids returned to the caller to stop). Allocation-free after construction.
+    /// </summary>
+    public class ParticleBudget
+    {
+        readonly int[] _ids, _counts; int _head, _len, _used;
+        public int Capacity { get; }
+        public int Used => _used;
+        public ParticleBudget(int capacity, int maxEmitters = 64) { Capacity = capacity; _ids = new int[maxEmitters]; _counts = new int[maxEmitters]; }
+
+        /// <summary>Registers an emitter; writes culled ids into `culled` and returns how many. Count is clamped to capacity.</summary>
+        public int Request(int id, int count, int[] culled)
+        {
+            count = Math.Min(count, Capacity); int n = 0;
+            while ((_used + count > Capacity || _len == _ids.Length) && _len > 0)
+            {
+                if (culled != null && n < culled.Length) culled[n] = _ids[_head];
+                n++; _used -= _counts[_head]; _head = (_head + 1) % _ids.Length; _len--;
+            }
+            int tail = (_head + _len) % _ids.Length; _ids[tail] = id; _counts[tail] = count; _len++; _used += count;
+            return n;
+        }
+
+        /// <summary>Emitter finished naturally.</summary>
+        public void Release(int id)
+        {
+            for (int i = 0; i < _len; i++)
+            {
+                int k = (_head + i) % _ids.Length; if (_ids[k] != id) continue;
+                _used -= _counts[k];
+                for (int j = i; j < _len - 1; j++) { int a = (_head + j) % _ids.Length, b = (_head + j + 1) % _ids.Length; _ids[a] = _ids[b]; _counts[a] = _counts[b]; }
+                _len--; return;
+            }
+        }
     }
 }

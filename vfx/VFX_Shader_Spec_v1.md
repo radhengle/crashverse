@@ -5,8 +5,20 @@ Sources: Art v2 FINAL visual target (`/workspace/art/v2`, board_v2.png, PROMPTS_
 
 **PR scope v1:** this spec, the glossy material shader, impact + dust effects (shader + pooled trigger component). Power-ups are **spec only** (§6).
 
-## 1 · Look (Art v2)
-Bright, saturated, "premium toy": glossy candy highlights, soft 2-band toon shading with a cool shade tint (not black), cool-white rim, gold trim reads as warm spec. Structures keep material readability: wood warm tan, brick red/terracotta, steel dark slate with yellow sparks, gold for joints. Slot colours are reserved: **cyan #22D3EE = Core/Wrecker only**, violet = Module, orange = Booster. Never use cyan in environment/impact FX.
+## 1 · Look (Art-approved 16 Oct 2026; lighting ref `/workspace/art/m1b/arena_brief_v2.md`)
+Art v2 is referenced by path only (`/workspace/art/v2`), never copied into the repo.
+| Parameter | Value |
+|---|---|
+| Toon threshold / softness | 0.45 / 0.08–0.12 (hero props 0.15) |
+| Shade tint | #5B6FA8 at 55–65 % (default 0.6), multiplied into albedo; wood/brick may drift toward #7A4A6A |
+| Spec | stepped, colour #FFF6E0, band cut 0.5, gloss 0.75–0.8; metal intensity 0.9 (steel smoothness 0.7); props 0.5 (smoothness 0.4–0.5) |
+| Rim | #FFFFFF at 0.35 from back-left (`_RimDirWS`) |
+| Outline (optional) | inverted hull 0.02 u #101828, not in v1 shader (extra pass; enable per hero prop later) |
+| Core cyan | #22D3EE, white-hot centre #E0FBFF, emissive ≈2.5 with bloom, gold #E8B04B rim, short dark outline on trails. **Cyan never in the environment.** |
+| Power-up colours | Module #8B5CF6, Booster #FF7A1A, weak-point ring #E8B04B |
+| Cracks | chunky wedge lines in the material's dark colour: wood #6B4226, mortar #7A3326, steel #3A3F48. Step 1 sparse edge cracks; step 2 dense + ≈20 % darkening (`_DarkenPerStep` 0.1) |
+| Effects | toon puffs with 2–3 value steps; no realistic smoke. White flashes capped (shader clamps flash at 0.85; ×0.4 under Reduce motion) |
+| Debris | wood splinters #F5C994 + dust #CFA779; brick body #D2664C, chipped faces #E9997C, dust #D9A37E; steel sparks #FFD27A + bits #3A3F48 |
 
 ## 2 · Shaders (delivered: `Assets/_Project/VFX/Shaders/`)
 | Shader | Use | Notes |
@@ -18,16 +30,15 @@ Bright, saturated, "premium toy": glossy candy highlights, soft 2-band toon shad
 SRP Batcher: every material property is in `UnityPerMaterial`; no per-object MaterialPropertyBlocks. Damage step and hit flash use **3 shared material instances per material type** (step 0/1/2) + one flash material swapped for the flash duration, so batching survives. Variants: GlossyToon = `_MAIN_LIGHT_SHADOWS` × fog × instancing (≤8 per pass); VfxParticle = fog only. Strip unused URP variants via URP asset (additional lights off, no SSAO, no decals keyword).
 
 ## 3 · Lighting & post (URP mobile)
-- 1 directional light (warm white, ~1.1 intensity, ~50° elevation), mixed/realtime; shadows: 1 cascade, distance 35 m, 1024 (High) / 512 (Mid) / off→blob (Low). Additional lights: off (per-pixel) on all tiers.
-- Ambient: gradient (sky pale blue, equator warm, ground sand), values live in `VisualConfig`. Linear fog, colour from VisualConfig.
-- Post (one Volume, values in VisualConfig): High = Bloom (threshold 1.1, intensity 0.6, HQ off), Tonemapping Neutral, Colour Adjustments (+10 sat), Vignette 0.2. Mid = Bloom low-res + tonemapping. Low = no post (colour grading baked into albedo/ramp).
+- Key directional #FFF2D6, intensity 1.4, rotation (50°, -35°, 0), soft shadows strength 0.6. Rim: second directional #FFFFFF 0.35 from back-left is emulated in-shader (`_RimDirWS`) so no extra realtime light. Shadows: 1 cascade, distance 35 m, 1024 (High) / 512 (Mid) / off→blob (Low). Additional lights: off (per-pixel) on all tiers.
+- Ambient: gradient sky #8CC8FF, equator #DCEFFF, ground #6FAE5A, intensity 1.15 (in `VisualConfig`). Fog linear #CFEAFF, 80–250.
+- Post (one Volume, values in VisualConfig): High = Bloom (threshold 1.0, intensity 0.6, HQ off), Tonemapping Neutral, Colour Adjustments (saturation +15, contrast +10), no vignette. Mid = Bloom low-res + tonemapping. Low = no post (colour grading baked into albedo/ramp).
 - No motion blur, no chromatic aberration, no DoF in gameplay (07 perf + readability). HDR on High/Mid only. MSAA 2× High, off Mid/Low; render scale 1.0/0.85/0.7.
 
 ## 4 · Mobile budgets per quality tier (`QualityTier` Low/Mid/High)
 | Budget | Low | Mid | High |
 |---|---|---|---|
-| Live impact particles (02) | 75 | 150 | 220 |
-| Per power-up effect (04) | 40 | 80 | 120 |
+| Particles: **one global pool** = 150 impacts + 80 active power-up, oldest culled first (`ParticleBudget`) | 115 (×0.5) | 230 | 230 |
 | Debris RBs (03, approved) | 25 | 60 | 90 |
 | Break-FX spawns | 3 / 100 ms, queue ≤200 ms (all tiers) | | |
 | Transparent overdraw target (avg / worst) | 1.5× / 3× | 2× / 4× | 2.5× / 5× |
@@ -43,7 +54,7 @@ Timings in ms (frames @60). Event column = audio/anim_audio_map.csv; VFX fire on
 | Event (sfx) | VFX | Particles (Mid; Low ×0.5) | Life | Flash | Reduce motion |
 |---|---|---|---|---|---|
 | IMPACT_WOOD / BREAK_WOOD (sfx_wood_break) | splinters #F5C994 + dust #CFA779, squash 0.92 80 ms | 12 | 400 | warm white 2 f | flash ×0.4, ≥100 ms ramp; counts unchanged |
-| IMPACT_BRICK / BREAK_BRICK | red chunks + dust #D9A37E; crack step decal | 16 | 600 | 2 f; hit stop 33 ms on break (Feel) | flash ×0.4; hit stop ≤33 ms/0.3 (Feel) |
+| IMPACT_BRICK / BREAK_BRICK | chunks body #D2664C, chipped faces #E9997C, dust #D9A37E; crack step decal | 16 | 600 | 2 f; hit stop 33 ms on break (Feel) | flash ×0.4; hit stop ≤33 ms/0.3 (Feel) |
 | IMPACT_STEEL / BREAK_STEEL | sparks #FFD27A (additive) + bits #3A3F48; BREAK_STEEL 24 sparks | 10 / 24 | 300 | white 2 f | flash ×0.4 |
 | IMPACT_STEEL_JOINT / BREAK_STEEL_JOINT | gold ring #E8B04B decal + 24 spark burst; joint pop 1→1.15→0 150 ms | 24 | 300 | gold ring 4 f | ring alpha ≤0.5, ×0.4 |
 | IMPACT_TERRAIN | dust puff #C98A4B | 6 | 400 | none | unchanged |
@@ -60,12 +71,12 @@ Debris lifecycle (03): active ≤2.5 s → rest 1.5 s → scale-fade 500 ms → 
 Values from 04_powerups.md; sync from anim_audio_map.csv. Common arm: slot part pulses in slot colour on `PU_ARM_<NAME>`; `PU_DISARM` = 150 ms fade-out (not Time Fracture).
 | Power-up | Timeline (ms / f@60) | Sync events | Shader/tech | Low tier | Reduce motion |
 |---|---|---|---|---|---|
-| Shockwave (Core cyan) | 0: cyan flash 3 f · 0–400/24 f ring 0→connected bounds, alpha 1→0 (ease-out cubic) · link flashes 1 f staggered 16 ms (max 12) | PU_SHOCKWAVE_IMPACT (sound listens to IMPACT only), _RING | ring mesh + fresnel energy shader | single mesh ring, link flashes off | ring alpha ≤0.5, flash ×0.4 ≥100 ms, link flashes → colour tint 100 ms |
+| Shockwave (Core cyan) | 0: cyan flash 3 f · 0–400/24 f ring 0→connected bounds, alpha 1→0 (ease-out cubic) · link flashes 1 f staggered 16 ms (max 12) | PU_SHOCKWAVE_IMPACT (sound listens to IMPACT only), _RING | ring mesh + fresnel energy shader | single mesh ring, link flashes off | ring alpha ≤0.5, flash ×0.4 ≥100 ms; link flashes replaced by **one 100 ms ease-out tint per activation, alpha ≤0.5** |
 | Splitstrike (Module violet) | split point: 66/4 f violet pop, scale 1→1.3→split (ease-out-back) · 3 violet trails · child impacts at 0.8 scale | PU_SPLIT (not raised if hit before split) | additive pop sprite | trails 8 seg | pop ×0.4, no overshoot scale (1→1.1) |
 | Gravity Well (Module violet) | 0–150/9 f vortex disc 0→4 m (ease-out-back) · 150–1500 swirl loop · 1500/90 f 100 ms implode (ease-in expo) + 300 ms burst ring | PU_GRAVITY_OPEN, LOOP @9 f, BURST @90 f | UV-swirl disc, fresnel | 1 flipbook quad, no debris trails | swirl speed ×0.5, burst no shake, alpha ≤0.5 |
 | Chain Reactor (Core cyan) | 3 m sphere pulse 200 ms (ease-out) · arc line to each target +80 ms by distance · targets use EXPLODE_CRATE | PU_CHAIN_PULSE, PU_CHAIN_LINK +5 f/80 ms per link | line renderer arcs, sphere fresnel | arcs 4 segments | arcs alpha ≤0.5, no flicker >3 Hz (static arcs) |
 | Phase Piercer (Booster orange) | projectile ghost: orange fresnel 60% opacity · ripple decal 150 ms on pieces 1–2 · 3rd: solidify 1 f + normal impact | PU_PHASE_PASS ×2, PU_PHASE_HIT (DEV hook needed) | fresnel transparent (1 extra transparent draw) | ripple off, ghost kept | solidify as 100 ms ramp |
-| Time Fracture (Booster orange) | on **arm**: 0–200/12 f crack overlay from Booster ring + env desat 30% · 4000/240 f · warn last 500 ms crack pulse 2 Hz (skipped if extended) · end 200 ms shatter-out | PU_TIME_START @0 on arm, PU_TIME_WARN 210 f/3500, PU_TIME_END 240 f/4000 or at that shot's impact | 1 full-screen pass (crack + desat) | UI-image tint, no full-screen pass | **static 25% tint fading in 300 ms**, no crack animation, warn = colour change only |
+| Time Fracture (Booster orange) | on **arm**: 0–200/12 f crack overlay from Booster ring + env desat 30% · 4000/240 f · warn last 500 ms crack pulse 2 Hz (skipped if extended) · end 200 ms shatter-out | PU_TIME_START @0 on arm, PU_TIME_WARN 210 f/3500, PU_TIME_END 240 f/4000 or at that shot's impact | 1 full-screen pass (crack + desat) | UI-image tint, no full-screen pass | static 30 % env desaturation under a static 25 % tint; tint fades **out** over 300 ms at end; no crack animation; warn = colour change only |
 Time Fracture slows moving parts only; FX on those parts use their local speed, global FX use unscaled time.
 
 ## 7 · Reduce shake / Reduce motion (animation/07, `MotionSettings`)
@@ -75,3 +86,5 @@ Time Fracture slows moving parts only; FX on those parts use their local speed, 
 
 ## 8 · Delivered files
 `vfx/VFX_Shader_Spec_v1.md`, `vfx/OPEN_QUESTIONS.md`, `vfx/compile_check/VfxCompileCheck.csproj`, `Assets/_Project/VFX/Shaders/CrashverseGlossyToon.shader`, `.../CrashverseVfxParticle.shader`, `Assets/_Project/Scripts/VFX/VfxCore.cs`, `VfxDirector.cs`. Compile check: `dotnet build vfx/compile_check` (stubs; not a Unity compile; shaders need a Unity import to validate).
+
+Device testing (Mali/Adreno) waits for the Unity licence and the CI APK. VFX owns crack masks and FX sprite sheets (original, free tools: Krita/Blender).
