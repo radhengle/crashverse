@@ -142,6 +142,7 @@ jobs:
         run: |
           set -e
           curl -fsSLo bt.zip https://dl.google.com/android/repository/build-tools_r35_linux.zip
+          echo "bd3a4966912eb8b30ed0d00b0cda6b6543b949d5ffe00bea54c04c81e1561d88  bt.zip" | sha256sum -c - # pinned (Google repo sha1 2cfaa0bb…07bc)
           unzip -q bt.zip -d bt && echo "BT=$PWD/$(ls -d bt/* | head -1)" >> $GITHUB_ENV
 
       - name: zipalign -P 16 + re-sign v1+v2+v3 with the persistent dev key

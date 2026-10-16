@@ -42,6 +42,10 @@ namespace Crashverse.EditorTools
                 PlayerSettings.Android.keyaliasPass = Env("ANDROID_KEYALIAS_PASS", "CRASHVERSE_KEYALIAS_PASS");
             }
             else if (Environment.GetEnvironmentVariable("CI") != null) { Debug.LogError("CRASHVERSE_KEYSTORE_PATH missing in CI: refusing a throwaway debug key"); EditorApplication.Exit(1); }
+            // Security: the dev key is never the Play upload key. A release build signed with the dev keystore/alias is refused.
+            if (release && PlayerSettings.Android.useCustomKeystore &&
+                (PlayerSettings.Android.keyaliasName == "crashverse-dev" || (PlayerSettings.Android.keystoreName ?? "").EndsWith("dev.keystore", StringComparison.OrdinalIgnoreCase)))
+            { Debug.LogError("Refusing a release build signed with the dev key"); EditorApplication.Exit(1); return; }
             var opts = new BuildPlayerOptions
             {
                 scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray(),
