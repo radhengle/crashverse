@@ -55,7 +55,7 @@ jobs:
   build:
     name: GameCI Unity Android (${{ github.event.inputs.profile || 'dev' }})
     needs: guards
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'  # dispatch needs repo write; lets QA builds come from a PR branch
     runs-on: ubuntu-24.04
     permissions:
       contents: read
