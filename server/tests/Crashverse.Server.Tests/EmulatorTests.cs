@@ -40,8 +40,8 @@ public class FirestoreEmulatorTests
         var s = await h.Guest();
         Assert.Equal(100, (await h.Post("/v1/daily-reward/claim", null, s))["coins"].GetInt32());
         var tok = h.PlayPurchase(s, "gems_small");
-        Assert.Equal("granted", (await h.Verify(s, "gems_small", tok))["status"].GetString());
-        Assert.Equal("already_granted", (await h.Verify(s, "gems_small", tok))["status"].GetString());
+        Assert.Equal("verified", (await h.Verify(s, "gems_small", tok))["status"].GetString());
+        Assert.Equal("verified", (await h.Verify(s, "gems_small", tok))["status"].GetString());
         Assert.Equal(100, (await h.Wallet(s)).gems);
     }
 
@@ -71,5 +71,22 @@ public class FirestoreEmulatorTests
             Assert.Equal(HttpStatusCode.Forbidden, await Do(HttpMethod.Post, "boards?documentId=x", "{\"fields\":{}}"));
         }
         Assert.Equal(5, (await db.Get<WalletDoc>("wallets", "victim")).gems);
+    }
+
+    /// <summary>Agreed-interface account/privacy flow on the Firestore emulator: single-use reauth, delete, cancel, consent, hide name.</summary>
+    [EmulatorFact]
+    public async Task AccountPrivacyFlow_RunsOnFirestore()
+    {
+        await using var h = await Harness.Start(null, new FirestoreDocStore(Project));
+        var s = await h.Linked("emu-" + Guid.NewGuid().ToString("N"));
+        var sub = h.Facebook.Tokens.Keys.Last();
+        var re = await h.Post("/v1/auth/reauth", new { credential = new { provider = "Facebook", token = sub } }, s);
+        var tok = re["reauthToken"].GetString();
+        Assert.Equal("scheduled", (await h.Post("/v1/account/delete", new { reauthToken = tok }, s))["status"].GetString());
+        Assert.Equal("active", (await h.Post("/v1/account/delete/cancel", null, s))["status"].GetString());
+        Assert.Equal("REAUTH_REQUIRED", (await h.Post("/v1/account/delete", new { reauthToken = tok }, s)).Code); // single use across the shared store
+        Assert.Equal("pending", (await h.Post("/v1/consent/parental/request", new { parentEmail = "p@example.com" }, s))["status"].GetString());
+        Assert.Equal("pending", (await h.Get("/v1/consent/parental/status", s))["status"].GetString());
+        Assert.True((await h.Post("/v1/profile/visibility", new { hideName = true }, s))["hideName"].GetBoolean());
     }
 }

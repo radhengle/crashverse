@@ -186,7 +186,7 @@ public sealed class Friends
     {
         var f = await _x.Db.Get<FriendDoc>("friends", pid) ?? new FriendDoc();
         var mutual = (await Mutual(pid)).ToHashSet(); var list = new List<FriendView>();
-        foreach (var o in f.added) list.Add(new FriendView { playerId = o, name = (await _x.Db.Get<AccountDoc>("accounts", o))?.displayName, mutual = mutual.Contains(o) });
+        foreach (var o in f.added) list.Add(new FriendView { playerId = o, name = AuthService.PublicName(await _x.Db.Get<AccountDoc>("accounts", o)), mutual = mutual.Contains(o) });
         return new ListResponse<FriendView>(list);
     }
 

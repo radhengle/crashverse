@@ -44,14 +44,19 @@ public sealed class ApiError : Exception
 }
 
 // ---------------- wire extensions (P1, P3, P6, P7, P8, D7) ----------------
-public sealed class ShotInput { public int yaw; public int pitch; public int power; public string powerUpId; public int fireFrame; public int settleFrames; }
-public sealed class AccountStateEx : AccountState { public List<string> providers = new(); public string obfuscatedAccountId; public string friendCode; }
+/// <summary>Agreed interface: one input event, fixed point at 1/1000 units. tick = physics tick (PhysicsHz).
+/// type: aim (x = yaw, y = pitch, milli-degrees) | power (x = power 0..1000) | powerup (x = slot) | fire (x = yaw, y = pitch) | settle.</summary>
+// InputEvent is Developer's Crashverse.Backend.InputEvent {tick, type, x, y} (linked ServerContracts.cs), used as-is.
+/// <summary>Agreed interface: SubmitScore {attemptToken, inputs[], clientScoreBp, buildHash}.</summary>
+public class SubmitScore { public string attemptToken; public List<InputEvent> inputs = new(); public int clientScoreBp; public string buildHash; }
+public sealed class AccountStateEx : AccountState { public List<string> providers = new(); public string obfuscatedAccountId; public string friendCode; public string status; public long purgeAt; public bool hideName; }
 public sealed class WalletEx : Wallet { public int gems; public bool gemSpendLocked; }
 public sealed class RankedTicketEx : RankedTicket { public long seed; public string configHash; public int physicsHz; public string simVersion; public bool practice; public string practiceReason; }
-public sealed class RankedCheckpointEx : RankedCheckpoint { public ShotInput inputs; }
+public sealed class RankedCheckpointEx : RankedCheckpoint { public List<InputEvent> inputs; }
 public sealed class RankedJournalEx { public string token; public bool final; public string simVersion; public List<RankedCheckpointEx> checkpoints = new(); }
-public sealed class CampaignRunReportEx : CampaignRunReport { public string attemptToken; public string simVersion; public List<ShotInput> inputs = new(); }
-public sealed class CampaignSubmitResponseEx : CampaignSubmitResponse { public string validation; public bool rewardDeferred; }
+public sealed class CampaignRunReportEx : CampaignRunReport { public string attemptToken; public string simVersion; public List<InputEvent> inputs = new(); public int clientScoreBp; public string buildHash; }
+/// <summary>Also satisfies the agreed ScoreResponse {accepted, status, message, serverScoreBp}.</summary>
+public sealed class CampaignSubmitResponseEx : CampaignSubmitResponse { public string validation; public bool rewardDeferred; public string status; public int serverScoreBp; }
 public sealed class LeaderboardEntryEx : LeaderboardEntry { public long submittedUnixMs; public bool provisional; }
 /// <summary>Same fields as BackendModels.LeaderboardPage, typed with the extended entry so the extra fields serialise.</summary>
 public sealed class LeaderboardPageEx
@@ -68,8 +73,11 @@ public sealed class AccountDoc
 {
     public string playerId; public string displayName; public bool isGuest = true; public List<string> providers = new();
     public string primaryProvider = "guest"; public long createdUnixMs; public int riskScore; public bool refundAbuse;
-    public List<long> refundTimesUnixMs = new(); public string status = "active"; public string friendCode; public string deviceInstallId;
+    public List<long> refundTimesUnixMs = new(); public string status = "active"; public long purgeAtUnixMs; public long lastActiveUnixMs; public bool hideName;
+    public AgeGateDoc ageGate; public string friendCode; public string deviceInstallId;
 }
+public sealed class AgeGateDoc { public string band; public string country; public bool requiresParentalConsent; public long ts; }
+public sealed class ConsentDoc { public string requestId; public string playerId; public string parentEmailHash; public string status = "none"; public long requestedUnixMs; public long decidedUnixMs; }
 public sealed class IdentityDoc { public string key; public string playerId; public long linkedUnixMs; }
 public sealed class EmailCredDoc { public string email; public string playerId; public string salt; public string hash; public int iterations; public bool verified; public string verifyCodeHash; public string resetCodeHash; public long resetExpUnixMs; }
 public sealed class SessionDoc { public string familyId; public string playerId; public string currentHash; public bool revoked; public long expUnixMs; }
@@ -94,7 +102,7 @@ public sealed class EntitlementDoc { public string id; public string playerId; p
 public sealed class InboxDoc { public string id; public string playerId; public string source; public Reward reward; public long expiresUnixUtc; public bool claimed; }
 public sealed class DailyRewardDoc { public int streakIndex; public string lastClaimDayKey = ""; }
 public sealed class RankedStatusDoc { public string dayKey; public bool attemptUsed; public bool submitted; public int score; public string status = "available"; }
-public sealed class CheckpointRec { public int shotIndex; public int damageScore; public int shotsLeft; public bool killed; public ShotInput inputs; public long serverUnixMs; public bool offline; }
+public sealed class CheckpointRec { public int shotIndex; public int damageScore; public int shotsLeft; public bool killed; public List<InputEvent> inputs; public long serverUnixMs; public bool offline; }
 public sealed class RunDoc
 {
     public string runId; public string playerId; public string mode; public string key; public string levelVersion; public long seed;

@@ -79,11 +79,38 @@ FIRESTORE_EMULATOR_HOST=127.0.0.1:8085 CRASHVERSE_STORE=firestore dotnet run --p
   - Unauthenticated endpoints have strict per-IP limits (`/auth/guest` 10 per hour per IP and per device, `/auth/*` 5 per minute). The body cap is 64 KB (256 KB for journals).
   - The `X-Nonce` replay cache and the rate limiters both live in the shared store.
 
-## Endpoint map → `IBackendService`
-See the report in the commit message, or the table in `Backend_Plan_v1.md` §1. Every list response is wrapped as `{items:[...]}`. Leaderboard entries carry the server-set `submittedUnixMs` (plus `submittedTicks` for compatibility) and `provisional`.
+## Endpoint map → `IBackendService` (interface agreed with Developer, 2026-10-16; client commit 817aef8)
+All paths carry the `/v1` prefix. Bearer token required unless noted. Every list response is `{items:[...]}`. Times on the new account/privacy endpoints are Unix seconds UTC; leaderboard entries carry `submittedUnixMs` (+ `submittedTicks`) and `provisional`.
+
+| `IBackendService` | Server |
+|---|---|
+| guest / refresh (no bearer) | `POST /auth/guest`, `POST /auth/refresh` |
+| `SignIn` (no bearer) | `POST /auth/sign-in` `{provider, token, codeVerifier?, redirectUri?, nonce?, deviceInstallId}` → `AuthResponse` |
+| `LinkAccount(LinkCredential)` | `POST /account/link-nonce` (Google), `POST /account/link` `LinkCredential` (+ `conflictResolution`) |
+| email register / verify / login / reset | `POST /auth/email/register`, `/auth/email/verify`, `/auth/email/login` (→ `AuthResponse`, no bearer), `/auth/email/reset-request`, `/auth/email/reset` |
+| `Reauthenticate` | `POST /auth/reauth {credential}` → `{reauthToken, expiresAt}` (5 min, single use) |
+| `DeleteAccount` | `POST /account/delete {reauthToken}` → `{status:"scheduled", purgeAt}` (linked: `401 REAUTH_REQUIRED` without a fresh reauth; guest: `null` allowed, the session is the proof) |
+| cancel deletion | `POST /account/delete/cancel` → `{status:"active"}` (allowed while pending) |
+| keep active | `POST /account/keep-active` → `{lastActiveAt}` |
+| `SubmitAgeGate` (no bearer) | `POST /agegate {birthYear, birthMonth, country}` → `{band: under13\|13to15\|16plus, requiresParentalConsent}`; nothing stored |
+| `RequestParentalConsent` | `POST /consent/parental/request {parentEmail}` → `{status:"pending", requestId}` via `IParentalConsentMailer` (fake); only a hash of the email is stored |
+| `GetParentalConsentStatus` | `GET /consent/parental/status` → `{status: none\|pending\|granted\|denied}`; parent decision: `POST /internal/consent/decide` (push-auth, placeholder for the parent page) |
+| `SetProfileVisibility` | `POST /profile/visibility {hideName}` → `{hideName}`; others see `Wrecker #XXXX` on boards and friend lists |
+| `BeginAttempt` | `POST /attempts` (also `/campaign/attempts`, `/events/attempts`); `seed` is a long |
+| `SubmitScore` | `POST /score` `{attemptToken, inputs[{tick,type,x,y}], clientScoreBp, buildHash}` → `{accepted, status, message, serverScoreBp}`. There is no separate input-log endpoint. |
+| `VerifyPurchase` | `POST /purchases/google/verify` → `{status: pending\|verified\|rejected, wallet, season}` |
+| restore | `GET /purchases` |
+| Titan | `GET /titan/today`, `/titan/ranked/status`, `POST /titan/ranked/start`, `/checkpoint` (that shot's `InputEvent`s), `/finalize` |
+| leaderboards / friends | `GET /leaderboards/{0-3}`, `GET/POST /friends`, `POST /friends/{id}/remove` |
+| wallet / inventory / season | `GET /wallet`, `/wallet/ledger`, `/inventory`, `/season`, `/inbox`, `/daily-reward`, etc. |
+| flags / time | `GET /config/flags`, `GET /time` |
+
+Inputs are Developer's `InputEvent` (fixed point, 1/1000): `aim` (x yaw, y pitch in milli-degrees), `power` (x 0..1000), `powerup` (x slot), `fire`, `settle`; `tick` is the physics tick. Checks: known type, ticks non-decreasing, ranges, ≤64 events per shot, one `fire` per shot used, a `settle` after each fire, and the server minimum shot interval in ticks.
 
 ## Not done in v0
 - No real KMS signer, no Play API client and no Integrity decoder; only the interfaces exist.
 - The replay worker is a stub, so queued runs stay pending.
 - No admin UI (the override endpoint is break-glass only and audited).
-- No deployment, CI deploy job or cloud resources.
+- No deployment, CI deploy job or cloud resources. CI (`.github/workflows/server-ci.yml`) only builds and tests.
+- `SubmitScore` still accepts the run summary (`won`, `destroyedRatio`, `shotsLeft`, `bestCombo`) next to the inputs, because the real replay worker that would recompute it from inputs does not exist yet. `clientScoreBp` is advisory and stored for the tolerance check.
+- The deletion purge job (requirements D1–D8), the 365-day guest inactivity job (C2) and the parent-facing consent page are not built.

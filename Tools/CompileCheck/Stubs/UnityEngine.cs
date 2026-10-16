@@ -139,6 +139,7 @@ namespace UnityEngine
         public static float unscaledTime;
         public static float deltaTime = 0.016f;
         public static float fixedDeltaTime = 0.02f;
+        public static float fixedTime;
         public static float timeScale = 1f, time, unscaledDeltaTime = 0.016f;
     }
 

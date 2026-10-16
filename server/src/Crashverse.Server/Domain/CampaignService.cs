@@ -8,7 +8,7 @@ namespace Crashverse.Server.Domain;
 
 public sealed class AttemptRequest { public string mode = "campaign"; public string levelId; public string levelVersion; public int count = 1; }
 public sealed class AttemptView { public string attemptToken; public string levelId; public string levelVersion; public long seed; public long expiresUnixUtc; }
-public sealed class EventStarsRequest { public string attemptToken; public int stars; public string simVersion; public List<ShotInput> inputs = new(); }
+public sealed class EventStarsRequest { public string attemptToken; public int stars; public string simVersion; public string buildHash; public List<InputEvent> inputs = new(); }
 
 /// <summary>
 /// Campaign + weekly-event results (H1). Attempt tokens: signed, single-use, bound to player + mode + level + level version,
@@ -73,26 +73,26 @@ public sealed class CampaignService
         return InputsPlausible(r.inputs, lvl.shots - r.shotsLeft);
     }
 
-    /// <summary>Input-log plausibility: exactly one input per shot used, ordered, server minimum shot interval in frames, ranges.</summary>
-    string InputsPlausible(List<ShotInput> inputs, int shotsUsed)
-    {
-        if (inputs == null || inputs.Count != shotsUsed) return "input log does not match shots used";
-        int minGap = _x.Opt.MinShotIntervalMs * _x.Opt.PhysicsHz / 1000; int prevFire = -minGap;
-        foreach (var i in inputs)
-        {
-            if (i == null || i.power < 0 || i.power > 1000 || Math.Abs(i.pitch) > 90_000 || Math.Abs(i.yaw) > 360_000) return "inputs out of range";
-            if (i.fireFrame - prevFire < minGap) return "shots too close together";
-            if (i.settleFrames < 1) return "missing settle";
-            prevFire = i.fireFrame + i.settleFrames;
-        }
-        return null;
-    }
+    /// <summary>Input-log plausibility (agreed InputEvent shape): one fire per shot used, settle after each, server minimum shot interval in ticks, ranges, per-shot event cap.</summary>
+    string InputsPlausible(List<InputEvent> inputs, int shotsUsed) => InputRules.Check(inputs, shotsUsed, _x.Opt.MinShotIntervalMs * _x.Opt.PhysicsHz / 1000);
 
     public int Ceiling(LevelEntry l) => 1000 + 500 * Math.Max(0, l.shots - 1) + 50 * _x.Content.Pieces(l) + 1000;
 
     public async Task<CampaignSubmitResponseEx> Submit(string pid, CampaignRunReportEx r)
     {
-        if (r == null || string.IsNullOrEmpty(r.reportId)) throw new ApiError(400, "BAD_REQUEST", "reportId required");
+        var res = await SubmitCore(pid, r);
+        res.status ??= !res.accepted ? "rejected" : res.validation == "pending" ? "pending" : "accepted";
+        return res;
+    }
+
+    async Task<CampaignSubmitResponseEx> SubmitCore(string pid, CampaignRunReportEx r)
+    {
+        if (r == null) throw new ApiError(400, "BAD_REQUEST", "body required");
+        r.simVersion ??= r.buildHash; // agreed interface: buildHash identifies the client simulation build
+        if (string.IsNullOrEmpty(r.levelId))   // SubmitScore carries only the attempt token: the level comes from its signed claims
+            r.levelId = (string)_x.Tokens.Verify("attempt", r.attemptToken, out _)?["lvl"];
+        if (string.IsNullOrEmpty(r.reportId) && !string.IsNullOrEmpty(r.attemptToken)) r.reportId = Hash.Sha256Hex(r.attemptToken)[..32];
+        if (string.IsNullOrEmpty(r.reportId)) throw new ApiError(400, "BAD_REQUEST", "attemptToken required");
         var pkey = pid;
         return await _x.Db.Atomic("campaign:" + pid, async () =>
         {
@@ -112,7 +112,7 @@ public sealed class CampaignService
             if (score > Ceiling(lvl)) return new CampaignSubmitResponseEx { accepted = false, message = "Rejected: score above level ceiling", total = await Total(pid) };
 
             var runId = Hash.NewId();
-            var run = new RunDoc { runId = runId, playerId = pid, mode = "campaign", key = lvl.id, simVersion = r.simVersion, campaign = r, clientScore = score, finalScore = score,
+            var run = new RunDoc { runId = runId, playerId = pid, mode = "campaign", key = lvl.id, simVersion = r.simVersion, campaign = r, clientScore = r.clientScoreBp > 0 ? r.clientScoreBp : score, finalScore = score,
                 issuedUnixMs = _x.NowMs, finalized = true, boardKeys = { "campaign:c1_alltime" } };
             bool first = !prog.cleared.Contains(lvl.id);
             if (first) prog.cleared.Add(lvl.id);
@@ -141,7 +141,7 @@ public sealed class CampaignService
             if (await rs.ShouldReplay(run, top || first && lvl.IsBoss)) await rs.Enqueue(runId, "campaign");
             prog.processedReports.Add(r.reportId);
             await _x.Db.Put("campaignProgress", pkey, prog);
-            return new CampaignSubmitResponseEx { accepted = true, message = "Campaign result synced (pending validation)", levelBest = rec.best, total = total, firstClear = first, validation = "pending", rewardDeferred = deferred };
+            return new CampaignSubmitResponseEx { accepted = true, message = "Campaign result synced (pending validation)", levelBest = rec.best, total = total, firstClear = first, validation = "pending", rewardDeferred = deferred, serverScoreBp = score };
         });
     }
 
@@ -192,8 +192,9 @@ public sealed class CampaignService
     {
         var lvl = _x.Content.EventLevel(eventLevelId) ?? throw new ApiError(404, "UNKNOWN_LEVEL", "unknown event level");
         await Burn(pid, "event", lvl.id, r.attemptToken);
+        r.simVersion ??= r.buildHash;
         if (r.simVersion != _x.Opt.SimVersion) throw new ApiError(422, "RESULT_REJECTED", "simVersion mismatch");
-        int used = r.inputs?.Count ?? 0;
+        int used = InputRules.Fires(r.inputs);
         if (used < 1 || used > lvl.shots) throw new ApiError(422, "RESULT_REJECTED", "input log does not match the level");
         var p = InputsPlausible(r.inputs, used); if (p != null) throw new ApiError(422, "RESULT_REJECTED", p);
         int maxStars = Crashverse.Meta.StarRules.ComputeInt(true, lvl.shots - used, lvl.shots);

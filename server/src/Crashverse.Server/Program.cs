@@ -4,6 +4,8 @@ using Crashverse.Data;
 using Crashverse.Server.Domain;
 using Crashverse.Server.Infra;
 
+using LinkCredential = Crashverse.Server.Domain.LinkCredential;
+
 namespace Crashverse.Server;
 
 public static class ServerApp
@@ -21,11 +23,12 @@ public static class ServerApp
         {
             Db = db, Clock = clock, Opt = opt, Content = Content.Load(opt.ContentRoot),
             Tokens = new TokenService(new[] { new KeyRing("access", new EcdsaDevSigner("access-dev-1"), clock), new KeyRing("run", new EcdsaDevSigner("run-dev-1"), clock),
-                new KeyRing("attempt", new EcdsaDevSigner("attempt-dev-1"), clock) }, clock),
+                new KeyRing("attempt", new EcdsaDevSigner("attempt-dev-1"), clock),
+                new KeyRing("reauth", new EcdsaDevSigner("reauth-dev-1"), clock), new KeyRing("consent", new EcdsaDevSigner("consent-dev-1"), clock) }, clock),
             Receipts = new ReceiptService(clock, "receipt-dev-1"),
             Nonces = new StoreNonceCache(db, clock), Limits = new StoreRateLimiter(db, clock),
             Integrity = new FakeIntegrityVerifier(), Google = new FakeGoogleVerifier(), Facebook = new FakeFacebookVerifier(), X = new FakeXClient(),
-            Email = new FakeEmailSender(), Play = new FakePlayApi(), PushAuth = new FakePushAuthVerifier(), Replay = new StubReplayWorker(), Sampler = new SystemSampler()
+            Email = new FakeEmailSender(), ConsentMailer = new FakeParentalConsentMailer(), Play = new FakePlayApi(), PushAuth = new FakePushAuthVerifier(), Replay = new StubReplayWorker(), Sampler = new SystemSampler()
         };
     }
 
@@ -72,7 +75,7 @@ public static class ServerApp
     }
 
     /// <summary>Order (gap 2): cheap JWT check → per-account rate limit → nonce (mutations) → work.</summary>
-    static async Task<string> Auth(Ctx x, AuthService auth, HttpContext h, bool mutating)
+    static async Task<string> Auth(Ctx x, AuthService auth, HttpContext h, bool mutating, bool allowPendingDeletion = false)
     {
         var hdr = h.Request.Headers.Authorization.ToString();
         if (!hdr.StartsWith("Bearer ")) throw new ApiError(401, "UNAUTHENTICATED", "missing bearer token");
@@ -80,7 +83,7 @@ public static class ServerApp
         await Limit(x, "acct:" + pid, x.Opt.AccountPerMinute, TimeSpan.FromMinutes(1));
         if (!await auth.SessionActive(hdr[7..])) throw new ApiError(401, "UNAUTHENTICATED", "session revoked");
         var acc = await x.Db.Get<AccountDoc>("accounts", pid);
-        if (acc == null || acc.status != "active") throw new ApiError(401, "UNAUTHENTICATED", "account inactive");
+        if (acc == null || (acc.status != "active" && !(allowPendingDeletion && acc.status == "deleted_pending"))) throw new ApiError(401, "UNAUTHENTICATED", "account inactive");
         if (mutating)
         {
             var nonce = h.Request.Headers["X-Nonce"].ToString();
@@ -129,7 +132,7 @@ public static class ServerApp
         {
             await Limit(x, "auth:" + Ip(h), x.Opt.AuthPerMinute, TimeSpan.FromMinutes(1));
             var r = await Body<SignInReq>(h) ?? new SignInReq();
-            return Ok(await auth.SignIn(r.provider, r.credential, r.deviceInstallId));
+            return Ok(await auth.SignIn(r.provider, r, r.deviceInstallId));
         });
         MP("/v1/auth/email/login", async h =>
         {
@@ -156,13 +159,24 @@ public static class ServerApp
         MG("/v1/config/flags", async h => Ok(new FeatureFlags { xLoginEnabled = x.Opt.XEnabled, emailAuthEnabled = true, accountDeletionEnabled = true }));
 
         // ---- account (P1, P2, P7) ----
-        Get("/account", async (h, pid) => auth.View(await auth.Account(pid)));
+        MG("/v1/account", async h => Ok(auth.View(await auth.Account(await Auth(x, auth, h, false, allowPendingDeletion: true)))));
         Post("/account/link-nonce", async (h, pid) => new { nonce = await auth.LinkNonce(pid) });
         Post("/account/link", async (h, pid) => await auth.Link(pid, await Body<LinkRequest>(h)));
-        Post("/account/unlink", async (h, pid) => { var r = await Body<LinkRequest>(h) ?? new LinkRequest(); return await auth.Unlink(pid, r.provider, r.credential); });
+        Post("/account/unlink", async (h, pid) => { var r = await Body<LinkRequest>(h) ?? new LinkRequest(); return await auth.Unlink(pid, Providers.Norm(r.provider), r); });
         Post("/auth/email/register", async (h, pid) => { await Limit(x, "auth:" + pid, x.Opt.AuthPerMinute, TimeSpan.FromMinutes(1)); var r = await Body<EmailReq>(h) ?? new EmailReq(); return await auth.EmailRegister(pid, r.email, r.password); });
         Post("/auth/email/verify", async (h, pid) => { var r = await Body<EmailReq>(h) ?? new EmailReq(); return await auth.EmailVerify(pid, r.email, r.code); });
-        MD("/v1/account", async h => Ok(await auth.DeleteAccount(await Auth(x, auth, h, true))));
+        // Agreed interface: deletion needs a fresh (≤5 min, single-use) re-auth; cancel works during the grace period.
+        Post("/auth/reauth", async (h, pid) => { await Limit(x, "reauth:" + pid, x.Opt.AuthPerMinute, TimeSpan.FromMinutes(1)); return await auth.Reauth(pid, (await Body<ReauthReq>(h))?.credential); });
+        Post("/account/delete", async (h, pid) => await auth.DeleteAccount(pid, (await Body<DeleteReq>(h))?.reauthToken));
+        MP("/v1/account/delete/cancel", async h => Ok(await auth.CancelDelete(await Auth(x, auth, h, true, allowPendingDeletion: true))));
+        Post("/account/keep-active", async (h, pid) => await auth.KeepActive(pid));
+        Post("/profile/visibility", async (h, pid) => await auth.SetVisibility(pid, (await Body<VisibilityReq>(h))?.hideName ?? false));
+
+        // ---- age gate (unauthenticated, strict IP limit) + parental consent ----
+        var comp = new ComplianceService(x);
+        MP("/v1/agegate", async h => { await Limit(x, "agegate:" + Ip(h), x.Opt.AuthPerMinute * 2, TimeSpan.FromMinutes(1)); return Ok(comp.AgeGate(await Body<ComplianceService.AgeGateReq>(h))); });
+        Post("/consent/parental/request", async (h, pid) => { await Limit(x, "consent:" + pid, 3, TimeSpan.FromDays(1)); return await comp.RequestConsent(pid, (await Body<ComplianceService.ConsentReq>(h))?.parentEmail); });
+        Get("/consent/parental/status", async (h, pid) => await comp.Status(pid));
 
         // ---- wallet / inventory / store ----
         var wallet = new WalletService(x);
@@ -196,6 +210,8 @@ public static class ServerApp
         Post("/campaign/attempts", async (h, pid) => { var r = await Body<AttemptRequest>(h) ?? new AttemptRequest(); r.mode = "campaign"; return await camp.IssueAttempts(pid, r); });
         Post("/events/attempts", async (h, pid) => { var r = await Body<AttemptRequest>(h) ?? new AttemptRequest(); r.mode = "event"; return await camp.IssueAttempts(pid, r); });
         MP("/v1/campaign/results", async h => { var pid = await Auth(x, auth, h, true); return Ok(await camp.Submit(pid, await Body<CampaignRunReportEx>(h, x.Opt.MaxJournalBytes))); });
+        // Agreed interface SubmitScore {attemptToken, inputs[], clientScoreBp, buildHash}; BeginAttempt = POST /v1/attempts (POST /score in the client). No separate input-log endpoint.
+        MP("/v1/score", async h => { var pid = await Auth(x, auth, h, true); return Ok(await camp.Submit(pid, await Body<CampaignRunReportEx>(h, x.Opt.MaxJournalBytes))); });
         Post("/events/{eventLevelId}/stars", async (h, pid) => await camp.EventStars(pid, (string)h.Request.RouteValues["eventLevelId"], await Body<EventStarsRequest>(h) ?? new EventStarsRequest()));
 
         // ---- leaderboards / friends ----
@@ -224,6 +240,7 @@ public static class ServerApp
             if (!hdr.StartsWith("Bearer ") || !await x.PushAuth.Verify(hdr[7..])) throw new ApiError(401, "UNAUTHENTICATED", "push auth failed");
         }
         MP("/internal/rtdn", async h => { await Internal(h); using var d = JsonDocument.Parse(await new StreamReader(h.Request.Body).ReadToEndAsync()); return Ok(new { result = await purchases.HandleRtdn(d.RootElement) }); });
+        MP("/internal/consent/decide", async h => { await Internal(h); var d = await Body<ConsentDecision>(h) ?? new ConsentDecision(); return Ok(await comp.Decide(d.token, d.grant)); });
         MP("/internal/jobs/voided-poll", async h => { await Internal(h); return Ok(new { revoked = await purchases.PollVoided() }); });
         MP("/internal/jobs/replay", async h => { await Internal(h); var (d, p) = await new ReplayService(x).Process(); return Ok(new { done = d, pending = p }); });
         MP("/internal/jobs/titan-close/{dayKey}", async h => { await Internal(h); return Ok(new { result = await titan.CloseDay((string)h.Request.RouteValues["dayKey"]) }); });
@@ -237,7 +254,11 @@ public static class ServerApp
 
     sealed class GuestReq { public string deviceInstallId; public string integrityToken; }
     sealed class RefreshReq { public string refreshToken; }
-    sealed class SignInReq { public string provider; public LinkCredential credential; public string deviceInstallId; }
+    sealed class SignInReq : LinkCredential { public string deviceInstallId; }
+    sealed class ReauthReq { public LinkCredential credential; }
+    sealed class DeleteReq { public string reauthToken; }
+    sealed class VisibilityReq { public bool hideName; }
+    sealed class ConsentDecision { public string token; public bool grant; }
     sealed class EmailReq { public string email; public string password; public string code; public string newPassword; }
     sealed class SkuReq { public string sku; }
     sealed class TierReq { public bool premium; }

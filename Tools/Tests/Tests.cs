@@ -281,7 +281,7 @@ static class Tests
             var p = b.GetLeaderboard(BoardType.DailyTitan, BoardPeriod.Current, false).Result;
             T.True(p.meIsGuestHidden && p.me == null, "guest stored but hidden");
             T.True(p.top.Count == 100, "top 100");
-            b.LinkAccount(AuthProvider.Google, "test-id-token").Wait();
+            b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "test-id-token" }).Wait();
             p = b.GetLeaderboard(BoardType.DailyTitan, BoardPeriod.Current, false).Result;
             T.True(p.me != null && p.me.score == 10000 + 500 * (t.shotBudget - 2), "linked player listed with own score");
             for (int i = 1; i < p.top.Count; i++)
@@ -448,7 +448,7 @@ static class Tests
         });
         T.Add("BUG06_season_rollover", () =>
         {
-            var b = NewBackend("2026-11-08T10:00:00"); b.LinkAccount(AuthProvider.Google, "test-id-token").Wait(); b.GrantPremiumPassForTests();
+            var b = NewBackend("2026-11-08T10:00:00"); b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "test-id-token" }).Wait(); b.GrantPremiumPassForTests();
             foreach (var l in Db.Season.weeks[3].levels) b.ReportEventStars(l.id, 3).Wait(); // 150 xp → tier 1
             var s0 = b.GetSeasonState().Result; T.Eq("s1_wrecking_frontier", s0.seasonId, "season 1"); T.Eq(3, s0.weekIndex, "last week");
             b.SetTestClock(U("2026-11-09T00:00:00"));
@@ -463,7 +463,7 @@ static class Tests
         });
         T.Add("BUG07_previous_season_board_is_real", () =>
         {
-            var b = NewBackend("2026-10-20T10:00:00"); b.LinkAccount(AuthProvider.Google, "test-id-token").Wait();
+            var b = NewBackend("2026-10-20T10:00:00"); b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "test-id-token" }).Wait();
             var pre = b.GetLeaderboard(BoardType.Season, BoardPeriod.Previous, false).Result;
             T.True(pre.closed && pre.top.Count == 0, "no fake archive before season 1");
             foreach (var l in Db.Season.weeks[1].levels) b.ReportEventStars(l.id, 3).Wait();
@@ -508,7 +508,7 @@ static class Tests
         });
         T.Add("SC13_campaign_leaderboard", () =>
         {
-            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount(AuthProvider.Google, "test-id-token").Wait();
+            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "test-id-token" }).Wait();
             var r1 = Win(b, "c1_l01", 1f, 1, 0); T.True(r1.accepted && r1.firstClear, "validated first clear");
             Win(b, "c1_l01", 0.9f, 0, 0);                                    // worse run doesn't lower the best
             var r2 = Win(b, "c1_l02", 0.9f, 2, 3);
@@ -564,7 +564,7 @@ static class Tests
         });
         T.Add("BUG16_timestamp_only_on_increase", () =>
         {
-            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount(AuthProvider.Google, "test-id-token").Wait();
+            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "test-id-token" }).Wait();
             Win(b, "c1_l01", 1f, 1, 0);
             long t0 = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result.me.submittedTicks;
             b.SetTestClock(U("2026-10-20T10:00:00")); Win(b, "c1_l01", 0.9f, 0, 0); // lower replay: total unchanged
@@ -735,42 +735,50 @@ static class Tests
         {
             var b = NewBackend("2026-10-16T10:00:00");
             var t = b.BeginAttempt("c1_l01").Result; T.True(t.token.StartsWith("att_") && t.levelId == "c1_l01", "token issued");
-            var log = new InputLog { attemptToken = t.token, levelId = "c1_l01" }; log.events.Add(new InputEvent { t = 1.2f, kind = "fire", yaw = 3, elevation = 30 });
-            T.True(b.SubmitInputLog(log).Result.accepted, "log accepted once"); T.True(!b.SubmitInputLog(log).Result.accepted, "token single-use");
-            T.True(!b.SubmitInputLog(new InputLog { attemptToken = "forged" }).Result.accepted, "unknown token rejected");
+            T.True(t.seed.GetType() == typeof(long), "seed is long");
+            var rec = new InputRecorder(); rec.Record(60, "fire", 3.25f, 30f);
+            var ev = rec.ToArray()[0]; T.Eq(60, ev.tick, "tick"); T.Eq("fire", ev.type, "type"); T.Eq(3250, ev.x, "x fixed-point 1/1000"); T.Eq(30000, ev.y, "y fixed-point");
+            T.Eq(-1500, InputRecorder.ToFixed(-1.5f), "negative fixed-point");
+            var sub = new ScoreSubmission { attemptToken = t.token, inputs = rec.ToArray(), clientScoreBp = 9000, buildHash = "test" };
+            T.True(b.SubmitScore(sub).Result.accepted, "score accepted once"); T.True(!b.SubmitScore(sub).Result.accepted, "token single-use");
+            T.True(!b.SubmitScore(new ScoreSubmission { attemptToken = "forged", inputs = rec.ToArray() }).Result.accepted, "unknown token rejected");
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(new LinkCredential { provider = AuthProvider.Facebook, token = "x" });
+            T.True(json.Contains("\"provider\":\"Facebook\""), "AuthProvider serializes as string");
+            T.Eq(AuthProvider.Facebook, Newtonsoft.Json.JsonConvert.DeserializeObject<LinkCredential>("{\"provider\":\"Facebook\",\"token\":\"t\"}").provider, "string → enum");
+            var ev2 = Newtonsoft.Json.JsonConvert.SerializeObject(ev); T.True(ev2.Contains("\"tick\":60") && ev2.Contains("\"x\":3250"), "InputEvent wire shape");
         });
         T.Add("SEC_email_auth_and_link", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
             T.True(Throws(() => b.AuthEmailRegister("bad", "longenough1").Wait()), "invalid email rejected");
             T.True(Throws(() => b.AuthEmailRegister("a@b.co", "short").Wait()), "short password rejected (placeholder policy)");
-            var s = b.AuthEmailRegister("Pat@Example.com", "correct-horse-1").Result; T.True(s.sessionToken.StartsWith("sess_"), "session");
+            var s = b.AuthEmailRegister("Pat@Example.com", "correct-horse-1").Result; T.True(s.accessToken.StartsWith("acc_") && !string.IsNullOrEmpty(s.refreshToken) && s.account != null, "AuthResponse");
             T.True(b.AuthEmailLogin("pat@example.com", "whatever-1").Result != null, "login");
             T.True(b.RequestPasswordReset("nobody@example.com").Result, "reset never reveals account existence");
-            var acc = b.LinkAccount(AuthProvider.Email, s.sessionToken).Result; T.True(acc.linked && acc.provider == "Email", "link with Email credential");
+            var acc = b.LinkAccount(new LinkCredential { provider = AuthProvider.Email, token = s.accessToken }).Result; T.True(acc.linked && acc.provider == "Email", "link with Email credential");
             var dbText = File.ReadAllText(typeof(LocalBackendService).GetField("_path", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(b) as string);
             T.True(!dbText.Contains("correct-horse-1"), "password never persisted");
-            T.True(Throws(() => b.LinkAccount(AuthProvider.Google, "").Wait()), "credential required");
+            T.True(Throws(() => b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "" }).Wait()), "credential required");
         });
         T.Add("SEC_x_login_flag_from_server", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
             T.True(!b.GetFeatureFlags().Result.xLoginEnabled, "X off unless server enables");
-            T.True(Throws(() => b.LinkAccount(AuthProvider.X, "tok").Wait()), "X link refused while flag off");
-            b.Flags.xLoginEnabled = true; T.True(b.LinkAccount(AuthProvider.X, "tok").Result.linked, "X link once server flag on");
+            T.True(Throws(() => b.LinkAccount(new LinkCredential { provider = AuthProvider.X, token = "tok" }).Wait()), "X link refused while flag off");
+            b.Flags.xLoginEnabled = true; T.True(b.LinkAccount(new LinkCredential { provider = AuthProvider.X, token = "tok" }).Result.linked, "X link once server flag on");
         });
         T.Add("REQ_A3_A4_A5_delete_reauth_grace_cancel", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            var g = b.DeleteAccount().Result; T.True(g.accepted, "guest deletes with session only (C1)");
-            T.Eq(Unix("2026-10-23T10:00:00"), g.scheduledDeletionUnixUtc, "7-day grace (A5)");
-            T.True(b.CancelAccountDeletion().Result.pendingDeletionUnixUtc == 0, "cancel in grace");
-            b.LinkAccount(AuthProvider.Google, "tok").Wait(); Win(b, "c1_l01"); var id = b.GetAccount().Result.playerId;
-            var ex = Catch(() => b.DeleteAccount().Wait()); T.Eq("REAUTH_REQUIRED", ex?.Code, "linked needs re-auth (A3)"); T.Eq(401, ex?.Status ?? 0, "401");
-            b.Reauthenticate(AuthProvider.Google, "fresh").Wait();
-            b.SetTestClock(U("2026-10-16T10:06:00")); T.Eq("REAUTH_REQUIRED", Catch(() => b.DeleteAccount().Wait())?.Code, "re-auth older than 5 min rejected");
-            b.Reauthenticate(AuthProvider.Google, "fresh").Wait(); var r = b.DeleteAccount().Result; T.True(r.accepted, "scheduled after fresh re-auth");
-            T.Eq(r.scheduledDeletionUnixUtc, b.DeleteAccount().Result.scheduledDeletionUnixUtc, "idempotent");
+            var g = b.DeleteAccount(null).Result; T.True(g.status == "scheduled", "guest deletes with session only (C1)");
+            T.Eq(Unix("2026-10-23T10:00:00"), g.purgeAt, "7-day grace (A5)");
+            T.True(b.CancelAccountDeletion().Result.status == "cancelled" && b.GetAccount().Result.pendingDeletionUnixUtc == 0, "cancel in grace");
+            b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "tok" }).Wait(); Win(b, "c1_l01"); var id = b.GetAccount().Result.playerId;
+            var ex = Catch(() => b.DeleteAccount(null).Wait()); T.Eq("REAUTH_REQUIRED", ex?.Code, "linked needs re-auth (A3)"); T.Eq(401, ex?.Status ?? 0, "401");
+            var rt = b.Reauthenticate(new LinkCredential { provider = AuthProvider.Google, token = "fresh" }).Result.reauthToken;
+            b.SetTestClock(U("2026-10-16T10:06:00")); T.Eq("REAUTH_REQUIRED", Catch(() => b.DeleteAccount(rt).Wait())?.Code, "re-auth older than 5 min rejected");
+            rt = b.Reauthenticate(new LinkCredential { provider = AuthProvider.Google, token = "fresh" }).Result.reauthToken; T.Eq("REAUTH_REQUIRED", Catch(() => b.DeleteAccount("forged").Wait())?.Code, "forged token rejected"); var r = b.DeleteAccount(rt).Result; T.True(r.status == "scheduled", "scheduled after fresh re-auth");
+            T.Eq(r.purgeAt, b.DeleteAccount(rt).Result.purgeAt, "idempotent");
             b.SetTestClock(U("2026-10-23T10:07:00"));
             var acc = b.GetAccount().Result; T.True(acc.playerId != id && !acc.linked && acc.identities.Count == 0, "purged after grace → new account");
             var lb = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result;
@@ -801,10 +809,10 @@ static class Tests
             T.Eq(0L, b.GetAccount().Result.deletionWarningAtUnixUtc, "no warning before day 335");
             b.SetLastActiveForTests(U("2026-01-01T00:00:00")); b.SetTestClock(U("2026-12-02T00:00:00")); // 335 days idle
             var a = b.GetAccount().Result; T.True(a.deletionWarningAtUnixUtc > 0, "warning at day 335"); T.Eq(Unix("2027-01-01T00:00:00"), a.guestPurgeAtUnixUtc, "purge date shown");
-            T.Eq(0L, b.KeepAccountActive().Result.deletionWarningAtUnixUtc, "keep my account clears it");
+            b.KeepAccountActive().Wait(); T.Eq(0L, b.GetAccount().Result.deletionWarningAtUnixUtc, "keep my account clears it");
             b.SetTestClock(U("2027-01-05T00:00:00")); T.Eq(id, b.GetAccount().Result.playerId, "activity reset the clock");
             b.SetTestClock(U("2028-01-06T00:00:00")); T.True(b.GetAccount().Result.playerId != id, "365 days idle → purged");
-            var l = NewBackend("2026-01-01T00:00:00"); l.LinkAccount(AuthProvider.Google, "t").Wait(); var lid = l.GetAccount().Result.playerId;
+            var l = NewBackend("2026-01-01T00:00:00"); l.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "t" }).Wait(); var lid = l.GetAccount().Result.playerId;
             l.SetTestClock(U("2027-06-01T00:00:00")); T.Eq(lid, l.GetAccount().Result.playerId, "linked accounts not auto-deleted");
         });
         T.Add("REQ_E_age_gate_bands", () =>
@@ -830,12 +838,15 @@ static class Tests
         T.Add("REQ_E3_E5_E6_server_enforcement", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            b.SetAgeGate("13to17", "IN").Wait(); T.Eq("13to17", b.SetAgeGate("adult", "IN").Result.ageBand, "most restrictive band kept (E3)");
-            T.Eq("MINOR_CONSENT_REQUIRED", Catch(() => b.LinkAccount(AuthProvider.Google, "t").Wait())?.Code, "link 403 without consent");
+            var ag = b.SubmitAgeGate(2012, 1, "IN").Result; T.True(ag.band == "13to17" && ag.requiresParentalConsent, "minor band + consent required");
+            T.Eq("13to17", b.SubmitAgeGate(1990, 5, "IN").Result.band, "most restrictive band kept (E3)");
+            T.Eq("AGE_BLOCKED", Catch(() => b.SubmitAgeGate(2018, 1, "IN").Wait())?.Code, "under-13 refused");
+            T.Eq("MINOR_CONSENT_REQUIRED", Catch(() => b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "t" }).Wait())?.Code, "link 403 without consent");
             T.Eq("AGE_RESTRICTED", Catch(() => b.VerifyPurchase("gems_100", "r").Wait())?.Code, "purchase 403 AGE_RESTRICTED");
-            T.True(b.RequestParentalConsent("parent@example.com").Result && b.GetAccount().Result.consentPending, "consent request recorded");
+            var cr = b.RequestParentalConsent("parent@example.com").Result; T.True(cr.status == "pending" && cr.requestId.Length > 0 && b.GetAccount().Result.consentPending, "consent request recorded");
+            T.Eq("pending", b.GetParentalConsentStatus().Result.status, "consent status pending");
             b.GrantConsentForTests(true, false, false);
-            T.True(b.LinkAccount(AuthProvider.Google, "t").Result.linked, "link allowed with social consent");
+            T.True(b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "t" }).Result.linked, "link allowed with social consent");
             Win(b, "c1_l01");
             var me = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result.me; T.True(me.name.StartsWith("Wrecker #"), "generated name until name consent");
             b.GrantConsentForTests(true, true, false);
@@ -844,12 +855,12 @@ static class Tests
         T.Add("REQ_F1_F4_F5_links_and_hide_name", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            b.LinkAccount(AuthProvider.Google, "t").Wait(); b.LinkAccount(AuthProvider.Email, "s").Wait();
-            T.Eq("REAUTH_REQUIRED", Catch(() => b.UnlinkAccount(AuthProvider.Email).Wait())?.Code, "unlink needs re-auth");
-            b.Reauthenticate(AuthProvider.Google, "fresh").Wait();
-            T.True(!b.UnlinkAccount(AuthProvider.Email).Result.identities.Contains("Email"), "unlinked");
-            T.Eq("LAST_LOGIN", Catch(() => b.UnlinkAccount(AuthProvider.Google).Wait())?.Code, "last login kept");
-            Win(b, "c1_l01"); b.SetHideName(true).Wait();
+            b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "t" }).Wait(); b.LinkAccount(new LinkCredential { provider = AuthProvider.Email, token = "s" }).Wait();
+            T.Eq("REAUTH_REQUIRED", Catch(() => b.UnlinkAccount(AuthProvider.Email, null).Wait())?.Code, "unlink needs re-auth");
+            var rt = b.Reauthenticate(new LinkCredential { provider = AuthProvider.Google, token = "fresh" }).Result.reauthToken;
+            T.True(!b.UnlinkAccount(AuthProvider.Email, rt).Result.identities.Contains("Email"), "unlinked");
+            T.Eq("LAST_LOGIN", Catch(() => b.UnlinkAccount(AuthProvider.Google, rt).Wait())?.Code, "last login kept");
+            Win(b, "c1_l01"); T.True(b.SetProfileVisibility(true).Result.hideName, "visibility echoed");
             var lb = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result;
             T.True(lb.me.name.StartsWith("Wrecker #") && lb.top.TrueForAll(e => !e.isMe || e.name.StartsWith("Wrecker #")), "real name never returned when hidden");
         });

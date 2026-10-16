@@ -579,7 +579,7 @@ namespace Crashverse.UI
         }
         async void ToggleHide()
         {
-            try { AppServices.Account = await AppServices.Backend.SetHideName(!(AppServices.Account?.hideName ?? false)); Refresh(); }
+            try { var v = await AppServices.Backend.SetProfileVisibility(!(AppServices.Account?.hideName ?? false)); if (AppServices.Account != null) AppServices.Account.hideName = v.hideName; Refresh(); }
             catch (BackendException) { Router.Toast("You need to be online to change this."); }
         }
         void Refresh()
@@ -623,7 +623,8 @@ namespace Crashverse.UI
                     {
                         if (acc.identities.Contains(prov.ToString()) || (prov == AuthProvider.X && !flags.xLoginEnabled)) continue; // X gated by server flag
                         var pv = prov;
-                        UIFactory.Button(_v, "Link " + pv, Th.green, () => Router.Toast("Sign-in with " + pv + " isn't wired yet"), Th, 48); // TODO(Dev): provider SDKs
+                        if (pv == AuthProvider.Facebook) continue; // TODO: Facebook Login only after the F3 deletion callback ships (docs/Privacy_And_Account.md)
+                        UIFactory.Button(_v, "Link " + pv, Th.green, () => Router.Toast("Sign-in with " + pv + " isn't wired yet"), Th, 48); // TODO(Dev): provider SDKs → LinkAccount(LinkCredential)
                     }
                 }
                 else UIFactory.Label(_v, "Linking a login needs a parent's permission.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
@@ -635,10 +636,9 @@ namespace Crashverse.UI
         {
             try
             {
-                var tok = await AccountLifecycle.ReauthProvider(p);
+                var tok = await AccountLifecycle.FreshReauthToken(p);
                 if (string.IsNullOrEmpty(tok)) { Router.Toast("Please sign in again first."); return; }
-                await AppServices.Backend.Reauthenticate(p, tok);
-                AppServices.Account = await AppServices.Backend.UnlinkAccount(p); Load();
+                AppServices.Account = await AppServices.Backend.UnlinkAccount(p, tok); Load();
             }
             catch (BackendException e) { Router.Toast(e.Code == "LAST_LOGIN" ? "You must keep at least one login method." : "Couldn't unlink: " + e.Code); }
         }
@@ -670,21 +670,20 @@ namespace Crashverse.UI
         public override void Tick() { if (_hold != null) _hold.text = _h != null && _h.Progress > 0f ? $"Keep holding… {Mathf.CeilToInt((1f - _h.Progress) * HoldSeconds)}" : "Press and hold to delete"; }
         async void Confirm()
         {
-            var b = AppServices.Backend;
+            var b = AppServices.Backend; string reauth = null;
             try
             {
                 var acc = AppServices.Account ?? await b.GetAccount();
-                if (acc.linked) // A3: fresh re-auth (< 5 min) with a linked provider
+                if (acc.linked) // A3: fresh re-auth (< 5 min) with a linked provider → reauthToken
                 {
                     var prov = (AuthProvider)Enum.Parse(typeof(AuthProvider), acc.identities.Count > 0 ? acc.identities[0] : acc.provider);
-                    var tok = await AccountLifecycle.ReauthProvider(prov);
-                    if (string.IsNullOrEmpty(tok)) { Router.Toast("Please sign in again to confirm deletion."); return; }
-                    await b.Reauthenticate(prov, tok);
+                    reauth = await AccountLifecycle.FreshReauthToken(prov);
+                    if (string.IsNullOrEmpty(reauth)) { Router.Toast("Please sign in again to confirm deletion."); return; }
                 }
             }
             catch (BackendException e) when (!e.IsOffline) { Router.Toast("Couldn't verify your sign-in: " + e.Code); return; }
             catch (BackendException) { } // offline: queue below (re-auth is requested again when it's sent)
-            var res = await AccountDeletion.Request(b);
+            var res = await AccountDeletion.Request(b, reauth);
             switch (res)
             {
                 case AccountDeletion.Result.Scheduled: GameBootstrap.RestartFirstRun(); AppServices.Router.Toast("Your account is scheduled for deletion.", 4f); break;
@@ -716,7 +715,17 @@ namespace Crashverse.UI
     {
         public const string BandKey = "cv_age_band_v", BlockedKey = "cv_age_blocked";
         public static bool Blocked => PlayerPrefs.GetInt(BlockedKey, 0) == 1;
-        public static bool Needed => !Blocked && PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0) == 0;
+        public const string SubmittedKey = "cv_age_submitted_v";
+        /// <summary>Asked again if the band was never confirmed by the server (the DOB is not kept across launches).</summary>
+        public static bool Needed => !Blocked && (PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0) == 0 || (PlayerPrefs.GetInt(SubmittedKey + AgeGate.Version, 0) == 0 && !PendingDob.HasValue));
+        /// <summary>Year/month held in memory only, for one POST /agegate (13+ only). Never written to disk.</summary>
+        public static (int year, int month)? PendingDob;
+        public static void OnServerBand(AgeGate.Band serverBand, bool requiresConsent)
+        {
+            PendingDob = null;
+            var local = Current; var band = serverBand == AgeGate.Band.Unknown ? local : (local == AgeGate.Band.Unknown ? serverBand : (AgeGate.Band)Math.Min((int)local, (int)serverBand)); // most restrictive
+            PlayerPrefs.SetInt(BandKey + AgeGate.Version, (int)band); PlayerPrefs.SetInt(SubmittedKey + AgeGate.Version, 1); PlayerPrefs.Save();
+        }
         public static AgeGate.Band Current => (AgeGate.Band)PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0);
         /// <summary>TODO(Legal): which age signal is acceptable (store country vs locale). Locale region for now.</summary>
         public static string Country() { try { return System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName; } catch { return ""; } }
@@ -756,6 +765,7 @@ namespace Crashverse.UI
             if (band == AgeGate.Band.Unknown) return;
             if (band == AgeGate.Band.Under13) { PlayerPrefs.SetInt(BlockedKey, 1); PlayerPrefs.Save(); _done?.Invoke(false); return; } // E2: no DOB stored
             PlayerPrefs.SetInt(BandKey + AgeGate.Version, (int)band); PlayerPrefs.Save();
+            PendingDob = (_year, _month); // memory only; sent once by AccountLifecycle, then dropped
             _done?.Invoke(true);
         }
     }

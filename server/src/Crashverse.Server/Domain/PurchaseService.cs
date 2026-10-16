@@ -7,7 +7,7 @@ using Crashverse.Server.Infra;
 namespace Crashverse.Server.Domain;
 
 public sealed class VerifyRequest { public string productId; public string purchaseToken; public string orderId; public string integrityToken; }
-public sealed class VerifyResponse { public string status; public WalletEx wallet; public SeasonState season; }
+public sealed class VerifyResponse { public string status; public string reason; public WalletEx wallet; public SeasonState season; }
 public sealed class PurchaseView { public string productId; public string orderId; public string state; public long grantedUnixUtc; }
 
 /// <summary>
@@ -50,11 +50,18 @@ public sealed class PurchaseService
         // S2: purchases soft-fail on integrity (log + risk only); the Play API receipt is the authority.
         await new TitanService(_x).CheckIntegrity(r.integrityToken, Hash.Sha256B64Url("purchase|" + pid + "|" + r.purchaseToken), ranked: false, pid);
         var p = await _x.Play.GetProduct(_x.Opt.PackageName, r.productId, r.purchaseToken);
-        if (p == null) throw new ApiError(402, "INVALID_PURCHASE", "purchase not found");
-        if (p.purchaseState == 2) return new VerifyResponse { status = "pending", wallet = WalletService.View(await W.Get(pid)) };
-        if (p.purchaseState != 0) throw new ApiError(402, "INVALID_PURCHASE", "purchase not in purchased state");
+        if (p == null) return await Rejected(pid, "purchase not found");
+        if (p.purchaseState == 2) return new VerifyResponse { status = "pending", wallet = WalletService.View(await W.Get(pid)), season = await new SeasonService(_x).State(pid) };
+        if (p.purchaseState != 0) return await Rejected(pid, "purchase not in purchased state");
         if (p.obfuscatedExternalAccountId != new AuthService(_x).ObfuscatedId(pid)) throw new ApiError(403, "INVALID_PURCHASE", "purchase belongs to another account");
         return await Grant(pid, item, r.purchaseToken, p);
+    }
+
+    /// <summary>Agreed interface: a definitive Play "no" is a 200 with status=rejected (pending|verified|rejected). Abuse cases (token reuse, other account) stay errors.</summary>
+    async Task<VerifyResponse> Rejected(string pid, string why)
+    {
+        await _x.Audit(pid, "purchase_rejected", pid, why);
+        return new VerifyResponse { status = "rejected", reason = why, wallet = WalletService.View(await W.Get(pid)), season = await new SeasonService(_x).State(pid) };
     }
 
     async Task<VerifyResponse> Grant(string pid, StoreItem item, string token, PlayProductPurchase p)
@@ -65,7 +72,7 @@ public sealed class PurchaseService
         {
             var ex = await _x.Db.Get<PurchaseDoc>("purchases", th);
             if (ex.playerId != pid) { await _x.Audit(pid, "purchase_token_reuse", pid, th); throw new ApiError(409, "INVALID_PURCHASE", "purchase token already used"); }
-            return new VerifyResponse { status = "already_granted", wallet = WalletService.View(await W.Get(pid)), season = await new SeasonService(_x).State(pid) };
+            return new VerifyResponse { status = "verified", wallet = WalletService.View(await W.Get(pid)), season = await new SeasonService(_x).State(pid) };
         }
         int gems = Gems(item); var cos = Cosmetics(item);
         var change = new WalletService.Change { addSource = "cash:" + th };
@@ -83,7 +90,7 @@ public sealed class PurchaseService
         if (item.type == "currency_pack") await _x.Play.Consume(_x.Opt.PackageName, item.sku, token);
         else await _x.Play.Acknowledge(_x.Opt.PackageName, item.sku, token);
         await _x.Audit(pid, "purchase_granted", pid, $"{item.sku} {p.orderId}");
-        return new VerifyResponse { status = "granted", wallet = WalletService.View(w), season = await new SeasonService(_x).State(pid) };
+        return new VerifyResponse { status = "verified", wallet = WalletService.View(w), season = await new SeasonService(_x).State(pid) };
     }
 
     public async Task<ListResponse<PurchaseView>> Restore(string pid) =>

@@ -93,7 +93,7 @@ public sealed class Leaderboards
             rank++;
             var le = new LeaderboardEntryEx
             {
-                rank = rank, playerId = e.playerId, name = acc.displayName, score = e.score, submittedUnixMs = e.reachedUnixMs,
+                rank = rank, playerId = e.playerId, name = isMe ? acc.displayName : AuthService.PublicName(acc), score = e.score, submittedUnixMs = e.reachedUnixMs,
                 submittedTicks = DateTimeOffset.FromUnixTimeMilliseconds(e.reachedUnixMs).UtcDateTime.Ticks,
                 isFriend = friends?.Contains(e.playerId) ?? false, isMe = isMe, provisional = pending
             };
@@ -160,7 +160,7 @@ public sealed class ReplayService
             var rr = await _x.Replay.Replay(new RunRecordView
             {
                 runId = run.runId, mode = run.mode, levelOrDay = run.key, seed = run.seed, simVersion = run.simVersion, clientScore = run.finalScore,
-                inputs = run.campaign?.inputs ?? run.checkpoints.Select(c => c.inputs).ToList()
+                inputs = run.campaign?.inputs ?? run.checkpoints.SelectMany(c => c.inputs ?? new List<InputEvent>()).ToList()
             });
             if (rr == null) { pending++; continue; }
             bool ok = WithinTolerance(run, rr, out var why);

@@ -97,7 +97,7 @@ public class C2_PurchaseTests
         await h.X.Db.Put("seasonProgress", s.pid + ":s1_wrecking_frontier", new SeasonProgressDoc { seasonId = "s1_wrecking_frontier", xp = 200 });
         Assert.Equal("PREMIUM_NOT_OWNED", (await h.Post("/v1/season/tiers/1/claim", new { premium = true }, s)).Code);
         var tok = h.PlayPurchase(s, "s1_premium_track");
-        Assert.Equal("granted", (await h.Verify(s, "s1_premium_track", tok))["status"].GetString());
+        Assert.Equal("verified", (await h.Verify(s, "s1_premium_track", tok))["status"].GetString());
         Assert.True((await h.Get("/v1/season", s))["premium"].GetBoolean());
         Assert.Equal(HttpStatusCode.OK, (await h.Post("/v1/season/tiers/1/claim", new { premium = true }, s)).status);
         Assert.Contains(tok, h.Play.Acked);
@@ -108,7 +108,9 @@ public class C2_PurchaseTests
     {
         await using var h = await Harness.Start();
         var a = await h.Guest(); var b = await h.Guest();
-        Assert.Equal("INVALID_PURCHASE", (await h.Verify(a, "gems_small", "made-up-token")).Code);
+        var unknown = await h.Verify(a, "gems_small", "made-up-token"); // agreed interface: definitive Play "no" → 200 status=rejected
+        Assert.Equal("rejected", unknown["status"].GetString()); Assert.Equal(0, unknown["wallet"].GetProperty("gems").GetInt32());
+        Assert.Equal("rejected", (await h.Verify(a, "gems_small", h.PlayPurchase(a, "gems_small", state: 1)))["status"].GetString()); // cancelled
         var pending = h.PlayPurchase(a, "gems_small", state: 2);
         Assert.Equal("pending", (await h.Verify(a, "gems_small", pending))["status"].GetString());
         var bs = h.PlayPurchase(b, "gems_small"); // bound to b's obfuscatedAccountId
@@ -123,8 +125,8 @@ public class C2_PurchaseTests
         await using var h = await Harness.Start();
         var a = await h.Guest();
         var tok = h.PlayPurchase(a, "gems_small");
-        Assert.Equal("granted", (await h.Verify(a, "gems_small", tok))["status"].GetString());
-        Assert.Equal("already_granted", (await h.Verify(a, "gems_small", tok))["status"].GetString());
+        Assert.Equal("verified", (await h.Verify(a, "gems_small", tok))["status"].GetString());
+        Assert.Equal("verified", (await h.Verify(a, "gems_small", tok))["status"].GetString());
         Assert.Equal(100, (await h.Wallet(a)).gems);
         Assert.Contains(tok, h.Play.Consumed);
         var b = await h.Guest(); h.Play.Purchases[tok].obfuscatedExternalAccountId = h.Obf(b); // even if Play said it's b's
@@ -149,7 +151,7 @@ public class C2_PurchaseTests
         // a "purchased" notification is also re-checked: grant only after Play confirms
         var t2 = h.PlayPurchase(a, "gems_small");
         var buy = new { packageName = h.X.Opt.PackageName, oneTimeProductNotification = new { notificationType = 1, purchaseToken = t2, sku = "gems_small" } };
-        Assert.Equal("granted", (await h.Rtdn(buy))["result"].GetString());
+        Assert.Equal("verified", (await h.Rtdn(buy))["result"].GetString());
         var cancel = new { packageName = h.X.Opt.PackageName, oneTimeProductNotification = new { notificationType = 2, purchaseToken = t2, sku = "gems_small" } };
         Assert.Equal("unconfirmed", (await h.Rtdn(cancel))["result"].GetString()); // Play still says purchased
         Assert.Equal("unknown_token", (await h.Rtdn(new { packageName = h.X.Opt.PackageName, oneTimeProductNotification = new { notificationType = 1, purchaseToken = "forged", sku = "gems_small" } }))["result"].GetString());
@@ -283,9 +285,9 @@ public class H1_CampaignTests
     {
         await using var h = await Harness.Start();
         var s = await h.Guest();
-        var rep = Harness.Win("c1_l01", await h.Attempt(s, "c1_l01"), 1, 4); rep.inputs.RemoveAt(0);
+        var rep = Harness.Win("c1_l01", await h.Attempt(s, "c1_l01"), 1, 4); rep.inputs.RemoveRange(0, 4); // drop one whole shot
         Assert.Contains("input log", (await h.Post("/v1/campaign/results", rep, s))["message"].GetString());
-        rep = Harness.Win("c1_l01", await h.Attempt(s, "c1_l01"), 1, 4); rep.inputs[1].fireFrame = rep.inputs[0].fireFrame + 101; // < 1.5 s at 50 Hz
+        rep = Harness.Win("c1_l01", await h.Attempt(s, "c1_l01"), 1, 4); rep.inputs = Harness.In(200).Concat(Harness.In(360)).Concat(Harness.In(600)).ToList(); // 2nd fire 60 ticks after settle: < 1.5 s at 50 Hz
         Assert.Contains("too close", (await h.Post("/v1/campaign/results", rep, s))["message"].GetString());
     }
 
@@ -358,9 +360,9 @@ public class H1_CampaignTests
     {
         await using var h = await Harness.Start();
         var s = await h.Guest();
-        Assert.Equal("INVALID_ATTEMPT", (await h.Post("/v1/events/magnetic_mayhem_e1/stars", new { stars = 3, simVersion = "dev", inputs = new[] { Harness.In(200) } }, s)).Code);
+        Assert.Equal("INVALID_ATTEMPT", (await h.Post("/v1/events/magnetic_mayhem_e1/stars", new { stars = 3, simVersion = "dev", inputs = Harness.In(200) }, s)).Code);
         var tok = await h.Attempt(s, "magnetic_mayhem_e1", "event");
-        var inputs = Enumerable.Range(1, 5).Select(i => Harness.In(i * 200)).ToList(); // used all 5 shots → 0 left → 1 star max
+        var inputs = Enumerable.Range(1, 5).SelectMany(i => Harness.In(i * 200)).ToList(); // used all 5 shots → 0 left → 1 star max
         var st = await h.Post("/v1/events/magnetic_mayhem_e1/stars", new EventStarsRequest { attemptToken = tok, stars = 3, simVersion = "dev", inputs = inputs }, s);
         Assert.Equal(10, st["xp"].GetInt32());
     }
@@ -550,7 +552,7 @@ public class H4_AccountLinkingTests
         await using var h = await Harness.Start();
         var s = await h.Guest();
         Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/account/link", new { provider = "facebook" }, s)).Code);
-        Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/account/link", new { provider = "facebook", credential = new { accessToken = "forged" } }, s)).Code);
+        Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/account/link", new { provider = "facebook", token = "forged" }, s)).Code);
         Assert.False((await h.Get("/v1/account", s))["linked"].GetBoolean());
     }
 
@@ -559,13 +561,13 @@ public class H4_AccountLinkingTests
     {
         await using var h = await Harness.Start();
         var s = await h.Guest();
-        Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/account/link", new { provider = "google", credential = new { idToken = "g1" } }, s)).Code);
+        Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/account/link", new { provider = "google", token = "g1" }, s)).Code);
         var nonce = (await h.Post("/v1/account/link-nonce", null, s))["nonce"].GetString();
         h.Google.Tokens["g1"] = (new ProviderIdentity { subject = "gsub" }, Hash.Sha256Hex("other-nonce"));
-        Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/account/link", new { provider = "google", credential = new { idToken = "g1" } }, s)).Code);
+        Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/account/link", new { provider = "google", token = "g1" }, s)).Code);
         nonce = (await h.Post("/v1/account/link-nonce", null, s))["nonce"].GetString();
         h.Google.Tokens["g1"] = (new ProviderIdentity { subject = "gsub" }, Hash.Sha256Hex(nonce));
-        var r = await h.Post("/v1/account/link", new { provider = "google", credential = new { idToken = "g1" } }, s);
+        var r = await h.Post("/v1/account/link", new { provider = "google", token = "g1" }, s);
         Assert.Equal(HttpStatusCode.OK, r.status); Assert.Contains("google", r["providers"].EnumerateArray().Select(p => p.GetString()));
     }
 
@@ -574,10 +576,10 @@ public class H4_AccountLinkingTests
     {
         await using var h = await Harness.Start();
         var a = await h.Linked("same"); var b = await h.Guest();
-        var r = await h.Post("/v1/account/link", new { provider = "facebook", credential = new { accessToken = "fb-same" } }, b);
+        var r = await h.Post("/v1/account/link", new { provider = "facebook", token = "fb-same" }, b);
         Assert.Equal("IDENTITY_IN_USE", r.Code);
         Assert.Equal(a.pid, r["error"].GetProperty("details").GetProperty("existing").GetProperty("playerId").GetString());
-        var sw = await h.Post("/v1/account/link", new { provider = "facebook", credential = new { accessToken = "fb-same" }, conflictResolution = "switch_to_existing" }, b);
+        var sw = await h.Post("/v1/account/link", new { provider = "facebook", token = "fb-same", conflictResolution = "switch_to_existing" }, b);
         Assert.Equal(a.pid, sw["account"].GetProperty("playerId").GetString()); // no silent merge: the client switched accounts
     }
 
@@ -586,12 +588,12 @@ public class H4_AccountLinkingTests
     {
         await using var h = await Harness.Start();
         var s = await h.Linked("u1");
-        Assert.Equal("LAST_LOGIN_METHOD", (await h.Post("/v1/account/unlink", new { provider = "facebook", credential = new { accessToken = "fb-u1" } }, s)).Code);
+        Assert.Equal("LAST_LOGIN_METHOD", (await h.Post("/v1/account/unlink", new { provider = "facebook", token = "fb-u1" }, s)).Code);
         await using var hx = await Harness.Start(o => o.XEnabled = true);
         var t = await hx.Linked("u2"); hx.XClient.Codes["c"] = new ProviderIdentity { subject = "x1" };
-        Assert.Equal(HttpStatusCode.OK, (await hx.Post("/v1/account/link", new { provider = "x", credential = new { authCode = "c", codeVerifier = "v" } }, t)).status);
-        Assert.Equal("PROVIDER_TOKEN_INVALID", (await hx.Post("/v1/account/unlink", new { provider = "x", credential = new { authCode = "wrong", codeVerifier = "v" } }, t)).Code);
-        Assert.Equal(HttpStatusCode.OK, (await hx.Post("/v1/account/unlink", new { provider = "x", credential = new { authCode = "c", codeVerifier = "v" } }, t)).status);
+        Assert.Equal(HttpStatusCode.OK, (await hx.Post("/v1/account/link", new { provider = "x", token = "c", codeVerifier = "v" }, t)).status);
+        Assert.Equal("PROVIDER_TOKEN_INVALID", (await hx.Post("/v1/account/unlink", new { provider = "x", token = "wrong", codeVerifier = "v" }, t)).Code);
+        Assert.Equal(HttpStatusCode.OK, (await hx.Post("/v1/account/unlink", new { provider = "x", token = "c", codeVerifier = "v" }, t)).status);
     }
 
     [Fact]
@@ -600,7 +602,7 @@ public class H4_AccountLinkingTests
         await using var h = await Harness.Start();
         Assert.False(new ServerOptions().XEnabled);
         var s = await h.Guest(); h.XClient.Codes["c"] = new ProviderIdentity { subject = "x1" };
-        Assert.Equal("FEATURE_DISABLED", (await h.Post("/v1/account/link", new { provider = "x", credential = new { authCode = "c", codeVerifier = "v" } }, s)).Code);
+        Assert.Equal("FEATURE_DISABLED", (await h.Post("/v1/account/link", new { provider = "x", token = "c", codeVerifier = "v" }, s)).Code);
         Assert.Equal("FEATURE_DISABLED", (await h.Post("/v1/auth/x/start", null, null)).Code);
     }
 
@@ -614,7 +616,7 @@ public class H4_AccountLinkingTests
         Assert.True((await h.Get("/v1/leaderboards/0", g))["meIsGuestHidden"].GetBoolean());
         Assert.Equal(0, (await h.Get("/v1/leaderboards/0", viewer))["top"].GetArrayLength());
         h.Facebook.Tokens["fb-g"] = new ProviderIdentity { subject = "g" };
-        await h.Post("/v1/account/link", new { provider = "facebook", credential = new { accessToken = "fb-g" } }, g);
+        await h.Post("/v1/account/link", new { provider = "facebook", token = "fb-g" }, g);
         Assert.Equal(1, (await h.Get("/v1/leaderboards/0", viewer))["top"].GetArrayLength());
     }
 }

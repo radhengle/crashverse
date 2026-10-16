@@ -57,9 +57,9 @@ public class AuthTests
     {
         await using var h = await Harness.Start();
         var s = await h.Linked("dev2");
-        var r = await h.Post("/v1/auth/sign-in", new { provider = "facebook", credential = new { accessToken = "fb-dev2" }, deviceInstallId = "d2" }, null);
+        var r = await h.Post("/v1/auth/sign-in", new { provider = "facebook", token = "fb-dev2", deviceInstallId = "d2" }, null);
         Assert.Equal(s.pid, r["account"].GetProperty("playerId").GetString());
-        Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/auth/sign-in", new { provider = "facebook", credential = new { accessToken = "nope" } }, null)).Code);
+        Assert.Equal("PROVIDER_TOKEN_INVALID", (await h.Post("/v1/auth/sign-in", new { provider = "facebook", token = "nope" }, null)).Code);
     }
 }
 

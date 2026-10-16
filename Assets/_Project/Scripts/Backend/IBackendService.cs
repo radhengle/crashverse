@@ -16,37 +16,41 @@ namespace Crashverse.Backend
         bool IsOnline { get; }
         Task<DateTime> GetServerTimeUtc();
         Task<AccountState> GetAccount();
-        /// <summary>Link the current (guest) player to a provider using a provider-issued token (OAuth id token, or email session token).</summary>
-        Task<AccountState> LinkAccount(AuthProvider provider, string credential);
+        /// <summary>POST /account/link with a provider credential (token + optional codeVerifier/redirectUri/nonce).</summary>
+        Task<AccountState> LinkAccount(LinkCredential credential);
 
         // Email auth. Passwords go to the server over TLS and are never stored client-side (not in saves, prefs or logs).
-        Task<AuthSession> AuthEmailRegister(string email, string password);
-        Task<AuthSession> AuthEmailLogin(string email, string password);
+        Task<AuthResponse> AuthEmailRegister(string email, string password);
+        Task<AuthResponse> AuthEmailLogin(string email, string password);
         Task<bool> RequestPasswordReset(string email);
-        /// <summary>A3/F1: fresh provider re-auth (or email OTP token). Valid for 5 minutes for deletion/unlink.</summary>
-        Task<bool> Reauthenticate(AuthProvider provider, string credential);
-        /// <summary>A4: schedules deletion (7-day grace). Linked accounts without fresh re-auth → BackendException REAUTH_REQUIRED (401).</summary>
-        Task<DeleteAccountResponse> DeleteAccount();
-        /// <summary>A5: cancel during the grace period.</summary>
-        Task<AccountState> CancelAccountDeletion();
-        /// <summary>C2: "keep my account" after the inactivity warning.</summary>
-        Task<AccountState> KeepAccountActive();
-        /// <summary>F1: needs re-auth; the last login method cannot be removed (LAST_LOGIN 409).</summary>
-        Task<AccountState> UnlinkAccount(AuthProvider provider);
-        /// <summary>E3: band + country only; the server keeps the most restrictive band.</summary>
-        Task<AccountState> SetAgeGate(string band, string country);
-        /// <summary>E4: send the parent a consent link (verification happens on the web).</summary>
-        Task<bool> RequestParentalConsent(string parentEmail);
-        /// <summary>F5: hide the real name on every board.</summary>
-        Task<AccountState> SetHideName(bool hide);
-        /// <summary>E6: server receipt verification. 403 AGE_RESTRICTED for 13-17 without purchase consent in configured markets.</summary>
-        Task<Wallet> VerifyPurchase(string sku, string receipt);
         /// <summary>Server feature flags (e.g. xLoginEnabled).</summary>
         Task<FeatureFlags> GetFeatureFlags();
 
-        /// <summary>Security Review §4: single-use token per attempt; reports reference it.</summary>
+        /// <summary>POST /auth/reauth {credential} → {reauthToken, expiresAt} (valid 5 min; A3/F1).</summary>
+        Task<ReauthResponse> Reauthenticate(LinkCredential credential);
+        /// <summary>POST /account/delete {reauthToken} → {status, purgeAt}. Linked accounts without a valid token → REAUTH_REQUIRED (401). Guests pass null.</summary>
+        Task<DeleteAccountResponse> DeleteAccount(string reauthToken);
+        /// <summary>POST /account/delete/cancel → {status} (A5 grace).</summary>
+        Task<StatusResponse> CancelAccountDeletion();
+        /// <summary>POST /account/keep-active → {lastActiveAt} (C2).</summary>
+        Task<KeepActiveResponse> KeepAccountActive();
+        /// <summary>F1: unlink with a fresh reauthToken; the last login method cannot be removed (LAST_LOGIN 409).</summary>
+        Task<AccountState> UnlinkAccount(AuthProvider provider, string reauthToken);
+        /// <summary>POST /agegate {birthYear, birthMonth, country} → {band, requiresParentalConsent}. Only sent for 13+ (E2); the server must not store the DOB.</summary>
+        Task<AgeGateResponse> SubmitAgeGate(int birthYear, int birthMonth, string country);
+        /// <summary>POST /consent/parental/request {parentEmail} → {status, requestId}.</summary>
+        Task<ConsentRequestResponse> RequestParentalConsent(string parentEmail);
+        /// <summary>GET /consent/parental/status → {status}.</summary>
+        Task<ConsentStatusResponse> GetParentalConsentStatus();
+        /// <summary>POST /profile/visibility {hideName} → {hideName} (F5).</summary>
+        Task<VisibilityResponse> SetProfileVisibility(bool hideName);
+        /// <summary>Server receipt verification → {status: pending|verified|rejected, wallet, season}. 403 AGE_RESTRICTED for minors without purchase consent.</summary>
+        Task<PurchaseVerifyResponse> VerifyPurchase(string sku, string receipt);
+
+        /// <summary>Security Review §4: single-use token per attempt.</summary>
         Task<AttemptToken> BeginAttempt(string levelId);
-        Task<InputLogResponse> SubmitInputLog(InputLog log);
+        /// <summary>POST /score {attemptToken, inputs[], clientScoreBp, buildHash}.</summary>
+        Task<ScoreResponse> SubmitScore(ScoreSubmission submission);
 
         Task<Wallet> GetWallet();
         Task<bool> ConsumeExtraCharge();

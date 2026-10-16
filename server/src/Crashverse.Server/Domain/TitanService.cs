@@ -131,15 +131,11 @@ public sealed class TitanService
         return _x.Db.Get<RunDoc>("runs", (string)c["rid"]).Result;
     }
 
-    static string InputsHash(ShotInput i) => i == null ? "-" : Hash.Sha256Hex($"{i.yaw}|{i.pitch}|{i.power}|{i.powerUpId}|{i.fireFrame}|{i.settleFrames}")[..16];
-    static string Canon(string runId, RankedCheckpoint c, ShotInput i) => $"{runId}|{c.shotIndex}|{c.damageScore}|{c.shotsLeft}|{(c.killed ? 1 : 0)}|{InputsHash(i)}";
+    static string InputsHash(List<InputEvent> i) => InputRules.Hash(i);
+    static string Canon(string runId, RankedCheckpoint c, List<InputEvent> i) => $"{runId}|{c.shotIndex}|{c.damageScore}|{c.shotsLeft}|{(c.killed ? 1 : 0)}|{InputsHash(i)}";
 
-    static string InputProblem(ShotInput i)
-    {
-        if (i == null) return "inputs missing";
-        if (i.power < 0 || i.power > 1000 || Math.Abs(i.pitch) > 90_000 || Math.Abs(i.yaw) > 360_000 || i.settleFrames < 0 || i.fireFrame < 0) return "inputs out of range";
-        return null;
-    }
+    /// <summary>Each checkpoint carries exactly the input events of that one shot (one fire, then settle).</summary>
+    string InputProblem(List<InputEvent> i) => i == null || i.Count == 0 ? "inputs missing" : InputRules.Check(i, 1, 0);
 
     string CheckStep(RunDoc r, int prevIndex, int prevDamage, bool prevKilled, RankedCheckpoint c)
     {

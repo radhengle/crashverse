@@ -5,8 +5,15 @@ using Crashverse.Server.Infra;
 
 namespace Crashverse.Server.Domain;
 
-public sealed class LinkCredential { public string idToken; public string accessToken; public string authCode; public string codeVerifier; public string redirectUri; public string nonce; }
-public sealed class LinkRequest { public string provider; public LinkCredential credential; public string conflictResolution; }
+/// <summary>Agreed interface. provider is a lowercase string: google | facebook | email | x | guest (guest: re-auth only).
+/// token = Google ID token, Facebook access token, X authorization code, or (email/guest re-auth) the password / current refresh token.</summary>
+public class LinkCredential { public string provider; public string token; public string codeVerifier; public string redirectUri; public string nonce; }
+public sealed class LinkRequest : LinkCredential { public string conflictResolution; }
+public static class Providers
+{
+    public static readonly string[] All = { "google", "facebook", "email", "x" };
+    public static string Norm(string p) => (p ?? "").Trim().ToLowerInvariant();
+}
 
 /// <summary>Guest/refresh sessions, provider linking (H4), email accounts, X behind a flag. M4: 128-bit server ids.</summary>
 public sealed class AuthService
@@ -18,7 +25,8 @@ public sealed class AuthService
     public AccountStateEx View(AccountDoc a) => new()
     {
         playerId = a.playerId, displayName = a.displayName, linked = !a.isGuest, provider = a.primaryProvider,
-        providers = new List<string>(a.providers), identities = new List<string>(a.providers), obfuscatedAccountId = ObfuscatedId(a.playerId), friendCode = a.friendCode
+        providers = new List<string>(a.providers), identities = new List<string>(a.providers), obfuscatedAccountId = ObfuscatedId(a.playerId), friendCode = a.friendCode,
+        status = a.status == "deleted_pending" ? "scheduled" : "active", purgeAt = a.purgeAtUnixMs / 1000, hideName = a.hideName
     };
 
     /// <summary>Play Billing obfuscatedAccountId = HMAC(pepper, playerId). The pepper is versioned, never rotated (review gap 7).</summary>
@@ -104,10 +112,11 @@ public sealed class AuthService
     public async Task<ProviderIdentity> VerifyProvider(string pid, string provider, LinkCredential c)
     {
         ProviderIdentity id = null;
+        provider = Providers.Norm(provider ?? c?.provider);
         switch (provider)
         {
             case "google":
-                if (string.IsNullOrEmpty(c?.idToken)) break;
+                if (string.IsNullOrEmpty(c?.token)) break;
                 string expected = null;
                 if (pid != null)
                 {
@@ -115,14 +124,14 @@ public sealed class AuthService
                     if (n == null || _x.NowMs - n.linkedUnixMs > 600_000) throw new ApiError(400, "PROVIDER_TOKEN_INVALID", "request a link nonce first");
                     expected = Hash.Sha256Hex(n.key);
                 }
-                id = await _x.Google.Verify(c.idToken, expected);
+                id = await _x.Google.Verify(c.token, expected);
                 if (id != null && pid != null) await _x.Db.Delete("linkNonces", pid); // single use
                 break;
             case "facebook":
-                if (!string.IsNullOrEmpty(c?.accessToken)) id = await _x.Facebook.Verify(c.accessToken); break;
+                if (!string.IsNullOrEmpty(c?.token)) id = await _x.Facebook.Verify(c.token); break;
             case "x":
                 if (!_x.Opt.XEnabled) throw new ApiError(404, "FEATURE_DISABLED", "X login is disabled");
-                if (!string.IsNullOrEmpty(c?.authCode)) id = await _x.X.Exchange(c.authCode, c.codeVerifier, c.redirectUri); break;
+                if (!string.IsNullOrEmpty(c?.token)) id = await _x.X.Exchange(c.token, c.codeVerifier, c.redirectUri); break;
             default: throw new ApiError(400, "BAD_PROVIDER", "unsupported provider");
         }
         if (id == null || string.IsNullOrEmpty(id.subject)) throw new ApiError(401, "PROVIDER_TOKEN_INVALID", "provider token could not be verified");
@@ -133,7 +142,7 @@ public sealed class AuthService
     public async Task<object> Link(string pid, LinkRequest r)
     {
         var a = await Account(pid);
-        var id = await VerifyProvider(pid, r?.provider, r?.credential);
+        var id = await VerifyProvider(pid, Providers.Norm(r?.provider), r);
         var key = $"{id.provider}:{id.subject}";
         var existing = await _x.Db.Get<IdentityDoc>("identities", key);
         if (existing != null && existing.playerId != pid)
@@ -183,6 +192,7 @@ public sealed class AuthService
 
     public async Task<AuthResponse> SignIn(string provider, LinkCredential c, string device)
     {
+        provider = Providers.Norm(provider ?? c?.provider);
         var id = await VerifyProvider(null, provider, c);
         var key = $"{provider}:{id.subject}";
         var existing = await _x.Db.Get<IdentityDoc>("identities", key);
@@ -282,13 +292,87 @@ public sealed class AuthService
         return new { message = "Password updated. Please sign in again." };
     }
 
-    public async Task<object> DeleteAccount(string pid)
+    // ---------------- Re-auth, deletion, keep-active (Deletion_AgeGate_Requirements A3, A5, C1, C2) ----------------
+    public const int ReauthTtlMinutes = 5;
+
+    /// <summary>Proves control of the account right now. Linked: provider credential whose identity maps to this player,
+    /// or email+password. Guest (no linked login): the current refresh token (C1). Returns a single-use token valid 5 minutes.</summary>
+    public async Task<object> Reauth(string pid, LinkCredential c)
+    {
+        if (c == null || string.IsNullOrEmpty(c.token)) throw new ApiError(400, "BAD_REQUEST", "credential required");
+        var a = await Account(pid); var prov = Providers.Norm(c.provider); bool ok;
+        if (prov == "guest")
+        {
+            if (!a.isGuest) throw new ApiError(401, "REAUTH_FAILED", "linked accounts must re-authenticate with a linked login");
+            var parts = c.token.Split('.'); var s = parts.Length == 2 ? await _x.Db.Get<SessionDoc>("sessions", parts[0]) : null;
+            ok = s != null && !s.revoked && s.playerId == pid && s.expUnixMs > _x.NowMs && s.currentHash == Hash.Sha256Hex(parts[1]);
+        }
+        else if (prov == "email")
+        {
+            var d = (await _x.Db.List<EmailCredDoc>("emailCreds")).FirstOrDefault(e => e.playerId == pid && e.verified);
+            ok = d != null && CheckPw(d, c.token);
+            if (d == null) HashPw(c.token);
+        }
+        else
+        {
+            if (!a.providers.Contains(prov)) throw new ApiError(401, "REAUTH_FAILED", "provider not linked to this account");
+            ProviderIdentity id;
+            if (prov == "google") { id = await _x.Google.Verify(c.token, null); if (id != null) id.provider = "google"; } // no link nonce for re-auth
+            else { try { id = await VerifyProvider(null, prov, c); } catch (ApiError e) when (e.Code == "PROVIDER_TOKEN_INVALID") { id = null; } }
+            var doc = id == null ? null : await _x.Db.Get<IdentityDoc>("identities", $"{prov}:{id.subject}");
+            ok = doc?.playerId == pid;
+        }
+        if (!ok) { await _x.Audit(pid, "reauth_failed", pid, prov); throw new ApiError(401, "REAUTH_FAILED", "re-authentication failed"); }
+        var exp = _x.Now.AddMinutes(ReauthTtlMinutes);
+        var tok = _x.Tokens.Issue("reauth", new JsonObject { ["sub"] = pid, ["jti"] = Hash.NewId() }, TimeSpan.FromMinutes(ReauthTtlMinutes));
+        await _x.Audit(pid, "reauth", pid, prov);
+        return new ReauthResponse { reauthToken = tok, expiresAt = Ctx.Unix(exp) };
+    }
+
+    async Task ConsumeReauth(string pid, string token)
+    {
+        var c = string.IsNullOrEmpty(token) ? null : _x.Tokens.Verify("reauth", token, out _);
+        if (c == null || (string)c["sub"] != pid || !await _x.Nonces.TryUse("reauth:" + (string)c["jti"], TimeSpan.FromMinutes(ReauthTtlMinutes + 1)))
+            throw new ApiError(401, "REAUTH_REQUIRED", "a fresh re-authentication (under 5 minutes, single use) is required");
+    }
+
+    /// <summary>A3/A5: needs a fresh reauth; schedules the purge 7 days out. Sessions stay valid so the player can cancel in the grace period.</summary>
+    public async Task<object> DeleteAccount(string pid, string reauthToken)
+    {
+        var acc = await Account(pid);
+        // C1: a guest has no other credential, so the bearer session is the proof (client passes null). Linked accounts must re-auth (A3).
+        if (!(acc.isGuest && string.IsNullOrEmpty(reauthToken))) await ConsumeReauth(pid, reauthToken);
+        return await _x.Db.Atomic("account:" + pid, async () =>
+        {
+            var a = await Account(pid);
+            if (a.status != "deleted_pending") { a.status = "deleted_pending"; a.purgeAtUnixMs = Ctx.UnixMs(_x.Now.AddDays(7)); await _x.Db.Put("accounts", pid, a); await _x.Audit(pid, "delete_requested", pid, ""); }
+            return (object)new DeleteAccountResponse { status = "scheduled", purgeAt = a.purgeAtUnixMs / 1000 };
+        });
+    }
+
+    public async Task<object> CancelDelete(string pid) => await _x.Db.Atomic("account:" + pid, async () =>
     {
         var a = await Account(pid);
-        a.status = "deleted_pending"; await _x.Db.Put("accounts", pid, a);
-        await RevokeAll(pid, null);
-        await _x.Audit(pid, "delete_requested", pid, "");
-        // Developer interface A4: 7-day grace, purge completes within 30 days.
-        return new DeleteAccountResponse { accepted = true, message = "Deletion scheduled", scheduledDeletionUnixUtc = Ctx.Unix(_x.Now.AddDays(7)) };
-    }
+        if (a.status == "deleted_pending")
+        {
+            if (a.purgeAtUnixMs <= _x.NowMs) throw new ApiError(410, "ACCOUNT_PURGED", "grace period is over");
+            a.status = "active"; a.purgeAtUnixMs = 0; await _x.Db.Put("accounts", pid, a); await _x.Audit(pid, "delete_cancelled", pid, "");
+        }
+        return (object)new StatusResponse { status = "active" };
+    });
+
+    public async Task<object> KeepActive(string pid) => await _x.Db.Atomic("account:" + pid, async () =>
+    {
+        var a = await Account(pid); a.lastActiveUnixMs = _x.NowMs; await _x.Db.Put("accounts", pid, a);
+        return (object)new KeepActiveResponse { lastActiveAt = Ctx.Unix(_x.Now) };
+    });
+
+    public async Task<object> SetVisibility(string pid, bool hide) => await _x.Db.Atomic("account:" + pid, async () =>
+    {
+        var a = await Account(pid); a.hideName = hide; await _x.Db.Put("accounts", pid, a);
+        await _x.Audit(pid, "visibility", pid, hide ? "hide" : "show");
+        return (object)new VisibilityResponse { hideName = a.hideName };
+    });
+
+    public static string PublicName(AccountDoc a) => a == null ? null : a.hideName ? "Wrecker #" + a.playerId[..Math.Min(4, a.playerId.Length)].ToUpperInvariant() : a.displayName;
 }

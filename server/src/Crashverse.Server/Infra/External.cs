@@ -99,6 +99,13 @@ public sealed class FakeXClient : IXAuthClient
 }
 
 // ---------------- Email ----------------
+/// <summary>Parental-consent emails go through their own sender so production can use a vetted template/provider. Fake in dev/tests.</summary>
+public interface IParentalConsentMailer { Task SendConsentRequest(string parentEmail, string requestId, string approveToken); }
+public sealed class FakeParentalConsentMailer : IParentalConsentMailer
+{
+    public readonly List<(string to, string requestId, string token)> Sent = new();
+    public Task SendConsentRequest(string to, string id, string t) { lock (Sent) Sent.Add((to, id, t)); return Task.CompletedTask; }
+}
 public interface IEmailSender { Task Send(string to, string subject, string body); }
 public sealed class FakeEmailSender : IEmailSender
 {
@@ -152,7 +159,7 @@ public sealed class ReplayResult { public int damageScore; public bool killed; p
 /// so runs stay pending and never become visible in the top-N. Tests inject a scripted worker.
 /// </summary>
 public interface IReplayWorker { Task<ReplayResult> Replay(RunRecordView run); }
-public sealed class RunRecordView { public string runId; public string mode; public string levelOrDay; public long seed; public string simVersion; public List<Crashverse.Server.Domain.ShotInput> inputs; public int clientScore; }
+public sealed class RunRecordView { public string runId; public string mode; public string levelOrDay; public long seed; public string simVersion; public List<Crashverse.Backend.InputEvent> inputs; public int clientScore; }
 public sealed class StubReplayWorker : IReplayWorker { public Task<ReplayResult> Replay(RunRecordView run) => Task.FromResult<ReplayResult>(null); }
 public sealed class ScriptedReplayWorker : IReplayWorker
 {

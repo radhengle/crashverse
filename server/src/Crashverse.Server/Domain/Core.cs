@@ -43,12 +43,13 @@ public sealed class Ctx
 {
     public IDocStore Db; public IClock Clock; public ServerOptions Opt; public Content Content; public TokenService Tokens; public ReceiptService Receipts;
     public INonceCache Nonces; public IRateLimiter Limits; public IIntegrityVerifier Integrity; public IGoogleTokenVerifier Google;
-    public IFacebookTokenVerifier Facebook; public IXAuthClient X; public IEmailSender Email; public IPlayDeveloperApi Play;
+    public IFacebookTokenVerifier Facebook; public IXAuthClient X; public IEmailSender Email; public IParentalConsentMailer ConsentMailer; public IPlayDeveloperApi Play;
     public IPushAuthVerifier PushAuth; public IReplayWorker Replay; public ISampler Sampler;
 
     public DateTime Now => Clock.UtcNow;
     public long NowMs => new DateTimeOffset(DateTime.SpecifyKind(Clock.UtcNow, DateTimeKind.Utc)).ToUnixTimeMilliseconds();
     public static long Unix(DateTime d) => new DateTimeOffset(DateTime.SpecifyKind(d, DateTimeKind.Utc)).ToUnixTimeSeconds();
+    public static string Iso(DateTime d) => DateTime.SpecifyKind(d, DateTimeKind.Utc).ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'");
     public static long UnixMs(DateTime d) => new DateTimeOffset(DateTime.SpecifyKind(d, DateTimeKind.Utc)).ToUnixTimeMilliseconds();
 
     public Task Audit(string actor, string action, string playerId, string detail) =>

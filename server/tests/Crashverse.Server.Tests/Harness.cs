@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Crashverse.Data;
+using InputEvent = Crashverse.Backend.InputEvent;
 using Crashverse.Server;
 using Crashverse.Server.Domain;
 using Crashverse.Server.Infra;
@@ -79,7 +80,7 @@ public sealed class Harness : IAsyncDisposable
     {
         var s = await Guest(); sub ??= Guid.NewGuid().ToString("N");
         Facebook.Tokens["fb-" + sub] = new ProviderIdentity { subject = sub };
-        var r = await Post("/v1/account/link", new { provider = "facebook", credential = new { accessToken = "fb-" + sub } }, s);
+        var r = await Post("/v1/account/link", new { provider = "facebook", token = "fb-" + sub }, s);
         Assert.Equal(HttpStatusCode.OK, r.status);
         return s;
     }
@@ -102,7 +103,12 @@ public sealed class Harness : IAsyncDisposable
         return await Post("/v1/titan/ranked/start", new { integrityToken = Integrity(s.pid, nonce, mutate) }, s, nonce);
     }
 
-    public static ShotInput In(int frame) => new() { yaw = 1000, pitch = 20000, power = 800, fireFrame = frame, settleFrames = 100 };
+    /// <summary>One shot in the agreed InputEvent shape (fixed point 1/1000): aim, power, fire at `tick`, settle 100 ticks later.</summary>
+    public static List<InputEvent> In(int tick) => new()
+    {
+        new() { tick = Math.Max(0, tick - 10), type = "aim", x = 1000, y = 20000 }, new() { tick = Math.Max(0, tick - 5), type = "power", x = 800 },
+        new() { tick = tick, type = "fire", x = 1000, y = 20000 }, new() { tick = tick + 100, type = "settle" },
+    };
 
     public async Task<Resp> Shot(Session s, string token, int idx, int damage, int budget, bool killed = false, bool inputs = true)
     {
@@ -132,7 +138,7 @@ public sealed class Harness : IAsyncDisposable
     public static CampaignRunReportEx Win(string level, string token, int shotsLeft, int shots, float ratio = 0.9f, int combo = 3) => new()
     {
         reportId = Guid.NewGuid().ToString("N"), levelId = level, won = true, destroyedRatio = ratio, shotsLeft = shotsLeft, bestCombo = combo, mastery = false,
-        attemptToken = token, simVersion = "dev", inputs = Enumerable.Range(1, shots - shotsLeft).Select(i => In(i * 200)).ToList()
+        attemptToken = token, simVersion = "dev", inputs = Enumerable.Range(1, shots - shotsLeft).SelectMany(i => In(i * 200)).ToList()
     };
 
     public async Task ClearPrereqs(Session s, string upTo)
