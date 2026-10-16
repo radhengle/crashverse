@@ -145,7 +145,12 @@ namespace Crashverse.EditorTools.Import
                     if (mf.sharedMesh == null || C.ColliderTarget(mf.name) != null) continue;
                     int lvl = C.LodLevel(mf.name, out _);
                     levels.Add(lvl < 0 ? 0 : lvl);
-                    if (lvl <= 0) LodSum(mf.sharedMesh, ref lod0Tris);
+                    if (lvl <= 0)
+                    {
+                        int before = lod0Tris; LodSum(mf.sharedMesh, ref lod0Tris);
+                        if (C.IsFragment(mf.name) && lod0Tris - before >= C.FragmentTriLimit)
+                            errs.Add($"fragment {mf.name} has {lod0Tris - before} tris, must be < {C.FragmentTriLimit}");
+                    }
                 }
             int budget = C.TriBudget(cls, lod0 != null ? lod0.name : "");
             if (lod0Tris > budget) errs.Add($"LOD0 {lod0Tris} tris over budget {budget}");

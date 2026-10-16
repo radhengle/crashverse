@@ -160,8 +160,8 @@ namespace Crashverse.EditorTools.Import
 
         // ---------- budgets ----------
         /// <summary>LOD0 triangle budgets (PM decision, PR #28): Wrecker &lt;= 12k, island &lt;= 10k, kit pieces 500-1.5k.
-        /// Kit range applies to each intact piece and to each fractured piece's total; fragments keep &lt;= 300 each.</summary>
-        public const int HeroTriMax = 12000, EnvTriMax = 10000, KitTriMin = 500, KitTriMax = 1500, FragmentTriBudget = 300, OtherTriMax = 3000;
+        /// Kit range applies to each intact piece and to each fractured piece's total; each fragment must be &lt; FragmentTriLimit (400, Model_Spec_v1 v3: "fragments &lt; 400 tris").</summary>
+        public const int HeroTriMax = 12000, EnvTriMax = 10000, KitTriMin = 500, KitTriMax = 1500, FragmentTriLimit = 400, OtherTriMax = 3000;
         public static int TriBudget(AssetClass c, string stem)
         {
             switch (c)

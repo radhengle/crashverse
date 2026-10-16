@@ -38,6 +38,9 @@ static class Program
         Eq("UCX not fragment", C.IsFragment("UCX_Wall_frag_01"), false);
         Eq("Kit texture max", C.PolicyFor("T_Brick_ORM", "Assets/_Project/Models/BuildingKit/Kit_Brick/textures/T_Brick_ORM.png").androidMax, 512);
         Eq("Hero texture max", C.PolicyFor("T_Wrecker_A", "Assets/_Project/Models/Wrecker_v2/textures/T_Wrecker_A.png").androidMax, 1024);
+        Eq("Fragment limit", C.FragmentTriLimit, 400);
+        Eq("Fractured exempt", C.RequiresLodChain(C.AssetClass.KitFractured), false);
+        Eq("Intact kit needs LODs", C.RequiresLodChain(C.AssetClass.Kit), true);
         Console.WriteLine($"{runs - fails}/{runs} passed");
         return fails == 0 ? 0 : 1;
     }

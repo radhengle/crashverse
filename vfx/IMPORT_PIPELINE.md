@@ -69,6 +69,7 @@ Sources: models/Model_Spec_v1.md (3D Modeler: rules 3 and 7, colliders), the Phy
 
 ## 2 · Materials and textures
 - Every `M_*` gets `Crashverse/GlossyPBR` with these maps: `T_<Asset>_A` to `_BaseMap`, `_N` to `_BumpMap`, `_ORM` to `_ORMMap`, `_E` to `_EmissionMap`, and `_Crack` to `_CrackMap` if present. `M_X_Emissive` and `M_X_Inner` read `T_X_*`.
+- `M_<Mat>_Inner` **prefers `T_<Mat>_Inner_A/_N/_ORM`**, falling back per map to the main `T_<Mat>_A/_N/_ORM` when an Inner file is missing. The validator errors only when both are missing.
 - `_InnerFace` is 1 on `M_<Mat>_Inner` and 0 otherwise. **No keywords** are set. A missing map leaves the shader default (white ORM, flat bump).
 - `_EmissionColor` is set to white ×2.5 only on an `_Emissive` material whose emission is still black (Art: Core emissive about 2.5 with bloom).
 - If the textures import after the FBX, the folder's materials are rewired automatically.
@@ -86,7 +87,7 @@ Mipmaps and mip streaming are on, Read/Write is off, alpha is none, and aniso is
 
 ## 3 · Prefabs (menu: Build Prefabs)
 **Hard gate (QA review of #28): the builder refuses to build, logs an error and writes no prefab when:**
-- the LOD0 triangle total is over budget (Wrecker > 12,000, island > 10,000, kit piece > 1,500);
+- the LOD0 triangle total is over budget (Wrecker > 12,000, island > 10,000, kit piece > 1,500), or any fragment has 400 or more triangles (fragments must be < 400);
 - or a Wrecker/Hero, island/Environment or **intact** kit asset is missing any of LOD0, LOD1 or LOD2 (per-file or in-file).
 
 **Fractured kit (`Kit_*_Fractured`) is exempt from the LOD rule** (Physics: fragments need no LODs). It builds with LOD0 only and no LODGroup. Any LOD1/LOD2 files or `_LOD1`/`_LOD2` objects get a warning, are ignored, and are left out of the prefab. The 1,500-triangle budget still applies to the fractured LOD0 total.
@@ -128,7 +129,7 @@ Checks per model group:
 | Hero (Wrecker) | **≤ 12,000** total | error above, prefab refused |
 | Environment (island) | **≤ 10,000** total | error above, prefab refused |
 | Kit piece (intact, and fractured total) | **500–1,500** | error above 1,500 (prefab refused), warning below 500 |
-| Fragment | ≤ 300 per fragment | error above |
+| Fragment | **< 400** per fragment (Model_Spec_v1 v3) | error at 400 or more, prefab refused |
 | Other | ≤ 3,000 | error above |
 
 Texel density hint = sqrt(UV area × albedo w × h / world area) over the LOD0 meshes. Targets: Hero 180–360 px/m (≈256), Kit 128–256, Environment 16–256 (macro map). The check warns below 0.75× min or above 1.5× max.

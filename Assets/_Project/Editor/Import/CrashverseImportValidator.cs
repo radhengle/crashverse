@@ -93,7 +93,7 @@ namespace Crashverse.EditorTools.Import
                 {
                     if (mf.sharedMesh == null || C.ColliderTarget(mf.name) != null || C.LodLevel(mf.name, out _) > 0) continue;
                     int tris = Tris(mf.sharedMesh); total += tris;
-                    if (C.IsFragment(mf.name) && tris > C.FragmentTriBudget) Err(baseName, "tris", $"{mf.name} {tris} > {C.FragmentTriBudget} per fragment");
+                    if (C.IsFragment(mf.name) && tris >= C.FragmentTriLimit) Err(baseName, "tris", $"{mf.name} {tris} tris, fragments must be < {C.FragmentTriLimit} (prefab build refused)");
                 }
                 int budget = C.TriBudget(cls, baseName), min = C.TriMin(cls);
                 foreach (var ge in CrashversePrefabBuilder.GateErrors(files, go, cls, out _)) Err(baseName, "gate", ge + " (prefab build refused)");
@@ -109,7 +109,8 @@ namespace Crashverse.EditorTools.Import
                     string asset = C.TextureAssetForMaterial(m.name, out bool inner, out bool emissive);
                     string tex = $"{dir}/textures/T_{asset}";
                     foreach (var sfx in new[] { "_A", "_N", "_ORM" })
-                        if (!Exists(tex + sfx)) (inner ? (System.Action<string, string, string>)Warn : Err)(baseName, "maps", $"{m.name}: missing T_{asset}{sfx}");
+                        if (inner ? !Exists(tex + "_Inner" + sfx) && !Exists(tex + sfx) : !Exists(tex + sfx))
+                            Err(baseName, "maps", inner ? $"{m.name}: missing T_{asset}_Inner{sfx} and fallback T_{asset}{sfx}" : $"{m.name}: missing T_{asset}{sfx}");
                     if (emissive && !Exists(tex + "_E")) Err(baseName, "maps", $"{m.name}: _Emissive material without T_{asset}_E");
                     if (inner && m.HasProperty("_InnerFace") && m.GetFloat("_InnerFace") < 0.5f) Err(baseName, "material", $"{m.name}: _InnerFace must be 1");
                     CheckTextureImport(tex + "_N", true, false, baseName, Err);

@@ -30,14 +30,19 @@ namespace Crashverse.EditorTools.Import
         {
             string asset = C.TextureAssetForMaterial(mat.name, out bool inner, out bool emissive);
             string tex = $"{modelDir}/textures/T_{asset}";
-            Set(mat, "_BaseMap", tex + "_A");
-            Set(mat, "_BumpMap", tex + "_N");
-            Set(mat, "_ORMMap", tex + "_ORM");
+            // M_<Mat>_Inner prefers T_<Mat>_Inner_A/_N/_ORM and falls back per map to the main T_<Mat>_* set.
+            string innerTex = tex + "_Inner";
+            SetPref(mat, "_BaseMap", inner, innerTex + "_A", tex + "_A");
+            SetPref(mat, "_BumpMap", inner, innerTex + "_N", tex + "_N");
+            SetPref(mat, "_ORMMap", inner, innerTex + "_ORM", tex + "_ORM");
             if (Set(mat, "_EmissionMap", tex + "_E") && emissive && mat.HasProperty("_EmissionColor") && mat.GetColor("_EmissionColor").maxColorComponent <= 0f)
                 mat.SetColor("_EmissionColor", Color.white * 2.5f);   // Art: Core emissive ~2.5 with bloom
             Set(mat, "_CrackMap", tex + "_Crack");
             if (mat.HasProperty("_InnerFace")) mat.SetFloat("_InnerFace", inner ? 1f : 0f);
         }
+
+        static bool SetPref(Material m, string prop, bool inner, string innerPath, string mainPath) =>
+            (inner && Set(m, prop, innerPath)) || Set(m, prop, mainPath);
 
         static bool Set(Material m, string prop, string pathNoExt)
         {

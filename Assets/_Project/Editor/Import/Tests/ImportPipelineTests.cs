@@ -38,6 +38,19 @@ namespace Crashverse.Tests
 
         [Test] public void JointNeedsTwoFragments() => Assert.IsFalse(C.TryParseJoint("JNT_Wall", out _, out _));
         [Test] public void Sockets() { Assert.AreEqual("Muzzle", C.SocketName("Socket_Muzzle")); Assert.AreEqual("Muzzle", C.SocketName("Muzzle_Spawn")); }
+        [Test]
+        public void LodChainRequirementExcludesFracturedKit()
+        {
+            Assert.AreEqual(C.AssetClass.KitFractured, C.Classify("Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall_Fractured.fbx"));
+            Assert.IsFalse(C.RequiresLodChain(C.Classify("Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall_Fractured.fbx")));
+            Assert.IsTrue(C.LodZeroOnly(C.AssetClass.KitFractured));
+            Assert.IsTrue(C.RequiresLodChain(C.Classify("Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx")));
+            Assert.IsTrue(C.RequiresLodChain(C.Classify("Assets/_Project/Models/Island_Sunnyville/Island_Sunnyville.fbx")));
+            Assert.IsTrue(C.RequiresLodChain(C.Classify("Assets/_Project/Models/Wrecker_v2/Wrecker_v2_LOD0.fbx")));
+        }
+
+        [Test] public void FragmentLimitIs400() => Assert.AreEqual(400, C.FragmentTriLimit);
+
         [Test] public void KitPath() { Assert.IsTrue(C.KitPathOk("Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx")); Assert.IsFalse(C.KitPathOk("Assets/_Project/Models/Kit_Wood/Kit_Wood_Wall.fbx")); }
     }
 
@@ -246,6 +259,16 @@ namespace Crashverse.Tests
             Assert.IsNull(BuildOne("Kit_Test_Heavy_Fractured", path));
         }
 
+        [Test]
+        public void FragmentAt400TrisIsRejected_399Builds()
+        {
+            string bad = SaveModel("Kit_Test_Frag400_Fractured", ("Big_frag_01", 400), ("Big_frag_02", 100));
+            LogAssert.Expect(LogType.Error, new Regex(@"Kit_Test_Frag400_Fractured: fragment Big_frag_01 has 400 tris, must be < 400\. Prefab NOT built"));
+            Assert.IsNull(BuildOne("Kit_Test_Frag400_Fractured", bad));
+            string ok = SaveModel("Kit_Test_Frag399_Fractured", ("Ok_frag_01", 399), ("Ok_frag_02", 100));
+            Assert.IsNotNull(BuildOne("Kit_Test_Frag399_Fractured", ok));
+        }
+
         [TestCase("Kit_Test_NoLod2", "LOD2")]
         [TestCase("Island_Test_NoLod1", "LOD1")]
         [TestCase("Wrecker_Test_NoLods", "LOD1")]
@@ -275,6 +298,28 @@ namespace Crashverse.Tests
             File.WriteAllBytes(path, tex.EncodeToPNG());
             Object.DestroyImmediate(tex);
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceSynchronousImport);
+        }
+
+        [Test]
+        public void InnerMaterialPrefersInnerMapsAndFallsBackPerMap()
+        {
+            string tex = $"{Dir}/textures/T_Brick";
+            WritePng(tex + "_A.png", Color.red);
+            WritePng(tex + "_N.png", new Color(0.5f, 0.5f, 1f));
+            WritePng(tex + "_ORM.png", new Color(1f, 0.6f, 0f));
+            WritePng(tex + "_Inner_A.png", Color.gray);           // inner albedo + normal present, no inner ORM
+            WritePng(tex + "_Inner_N.png", new Color(0.5f, 0.5f, 1f));
+            var shader = Shader.Find(C.ShaderName);
+            var inner = MaterialWiring.CreateOrWire("M_Brick_Inner", Dir, shader);
+            var outer = MaterialWiring.CreateOrWire("M_Brick", Dir, shader);
+            Texture2D L(string p) => AssetDatabase.LoadAssetAtPath<Texture2D>(p);
+            Assert.AreEqual(L(tex + "_Inner_A.png"), inner.GetTexture("_BaseMap"));
+            Assert.AreEqual(L(tex + "_Inner_N.png"), inner.GetTexture("_BumpMap"));
+            Assert.AreEqual(L(tex + "_ORM.png"), inner.GetTexture("_ORMMap"), "missing inner ORM falls back to main");
+            Assert.AreEqual(1f, inner.GetFloat("_InnerFace"));
+            Assert.AreEqual(L(tex + "_A.png"), outer.GetTexture("_BaseMap"), "outer never uses inner maps");
+            Assert.AreEqual(L(tex + "_N.png"), outer.GetTexture("_BumpMap"));
+            Assert.AreEqual(256, ((TextureImporter)AssetImporter.GetAtPath(tex + "_Inner_A.png")).GetPlatformTextureSettings("Android").maxTextureSize);
         }
 
         [Test]
