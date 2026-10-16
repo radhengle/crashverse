@@ -197,6 +197,10 @@ namespace Crashverse.Core
             int combo = tracker.Combo.BestThisRun;
             var res = new RunResult { won = won, stars = stars, mastery = mastery, bestCombo = combo, ratio = tracker.DestroyedRatio, shotsLeft = ShotsLeft };
             Result = res;
+#if CRASHVERSE_DEV
+            // Security Admin #2: a run driven by the dev aim hook records and submits nothing (no save, queue, score or ranked call).
+            if (DevHookUsed) { res.note = Crashverse.DevHooks.DevAimHookCore.NoSubmitNote; Changed?.Invoke(); Ended?.Invoke(res); return; }
+#endif
             var backend = AppServices.Backend;
             try
             {

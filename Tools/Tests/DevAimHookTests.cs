@@ -86,6 +86,60 @@ static class DevAimHookTests
             T.Eq("CVTAP|RESULT|win", DevAimHookCore.ResultLine(true)); T.Eq("CVTAP|RESULT|fail", DevAimHookCore.ResultLine(false));
             T.Eq("dev_aim_cmd.json", DevAimHookCore.FileName);
         });
+        T.Add("devaim_file_single_read_and_delete", () =>
+        {
+            var dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "cv_devaim_" + Guid.NewGuid().ToString("N"))).FullName;
+            var p = Path.Combine(dir, DevAimHookCore.FileName);
+            T.True(!DevAimFileReader.TryReadAndDelete(p, out var j, out var e), "no file → false");
+            File.WriteAllText(p, Hint);
+            T.True(DevAimFileReader.TryReadAndDelete(p, out j, out e) && e == null && j == Hint, "reads exact content");
+            T.True(!File.Exists(p), "deleted after read");
+            T.True(!DevAimFileReader.TryReadAndDelete(p, out j, out e), "second poll sees nothing (single read)");
+            File.WriteAllText(p, Hint + new string(' ', DevAimCommandParser.MaxBytes - Hint.Length));
+            T.True(DevAimFileReader.TryReadAndDelete(p, out j, out e) && e == null && j.Length == 512, "512 bytes accepted");
+            File.WriteAllText(p, Hint + new string(' ', DevAimCommandParser.MaxBytes + 1 - Hint.Length));
+            T.True(DevAimFileReader.TryReadAndDelete(p, out j, out e) && e == "too_large" && j == null, "513 bytes rejected");
+            T.True(!File.Exists(p), "oversize deleted");
+            File.WriteAllBytes(p, new byte[1 << 20]);
+            T.True(DevAimFileReader.TryReadAndDelete(p, out j, out e) && e == "too_large" && !File.Exists(p), "1 MiB rejected (reads ≤ 513 bytes) and deleted");
+            File.WriteAllText(p, "");
+            T.True(DevAimFileReader.TryReadAndDelete(p, out j, out e) && e == "empty", "empty rejected");
+            // full flow: file → reader → core → one fire
+            var f = new Fake(); var core = new DevAimHookCore(true);
+            File.WriteAllText(p, Hint);
+            DevAimFileReader.TryReadAndDelete(p, out j, out e); core.Offer(j, f.T); core.Tick(f.T);
+            DevAimFileReader.TryReadAndDelete(p, out j, out e); core.Offer(j, f.T); core.Tick(f.T);
+            T.Eq(1, f.fires, "one file → one fire");
+        });
+        T.Add("devaim_file_symlink_rejected", () =>
+        {
+            var dir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "cv_devaim_" + Guid.NewGuid().ToString("N"))).FullName;
+            var target = Path.Combine(dir, "secret.json"); File.WriteAllText(target, Hint);
+            var p = Path.Combine(dir, DevAimHookCore.FileName);
+            try { File.CreateSymbolicLink(p, target); } catch (Exception) { Console.WriteLine("SKIP symlink test (cannot create symlinks here)"); return; }
+            T.True(DevAimFileReader.TryReadAndDelete(p, out var j, out var e) && e == "symlink" && j == null, "symlink rejected, not followed");
+            T.True((File.GetAttributes(dir) & FileAttributes.Directory) != 0 && !File.Exists(p) && !Directory.EnumerateFileSystemEntries(dir, DevAimHookCore.FileName).Any(), "link removed");
+            T.True(File.Exists(target) && File.ReadAllText(target) == Hint, "target untouched");
+            var d2 = Path.Combine(dir, "d"); Directory.CreateDirectory(d2); var p2 = Path.Combine(dir, "x.json");
+            File.CreateSymbolicLink(p2, d2);
+            T.True(DevAimFileReader.TryReadAndDelete(p2, out j, out e) && e == "symlink", "dir symlink rejected");
+        });
+        T.Add("devaim_hooked_run_not_submitted", () =>
+        {
+            var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../Assets/_Project/Scripts"));
+            var src = File.ReadAllText(Path.Combine(root, "Core/GameSession.cs"));
+            int end = src.IndexOf("async void End(bool won)");
+            int res = src.IndexOf("Result = res;", end), sw = src.IndexOf("switch (Ctx.mode)", end);
+            int skip = src.IndexOf("if (DevHookUsed) {", end);
+            int g = src.LastIndexOf("#if CRASHVERSE_DEV", skip), ge = src.IndexOf("#endif", g);
+            T.True(end > 0 && res > end && skip > res && skip < sw, "DevHookUsed early-exit sits before the submit switch");
+            T.True(g > res && ge > skip && ge < sw, "early-exit wrapped in bare #if CRASHVERSE_DEV");
+            var line = src.Substring(skip, src.IndexOf('\n', skip) - skip);
+            T.True(line.Contains("return;") && line.Contains("Ended?.Invoke(res)") && !line.Contains("RecordResult") && !line.Contains("Enqueue"), "returns without recording or submitting");
+            foreach (var call in new[] { "RecordResult(", "CampaignResultQueue.Enqueue(", "CampaignResultQueue.Flush(", "ReportEventStars(", "FinalizeRanked(", "RecordHintAttempt(" })
+            { int c = src.IndexOf(call, end); T.True(c < 0 || c > skip, call + " only after the hook early-exit"); }
+            T.True(DevAimHookCore.NoSubmitNote.Length > 0, "note");
+        });
         T.Add("devaim_release_stripped_source", () =>
         {
             var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../Assets/_Project/Scripts"));

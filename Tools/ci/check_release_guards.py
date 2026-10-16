@@ -91,6 +91,20 @@ def scan_built(path):
             if t.encode() in data: bad.append(f"{name}: release metadata contains dev aim hook token '{t}'")
     return bad
 
+def android_manifests(root=None):
+    """Main custom manifest plus every Android library plugin manifest (Plugins/Android/**/*.androidlib/AndroidManifest.xml)."""
+    root = root or ROOT; d = root / "Assets/Plugins/Android"
+    if not d.exists(): return []
+    out = [d / "AndroidManifest.xml"] if (d / "AndroidManifest.xml").exists() else []
+    out += sorted(p for p in d.rglob("AndroidManifest.xml") if any(x.endswith(".androidlib") for x in p.relative_to(d).parts[:-1]))
+    return out
+
+def check_debuggable(root=None):
+    """Release must not be debuggable: no manifest may force android:debuggable="true" (dev = Unity Development build)."""
+    root = root or ROOT
+    return [f"{p.relative_to(root)} must not force android:debuggable=\"true\" (release must not be debuggable)"
+            for p in android_manifests(root) if re.search(r'android:debuggable\s*=\s*"true"', p.read_text(errors="replace"))]
+
 def check_config():
     bad = []
     uc = (ROOT / "ProjectSettings/UnityConnectSettings.asset")
@@ -98,8 +112,7 @@ def check_config():
     else:
         if re.search(r"^\s*m_Enabled:\s*1", uc.read_text(), re.M): bad.append("UnityConnectSettings: a Unity service (analytics/crash/perf/ads/IAP) is enabled")
     man = ROOT / "Assets/Plugins/Android/AndroidManifest.xml"
-    if man.exists() and re.search(r'android:debuggable\s*=\s*"true"', man.read_text()):
-        bad.append("AndroidManifest.xml must not force android:debuggable (release must not be debuggable; dev = Development build)")
+    bad += check_debuggable()
     if not man.exists() or not re.search(r'com\.google\.android\.gms\.permission\.AD_ID"\s+tools:node="remove"', man.read_text()):
         bad.append("Assets/Plugins/Android/AndroidManifest.xml must remove com.google.android.gms.permission.AD_ID")
     if not re.search(r"^\s*AndroidTargetArchitectures:\s*3\s*$", ps_text(), re.M):

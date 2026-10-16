@@ -53,18 +53,8 @@ namespace Crashverse.DevHooks
             {
                 _next = Time.unscaledTime + PollSeconds;
                 string json = null;
-                var p = CommandPath;
-                try
-                {
-                    if (File.Exists(p))
-                    {
-                        var info = new FileInfo(p);
-                        if (info.Length <= DevAimCommandParser.MaxBytes) json = File.ReadAllText(p);
-                        else json = "";
-                        File.Delete(p);
-                    }
-                }
-                catch (IOException e) { Debug.LogWarning(DevAimHookCore.LogTag + " read_error " + e.Message); }
+                if (DevAimFileReader.TryReadAndDelete(CommandPath, out json, out var err) && err != null)
+                    Debug.Log(DevAimHookCore.LogTag + " rejected reason=" + err);
                 var l = _core.Offer(json, _target);
                 if (l != null) Debug.Log(l);
             }

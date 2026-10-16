@@ -58,5 +58,20 @@ class HookGuard(unittest.TestCase):
         with zipfile.ZipFile(p, "w") as z: z.writestr("lib/arm64-v8a/libil2cpp.so", b"x")
         self.assertTrue(g.scan_built(p))
 
+    def test_debuggable_scans_androidlib_manifests(self):
+        root = pathlib.Path(tempfile.mkdtemp()); a = root / "Assets/Plugins/Android"
+        (a / "Foo.androidlib").mkdir(parents=True); (a / "Nested/Bar.androidlib").mkdir(parents=True)
+        (a / "AndroidManifest.xml").write_text('<manifest><application/></manifest>')
+        (a / "Foo.androidlib/AndroidManifest.xml").write_text('<manifest><application/></manifest>')
+        (a / "Nested/Bar.androidlib/AndroidManifest.xml").write_text('<manifest><application android:debuggable="true"/></manifest>')
+        self.assertEqual(len(g.android_manifests(root)), 3)
+        bad = g.check_debuggable(root)
+        self.assertEqual(len(bad), 1); self.assertIn("Bar.androidlib", bad[0])
+        (a / "AndroidManifest.xml").write_text('<manifest><application android:debuggable = "true"/></manifest>')
+        self.assertEqual(len(g.check_debuggable(root)), 2)
+
+    def test_repo_not_debuggable(self):
+        self.assertEqual(g.check_debuggable(), [])
+
 if __name__ == "__main__":
     unittest.main()

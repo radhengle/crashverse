@@ -5,6 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Text;
 
 namespace Crashverse.DevHooks
 {
@@ -76,6 +78,47 @@ namespace Crashverse.DevHooks
         static void Ws(string s, ref int i) { while (i < s.Length && char.IsWhiteSpace(s[i])) i++; }
     }
 
+    /// <summary>Single-open read of the command file (Security Admin TOCTOU fix): refuse reparse points/symlinks (checked before
+    /// opening and again after the handle is open), read at most MaxBytes+1 bytes from ONE FileStream, reject oversize, then delete.
+    /// Unity's .NET profile has no O_NOFOLLOW / handle-attribute API, so the post-open check re-reads the path's attributes and
+    /// compares the handle's length; a swap between the two checks still can't make us read more than 513 bytes.</summary>
+    public static class DevAimFileReader
+    {
+        /// <summary>Returns false when there is no file. Otherwise true, with json set (null on rejection) and error set on rejection.</summary>
+        public static bool TryReadAndDelete(string path, out string json, out string error)
+        {
+            json = null; error = null;
+            FileAttributes a;
+            try { a = File.GetAttributes(path); } catch (FileNotFoundException) { return false; } catch (DirectoryNotFoundException) { return false; }
+            if ((a & FileAttributes.ReparsePoint) != 0) { error = "symlink"; SafeDelete(path); return true; } // deletes the link, not its target
+            if ((a & FileAttributes.Directory) != 0) { error = "not_a_file"; return true; }
+            var buf = new byte[DevAimCommandParser.MaxBytes + 1];
+            int n = 0;
+            try
+            {
+                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 1, FileOptions.None))
+                {
+                    if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0) { error = "symlink"; }
+                    else
+                    {
+                        int r;
+                        while (n < buf.Length && (r = fs.Read(buf, n, buf.Length - n)) > 0) n += r;
+                    }
+                }
+            }
+            catch (IOException) { error = "read_error"; }
+            catch (UnauthorizedAccessException) { error = "read_error"; }
+            SafeDelete(path);
+            if (error != null) return true;
+            if (n > DevAimCommandParser.MaxBytes) { error = "too_large"; return true; }
+            if (n == 0) { error = "empty"; return true; }
+            json = Encoding.UTF8.GetString(buf, 0, n);
+            return true;
+        }
+
+        static void SafeDelete(string p) { try { File.Delete(p); } catch (IOException) { } catch (UnauthorizedAccessException) { } }
+    }
+
     /// <summary>What the hook may touch. Wired only by the CRASHVERSE_DEV registration in GameplayDirector.StartRun.</summary>
     public sealed class DevAimTarget
     {
@@ -93,6 +136,8 @@ namespace Crashverse.DevHooks
         public const string FileName = "dev_aim_cmd.json";
         public const string OptInExtra = "cv_dev_aim";
         public const string LogTag = "CRASHVERSE_DEV_AIM";
+        /// <summary>RunResult.note for a hooked run: nothing is recorded or submitted (Security Admin #2).</summary>
+        public const string NoSubmitNote = "Dev aim hook run: not recorded or submitted";
 
         readonly bool _optIn;
         readonly HashSet<int> _seen = new HashSet<int>();
