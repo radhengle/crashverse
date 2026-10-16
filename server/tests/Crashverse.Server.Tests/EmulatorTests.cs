@@ -32,6 +32,40 @@ public class FirestoreEmulatorTests
     }
 
     [EmulatorFact]
+    public async Task FirestoreLease_ExpiredIsTakenOver_LiveIsRespected()
+    {
+        var db = new FirestoreDocStore(Project);
+        var raw = new Google.Cloud.Firestore.FirestoreDbBuilder { ProjectId = Project, EmulatorDetection = Google.Api.Gax.EmulatorDetection.EmulatorOnly }.Build();
+        var key = "leasetest" + Guid.NewGuid().ToString("N");
+        var lease = raw.Collection("_locks").Document(key);
+        // crashed holder: expired lease left behind → taken over immediately
+        await lease.SetAsync(new Dictionary<string, object> { ["owner"] = "dead", ["expireAt"] = DateTime.UtcNow.AddSeconds(-1) });
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        Assert.Equal(1, await db.Atomic(key, () => Task.FromResult(1)));
+        Assert.True(sw.Elapsed < TimeSpan.FromSeconds(3));
+        Assert.False((await lease.GetSnapshotAsync()).Exists); // our own lease released
+        // live lease held by someone else → we wait; it is not deleted by us
+        await lease.SetAsync(new Dictionary<string, object> { ["owner"] = "other", ["expireAt"] = DateTime.UtcNow.AddSeconds(2) });
+        sw.Restart();
+        await db.Atomic(key, () => Task.FromResult(0));
+        Assert.True(sw.Elapsed >= TimeSpan.FromSeconds(1.5));
+    }
+
+    [EmulatorFact]
+    public async Task Purge_OnFirestore_LeavesNoPlayerRows()
+    {
+        await using var h = await Harness.Start(null, new FirestoreDocStore(Project));
+        var s = await h.Guest();
+        await new EconomyService(h.X).Day7Chest(s.pid, "d1");
+        await h.X.Db.Put("purchases", "fs" + Guid.NewGuid().ToString("N"), new PurchaseDoc { playerId = s.pid });
+        await new DataLifecycleService(h.X).PurgeAccount(s.pid);
+        foreach (var col in Collections.PlayerData)
+            foreach (var (id, json) in await h.X.Db.ListRaw(col))
+                Assert.False(id.Contains(s.pid) || json.Contains(s.pid), $"{col}/{id} still references the player");
+        Assert.Empty(await new DataLifecycleService(h.X).PurgeAccount(s.pid));
+    }
+
+    [EmulatorFact]
     public async Task ServerRunsEndToEnd_OnFirestore()
     {
         // pass the Firestore store explicitly (no process-wide env var: other test classes run in parallel)

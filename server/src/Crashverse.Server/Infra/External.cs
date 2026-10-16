@@ -14,7 +14,7 @@ public sealed class IntegrityVerdict
 public interface IIntegrityVerifier { Task<IntegrityVerdict> Decode(string integrityToken); }
 
 /// <summary>DEV/TEST: the token is "fake:" + JSON of an IntegrityVerdict. Anything else fails to decode.</summary>
-public sealed class FakeIntegrityVerifier : IIntegrityVerifier
+[DevOnly] public sealed class FakeIntegrityVerifier : IIntegrityVerifier
 {
     public Task<IntegrityVerdict> Decode(string token)
     {
@@ -81,18 +81,18 @@ public sealed class FacebookDebugTokenVerifier : IFacebookTokenVerifier
 }
 
 /// <summary>TEST/DEV fakes: tokens registered up front map to identities; everything else is rejected.</summary>
-public sealed class FakeGoogleVerifier : IGoogleTokenVerifier
+[DevOnly] public sealed class FakeGoogleVerifier : IGoogleTokenVerifier
 {
     public readonly Dictionary<string, (ProviderIdentity id, string nonce)> Tokens = new();
     public Task<ProviderIdentity> Verify(string t, string nonce) =>
         Task.FromResult(t != null && Tokens.TryGetValue(t, out var v) && (v.nonce == null || v.nonce == nonce) ? v.id : null);
 }
-public sealed class FakeFacebookVerifier : IFacebookTokenVerifier
+[DevOnly] public sealed class FakeFacebookVerifier : IFacebookTokenVerifier
 {
     public readonly Dictionary<string, ProviderIdentity> Tokens = new();
     public Task<ProviderIdentity> Verify(string t) => Task.FromResult(t != null && Tokens.TryGetValue(t, out var v) ? v : null);
 }
-public sealed class FakeXClient : IXAuthClient
+[DevOnly] public sealed class FakeXClient : IXAuthClient
 {
     public readonly Dictionary<string, ProviderIdentity> Codes = new();
     public Task<ProviderIdentity> Exchange(string code, string v, string r) => Task.FromResult(code != null && v != null && Codes.TryGetValue(code, out var id) ? id : null);
@@ -101,13 +101,13 @@ public sealed class FakeXClient : IXAuthClient
 // ---------------- Email ----------------
 /// <summary>Parental-consent emails go through their own sender so production can use a vetted template/provider. Fake in dev/tests.</summary>
 public interface IParentalConsentMailer { Task SendConsentRequest(string parentEmail, string requestId, string approveToken); }
-public sealed class FakeParentalConsentMailer : IParentalConsentMailer
+[DevOnly] public sealed class FakeParentalConsentMailer : IParentalConsentMailer
 {
     public readonly List<(string to, string requestId, string token)> Sent = new();
     public Task SendConsentRequest(string to, string id, string t) { lock (Sent) Sent.Add((to, id, t)); return Task.CompletedTask; }
 }
 public interface IEmailSender { Task Send(string to, string subject, string body); }
-public sealed class FakeEmailSender : IEmailSender
+[DevOnly] public sealed class FakeEmailSender : IEmailSender
 {
     public readonly List<(string to, string subject, string body)> Sent = new();
     public Task Send(string to, string s, string b) { lock (Sent) Sent.Add((to, s, b)); return Task.CompletedTask; }
@@ -131,7 +131,7 @@ public interface IPlayDeveloperApi
     Task<List<PlayVoidedPurchase>> ListVoided(string packageName, long startTimeMillis);
 }
 
-public sealed class FakePlayApi : IPlayDeveloperApi
+[DevOnly] public sealed class FakePlayApi : IPlayDeveloperApi
 {
     public readonly Dictionary<string, PlayProductPurchase> Purchases = new();
     public readonly List<PlayVoidedPurchase> Voided = new();
@@ -143,11 +143,43 @@ public sealed class FakePlayApi : IPlayDeveloperApi
     public Task<List<PlayVoidedPurchase>> ListVoided(string p, long since) => Task.FromResult(Voided.Where(v => v.voidedTimeMillis >= since).ToList());
 }
 
-/// <summary>Verifies the Pub/Sub push OIDC token (aud + service-account email). Gap 6.</summary>
+/// <summary>Authenticates callers of /internal/* (Pub/Sub push, Cloud Scheduler): a Google-signed OIDC token from workload identity,
+/// checked for audience and service-account email. There is no shared secret.</summary>
 public interface IPushAuthVerifier { Task<bool> Verify(string bearerToken); }
-public sealed class FakePushAuthVerifier : IPushAuthVerifier
+
+/// <summary>Production: validates a Google-issued OIDC ID token (JWKS from accounts.google.com) with the expected audience,
+/// an allow-listed service-account email and email_verified=true. Not exercised in tests (needs network).</summary>
+public sealed class GoogleOidcPushAuthVerifier : IPushAuthVerifier
 {
-    public string Expected = "fake-pubsub-oidc";
+    readonly string _audience; readonly HashSet<string> _serviceAccounts;
+    readonly Microsoft.IdentityModel.Protocols.ConfigurationManager<Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectConfiguration> _cfg =
+        new("https://accounts.google.com/.well-known/openid-configuration", new Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectConfigurationRetriever());
+    public GoogleOidcPushAuthVerifier(string audience, IEnumerable<string> serviceAccountEmails)
+    {
+        if (string.IsNullOrWhiteSpace(audience)) throw new ArgumentException("OIDC audience required");
+        _audience = audience; _serviceAccounts = serviceAccountEmails.Where(e => !string.IsNullOrWhiteSpace(e)).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (_serviceAccounts.Count == 0) throw new ArgumentException("at least one service-account email required");
+    }
+    public async Task<bool> Verify(string token)
+    {
+        try
+        {
+            var conf = await _cfg.GetConfigurationAsync(CancellationToken.None);
+            var p = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler().ValidateToken(token, new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidIssuers = new[] { "accounts.google.com", "https://accounts.google.com" }, ValidAudience = _audience,
+                IssuerSigningKeys = conf.SigningKeys, ValidateLifetime = true, ClockSkew = TimeSpan.FromMinutes(1)
+            }, out _);
+            return p.FindFirst("email_verified")?.Value == "true" && _serviceAccounts.Contains(p.FindFirst("email")?.Value ?? "");
+        }
+        catch { return false; }
+    }
+}
+
+/// <summary>DEV/TEST ONLY. The expected token is random per process unless a test sets it; never a constant in the repo.</summary>
+[DevOnly] public sealed class FakePushAuthVerifier : IPushAuthVerifier
+{
+    public string Expected = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(16));
     public Task<bool> Verify(string t) => Task.FromResult(t == Expected);
 }
 
@@ -158,16 +190,23 @@ public sealed class ReplayResult { public int damageScore; public bool killed; p
 /// Headless Unity re-simulation (S4 slice). v0 ships only the interface: StubReplayWorker returns null (not available),
 /// so runs stay pending and never become visible in the top-N. Tests inject a scripted worker.
 /// </summary>
-public interface IReplayWorker { Task<ReplayResult> Replay(RunRecordView run); }
-public sealed class RunRecordView { public string runId; public string mode; public string levelOrDay; public long seed; public string simVersion; public List<Crashverse.Backend.InputEvent> inputs; public int clientScore; }
-public sealed class StubReplayWorker : IReplayWorker { public Task<ReplayResult> Replay(RunRecordView run) => Task.FromResult<ReplayResult>(null); }
-public sealed class ScriptedReplayWorker : IReplayWorker
+public interface ICaptchaVerifier { Task<bool> Verify(string token, string remoteIp); }
+/// <summary>DEV/TEST: accepts "ok".</summary>
+[DevOnly] public sealed class FakeCaptchaVerifier : ICaptchaVerifier { public Task<bool> Verify(string t, string ip) => Task.FromResult(t == "ok"); }
+
+public interface IReplayWorker { Task<ReplayResult> Replay(RunRecordView run); bool Configured => false; }
+/// <summary>Replay contract (Physics PR #6): integer ticks at physicsHz (50). For tick t = 0, 1, …: first apply every InputEvent with
+/// tick == t in list order, then Physics.Simulate(1/physicsHz). `seed` is the attempt/run token seed (long), the client's RunContext.seed.</summary>
+public sealed class RunRecordView { public int physicsHz = 50; public string runId; public string mode; public string levelOrDay; public long seed; public string simVersion; public List<Crashverse.Backend.InputEvent> inputs; public int clientScore; }
+[DevOnly] public sealed class StubReplayWorker : IReplayWorker { public Task<ReplayResult> Replay(RunRecordView run) => Task.FromResult<ReplayResult>(null); }
+[DevOnly] public sealed class ScriptedReplayWorker : IReplayWorker
 {
     public Func<RunRecordView, ReplayResult> Fn = r => null;
+    public bool IsConfigured = true; public bool Configured => IsConfigured;
     public Task<ReplayResult> Replay(RunRecordView run) => Task.FromResult(Fn(run));
 }
 
 /// <summary>Random source for sampling (injectable for tests).</summary>
 public interface ISampler { double Next(); }
 public sealed class SystemSampler : ISampler { public double Next() => Random.Shared.NextDouble(); }
-public sealed class FixedSampler : ISampler { public double Value = 0.99; public double Next() => Value; }
+[DevOnly] public sealed class FixedSampler : ISampler { public double Value = 0.99; public double Next() => Value; }

@@ -36,11 +36,11 @@ public sealed class Harness : IAsyncDisposable
     public static async Task<Harness> Start(Action<ServerOptions> cfg = null, IDocStore shared = null)
     {
         var h = new Harness { Clock = new FakeClock(T0) };
-        var opt = new ServerOptions { PasswordIterations = 1000, AccountPerMinute = 10_000, GuestPerIpPerHour = 1000, GuestPerDevicePerHour = 1000, AuthPerMinute = 1000 };
+        var opt = new ServerOptions { Env = CrashverseEnv.Test, IapEnabled = true, EnableGemPacks = true, AllowClientRunSummary = true, RankedPublicBoardEnabled = true, PasswordIterations = 1000, AccountPerMinute = 10_000, GuestPerIpPerHour = 1000, GuestPerDevicePerHour = 1000, AuthPerMinute = 1000 };
         cfg?.Invoke(opt);
         h.X = ServerApp.DevContext(opt, h.Clock);
         if (shared != null) { h.X.Db = shared; h.X.Nonces = new StoreNonceCache(shared, h.Clock); h.X.Limits = new StoreRateLimiter(shared, h.Clock); }
-        h.X.Replay = h.Replay; h.X.Sampler = h.Sampler;
+        h.X.Replay = h.Replay; h.X.Sampler = h.Sampler; ((FakePushAuthVerifier)h.X.PushAuth).Expected = "fake-pubsub-oidc";
         h.App = ServerApp.Build(h.X, b => b.WebHost.UseTestServer());
         await h.App.StartAsync();
         h.Http = h.App.GetTestClient();
@@ -70,10 +70,18 @@ public sealed class Harness : IAsyncDisposable
 
     public async Task<Session> Guest(string device = null)
     {
-        var r = await Post("/v1/auth/guest", new { deviceInstallId = device ?? Guid.NewGuid().ToString("N") }, null);
+        var r = await Post("/v1/auth/guest", new { deviceInstallId = device ?? Guid.NewGuid().ToString("N"), ageToken = await AgeToken() }, null);
         Assert.Equal(HttpStatusCode.OK, r.status);
         return new Session { pid = r["account"].GetProperty("playerId").GetString(), access = r["accessToken"].GetString(), refresh = r["refreshToken"].GetString(),
             friendCode = r["account"].GetProperty("friendCode").GetString() };
+    }
+
+    /// <summary>Passes the age gate (adult, US by default) and returns the signed age token account creation needs.</summary>
+    public async Task<string> AgeToken(int birthYear = 1990, int birthMonth = 1, string country = "US")
+    {
+        var r = await Post("/v1/agegate", new { birthYear, birthMonth, country }, null);
+        Assert.Equal(HttpStatusCode.OK, r.status);
+        return r["ageToken"].GetString();
     }
 
     public async Task<Session> Linked(string sub = null)

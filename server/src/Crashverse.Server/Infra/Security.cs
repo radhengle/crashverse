@@ -16,7 +16,7 @@ public interface ISigner
 }
 
 /// <summary>DEV ONLY: in-process ECDSA P-256 key, never persisted, never shipped to the client.</summary>
-public sealed class EcdsaDevSigner : ISigner, IDisposable
+[DevOnly] public sealed class EcdsaDevSigner : ISigner, IDisposable
 {
     readonly ECDsa _k = ECDsa.Create(ECCurve.NamedCurves.nistP256);
     public EcdsaDevSigner(string kid) { Kid = kid; }
@@ -73,14 +73,17 @@ public sealed class TokenService
 {
     readonly Dictionary<string, KeyRing> _rings;
     readonly IClock _clock;
-    public TokenService(IEnumerable<KeyRing> rings, IClock clock) { _rings = rings.ToDictionary(r => r.Purpose); _clock = clock; }
+    /// <summary>Server-issued flavor claim ("prod" | "test") stamped on every token; comes from server environment only.</summary>
+    public string Flavor { get; }
+    public TokenService(IEnumerable<KeyRing> rings, IClock clock, string flavor = "test") { _rings = rings.ToDictionary(r => r.Purpose); _clock = clock; Flavor = flavor; }
     public KeyRing Ring(string purpose) => _rings[purpose];
+    public IEnumerable<KeyRing> Rings => _rings.Values;
 
     public string Issue(string purpose, JsonObject claims, TimeSpan ttl)
     {
         var s = _rings[purpose].Active;
         var now = new DateTimeOffset(DateTime.SpecifyKind(_clock.UtcNow, DateTimeKind.Utc)).ToUnixTimeSeconds();
-        claims["pur"] = purpose; claims["iat"] = now; claims["exp"] = now + (long)ttl.TotalSeconds;
+        claims["flv"] = Flavor; claims["pur"] = purpose; claims["iat"] = now; claims["exp"] = now + (long)ttl.TotalSeconds;
         var h = B64.Url(Encoding.UTF8.GetBytes(new JsonObject { ["alg"] = s.Alg, ["kid"] = s.Kid, ["typ"] = "JWT" }.ToJsonString()));
         var p = B64.Url(Encoding.UTF8.GetBytes(claims.ToJsonString()));
         return h + "." + p + "." + B64.Url(s.Sign(Encoding.ASCII.GetBytes(h + "." + p)));
@@ -102,6 +105,7 @@ public sealed class TokenService
             if (!signer.Verify(Encoding.ASCII.GetBytes(parts[0] + "." + parts[1]), B64.FromUrl(parts[2]))) { error = "bad signature"; return null; }
             var claims = JsonNode.Parse(B64.FromUrl(parts[1])).AsObject();
             if ((string)claims["pur"] != purpose) { error = "wrong token purpose"; return null; }
+            if (Flavor == "prod" && (string)claims["flv"] != "prod") { error = "test-flavor token rejected in prod"; return null; }
             if ((long)claims["exp"] < new DateTimeOffset(DateTime.SpecifyKind(_clock.UtcNow, DateTimeKind.Utc)).ToUnixTimeSeconds()) { error = "token expired"; return null; }
             error = null; return claims;
         }
@@ -119,8 +123,10 @@ public sealed class ReceiptService
     readonly IClock _clock;
     (string kid, byte[] key) _active;
     readonly List<(string kid, byte[] key, DateTime notAfter)> _retired = new();
+    /// <summary>True when the master was generated in-process (dev/test). Prod must load it from the secret store.</summary>
+    public bool Ephemeral { get; }
     public ReceiptService(IClock clock, string kid = "r1", byte[] master = null)
-    { _clock = clock; _active = (kid, master ?? RandomNumberGenerator.GetBytes(32)); }
+    { _clock = clock; Ephemeral = master == null; _active = (kid, master ?? RandomNumberGenerator.GetBytes(32)); }
 
     public string ActiveKid { get { lock (_gate) return _active.kid; } }
     public void Rotate(string kid, byte[] master, TimeSpan overlap)

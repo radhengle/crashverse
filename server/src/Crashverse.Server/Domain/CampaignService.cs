@@ -47,7 +47,7 @@ public sealed class CampaignService
     /// <summary>Verifies and burns an attempt token (single use). Throws on anything wrong.</summary>
     async Task<AttemptDoc> Burn(string pid, string mode, string levelId, string token)
     {
-        var c = _x.Tokens.Verify("attempt", token, out var err) ?? throw new ApiError(401, "INVALID_ATTEMPT", "attempt token: " + err);
+        var c = _x.Tokens.Verify("attempt", token, out var err) ?? throw new ApiError(401, err == "test-flavor token rejected in prod" ? "TEST_FLAVOR_TOKEN" : "INVALID_ATTEMPT", "attempt token: " + err);
         if ((string)c["sub"] != pid || (string)c["mode"] != mode || (string)c["lvl"] != levelId) throw new ApiError(403, "INVALID_ATTEMPT", "attempt token not valid for this player/level");
         var id = $"{pid}:{mode}:{(string)c["aid"]}";
         return await _x.Db.Atomic("attempt:" + id, async () =>
@@ -100,8 +100,9 @@ public sealed class CampaignService
             if (prog.processedReports.Contains(r.reportId))
                 return new CampaignSubmitResponseEx { accepted = true, message = "Already synced", levelBest = (await Best(pid, r.levelId))?.best ?? 0, total = await Total(pid) };
             var lvl = _x.Content.Level(r.levelId) ?? throw new ApiError(404, "UNKNOWN_LEVEL", "unknown level");
-            await Burn(pid, "campaign", lvl.id, r.attemptToken); // H1: no token, no result (replayed reports fail here)
+            var attempt = await Burn(pid, "campaign", lvl.id, r.attemptToken); // H1: no token, no result (replayed reports fail here)
             if (r.simVersion != _x.Opt.SimVersion) return new CampaignSubmitResponseEx { accepted = false, message = "Rejected: simVersion mismatch", total = await Total(pid) };
+            if (!_x.Opt.AllowClientRunSummary) return await ServerSummary(pid, r, lvl, prog, attempt.seed);
             var err = Validate(r, lvl, prog);
             if (err != null)
             {
@@ -112,7 +113,7 @@ public sealed class CampaignService
             if (score > Ceiling(lvl)) return new CampaignSubmitResponseEx { accepted = false, message = "Rejected: score above level ceiling", total = await Total(pid) };
 
             var runId = Hash.NewId();
-            var run = new RunDoc { runId = runId, playerId = pid, mode = "campaign", key = lvl.id, simVersion = r.simVersion, campaign = r, clientScore = r.clientScoreBp > 0 ? r.clientScoreBp : score, finalScore = score,
+            var run = new RunDoc { runId = runId, playerId = pid, mode = "campaign", key = lvl.id, seed = attempt.seed, simVersion = r.simVersion, campaign = r, clientScore = r.clientScoreBp > 0 ? r.clientScoreBp : score, finalScore = score,
                 issuedUnixMs = _x.NowMs, finalized = true, boardKeys = { "campaign:c1_alltime" } };
             bool first = !prog.cleared.Contains(lvl.id);
             if (first) prog.cleared.Add(lvl.id);
@@ -145,6 +146,55 @@ public sealed class CampaignService
         });
     }
 
+    /// <summary>ALLOW_CLIENT_RUN_SUMMARY=false (every non-Development environment): the client's won/ratio/shotsLeft/combo are ignored.
+    /// Only the inputs are checked and stored; the run is queued for server replay and nothing (best, board, reward) changes until it returns.</summary>
+    async Task<CampaignSubmitResponseEx> ServerSummary(string pid, CampaignRunReportEx r, LevelEntry lvl, CampaignProgressDoc prog, long seed)
+    {
+        int fires = InputRules.Fires(r.inputs);
+        string err = !string.IsNullOrEmpty(lvl.requires) && !prog.cleared.Contains(lvl.requires) ? "prerequisite level not cleared on server"
+            : fires < 1 || fires > lvl.shots ? "input log does not match the level" : InputsPlausible(r.inputs, fires);
+        if (err != null)
+        {
+            await _x.Audit(pid, "campaign_rejected", pid, $"{lvl.id}: {err}");
+            return new CampaignSubmitResponseEx { accepted = false, message = "Rejected: " + err, total = await Total(pid) };
+        }
+        var runId = Hash.NewId();
+        var stored = new CampaignRunReportEx { reportId = r.reportId, levelId = lvl.id, attemptToken = r.attemptToken, simVersion = r.simVersion, buildHash = r.buildHash, clientScoreBp = r.clientScoreBp, inputs = r.inputs };
+        await _x.Db.Put("runs", runId, new RunDoc { runId = runId, playerId = pid, mode = "campaign", key = lvl.id, seed = seed, simVersion = r.simVersion, campaign = stored, serverSummary = true,
+            clientScore = r.clientScoreBp, finalScore = 0, issuedUnixMs = _x.NowMs, finalized = true, boardKeys = { "campaign:c1_alltime" } });
+        await new ReplayService(_x).Enqueue(runId, "server_summary");
+        prog.processedReports.Add(r.reportId);
+        await _x.Db.Put("campaignProgress", pid, prog);
+        return new CampaignSubmitResponseEx { accepted = true, status = "pending", validation = "awaiting_replay", serverScoreBp = 0, total = await Total(pid),
+            message = "Result received; the score is computed by server replay" };
+    }
+
+    /// <summary>Server replay finished for a summary-less run: the replay's own result becomes the run summary.</summary>
+    public async Task ApplyServerSummary(RunDoc run, ReplayResult rr)
+    {
+        var lvl = _x.Content.Level(run.key);
+        run.campaign.won = rr.won; run.campaign.destroyedRatio = rr.destroyedRatio; run.campaign.shotsLeft = rr.shotsLeft; run.campaign.bestCombo = rr.bestCombo; run.campaign.mastery = rr.mastery;
+        bool win = rr.won && Crashverse.Meta.WinRule.Meets(rr.destroyedRatio, lvl.winThreshold);
+        int score = win ? Math.Min(Ceiling(lvl), Crashverse.Meta.CampaignScore.Compute(true, rr.destroyedRatio, rr.shotsLeft, rr.bestCombo, rr.mastery)) : 0;
+        run.finalScore = score; run.replayState = "passed";
+        run.replay = new ReplayResult_ { damageScore = rr.damageScore, killed = rr.killed, destroyedRatio = rr.destroyedRatio, bestCombo = rr.bestCombo, mastery = rr.mastery, won = rr.won, shotsLeft = rr.shotsLeft, score = score };
+        await _x.Db.Put("runs", run.runId, run);
+        if (!win) return;
+        await _x.Db.Atomic("campaign:" + run.playerId, async () =>
+        {
+            var prog = await _x.Db.Get<CampaignProgressDoc>("campaignProgress", run.playerId) ?? new CampaignProgressDoc();
+            if (!prog.cleared.Contains(lvl.id)) prog.cleared.Add(lvl.id);
+            await _x.Db.Put("campaignProgress", run.playerId, prog);
+            var rec = await Best(run.playerId, lvl.id) ?? new LevelBestDoc { levelId = lvl.id };
+            if (score > rec.best) { rec.best = score; rec.runId = run.runId; rec.validated = true; }
+            await _x.Db.Put("campaignBest", run.playerId + ":" + lvl.id, rec);
+            await new Leaderboards(_x).Submit("campaign:c1_alltime", run.playerId, await Total(run.playerId), run.runId, replace: true);
+            return 0;
+        });
+        await new Leaderboards(_x).OnReplay(run, true, null);
+        await new EconomyService(_x).OnCampaignValidated(run.playerId, lvl, true, rr.shotsLeft);
+    }
+
     /// <summary>Replay outcome for a campaign run: lower-of score; failure claws back provisional first-clear rewards (floor 0).</summary>
     public async Task OnReplay(RunDoc run, bool ok, int scoreBefore)
     {
@@ -157,6 +207,7 @@ public sealed class CampaignService
                 if (ok) { rec.best = run.finalScore; rec.validated = true; }
                 else { rec.best = 0; rec.runId = null; }
                 await _x.Db.Put("campaignBest", pid + ":" + run.key, rec);
+                if (ok && run.campaign != null && _x.Content.Level(run.key) is { } lv0) await new EconomyService(_x).OnCampaignValidated(pid, lv0, run.campaign.won, run.campaign.shotsLeft);
                 await new Leaderboards(_x).Submit("campaign:c1_alltime", pid, await Total(pid), null, replace: true);
             }
             var prog = await _x.Db.Get<CampaignProgressDoc>("campaignProgress", pid) ?? new CampaignProgressDoc();
@@ -191,7 +242,7 @@ public sealed class CampaignService
     public async Task<SeasonState> EventStars(string pid, string eventLevelId, EventStarsRequest r)
     {
         var lvl = _x.Content.EventLevel(eventLevelId) ?? throw new ApiError(404, "UNKNOWN_LEVEL", "unknown event level");
-        await Burn(pid, "event", lvl.id, r.attemptToken);
+        var attempt = await Burn(pid, "event", lvl.id, r.attemptToken);
         r.simVersion ??= r.buildHash;
         if (r.simVersion != _x.Opt.SimVersion) throw new ApiError(422, "RESULT_REJECTED", "simVersion mismatch");
         int used = InputRules.Fires(r.inputs);
@@ -200,7 +251,7 @@ public sealed class CampaignService
         int maxStars = Crashverse.Meta.StarRules.ComputeInt(true, lvl.shots - used, lvl.shots);
         int stars = Math.Max(0, Math.Min(Math.Min(_x.Content.Season.eventStarCapPerLevel, maxStars), r.stars));
         var runId = Hash.NewId();
-        await _x.Db.Put("runs", runId, new RunDoc { runId = runId, playerId = pid, mode = "event", key = lvl.id, simVersion = r.simVersion, eventStars = stars, finalScore = stars, clientScore = stars,
+        await _x.Db.Put("runs", runId, new RunDoc { runId = runId, playerId = pid, mode = "event", key = lvl.id, seed = attempt.seed, simVersion = r.simVersion, eventStars = stars, finalScore = stars, clientScore = stars,
             issuedUnixMs = _x.NowMs, finalized = true, campaign = new CampaignRunReportEx { inputs = r.inputs, won = true, shotsLeft = lvl.shots - used } });
         return await new SeasonService(_x).ReportEventStars(pid, lvl.id, stars, runId);
     }

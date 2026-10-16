@@ -1,0 +1,19 @@
+{
+  "_source": "design/Economy_v1_Earned_Gems.md (PM: earned-only gems, no real-money purchases in v1). All values are tunable server data.",
+  "dailyDay7Gems": 10,
+  "titanCompletionGems": 3,
+  "titanTop10Gems": 5,
+  "eventAllClearedGems": 15,
+  "eventAllThreeStarGems": 10,
+  "chapterStarMilestones": [ { "stars": 10, "gems": 5 }, { "stars": 20, "gems": 10 }, { "stars": 30, "gems": 20 } ],
+  "guardianFirstClearGems": 25,
+  "seasonEveryNthTier": 5,
+  "seasonNthTierGems": 10,
+  "seasonPremiumUnlockGems": 450,
+  "achievements": [
+    { "id": "first_campaign_clear", "gems": 5 },
+    { "id": "first_titan_kill", "gems": 10 },
+    { "id": "first_guardian_clear", "gems": 15 },
+    { "id": "event_week_perfect", "gems": 25 }
+  ]
+}

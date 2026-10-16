@@ -92,7 +92,7 @@ All paths carry the `/v1` prefix. Bearer token required unless noted. Every list
 | `DeleteAccount` | `POST /account/delete {reauthToken}` → `{status:"scheduled", purgeAt}` (linked: `401 REAUTH_REQUIRED` without a fresh reauth; guest: `null` allowed, the session is the proof) |
 | cancel deletion | `POST /account/delete/cancel` → `{status:"active"}` (allowed while pending) |
 | keep active | `POST /account/keep-active` → `{lastActiveAt}` |
-| `SubmitAgeGate` (no bearer) | `POST /agegate {birthYear, birthMonth, country}` → `{band: under13\|13to15\|16plus, requiresParentalConsent}`; nothing stored |
+| `SubmitAgeGate` (no bearer) | `POST /agegate {birthYear, birthMonth, country}` → `{band: under13\|13to15\|16to17\|adult, requiresParentalConsent}`; nothing stored. Consent ages per market come from `server/config/consent_ages.json` (**NEEDS LEGAL REVIEW**; override with `CONSENT_AGES_PATH`; a missing or invalid file stops startup) |
 | `RequestParentalConsent` | `POST /consent/parental/request {parentEmail}` → `{status:"pending", requestId}` via `IParentalConsentMailer` (fake); only a hash of the email is stored |
 | `GetParentalConsentStatus` | `GET /consent/parental/status` → `{status: none\|pending\|granted\|denied}`; parent decision: `POST /internal/consent/decide` (push-auth, placeholder for the parent page) |
 | `SetProfileVisibility` | `POST /profile/visibility {hideName}` → `{hideName}`; others see `Wrecker #XXXX` on boards and friend lists |
@@ -107,10 +107,40 @@ All paths carry the `/v1` prefix. Bearer token required unless noted. Every list
 
 Inputs are Developer's `InputEvent` (fixed point, 1/1000): `aim` (x yaw, y pitch in milli-degrees), `power` (x 0..1000), `powerup` (x slot), `fire`, `settle`; `tick` is the physics tick. Checks: known type, ticks non-decreasing, ranges, ≤64 events per shot, one `fire` per shot used, a `settle` after each fire, and the server minimum shot interval in ticks.
 
+## Flags (PR #1 decisions)
+| Env var | Default | Effect |
+|---|---|---|
+| `ALLOW_CLIENT_RUN_SUMMARY` | `true` in Development, **forced `false` elsewhere** | When false, the client's `won/destroyedRatio/shotsLeft/bestCombo` are ignored: only inputs are checked and stored, the run is queued for replay, and best, boards and rewards change only from the replay result. |
+| `RANKED_PUBLIC_BOARD_ENABLED` | `false` | The public Daily Titan board shows other players only if this is `true` **and** the replay worker is configured **and** every top-N entry is replayed. Otherwise it fails closed (`publicBoard:false`, `publicBoardReason`, the viewer sees only their own entry). This covers B3. |
+| `REFUND_POLICY`, `INTEGRITY_MODE`, `AUTH_X_ENABLED` | `gemDebt`, `enforce`, off | unchanged |
+| `CRASHVERSE_ENV` | missing = `prod` | `dev`/`test` use `DevContext` (fakes, in-memory keys). `prod` uses `ProdContext`, which runs `ProdGuard` first and **refuses to start** with any fake/stub/in-memory adapter, in-process signer or receipt key, `INTEGRITY_MODE` other than `enforce`, the client run summary, or an admin key (C1). Prod adapters are not built yet, so prod cannot start: intended. |
+| `IAP_ENABLED` | `false` | Economy v1 has no IAP. Off: `/v1/purchases/google/verify` → 404 `FEATURE_DISABLED`; RTDN is acknowledged and ignored. |
+| `ENABLE_GEM_PACKS` | `false` | Served as `enableGemPacks` in `/v1/config/flags`. Off: verify rejects `gems_small` (Pouch, 0.99) and `gems_large` (Chest, 4.99), the ids from client PR #10 `store_catalog.json`, with 403 `GEM_PACKS_DISABLED` before any Play call or grant. |
+| `TRUST_X_FORWARDED_FOR` / `TRUSTED_PROXY_HOPS` | `false` / `1` | M2: rate-limit IP from X-Forwarded-For only when on; takes the entry N hops from the right (the one the load balancer appended). |
+| `TAX_RETENTION_DAYS` | `2920` | S3: pseudonymised purchase rows kept this long after deletion. **NEEDS LEGAL REVIEW.** |
+
+All boolean flags are strict: only the exact string `true` turns them on (H2).
+
+Consent ages per market: `server/config/consent_ages.json` (**NEEDS LEGAL REVIEW**, `legalReviewed:false`). While unreviewed, unknown markets use 18. Gem grants: `server/config/economy_v1.json`.
+
+## Jobs (Cloud Scheduler → OIDC push)
+
+| Job | What it does |
+|---|---|
+| `POST /internal/jobs/purge` | Purges accounts past their 7-day grace period (deletion completes within 30 days; an audit alert fires after 25). It deletes or aggregates player-keyed rows (the ledger goes to `ledgerDaily`), pseudonymises purchases, detaches top-100 runs (tombstone id) and redacts audit rows. Idempotent. |
+| `POST /internal/jobs/retention` | Clears input logs older than 90 days and deletes purchase rows whose tax retention has ended. |
+| `POST /internal/jobs/guest-inactivity` | Warns guests at 335 days of inactivity and schedules deletion at 365. Any authenticated call or keep-active resets the clock. |
+
+Web deletion (B6, no app needed): `POST /v1/web/deletion/request {email, captchaToken}` always returns the same generic answer and emails a 6-digit code to verified emails. `POST /v1/web/deletion/confirm {email, code}` allows 5 attempts and a 15-minute code. `POST /v1/web/deletion/provider {credential, captchaToken}` covers Google, Facebook and X. Rate limits: 5 requests per IP per hour and 3 per email per day.
+
+## CI and Unity secrets (M4)
+
+`server-ci.yml` only builds and tests: actions are pinned to SHAs and it has `permissions: contents: read`. `android-apk.yml`'s build job runs in the GitHub **environment `unity`**. `UNITY_LICENSE`, `UNITY_EMAIL` and `UNITY_PASSWORD` must be stored as secrets of that environment only, not as repo secrets. Set the environment to require reviewers and to deploy from `main` only. The repo owner configures this in Settings → Environments.
+
 ## Not done in v0
 - No real KMS signer, no Play API client and no Integrity decoder; only the interfaces exist.
 - The replay worker is a stub, so queued runs stay pending.
 - No admin UI (the override endpoint is break-glass only and audited).
 - No deployment, CI deploy job or cloud resources. CI (`.github/workflows/server-ci.yml`) only builds and tests.
-- `SubmitScore` still accepts the run summary (`won`, `destroyedRatio`, `shotsLeft`, `bestCombo`) next to the inputs, because the real replay worker that would recompute it from inputs does not exist yet. `clientScoreBp` is advisory and stored for the tolerance check.
+- Outside Development, campaign results stay pending until a real replay worker exists (the dev stub never counts as configured). Server-replayed first-clear rewards are not granted yet. `clientScoreBp` is advisory.
 - The deletion purge job (requirements D1–D8), the 365-day guest inactivity job (C2) and the parent-facing consent page are not built.

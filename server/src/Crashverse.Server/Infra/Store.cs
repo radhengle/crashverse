@@ -18,6 +18,10 @@ public interface IDocStore
     Task<List<T>> List<T>(string collection, string idPrefix = "") where T : class;
     /// <summary>Serialises read-modify-write sections on a key across all callers (and, for Firestore, all instances).</summary>
     Task<T> Atomic<T>(string lockKey, Func<Task<T>> body);
+    /// <summary>Raw (id, json) listing, used only by the data-lifecycle jobs.</summary>
+    Task<List<(string id, string json)>> ListRaw(string collection);
+    /// <summary>Deletes a document even in an append-only collection. Only the deletion/retention jobs call this, and every call is audited.</summary>
+    Task<bool> LifecyclePurge(string collection, string id);
 }
 
 /// <summary>Tracks locks held by the current async flow so nested Atomic() on the same key does not deadlock.</summary>
@@ -37,6 +41,10 @@ static class Reentrancy
 public static class Collections
 {
     public static readonly HashSet<string> AppendOnly = new() { "ledger", "audit" };
+    /// <summary>Every collection that can hold player-keyed data (the deletion job scans all of them).</summary>
+    public static readonly string[] PlayerData = { "accounts", "attempts", "boards", "campaignBest", "campaignProgress", "consents", "dailyReward", "emailCreds",
+        "entitlements", "friendCodes", "friends", "grantKeys", "idem", "identities", "inbox", "installAge", "ledger", "linkNonces", "purchases", "rankedStatus",
+        "replayQueue", "runs", "seasonProgress", "sessions", "shadowBoards", "wallets", "webDeletion", "audit" };
 }
 
 public sealed class AppendOnlyViolation : InvalidOperationException
@@ -51,7 +59,7 @@ static class StoreJson
     public static T De<T>(string s) => JsonSerializer.Deserialize<T>(s, Opts);
 }
 
-public sealed class InMemoryDocStore : IDocStore
+[DevOnly] public sealed class InMemoryDocStore : IDocStore
 {
     readonly ConcurrentDictionary<string, ConcurrentDictionary<string, string>> _c = new();
     readonly ConcurrentDictionary<string, SemaphoreSlim> _locks = new();
@@ -79,6 +87,10 @@ public sealed class InMemoryDocStore : IDocStore
         Task.FromResult(C(collection).Where(kv => kv.Key.StartsWith(idPrefix, StringComparison.Ordinal))
             .OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => StoreJson.De<T>(kv.Value)).ToList());
 
+    public Task<List<(string id, string json)>> ListRaw(string collection) =>
+        Task.FromResult(C(collection).OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => (kv.Key, kv.Value)).ToList());
+    public Task<bool> LifecyclePurge(string collection, string id) => Task.FromResult(C(collection).TryRemove(id, out _));
+
     public async Task<T> Atomic<T>(string lockKey, Func<Task<T>> body)
     {
         if (Reentrancy.Holds(lockKey)) return await body(); // re-entrant within one logical call flow
@@ -93,7 +105,7 @@ public sealed class InMemoryDocStore : IDocStore
 /// no credentials, nothing provisioned). Each document stores {id, json}; ids are escaped so '/' is safe.
 /// Atomic() uses a lease document created with CreateAsync (fails if it exists), so it serialises across instances.
 /// </summary>
-public sealed class FirestoreDocStore : IDocStore
+[DevOnly] public sealed class FirestoreDocStore : IDocStore
 {
     readonly FirestoreDb _db;
     public FirestoreDb Db => _db;
@@ -141,21 +153,49 @@ public sealed class FirestoreDocStore : IDocStore
         return snap.Documents.Select(d => StoreJson.De<T>(d.GetValue<string>("json"))).ToList();
     }
 
+    public async Task<List<(string id, string json)>> ListRaw(string collection)
+    {
+        var snap = await _db.Collection(collection).OrderBy("id").GetSnapshotAsync();
+        return snap.Documents.Select(d => (d.GetValue<string>("id"), d.GetValue<string>("json"))).ToList();
+    }
+    public async Task<bool> LifecyclePurge(string collection, string id)
+    {
+        var r = Ref(collection, id); var s = await r.GetSnapshotAsync();
+        if (!s.Exists) return false; await r.DeleteAsync(); return true;
+    }
+
+    /// <summary>Lease lifetime. Bodies are short (one player's read-modify-write); a crashed holder's lease expires and is taken over.</summary>
+    public static TimeSpan LeaseTtl = TimeSpan.FromSeconds(15);
+
+    /// <summary>M1: lease lock with expiry. Acquire = transaction that creates the lease or replaces an expired one; the lease stores an
+    /// owner token and `expireAt` (a Firestore TTL policy on _locks.expireAt garbage-collects leftovers). Release deletes only our own lease.</summary>
     public async Task<T> Atomic<T>(string lockKey, Func<Task<T>> body)
     {
         if (Reentrancy.Holds(lockKey)) return await body();
         var lease = _db.Collection("_locks").Document(Esc(lockKey));
+        var owner = Hash.NewId();
         for (int i = 0; ; i++)
         {
-            try { await lease.CreateAsync(new Dictionary<string, object> { ["exp"] = DateTime.UtcNow.AddSeconds(10) }); break; }
-            catch (Grpc.Core.RpcException e) when (e.StatusCode == Grpc.Core.StatusCode.AlreadyExists)
+            bool got = await _db.RunTransactionAsync(async tx =>
             {
-                var s = await lease.GetSnapshotAsync();
-                if (s.Exists && s.GetValue<DateTime>("exp") < DateTime.UtcNow) { await lease.DeleteAsync(); continue; } // stale lease
-                if (i > 200) throw new TimeoutException("lock " + lockKey);
-                await Task.Delay(10 + Random.Shared.Next(20));
-            }
+                var s = await tx.GetSnapshotAsync(lease);
+                if (s.Exists && s.GetValue<DateTime>("expireAt") > DateTime.UtcNow) return false;
+                tx.Set(lease, new Dictionary<string, object> { ["owner"] = owner, ["expireAt"] = DateTime.UtcNow.Add(LeaseTtl) });
+                return true;
+            });
+            if (got) break;
+            if (i > 400) throw new TimeoutException("lock " + lockKey);
+            await Task.Delay(10 + Random.Shared.Next(20));
         }
-        try { using (Reentrancy.Enter(lockKey)) return await body(); } finally { await lease.DeleteAsync(); }
+        try { using (Reentrancy.Enter(lockKey)) return await body(); }
+        finally
+        {
+            await _db.RunTransactionAsync(async tx =>
+            {
+                var s = await tx.GetSnapshotAsync(lease);
+                if (s.Exists && s.GetValue<string>("owner") == owner) tx.Delete(lease);
+                return 0;
+            });
+        }
     }
 }

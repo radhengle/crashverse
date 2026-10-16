@@ -43,7 +43,7 @@ public sealed class Ctx
 {
     public IDocStore Db; public IClock Clock; public ServerOptions Opt; public Content Content; public TokenService Tokens; public ReceiptService Receipts;
     public INonceCache Nonces; public IRateLimiter Limits; public IIntegrityVerifier Integrity; public IGoogleTokenVerifier Google;
-    public IFacebookTokenVerifier Facebook; public IXAuthClient X; public IEmailSender Email; public IParentalConsentMailer ConsentMailer; public IPlayDeveloperApi Play;
+    public IFacebookTokenVerifier Facebook; public IXAuthClient X; public IEmailSender Email; public IParentalConsentMailer ConsentMailer; public ConsentAgeTable ConsentAges; public EconomyConfig Economy; public ICaptchaVerifier Captcha; public IPlayDeveloperApi Play;
     public IPushAuthVerifier PushAuth; public IReplayWorker Replay; public ISampler Sampler;
 
     public DateTime Now => Clock.UtcNow;
@@ -52,8 +52,13 @@ public sealed class Ctx
     public static string Iso(DateTime d) => DateTime.SpecifyKind(d, DateTimeKind.Utc).ToString("yyyy-MM-dd'T'HH:mm:ss.fff'Z'");
     public static long UnixMs(DateTime d) => new DateTimeOffset(DateTime.SpecifyKind(d, DateTimeKind.Utc)).ToUnixTimeMilliseconds();
 
+    static readonly HashSet<string> SystemActors = new() { "system", "play", "replay", "admin", "parent", "web", "lifecycle" };
+    /// <summary>S3/D6: audit rows never hold a raw player id. The pseudonym is HMAC(deletion pepper, playerId), so investigators can still
+    /// find a live player's rows, and once the account is purged nothing links them back.</summary>
+    public string Pseudo(string pid) => pid == null ? null : "p_" + Hash.HmacHex(Opt.DeletionPepper, pid)[..32];
     public Task Audit(string actor, string action, string playerId, string detail) =>
-        Db.TryCreate("audit", $"{NowMs:D15}:{Hash.NewId()}", new AuditEntry { id = Hash.NewId(), ts = NowMs, actor = actor, action = action, playerId = playerId, detail = detail });
+        Db.TryCreate("audit", $"{NowMs:D15}:{Hash.NewId()}", new AuditEntry { id = Hash.NewId(), ts = NowMs, actor = actor == null || SystemActors.Contains(actor) ? actor : Pseudo(actor),
+            action = action, playerId = Pseudo(playerId), detail = detail });
 }
 
 /// <summary>Server time (SG-15/18/20/22). Only the server clock is used.</summary>

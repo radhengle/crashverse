@@ -56,13 +56,16 @@ public sealed class SeasonService
     {
         var sid = _cal.SeasonKey(_x.Now); var p = await Progress(pid, sid);
         if (p.titanClearDays.Contains(dayKey)) return 0;
-        p.titanClearDays.Add(dayKey); p.xp += S.xpPerTitanClear; await Save(pid, p);
+        p.titanClearDays.Add(dayKey); p.xp += S.xpPerTitanClear; p.titanXp += S.xpPerTitanClear; await Save(pid, p);
         var w = new WalletService(_x);
         foreach (var cr in _x.Content.Titan.completionRewards ?? Array.Empty<Reward>()) await w.Grant(pid, cr, "titan_clear", runId);
-        await new Leaderboards(_x).Submit("season:" + sid, pid, p.xp, runId, replace: true);
+        await new Leaderboards(_x).Submit("season:" + sid, pid, BoardXp(p), runId, replace: true);
         await AttachRun(runId, "season:" + sid);
         return 0;
     });
+
+    /// <summary>H2: while the public ranked board is off, the season board excludes Titan-derived XP (progression XP is unaffected).</summary>
+    int BoardXp(SeasonProgressDoc p) => _x.Opt.RankedPublicBoardEnabled && _x.Replay.Configured ? p.xp : p.xp - p.titanXp;
 
     async Task AttachRun(string runId, string boardKey)
     {
@@ -85,9 +88,10 @@ public sealed class SeasonService
             if (w >= 0 && w < S.weeks.Length) foreach (var l in S.weeks[w].levels) weekly += p.eventBest.GetValueOrDefault(l.id);
             var lb = new Leaderboards(_x);
             await lb.Submit("week:" + _cal.WeekKey(now), pid, weekly, runId, replace: true);
-            await lb.Submit("season:" + sid, pid, p.xp, runId, replace: true);
+            await lb.Submit("season:" + sid, pid, BoardXp(p), runId, replace: true);
             await AttachRun(runId, "week:" + _cal.WeekKey(now)); await AttachRun(runId, "season:" + sid);
             var run = await _x.Db.Get<RunDoc>("runs", runId);
+            if (w >= 0 && w < S.weeks.Length) await new EconomyService(_x).OnEventProgress(pid, _cal.WeekKey(now), S.weeks[w].levels.Select(l => l.id), p.eventBest);
             var rs = new ReplayService(_x);
             if (await rs.ShouldReplay(run, await lb.Position("week:" + _cal.WeekKey(now), pid) <= _x.Opt.TopN)) await rs.Enqueue(runId, "event");
         }
@@ -106,6 +110,7 @@ public sealed class SeasonService
             list.Add(tier); var t = S.tiers[tier - 1];
             await new WalletService(_x).Grant(pid, premium ? t.premium : t.free, premium ? "season_tier_premium" : "season_tier", $"{sid}:{tier}",
                 premium ? "premium_tier:" + sid : "reward");
+            if (!premium) await new EconomyService(_x).SeasonTier(pid, sid, tier);
             await Save(pid, p);
         }
         return await State(pid);
@@ -127,6 +132,7 @@ public sealed class SeasonService
         if (d.lastClaimDayKey == key) throw new ApiError(409, "ALREADY_CLAIMED", "Already claimed today");
         var days = _x.Content.DailyRewards.days;
         var (w, _) = await new WalletService(_x).Grant(pid, days[d.streakIndex % days.Length], "daily_reward", key);
+        if (d.streakIndex % days.Length == 6 && await new EconomyService(_x).Day7Chest(pid, key)) w = await new WalletService(_x).Get(pid); // Economy v1: Day 7 chest + 10 gems
         d.streakIndex = (d.streakIndex + 1) % days.Length; d.lastClaimDayKey = key;
         await _x.Db.Put("dailyReward", pid, d);
         return WalletService.View(w);

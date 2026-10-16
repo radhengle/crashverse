@@ -45,6 +45,20 @@ public static class InputRules
         return null;
     }
 
+    /// <summary>Reference tick loop (Physics PR #6 ordering): for each tick t from 0 to the last input tick (+ extraTicks), apply
+    /// that tick's events in list order, then step. An input at tick N therefore happens before the physics step for tick N.</summary>
+    public static void Drive(List<InputEvent> ev, Action<InputEvent> apply, Action<int> step, int extraTicks = 0)
+    {
+        if (ev == null) return;
+        int last = ev.Count == 0 ? -1 : ev.Max(e => e.tick), i = 0;
+        var ordered = ev.Select((e, idx) => (e, idx)).OrderBy(p => p.e.tick).ThenBy(p => p.idx).Select(p => p.e).ToList(); // stable
+        for (int t = 0; t <= last + extraTicks; t++)
+        {
+            while (i < ordered.Count && ordered[i].tick == t) apply(ordered[i++]);
+            step(t);
+        }
+    }
+
     public static int Fires(List<InputEvent> ev) => ev?.Count(e => e?.type == "fire") ?? 0;
     public static string Hash(List<InputEvent> ev) => ev == null ? "-" : Infra.Hash.Sha256Hex(string.Join(";", ev.Select(e => $"{e?.tick}|{e?.type}|{e?.x}|{e?.y}")))[..16];
 }

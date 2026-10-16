@@ -498,7 +498,7 @@ public class H2_RankedTitanTests
         var s = await h.Linked();
         await h.RankedRun(s, 2, 2000);
         h.At(new DateTime(2026, 10, 17, 0, 16, 0)); await h.Renew(s);
-        Assert.Equal("deferred", (await h.Job("/internal/jobs/titan-close/2026-10-16"))["result"].GetString());
+        Assert.StartsWith("deferred", (await h.Job("/internal/jobs/titan-close/2026-10-16"))["result"].GetString());
         Assert.Empty((await h.Get("/v1/inbox", s))["items"].EnumerateArray());
         h.Replay.Fn = _ => new ReplayResult { damageScore = 4000 };
         await h.Job("/internal/jobs/replay");

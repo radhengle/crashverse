@@ -1,12 +1,15 @@
 using System.Text.Json;
 using Crashverse.Backend;
 using Crashverse.Data;
+using Crashverse.Server.Infra;
 
 namespace Crashverse.Server.Domain;
 
 /// <summary>All tunables. Defaults follow Backend_Plan_v1 + PM decisions + Security review (Backend_Plan_v1_Review.md).</summary>
 public sealed class ServerOptions
 {
+    public CrashverseEnv Env = CrashverseEnv.Test;     // CRASHVERSE_ENV; missing/unknown = prod (Main)
+    public string Flavor => Envs.Flavor(Env);
     public string ContentRoot;                       // Assets/_Project/Resources/Data
     public string PackageName = "com.radhengle.crashverse";
     public string[] CertDigests = { "dev-cert-sha256" };
@@ -30,7 +33,44 @@ public sealed class ServerOptions
     public int GuestPerIpPerHour = 10; public int GuestPerDevicePerHour = 10; public int AuthPerMinute = 5; public int TimePerIpPerMinute = 120;
     public int AccountPerMinute = 240;
     public long MaxBodyBytes = 64 * 1024; public long MaxJournalBytes = 256 * 1024;
-    public string AdminKey = null;                   // break-glass admin header; null = admin endpoints disabled
+    public string ConsentAgesPath; public string EconomyPath;
+    /// <summary>TRUST_X_FORWARDED_FOR (exact "true"): only when the service sits behind Google's front end.</summary>
+    public bool TrustForwardedFor = false; public int TrustedProxyHops = 1;
+    /// <summary>IAP_ENABLED (exact "true"). Economy v1 sells nothing for real money, so Play purchase verification is off.</summary>
+    public bool IapEnabled = false;
+    /// <summary>ENABLE_GEM_PACKS (exact "true"; anything else = false). Off: verify rejects the gem packs with GEM_PACKS_DISABLED and grants nothing.</summary>
+    public bool EnableGemPacks = false;
+    /// <summary>Real-money gem packs, product ids from client PR #10 store_catalog.json (requiresFlag enableGemPacks): Pouch $0.99, Chest $4.99.</summary>
+    public static readonly string[] GemPackSkus = { "gems_small", "gems_large" };
+    public int GuestInactivityWarnDays = 335, GuestInactivityDeleteDays = 365, DeletionGraceDays = 7, DeletionAlertDays = 25;
+    public int InputLogRetentionDays = 90;
+    /// <summary>NEEDS LEGAL REVIEW: how long pseudonymised purchase rows are kept for tax (TAX_RETENTION_DAYS). Placeholder 8 years.</summary>
+    public int TaxRetentionDays = 8 * 365;
+    public byte[] DeletionPepper = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32);                   // null = server/config/consent_ages.json (or CONSENT_AGES_PATH)
+    /// <summary>ALLOW_CLIENT_RUN_SUMMARY: accept the client's won/ratio/shotsLeft/combo claims. Development only; elsewhere forced false
+    /// and campaign results wait for the server replay.</summary>
+    public bool AllowClientRunSummary = false;
+    /// <summary>RANKED_PUBLIC_BOARD_ENABLED (default false). Even when true, the public Daily Titan board fails closed unless the replay
+    /// worker is configured AND every top-N entry has been replayed (B3).</summary>
+    public bool RankedPublicBoardEnabled = false;
+    public string AdminKey = null;
+
+    /// <summary>PR #1 decisions. ALLOW_CLIENT_RUN_SUMMARY is honoured only when ASPNETCORE_ENVIRONMENT (or DOTNET_ENVIRONMENT) is
+    /// Development, where it defaults to true; in any other environment it is forced false. RANKED_PUBLIC_BOARD_ENABLED must be exactly "true".</summary>
+    public static void ApplyEnvFlags(ServerOptions o, Func<string, string> env)
+    {
+        var name = env("ASPNETCORE_ENVIRONMENT") ?? env("DOTNET_ENVIRONMENT") ?? "Production";
+        bool dev = string.Equals(name, "Development", StringComparison.OrdinalIgnoreCase);
+        o.AllowClientRunSummary = dev && (env("ALLOW_CLIENT_RUN_SUMMARY") ?? "true").Equals("true", StringComparison.OrdinalIgnoreCase);
+        o.RankedPublicBoardEnabled = env("RANKED_PUBLIC_BOARD_ENABLED") == "true"; // strict: anything else (1, TRUE, " true") is off
+        o.IapEnabled = env("IAP_ENABLED") == "true";
+        o.EnableGemPacks = env("ENABLE_GEM_PACKS") == "true";
+        o.TrustForwardedFor = env("TRUST_X_FORWARDED_FOR") == "true";
+        if (int.TryParse(env("TRUSTED_PROXY_HOPS"), out var hops) && hops is >= 1 and <= 5) o.TrustedProxyHops = hops;
+        if (int.TryParse(env("TAX_RETENTION_DAYS"), out var tax) && tax > 0) o.TaxRetentionDays = tax;
+        // CRASHVERSE_ENV gates the run summary too: never honoured in prod, even in "Development" ASP.NET environment.
+        if (o.Env == CrashverseEnv.Prod) o.AllowClientRunSummary = false;
+    }                   // break-glass admin header; null = admin endpoints disabled
     public byte[] ObfuscationPepper = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32); public string ObfuscationPepperVersion = "p1";
 }
 
@@ -61,6 +101,7 @@ public sealed class LeaderboardEntryEx : LeaderboardEntry { public long submitte
 /// <summary>Same fields as BackendModels.LeaderboardPage, typed with the extended entry so the extra fields serialise.</summary>
 public sealed class LeaderboardPageEx
 {
+    public bool publicBoard = true; public string publicBoardReason;
     public BoardType board; public string periodKey; public bool closed; public List<LeaderboardEntryEx> top = new();
     public LeaderboardEntryEx me; public int totalEntries; public bool meIsGuestHidden; public long fetchedUnixUtc;
 }
@@ -73,7 +114,7 @@ public sealed class AccountDoc
 {
     public string playerId; public string displayName; public bool isGuest = true; public List<string> providers = new();
     public string primaryProvider = "guest"; public long createdUnixMs; public int riskScore; public bool refundAbuse;
-    public List<long> refundTimesUnixMs = new(); public string status = "active"; public long purgeAtUnixMs; public long lastActiveUnixMs; public bool hideName;
+    public List<long> refundTimesUnixMs = new(); public string status = "active"; public long purgeAtUnixMs; public long lastActiveUnixMs; public bool hideName; public bool minorRestricted; public long deletionWarningAtUnixMs;
     public AgeGateDoc ageGate; public string friendCode; public string deviceInstallId;
 }
 public sealed class AgeGateDoc { public string band; public string country; public bool requiresParentalConsent; public long ts; }
@@ -96,7 +137,7 @@ public sealed class AuditEntry { public string id; public long ts; public string
 public sealed class PurchaseDoc
 {
     public string tokenHash; public string playerId; public string productId; public string orderId; public string state; // granted|voided
-    public long grantedUnixMs; public long voidedUnixMs; public int gems; public List<string> cosmetics = new(); public string entitlementId;
+    public long grantedUnixMs; public long voidedUnixMs; public int gems; public List<string> cosmetics = new(); public string entitlementId; public long retainUntilUnixMs;
 }
 public sealed class EntitlementDoc { public string id; public string playerId; public string type; public string seasonId; public string state; public string purchaseTokenHash; }
 public sealed class InboxDoc { public string id; public string playerId; public string source; public Reward reward; public long expiresUnixUtc; public bool claimed; }
@@ -112,13 +153,13 @@ public sealed class RunDoc
     public string replayState = "none"; // none|queued|passed|failed
     public ReplayResult_ replay; public string boardKey; public List<string> boardKeys = new();
     // campaign/event specifics
-    public CampaignRunReportEx campaign; public int eventStars; public List<string> provisionalLedgerIds = new(); public bool firstClearDeferred;
+    public CampaignRunReportEx campaign; public int eventStars; public List<string> provisionalLedgerIds = new(); public bool firstClearDeferred; public bool serverSummary; public bool inputsPurged;
 }
 public sealed class ReplayResult_ { public int damageScore; public bool killed; public float destroyedRatio; public int bestCombo; public bool mastery; public bool won; public int shotsLeft; public int score; }
 public sealed class AttemptDoc { public string attemptId; public string playerId; public string mode; public string levelId; public string levelVersion; public long seed; public long expUnixMs; public bool used; }
-public sealed class LevelBestDoc { public string levelId; public int best; public string runId; public bool validated; }
+public sealed class LevelBestDoc { public string levelId; public int best; public string runId; public bool validated; public int stars; }
 public sealed class CampaignProgressDoc { public List<string> cleared = new(); public List<string> rewarded = new(); public Dictionary<string, int> firstClearsByDay = new(); public List<string> processedReports = new(); public Dictionary<string, string> reportResponses = new(); }
-public sealed class SeasonProgressDoc { public string seasonId; public int xp; public List<int> claimedFree = new(); public List<int> claimedPremium = new(); public Dictionary<string, int> eventBest = new(); public List<string> titanClearDays = new(); public bool endProcessed; }
+public sealed class SeasonProgressDoc { public string seasonId; public int xp; public List<int> claimedFree = new(); public List<int> claimedPremium = new(); public Dictionary<string, int> eventBest = new(); public List<string> titanClearDays = new(); public bool endProcessed; public int titanXp; }
 public sealed class BoardEntryDoc
 {
     public string boardKey; public string playerId; public int score; public long reachedUnixMs; public bool guestAtSubmit;
@@ -126,3 +167,6 @@ public sealed class BoardEntryDoc
 }
 public sealed class FriendDoc { public string playerId; public List<string> added = new(); }
 public sealed class TitanDayDoc { public string dayKey; public DailyTitanConfig overrideConfig; public string overrideBy; public bool bonusProcessed; }
+
+/// <summary>/v1/config/flags: the agreed FeatureFlags plus enableGemPacks (client PR #10 catalog flag).</summary>
+public sealed class FeatureFlagsEx : Crashverse.Backend.FeatureFlags { public bool enableGemPacks; }

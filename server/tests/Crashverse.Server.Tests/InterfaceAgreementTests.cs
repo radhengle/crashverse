@@ -92,7 +92,7 @@ public class InterfaceAgreementTests
         Assert.Equal(HttpStatusCode.OK, r.status);
         Assert.Equal("facebook", r["identities"][0].GetString()); Assert.Equal(JsonValueKind.String, r["provider"].ValueKind);
         Assert.Equal("BAD_PROVIDER", (await h.Post("/v1/account/link", new { provider = "Apple", token = "a" }, s)).Code); // Apple: not offered at launch
-        var si = await h.Post("/v1/auth/sign-in", new { provider = "facebook", token = "fb-cap", deviceInstallId = "d" }, null);
+        var si = await h.Post("/v1/auth/sign-in", new { provider = "facebook", token = "fb-cap", deviceInstallId = "d", ageToken = await h.AgeToken() }, null);
         Assert.Equal(s.pid, si["account"].GetProperty("playerId").GetString());
     }
 
@@ -220,9 +220,9 @@ public class InterfaceAgreementTests
     [InlineData(2013, 10, "US", "under13", true)]   // turns 13 this month → still treated as 12
     [InlineData(2012, 1, "DE", "13to15", true)]     // 14 in Germany (consent age 16)
     [InlineData(2012, 1, "GB", "13to15", false)]
-    [InlineData(2010, 1, "DE", "16plus", false)]
-    [InlineData(2009, 1, "IN", "16plus", true)]     // 17 in India (DPDP: 18)
-    [InlineData(1990, 5, "fr", "16plus", false)]
+    [InlineData(2010, 1, "DE", "16to17", false)]
+    [InlineData(2009, 1, "IN", "16to17", true)]     // 17 in India (DPDP: 18)
+    [InlineData(1990, 5, "fr", "adult", false)]
     public async Task AgeGate_Bands_AndConsentByCountry_NoAuth(int y, int m, string c, string band, bool consent)
     {
         await using var h = await Harness.Start();

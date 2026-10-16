@@ -60,10 +60,13 @@ public sealed class AuthService
     }
     static string FriendCode() { const string A = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; var b = RandomNumberGenerator.GetBytes(8); return new string(b.Select(x => A[x % A.Length]).ToArray()); }
 
-    public async Task<AuthResponse> Guest(string deviceInstallId)
+    public async Task<AuthResponse> Guest(string deviceInstallId, string ageToken)
     {
+        var g = new ComplianceService(_x).VerifyAgeToken(ageToken);
         if (string.IsNullOrWhiteSpace(deviceInstallId) || deviceInstallId.Length > 128) throw new ApiError(400, "BAD_REQUEST", "deviceInstallId required");
-        return await NewSession(await CreateAccount(deviceInstallId));
+        var a = await CreateAccount(deviceInstallId);
+        await new ComplianceService(_x).ApplyAge(a, g); await _x.Db.Put("accounts", a.playerId, a);
+        return await NewSession(a);
     }
 
     /// <summary>Rotating refresh tokens; presenting an already-rotated secret revokes the family (reuse detection).</summary>
@@ -142,6 +145,7 @@ public sealed class AuthService
     public async Task<object> Link(string pid, LinkRequest r)
     {
         var a = await Account(pid);
+        ComplianceService.Enforce(a, "link", _x.ConsentAges);
         var id = await VerifyProvider(pid, Providers.Norm(r?.provider), r);
         var key = $"{id.provider}:{id.subject}";
         var existing = await _x.Db.Get<IdentityDoc>("identities", key);
@@ -190,14 +194,20 @@ public sealed class AuthService
         return View(a);
     }
 
-    public async Task<AuthResponse> SignIn(string provider, LinkCredential c, string device)
+    public async Task<AuthResponse> SignIn(string provider, LinkCredential c, string device, string ageToken = null)
     {
+        var g = new ComplianceService(_x).VerifyAgeToken(ageToken);
         provider = Providers.Norm(provider ?? c?.provider);
         var id = await VerifyProvider(null, provider, c);
         var key = $"{provider}:{id.subject}";
         var existing = await _x.Db.Get<IdentityDoc>("identities", key);
-        if (existing != null) return await NewSession(await Account(existing.playerId));
+        if (existing != null)
+        {
+            var ex = await Account(existing.playerId); await new ComplianceService(_x).ApplyAge(ex, g); await _x.Db.Put("accounts", ex.playerId, ex);
+            return await NewSession(ex);
+        }
         var a = await CreateAccount(device, guest: false);
+        await new ComplianceService(_x).ApplyAge(a, g);
         if (!await _x.Db.TryCreate("identities", key, new IdentityDoc { key = key, playerId = a.playerId, linkedUnixMs = _x.NowMs }))
             throw new ApiError(409, "IDENTITY_IN_USE", "retry sign-in", true);
         a.providers.Add(provider); a.primaryProvider = provider; a.displayName = provider + " Wrecker";
@@ -369,10 +379,12 @@ public sealed class AuthService
 
     public async Task<object> SetVisibility(string pid, bool hide) => await _x.Db.Atomic("account:" + pid, async () =>
     {
-        var a = await Account(pid); a.hideName = hide; await _x.Db.Put("accounts", pid, a);
+        var a = await Account(pid);
+        if (!hide) ComplianceService.Enforce(a, "name", _x.ConsentAges); // E5: unconsented minors keep the generated name
+        a.hideName = hide; await _x.Db.Put("accounts", pid, a);
         await _x.Audit(pid, "visibility", pid, hide ? "hide" : "show");
         return (object)new VisibilityResponse { hideName = a.hideName };
     });
 
-    public static string PublicName(AccountDoc a) => a == null ? null : a.hideName ? "Wrecker #" + a.playerId[..Math.Min(4, a.playerId.Length)].ToUpperInvariant() : a.displayName;
+    public static string PublicName(AccountDoc a) => a == null ? null : a.hideName || a.minorRestricted ? "Wrecker #" + a.playerId[..Math.Min(4, a.playerId.Length)].ToUpperInvariant() : a.displayName;
 }

@@ -65,6 +65,24 @@ public sealed class Leaderboards
             if (!cal.IsClosed(e.boardKey, _x.Now)) { e.guestAtSubmit = false; await _x.Db.Put("boards", Id(e.boardKey, pid), e); }
     }
 
+    /// <summary>Null when the public Daily Titan board may be shown: flag on (strict "true"), a real replay worker configured,
+    /// and 100% of the top-N replayed. Otherwise the reason. Pending top-N runs are queued as a side effect.</summary>
+    public async Task<string> RankedBlockReason(List<BoardEntryDoc> entries, bool closed)
+    {
+        if (!_x.Opt.RankedPublicBoardEnabled) return "disabled";
+        if (!_x.Replay.Configured) return "replay_worker_not_configured";
+        string why = null; int pos = 0; var replay = new ReplayService(_x);
+        foreach (var e in entries)
+        {
+            if (e.shadow) continue;
+            var acc = await _x.Db.Get<AccountDoc>("accounts", e.playerId);
+            if (acc == null || acc.status != "active" || acc.isGuest || (e.guestAtSubmit && closed)) continue;
+            if (++pos > _x.Opt.TopN) break;
+            if (e.pendingRuns.Count > 0 || !e.hasValidated) { why = "top_n_not_fully_replayed"; foreach (var r in e.pendingRuns) await replay.Enqueue(r, "top_n"); }
+        }
+        return why;
+    }
+
     public async Task<LeaderboardPageEx> Page(string viewer, BoardType board, BoardPeriod period, bool friendsOnly)
     {
         var cal = new Calendar(_x); var now = _x.Now;
@@ -73,8 +91,25 @@ public sealed class Leaderboards
         HashSet<string> friends = friendsOnly ? (await new Friends(_x).Mutual(viewer)).ToHashSet() : null;
         var page = new LeaderboardPageEx { board = board, periodKey = key.Split(':', 2)[1], closed = closed, fetchedUnixUtc = Ctx.Unix(now) };
         var replay = new ReplayService(_x);
+        var entries = await Entries(key);
+        if (board == BoardType.DailyTitan) // B3: the public ranked board fails closed
+        {
+            var why = await RankedBlockReason(entries, closed);
+            if (why != null)
+            {
+                page.publicBoard = false; page.publicBoardReason = why;
+                var mine = entries.FirstOrDefault(e => e.playerId == viewer && !e.shadow);
+                if (mine != null)
+                {
+                    var acc = await _x.Db.Get<AccountDoc>("accounts", viewer);
+                    page.me = new LeaderboardEntryEx { rank = 0, playerId = viewer, name = acc?.displayName, score = mine.score, submittedUnixMs = mine.reachedUnixMs,
+                        submittedTicks = DateTimeOffset.FromUnixTimeMilliseconds(mine.reachedUnixMs).UtcDateTime.Ticks, isMe = true, provisional = mine.pendingRuns.Count > 0 || !mine.hasValidated };
+                }
+                return page; // no other players, no ranks
+            }
+        }
         int position = 0, rank = 0;
-        foreach (var e in await Entries(key))
+        foreach (var e in entries)
         {
             if (e.shadow) continue;
             var acc = await _x.Db.Get<AccountDoc>("accounts", e.playerId);
@@ -84,10 +119,10 @@ public sealed class Leaderboards
             if (hiddenGuest) { if (isMe) page.meIsGuestHidden = true; continue; }
             position++;
             bool pending = e.pendingRuns.Count > 0 || !e.hasValidated;
-            if (pending && position <= _x.Opt.TopN)
+            if (pending)
             {
-                foreach (var r in e.pendingRuns) await replay.Enqueue(r, "top_n");
-                if (!isMe) continue; // not shown to others until replayed (B3)
+                if (position <= _x.Opt.TopN) foreach (var r in e.pendingRuns) await replay.Enqueue(r, "top_n");
+                if (!isMe) continue; // provisional entries are never shown to others, at any rank (PR #1 review H2)
             }
             if (friends != null && !isMe && !friends.Contains(e.playerId)) continue;
             rank++;
@@ -159,10 +194,15 @@ public sealed class ReplayService
             if (run == null) { await _x.Db.Delete("replayQueue", q.key); continue; }
             var rr = await _x.Replay.Replay(new RunRecordView
             {
-                runId = run.runId, mode = run.mode, levelOrDay = run.key, seed = run.seed, simVersion = run.simVersion, clientScore = run.finalScore,
+                physicsHz = _x.Opt.PhysicsHz, runId = run.runId, mode = run.mode, levelOrDay = run.key, seed = run.seed, simVersion = run.simVersion, clientScore = run.finalScore,
                 inputs = run.campaign?.inputs ?? run.checkpoints.SelectMany(c => c.inputs ?? new List<InputEvent>()).ToList()
             });
             if (rr == null) { pending++; continue; }
+            if (run.serverSummary)
+            {
+                await new CampaignService(_x).ApplyServerSummary(run, rr);
+                await _x.Db.Delete("replayQueue", run.runId); done++; continue;
+            }
             bool ok = WithinTolerance(run, rr, out var why);
             int corrected = run.finalScore;
             if (ok)

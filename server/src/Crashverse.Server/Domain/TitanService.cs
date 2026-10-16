@@ -163,6 +163,8 @@ public sealed class TitanService
             if (e == null && _x.NowMs - run.lastShotServerUnixMs < _x.Opt.MinShotIntervalMs) e = "shots too close together"; // H2: server-measured
             if (e != null) throw new ApiError(422, "CHECKPOINT_REJECTED", "Checkpoint rejected: " + e);
             var ip = InputProblem(c.inputs);
+            // Ticks are run-global (50 Hz from BeginRun); a later shot can never start before the previous shot's last tick.
+            if (ip == null && last?.inputs is { Count: > 0 } li && c.inputs[0].tick < li[^1].tick) ip = "input ticks out of order";
             if (ip != null && !run.practice) { run.practice = true; run.practiceReason = ip; } // S1: no inputs → practice
             run.lastShotIndex = c.shotIndex; run.lastDamage = c.damageScore; run.lastShotsLeft = c.shotsLeft; run.lastKilled = c.killed; run.lastShotServerUnixMs = _x.NowMs;
             run.checkpoints.Add(new CheckpointRec { shotIndex = c.shotIndex, damageScore = c.damageScore, shotsLeft = c.shotsLeft, killed = c.killed, inputs = c.inputs, serverUnixMs = _x.NowMs });
@@ -233,7 +235,8 @@ public sealed class TitanService
             if (await rs.ShouldReplay(run, topCandidate)) await rs.Enqueue(run.runId, topCandidate ? "top" : "sample");
             st.submitted = true; st.score = score; st.status = final ? "submitted" : "submitted_partial"; st.attemptUsed = true;
             await _x.Db.Put("rankedStatus", stId, st);
-            if (killed) await new SeasonService(_x).OnTitanClear(pid, run.key, run.runId);
+            await new EconomyService(_x).TitanCompletion(pid, run.key);
+            if (killed) { await new SeasonService(_x).OnTitanClear(pid, run.key, run.runId); await new EconomyService(_x).Achievement(pid, "first_titan_kill"); }
             resp = new SubmitResponse { status = SubmitStatus.Accepted, finalScore = score, message = "Ranked score accepted (pending validation)" };
             if (tampered) resp.message += " (journal failed verification; server-held run state used)";
             else if (usedTail) resp.message += " (offline shots accepted after plausibility checks)";
@@ -250,6 +253,8 @@ public sealed class TitanService
         int cut = (int)Math.Ceiling(entries.Count * T.topPercent);
         bool deferred = false;
         var rs = new ReplayService(_x);
+        // H2: top-10% bonuses wait while the public ranked board is blocked (off, no replay worker, or top-N not replayed)
+        if (await lb.RankedBlockReason(entries, true) is { } blocked) return "deferred:" + blocked;
         foreach (var e in entries.Take(cut))
         {
             if (e.pendingRuns.Count > 0) { foreach (var r in e.pendingRuns) await rs.Enqueue(r, "top10"); deferred = true; continue; }
@@ -258,6 +263,7 @@ public sealed class TitanService
                 id = "titan_top_" + dayKey, playerId = e.playerId, source = $"Daily Titan top 10% ({dayKey})",
                 reward = new Reward { type = "shard", amount = T.topPercentBonusShards }, expiresUnixUtc = Ctx.Unix(_x.Now.AddDays(30))
             });
+            await new EconomyService(_x).TitanTop10(e.playerId, dayKey);
         }
         return deferred ? "deferred" : "done";
     }
