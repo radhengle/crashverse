@@ -30,7 +30,7 @@ put MONTH AgeGateScreen "$(coord AgeGateScreen Button_Month)"; ctap $MONTH_X $MO
 put MONTH_OPT AgeGateScreen "$(coord ListModal Button_$M)";   ctap $MONTH_OPT_X $MONTH_OPT_Y
 put YEAR AgeGateScreen "$(coord AgeGateScreen Button_Year)";  ctap $YEAR_X $YEAR_Y
 # the year list scrolls: swipe up until the wanted year is logged on screen
-for i in $(seq 1 20); do adb logcat -d -s Unity | grep -q "CVTAP|ListModal|Button_$YR|" && break; adb shell input swipe 540 1300 540 1000 400; sleep 2; done
+YEAR_SWIPES=0; for i in $(seq 1 20); do adb logcat -d -s Unity | grep -q "CVTAP|ListModal|Button_$YR|" && break; adb shell input swipe 540 1300 540 1000 400; sleep 2; YEAR_SWIPES=$i; done; export YEAR_SWIPES
 put YEAR_OPT x "$(coord ListModal Button_$YR)"; ctap $YEAR_OPT_X $YEAR_OPT_Y
 put CONTINUE x "$(coord AgeGateScreen Button_Continue)"; ctap $CONTINUE_X $CONTINUE_Y 5
 # First run has no login screen yet (guest sign-in is automatic in AccountLifecycle): GUEST taps the status bar, a no-op.
