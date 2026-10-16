@@ -23,6 +23,7 @@ static class T
         UnityEngine.Resources.Root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../Assets/_Project/Resources"));
         Tests.Register();
         AnimTests.Register(); // Animation Spec v1 implementation (anim/* PRs)
+        UiMotionTests.Register(); // 06 UI motion
         foreach (var (n, a) in Cases)
         {
             try { a(); } catch (Exception e) { _fail++; Console.WriteLine($"FAIL {n}: threw {e.GetType().Name}: {e.Message}"); }

@@ -254,7 +254,10 @@ namespace Crashverse.UI
     public class HudScreen : UIScreen
     {
         readonly GameSession _s; Text _shots, _pct, _combo, _status; Image _bar; Button _fire; Button[] _pu = new Button[3];
-        float _comboT;
+        // 06 UI motion (unscaled time, Reduce Motion variants): combo pop, % bar fill + win tick pop, shots punch.
+        readonly Crashverse.Feel.ComboUiStateMachine _comboSm = new Crashverse.Feel.ComboUiStateMachine();
+        RectTransform _tick; Image _tickImg; Crashverse.Feel.FloatTween _fill; float _fillShown, _fillTarget = -1f, _tickMs = -1f, _shotMs = -1f;
+        bool _tickHit; int _lastShots = -1;
         public override bool BlocksWorldInput => false;
         public HudScreen(GameSession s) { _s = s; }
 
@@ -269,17 +272,18 @@ namespace Crashverse.UI
             var barBg = UIFactory.Panel("Bar", root, Th.navy700); UIFactory.Band(barBg.rectTransform, true, 10f, 64f, 24f); barBg.raycastTarget = false;
             _bar = UIFactory.Panel("Fill", barBg.transform, Th.green); UIFactory.Stretch(_bar.rectTransform); _bar.raycastTarget = false;
             _bar.type = Image.Type.Filled; _bar.fillMethod = Image.FillMethod.Horizontal;
-            var tick = UIFactory.Panel("WinTick", barBg.transform, Th.white); tick.raycastTarget = false;
+            var tick = UIFactory.Panel("WinTick", barBg.transform, Th.white); tick.raycastTarget = false; _tickImg = tick; _tick = tick.rectTransform;
             var trt = tick.rectTransform; trt.anchorMin = new Vector2(_s.Ctx.level.winThreshold, 0); trt.anchorMax = new Vector2(_s.Ctx.level.winThreshold, 1); trt.sizeDelta = new Vector2(2, 6);
             _status = UIFactory.Label(root, "", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th); UIFactory.Band(_status.rectTransform, true, 24f, 80f);
-            _combo = UIFactory.Label(root, "", Th.titleSp, Th.orange, TextAnchor.MiddleCenter, Th, true); UIFactory.Place(_combo.rectTransform, new Vector2(0.5f, 0.7f), new Vector2(240, 48), Vector2.zero);
+            _combo = UIFactory.Label(root, "", Th.titleSp, Th.violet, TextAnchor.MiddleCenter, Th, true); // COMBO is violet (asset_list ui_label_combo)
+            _combo.rectTransform.localScale = Vector3.zero; UIFactory.Place(_combo.rectTransform, new Vector2(0.5f, 0.7f), new Vector2(240, 48), Vector2.zero);
             // bottom: power-ups left, FIRE right (thumb zone)
             var pu = UIFactory.HStack(root, Th.gap, 64f); UIFactory.Place(pu, new Vector2(0f, 0f), new Vector2(220, 64), new Vector2(Th.edgeGestureInset, Th.edgeGestureInset + 8));
             for (int i = 0; i < 3; i++) { int idx = i; _pu[i] = UIFactory.Button(pu, "", Th.navy500, () => _s.PowerUps.ToggleArm(idx), Th, 64, 64, Th.captionSp); }
             _fire = UIFactory.Button(root, "FIRE", Th.orange, () => _s.TryFire(), Th, 88, 88, Th.titleSp);
             UIFactory.Place((RectTransform)_fire.transform, new Vector2(1f, 0f), new Vector2(88, 88), new Vector2(-Th.edgeGestureInset, Th.edgeGestureInset + 8));
             _s.Changed += Refresh; _s.Ended += OnEnded;
-            _s.tracker.ComboChanged += n => { if (n >= ComboTracker.ShowFrom) { _combo.text = "x" + n; _comboT = 0.8f; _combo.fontSize = Mathf.RoundToInt(Th.titleSp + 4 * ComboTracker.PopTier(n)); } };
+            _s.tracker.ComboChanged += n => { if (n >= ComboTracker.ShowFrom) _combo.text = "COMBO x" + n; _comboSm.OnCombo(n); }; // shows from x3; pop sizes escalate at x5/x10/x20
             Refresh();
         }
 
@@ -287,6 +291,9 @@ namespace Crashverse.UI
         {
             if (_s == null || _s.Ctx == null) return;
             int total = _s.Ctx.ShotBudget;
+            if (_lastShots >= 0 && _s.ShotsLeft < _lastShots) { _shotMs = 0f; _comboSm.OnShot(); Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiShotSpend); } // new shot: punch + combo out
+            if (_lastShots >= 0 && _s.ShotsLeft > _lastShots) { _tickHit = false; _fillTarget = -1f; _tickImg.color = Th.white; } // Retry: tick re-arms
+            _lastShots = _s.ShotsLeft;
             int stars = StarRules.Compute(true, _s.ShotsLeft, total, _s.Ctx.level.star3Pct, _s.Ctx.level.star2Pct);
             _shots.text = $"Shots {_s.ShotsLeft}/{total}  {UIFactory.Stars(stars)}";
             for (int i = 0; i < 3; i++)
@@ -309,8 +316,25 @@ namespace Crashverse.UI
             if (_s == null || _s.tracker == null) return;
             float r = _s.tracker.DestroyedRatio;
             _pct.text = Mathf.FloorToInt(r * 100f) + "%" + (_s.Ctx.IsTitan ? $"  {_s.TitanDamageScore}" : "");
-            _bar.fillAmount = r;
-            if (_comboT > 0f) { _comboT -= Time.deltaTime; if (_comboT <= 0f) _combo.text = ""; }
+            float dt = Time.unscaledDeltaTime; bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
+
+            // % bar: 400 ms ease-out toward the latest ratio (re-targets on change, never allocates)
+            if (r != _fillTarget) { if (_fillTarget < 0f) _fillShown = r; _fillTarget = r; _fill.Start(_fillShown, r, Crashverse.Feel.UiMotionMath.BarFillMs, Crashverse.Feel.EaseType.OutQuad); }
+            _fillShown = _fill.Tick(dt); _bar.fillAmount = _fillShown;
+
+            // 85% win tick (level winThreshold): pops 1→1.4→1 in 250 ms when the fill reaches it, then stays gold. Reduce Motion: colour only.
+            float thr = _s.Ctx.level.winThreshold;
+            if (!_tickHit && Crashverse.Feel.UiMotionMath.ReachedThreshold(_fillShown, thr))
+            { _tickHit = true; _tickMs = 0f; _tickImg.color = Th.goldTrim; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiThresholdHit); }
+            if (_tickMs >= 0f) { float k = Crashverse.Feel.UiMotionMath.TickScale(_tickMs, rm); _tick.localScale = new Vector3(k, k, 1f); _tickMs += dt * 1000f; if (_tickMs >= Crashverse.Feel.UiMotionMath.TickPopMs) { _tickMs = -1f; _tick.localScale = Vector3.one; } }
+
+            // COMBO xN pop (ComboUiStateMachine raises UI_COMBO_UP / UI_COMBO_TIER)
+            _comboSm.Tick(dt);
+            float cs = Crashverse.Feel.UiMotionMath.ComboScale(_comboSm.State, _comboSm.ElapsedMs, _comboSm.N, rm);
+            _combo.rectTransform.localScale = new Vector3(cs, cs, 1f);
+
+            // shots-left punch 1.25 (200 ms)
+            if (_shotMs >= 0f) { float k = Crashverse.Feel.UiMotionMath.ShotPunchScale(_shotMs, rm); _shots.rectTransform.localScale = new Vector3(k, k, 1f); _shotMs += dt * 1000f; if (_shotMs >= Crashverse.Feel.UiMotionMath.ShotPunchMs) { _shotMs = -1f; _shots.rectTransform.localScale = Vector3.one; } }
         }
 
         void OnEnded(RunResult r) => Router.Push(new ResultsScreen(_s, r));
@@ -343,6 +367,8 @@ namespace Crashverse.UI
     public class ResultsScreen : UIScreen
     {
         readonly GameSession _s; readonly RunResult _r;
+        // 06 win sequence: stars pop one by one (0→1.3→1, 250 ms, 300 ms stagger), mastery tick, score count-up (600 ms). Unscaled; tap = skip.
+        readonly Text[] _star = new Text[3]; Text _mastery, _score; string _scoreFmt; float _seqMs; bool _starRaised0, _starRaised1, _starRaised2, _masteryRaised;
         public override bool IsModal => true;
         public ResultsScreen(GameSession s, RunResult r) { _s = s; _r = r; }
         protected override void Build(RectTransform root)
@@ -352,11 +378,20 @@ namespace Crashverse.UI
             var p = UIFactory.TrimPanel("Results", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 470), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 16f); UIFactory.Stretch(v);
             UIFactory.Label(v, _r.won ? (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? "TITAN DOWN!" : "SMASHED!") : "So close!", Th.titleSp, _r.won ? Th.goldFill : Th.red, TextAnchor.MiddleCenter, Th, true);
-            if (_r.won && !_s.Ctx.IsTitan) UIFactory.Label(v, UIFactory.Stars(_r.stars), 40, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            if (_r.won && !_s.Ctx.IsTitan)
+            {
+                var sr = UIFactory.HStack(v, Th.gap, 48f);
+                for (int i = 0; i < 3; i++)
+                {
+                    bool earned = i < _r.stars;
+                    _star[i] = UIFactory.Label(sr, earned ? "★" : "☆", 40, earned ? Th.goldFill : Th.navy700, TextAnchor.MiddleCenter, Th, true);
+                    _star[i].rectTransform.localScale = Vector3.zero;
+                }
+            }
             UIFactory.Label(v, $"Destroyed {Mathf.FloorToInt(_r.ratio * 100)}% (need {Mathf.RoundToInt(lvl.winThreshold * 100)}%)   Shots left {_r.shotsLeft}", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
-            if (lvl.mastery != null) UIFactory.Label(v, (_r.mastery ? "◆ Mastery complete: " : "◇ Mastery: ") + lvl.mastery.text, Th.captionSp, _r.mastery ? Th.cyan : Th.body, TextAnchor.MiddleCenter, Th);
+            if (lvl.mastery != null) _mastery = UIFactory.Label(v, (_r.mastery ? "◆ Mastery complete: " : "◇ Mastery: ") + lvl.mastery.text, Th.captionSp, _r.mastery ? Th.cyan : Th.body, TextAnchor.MiddleCenter, Th);
             if (_r.bestCombo >= ComboTracker.ShowFrom) UIFactory.Label(v, "Best combo x" + _r.bestCombo, Th.bodySp, Th.orange, TextAnchor.MiddleCenter, Th);
-            if (mode == RunMode.Campaign && _r.won) UIFactory.Label(v, $"Score {_r.score}  (best {AppServices.Save.BestScore(lvl.id)})", Th.bodySp, Th.goldFill, TextAnchor.MiddleCenter, Th);
+            if (mode == RunMode.Campaign && _r.won) { _scoreFmt = "  (best " + AppServices.Save.BestScore(lvl.id) + ")"; _score = UIFactory.Label(v, "Score 0" + _scoreFmt, Th.bodySp, Th.goldFill, TextAnchor.MiddleCenter, Th); }
             if (_s.Ctx.IsTitan) UIFactory.Label(v, $"Titan score {_r.titanScore}" + (_r.titanSubmit != null ? $"\n{_r.titanSubmit.status}: {_r.titanSubmit.message}" : ""), Th.bodySp, Th.orange, TextAnchor.MiddleCenter, Th);
             if (_r.firstClear && lvl.reward != null) foreach (var rw in lvl.reward) UIFactory.Label(v, $"+{rw.amount} {rw.type} {rw.id}", Th.captionSp, Th.green, TextAnchor.MiddleCenter, Th);
             if (!string.IsNullOrEmpty(_r.note)) UIFactory.Label(v, _r.note, Th.captionSp, Th.body, TextAnchor.MiddleCenter, Th);
@@ -371,6 +406,42 @@ namespace Crashverse.UI
             if (_r.won && mode == RunMode.Campaign && next != null && UnlockRules.IsLevelUnlocked(next, AppServices.Save))
                 UIFactory.Button(row, "Next", Th.green, () => { GameplayDirector.ExitToMap(); AppServices.Router.Push(new BriefingScreen(next, RunMode.Campaign, null)); }, Th);
         }
+        public override void Tick()
+        {
+            if (_seqMs > 4000f) return; // sequence finished
+            bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
+            if (Input.GetMouseButtonDown(0) || Input.touchCount > 0) _seqMs = Mathf.Max(_seqMs, 3000f); // tap skips to the final state (06)
+            _seqMs += Time.unscaledDeltaTime * 1000f;
+            for (int i = 0; i < 3; i++)
+            {
+                if (_star[i] == null) continue;
+                float ms = Crashverse.Feel.UiMotionMath.MsIntoStar(_seqMs, i);
+                bool earned = i < _r.stars;
+                float k = Crashverse.Feel.UiMotionMath.StarScale(ms, earned, rm);
+                _star[i].rectTransform.localScale = new Vector3(k, k, 1f);
+                if (earned && ms >= Crashverse.Feel.UiMotionMath.StarPeakMs) RaiseStar(i);
+            }
+            if (_mastery != null)
+            {
+                float ms = _seqMs - Crashverse.Feel.WinSequence.Steps[4].startMs; // "Mastery" step (1200 ms)
+                // v1 mastery row: appears at 1200 ms; if achieved, gold ping 1 → 1.2 → 1 (150 ms; Reduce Motion 1.1)
+                float k = ms <= 0f ? 0f : _r.mastery && ms < 150f ? 1f + (rm ? 0.1f : 0.2f) * Mathf.Sin(Mathf.PI * ms / 150f) : 1f;
+                _mastery.rectTransform.localScale = new Vector3(k, k, 1f);
+                if (_r.mastery && ms >= 150f && !_masteryRaised) { _masteryRaised = true; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiMasteryTick); }
+            }
+            if (_score != null)
+            {
+                float ms = _seqMs - Crashverse.Feel.WinSequence.Steps[5].startMs; // "Score" step (1500 ms)
+                _score.text = "Score " + Crashverse.Feel.UiMotionMath.CountUp(0, _r.score, ms, Crashverse.Feel.UiMotionMath.ResultsScoreMs) + _scoreFmt;
+            }
+        }
+
+        void RaiseStar(int i)
+        {
+            if (i == 0) { if (_starRaised0) return; _starRaised0 = true; } else if (i == 1) { if (_starRaised1) return; _starRaised1 = true; } else { if (_starRaised2) return; _starRaised2 = true; }
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiStar + (i + 1)); // UI_STAR_1..3 at the pop peak
+        }
+
         static LevelEntry NextLevel(LevelEntry l)
         {
             var ls = AppServices.Content.Chapter1.levels;
