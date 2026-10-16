@@ -27,6 +27,8 @@ namespace Crashverse.Destruction
 
         readonly Queue<DebrisPiece> _free = new Queue<DebrisPiece>();
         readonly List<DebrisPiece> _active = new List<DebrisPiece>();
+        /// <summary>Live debris rigidbodies (perf capture / tests).</summary>
+        public int ActiveCount => _active.Count;
         Transform _root;
 
         void Awake()

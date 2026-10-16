@@ -17,6 +17,7 @@ DEV_SYMBOLS = {
     r"\bDevOverride\b": ("CRASHVERSE_DEV",),
     r"\bGrantPremiumPass(Stub|ForTests)\b": ("CRASHVERSE_TESTS",),
     r"\bQADebugModal\b": ("CRASHVERSE_DEV", "DEVELOPMENT_BUILD"),
+    r"\b(PerfL10Fixture|PerfL10Stats|PerfL10Stage|PerfDummyPowerUpLane)\b": ("CRASHVERSE_DEV", "DEVELOPMENT_BUILD", "UNITY_EDITOR"),  # L10 perf staging
     r"daily_titan_override": (),  # never allowed anywhere
 }
 COMMENT = re.compile(r"^\s*(//|///|\*)")
@@ -55,6 +56,16 @@ def check_config():
         bad.append("ProjectSettings: AndroidTargetArchitectures must be 3 (ARMv7 | ARM64)")
     if not re.search(r"scriptingBackend:\s*\n\s*Android:\s*1", ps_text()):
         bad.append("ProjectSettings: Android scripting backend must be IL2CPP (1)")
+    # L10 perf staging: dev scenes never in the committed build list; Frame Timing Stats off in committed ProjectSettings
+    # (BuildScript turns it on for dev builds only).
+    ebs = ROOT / "ProjectSettings/EditorBuildSettings.asset"
+    if ebs.exists() and re.search(r"path:\s*Assets/_Project/Scenes/Dev/", ebs.read_text()):
+        bad.append("EditorBuildSettings lists a Scenes/Dev/ scene (dev scenes are added by BuildScript for dev builds only)")
+    if re.search(r"^\s*enableFrameTimingStats:\s*1", ps_text(), re.M):
+        bad.append("ProjectSettings: enableFrameTimingStats must be 0 (BuildScript enables it for dev builds only)")
+    bs = ROOT / "Assets/_Project/Scripts/Editor/BuildScript.cs"
+    if bs.exists() and "SetFrameTimingStats(!release)" not in bs.read_text():
+        bad.append("BuildScript must call SetFrameTimingStats(!release)")
     return bad
 
 def ps_text(): return (ROOT / "ProjectSettings/ProjectSettings.asset").read_text()
