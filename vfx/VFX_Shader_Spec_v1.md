@@ -23,12 +23,12 @@ Art v2 is referenced by path only (`/workspace/art/v2`), never copied into the r
 ## 2 · Shaders (delivered: `Assets/_Project/VFX/Shaders/`)
 | Shader | Use | Notes |
 |---|---|---|
-| `Crashverse/GlossyPBR` (**primary**, v1.1) | all opaque gameplay meshes on High/Mid; Low via SubShader LOD 150 | URP GGX BRDF (`InitializeBRDFData`, `DirectBRDFSpecular`, `GlobalIllumination` → `GlossyEnvironmentReflection` with box projection/blending), normal map, ORM, soft shadows, baked AO + SSAO, lightmaps (UV2), emissive, stylised terminator, shade tint, back-left rim, damage cracks (× vertex R), hit flash, flex (× vertex A), `_InnerFace` for M_<Mat>_Inner. Passes: ForwardLit, ShadowCaster, DepthOnly, DepthNormals (SSAO). |
+| `Crashverse/GlossyPBR` (**primary**, v1.1) | all opaque gameplay meshes on High/Mid; Low via SubShader LOD 150 | URP GGX BRDF (`InitializeBRDFData`, `DirectBRDFSpecular`, `GlossyEnvironmentReflection`, plain probe sample, no box projection or blending), normal map, ORM, soft shadows, baked AO from ORM.r only (no SSAO), lightmaps (UV2), emissive, stylised terminator, shade tint, back-left rim, damage cracks (× vertex R), hit flash, flex (× vertex A), `_InnerFace` for M_<Mat>_Inner. Passes: ForwardLit, ShadowCaster, DepthOnly (DepthNormals removed with SSAO). |
 | `Crashverse/GlossyToon` | Low-tier/fallback, stylised previews | Toon band (threshold/softness), shade tint, stepped Blinn spec (gloss + band cut), rim, emission, SH ambient. **Damage 2 steps**: `_DamageStep` 0/1/2 darkens and blends crack mask (R=step1, G=step2). `_HitFlash` lerp. ShadowCaster + DepthOnly passes. |
 | `Crashverse/VfxParticle` | impact sprites, dust, sparks, smoke | Unlit, blend via material (alpha or additive), vertex-colour fade, alpha-clip floor to cut invisible overdraw, `_Intensity` = flash cap hook. No depth texture needed. |
 | Dissolve/crack + power-up fresnel | — | **Deferred to v2 PR** (PM scope). Planned as variants of the above using the same CBUFFER layout. |
 
-SRP Batcher: every material property is in `UnityPerMaterial`; no per-object MaterialPropertyBlocks. Damage step and hit flash use **3 shared material instances per material type** (step 0/1/2) + one flash material swapped for the flash duration, so batching survives. Variants: GlossyToon = `_MAIN_LIGHT_SHADOWS` × fog × instancing (≤8 per pass); VfxParticle = fog only. Strip unused URP variants via URP asset (additional lights off, no SSAO, no decals keyword).
+SRP Batcher: every material property is in `UnityPerMaterial`; no per-object MaterialPropertyBlocks. Damage step and hit flash use **3 shared material instances per material type** (step 0/1/2) + one flash material swapped for the flash duration, so batching survives. Variants: GlossyToon = `_MAIN_LIGHT_SHADOWS` × fog × instancing (≤8 per pass); VfxParticle = fog only. Strip unused URP variants via URP asset (additional lights off, no SSAO, no decals keyword); exact GlossyPBR counts in §4a.
 
 ## 3 · Lighting & post (URP 14 mobile), v1.1 "real, top-quality objects"
 Reference: `/workspace/art/m1b/arena_brief_v2.md` (key #FFF2D6 1.4 at (50°, -35°, 0); gradient ambient sky #8CC8FF / equator #DCEFFF / ground #6FAE5A ×1.15; fog linear #CFEAFF 80–250). Values live in `VisualConfig`.
@@ -40,13 +40,13 @@ Reference: `/workspace/art/m1b/arena_brief_v2.md` (key #FFF2D6 1.4 at (50°, -35
 | Main light shadows | 2 cascades (split 25%), distance 40 m, 2048 | 1 cascade, 35 m, 1024 | hard, 1 cascade, 25 m, 512 (or off → blob under Wrecker) |
 | Soft shadows | on | on | off |
 | Additional lights | off (per-vertex for FX glows if needed) | off | off |
-| SSAO (Renderer Feature) | on: Depth Normals source, radius 0.3, intensity 0.6, direct lighting strength 0.25, half res off, falloff 40 m | on, **half res**, radius 0.25, intensity 0.5, sample count low (decision: Mid gets SSAO at half res; disable on GPUs below Adreno 6xx/Mali-G7x via device list) | off (baked AO from ORM only) |
-| Reflection probes | probe blending + box projection on | box projection on, blending off | off (SH only; matcap-like stepped spec) |
-| Depth texture / Opaque texture | on (SSAO) / off | on / off | off / off |
+| SSAO (Renderer Feature) | **off** (QA #2: AO = baked ORM.r only; shader has no SSAO keyword) | **off** | off |
+| Reflection probes | **one baked probe per zone, no blending, no box projection** (URP asset: Probe Blending off, Box Projection off) | same | off (SH + `_MetalReflectFloor`; stepped spec) |
+| Depth texture / Opaque texture | off / off | off / off | off / off |
 | Shader LOD | 300 | 300 | 150 |
 
 ### Reflection probes per arena
-1 baked box-projected probe covering the play diorama (bounds = island top + 6 m up), resolution 256 (High) / 128 (Mid), HDR, box projection on; 1 lower-priority probe for the sky/satellite islands at 64. Re-bake when arena layout changes. Wrecker gets its own anchor override to the arena probe. No realtime probes.
+One baked probe per zone, non-blended (each renderer takes the single most important probe), box projection off: the play diorama probe (bounds = island top + 6 m up, placed at diorama centre ~2 m up), resolution 256 (High) / 128 (Mid), HDR; one probe for the sky/satellite islands at 64. Zones do not overlap. Re-bake when arena layout changes. Wrecker gets its own anchor override to the arena probe. No realtime probes.
 
 **Rule (Art, steel metallic 1 "never renders dark"):** every arena scene ships (a) its baked probes above, baked before merge, and (b) Environment Reflections = Custom `Assets/_Project/VFX/Lighting/T_SkyFallback_Cube.png`, a bright gradient-sky cubemap (#8CC8FF / #DCEFFF / #6FAE5A, generated, import notes in that folder's README). It is never the black default skybox. As a backstop, CrashverseGlossyPBR applies `_MetalReflectFloor` (default #9AA3AF) as `max()` on the environment specular, weighted by metallic, on both High/Mid and Low. Modeler keeps steel albedo ≥ #9AA3AF without a probe.
 
@@ -54,7 +54,7 @@ Reference: `/workspace/art/m1b/arena_brief_v2.md` (key #FFF2D6 1.4 at (50°, -35
 - Tonemapping **ACES**, post-exposure **0** (Modeler preview rig matches). Colour grade that keeps the bright palette: Colour Adjustments saturation +15, contrast +10 (compensates ACES desaturation), White Balance temperature +5; Lift/Gamma/Gain neutral; Shadows-Midtones-Highlights: shadows tinted slightly to #5B6FA8 (≤5%).
 - Bloom: threshold 1.0, intensity 0.4 (High; Mid same, low-quality filtering), scatter 0.6; Core emissive ≈2.5 so only Core/power-ups bloom.
 - No vignette, no DoF in gameplay, no motion blur, no chromatic aberration. Low: no post; ACES look approximated by authored albedo.
-- Preview rig (Modeler, agreed): sun ≈1.2 from upper back-left, gradient ambient, one reflection probe, ACES exposure 0, bloom threshold 1 / intensity 0.4, SSAO on, no DoF.
+- Preview rig (Modeler, agreed): sun ≈1.2 from upper back-left, gradient ambient, one reflection probe, ACES exposure 0, bloom threshold 1 / intensity 0.4, SSAO off (AO from ORM), no DoF.
 
 ## 4 · Mobile budgets per quality tier (`QualityTier` Low/Mid/High)
 | Budget | Low | Mid | High |
@@ -66,9 +66,24 @@ Reference: `/workspace/art/m1b/arena_brief_v2.md` (key #FFF2D6 1.4 at (50°, -35
 | Full-screen passes | 0 (TF tint via UI image) | 1 | 1 |
 | FX texture size | 256, atlas | 512 atlas | 512 atlas (1024 for TF crack) |
 | Prop textures (albedo/normal/ORM) | 512 (mip-bias import) ASTC 8×8, normal/ORM not sampled | 1024 ASTC 6×6 (normal ASTC 5×5) | 1024 ASTC 6×6 (normal 5×5) |
-| Shader variants | GlossyPBR High/Mid ForwardLit ≤ 96 before stripping, target ≤ 32 shipped per tier after URP stripping; Low SubShader ≤ 8; game total ≤ 128 | | |
+| Shader variants | GlossyPBR: see §4a (124 declared, 32 shipped in the APK) | | |
 | Draw calls / SetPass gameplay | ≤120 / ≤40 | ≤150 / ≤50 | ≤200 / ≤60 |
 Debris fade = scale to 0 (no alpha) per 03. Dust = 1 flipbook quad on Low.
+
+## 4a · GlossyPBR variant count (QA #2, after removing SSAO / box projection / probe blending)
+Keyword sets per pass (`_` = keyword off). Fog `multi_compile_fog` = {_, FOG_LINEAR, FOG_EXP, FOG_EXP2}; instancing = {_, INSTANCING_ON}.
+| SubShader / pass | Keyword sets | Declared | Shipped (per tier) |
+|---|---|---|---|
+| LOD 300 ForwardLit | shadows {_, _MAIN_LIGHT_SHADOWS, _MAIN_LIGHT_SHADOWS_CASCADE} × soft {_, _SHADOWS_SOFT} × {_, LIGHTMAP_ON} × fog 4 × inst 2 | 3×2×2×4×2 = **96** | High: {CASCADE} × {SOFT} × LM 2 × fog {_, LINEAR} 2 × inst 2 = **8**; Mid: {_MAIN_LIGHT_SHADOWS} × {SOFT} × 2 × 2 × 2 = **8** |
+| LOD 300 ShadowCaster | {_, _CASTING_PUNCTUAL_LIGHT_SHADOW} × inst 2 | **4** | punctual stripped (no additional lights): **2** |
+| LOD 300 DepthOnly | inst 2 | **2** | **2** |
+| LOD 150 ForwardLitLow | {_, _MAIN_LIGHT_SHADOWS} × fog 4 × inst 2 | **16** | Low: {_, _MAIN_LIGHT_SHADOWS} (shadows can be off on Low) × fog 2 × inst 2 = **8** |
+| LOD 150 ShadowCaster | {_, _CASTING_PUNCTUAL_LIGHT_SHADOW} × inst 2 | **4** | **2** |
+| LOD 150 DepthOnly | inst 2 | **2** | **2** |
+| **Total** | | **124** (was 772 with SSAO ×2, box projection ×2, blending ×2 on ForwardLit and the DepthNormals pass) | **APK (union of the three URP assets): ForwardLit 16 + ShadowCaster 2 + DepthOnly 2 + ForwardLitLow 8 + ShadowCaster 2 + DepthOnly 2 = 32**. A single tier uses 8 + 2 + 2 (High or Mid) or 8 + 2 + 2 (Low). |
+Shipped counts assume Graphics settings fog = Linear only (strips FOG_EXP/EXP2), additional lights off in all three URP assets, and High = 2 cascades + soft, Mid = 1 cascade + soft, Low = hard or off. These are pre-stage counts (vertex/fragment programs are deduplicated further for `multi_compile_fragment`/`_vertex`).
+
+**Stripping note (IPreprocessShaders):** URP's own stripper removes features no URP asset in the build enables (SSAO, additional lights, decals). For our own guarantee, an editor `IPreprocessShaders` (Developer/VFX, `Scripts/VFX/Editor`, `callbackOrder` after URP's) should, for `Crashverse/GlossyPBR` only: drop `FOG_EXP`/`FOG_EXP2`; drop `_CASTING_PUNCTUAL_LIGHT_SHADOW`; in LOD 300 passes keep `_SHADOWS_SOFT` on whenever main light shadows are on (drop shadows-without-soft), and drop the shadows-off ForwardLit variant (High/Mid always have shadows); log the final count and fail the build if GlossyPBR > 32. Not added in this PR (needs a Unity build to verify; tracked as Q-D8).
 
 ## 4b · Texture & mesh authoring conventions (agreed with 3D Modeler)
 - **Per asset:** 1024² albedo (sRGB), normal (**OpenGL Y+**, linear, Unity "Normal map" import), ORM (linear: **R occlusion, G roughness, B metallic**). Low tier gets the same files with Max Size 512 via platform override.

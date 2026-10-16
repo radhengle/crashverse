@@ -1,6 +1,6 @@
 // CRASHVERSE glossy stylised PBR lit shader (URP 14, Android). Original.
-// High/Mid: GGX (URP BRDF via Lighting.hlsl) + normal map + ORM (R occlusion, G roughness, B metallic) + soft shadows + SSAO +
-// reflection probes (box projection, blending) + emissive + damage cracks + hit flash, with a soft stylised terminator, Art's shade tint
+// High/Mid: GGX (URP BRDF via Lighting.hlsl) + normal map + ORM (R occlusion, G roughness, B metallic; AO is baked ORM only, no SSAO) +
+// soft shadows + one plain (non-blended, non-box-projected) reflection probe per zone + emissive + damage cracks + hit flash, with a soft stylised terminator, Art's shade tint
 // multiply (#5B6FA8) and a back-left rim (#FFFFFF ~0.35).
 // Low: SubShader LOD 150 (selected with Shader.globalMaximumLOD = 150): no normal map / ORM sampling, stepped Blinn spec, hard shadows only.
 // SRP Batcher: one UnityPerMaterial CBUFFER shared by both SubShaders; no MaterialPropertyBlocks.
@@ -89,12 +89,10 @@ Shader "Crashverse/GlossyPBR"
             #pragma target 3.5
             #pragma vertex vert
             #pragma fragment frag
-            // Variant budget (see spec §4): shadows 3 × soft 2 × SSAO 2 × probe 2 × lightmap 2 × fog = ≤ 96 before stripping; URP asset strips unused.
+            // Variants (spec §4, QA #2): shadows 3 × soft 2 × lightmap 2 × fog 4 × instancing 2 = 96 declared. SSAO and probe box-projection/
+            // blending multi_compiles removed for mobile: AO = baked ORM, probes sampled plainly.
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
-            #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
-            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
-            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
@@ -146,14 +144,7 @@ Shader "Crashverse/GlossyPBR"
                 BRDFData brdf; half alpha = 1;
                 InitializeBRDFData(albedo.rgb, metal, half3(0,0,0), 1.0h - rough, alpha, brdf);
 
-                float2 ssUV = GetNormalizedScreenSpaceUV(i.positionCS);
-                #if defined(_SCREEN_SPACE_OCCLUSION)
-                    AmbientOcclusionFactor ssao = GetScreenSpaceAmbientOcclusion(ssUV);
-                    ao = min(ao, ssao.indirectAmbientOcclusion);
-                    half directAO = ssao.directAmbientOcclusion;
-                #else
-                    half directAO = 1.0h;
-                #endif
+                half directAO = 1.0h; // no SSAO on mobile: occlusion comes from ORM.r only (ao above)
 
                 float4 shadowCoord = TransformWorldToShadowCoord(i.positionWS);
                 half4 shadowMask = SAMPLE_SHADOWMASK(i.lightmapUV);
@@ -161,7 +152,7 @@ Shader "Crashverse/GlossyPBR"
                 half3 bakedGI = SAMPLE_GI(i.lightmapUV, i.vertexSH, n);
                 MixRealtimeAndBakedGI(L, n, bakedGI);
 
-                // Indirect: SH/lightmap diffuse + GlossyEnvironmentReflection (box projection / blending via keywords)
+                // Indirect: SH/lightmap diffuse + GlossyEnvironmentReflection (no keywords: plain unity_SpecCube0 sample, one probe per zone)
                 // Expanded URP GlobalIllumination so metals get a reflection floor (Art: steel never renders dark).
                 half3 reflWS = reflect(-v, n);
                 half3 envSpec = GlossyEnvironmentReflection(reflWS, i.positionWS, brdf.perceptualRoughness, ao);
@@ -241,36 +232,6 @@ Shader "Crashverse/GlossyPBR"
             ENDHLSL
         }
 
-        Pass
-        {
-            // Needed for SSAO (depth-normals prepass)
-            Name "DepthNormals"
-            Tags { "LightMode"="DepthNormals" }
-            ZWrite On
-            HLSLPROGRAM
-            #pragma target 3.5
-            #pragma vertex vertDN
-            #pragma fragment fragDN
-            #pragma multi_compile_instancing
-            struct A { float4 positionOS:POSITION; float3 normalOS:NORMAL; float4 tangentOS:TANGENT; half4 color:COLOR; float2 uv:TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
-            struct V { float4 positionCS:SV_POSITION; float2 uv:TEXCOORD0; half3 n:TEXCOORD1; half4 t:TEXCOORD2; };
-            V vertDN(A i)
-            {
-                V o; UNITY_SETUP_INSTANCE_ID(i);
-                o.positionCS = TransformObjectToHClip(FlexOS(i.positionOS.xyz, i.normalOS, i.color.a));
-                VertexNormalInputs nrm = GetVertexNormalInputs(i.normalOS, i.tangentOS);
-                o.n = nrm.normalWS; o.t = half4(nrm.tangentWS, i.tangentOS.w); o.uv = TRANSFORM_TEX(i.uv, _BaseMap);
-                return o;
-            }
-            half4 fragDN(V i) : SV_Target
-            {
-                half3 nTS = UnpackNormalScale(SAMPLE_TEXTURE2D(_BumpMap, sampler_BaseMap, i.uv), _BumpScale);
-                half3 b = i.t.w * cross(i.n, i.t.xyz);
-                half3 n = normalize(TransformTangentToWorld(nTS, half3x3(i.t.xyz, b, i.n)));
-                return half4(n, 0);
-            }
-            ENDHLSL
-        }
     }
 
     // ───────────── Low (LOD 150) ─────────────
