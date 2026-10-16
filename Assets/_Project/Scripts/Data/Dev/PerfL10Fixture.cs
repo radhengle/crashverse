@@ -31,11 +31,13 @@ namespace Crashverse.Data.Dev
         public const string ArmInput = "arm", FireInput = "fire";
 
         // Curtain wall in front of the boss (local x relative to structureBase; the Wrecker fires along +x).
-        public const int Layers = 2, Columns = 8, Rows = 10;
+        // Tuned after CI run 38947452856 (2x10x8: breaks bunched, saturated_ms 200): taller and narrower so falling-time spread
+        // staggers the landing breaks. Starting values; see physics/PERF_L10_STAGING.md.
+        public const int Layers = 2, Columns = 6, Rows = 16;
         public const float PieceW = 0.9f, PieceH = 0.55f, PieceD = 0.9f, Gap = 0.05f;
         public const float CurtainX = -3.2f, LayerStep = 1.0f;
         /// <summary>Row materials bottom→top. Row 0 is the explosive fuse that Chain Reactor sets off.</summary>
-        public static readonly string[] RowMats = { "wood", "glass", "brick", "glass", "wood", "steel", "glass", "brick", "glass", "wood" };
+        public static readonly string[] RowMats = { "wood", "glass", "brick", "glass", "wood", "steel", "glass", "brick", "glass", "wood", "glass", "brick", "glass", "wood", "glass", "wood" };
 
         /// <summary>Scripted inputs, tick-ordered (fixed-point aim via InputRecorder, like live play).</summary>
         public static InputEvent[] Script() => new[]
@@ -165,11 +167,19 @@ namespace Crashverse.Data.Dev
 
         public int MaterialsBroken => BreaksByMaterial.Count;
 
+        /// <summary>Breaks per 100 ms window from the shot, first n windows ("3.0.12..."), for tuning the fixture.</summary>
+        public string WindowHistogram(int n = 40)
+        {
+            var sb = new System.Text.StringBuilder();
+            for (int w = 0; w < n; w++) { if (w > 0) sb.Append('.'); sb.Append(_breaksPerWindow.TryGetValue(w, out var c) ? c : 0); }
+            return sb.ToString();
+        }
+
         void Mix(int v) { unchecked { for (int i = 0; i < 4; i++) { _hash ^= (byte)(v >> (8 * i)); _hash *= 1099511628211UL; } } }
 
         public string Summary(int run, long seed, string tier) =>
             $"PERFL10_SUMMARY,run={run},seed=0x{seed:X16},tier={tier},hit={(Hit ? 1 : 0)},hit_tick={HitTick},hit_y={HitY:0.00},hit_row={HitRow},hash={_hash:X16},events={Events},breaks={Breaks},saturated_ms={SaturatedMs}," +
-            $"peak_debris={PeakDebris},collapse_start={CollapseStarts},collapse_end={CollapseEnds},mats={string.Join("|", Mats())}";
+            $"peak_debris={PeakDebris},collapse_start={CollapseStarts},collapse_end={CollapseEnds},mats={string.Join("|", Mats())},windows={WindowHistogram()}";
 
         IEnumerable<string> Mats() { foreach (var kv in BreaksByMaterial) yield return kv.Key + ":" + kv.Value; }
     }
