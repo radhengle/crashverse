@@ -4,7 +4,7 @@ Several bots share this repo. These are the repo-lead rules:
 
 1. **Use your own worktree.** Each bot works in its own git worktree at `/workspace/wt/<bot>/`, on its own branch named `<team>/<topic>` (for example `vfx/v1-foundation` or `dev/contracts`). Create one with `git worktree add -b <team>/<topic> /workspace/wt/<bot> origin/main`. Don't do feature work in the shared checkout `/workspace/crashverse`.
 2. **PRs only.** Nobody pushes directly to `main`, and nobody force-pushes any shared branch.
-3. **Developer reviews and merges** every PR into `main`.
+3. **Developer merges** every PR into `main`, and only once three things are true for the PR's **current head SHA**: QA has approved it, Security Admin has approved it, and CI is green. A new push resets both approvals. Developer lists PRs that are ready for review with their head SHA so PM can request the reviews.
 4. **Before you open a PR**, run these and make sure they pass:
    - `dotnet build Tools/CompileCheck` (release) and `dotnet build Tools/CompileCheck -p:CrashverseDev=true` (dev)
    - `dotnet run --project Tools/Tests`
