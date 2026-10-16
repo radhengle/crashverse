@@ -70,11 +70,17 @@ namespace Crashverse.EditorTools.Import
         }
 
         // ---------- colliders, sockets, fragments ----------
-        /// <summary>UCX_&lt;Target&gt;[_##] (models README) or &lt;Target&gt;_COL[_##]. Returns target object name or null.</summary>
+        /// <summary>UCX_&lt;Target&gt;[_##] (models README) or &lt;Target&gt;_COL[_##]. Returns target object name or null.
+        /// Fragment hulls are exactly UCX_&lt;Piece&gt;_frag_## and keep the full name (UCX_Wall_frag_03 -> Wall_frag_03);
+        /// any other UCX_ name drops one trailing _## hull index (UCX_Carriage_01 -> Carriage).</summary>
         public static string ColliderTarget(string name)
         {
             if (string.IsNullOrEmpty(name)) return null;
-            if (name.StartsWith("UCX_", StringComparison.Ordinal)) return Regex.Replace(name.Substring(4), @"_\d{2}$", "");
+            if (name.StartsWith("UCX_", StringComparison.Ordinal))
+            {
+                string t = name.Substring(4);
+                return FragRx.IsMatch(t) ? t : Regex.Replace(t, @"_\d{2}$", "");
+            }
             var m = Regex.Match(name, @"^(?<t>.+?)_COL(_\d{2})?$");
             return m.Success ? m.Groups["t"].Value : null;
         }
@@ -92,6 +98,9 @@ namespace Crashverse.EditorTools.Import
 
         static readonly Regex FragRx = new Regex(@"_frag_\d{2}$", RegexOptions.Compiled);
         public static bool IsFragment(string name) => name != null && FragRx.IsMatch(StripLodSuffix(name));
+        /// <summary>Kit files must live under Assets/_Project/Models/BuildingKit/.</summary>
+        public const string KitRoot = ModelsRoot + "BuildingKit/";
+        public static bool KitPathOk(string assetPath) => assetPath.Replace('\\', '/').StartsWith(KitRoot, StringComparison.Ordinal);
         public static bool IsJoint(string name) => name != null && name.StartsWith("JNT_", StringComparison.Ordinal);
         /// <summary>Non-render helper empties that must survive prefab building untouched.</summary>
         public static bool IsHelper(string name) => SocketName(name) != null || IsJoint(name) || (name != null && (name.StartsWith("Spawn_", StringComparison.Ordinal) || name.StartsWith("ANCHOR", StringComparison.Ordinal) || name.EndsWith("_Hint", StringComparison.Ordinal) || name.StartsWith("VFX_", StringComparison.Ordinal)));

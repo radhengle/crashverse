@@ -59,6 +59,24 @@ namespace Crashverse.EditorTools.Import
                     var socks = new HashSet<string>(all.Select(t => C.SocketName(t.name)).Where(x => x != null));
                     foreach (var need in C.HeroSockets) if (!socks.Contains(need)) Err(baseName, "socket", $"missing Socket_{need}");
                 }
+                if ((cls == C.AssetClass.Kit || cls == C.AssetClass.KitFractured) && !C.KitPathOk(lod0)) Err(baseName, "path", $"kit files must be under {C.KitRoot}");
+                if (cls == C.AssetClass.KitFractured)
+                {
+                    var hullsByTarget = all.Where(t => t.name.StartsWith("UCX_")).GroupBy(t => C.ColliderTarget(t.name)).ToDictionary(g2 => g2.Key, g2 => g2.Count());
+                    foreach (var f in all.Where(t => C.IsFragment(t.name) && C.LodLevel(t.name, out _) <= 0 && !t.name.StartsWith("UCX_")).OrderBy(t => t.name, System.StringComparer.Ordinal))
+                    {
+                        int n = hullsByTarget.TryGetValue(f.name, out var k) ? k : 0;
+                        if (n != 1) Err(baseName, "collider", $"{f.name}: {n} UCX_{f.name} hulls, need exactly 1");
+                        var fm = f.GetComponent<MeshFilter>();
+                        if (fm != null && fm.sharedMesh != null)
+                        {
+                            var bnd = fm.sharedMesh.bounds;   // local space: centre offset = pivot distance from bounds centre
+                            float off = Vector3.Scale(bnd.center, f.lossyScale).magnitude, tol = Mathf.Max(0.05f, 0.1f * Vector3.Scale(bnd.size, f.lossyScale).magnitude);
+                            if (off > tol) Warn(baseName, "pivot", $"{f.name}: pivot {off:0.000} m from bounds centre (tol {tol:0.000}); README wants pivot = centre of mass");
+                        }
+                    }
+                    foreach (var h in hullsByTarget.Keys.Where(t => all.All(x => x.name != t))) Err(baseName, "collider", $"UCX_ hull targets missing '{h}'");
+                }
                 bool anyHull = all.Any(t => C.ColliderTarget(t.name) != null);
                 if (!anyHull) Warn(baseName, "collider", cls == C.AssetClass.KitFractured ? "no UCX_ hulls: fragments fall back to convex own-mesh" : "no UCX_/_COL hull: BoxCollider fallback");
 

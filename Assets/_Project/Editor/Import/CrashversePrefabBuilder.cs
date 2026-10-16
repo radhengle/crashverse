@@ -102,6 +102,7 @@ namespace Crashverse.EditorTools.Import
                 }
 
                 FlagFragments(root.transform);
+                SortOrdinal(root.transform);
                 if (C.IsStatic(cls))
                     foreach (var t in root.GetComponentsInChildren<Transform>(true))
                         GameObjectUtility.SetStaticEditorFlags(t.gameObject, StaticEditorFlags.ContributeGI | StaticEditorFlags.BatchingStatic | StaticEditorFlags.OccludeeStatic | StaticEditorFlags.ReflectionProbeStatic);
@@ -129,7 +130,15 @@ namespace Crashverse.EditorTools.Import
             {
                 var mf = hull.GetComponent<MeshFilter>();
                 if (mf == null || mf.sharedMesh == null) continue;
-                var target = CrashverseImportPostprocessor.FindDeep(root, C.ColliderTarget(hull.name)) ?? root;
+                string tname = C.ColliderTarget(hull.name);
+                var target = tname == root.name ? root : CrashverseImportPostprocessor.FindDeep(root, tname);
+                if (target == null)
+                {
+                    // No root fallback (Physics review): a misnamed hull must not silently collide the whole model.
+                    Debug.LogError($"[CrashverseImport] {root.name}: hull {hull.name} targets '{tname}', which does not exist. Skipped (no collider).");
+                    Object.DestroyImmediate(hull.gameObject);
+                    continue;
+                }
                 bool samePose = (hull.position - target.position).sqrMagnitude < 1e-8f && Quaternion.Angle(hull.rotation, target.rotation) < 0.01f && (hull.lossyScale - target.lossyScale).sqrMagnitude < 1e-8f;
                 var host = samePose ? target : NewChild(target, "COL_" + target.name, hull);
                 var mc = host.gameObject.AddComponent<MeshCollider>();
@@ -162,6 +171,22 @@ namespace Crashverse.EditorTools.Import
             go.transform.SetPositionAndRotation(pose.position, pose.rotation);
             go.transform.localScale = pose.localScale;
             return go.transform;
+        }
+
+        /// <summary>Fragments and JNT_ empties are reordered by ordinal name within each parent (deterministic sibling order for Physics).
+        /// They take the sibling slots they already occupied, so other children keep their positions.</summary>
+        static void SortOrdinal(Transform root)
+        {
+            foreach (var parent in root.GetComponentsInChildren<Transform>(true))
+            {
+                var kids = new List<Transform>();
+                for (int i = 0; i < parent.childCount; i++) kids.Add(parent.GetChild(i));
+                var picked = kids.Where(k => C.IsFragment(k.name) || C.IsJoint(k.name)).ToList();
+                if (picked.Count < 2) continue;
+                var slots = picked.Select(k => k.GetSiblingIndex()).OrderBy(i => i).ToList();
+                var sorted = picked.OrderBy(k => C.IsJoint(k.name) ? 1 : 0).ThenBy(k => k.name, System.StringComparer.Ordinal).ToList();
+                for (int i = 0; i < sorted.Count; i++) sorted[i].SetSiblingIndex(slots[i]);
+            }
         }
 
         static void FlagFragments(Transform root)

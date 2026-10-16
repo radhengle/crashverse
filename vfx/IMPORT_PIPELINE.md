@@ -9,7 +9,7 @@ Stacked on `vfx/v1-foundation` (PR #2), which holds the `Crashverse/GlossyPBR` s
 | `CrashverseImportPostprocessor.cs` | **The only** model and texture `AssetPostprocessor`: FBX settings, texture import with Android ASTC, material hookup, `attach_to` |
 | `MaterialWiring.cs` | Creates and wires `M_*` materials to GlossyPBR. Menu: **Crashverse ▸ Import ▸ Rewire Materials** |
 | `CrashversePrefabBuilder.cs` | Menus: **Build Prefabs (all / selected)** |
-| `Assets/_Project/Scripts/Import/ImportedPhysicsHints.cs` | Runtime **data-only** marker: `mass` (kg) and `breakForce` (N) from FBX user properties |
+| `Assets/_Project/Scripts/Import/ImportedPhysicsHints.cs` | Runtime **data-only** marker: `mass` (kg), `breakForce` (N), `breakTorque` (N·m), `anchorTo` (string) from FBX user properties |
 | `CrashverseImportValidator.cs` | Menu: **Validation Report**. Writes `Logs/CrashverseImportReport.md` and never modifies assets |
 
 ## Ownership (one owner per concern)
@@ -31,7 +31,8 @@ Assets/_Project/Models/<Asset>/M_<Asset>[_Emissive|_Inner].mat  created on impor
 Assets/_Project/Prefabs/Models/<Folder>/<Asset>.prefab          built by menu
 ```
 - Asset class comes from the file prefix: `Wrecker*` and `Hero_*` are **Hero**; `Island_*` and `Env_*` are **Environment**; `Kit_*` is **Kit**; `Kit_*_Fractured` is **KitFractured**.
-- Colliders: `UCX_<Target>[_##]` (models README) or `<Target>_COL[_##]`.
+- Colliders: `UCX_<Target>[_##]` (models README) or `<Target>_COL[_##]`. **Fragment hulls are exactly `UCX_<Piece>_frag_##`** and target `<Piece>_frag_##` (the `_##` is the fragment number, not stripped). Other hulls drop one trailing `_##` (`UCX_Carriage_01` targets `Carriage`).
+- **Kit files must be under `Assets/_Project/Models/BuildingKit/`**; the validator reports any other location as an error.
 - Sockets: `Socket_Muzzle|Core|Module|Booster|WheelDust` (v3). The v1 name `Muzzle_Spawn` is read as Muzzle.
 - Fragments are `<Piece>_frag_##`, and joints are `JNT_<A>__<B>`. Helpers (`Spawn_*`, `ANCHOR*`, `*_Hint`, `VFX_*`) are kept untouched.
 - No spaces and no Blender `.001` suffixes; the validator reports both as errors.
@@ -48,7 +49,7 @@ Assets/_Project/Prefabs/Models/<Folder>/<Asset>.prefab          built by menu
 | Off | blend shapes, cameras, lights, visibility, auto collider |
 | Materials | ImportStandard, External, BasedOnMaterialName, Local search |
 | `attach_to` user property | the object is reparented under the named object, keeping its world pose (models README) |
-| `mass_kg`, `break_force_N` user properties | stored on `ImportedPhysicsHints` (`mass`, `breakForce`) on that object as **authoring defaults**. Physics Developer owns the final values and their use; no physics logic is added |
+| `mass_kg`, `break_force_N`, `break_torque_Nm`, `anchor_to` | stored on `ImportedPhysicsHints` (`mass`, `breakForce`, `breakTorque`, `anchorTo`) as **authoring defaults**. A property missing from the FBX never overwrites an existing value. See *Physics hints* below |
 
 ## 2 · Materials and textures
 - Every `M_*` gets `Crashverse/GlossyPBR` with these maps: `T_<Asset>_A` to `_BaseMap`, `_N` to `_BumpMap`, `_ORM` to `_ORMMap`, `_E` to `_EmissionMap`, and `_Crack` to `_CrackMap` if present. `M_X_Emissive` and `M_X_Inner` read `T_X_*`.
@@ -79,7 +80,8 @@ Mipmaps and mip streaming are on, Read/Write is off, alpha is none, and aniso is
 | Other | 0.25 | 0.10 | 0.02 |
 
 - **Colliders:** each `UCX_`/`_COL` hull becomes a **convex MeshCollider** on its target, or on a `COL_<Target>` child when the pivot differs (**approved by PM**), and the hull renderer object is removed. Fallbacks: a fragment without a hull gets a convex collider from its own mesh, and a model with no collider at all gets one root BoxCollider from the renderer bounds.
-- **Sockets**, `JNT_*` and the other helpers are preserved with their transforms.
+- A hull whose target doesn't exist is **logged as an error and skipped**; there is no root fallback.
+- **Sockets**, `JNT_*` and the other helpers are preserved with their transforms. Fragments and `JNT_*` empties are **sorted by ordinal name** within their parent (fragments first, then joints, in the sibling slots they already used).
 - **Fragments** are flagged only by the `Fragment` tag, if it exists in TagManager; the `_frag_##` name stays the marker in any case. No Rigidbody, joint or destruction component is added.
 - Static classes get the static flags ContributeGI, BatchingStatic, OccludeeStatic and ReflectionProbeStatic.
 
@@ -88,7 +90,9 @@ Checks per model group:
 - Naming: spaces, `.00n`, `M_` prefix, `T_<Asset>_<Map>`, and an unknown class prefix
 - LOD set consistency
 - Hero sockets (all 5 are required)
-- Missing hulls
+- Missing hulls. For **KitFractured**, an error unless each fragment has **exactly one** `UCX_<Piece>_frag_##`, and an error for hulls with no matching fragment
+- Fragment pivot far from its mesh bounds centre (warning above max(0.05 m, 10% of the bounds diagonal))
+- Kit files outside `BuildingKit/`
 - Missing A/N/ORM maps (errors; warnings for `_Inner`), `_E` for `_Emissive`, and `_InnerFace`
 - Texture import: NormalMap type, sRGB, and the Android ASTC override
 - Triangle budgets (table below)
@@ -104,5 +108,12 @@ Checks per model group:
 
 Texel density hint = sqrt(UV area × albedo w × h / world area) over the LOD0 meshes. Targets: Hero 180–360 px/m (≈256), Kit 128–256, Environment 16–256 (macro map). The check warns below 0.75× min or above 1.5× max.
 
+## Physics hints (`ImportedPhysicsHints`)
+- Values are **float SI units**: `mass` in kg, `breakForce` in N, `breakTorque` in N·m, plus `anchorTo` as a name. They are authoring defaults only.
+- **Physics** converts them to its integer units and maps them onto `MaterialDefinition`; the pipeline adds no physics logic.
+- Steel `mass_kg` uses an **effective density of 800 kg/m³** (hollow sections), not solid steel.
+
 ## Compile check
 `cd vfx/compile_check/import && dotnet build` type-checks the pipeline against API-shaped UnityEngine/UnityEditor stubs. It is **not** a Unity compile; the first real Unity import is still pending (licence).
+
+`cd vfx/compile_check/import_tests && dotnet run` runs the stub test harness on the naming rules (including `UCX_Wall_frag_03` mapping to `Wall_frag_03`). It exits non-zero on failure.

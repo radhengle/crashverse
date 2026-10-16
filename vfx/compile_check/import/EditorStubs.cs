@@ -13,7 +13,7 @@ namespace UnityEngine
         public T GetComponent<T>() => default; public T AddComponent<T>() where T : Component => default; public T[] GetComponentsInChildren<T>(bool inc) => null; }
     public class Transform : Component { public Vector3 position; public Quaternion rotation; public Vector3 localScale; public Vector3 lossyScale => default; public int childCount => 0;
         public Transform root => null; public Transform GetChild(int i) => null; public void SetParent(Transform p, bool w) { } public void SetPositionAndRotation(Vector3 p, Quaternion r) { }
-        public Vector3 InverseTransformPoint(Vector3 p) => p; public T[] GetComponentsInChildren<T>(bool inc) => null; }
+        public int GetSiblingIndex() => 0; public void SetSiblingIndex(int i) { } public Vector3 InverseTransformPoint(Vector3 p) => p; public T[] GetComponentsInChildren<T>(bool inc) => null; }
     public class Renderer : Component { public Bounds bounds; public Material[] sharedMaterials; }
     public class MeshFilter : Component { public Mesh sharedMesh; }
     public class Collider : Component { }
@@ -22,7 +22,7 @@ namespace UnityEngine
     public enum LODFadeMode { None, CrossFade, SpeedTree }
     public struct LOD { public float screenRelativeTransitionHeight; public Renderer[] renderers; public LOD(float h, Renderer[] r) { screenRelativeTransitionHeight = h; renderers = r; } }
     public class LODGroup : Component { public LODFadeMode fadeMode; public void SetLODs(LOD[] l) { } public void RecalculateBounds() { } }
-    public class Mesh : Object { public int subMeshCount; public uint GetIndexCount(int s) => 0; public Vector3[] vertices; public Vector2[] uv; public int[] triangles; }
+    public class Mesh : Object { public Bounds bounds; public int subMeshCount; public uint GetIndexCount(int s) => 0; public Vector3[] vertices; public Vector2[] uv; public int[] triangles; }
     public class Shader : Object { public static Shader Find(string n) => null; }
     public class Texture : Object { public int width, height; }
     public class Texture2D : Texture { }
@@ -34,6 +34,7 @@ namespace UnityEngine
         public static Vector3 Cross(Vector3 a, Vector3 b) => a; public static Vector3 operator -(Vector3 a, Vector3 b) => a; }
     public struct Quaternion { public static float Angle(Quaternion a, Quaternion b) => 0; }
     public struct Bounds { public Vector3 center, size; public void Encapsulate(Bounds b) { } }
+    public static class Mathf { public static float Max(float a, float b) => a > b ? a : b; }
     public static class Debug { public static void Log(object o) { } public static void LogWarning(object o) { } public static void LogError(object o) { } }
 }
 namespace UnityEditor

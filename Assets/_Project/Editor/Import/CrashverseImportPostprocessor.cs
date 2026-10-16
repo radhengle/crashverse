@@ -77,37 +77,48 @@ namespace Crashverse.EditorTools.Import
         }
 
         /// <summary>FBX user properties. attach_to=&lt;Object&gt; reparents keeping world pose (models README).
-        /// mass_kg / break_force_N are stored as authoring defaults on ImportedPhysicsHints (data only; Physics owns use).</summary>
+        /// mass_kg, break_force_N, break_torque_Nm, anchor_to are stored as SI authoring defaults on ImportedPhysicsHints
+        /// (data only; Physics owns conversion and use). A property that is missing never overwrites an existing value.</summary>
         void OnPostprocessGameObjectWithUserProperties(GameObject go, string[] names, object[] values)
         {
             if (!C.InScope(assetPath)) return;
-            float mass = Num(names, values, "mass_kg"), brk = Num(names, values, "break_force_N");
-            if (mass > 0f || brk > 0f)
+            float? mass = Num(names, values, "mass_kg"), brk = Num(names, values, "break_force_N"), tq = Num(names, values, "break_torque_Nm");
+            string anchor = Str(names, values, "anchor_to");
+            if (mass.HasValue || brk.HasValue || tq.HasValue || anchor != null)
             {
                 var h = go.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
                 if (h == null) h = go.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
-                h.mass = mass; h.breakForce = brk;
+                if (mass.HasValue) h.mass = mass.Value;
+                if (brk.HasValue) h.breakForce = brk.Value;
+                if (tq.HasValue) h.breakTorque = tq.Value;
+                if (anchor != null) h.anchorTo = anchor;
             }
-            int i = Array.IndexOf(names, "attach_to");
-            if (i < 0 || !(values[i] is string target) || string.IsNullOrEmpty(target)) return;
-            var root = go.transform.root;
-            var parent = FindDeep(root, target);
+            string target = Str(names, values, "attach_to");
+            if (string.IsNullOrEmpty(target)) return;
+            var parent = FindDeep(go.transform.root, target);
             if (parent != null && parent != go.transform) go.transform.SetParent(parent, true);
             else Debug.LogWarning($"[CrashverseImport] {assetPath}: attach_to '{target}' not found for {go.name}");
         }
 
-        static float Num(string[] names, object[] values, string key)
+        internal static float? Num(string[] names, object[] values, string key)
         {
             int i = Array.IndexOf(names, key);
-            if (i < 0 || values[i] == null) return 0f;
+            if (i < 0 || values[i] == null) return null;
             switch (values[i])
             {
                 case float f: return f;
                 case double d: return (float)d;
                 case int n: return n;
+                case long l: return l;
                 case string str when float.TryParse(str, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v): return v;
-                default: return 0f;
+                default: return null;
             }
+        }
+
+        internal static string Str(string[] names, object[] values, string key)
+        {
+            int i = Array.IndexOf(names, key);
+            return i < 0 || values[i] == null ? null : values[i].ToString();
         }
 
         internal static Transform FindDeep(Transform t, string name)
