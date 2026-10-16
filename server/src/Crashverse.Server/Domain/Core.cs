@@ -21,9 +21,17 @@ public sealed class Content
             DailyRewards = R<DailyRewardsData>("daily_rewards.json"), Store = R<StoreCatalog>("store_catalog.json")
         };
         // requiresFlag (client PR #10 catalog) is read from the raw JSON so it applies whether or not StoreItem has the field yet.
-        if (System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(Path.Combine(root, "store_catalog.json")))?["items"] is System.Text.Json.Nodes.JsonArray items)
-            foreach (var it in items)
-                if (it?["sku"]?.GetValue<string>() is string s && it?["requiresFlag"] is System.Text.Json.Nodes.JsonValue rf && rf.TryGetValue<string>(out var f) && f.Length > 0) c.RequiresFlag[s] = f;
+        // The catalog's own flags block (client release flags, enableGemPacks=false in v1) is NOT the server switch: ENABLE_GEM_PACKS is
+        // (Ctx.Sku). So the flags and per-item requiresFlag are lifted out before validation and re-applied per request from server config.
+        var raw = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(Path.Combine(root, "store_catalog.json"))) as System.Text.Json.Nodes.JsonObject;
+        if (raw?["items"] is System.Text.Json.Nodes.JsonArray items)
+            foreach (var it in items.OfType<System.Text.Json.Nodes.JsonObject>())
+            {
+                if (it["sku"]?.GetValue<string>() is string s && it["requiresFlag"] is System.Text.Json.Nodes.JsonValue rf && rf.TryGetValue<string>(out var f) && f.Length > 0) c.RequiresFlag[s] = f;
+                it.Remove("requiresFlag");
+            }
+        raw?.Remove("flags");
+        if (raw != null) c.Store = raw.Deserialize<StoreCatalog>(O);
         Crashverse.Meta.StoreValidator.Validate(c.Store, out c.AcceptedStore); // server re-runs the cosmetics-only rule (review §5.7)
         var ld = Path.Combine(root, "Layouts");
         if (Directory.Exists(ld))
