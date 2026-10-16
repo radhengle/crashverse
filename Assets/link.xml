@@ -1,0 +1,8 @@
+<!-- BUG-24: colliders are only created natively by GameObject.CreatePrimitive (LevelBuilder, DebrisPool,
+     FireController, WreckerBuilder, ArenaBuilder), so no C# code references BoxCollider/SphereCollider and
+     IL2CPP engine-code stripping removed them from the player ("class 'BoxCollider' doesn't exist").
+     Blocks and the projectile then had no colliders: shots passed through and Destroyed stayed 0%.
+     Preserve the whole physics module. Guarded by Tools/ci/check_release_guards.py. -->
+<linker>
+  <assembly fullname="UnityEngine.PhysicsModule" preserve="all"/>
+</linker>
