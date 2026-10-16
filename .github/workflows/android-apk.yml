@@ -141,7 +141,7 @@ jobs:
       - name: Get build-tools 35 (zipalign -P 16, apksigner)
         run: |
           set -e
-          curl -sSLo bt.zip https://dl.google.com/android/repository/build-tools_r35-linux.zip
+          curl -fsSLo bt.zip https://dl.google.com/android/repository/build-tools_r35_linux.zip
           unzip -q bt.zip -d bt && echo "BT=$PWD/$(ls -d bt/* | head -1)" >> $GITHUB_ENV
 
       - name: zipalign -P 16 + re-sign v1+v2+v3 with the persistent dev key
