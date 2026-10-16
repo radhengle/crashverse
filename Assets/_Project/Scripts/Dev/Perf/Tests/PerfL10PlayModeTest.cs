@@ -36,8 +36,9 @@ namespace Crashverse.DevTools.Perf.Tests
             var modeType = t.GetNestedType("RetryMode");
             t.GetField("RetryModeOverride", BindingFlags.Public | BindingFlags.Static).SetValue(null, Enum.Parse(modeType, retryMode));
             t.GetField("RankedOverride", BindingFlags.Public | BindingFlags.Static).SetValue(null, ranked);
+            LogAssert.ignoreFailingMessages = true;
             var op = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(ScenePath, new LoadSceneParameters(LoadSceneMode.Single));
-            while (!op.isDone) yield return null;
+            while (!op.isDone) { yield return null; LogAssert.ignoreFailingMessages = true; }
             var done = t.GetProperty("Done"); float start = Time.realtimeSinceStartup;
             UnityEngine.Object stage = null;
             while (Time.realtimeSinceStartup - start < TimeoutSec)
@@ -45,6 +46,7 @@ namespace Crashverse.DevTools.Perf.Tests
                 stage = UnityEngine.Object.FindObjectOfType(t); // a new instance after every reload
                 if (stage != null && (bool)done.GetValue(stage)) break;
                 yield return null;
+                LogAssert.ignoreFailingMessages = true; // the test framework resets it; re-set after every waited frame (legacy-Input log)
             }
             Assert.IsNotNull(stage, "PerfL10Stage in scene");
             o.done = (bool)done.GetValue(stage);
