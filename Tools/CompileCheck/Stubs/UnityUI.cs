@@ -29,7 +29,7 @@ namespace UnityEngine
     public enum VerticalWrapMode { Truncate, Overflow }
     public enum ScreenOrientation { Portrait, PortraitUpsideDown, LandscapeLeft, LandscapeRight, AutoRotation }
     public enum RenderMode { ScreenSpaceOverlay, ScreenSpaceCamera, WorldSpace }
-    public class Canvas : Behaviour { public RenderMode renderMode; public int sortingOrder; public float scaleFactor = 1f; }
+    public class Canvas : Behaviour { public static void ForceUpdateCanvases() { } public RenderMode renderMode; public int sortingOrder; public float scaleFactor = 1f; }
     public class Mesh : Object
     {
         public Vector3[] vertices; public int[] triangles; public Vector3[] normals; public Vector2[] uv;
@@ -101,7 +101,7 @@ namespace UnityEngine.UI
     public class VerticalLayoutGroup : HorizontalOrVerticalLayoutGroup { }
     public class HorizontalLayoutGroup : HorizontalOrVerticalLayoutGroup { }
     public class ContentSizeFitter : UIBehaviour { public enum FitMode { Unconstrained, MinSize, PreferredSize } public FitMode verticalFit, horizontalFit; }
-    public class ScrollRect : UIBehaviour { public enum MovementType { Unrestricted, Elastic, Clamped } public RectTransform content; public bool horizontal, vertical; public MovementType movementType; }
+    public class ScrollRect : UIBehaviour { public enum MovementType { Unrestricted, Elastic, Clamped } public RectTransform content; public bool horizontal, vertical; public MovementType movementType; public RectTransform viewport; }
     public class RectMask2D : UIBehaviour { }
 }
 

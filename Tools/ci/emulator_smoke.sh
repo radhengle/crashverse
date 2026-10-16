@@ -11,7 +11,10 @@ adb shell wm size 1080x2340; adb shell wm density 420
 adb shell settings put secure immersive_mode_confirmations confirmed || true
 adb shell settings put global hide_error_dialogs 1 || true
 sleep 20 # let System UI settle on the software GPU
-adb install -r -g "$APK"; adb shell pm clear $PKG >/dev/null; adb logcat -c
+if ! adb install -r -g "$APK" > "$OUT/install.txt" 2>&1; then
+  code=$(grep -o "INSTALL_[A-Z_]*" "$OUT/install.txt" | head -1); cat "$OUT/install.txt"
+  echo "::error::adb install failed on API $(adb shell getprop ro.build.version.sdk | tr -d '\r'): ${code:-unknown}"; exit 1; fi
+cat "$OUT/install.txt"; adb shell pm clear $PKG >/dev/null; adb logcat -c
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null
 
 # coord <Screen> <Button> -> "x y" from the newest probe dump of that screen (waits up to 40 s)
