@@ -1,12 +1,15 @@
 import sys,os,bpy,bmesh,random,json; sys.path.insert(0,os.path.dirname(__file__)); from cv_lib import *
 from mathutils import Vector
 OUT=sys.argv[sys.argv.index("--")+1]; MODE=sys.argv[sys.argv.index("--")+2]  # validation|kit
-ROOT="/workspace/wt/3d-modeler/models/BuildingKit"
+GLB="/workspace/wt/3d-modeler-v3/models/BuildingKit"
+MINAX={"Glass":0.02}
 SPEC={ # piece: (sx width X, sy depth Y, sz height Z) ; grid nx,nz fragments ; count range
  "Wood": dict(cell="wood",dk="wood_dk",rough=0.45,metal=0,rng=(8,16),
    pieces={"Wall":((3,0.2,3),(4,3,1)),"Floor":((3,3,0.2),(3,3,1)),"Joint":((0.3,0.3,3),(1,1,8))}),
  "Brick":dict(cell="brick",dk="mortar",rough=0.5,metal=0,rng=(12,24),
    pieces={"Wall":((3,0.25,3),(6,3,1)),"Floor":((3,3,0.25),(4,4,1)),"Joint":((0.4,0.4,3),(1,1,12))}),
+ "Glass":dict(cell="water",dk="white",rough=0.05,metal=0,rng=(8,16),pieces={"Wall":((3,0.03,3),(4,3,1))}),
+ "Stone":dict(cell="stone",dk="cliff",rough=0.7,metal=0,rng=(4,10),pieces={"Wall":((3,0.4,3),(3,2,1))}),
  "Steel":dict(cell="steel",dk="steel_dk",rough=0.3,metal=0.0,rng=(4,10),
    pieces={"Wall":((3,0.16,3),(3,2,1)),"Floor":((3,3,0.16),(3,2,1)),"Joint":((0.3,0.3,3),(1,1,5))}),
 }
@@ -22,8 +25,31 @@ def seeds_for(sx,sy,sz,nx,ny,nz,rnd):
                     c=(idx+0.5)/n; c+= (rnd.random()-0.5)*0.5/n; p.append(c*L)
                 S.append(Vector((p[0]-sx/2,p[1]-sy/2,p[2])))
     return S
+CELLSZ={"Wood":(0.25,1.5),"Brick":(0.5,0.25),"Steel":(0.75,0.75),"Glass":(0.75,0.75),"Stone":(0.75,0.5)}
+def detail_bm(mat,sx,sy,sz):
+    """v3 LOD0 (500-1.5k tris): material cells (planks/bricks/plates/panes/blocks) across the two large axes,
+    1 cm proud of a core box on both faces; gaps expose the core (mortar/seams). Bricks unbevelled (12 tris), others 1-seg bevel."""
+    D=[sx,sy,sz]; th=min(range(3),key=lambda a:D[a]); ax=[a for a in range(3) if a!=th]
+    lng=max(ax,key=lambda a:D[a]); sh=[a for a in ax if a!=lng][0]
+    T=12 if mat=="Brick" else 44; lo,hi=-(-560//T),1400//T
+    c1,c2=CELLSZ[mat]; n={sh:max(1,round(D[sh]/c1)),lng:max(1,round(D[lng]/c2))}
+    while n[sh]*n[lng]<lo: n[lng]+=1
+    while n[sh]*n[lng]>hi: n[max(ax,key=lambda a:n[a])]-=1
+    g=0.02 if mat!="Glass" else 0.04
+    bm=box_bm(sx,sy,sz); off=[-sx/2,-sy/2,0]
+    for i in range(n[sh]):
+        for j in range(n[lng]):
+            c=[0,0,0]; s=[0,0,0]
+            for a,k in ((sh,i),(lng,j)):
+                L=D[a]/n[a]; c[a]=off[a]+(k+0.5)*L; s[a]=L-g
+            c[th]=off[th]+D[th]/2; s[th]=D[th]+0.02
+            b=box_bm(*s)   # box_bm is z-from-0, xy centred
+            for v in b.verts: v.co+=Vector((c[0],c[1],c[2]-s[2]/2))
+            if T==44: bevel_hard(b,min(s)*0.15 if mat!="Glass" else 0.008,1)
+            me=bpy.data.meshes.new("t"); b.to_mesh(me); b.free(); bm.from_mesh(me); bpy.data.meshes.remove(me)
+    return bm
 def build(mat,piece,outdir,texdir,glbdir):
-    global SRCDIR; SRCDIR=("BuildingKit_validation" if MODE=="validation" else f"Kit_{mat}")
+    global SRCDIR; SRCDIR=f"Kit_{mat}"
     reset(); sp=SPEC[mat]; (sx,sy,sz),grid=sp["pieces"][piece]
     if piece=="Floor": nx,ny,nz=grid[0],grid[1],1
     elif piece=="Wall": nx,ny,nz=grid[0],1,grid[1]
@@ -44,9 +70,9 @@ def build(mat,piece,outdir,texdir,glbdir):
     name=f"Kit_{mat}_{piece}"
     # ---- intact + LODs + UCX
     grp=empty(name,(0,0,0))
-    for lod in (0,1):
-        bm=box_bm(sx,sy,sz)
-        if lod==0: bevel_hard(bm,min(sx,sy,sz)*0.12,2)
+    for lod in (0,1,2):
+        bm=detail_bm(mat,sx,sy,sz) if lod==0 else box_bm(sx,sy,sz)
+        if lod==1: bevel_hard(bm,min(sx,sy,sz)*0.12,2)
         uv=bm.loops.layers.uv.verify()
         for f in bm.faces: outer_uv(f,uv)
         lo=mesh_from_bm(f"{name}_LOD{lod}",bm,[M],grp); add_vcol(lo); lo["static"]=True
@@ -63,14 +89,14 @@ def build(mat,piece,outdir,texdir,glbdir):
             vs=[v.co for v in bm.verts]
             if not vs: ok=False;break
             ext=[max(c[a] for c in vs)-min(c[a] for c in vs) for a in range(3)]
-            if min(ext)<0.15 or bm.calc_volume()*dens<0.5: ok=False;break
+            if min(ext)<MINAX.get(mat,0.15) or bm.calc_volume()*dens<0.5: ok=False;break
         if ok: break
         for bm in cells: bm.free()
     reset(); M,MI=mats()
     root=empty(name+"_Fractured"); frags=[]; info=[]
     for i,bm in enumerate(cells):
         fn=f"{name}_frag_{i+1:02d}"
-        hull0=bm.copy(); bevel_hard(bm,0.025,1)      # bevelled breakup edges (bevel faces = inner, darker)
+        hull0=bm.copy(); bevel_hard(bm,0.025 if mat!="Glass" else 0.004,1)      # bevelled breakup edges (bevel faces = inner, darker)
         uv=bm.loops.layers.uv.verify()
         for f in bm.faces:
             if on_box(f,sx,sy,sz):
@@ -115,9 +141,9 @@ def build(mat,piece,outdir,texdir,glbdir):
     export(os.path.join(outdir,f"{name}_Fractured.fbx"), os.path.join(glbdir,f"{name}_Fractured.glb") if glbdir else None)
     save_src(SRCDIR,name+"_Fractured")
     return info
-mats=["Wood","Brick","Steel"]; pieces=["Wall"] if MODE=="validation" else ["Wall","Floor","Joint"]
+# v3: validation walls ARE the kit walls (Kit_<Mat>_Wall*), all under Assets/_Project/Models/BuildingKit/ (#28 scans only there)
+mats=sys.argv[sys.argv.index("--")+3].split(",") if len(sys.argv)>sys.argv.index("--")+3 else list(SPEC)
 for m in mats:
-    for p in pieces:
-        if MODE=="validation": d=OUT; i=build(m,p,d,os.path.join(d,"textures"),os.path.join(d,"source"))
-        else: d=os.path.join(OUT,f"Kit_{m}"); i=build(m,p,d,os.path.join(d,"textures"),f"/workspace/wt/3d-modeler/models/BuildingKit/Kit_{m}/source")
-        print("BUILT",m,p,len(i),i)
+    for p in SPEC[m]["pieces"]:
+        d=os.path.join(OUT,f"Kit_{m}"); i=build(m,p,d,os.path.join(d,"textures"),f"{GLB}/Kit_{m}/source")
+        print("BUILT",m,p,len(i),i,flush=True)

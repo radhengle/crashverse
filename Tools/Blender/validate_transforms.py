@@ -7,7 +7,9 @@ def cen(o):
 SRC="/workspace/crashverse/models_src"
 for f in sorted(glob.glob(R+"/**/*.fbx",recursive=True)):
     d=os.path.basename(os.path.dirname(f)); d="BuildingKit_validation" if d=="validation" else d
-    b=os.path.join(SRC,d,os.path.basename(f).replace(".fbx",".blend"))
+    st=os.path.basename(f)[:-4]
+    if st.endswith(("_LOD1","_LOD2")): continue   # decimated per-file LODs: no 1:1 source
+    b=os.path.join(SRC,d,st.replace("_LOD0","")+".blend")
     if not os.path.exists(b): continue
     bpy.ops.wm.open_mainfile(filepath=b); a={o.name:cen(o) for o in bpy.data.objects if o.type=='MESH'}
     bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=f); e=[]

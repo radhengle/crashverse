@@ -57,3 +57,21 @@ P={paths!r}; c={cols}; s={cell}; r=(len(P)+c-1)//c
 S=Image.new('RGB',(c*s,r*s+28),(16,24,40)); d=ImageDraw.Draw(S); d.text((8,8),{title!r},fill=(232,176,75))
 for i,p in enumerate(P): S.paste(Image.open(p).convert('RGB').resize((s,s)),((i%c)*s,28+(i//c)*s))
 S.save({out!r})"""])
+
+def art_sky(sc):
+    """art sky #2F8CFF->#BDEBFF composited behind a transparent render (Filmic desaturates world blues)"""
+    import sys as _s; _M=_s.modules[__name__]; sc.render.film_transparent=True
+    import subprocess
+    SKY="""
+    import sys;from PIL import Image
+    p=sys.argv[1];im=Image.open(p).convert('RGBA');w,h=im.size;bg=Image.new('RGBA',(w,h))
+    a=(0x2F,0x8C,0xFF);b=(0xBD,0xEB,0xFF)
+    for y in range(h):
+      t=min(1,y/(h*0.8));bg.paste(tuple(int(a[i]+(b[i]-a[i])*t) for i in range(3))+(255,),(0,y,w,y+1))
+    Image.alpha_composite(bg,im).convert('RGB').save(p)"""
+    import textwrap; SKY=textwrap.dedent(SKY)
+    _shoot=_M.shoot; _cap=_M.caption
+    def shoot(p,*a,**k):
+        _M.caption=lambda *x,**y:None; _shoot(p,*a,**k); _M.caption=_cap
+        subprocess.check_call(["/usr/bin/python3","-c",SKY,p]); _cap(p)
+    _M.shoot=shoot; globals()['shoot']=shoot

@@ -7,7 +7,7 @@ def load():
         if o.name.startswith("UCX_") or (o.users_collection and o.users_collection[0].name=="HP_source"): o.hide_render=True
     for l in list(bpy.data.lights): bpy.data.lights.remove(l)
     return [o for o in bpy.data.objects if o.type=='MESH' and not o.hide_render]
-objs=load(); rig.setup(SAMP); rig.ground(5.5)
+objs=load(); sc0=rig.setup(SAMP); rig.art_sky(sc0); rig.ground(5.5)
 rig.shoot(f"{OUT}/Wrecker_v2_gameplay.png",objs,(0.8,-1.0,0.5),lens=35,fill=1.0)          # full 3/4 front (muzzle = -Y)
 rig.shoot(f"{OUT}/Wrecker_v2_beauty.png",objs,(1.0,-0.55,0.28),lens=70,dof=True,fill=1.0,fstop=2.0)
 tt=[]

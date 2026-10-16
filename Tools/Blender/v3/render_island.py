@@ -36,18 +36,6 @@ for k in range(9):
     for j in range(5):
         bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3,radius=R.uniform(4,8),location=c+Vector((j*5-10,R.uniform(-2,2),R.uniform(-1,2))))
         o=bpy.context.object; o.scale.z=0.55; o.data.materials.append(cm); bpy.ops.object.shade_smooth()
-sc.render.film_transparent=True
-import subprocess
-SKY="""import sys;from PIL import Image
-p=sys.argv[1];im=Image.open(p).convert('RGBA');w,h=im.size;bg=Image.new('RGBA',(w,h))
-a=(0x2F,0x8C,0xFF);b=(0xBD,0xEB,0xFF)
-for y in range(h):
-  t=min(1,y/(h*0.8));bg.paste(tuple(int(a[i]+(b[i]-a[i])*t) for i in range(3))+(255,),(0,y,w,y+1))
-Image.alpha_composite(bg,im).convert('RGB').save(p)"""
-_shoot=rig.shoot; _cap=rig.caption
-def shoot(p,*a,**k):
-    rig.caption=lambda *x,**y:None; _shoot(p,*a,**k); rig.caption=_cap
-    subprocess.check_call(["/usr/bin/python3","-c",SKY,p]); _cap(p)
-rig.shoot=shoot
+rig.art_sky(sc)
 rig.shoot(f"{OUT}/Island_Sunnyville_gameplay.png",objs,(0.0,1.0,0.5),lens=32,fill=0.95)
 rig.shoot(f"{OUT}/Island_Sunnyville_beauty.png",objs,(0.9,-0.6,0.22),lens=50,dof=True,fill=1.0,fstop=4.0)

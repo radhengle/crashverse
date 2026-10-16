@@ -1,0 +1,31 @@
+Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx [Kit] LOD0 tris=1304 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Floor.fbx [Kit] LOD0 tris=876 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Floor_Fractured.fbx [KitFractured] LOD0 tris=936 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx [Kit] LOD0 tris=576 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx [KitFractured] LOD0 tris=536 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx [Kit] LOD0 tris=876 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall_Fractured.fbx [KitFractured] LOD0 tris=1000 LODs=[0] hulls=18 frags=18 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx [Kit] LOD0 tris=716 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx [KitFractured] LOD0 tris=668 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor.fbx [Kit] LOD0 tris=716 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor_Fractured.fbx [KitFractured] LOD0 tris=308 LODs=[0] hulls=6 frags=6 -> PASS
+    warn  LOD0 308 < 500
+Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx [Kit] LOD0 tris=584 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx [KitFractured] LOD0 tris=220 LODs=[0] hulls=5 frags=5 -> PASS
+    warn  LOD0 220 < 500
+Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall.fbx [Kit] LOD0 tris=716 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall_Fractured.fbx [KitFractured] LOD0 tris=312 LODs=[0] hulls=6 frags=6 -> PASS
+    warn  LOD0 312 < 500
+Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Wall.fbx [Kit] LOD0 tris=1068 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Wall_Fractured.fbx [KitFractured] LOD0 tris=312 LODs=[0] hulls=6 frags=6 -> PASS
+    warn  LOD0 312 < 500
+Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor.fbx [Kit] LOD0 tris=1068 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor_Fractured.fbx [KitFractured] LOD0 tris=516 LODs=[0] hulls=9 frags=9 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx [Kit] LOD0 tris=584 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx [KitFractured] LOD0 tris=352 LODs=[0] hulls=8 frags=8 -> PASS
+    warn  LOD0 352 < 500
+Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx [Kit] LOD0 tris=1068 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall_Fractured.fbx [KitFractured] LOD0 tris=664 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/Island_Sunnyville/Island_Sunnyville_LOD0.fbx [Environment] LOD0 tris=9958 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Wrecker_v2/Wrecker_v2_LOD0.fbx [Hero] LOD0 tris=10842 LODs=[0, 1, 2] hulls=2 frags=0 -> PASS
+RESULT: ALL PASS (25 groups, 29 files)

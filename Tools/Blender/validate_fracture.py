@@ -6,7 +6,7 @@ def col_target(n):  # PR #28 (updated): fragment hulls exact, other UCX_ drop on
     m=_re.match(r"^(?P<t>.+?)_COL(_\d{2})?$",n); return m.group("t") if m else None
 import bpy,sys,os,glob,re
 from mathutils import Vector
-D=sys.argv[sys.argv.index("--")+1]; RNG={"Wood":(8,16),"Brick":(12,24),"Steel":(4,10)}; fails=0
+D=sys.argv[sys.argv.index("--")+1]; RNG={"Wood":(8,16),"Brick":(12,24),"Steel":(4,10),"Glass":(8,16),"Stone":(4,10)}; MINAX={"Glass":0.02}; fails=0
 def tri(o): return sum(len(p.vertices)-2 for p in o.data.polygons)
 for f in sorted(glob.glob(os.path.join(D,"*_Fractured.fbx"))):
     bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=f)
@@ -22,8 +22,8 @@ for f in sorted(glob.glob(os.path.join(D,"*_Fractured.fbx"))):
         mats=[s.material.name if s.material else None for s in o.material_slots]
         u=[x for x in ucx if col_target(x.name)==o.name]
         if "Col" not in o.data.color_attributes and not o.data.color_attributes: errs.append(f"{o.name} no vertex colour")
-        if t>=400: errs.append(f"{o.name} tris {t}")
-        if ext<0.15-1e-4: errs.append(f"{o.name} min axis {ext:.3f}")
+        if t>=300: errs.append(f"{o.name} tris {t}")
+        if ext<MINAX.get(mat,0.15)-1e-4: errs.append(f"{o.name} min axis {ext:.3f}")
         if m<0.5: errs.append(f"{o.name} mass {m}")
         if len(u)!=1: errs.append(f"{o.name} UCX count {len(u)}")
         elif tri(u[0])>255: errs.append(f"{o.name} UCX tris")
@@ -35,6 +35,7 @@ for f in sorted(glob.glob(os.path.join(D,"*_Fractured.fbx"))):
         if a not in names or b not in names or "break_force_N" not in j or "break_torque_Nm" not in j: errs.append(f"bad joint {j.name}")
     for a in anc:
         if a.name[7:] not in names: errs.append(f"bad anchor {a.name}")
+    if sum(tri(o) for o in fr)>1500: errs.append("fractured total >1500")
     tt=[tri(o) for o in fr]; ms=[o["mass_kg"] for o in fr]
     names={x.name for x in objs}
     for x in ucx:

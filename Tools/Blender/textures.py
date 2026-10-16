@@ -26,6 +26,24 @@ def sheet(kind,out,N=512):
         grain=0.5+0.5*np.sin((x+12*noise(N,64,3)*N/8)*0.35+pl*7); tint=rng.uniform(0.9,1.08,N//pw+1)[pl]
         alb=hx("#E3A766")[None,None]*(tint*(0.9+0.12*grain))[...,None]; alb=np.where(h[...,None]>0.3,alb,hx("#8A5A2E"))
         rough=0.5+0.1*grain; metal=np.zeros_like(h); ao=0.6+0.4*h; nstr=4; h=h+0.05*grain
+    elif kind=="Glass":  # clear pale-cyan glass, faint streaks, very smooth
+        streak=noise(N,32,6); h=0.1*streak
+        alb=hx("#BFEFFF")[None,None]*(0.95+0.08*streak[...,None]); rough=0.05+0.05*streak; metal=np.zeros_like(h); ao=np.ones_like(h); nstr=2
+    elif kind=="Stone":  # Art #10: warm sandstone #C9B48A, seams #8A7350, chipped edges, warm per-block variation, rough ~0.7
+        bw,bh,g=int(0.75*ppm),int(0.5*ppm),int(0.03*ppm)
+        row=y//bh; xo=(x+(row%2)*bw//2)%N; col=xo//bw; lx=xo%bw; ly=y%bh
+        edge=np.minimum(np.minimum(lx,bw-1-lx),np.minimum(ly,bh-1-ly)).astype(float)
+        chip=noise(N,6,11)*g*1.2; h=np.clip((edge-chip*0.6)/g,0,1)**0.6
+        tint=rng.uniform(0.9,1.08,(N//bh+2,N//bw+3,3))[row,col]*np.array([1.0,0.98,0.94])
+        base=hx("#C9B48A")[None,None]*tint*(0.92+0.14*noise(N,12,12)[...,None])
+        alb=np.where(h[...,None]>0.2,base,hx("#8A7350")); rough=np.where(h>0.2,0.7,0.85)+0.03*noise(N,8,13)
+        metal=np.zeros_like(h); ao=0.55+0.45*h; nstr=7; h=h+0.08*noise(N,8,14)
+    elif kind=="Granite":  # Art #10: indestructible, monolithic charcoal #4A4F5C -> #2E3340, no seams, smoothness ~0.5
+        n=0.6*noise(N,24,15)+0.4*noise(N,3,16); sp=(noise(N,1,17)>0.82)
+        alb=hx("#2E3340")[None,None]*(1-n[...,None])+hx("#4A4F5C")[None,None]*n[...,None]; alb=np.where(sp[...,None],alb*1.25,alb)
+        h=0.05*n; rough=0.5+0.05*n; metal=np.zeros_like(h); ao=np.ones_like(h)*0.95; nstr=2
+    elif kind=="Gold":   # Art #10 trim #E8B53A metallic 1
+        n=noise(N,16,18); h=0.03*n; alb=hx("#E8B53A")[None,None]*(0.95+0.08*n[...,None]); rough=0.28+0.05*n; metal=np.ones_like(h); ao=np.ones_like(h); nstr=1
     else:               # Steel: 1 m plates, seams + rivets, brushed
         pp=int(1.0*ppm); lx=x%pp; ly=y%pp; edge=np.minimum(np.minimum(lx,pp-1-lx),np.minimum(ly,pp-1-ly))
         h=np.clip(edge/3,0,1); rv=((np.minimum(lx,pp-1-lx)-12)**2+(np.minimum(ly,pp-1-ly)%64-32)**2)<36
@@ -35,7 +53,7 @@ def sheet(kind,out,N=512):
     save(alb,f"{out}/T_{kind}_A.png"); save(normal_from_height(h.astype(float),nstr),f"{out}/T_{kind}_N.png")
     save(np.dstack([ao,rough,metal]),f"{out}/T_{kind}_ORM.png")
 def inner(kind,out,N=256):
-    base={"Wood":"#C68A52","Brick":"#B0533D","Steel":"#949CA8"}[kind]
+    base={"Wood":"#C68A52","Brick":"#B0533D","Steel":"#949CA8","Glass":"#D8F6FF","Stone":"#A8916A"}[kind]
     n=noise(N,8,7)*0.6+noise(N,32,8)*0.4; alb=hx(base)[None,None]*(0.82+0.25*n[...,None])
     save(alb,f"{out}/T_{kind}_Inner_A.png")
 def detail(out,N=256):

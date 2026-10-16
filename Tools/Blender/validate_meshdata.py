@@ -9,10 +9,13 @@ for f in sorted(glob.glob(R+"/**/*.fbx",recursive=True)):
     for o in meshes:
         if not o.data.color_attributes: e.append(f"{o.name}: no vertex colour")
         nuv=len(o.data.uv_layers)
-        static=o.name.endswith(("_LOD0","_LOD1")) or (o.name.startswith("Island_") )
+        static=o.name.endswith(("_LOD0","_LOD1","_LOD2")) or (o.name.startswith("Island_") )
         if nuv<1: e.append(f"{o.name}: no UV0")
         if static and nuv<2: e.append(f"{o.name}: missing UV2 lightmap")
     m=re.search(r"Kit_(\w+?)_",os.path.basename(f))
+    if "Kit_Base" in f:
+        if mats!=["M_Gold","M_Granite"]: e.append(f"materials {mats}")
+        m=None
     if m and set(mats)-{f"M_{m.group(1)}",f"M_{m.group(1)}_Inner"}: e.append(f"extra materials {mats}")
     if "Wrecker" in f:
         names={o.name for o in bpy.data.objects}
