@@ -26,6 +26,22 @@ namespace Crashverse.Core
             return (await AppServices.Backend.Reauthenticate(cred)).reauthToken;
         }
 
+        /// <summary>Server said 403 AGE_GATE_REQUIRED: show the neutral age gate again, then POST /v1/agegate and /v1/account/agegate.</summary>
+        static async Task<bool> ReGate(IBackendService b)
+        {
+            var r = AppServices.Router;
+            var tcs = new TaskCompletionSource<bool>();
+            AgeGateScreen.ForceAsk();
+            r?.PopAllAndPush(new AgeGateScreen(ok => tcs.TrySetResult(ok)));
+            if (!await tcs.Task || !AgeGateScreen.PendingDob.HasValue) { r?.PopAllAndPush(new BlockedScreen()); return false; }
+            var d = AgeGateScreen.PendingDob.Value;
+            var ag = await b.SubmitAgeGate(d.year, d.month, AgeGateScreen.Country(), InstallId.Get());
+            AgeGateScreen.OnServerBand(AgeGate.FromServer(ag.band), ag.requiresParentalConsent);
+            await b.SubmitAccountAgeGate(ag.ageToken);
+            GameplayDirector.ShowMap();
+            return true;
+        }
+
         public static async Task OnConnected()
         {
             var b = AppServices.Backend; var r = AppServices.Router;
@@ -34,8 +50,9 @@ namespace Crashverse.Core
                 if (AgeGateScreen.PendingDob.HasValue) // E3: DOB held in memory only since the gate; sent once, then dropped
                 {
                     var d = AgeGateScreen.PendingDob.Value;
-                    var ag = await b.SubmitAgeGate(d.year, d.month, AgeGateScreen.Country());
+                    var ag = await b.SubmitAgeGate(d.year, d.month, AgeGateScreen.Country(), InstallId.Get());
                     AgeGateScreen.OnServerBand(AgeGate.FromServer(ag.band), ag.requiresParentalConsent);
+                    if (!string.IsNullOrEmpty(ag.ageToken)) await b.SubmitAccountAgeGate(ag.ageToken); // bind the band to this account (single-use token)
                 }
                 if (AccountDeletion.Pending)
                 {
@@ -43,7 +60,14 @@ namespace Crashverse.Core
                     if (res == AccountDeletion.Result.Scheduled) { GameBootstrap.RestartFirstRun(); r?.Toast("Your account deletion request was sent.", 4f); return; }
                     if (res == AccountDeletion.Result.ReauthRequired) r?.Toast("Sign in again to finish deleting your account.", 4f);
                 }
-                var acc = AppServices.Account = await b.GetAccount();
+                AccountState acc;
+                try { acc = await b.GetAccount(); }
+                catch (BackendException ex) when (ex.Code == "AGE_GATE_REQUIRED") // N5: older account without a band
+                {
+                    if (!await ReGate(b)) return;
+                    acc = await b.GetAccount();
+                }
+                AppServices.Account = acc;
                 if (acc.pendingDeletionUnixUtc > 0) // A5: signing in during grace offers cancel
                     r?.Push(new ConfirmModal("Account scheduled for deletion",
                         $"Your account will be permanently deleted on {DateTimeOffset.FromUnixTimeSeconds(acc.pendingDeletionUnixUtc):d MMM yyyy} (UTC). Cancel the deletion to keep it.",

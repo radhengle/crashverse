@@ -23,6 +23,7 @@ namespace Crashverse.Backend
         [Serializable] class Sub { public string playerId; public string name; public int score; public long ticks; public bool friend; }
         [Serializable] class Board { public string key; public int type; public bool processed; public List<Sub> subs = new List<Sub>(); }
         [Serializable] class EventBest { public string levelId; public int stars; }
+        [Serializable] class AgeTokenRec { public string token; public string installId; public string band; public bool consent; public bool used; }
         [Serializable] class LevelBestRec { public string levelId; public int best; }
         [Serializable] class TicketRec
         {
@@ -52,6 +53,7 @@ namespace Crashverse.Backend
             public bool seasonEndProcessed; // BUG-15: set when a season end has been processed (rollover idempotency/diagnostics)
             public List<LevelBestRec> campaignLevels = new List<LevelBestRec>(); // BUG-13: server-held best per level
             public List<string> processedReports = new List<string>();
+            public List<AgeTokenRec> ageTokens = new List<AgeTokenRec>();
         }
 
         readonly ContentDatabase _db;
@@ -125,7 +127,7 @@ namespace Crashverse.Backend
             Online();
             return ServerNow;
         }
-        public Task<AccountState> GetAccount() { Online(); return Task.FromResult(_s.account); }
+        public Task<AccountState> GetAccount() { RequireBand(); Online(); return Task.FromResult(_s.account); }
 
         // ---------------- Deletion job (D1) + guest inactivity (C2): run lazily on every authenticated call ----------------
         public const int GraceDays = 7, GuestWarnDays = 335, GuestPurgeDays = 365;
@@ -157,7 +159,7 @@ namespace Crashverse.Backend
         bool FreshReauth(string token) => !_s.account.linked ||
             (!string.IsNullOrEmpty(token) && token == _s.reauthToken && (new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds() - _s.reauthUnixMs) <= 5 * 60 * 1000);
         /// <summary>Stub of the server's per-market consent config (real values live server-side). TODO(Legal).</summary>
-        public HashSet<string> ConsentRequiredBands = new HashSet<string> { AgeBands.Age13to15, AgeBands.Age16to17 };
+        public HashSet<string> ConsentRequiredBands = new HashSet<string> { AgeBands.Teen13to15, AgeBands.Teen16to17 };
         bool MinorNoConsent(Func<AccountState, bool> scope) => ConsentRequiredBands.Contains(_s.account.ageBand) && !scope(_s.account);
         public static string GeneratedName(string playerId) => "Wrecker #" + (Math.Abs((playerId ?? "").GetHashCode()) % 9000 + 1000);
 
@@ -181,9 +183,10 @@ namespace Crashverse.Backend
             return Task.FromResult(a);
         }
         /// <summary>POST /agegate: band computed server-side from year/month, DOB not stored (E3). Under-13 never reaches here (E2) → 403.</summary>
-        public Task<AgeGateResponse> SubmitAgeGate(int birthYear, int birthMonth, string country)
+        public Task<AgeGateResponse> SubmitAgeGate(int birthYear, int birthMonth, string country, string deviceInstallId)
         {
             Online();
+            if (string.IsNullOrEmpty(deviceInstallId)) throw new BackendException("BAD_REQUEST", 400); // N4
             var now = ServerNow;
             var b = Crashverse.Meta.AgeGate.Classify(birthYear, birthMonth, now.Year, now.Month);
             if (b == Crashverse.Meta.AgeGate.Band.Unknown) throw new BackendException("BAD_DOB", 400);
@@ -195,7 +198,27 @@ namespace Crashverse.Backend
             _s.country = country ?? "";
             a.requiresParentalConsent = ConsentRequiredBands.Contains(a.ageBand);
             Save();
-            return Task.FromResult(new AgeGateResponse { band = a.ageBand, requiresParentalConsent = a.requiresParentalConsent });
+            var tok = "age_" + Guid.NewGuid().ToString("N");
+            _s.ageTokens.Add(new AgeTokenRec { token = tok, installId = deviceInstallId, band = band, consent = ConsentRequiredBands.Contains(band) });
+            Save();
+            return Task.FromResult(new AgeGateResponse { band = a.ageBand, requiresParentalConsent = a.requiresParentalConsent, ageToken = tok });
+        }
+
+        /// <summary>Stub of the server's legacy-account path: an account with no band gets 403 AGE_GATE_REQUIRED until re-gated (N5).</summary>
+        public bool RequireAgeGateForLegacyAccounts;
+        void RequireBand() { if (RequireAgeGateForLegacyAccounts && string.IsNullOrEmpty(_s.account.ageBand)) throw new BackendException("AGE_GATE_REQUIRED", 403); }
+
+        public Task<AccountState> SubmitAccountAgeGate(string ageToken)
+        {
+            Online();
+            var t = _s.ageTokens.Find(x => x.token == ageToken && !x.used);
+            if (t == null) throw new BackendException("BAD_AGE_TOKEN", 400); // unknown or reused (single use)
+            t.used = true;
+            var a = _s.account; var prev = Crashverse.Meta.AgeGate.FromServer(a.ageBand); var nb = Crashverse.Meta.AgeGate.FromServer(t.band);
+            if (prev == Crashverse.Meta.AgeGate.Band.Unknown || nb < prev) a.ageBand = t.band;
+            a.requiresParentalConsent = ConsentRequiredBands.Contains(a.ageBand);
+            Save();
+            return Task.FromResult(a);
         }
         public Task<ConsentRequestResponse> RequestParentalConsent(string parentEmail)
         {

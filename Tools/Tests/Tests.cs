@@ -842,11 +842,11 @@ static class Tests
         T.Add("REQ_E3_E5_E6_server_enforcement", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            var ag = b.SubmitAgeGate(2012, 1, "IN").Result; T.True(ag.band == "13to15" && ag.requiresParentalConsent, "13to15 + server says consent required");
-            T.Eq("13to15", b.SubmitAgeGate(1990, 5, "IN").Result.band, "most restrictive band kept (E3)");
-            var b2 = NewBackend("2026-10-16T10:00:00"); var a2 = b2.SubmitAgeGate(1990, 5, "IN").Result; T.True(a2.band == "adult" && !a2.requiresParentalConsent, "adult, no consent");
-            var b3 = NewBackend("2026-10-16T10:00:00"); b3.ConsentRequiredBands.Remove("16to17"); T.True(!b3.SubmitAgeGate(2009, 1, "IN").Result.requiresParentalConsent, "consent is server config, not client age math");
-            T.Eq("AGE_BLOCKED", Catch(() => b.SubmitAgeGate(2018, 1, "IN").Wait())?.Code, "under-13 refused");
+            var ag = b.SubmitAgeGate(2012, 1, "IN", "inst-1").Result; T.True(ag.band == "13to15" && ag.requiresParentalConsent, "13to15 + server says consent required");
+            T.Eq("13to15", b.SubmitAgeGate(1990, 5, "IN", "inst-1").Result.band, "most restrictive band kept (E3)");
+            var b2 = NewBackend("2026-10-16T10:00:00"); var a2 = b2.SubmitAgeGate(1990, 5, "IN", "inst-1").Result; T.True(a2.band == "adult" && !a2.requiresParentalConsent, "adult, no consent");
+            var b3 = NewBackend("2026-10-16T10:00:00"); b3.ConsentRequiredBands.Remove("16to17"); T.True(!b3.SubmitAgeGate(2009, 1, "IN", "inst-1").Result.requiresParentalConsent, "consent is server config, not client age math");
+            T.Eq("AGE_BLOCKED", Catch(() => b.SubmitAgeGate(2018, 1, "IN", "inst-1").Wait())?.Code, "under-13 refused");
             T.Eq("MINOR_CONSENT_REQUIRED", Catch(() => b.LinkAccount(new LinkCredential { provider = AuthProvider.Google, token = "t" }).Wait())?.Code, "link 403 without consent");
             T.Eq("AGE_RESTRICTED", Catch(() => b.VerifyPurchase("gems_100", "r").Wait())?.Code, "purchase 403 AGE_RESTRICTED");
             var cr = b.RequestParentalConsent("parent@example.com").Result; T.True(cr.status == "pending" && cr.requestId.Length > 0 && b.GetAccount().Result.consentPending, "consent request recorded");
@@ -869,6 +869,22 @@ static class Tests
             Win(b, "c1_l01"); T.True(b.SetProfileVisibility(true).Result.hideName, "visibility echoed");
             var lb = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result;
             T.True(lb.me.name.StartsWith("Wrecker #") && lb.top.TrueForAll(e => !e.isMe || e.name.StartsWith("Wrecker #")), "real name never returned when hidden");
+        });
+        T.Add("AGEGATE_install_id_token_and_legacy_regate", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            T.Eq(400, Catch(() => b.SubmitAgeGate(1990, 5, "IN", "").Wait())?.Status ?? 0, "deviceInstallId required (N4)");
+            var ag = b.SubmitAgeGate(1990, 5, "IN", "inst-9").Result; T.True(!string.IsNullOrEmpty(ag.ageToken), "ageToken issued");
+            T.Eq("adult", b.SubmitAccountAgeGate(ag.ageToken).Result.ageBand, "account re-gated with the token");
+            T.Eq("BAD_AGE_TOKEN", Catch(() => b.SubmitAccountAgeGate(ag.ageToken).Wait())?.Code, "token single use");
+            var legacy = NewBackend("2026-10-16T10:00:00"); legacy.RequireAgeGateForLegacyAccounts = true;
+            var ex = Catch(() => legacy.GetAccount().Wait()); T.True(ex?.Code == "AGE_GATE_REQUIRED" && ex.Status == 403, "older account → 403 AGE_GATE_REQUIRED");
+            legacy.SubmitAccountAgeGate(legacy.SubmitAgeGate(2011, 3, "IN", "inst-2").Result.ageToken).Wait();
+            T.Eq("13to15", legacy.GetAccount().Result.ageBand, "after re-gate the account works");
+            var lc = Src("Assets/_Project/Scripts/Core/AccountLifecycle.cs"); T.True(lc.Contains("\"AGE_GATE_REQUIRED\"") && lc.Contains("SubmitAccountAgeGate") && lc.Contains("InstallId.Get()"), "client handles the legacy path");
+            var id = Src("Assets/_Project/Scripts/Core/InstallId.cs"); T.True(id.Contains("Guid.NewGuid()") && id.Contains("EncryptedSharedPreferences") && !id.Contains("ANDROID_ID") && !id.Contains("getDeviceId"), "random UUID in Keystore prefs, never a hardware ID");
+            T.True(AgeBands.IsMinor("13to15") && AgeBands.IsMinor("16to17") && !AgeBands.IsMinor("adult"), "IsMinor");
+            T.True(!Src("Assets/_Project/Scripts/Backend/ServerContracts.cs").Contains("13to17"), "legacy 13to17 band removed");
         });
         T.Add("SECADMIN_unity_services_off_and_no_ad_id", () =>
         {

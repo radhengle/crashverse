@@ -719,6 +719,8 @@ namespace Crashverse.UI
         public static bool Needed => !Blocked && (PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0) == 0 || (PlayerPrefs.GetInt(SubmittedKey + AgeGate.Version, 0) == 0 && !PendingDob.HasValue));
         /// <summary>Year/month held in memory only, for one POST /agegate (13+ only). Never written to disk.</summary>
         public static (int year, int month)? PendingDob;
+        /// <summary>Clears the stored band so the gate asks again (server 403 AGE_GATE_REQUIRED). Blocked state is kept.</summary>
+        public static void ForceAsk() { PendingDob = null; PlayerPrefs.DeleteKey(BandKey + AgeGate.Version); PlayerPrefs.DeleteKey(SubmittedKey + AgeGate.Version); PlayerPrefs.Save(); }
         public static void OnServerBand(AgeGate.Band serverBand, bool requiresConsent)
         {
             PendingDob = null;

@@ -64,14 +64,22 @@ namespace Crashverse.Backend
     [Serializable] public class DeleteAccountResponse { public string status; public long purgeAt; }          // POST /account/delete
     [Serializable] public class StatusResponse { public string status; }                                      // POST /account/delete/cancel
     [Serializable] public class KeepActiveResponse { public long lastActiveAt; }                               // POST /account/keep-active
-    [Serializable] public class AgeGateResponse { public string band; public bool requiresParentalConsent; }   // POST /agegate
+    [Serializable] public class AgeGateResponse { public string band; public bool requiresParentalConsent; public string ageToken; }   // POST /v1/agegate
+    /// <summary>POST /v1/agegate body. deviceInstallId: random UUID per install (never a hardware ID); the ageToken is bound to it, single use.</summary>
+    [Serializable] public class AgeGateRequest { public int birthYear; public int birthMonth; public string country; public string deviceInstallId; }
+    /// <summary>POST /v1/account/agegate {ageToken}: re-gate an older account that has no band (server answered 403 AGE_GATE_REQUIRED).</summary>
+    [Serializable] public class AccountAgeGateRequest { public string ageToken; }
     [Serializable] public class ConsentRequestResponse { public string status; public string requestId; }     // POST /consent/parental/request
     [Serializable] public class ConsentStatusResponse { public string status; }                               // GET /consent/parental/status
     [Serializable] public class VisibilityResponse { public bool hideName; }                                  // POST /profile/visibility
     public static class ConsentStatus { public const string None = "none", Pending = "pending", Granted = "granted", Denied = "denied", Withdrawn = "withdrawn"; }
 
     /// <summary>Exactly the server's band strings. The client never derives consent from these.</summary>
-    public static class AgeBands { public const string Under13 = "under13", Age13to15 = "13to15", Age16to17 = "16to17", Adult = "adult"; }
+    public static class AgeBands
+    {
+        public const string Under13 = "under13", Teen13to15 = "13to15", Teen16to17 = "16to17", Adult = "adult";
+        public static bool IsMinor(string band) => band == Teen13to15 || band == Teen16to17;
+    }
 
     /// <summary>Server routes (PR #1, backend/server-v0): everything under /v1.</summary>
     public static class ApiRoutes
@@ -80,7 +88,7 @@ namespace Crashverse.Backend
         public const string Attempts = Prefix + "/attempts", Score = Prefix + "/score", Reauth = Prefix + "/auth/reauth",
             AccountDelete = Prefix + "/account/delete", AccountDeleteCancel = Prefix + "/account/delete/cancel", KeepActive = Prefix + "/account/keep-active",
             AgeGate = Prefix + "/agegate", ParentalConsentRequest = Prefix + "/consent/parental/request", ParentalConsentStatus = Prefix + "/consent/parental/status",
-            ProfileVisibility = Prefix + "/profile/visibility", PurchaseVerify = Prefix + "/purchases/google/verify";
+            ProfileVisibility = Prefix + "/profile/visibility", AccountAgeGate = Prefix + "/account/agegate", PurchaseVerify = Prefix + "/purchases/google/verify";
     }
 
     /// <summary>
