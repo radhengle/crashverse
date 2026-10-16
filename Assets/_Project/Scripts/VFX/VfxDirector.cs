@@ -8,84 +8,177 @@ namespace Crashverse.VFX
     public struct VfxHit { public Vector3 Position; public VfxMaterial Material; public VfxHit(Vector3 p, VfxMaterial m) { Position = p; Material = m; } }
 
     /// <summary>
-    /// Listens to AnimEventBus (impact/break/dust/collapse events, animation/audio_sync_table.md) and plays pooled one-shot
-    /// effects. Pure listener: never raises events or touches gameplay. Prefabs are optional; with none assigned it pools empty
-    /// GameObjects so the timing/budget logic still runs (effects authored in Editor, see VFX_Shader_Spec_v1.md §5).
+    /// Listens to AnimEventBus and plays pooled, code-built particle effects (VfxRecipes → VfxParticleBuilder). Pure listener: never raises
+    /// events or touches gameplay. Sources:
+    ///  - PHYS_* ImpactEvent (PR #18/#20) via ImpactEventAdapter: impacts, breaks, joint snaps, collapse dust, plus DamageFeedback by pieceId.
+    ///  - Legacy AnimEvents (IMPACT_*/BREAK_*/EXPLODE_*/COLLAPSE_LAND/DEBRIS_BURST): used until the first PHYS_* event arrives, then
+    ///    ignored for impact FX so one hit never spawns twice.
+    ///  - ANIM_WRECKER_FIRE: Wrecker muzzle flash at muzzleSocket (animation/01).
+    /// Budget: impacts lane 150 (Low 75) of the global 150 + 80 pool (power-up lane is reserved for the power-up FX PR); oldest culled first.
+    /// Break-type spawns: max 3 per 100 ms (03 beat 4); dropped spawns still get their sound. Unscaled time throughout.
     /// </summary>
     public class VfxDirector : MonoBehaviour
     {
-        public GameObject[] impactPrefabs = new GameObject[6]; // indexed by VfxMaterial
-        public GameObject dustPrefab;
-        public int poolPerMaterial = 6;
+        public VfxAssets assets = new VfxAssets();
         public QualityTier tier = QualityTier.Mid;
+        public Transform muzzleSocket;
+        [Tooltip("Instances per effect (Low: half, min 2).")] public int poolPerEffect = 4;
 
-        readonly Dictionary<int, RingPool<GameObject>> _pools = new Dictionary<int, RingPool<GameObject>>();
-        readonly List<GameObject> _live = new List<GameObject>(); readonly List<float> _until = new List<float>();
+        sealed class Fx { public GameObject Go; public ParticleSystem[] Systems; public string Id; public int BudgetId, Particles; public float Until; }
+
+        readonly Dictionary<string, RingPool<Fx>> _pools = new Dictionary<string, RingPool<Fx>>();
+        readonly Dictionary<string, VfxRecipe> _recipes = new Dictionary<string, VfxRecipe>();
+        readonly List<Fx> _live = new List<Fx>();
         readonly SpawnLimiter _limiter = new SpawnLimiter();
-        ParticleBudget _budget; readonly int[] _culled = new int[16]; readonly List<int> _liveIds = new List<int>(); int _nextId;
-        const int DustKey = 100;
+        readonly int[] _culled = new int[16];
+        ParticleBudget _budget; int _nextId; bool _physSeen; bool _builtRm; MotionSettings _motion;
 
-        void Awake()
+        public int LiveCount => _live.Count;
+        public int BudgetUsed => _budget?.Used ?? 0;
+        static bool Rm => MotionSettings.Current != null && MotionSettings.Current.ReduceMotion;
+
+        void Awake() { Build(); }
+
+        void Build()
         {
-            _budget = new ParticleBudget(VfxRules.GlobalParticleBudget((int)tier));
-            for (int m = 0; m < 6; m++) { int k = m; _pools[k] = MakePool(k < impactPrefabs.Length ? impactPrefabs[k] : null, "vfx_impact_" + k); }
-            _pools[DustKey] = MakePool(dustPrefab, "vfx_dust");
-        }
+            for (int i = _live.Count - 1; i >= 0; i--) Kill(_live[i], false);
+            _live.Clear(); _pools.Clear(); _recipes.Clear();
+            // children of the director are the pooled FX
+            var old = new List<Transform>(); foreach (Transform c in transform) old.Add(c);
+            foreach (var c in old) Destroy(c.gameObject);
+            VfxParticleBuilder.ClearMaterialCache();
 
-        RingPool<GameObject> MakePool(GameObject prefab, string name)
-        {
-            int size = tier == QualityTier.Low ? Mathf.Max(2, poolPerMaterial / 2) : poolPerMaterial;
-            return new RingPool<GameObject>(
-                () => { var g = prefab != null ? (GameObject)Instantiate(prefab, transform) : new GameObject(name); g.transform.SetParent(transform); return g; },
-                size, g => g.SetActive(true), g => g.SetActive(false));
-        }
-
-        void OnEnable() { AnimEventBus.Raised += OnEvent; }
-        void OnDisable() { AnimEventBus.Raised -= OnEvent; }
-
-        void OnEvent(string name, object payload)
-        {
-            switch (name)
+            int t = (int)tier; _builtRm = Rm;
+            _budget = new ParticleBudget(VfxRules.ImpactLaneBudget(t));
+            foreach (var id in VfxIds.All)
             {
-                case "IMPACT_WOOD": case "BREAK_WOOD": Spawn(VfxMaterial.Wood, payload, name.StartsWith("BREAK")); break;
-                case "IMPACT_BRICK": case "BREAK_BRICK": Spawn(VfxMaterial.Brick, payload, name.StartsWith("BREAK")); break;
-                case "IMPACT_STEEL": case "BREAK_STEEL": Spawn(VfxMaterial.Steel, payload, name.StartsWith("BREAK")); break;
-                case "IMPACT_STEEL_JOINT": case "BREAK_STEEL_JOINT": Spawn(VfxMaterial.SteelJoint, payload, name.StartsWith("BREAK")); break;
-                case "IMPACT_TERRAIN": Spawn(VfxMaterial.Terrain, payload, false); break;
-                case "EXPLODE_CRATE": case "EXPLODE_BARREL": Spawn(VfxMaterial.Explosive, payload, true); break;
-                case "COLLAPSE_LAND": case "DEBRIS_BURST": SpawnPool(DustKey, payload, 1.2f, true); break;
+                var r = VfxRecipes.Get(id); _recipes[id] = r; string rid = id;
+                int size = t == 0 ? Mathf.Max(2, poolPerEffect / 2) : poolPerEffect;
+                _pools[id] = new RingPool<Fx>(() => Make(rid, r, t), size, OnGet, OnRelease);
             }
         }
 
-        void Spawn(VfxMaterial m, object payload, bool isBreak)
+        Fx Make(string id, VfxRecipe r, int t)
         {
-            if (payload is VfxHit h) m = h.Material;
-            SpawnPool((int)m, payload, VfxRules.Impact(m).LifetimeSec, isBreak, VfxRules.ParticleCount(VfxRules.Impact(m).Particles, (int)tier));
+            var systems = new List<ParticleSystem>(4);
+            var go = VfxParticleBuilder.Build(r, assets, t, _builtRm, transform, systems);
+            return new Fx { Go = go, Id = id, Systems = systems.ToArray(), Particles = r.TotalParticles(t) };
+        }
+        static void OnGet(Fx f) => f.Go.SetActive(true);
+        static void OnRelease(Fx f)
+        {
+            if (f.Systems != null) foreach (var s in f.Systems) if (s != null) s.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            f.Go.SetActive(false);
         }
 
-        void SpawnPool(int key, object payload, float life, bool rateLimited, int particles = 6)
+        void OnEnable()
         {
-            if (rateLimited && !_limiter.TryAcquire(Time.unscaledTime)) return; // 03 beat 4: VFX dropped, sound still plays
-            var g = _pools[key].Get(); if (g == null) return;
-            g.transform.position = payload is VfxHit h ? h.Position : transform.position;
-            int id = ++_nextId;
-            int n = _budget.Request(id, particles, _culled);
-            for (int c = 0; c < n && c < _culled.Length; c++) { int idx = _liveIds.IndexOf(_culled[c]); if (idx >= 0) _until[idx] = 0f; } // oldest culled first
-            _live.Add(g); _until.Add(Time.unscaledTime + life); _liveIds.Add(id);
+            AnimEventBus.Raised += OnEvent;
+            _motion = MotionSettings.Current; if (_motion != null) _motion.Changed += OnMotionChanged;
+        }
+        void OnDisable()
+        {
+            AnimEventBus.Raised -= OnEvent;
+            if (_motion != null) _motion.Changed -= OnMotionChanged; _motion = null;
+        }
+        void OnMotionChanged() { if (Rm != _builtRm) Build(); } // flash layers are baked per Reduce motion state (rare toggle)
+
+        void OnEvent(string name, object payload)
+        {
+            if (ImpactEventAdapter.IsPhysEvent(name))
+            {
+                if (!ImpactEventAdapter.TryRead(payload, out var e)) return;
+                _physSeen = true; HandleImpact(e); return;
+            }
+            switch (name)
+            {
+                case "ANIM_WRECKER_FIRE":
+                    var mp = muzzleSocket != null ? muzzleSocket.position : payload is VfxHit mh ? mh.Position : transform.position;
+                    var mf = muzzleSocket != null ? muzzleSocket.forward : Vector3.forward;
+                    Play(VfxIds.MuzzleFlash, mp, mf, false, 0); return;
+            }
+            if (_physSeen) return; // PHYS_* is authoritative once present (no double spawns)
+            switch (name)
+            {
+                case "IMPACT_WOOD": case "BREAK_WOOD": Legacy(VfxMaterial.Wood, payload, name[0] == 'B'); break;
+                case "IMPACT_BRICK": case "BREAK_BRICK": Legacy(VfxMaterial.Brick, payload, name[0] == 'B'); break;
+                case "IMPACT_STEEL": case "BREAK_STEEL": Legacy(VfxMaterial.Steel, payload, name[0] == 'B'); break;
+                case "IMPACT_STEEL_JOINT": case "BREAK_STEEL_JOINT": Legacy(VfxMaterial.SteelJoint, payload, name[0] == 'B'); break;
+                case "IMPACT_TERRAIN": Legacy(VfxMaterial.Terrain, payload, false); break;
+                case "EXPLODE_CRATE": case "EXPLODE_BARREL": Legacy(VfxMaterial.Explosive, payload, true); break;
+                case "COLLAPSE_LAND":
+                {
+                    var m = payload is VfxHit h ? h.Material : VfxMaterial.Brick;
+                    Play(VfxIds.CollapseDust, PosOf(payload), Vector3.up, false, VfxRecipes.DustTint(m)); break;
+                }
+                case "DEBRIS_BURST": Play(VfxRecipes.DustFor(payload is VfxHit d ? d.Material : VfxMaterial.Terrain), PosOf(payload), Vector3.up, true, 0); break;
+            }
+        }
+
+        void Legacy(VfxMaterial m, object payload, bool isBreak)
+        {
+            if (payload is VfxHit h) m = h.Material;
+            Play(VfxRecipes.ImpactFor(m, isBreak), PosOf(payload), Vector3.up, isBreak, 0);
+        }
+
+        Vector3 PosOf(object payload) => payload is VfxHit h ? h.Position : transform.position;
+
+        /// <summary>ImpactEvent → particles + DamageFeedback (hit flash / crack step) on the piece.</summary>
+        public void HandleImpact(in VfxImpact e)
+        {
+            var route = VfxImpactRouting.Route(e);
+            if (e.PieceId != -1 && (route.HitFlash || route.DamageStep > 0) && DamageFeedback.TryGet(e.PieceId, out var fb))
+            {
+                if (route.HitFlash) fb.Hit(e.Tier);
+                if (route.DamageStep > 0) fb.SetDamageStep(route.DamageStep);
+            }
+            if (route.EffectId != null) Play(route.EffectId, new Vector3(e.X, e.Y, e.Z), Vector3.up, route.RateLimited, route.Tint);
+        }
+
+        /// <summary>Spawn one pooled effect. Returns false when rate-limited/unknown.</summary>
+        public bool Play(string id, Vector3 position, Vector3 forward, bool rateLimited, uint tint)
+        {
+            if (!_pools.TryGetValue(id, out var pool)) return false;
+            if (rateLimited && !_limiter.TryAcquire(Time.unscaledTime)) return false; // 03 beat 4
+            var fx = pool.Get(); if (fx == null) return false;
+            _live.Remove(fx); if (fx.BudgetId != 0) _budget.Release(fx.BudgetId); // recycled oldest in its own pool
+
+            fx.BudgetId = ++_nextId;
+            int n = _budget.Request(fx.BudgetId, fx.Particles, _culled);
+            for (int c = 0; c < n && c < _culled.Length; c++) CullById(_culled[c]); // global oldest-first cull
+
+            fx.Go.transform.position = position;
+            fx.Go.transform.rotation = Quaternion.FromToRotation(Vector3.forward, forward.sqrMagnitude > 1e-6f ? forward.normalized : Vector3.up);
+            var col = tint == 0 ? new Color(1f, 1f, 1f, 1f) : VfxColor.From(tint);
+            foreach (var s in fx.Systems)
+            {
+                if (s == null) continue;
+                if (tint != 0) { var main = s.main; var a = main.startColor.color.a; main.startColor = new ParticleSystem.MinMaxGradient(new Color(col.r, col.g, col.b, a)); }
+                s.Play(true);
+            }
+            fx.Until = Time.unscaledTime + _recipes[id].Duration + 0.1f;
+            _live.Add(fx); return true;
+        }
+
+        void CullById(int budgetId)
+        {
+            for (int i = 0; i < _live.Count; i++) if (_live[i].BudgetId == budgetId) { Kill(_live[i], true); return; }
+        }
+
+        void Kill(Fx fx, bool alreadyReleasedFromBudget)
+        {
+            if (!alreadyReleasedFromBudget && fx.BudgetId != 0) _budget.Release(fx.BudgetId);
+            fx.BudgetId = 0; _live.Remove(fx);
+            if (_pools.TryGetValue(fx.Id, out var p)) p.Release(fx);
         }
 
         void Update()
         {
             float now = Time.unscaledTime;
-            for (int i = _live.Count - 1; i >= 0; i--)
-            {
-                if (now < _until[i]) continue;
-                var g = _live[i]; _budget.Release(_liveIds[i]); _live.RemoveAt(i); _until.RemoveAt(i); _liveIds.RemoveAt(i);
-                foreach (var p in _pools.Values) p.Release(g);
-            }
+            for (int i = _live.Count - 1; i >= 0; i--) if (now >= _live[i].Until) Kill(_live[i], false);
         }
 
         /// <summary>Flash scale for materials/particles (×0.4 under Reduce motion, animation/07). Reads the shared MotionSettings.</summary>
-        public static float FlashScale => VfxRules.FlashPeak(MotionSettings.Current != null && MotionSettings.Current.ReduceMotion);
+        public static float FlashScale => VfxRules.FlashPeak(Rm);
     }
 }
