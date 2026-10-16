@@ -1,0 +1,342 @@
+{
+ "id": "c1_l05_twin_cottages",
+ "blocks": [
+  {
+   "id": "rockL",
+   "mat": "brick",
+   "p": [
+    -5,
+    0.6,
+    0
+   ],
+   "s": [
+    3,
+    1.2,
+    3
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "6B5B4B",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "rockR",
+   "mat": "brick",
+   "p": [
+    5,
+    0.6,
+    0
+   ],
+   "s": [
+    3,
+    1.2,
+    3
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "6B5B4B",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pierL",
+   "mat": "brick",
+   "p": [
+    -3.2,
+    2.0,
+    0
+   ],
+   "s": [
+    0.8,
+    1.6,
+    0.8
+   ],
+   "sup": [
+    "rockL"
+   ],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "6B5B4B",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pierR",
+   "mat": "brick",
+   "p": [
+    3.2,
+    2.0,
+    0
+   ],
+   "s": [
+    0.8,
+    1.6,
+    0.8
+   ],
+   "sup": [
+    "rockR"
+   ],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "6B5B4B",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "bridge",
+   "mat": "wood",
+   "p": [
+    0,
+    3.0,
+    0
+   ],
+   "s": [
+    7.2,
+    0.4,
+    2.0
+   ],
+   "sup": [
+    "pierL",
+    "pierR"
+   ],
+   "joint": false,
+   "role": "bridge",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "floorL",
+   "mat": "wood",
+   "p": [
+    -2,
+    3.4,
+    0
+   ],
+   "s": [
+    2.4,
+    0.4,
+    2
+   ],
+   "sup": [
+    "bridge"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallFL",
+   "mat": "brick",
+   "p": [
+    -2,
+    4.2,
+    0.85
+   ],
+   "s": [
+    2.2,
+    1.2,
+    0.3
+   ],
+   "sup": [
+    "floorL"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallBL",
+   "mat": "brick",
+   "p": [
+    -2,
+    4.2,
+    -0.85
+   ],
+   "s": [
+    2.2,
+    1.2,
+    0.3
+   ],
+   "sup": [
+    "floorL"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roofL",
+   "mat": "wood",
+   "p": [
+    -2,
+    5.1,
+    0
+   ],
+   "s": [
+    2.6,
+    0.6,
+    2.2
+   ],
+   "sup": [
+    "wallFL",
+    "wallBL"
+   ],
+   "joint": false,
+   "role": "roof",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "floorR",
+   "mat": "wood",
+   "p": [
+    2,
+    3.4,
+    0
+   ],
+   "s": [
+    2.4,
+    0.4,
+    2
+   ],
+   "sup": [
+    "bridge"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallFR",
+   "mat": "brick",
+   "p": [
+    2,
+    4.2,
+    0.85
+   ],
+   "s": [
+    2.2,
+    1.2,
+    0.3
+   ],
+   "sup": [
+    "floorR"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallBR",
+   "mat": "brick",
+   "p": [
+    2,
+    4.2,
+    -0.85
+   ],
+   "s": [
+    2.2,
+    1.2,
+    0.3
+   ],
+   "sup": [
+    "floorR"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roofR",
+   "mat": "wood",
+   "p": [
+    2,
+    5.1,
+    0
+   ],
+   "s": [
+    2.6,
+    0.6,
+    2.2
+   ],
+   "sup": [
+    "wallFR",
+    "wallBR"
+   ],
+   "joint": false,
+   "role": "roof",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

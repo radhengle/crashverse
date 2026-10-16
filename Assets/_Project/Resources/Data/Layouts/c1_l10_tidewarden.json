@@ -86,9 +86,9 @@
     0
    ],
    "s": [
-    1.0,
-    1.0,
-    1.0
+    1,
+    1,
+    1
    ],
    "sup": [
     "torso"
@@ -112,9 +112,9 @@
     0
    ],
    "s": [
-    1.0,
-    1.0,
-    1.0
+    1,
+    1,
+    1
    ],
    "sup": [
     "torso"
@@ -147,7 +147,7 @@
    ],
    "joint": false,
    "role": "arm",
-   "nonObj": false,
+   "nonObj": true,
    "color": "",
    "explosive": false,
    "indestructible": false,
@@ -173,7 +173,7 @@
    ],
    "joint": false,
    "role": "arm",
-   "nonObj": false,
+   "nonObj": true,
    "color": "",
    "explosive": false,
    "indestructible": false,
@@ -242,8 +242,8 @@
     1.0
    ],
    "s": [
-    1.0,
-    1.0,
+    1,
+    1,
     0.4
    ],
    "sup": [
@@ -318,9 +318,9 @@
     0
    ],
    "s": [
-    1.0,
+    1,
     0.6,
-    1.0
+    1
    ],
    "sup": [
     "head"

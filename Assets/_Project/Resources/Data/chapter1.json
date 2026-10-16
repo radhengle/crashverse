@@ -73,7 +73,7 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "post0",
+   "hintTarget": "post",
    "hintYaw": 4,
    "hintPitch": 22
   },
@@ -105,7 +105,7 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "stilt2",
+   "hintTarget": "sill",
    "hintYaw": 3,
    "hintPitch": 20
   },
@@ -171,7 +171,7 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "cap",
+   "hintTarget": "beamL",
    "hintYaw": 2,
    "hintPitch": 28
   },
@@ -204,7 +204,7 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "pierL",
+   "hintTarget": "bridge",
    "hintYaw": -6,
    "hintPitch": 16
   },
@@ -237,7 +237,7 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "brace0",
+   "hintTarget": "braceL",
    "hintYaw": 0,
    "hintPitch": 24
   },
@@ -279,7 +279,7 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "ring0",
+   "hintTarget": "scaffold",
    "hintYaw": 0,
    "hintPitch": 24
   },
@@ -318,7 +318,7 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "joint",
+   "hintTarget": "key1",
    "hintYaw": 0,
    "hintPitch": 26
   },
@@ -398,11 +398,11 @@
      "id": "gearstorm_city"
     }
    ],
-   "star3Pct": 0.6,
-   "star2Pct": 0.3,
+   "star3Pct": 0.28,
+   "star2Pct": 0.14,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "",
+   "hintTarget": "shoulderL",
    "hintYaw": 0,
    "hintPitch": 0
   }

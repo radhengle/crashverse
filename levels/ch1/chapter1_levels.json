@@ -1,0 +1,365 @@
+{
+ "levels": [
+  {
+   "id": "c1_l01",
+   "number": 1,
+   "island": "harbor",
+   "name": "Wooden Lookout Hut",
+   "layout": "c1_l01_lookout_hut",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 4,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood"
+   ],
+   "teaches": "Aim + fire, trajectory arc",
+   "mastery": {
+    "type": "CLEAR_IN_SHOTS",
+    "value": 1,
+    "role": "",
+    "text": "Clear in 1 shot"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "post",
+   "hintYaw": 4,
+   "hintPitch": 22
+  },
+  {
+   "id": "c1_l02",
+   "number": 2,
+   "island": "harbor",
+   "name": "Stilt Water Tower",
+   "layout": "c1_l02_stilt_tower",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 4,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood"
+   ],
+   "teaches": "Hit supports, not walls",
+   "mastery": {
+    "type": "ROLE_BELOW_HEIGHT",
+    "value": 0,
+    "role": "tank",
+    "text": "Topple tank into sea (off the island)"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c1_l01",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "sill",
+   "hintYaw": 3,
+   "hintPitch": 20
+  },
+  {
+   "id": "c1_l03",
+   "number": 3,
+   "island": "harbor",
+   "name": "Brick Bakery",
+   "layout": "c1_l03_bakery",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick"
+   ],
+   "teaches": "Brick needs support loss",
+   "mastery": {
+    "type": "DESTROYED_AT_LEAST",
+    "value": 0.95,
+    "role": "",
+    "text": ">=95% destroyed"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c1_l02",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "propL",
+   "hintYaw": -2,
+   "hintPitch": 18
+  },
+  {
+   "id": "c1_l04",
+   "number": 4,
+   "island": "mill",
+   "name": "Windmill",
+   "layout": "c1_l04_windmill",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick"
+   ],
+   "teaches": "Collapse chains between pieces",
+   "mastery": {
+    "type": "THREE_STARS_NO_ROLE_HITS",
+    "value": 0,
+    "role": "wall",
+    "text": "3 stars with no wall hits"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c1_l03",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "beamL",
+   "hintYaw": 2,
+   "hintPitch": 28
+  },
+  {
+   "id": "c1_l05",
+   "number": 5,
+   "island": "mill",
+   "name": "Twin Cottages",
+   "layout": "c1_l05_twin_cottages",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick"
+   ],
+   "teaches": "One shot, two targets (bridge)",
+   "mastery": {
+    "type": "CLEAR_IN_SHOTS",
+    "value": 1,
+    "role": "",
+    "text": "Both in 1 shot"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c1_l04",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "bridge",
+   "hintYaw": -6,
+   "hintPitch": 16
+  },
+  {
+   "id": "c1_l06",
+   "number": 6,
+   "island": "mill",
+   "name": "Steel-Braced Granary",
+   "layout": "c1_l06_granary",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel"
+   ],
+   "teaches": "Steel joints take 2x damage",
+   "mastery": {
+    "type": "ALL_ROLE_BROKEN",
+    "value": 0,
+    "role": "steel_joint",
+    "text": "Break all 3 joints"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c1_l05",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "braceL",
+   "hintYaw": 0,
+   "hintPitch": 24
+  },
+  {
+   "id": "c1_l07",
+   "number": 7,
+   "island": "clocktower",
+   "name": "Clockwork Tower",
+   "layout": "m1_clockwork_tower",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "steel"
+   ],
+   "teaches": "Joint sequencing; first power-up pick (Shockwave)",
+   "mastery": {
+    "type": "ROLE_INTACT",
+    "value": 0.8,
+    "role": "crown",
+    "text": "Crown falls intact"
+   },
+   "forced": [
+    {
+     "slot": "Core",
+     "powerup": "shockwave"
+    }
+   ],
+   "lockedSlots": [
+    "Module",
+    "Booster"
+   ],
+   "requires": "c1_l06",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "scaffold",
+   "hintYaw": 0,
+   "hintPitch": 24
+  },
+  {
+   "id": "c1_l08",
+   "number": 8,
+   "island": "clocktower",
+   "name": "Market Arcade",
+   "layout": "c1_l08_market_arcade",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "steel"
+   ],
+   "teaches": "Choose loadout deliberately (Splitstrike)",
+   "mastery": {
+    "type": "STARS",
+    "value": 3,
+    "role": "",
+    "text": "3 stars"
+   },
+   "forced": [
+    {
+     "slot": "Module",
+     "powerup": "splitstrike"
+    }
+   ],
+   "lockedSlots": [],
+   "requires": "c1_l07",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "key1",
+   "hintYaw": 0,
+   "hintPitch": 26
+  },
+  {
+   "id": "c1_l09",
+   "number": 9,
+   "island": "clocktower",
+   "name": "Lighthouse Gauntlet",
+   "layout": "c1_l09_lighthouse_gauntlet",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 6,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "steel"
+   ],
+   "teaches": "Tests everything; tight budget",
+   "mastery": {
+    "type": "NO_POWERUP",
+    "value": 0,
+    "role": "",
+    "text": "No power-up used"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c1_l08",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 2,
+   "islandKillY": -2.0,
+   "hintTarget": "lhRing",
+   "hintYaw": 0,
+   "hintPitch": 26
+  },
+  {
+   "id": "c1_l10",
+   "number": 10,
+   "island": "storm",
+   "name": "The Tidewarden",
+   "layout": "c1_l10_tidewarden",
+   "objective": "BOSS",
+   "shots": 7,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "steel"
+   ],
+   "teaches": "Boss phases + weak points",
+   "mastery": {
+    "type": "SHOTS_LEFT_AT_LEAST",
+    "value": 3,
+    "role": "",
+    "text": "Defeat with 3 shots left"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c1_l09",
+   "bossId": "tidewarden",
+   "reward": [
+    {
+     "type": "coins",
+     "amount": 500,
+     "id": ""
+    },
+    {
+     "type": "powerup",
+     "amount": 1,
+     "id": "gravity_well"
+    },
+    {
+     "type": "gate",
+     "amount": 1,
+     "id": "gearstorm_city"
+    }
+   ],
+   "star3Pct": 0.28,
+   "star2Pct": 0.14,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "shoulderL",
+   "hintYaw": 0,
+   "hintPitch": 0
+  }
+ ]
+}
