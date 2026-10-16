@@ -1,22 +1,22 @@
 event,owner,key,sfx_id,variations,mixer_group,priority,cooldown_ticks,params,notes,status
-ANIM_WRECKER_IDLE_FIDGET,anim,,sfx_wrecker_fidget,,,150,0,0/0,,MISSING
-ANIM_WRECKER_AIM_START,anim,,sfx_wrecker_aim_hum,,,140,0,0/0,,MISSING
-ANIM_WRECKER_AIM_START,anim,,sfx_aim_stretch,,,140,0,0/0,,MISSING
-ANIM_WRECKER_AIM_TICK,anim,,sfx_wrecker_aim_tick,,,150,0,"per 5 deg, throttle 60ms",,MISSING
-ANIM_WRECKER_AIM_CLAMP,anim,,sfx_wrecker_aim_clamp,,,120,0,0/0,,MISSING
+ANIM_WRECKER_IDLE_FIDGET,anim,,sfx_wrecker_fidget,SFX/Weapon/sfx_wrecker_fidget_01|SFX/Weapon/sfx_wrecker_fidget_02,SFX/Weapon,150,0,0/0,,ok
+ANIM_WRECKER_AIM_START,anim,,sfx_wrecker_aim_hum,SFX/Weapon/sfx_wrecker_aim_hum_loop,SFX/Weapon,140,0,0/0,,ok
+ANIM_WRECKER_AIM_START,anim,,sfx_aim_stretch,SFX/Weapon/sfx_aim_stretch_loop,SFX/Weapon,140,0,0/0,,ok
+ANIM_WRECKER_AIM_TICK,anim,,sfx_wrecker_aim_tick,SFX/Weapon/sfx_wrecker_aim_tick_01|SFX/Weapon/sfx_wrecker_aim_tick_02|SFX/Weapon/sfx_wrecker_aim_tick_03,SFX/Weapon,150,0,"per 5 deg, throttle 60ms",,ok
+ANIM_WRECKER_AIM_CLAMP,anim,,sfx_wrecker_aim_clamp,SFX/Weapon/sfx_wrecker_aim_clamp,SFX/Weapon,120,0,0/0,,ok
 ANIM_WRECKER_AIM_END,anim,,,,,,0,,stop aim loops,silent
 ANIM_WRECKER_FIRE_ANTICIPATE,anim,,sfx_wrecker_breech,SFX/Weapon/sfx_wrecker_breech_01|SFX/Weapon/sfx_wrecker_breech_02,SFX/Weapon,30,0,0/0 at FIRE tap,RESOLVED: Developer accepted 66 ms spawn delay,ok
 ANIM_WRECKER_FIRE,anim,,sfx_cannon_fire,SFX/Weapon/sfx_cannon_fire_01|SFX/Weapon/sfx_cannon_fire_02|SFX/Weapon/sfx_cannon_fire_03|SFX/Weapon/sfx_cannon_fire_04,SFX/Weapon,16,0,+4f/66ms after tap (launch),,ok
-ANIM_WRECKER_MUZZLE_SMOKE,anim,,sfx_wrecker_smoke_tail,,,80,0,2f/33ms,,MISSING
-ANIM_WRECKER_RECOIL_LAND,anim,,sfx_wrecker_recoil_land,,,60,0,12f/200ms,,MISSING
+ANIM_WRECKER_MUZZLE_SMOKE,anim,,sfx_wrecker_smoke_tail,SFX/Weapon/sfx_wrecker_smoke_tail_01|SFX/Weapon/sfx_wrecker_smoke_tail_02,SFX/Weapon,80,0,2f/33ms,,ok
+ANIM_WRECKER_RECOIL_LAND,anim,,sfx_wrecker_recoil_land,SFX/Weapon/sfx_wrecker_recoil_land_01|SFX/Weapon/sfx_wrecker_recoil_land_02,SFX/Weapon,60,0,12f/200ms,,ok
 ANIM_WRECKER_REARM,visual,,,,,,0,,(silent),silent
 ANIM_WRECKER_READY,anim,,sfx_cannon_ready,SFX/Weapon/sfx_cannon_ready_01|SFX/Weapon/sfx_cannon_ready_02,SFX/Weapon,30,0,0/0 at FIRE unlock,DEV HOOK: 1.0 s reload gate still needed,ok
 ANIM_WRECKER_READY,anim,,sfx_cannon_reload,SFX/Weapon/sfx_cannon_reload_loop,SFX/Weapon,72,0,0/0 at FIRE unlock,DEV HOOK: 1.0 s reload gate still needed,ok
-ANIM_WRECKER_SLOT_OUT,anim,,sfx_wrecker_slot_out,,,60,0,0/0,,MISSING
-ANIM_WRECKER_SLOT_IN,anim,,sfx_wrecker_slot_in,,,60,0,9f/150ms,,MISSING
-ANIM_WRECKER_WIN,anim,,sfx_wrecker_win_hop,,,30,0,0/0,,MISSING
-ANIM_WRECKER_FAIL,anim,,sfx_wrecker_fail_droop,,,30,0,0/0,,MISSING
-ANIM_PROJ_LAUNCH,anim,,sfx_projectile_whoosh,,,120,0,0/0,"stop: code, Projectile.Despawn",MISSING
+ANIM_WRECKER_SLOT_OUT,anim,,sfx_wrecker_slot_out,SFX/Weapon/sfx_wrecker_slot_out,SFX/Weapon,60,0,0/0,,ok
+ANIM_WRECKER_SLOT_IN,anim,,sfx_wrecker_slot_in,SFX/Weapon/sfx_wrecker_slot_in_01|SFX/Weapon/sfx_wrecker_slot_in_02|SFX/Weapon/sfx_wrecker_slot_in_03,SFX/Weapon,60,0,9f/150ms,,ok
+ANIM_WRECKER_WIN,anim,,sfx_wrecker_win_hop,SFX/Results/sfx_wrecker_win_hop,SFX/Rewards,30,0,0/0,,ok
+ANIM_WRECKER_FAIL,anim,,sfx_wrecker_fail_droop,SFX/Results/sfx_wrecker_fail_droop,SFX/Rewards,30,0,0/0,,ok
+ANIM_PROJ_LAUNCH,anim,,sfx_projectile_whoosh,SFX/Weapon/sfx_projectile_whoosh_loop_01|SFX/Weapon/sfx_projectile_whoosh_loop_02,SFX/Weapon,120,0,0/0,"stop: code, Projectile.Despawn",ok
 ANIM_PROJ_SPLIT_POINT,visual,,,,,,0,,(none; PU_SPLIT owns the sound),silent
 IMPACT_WOOD/BRICK/STEEL/STEEL_JOINT,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_projectile_impact (+material layer) (velocity->volume),silent
 IMPACT_TERRAIN,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_impact_terrain,silent
@@ -34,11 +34,11 @@ DEBRIS_BURST,anim,,sfx_brick_debris,SFX/Destruction/Brick/sfx_brick_debris_01|SF
 DEBRIS_BURST,anim,,sfx_steel_debris,SFX/Destruction/Steel/sfx_steel_debris_01|SFX/Destruction/Steel/sfx_steel_debris_02|SFX/Destruction/Steel/sfx_steel_debris_03|SFX/Destruction/Steel/sfx_steel_debris_04,SFX/Destruction,200,0,"0/0 (material,count)",1 sound per burst,ok
 DEBRIS_BURST,anim,,sfx_glass_debris,SFX/Destruction/Glass/sfx_glass_debris_01|SFX/Destruction/Glass/sfx_glass_debris_02|SFX/Destruction/Glass/sfx_glass_debris_03|SFX/Destruction/Glass/sfx_glass_debris_04,SFX/Destruction,96,0,"0/0 (material,count)",1 sound per burst,ok
 DEBRIS_BURST,anim,,sfx_stone_debris,SFX/Destruction/Stone/sfx_stone_debris_01|SFX/Destruction/Stone/sfx_stone_debris_02|SFX/Destruction/Stone/sfx_stone_debris_03|SFX/Destruction/Stone/sfx_stone_debris_04,SFX/Destruction,96,0,"0/0 (material,count)",1 sound per burst,ok
-EXPLODE_CRATE (alias EXPLODE_BARREL),anim,,sfx_explosive_crate,,,40,0,6f/100ms,listen to both names until alias removed,MISSING
+EXPLODE_CRATE (alias EXPLODE_BARREL),anim,,sfx_explosive_crate,SFX/Destruction/Events/sfx_explosive_crate_01|SFX/Destruction/Events/sfx_explosive_crate_02|SFX/Destruction/Events/sfx_explosive_crate_03,SFX/Destruction,40,0,6f/100ms,listen to both names until alias removed,ok
 COLLAPSE_CREAK,anim,,sfx_creak_wood,SFX/Destruction/Wood/sfx_creak_wood_01|SFX/Destruction/Wood/sfx_creak_wood_02|SFX/Destruction/Wood/sfx_creak_wood_03|SFX/Destruction/Wood/sfx_creak_wood_04,SFX/Destruction,96,0,0-9f/0-150ms,,ok
 COLLAPSE_CREAK,anim,,sfx_creak_steel,SFX/Destruction/Steel/sfx_creak_steel_01|SFX/Destruction/Steel/sfx_creak_steel_02|SFX/Destruction/Steel/sfx_creak_steel_03|SFX/Destruction/Steel/sfx_creak_steel_04,SFX/Destruction,96,0,0-9f/0-150ms,,ok
 COLLAPSE_LAND,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_wood_collapse|sfx_brick_collapse|sfx_steel_collapse (cooldown 250ms),silent
-DEBRIS_FALL_OFF,anim,,sfx_kill_plane_fall,,,80,0,0/0,,MISSING
+DEBRIS_FALL_OFF,anim,,sfx_kill_plane_fall,SFX/Destruction/Events/sfx_kill_plane_fall_01|SFX/Destruction/Events/sfx_kill_plane_fall_02|SFX/Destruction/Events/sfx_kill_plane_fall_03,SFX/Destruction,80,0,0/0,,ok
 PU_ARM_<NAME>,anim,,sfx_pu_shockwave_arm,SFX/PowerUps/sfx_pu_shockwave_arm,SFX/PowerUps,60,0,0/0,,ok
 PU_ARM_<NAME>,anim,,sfx_pu_splitstrike_arm,SFX/PowerUps/sfx_pu_splitstrike_arm,SFX/PowerUps,60,0,0/0,,ok
 PU_ARM_<NAME>,anim,,sfx_pu_gravity_well_arm,SFX/PowerUps/sfx_pu_gravity_well_arm,SFX/PowerUps,60,0,0/0,,ok
@@ -92,43 +92,43 @@ UI_BTN_PRESS,anim,,sfx_ui_click,SFX/UI/sfx_ui_click_01|SFX/UI/sfx_ui_click_02|SF
 UI_TAB,anim,,sfx_ui_tab,SFX/UI/sfx_ui_tab,UI,4,0,0/0,,ok
 UI_TOGGLE,anim,,sfx_ui_toggle,SFX/UI/sfx_ui_toggle,UI,4,0,0/0,,ok
 UI_PANEL_IN,anim,,sfx_ui_modal_open,SFX/UI/sfx_ui_modal_open,UI,4,0,0/0,,ok
-UI_PANEL_OUT,anim,,sfx_ui_panel_out,,,6,0,0/0,,MISSING
+UI_PANEL_OUT,anim,,sfx_ui_panel_out,SFX/UI/sfx_ui_panel_out,UI,6,0,0/0,,ok
 UI_STAR_1/2/3,anim,,sfx_star_1,SFX/Results/sfx_star_1,SFX/Rewards,10,0,150 / 450 / 750 ms,,ok
 UI_STAR_1/2/3,anim,,sfx_star_2,SFX/Results/sfx_star_2,SFX/Rewards,10,0,150 / 450 / 750 ms,,ok
 UI_STAR_1/2/3,anim,,sfx_star_3,SFX/Results/sfx_star_3,SFX/Rewards,10,0,150 / 450 / 750 ms,,ok
-UI_MASTERY_TICK,anim,,sfx_ui_mastery_tick,,,10,0,0/0,,MISSING
+UI_MASTERY_TICK,anim,,sfx_ui_mastery_tick,SFX/Results/sfx_ui_mastery_tick,SFX/Rewards,10,0,0/0,,ok
 UI_COMBO_UP,anim,,sfx_combo_step,SFX/Combo/sfx_combo_step,SFX/Rewards,30,0,0/0 at x>=3,x2 step: CODE (no anim event below x3),ok
 UI_COMBO_UP,anim,,sfx_combo_tier1,SFX/Combo/sfx_combo_tier1,SFX/Rewards,20,0,0/0 at x>=3,x2 step: CODE (no anim event below x3),ok
 UI_COMBO_TIER,anim,,sfx_combo_tier2,SFX/Combo/sfx_combo_tier2,SFX/Rewards,20,0,0/0 x5/x10/x20,,ok
 UI_COMBO_TIER,anim,,sfx_combo_tier3,SFX/Combo/sfx_combo_tier3,SFX/Rewards,20,0,0/0 x5/x10/x20,,ok
 UI_COMBO_TIER,anim,,sfx_combo_tier4,SFX/Combo/sfx_combo_tier4,SFX/Rewards,20,0,0/0 x5/x10/x20,,ok
-UI_SCORE_TICK,anim,,sfx_ui_score_tick,,,40,0,every 50ms max 12,,MISSING
-UI_DAMAGE_TICK,anim,,sfx_titan_damage_tick,,,14,0,per hit throttle 50ms,,MISSING
+UI_SCORE_TICK,anim,,sfx_ui_score_tick,SFX/UI/sfx_ui_score_tick_01|SFX/UI/sfx_ui_score_tick_02,UI,40,0,every 50ms max 12,,ok
+UI_DAMAGE_TICK,anim,,sfx_titan_damage_tick,SFX/Boss/Titan/sfx_titan_damage_tick_01|SFX/Boss/Titan/sfx_titan_damage_tick_02,SFX/Boss,14,0,per hit throttle 50ms,,ok
 UI_COIN_LAND,anim,,sfx_reward_coin_single,SFX/Reward/sfx_reward_coin_single_01|SFX/Reward/sfx_reward_coin_single_02|SFX/Reward/sfx_reward_coin_single_03,SFX/Rewards,24,0,"700ms per coin, 2/100ms",,ok
 UI_CHEST_SHAKE,anim,,sfx_reward_chest_shake,SFX/Reward/sfx_reward_chest_shake,SFX/Rewards,24,0,0/0,,ok
 UI_CHEST_OPEN,anim,,sfx_reward_chest_open,SFX/Reward/sfx_reward_chest_open,SFX/Rewards,24,0,24f/400ms,,ok
-UI_CLAIM,anim,,sfx_ui_claim_stamp,,,20,0,0/0,,MISSING
-UI_CLAIM,anim,,sfx_reward_daily_claim,,,24,0,0/0,,MISSING
-UI_SHARD_GAIN,anim,,sfx_reward_shard,,,24,0,36f/600ms,,MISSING
-UI_EXTRA_CHARGE,anim,,sfx_reward_extra_charge,,,24,0,42f/700ms,,MISSING
-UI_SEASON_TIER_UP,anim,,sfx_reward_season_tier_up,,,24,0,0/0,,MISSING
-UI_NODE_UNLOCK,anim,,sfx_map_node_unlock,,,20,0,12f/200ms,,MISSING
-UI_MARKER_HOP,anim,,sfx_ui_marker_hop,,,40,0,39f/650ms,,MISSING
-UI_GATE_OPEN,anim,,sfx_ui_gate_open,,,20,0,0/0,,MISSING
-UI_SHOT_SPEND,anim,,sfx_ui_shot_spend,,,60,0,0/0,,MISSING
+UI_CLAIM,anim,,sfx_ui_claim_stamp,SFX/UI/sfx_ui_claim_stamp,UI,20,0,0/0,,ok
+UI_CLAIM,anim,,sfx_reward_daily_claim,SFX/Reward/sfx_reward_daily_claim,SFX/Rewards,24,0,0/0,,ok
+UI_SHARD_GAIN,anim,,sfx_reward_shard,SFX/Reward/sfx_reward_shard,SFX/Rewards,24,0,36f/600ms,,ok
+UI_EXTRA_CHARGE,anim,,sfx_reward_extra_charge,SFX/Reward/sfx_reward_extra_charge,SFX/Rewards,24,0,42f/700ms,,ok
+UI_SEASON_TIER_UP,anim,,sfx_reward_season_tier_up,SFX/Reward/sfx_reward_season_tier_up,SFX/Rewards,24,0,0/0,,ok
+UI_NODE_UNLOCK,anim,,sfx_map_node_unlock,SFX/UI/sfx_map_node_unlock,UI,20,0,12f/200ms,,ok
+UI_MARKER_HOP,anim,,sfx_ui_marker_hop,SFX/UI/sfx_ui_marker_hop_01|SFX/UI/sfx_ui_marker_hop_02,UI,40,0,39f/650ms,,ok
+UI_GATE_OPEN,anim,,sfx_ui_gate_open,SFX/UI/sfx_ui_gate_open,UI,20,0,0/0,,ok
+UI_SHOT_SPEND,anim,,sfx_ui_shot_spend,SFX/UI/sfx_ui_shot_spend,UI,60,0,0/0,,ok
 UI_CHARGE_SPEND,anim,,sfx_ui_charge_spend,SFX/UI/sfx_ui_charge_spend,UI,50,0,0/0 on FIRE with power-up armed,,ok
-UI_THRESHOLD_HIT,anim,,sfx_ui_threshold_hit,,,12,0,"crossing win threshold (level data, default 85%)",,MISSING
-UI_WIN,anim,,sfx_win_stinger_sfx,,,8,0,0/0,mus_stinger_victory: code,MISSING
-UI_FAIL,anim,,sfx_fail_sfx,,,8,0,0/0,mus_stinger_fail: code; also Titan out-of-shots,MISSING
-UI_HINT_BUTTON_APPEAR,anim,,sfx_hint_button,,,30,0,18f/300ms after Retry,,MISSING
-UI_HINT_SHOW,anim,,sfx_hint_pulse,,,90,0,0/0,,MISSING
+UI_THRESHOLD_HIT,anim,,sfx_ui_threshold_hit,SFX/Results/sfx_ui_threshold_hit,SFX/Rewards,12,0,"crossing win threshold (level data, default 85%)",,ok
+UI_WIN,anim,,sfx_win_stinger_sfx,SFX/Results/sfx_win_stinger_sfx,SFX/Rewards,8,0,0/0,mus_stinger_victory: code,ok
+UI_FAIL,anim,,sfx_fail_sfx,SFX/Results/sfx_fail_sfx_01|SFX/Results/sfx_fail_sfx_02,SFX/Rewards,8,0,0/0,mus_stinger_fail: code; also Titan out-of-shots,ok
+UI_HINT_BUTTON_APPEAR,anim,,sfx_hint_button,SFX/UI/sfx_hint_button,UI,30,0,18f/300ms after Retry,,ok
+UI_HINT_SHOW,anim,,sfx_hint_pulse,SFX/UI/sfx_hint_pulse_loop,UI,90,0,0/0,,ok
 CAM_SLOWMO_START,anim,,,,,,0,,"snapshot SlowMo (LPF) big collapse / boss phase only; never win shot, Titan ranked, or Reduce Motion",silent
 CAM_SLOWMO_END,anim,,,,,,0,,snapshot Default,silent
 IMPACT_GLASS,anim,,,,,,0,,(none; sound owned by PHYS_IMPACT AnimEventBus,silent
 BREAK_GLASS,anim,,,,,,0,,(none; sound owned by PHYS_BREAK AnimEventBus,silent
 reload_start,code,,sfx_cannon_reload,SFX/Weapon/sfx_cannon_reload_loop,SFX/Weapon,72,0,,trigger: Projectile.Impact (first impact of the shot); loop until ready,ok
 combo_step_x2,code,,sfx_combo_step,SFX/Combo/sfx_combo_step,SFX/Rewards,30,0,count,trigger: ComboTracker.OnBreak when Current==2; only x2; x3+ via UI_COMBO_UP,ok
-projectile_despawn,code,,sfx_projectile_whoosh,,,120,0,,trigger: Projectile.Despawn,MISSING
+projectile_despawn,code,,sfx_projectile_whoosh,SFX/Weapon/sfx_projectile_whoosh_loop_01|SFX/Weapon/sfx_projectile_whoosh_loop_02,SFX/Weapon,120,0,,trigger: Projectile.Despawn,ok
 music_level,code,,,,,,0,chapter/level,trigger: GameSession.Begin,silent
 music_intensity,code,,,,,,0,shotsLeft,trigger: GameSession.ResolveShot / combo>=5,silent
 music_boss_p2,code,,,,,,0,,trigger: BOSS_TIDE_PHASE2 received -> next bar; listens to anim event but plays music only,silent
@@ -186,6 +186,9 @@ PHYS_BREAK,phys,material=glass;kind=break;size=L;tier=any,sfx_glass_break_l,SFX/
 PHYS_BREAK,phys,material=stone;kind=break;size=S;tier=any,sfx_stone_break_s,SFX/Destruction/Stone/sfx_stone_break_s_01|SFX/Destruction/Stone/sfx_stone_break_s_02|SFX/Destruction/Stone/sfx_stone_break_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
 PHYS_BREAK,phys,material=stone;kind=break;size=M;tier=any,sfx_stone_break_m,SFX/Destruction/Stone/sfx_stone_break_m_01|SFX/Destruction/Stone/sfx_stone_break_m_02|SFX/Destruction/Stone/sfx_stone_break_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
 PHYS_BREAK,phys,material=stone;kind=break;size=L;tier=any,sfx_stone_break_l,SFX/Destruction/Stone/sfx_stone_break_l_01|SFX/Destruction/Stone/sfx_stone_break_l_02|SFX/Destruction/Stone/sfx_stone_break_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_IMPACT,phys,material=terrain;kind=impact;size=S;tier=any,sfx_terrain_impact_s,SFX/Destruction/Impacts/sfx_terrain_impact_s_01|SFX/Destruction/Impacts/sfx_terrain_impact_s_02|SFX/Destruction/Impacts/sfx_terrain_impact_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",terrain = softest; used when the other body is Terrain,ok
+PHYS_IMPACT,phys,material=terrain;kind=impact;size=M;tier=any,sfx_terrain_impact_m,SFX/Destruction/Impacts/sfx_terrain_impact_m_01|SFX/Destruction/Impacts/sfx_terrain_impact_m_02|SFX/Destruction/Impacts/sfx_terrain_impact_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",terrain = softest; used when the other body is Terrain,ok
+PHYS_IMPACT,phys,material=terrain;kind=impact;size=L;tier=any,sfx_terrain_impact_l,SFX/Destruction/Impacts/sfx_terrain_impact_l_01|SFX/Destruction/Impacts/sfx_terrain_impact_l_02|SFX/Destruction/Impacts/sfx_terrain_impact_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",terrain = softest; used when the other body is Terrain,ok
 PHYS_JOINT_SNAP,phys,material=steel;kind=jointsnap;size=S;tier=any,sfx_steel_jointsnap_s,SFX/Destruction/Steel/sfx_steel_jointsnap_s_01|SFX/Destruction/Steel/sfx_steel_jointsnap_s_02|SFX/Destruction/Steel/sfx_steel_jointsnap_s_03,SFX/Destruction,128,4,"impulse,sizeClass",,ok
 PHYS_JOINT_SNAP,phys,material=steel;kind=jointsnap;size=M;tier=any,sfx_steel_jointsnap_m,SFX/Destruction/Steel/sfx_steel_jointsnap_m_01|SFX/Destruction/Steel/sfx_steel_jointsnap_m_02|SFX/Destruction/Steel/sfx_steel_jointsnap_m_03,SFX/Destruction,128,4,"impulse,sizeClass",,ok
 PHYS_JOINT_SNAP,phys,material=steel;kind=jointsnap;size=L;tier=any,sfx_steel_jointsnap_l,SFX/Destruction/Steel/sfx_steel_jointsnap_l_01|SFX/Destruction/Steel/sfx_steel_jointsnap_l_02|SFX/Destruction/Steel/sfx_steel_jointsnap_l_03,SFX/Destruction,128,4,"impulse,sizeClass",,ok

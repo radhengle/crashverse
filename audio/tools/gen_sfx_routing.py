@@ -10,7 +10,8 @@ for f in files: byid[re.sub(r'_\d{2}$', '', f.rsplit('/', 1)[1])].append(f)
 ALIAS = {'sfx_cannon_reload': 'sfx_cannon_reload_loop', 'sfx_steel_joint_snap': 'sfx_steel_jointsnap',
          'sfx_pu_gravity_well_fx': 'sfx_pu_gravity_well_fx_loop', 'sfx_pu_time_fracture_fx': 'sfx_pu_time_fracture_fx_loop',
          'sfx_titan_stage_25': 'sfx_titan_stage', 'sfx_titan_stage_50': 'sfx_titan_stage',
-         'sfx_titan_stage_75': 'sfx_titan_stage'}
+         'sfx_titan_stage_75': 'sfx_titan_stage', 'sfx_wrecker_aim_hum': 'sfx_wrecker_aim_hum_loop', 'sfx_aim_stretch': 'sfx_aim_stretch_loop',
+         'sfx_projectile_whoosh': 'sfx_projectile_whoosh_loop', 'sfx_hint_pulse': 'sfx_hint_pulse_loop', 'sfx_impact_terrain': 'sfx_terrain_impact'}
 STAGEVAR = {'sfx_titan_stage_25': 0, 'sfx_titan_stage_50': 1, 'sfx_titan_stage_75': 2}
 MATS = ['wood', 'brick', 'steel', 'glass', 'stone']
 PU = ['shockwave', 'splitstrike', 'gravity_well', 'chain_reactor', 'phase_piercer', 'time_fracture']
@@ -89,6 +90,8 @@ for ev, k in KIND.items():
             add(ev, 'phys', [f'sfx_{m}_{k}_{s}'], 'tier,impulse,sizeClass,materialA/B,source', 4,
                 'harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)' if k == 'impact' else ('+0.03 pitch per damageStep' if k == 'crack' else 'in active cascade: 1 voice + rattle'),
                 key={'material': m, 'kind': k, 'size': s.upper(), 'tier': 'any'})
+for s in 'sml':  # Terrain (MaterialType.Terrain, bank SFX/Destruction/Impacts): impact only
+    add('PHYS_IMPACT', 'phys', [f'sfx_terrain_impact_{s}'], 'tier,impulse,sizeClass,materialA/B,source', 4, 'terrain = softest; used when the other body is Terrain', key={'material': 'terrain', 'kind': 'impact', 'size': s.upper(), 'tier': 'any'})
 for s in 'sml':
     add('PHYS_JOINT_SNAP', 'phys', [f'sfx_steel_jointsnap_{s}'], 'impulse,sizeClass', 4, '', key={'material': 'steel', 'kind': 'jointsnap', 'size': s.upper(), 'tier': 'any'})
 for m in MATS:

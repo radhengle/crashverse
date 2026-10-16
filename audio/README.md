@@ -5,7 +5,7 @@ All audio is original (code-synthesised; tonal layers and music leads rendered f
 ## Layout
 - `Assets/_Project/Resources/Music/<id>.ogg`: 26 launch tracks (ids as used by `MusicPlayer` / `MusicTracks`). **Streaming**, Vorbis (stems 40%, full mixes 50%, stingers 60%), preload off, load in background (set in the .meta files and enforced by `MusicImportRules`).
 - `Assets/_Project/Resources/SFX/Destruction/<Material>/`: matches `ImpactAudioProfile.bank` (`SFX/Destruction/Wood|Brick|Steel|Glass|Stone`). Files: `sfx_<material>_<impact|crack|break>_<s|m|l>_<nn>`, `sfx_<material>_collapse_<s|m|l>_<nn>`, `sfx_<material>_debris_<nn>`, `sfx_steel_jointsnap_<s|m|l>_<nn>`, `sfx_creak_<wood|steel>_<nn>`.
-- `Assets/_Project/Resources/SFX/{Weapon,PowerUps,Combo,Results,UI,Reward,Boss/Tidewarden,Boss/Titan}/`
+- `Assets/_Project/Resources/SFX/{Weapon,PowerUps,Combo,Results,UI,Reward,Boss/Tidewarden,Boss/Titan}`, plus `SFX/Destruction/Impacts/` (Terrain bank: `sfx_terrain_impact_<s|m|l>_<nn>`) and `SFX/Destruction/Events/` (explosive crate, kill-plane fall). These two are kept apart so the Terrain bank folder holds only terrain clips.
 - Names are lowercase snake_case and match the ids in `sfx_list.csv`. Variations are `_01.._04`. Loops end in `_loop`, except boss core hum and Titan rule loops (see sfx_list `loop` column).
 - Excluded from the APK: Season 2 hub, previews, demos, `main_theme_alt_piano`, archives.
 - `main_theme.ogg` is the user-approved v1: sha256 `23c798f8b8122b92f525e0dbcbbcdf3c53c6da687ab130635d3c75d5c80cdb8f` (byte-identical, do not re-encode).
@@ -14,14 +14,14 @@ All audio is original (code-synthesised; tonal layers and music leads rendered f
 | Folder | Load type | Format | Quality | Mono | Preload |
 |---|---|---|---|---|---|
 | Music | Streaming | Vorbis | 40/50/60% | no | no (load in background) |
-| SFX/UI | Decompress On Load | ADPCM | – | yes | yes |
-| SFX/Destruction (impact/crack/break/debris/creak/jointsnap), Weapon, PowerUps *_arm, Combo, Results, Reward (single) | Decompress On Load | Vorbis | 50–60% | yes | yes |
-| SFX/Destruction *_collapse_*, PowerUps *_fx*, Reward coin_burst/chest_open, Boss/* | Compressed In Memory | Vorbis | 50–55% | yes | yes |
-There is no SFX AssetPostprocessor yet. If Developer adds one (like `MusicImportRules`), it should encode the table above.
+| SFX/UI (incl. hint, map node, gate, marker, score/shot ticks) | Decompress On Load | ADPCM | – | yes | yes |
+| SFX/Destruction (impact/crack/break/debris/creak/jointsnap, Impacts/terrain), Weapon (incl. Wrecker foley and the aim/whoosh loops), PowerUps *_arm, Combo, Results (stars, win/fail accents, mastery, threshold, win hop/fail droop), Reward (single, shard, charge, tier up, daily) | Decompress On Load | Vorbis | 50–60% | yes | yes |
+| SFX/Destruction *_collapse_*, Destruction/Events (crate, kill-plane fall), v1.1 Vorbis clips ≥ 1.0 s (aim hum/stretch + projectile whoosh loops, win/fail accents, daily claim), PowerUps *_fx*, Reward coin_burst/chest_open, Boss/* | Compressed In Memory | Vorbis | 50–55% | yes | yes |
+Sample rate: preserve (44.1 kHz), except Destruction `*_crack_*`, `*_debris_*` and `sfx_creak_*`, which override to 22050 Hz. There is no SFX AssetPostprocessor yet. If Developer adds one (like `MusicImportRules`), it should encode the table above.
 
 ## Budget (measured)
 - Music: 15.71 MB of OGG (budget ≤ 16 MB).
-- SFX: 3.18 MB on disk. Resident if every Decompress-On-Load clip is loaded: ≈ 9.7 MB PCM (budget ≤ 12 MB). Compressed in memory: 1.39 MB.
+- SFX: 356 files, 3.68 MB on disk. Resident if every Decompress-On-Load clip is loaded: ≈ 9.8 MB PCM, plus 1.58 MB Compressed In Memory = 11.4 MB (budget ≤ 12 MB). Destruction crack/debris/creak clips import at 22.05 kHz (sample-rate override). They are low-passed at 9.5 kHz, so nothing audible is lost and their PCM size halves.
 
 ## Music loop points (44.1 kHz samples)
 | id | samples | loop start | loop end | BPM | LUFS / dBTP |
