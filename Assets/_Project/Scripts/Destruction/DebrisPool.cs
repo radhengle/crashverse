@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Crashverse.Sim;
 using UnityEngine;
 
 namespace Crashverse.Destruction
@@ -6,6 +7,8 @@ namespace Crashverse.Destruction
     /// <summary>
     /// Pooled debris (03). Caps by tier 25 low / 60 mid / 90 high simulated rigidbodies (OQ-D1); at cap the OLDEST SETTLED chunk is
     /// recycled first (else the oldest). Chunks are visual only: destroyed mass is counted on the source piece (OQ-D2).
+    /// Deterministic: offsets/velocities come from a SimRng stream forked from SimRunner's seed, lifetimes count sim ticks
+    /// (FixedUpdate), and the pool prewarms to the current tier cap so play never instantiates under the cap.
     /// </summary>
     public class DebrisPool : MonoBehaviour
     {
@@ -13,7 +16,11 @@ namespace Crashverse.Destruction
 
         int maxActiveDebris => Crashverse.Feel.DebrisBudget.Cap(Crashverse.Perf.QualityController.FeelTier);
         readonly Crashverse.Feel.DebrisLedger<DebrisPiece> _ledger = new Crashverse.Feel.DebrisLedger<DebrisPiece>(60);
-        [SerializeField] int prewarm = 24;
+        [SerializeField] int prewarm = 24; // minimum; actual prewarm = max(prewarm, tier cap)
+        const long DebrisStreamSalt = 0x44454252; // "DEBR"
+        SimRng _rng = new SimRng(DebrisStreamSalt);
+        int _rngRunTick = -1; long _rngSeed = long.MinValue;
+        int _created;
 
         readonly Queue<DebrisPiece> _free = new Queue<DebrisPiece>();
         readonly List<DebrisPiece> _active = new List<DebrisPiece>();
@@ -24,17 +31,43 @@ namespace Crashverse.Destruction
             Instance = this;
             _root = new GameObject("DebrisRoot").transform;
             _root.SetParent(transform);
-            for (int i = 0; i < prewarm; i++)
-                _free.Enqueue(CreatePiece());
+            Prewarm();
+            Crashverse.Perf.QualityController.TierChanged += Prewarm;
+        }
+
+        /// <summary>Top the pool up to max(prewarm, current tier cap).</summary>
+        void Prewarm()
+        {
+            int target = Mathf.Max(prewarm, maxActiveDebris);
+            while (_created < target) _free.Enqueue(CreatePiece());
+            _ledger.Cap = maxActiveDebris;
+        }
+
+        /// <summary>Debris RNG stream, re-forked whenever SimRunner starts a new run (new seed or Retry).</summary>
+        SimRng Rng
+        {
+            get
+            {
+                var sim = SimRunner.Instance;
+                if (sim != null && (sim.Seed != _rngSeed || sim.Tick < _rngRunTick))
+                {
+                    _rng = new SimRng(sim.Seed ^ DebrisStreamSalt);
+                    _rngSeed = sim.Seed;
+                }
+                if (sim != null) _rngRunTick = sim.Tick;
+                return _rng;
+            }
         }
 
         void OnDestroy()
         {
+            Crashverse.Perf.QualityController.TierChanged -= Prewarm;
             if (Instance == this) Instance = null;
         }
 
         DebrisPiece CreatePiece()
         {
+            _created++;
             var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
             go.name = "Debris";
             go.tag = "Debris";
@@ -56,10 +89,11 @@ namespace Crashverse.Destruction
 
                 var piece = _free.Count > 0 ? _free.Dequeue() : CreatePiece();
                 float s = Mathf.Clamp(Mathf.Min(parentScale.x, Mathf.Min(parentScale.y, parentScale.z)) * 0.35f, 0.15f, 0.55f);
-                piece.transform.position = pos + Random.insideUnitSphere * 0.4f;
-                piece.transform.rotation = Random.rotation;
+                var rng = Rng;
+                piece.transform.position = pos + rng.InsideUnitSphere() * 0.4f;
+                piece.transform.rotation = rng.Rotation();
                 piece.transform.localScale = Vector3.one * s;
-                piece.Activate(mat, mat != null ? mat.debrisLifetimeSeconds : 2.5f);
+                piece.Activate(mat, SimTime.SecondsToTicks(mat != null ? mat.debrisLifetimeSeconds : 2.5f), rng);
                 _active.Add(piece); _ledger.Add(piece);
             }
         }
@@ -92,12 +126,13 @@ namespace Crashverse.Destruction
             _free.Enqueue(piece);
         }
 
-        void Update()
+        /// <summary>One sim tick per FixedUpdate (0.02 s); lifetimes are in ticks, not render time.</summary>
+        void FixedUpdate()
         {
             for (int i = _active.Count - 1; i >= 0; i--)
             {
                 _ledger.MarkSettled(_active[i], _active[i].IsSettled);
-                if (_active[i].Tick(Time.deltaTime))
+                if (_active[i].Tick())
                 {
                     var p = _active[i];
                     _active.RemoveAt(i); _ledger.Remove(p);
@@ -111,21 +146,22 @@ namespace Crashverse.Destruction
     {
         Rigidbody _rb;
         Renderer _rend;
-        float _life;
-        float _maxLife;
+        const int FadeTicks = 30; // 0.6 s at 50 Hz
+        int _lifeTicks;
+        int _maxLifeTicks;
         Color _color;
 
-        public void Activate(MaterialDefinition mat, float life)
+        public void Activate(MaterialDefinition mat, int lifeTicks, SimRng rng)
         {
             if (_rb == null) _rb = GetComponent<Rigidbody>();
             if (_rend == null) _rend = GetComponent<Renderer>();
-            _maxLife = life;
-            _life = life;
+            _maxLifeTicks = lifeTicks;
+            _lifeTicks = lifeTicks;
             _color = mat != null ? mat.breakFxColor : Color.gray;
             gameObject.SetActive(true);
             _rb.isKinematic = false;
-            _rb.velocity = Random.insideUnitSphere * 3f + Vector3.up * 2f;
-            _rb.angularVelocity = Random.insideUnitSphere * 6f;
+            _rb.velocity = rng.InsideUnitSphere() * 3f + Vector3.up * 2f;
+            _rb.angularVelocity = rng.InsideUnitSphere() * 6f;
             var block = new MaterialPropertyBlock();
             block.SetColor("_BaseColor", _color);
             block.SetColor("_Color", _color);
@@ -146,12 +182,12 @@ namespace Crashverse.Destruction
         }
 
         /// <returns>true when life expired</returns>
-        public bool Tick(float dt)
+        public bool Tick()
         {
-            _life -= dt;
-            if (_life < 0.6f && _rend != null)
+            _lifeTicks--;
+            if (_lifeTicks < FadeTicks && _rend != null)
             {
-                float a = Mathf.Clamp01(_life / 0.6f);
+                float a = Mathf.Clamp01(_lifeTicks / (float)FadeTicks);
                 var c = _color;
                 c.a = a;
                 var block = new MaterialPropertyBlock();
@@ -159,7 +195,7 @@ namespace Crashverse.Destruction
                 block.SetColor("_Color", c);
                 _rend.SetPropertyBlock(block);
             }
-            return _life <= 0f;
+            return _lifeTicks <= 0;
         }
     }
 }
