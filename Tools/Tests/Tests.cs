@@ -20,12 +20,22 @@ static class Tests
         return b;
     }
 
-    static RankedResult Res(RankedTicket t, int dmg, int left, bool killed, bool partial = false)
+    /// <summary>Plays a ranked run shot by shot: damage ramps linearly to dmg, killed only on the last shot. Online shots get server receipts.</summary>
+    static RankedJournal Play(LocalBackendService b, RankedTicket t, int dmg, int left, bool killed, bool final = true, int onlineShots = int.MaxValue)
     {
-        var r = new RankedResult { token = t.token, damageScore = dmg, shotsLeft = left, killed = killed, partial = partial };
-        r.signature = LocalBackendService.Sign(r);
-        return r;
+        var j = new RankedJournal { token = t.token, final = final };
+        int shots = t.shotBudget - left;
+        for (int i = 1; i <= shots; i++)
+        {
+            var cp = new RankedCheckpoint { token = t.token, shotIndex = i, damageScore = dmg * i / shots, shotsLeft = t.shotBudget - i, killed = killed && i == shots };
+            if (i <= onlineShots) cp = b.ReportRankedCheckpoint(cp).Result;
+            j.checkpoints.Add(cp);
+        }
+        return j;
     }
+    static SubmitResponse Ranked(LocalBackendService b, RankedTicket t, int dmg, int left, bool killed, bool final = true) =>
+        b.FinalizeRanked(Play(b, t, dmg, left, killed, final)).Result;
+    static bool Throws(Action a) { try { a(); return false; } catch (Exception) { return true; } }
 
     public static void Register()
     {
@@ -158,31 +168,31 @@ static class Tests
             var b = NewBackend("2026-10-16T23:50:00");
             var t = b.BeginRankedRun().Result;
             b.SetTestClock(U("2026-10-17T00:15:00.000"));
-            T.Eq(SubmitStatus.Accepted, b.SubmitRanked(Res(t, 5000, 2, true)).Result.status, "00:15:00.000 accepted");
+            T.Eq(SubmitStatus.Accepted, Ranked(b, t, 5000, 2, true).status, "00:15:00.000 accepted");
             var b2 = NewBackend("2026-10-16T23:50:00");
             var t2 = b2.BeginRankedRun().Result;
             b2.SetTestClock(U("2026-10-17T00:15:00.001"));
-            T.Eq(SubmitStatus.RefundedAsPractice, b2.SubmitRanked(Res(t2, 5000, 2, true)).Result.status, "00:15:00.001 refunded as practice");
+            T.Eq(SubmitStatus.RefundedAsPractice, Ranked(b2, t2, 5000, 2, true).status, "00:15:00.001 refunded as practice");
         });
         T.Add("SG11_partial_submit", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
             var t = b.BeginRankedRun().Result;
-            var resp = b.SubmitRanked(Res(t, 3100, 3, false, partial: true)).Result;
+            var resp = Ranked(b, t, 3100, 3, false, final: false);
             T.Eq(SubmitStatus.Accepted, resp.status, "partial accepted");
             T.Eq(3100, resp.finalScore, "no shot bonus without kill");
             T.Eq("submitted_partial", b.GetRankedStatus().Result.status, "status partial, attempt used");
-            T.Eq(SubmitStatus.RejectedDuplicate, b.SubmitRanked(Res(t, 9000, 3, true)).Result.status, "no resubmit");
+            T.Eq(SubmitStatus.RejectedDuplicate, b.FinalizeRanked(new RankedJournal { token = t.token, final = true }).Result.status, "no resubmit");
         });
         T.Add("ranked_validation", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
             var t = b.BeginRankedRun().Result;
-            var r = Res(t, 20000, 2, true); T.Eq(SubmitStatus.RejectedInvalid, b.SubmitRanked(r).Result.status, "score out of range");
-            var r2 = Res(t, 100, 2, true); r2.signature = "bad"; T.Eq(SubmitStatus.RejectedInvalid, b.SubmitRanked(r2).Result.status, "bad signature");
-            var r3 = new RankedResult { token = "nope" }; r3.signature = LocalBackendService.Sign(r3);
-            T.Eq(SubmitStatus.RejectedInvalid, b.SubmitRanked(r3).Result.status, "unknown token");
-            var ok = b.SubmitRanked(Res(t, 8000, 2, true)).Result;
+            T.True(Throws(() => b.ReportRankedCheckpoint(new RankedCheckpoint { token = t.token, shotIndex = 1, damageScore = 20000, shotsLeft = t.shotBudget - 1 }).Wait()), "damage out of range");
+            T.True(Throws(() => b.ReportRankedCheckpoint(new RankedCheckpoint { token = t.token, shotIndex = 3, damageScore = 10, shotsLeft = t.shotBudget - 3 }).Wait()), "shot out of order");
+            T.True(Throws(() => b.ReportRankedCheckpoint(new RankedCheckpoint { token = t.token, shotIndex = 1, damageScore = 10, shotsLeft = t.shotBudget }).Wait()), "shot count mismatch");
+            T.Eq(SubmitStatus.RejectedInvalid, b.FinalizeRanked(new RankedJournal { token = "nope" }).Result.status, "unknown token");
+            var ok = Ranked(b, t, 8000, 2, true);
             T.Eq(9000, ok.finalScore, "8000 + 2*500 on kill");
         });
 
@@ -236,7 +246,7 @@ static class Tests
         T.Add("titan_clear_xp_once_per_day", () =>
         {
             var b = NewBackend("2026-10-13T10:00:00");
-            var t = b.BeginRankedRun().Result; b.SubmitRanked(Res(t, 9000, 1, true)).Wait();
+            var t = b.BeginRankedRun().Result; Ranked(b, t, 9000, 1, true);
             T.Eq(50, b.GetSeasonState().Result.xp, "titan clear 50xp");
             T.Eq(150, b.GetWallet().Result.coins, "completion chest coins");
         });
@@ -260,13 +270,13 @@ static class Tests
         T.Add("leaderboard_top100_rank_guest_ties", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            var t = b.BeginRankedRun().Result; b.SubmitRanked(Res(t, 10000, 6, true)).Wait();
+            var t = b.BeginRankedRun().Result; Ranked(b, t, 10000, 5, true);
             var p = b.GetLeaderboard(BoardType.DailyTitan, BoardPeriod.Current, false).Result;
             T.True(p.meIsGuestHidden && p.me == null, "guest stored but hidden");
             T.True(p.top.Count == 100, "top 100");
             b.LinkAccount("Google").Wait();
             p = b.GetLeaderboard(BoardType.DailyTitan, BoardPeriod.Current, false).Result;
-            T.True(p.me != null && p.me.rank == 1, "linked player listed at rank 1 (13000)");
+            T.True(p.me != null && p.me.rank == 1, "linked player listed at rank 1 (12500)");
             for (int i = 1; i < p.top.Count; i++)
             {
                 var a = p.top[i - 1]; var c = p.top[i];
@@ -278,7 +288,7 @@ static class Tests
         T.Add("top10_bonus_after_close", () =>
         {
             var b = NewBackend("2026-10-16T10:00:00");
-            var t = b.BeginRankedRun().Result; b.SubmitRanked(Res(t, 10000, 6, true)).Wait();
+            var t = b.BeginRankedRun().Result; Ranked(b, t, 10000, 5, true);
             b.SetTestClock(U("2026-10-17T00:15:00")); T.Eq(0, b.GetInbox().Result.Count, "not before board closes");
             b.SetTestClock(U("2026-10-17T00:15:01")); T.Eq(1, b.GetInbox().Result.Count, "bonus shards in inbox");
         });
@@ -356,6 +366,145 @@ static class Tests
             T.Eq(3, StarRules.MinShotsLeft(5, .6f), "5 shots 3*"); T.Eq(2, StarRules.MinShotsLeft(5, .3f), "5 shots 2*");
             T.Eq(5, StarRules.MinShotsLeft(7, .6f), "7 shots 3*"); T.Eq(3, StarRules.MinShotsLeft(7, .3f), "7 shots 2*");
             for (int n = 4; n <= 7; n++) T.Eq(3, StarRules.ComputeInt(true, StarRules.MinShotsLeft(n, .6f), n), "band consistent " + n);
+        });
+
+        // ───────────── Build 0ccfa9b QA fixes ─────────────
+        T.Add("SEC01_edited_journal_cannot_raise_score", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00"); var t = b.BeginRankedRun().Result;
+            var j = Play(b, t, 1200, t.shotBudget - 2, false, final: false);       // 2 shots, server-signed, app killed
+            T.True(!string.IsNullOrEmpty(j.Last().receipt), "server receipt present");
+            var forged = UnityEngine.JsonUtility.FromJson<RankedJournal>(UnityEngine.JsonUtility.ToJson(j));
+            forged.Last().damageScore = 9999;                                      // QA repro: 1200 → 9999, receipt untouched
+            var r = b.FinalizeRanked(forged).Result;
+            T.Eq(SubmitStatus.Accepted, r.status, "still settles the run"); T.Eq(1200, r.finalScore, "server state used, not 9999");
+            T.True(r.message.Contains("verification"), "tamper flagged");
+        });
+        T.Add("SEC01_forged_receipt_and_tail_limits", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00"); var t = b.BeginRankedRun().Result;
+            var j = Play(b, t, 1000, t.shotBudget - 1, false, final: false);
+            j.checkpoints.Add(new RankedCheckpoint { token = t.token, shotIndex = 2, damageScore = 9000, shotsLeft = t.shotBudget - 2, killed = true, receipt = "Zm9yZ2Vk" });
+            T.Eq(1000, b.FinalizeRanked(j).Result.finalScore, "client-made receipt ignored");
+            var b2 = NewBackend("2026-10-16T10:00:00"); var t2 = b2.BeginRankedRun().Result;
+            var j2 = Play(b2, t2, 1000, t2.shotBudget - 1, false, final: false);
+            j2.checkpoints.Add(new RankedCheckpoint { token = t2.token, shotIndex = 2, damageScore = 9500, shotsLeft = t2.shotBudget - 2, killed = true });
+            T.Eq(1000, b2.FinalizeRanked(j2).Result.finalScore, "implausible offline jump (+8500 in one shot) rejected");
+            T.True(typeof(LocalBackendService).GetMethod("Sign") == null, "no client-callable signer exists");
+        });
+        T.Add("SEC01_flush_sends_journal_verbatim", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00"); var t = b.BeginRankedRun().Result;
+            var j = Play(b, t, 1200, t.shotBudget - 2, false, final: false);
+            j.Last().damageScore = 9999; Crashverse.Core.TitanRunJournal.Write(j);   // edited on disk before relaunch
+            var r = Crashverse.Core.TitanRunJournal.FlushPending(b).Result;
+            T.Eq(1200, r.finalScore, "relaunch flush cannot re-sign edited data"); T.True(Crashverse.Core.TitanRunJournal.Read() == null, "journal cleared");
+        });
+        T.Add("BUG04_offline_kill_keeps_bonus_xp_chest", () =>
+        {
+            var b = NewBackend("2026-10-13T10:00:00"); var t = b.BeginRankedRun().Result;
+            int left = t.shotBudget - 3;
+            var j = Play(b, t, 6000, left, true, final: true, onlineShots: 2);        // kill shot made offline (unsigned)
+            T.True(string.IsNullOrEmpty(j.Last().receipt), "kill shot unsigned");
+            var r = b.FinalizeRanked(j).Result;
+            T.Eq(6000 + 500 * left, r.finalScore, "kill bonus kept"); T.Eq(50, b.GetSeasonState().Result.xp, "Titan clear XP");
+            T.Eq(150, b.GetWallet().Result.coins, "completion chest");
+            var b2 = NewBackend("2026-10-13T10:00:00"); var t2 = b2.BeginRankedRun().Result;
+            var j2 = Play(b2, t2, 6000, t2.shotBudget - 3, true, final: false);      // app killed after the kill, before submit
+            Crashverse.Core.TitanRunJournal.Write(j2);
+            T.Eq(6000 + 500 * (t2.shotBudget - 3), Crashverse.Core.TitanRunJournal.FlushPending(b2).Result.finalScore, "relaunch keeps kill bonus");
+        });
+        T.Add("BUG03_server_time_ignores_device_clock", () =>
+        {
+            double mono = 0; DateTime? net = U("2026-10-16T10:00:00");
+            var clk = new NetworkServerClock(() => System.Threading.Tasks.Task.FromResult(net), () => mono);
+            var dir = Path.Combine(Path.GetTempPath(), "cv_tests_" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(dir);
+            var b = new LocalBackendService(Db, clk, Path.Combine(dir, "db.json"));
+            T.True(Throws(() => b.ClaimDailyReward().Wait()), "unsynced: live-ops refused (no device-clock fallback)");
+            b.GetServerTimeUtc().Wait();
+            b.ClaimDailyReward().Wait();
+            mono += 3600; T.Eq(U("2026-10-16T11:00:00"), b.ServerNow, "advances by monotonic time only");
+            T.True(Throws(() => b.ClaimDailyReward().Wait()), "device clock +1 day cannot unlock a claim");
+            net = null; b.GetServerTimeUtc().Wait(); T.Eq(U("2026-10-16T11:00:00"), b.ServerNow, "failed resync keeps anchor");
+            mono += 14 * 3600; T.True(b.GetDailyRewardState().Result.canClaimToday, "real UTC midnight still resets");
+            var f = typeof(LocalBackendService).GetField("_clock", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var def = new LocalBackendService(Db, null, Path.Combine(dir, "db2.json"));
+            T.True(f.GetValue(def) is NetworkServerClock, "default clock is network, not SystemClock");
+        });
+        T.Add("BUG05_score_floor", () =>
+        {
+            T.Eq(873, CampaignScore.Compute(true, 0.8739f, 0, 0, false), "0.8739 → 873");
+            T.Eq(999 + 100, CampaignScore.Compute(true, 0.9999f, 0, 2, false), "0.9999 → 999 (+2 combo = 1099)");
+            T.Eq(700, CampaignScore.Compute(true, 0.7f, 0, 0, false), "no float drift: 0.7 → 700");
+            T.Eq(850, CampaignScore.Compute(true, 0.85f, 0, 0, false), "0.85 → 850");
+        });
+        T.Add("BUG06_season_rollover", () =>
+        {
+            var b = NewBackend("2026-11-08T10:00:00"); b.LinkAccount("Google").Wait(); b.GrantPremiumPassStub();
+            foreach (var l in Db.Season.weeks[3].levels) b.ReportEventStars(l.id, 3).Wait(); // 150 xp → tier 1
+            var s0 = b.GetSeasonState().Result; T.Eq("s1_wrecking_frontier", s0.seasonId, "season 1"); T.Eq(3, s0.weekIndex, "last week");
+            b.SetTestClock(U("2026-11-09T00:00:00"));
+            var s1 = b.GetSeasonState().Result;
+            T.Eq("s1_wrecking_frontier_r1", s1.seasonId, "new season id"); T.Eq(0, s1.xp, "XP reset"); T.Eq(0, s1.tier, "tier reset");
+            T.Eq(0, s1.weekIndex, "week 0"); T.True(!s1.premium && s1.claimedFree.Count == 0, "claims/premium reset");
+            T.Eq(0, b.BestEventStars(Db.Season.weeks[3].levels[0].id), "event bests reset");
+            var inbox = b.GetInbox().Result;
+            T.True(inbox.Exists(i => i.id.EndsWith("_tier_1_free")), "unclaimed free tier → inbox");
+            T.True(inbox.Exists(i => i.id.EndsWith("_tier_1_premium")), "BUG-07: unclaimed premium tier → inbox");
+            b.GetSeasonState().Wait(); T.Eq(2, b.GetInbox().Result.Count, "processed once");
+        });
+        T.Add("BUG07_previous_season_board_is_real", () =>
+        {
+            var b = NewBackend("2026-10-20T10:00:00"); b.LinkAccount("Google").Wait();
+            var pre = b.GetLeaderboard(BoardType.Season, BoardPeriod.Previous, false).Result;
+            T.True(pre.closed && pre.top.Count == 0, "no fake archive before season 1");
+            foreach (var l in Db.Season.weeks[1].levels) b.ReportEventStars(l.id, 3).Wait();
+            b.SetTestClock(U("2026-11-10T10:00:00"));
+            var prev = b.GetLeaderboard(BoardType.Season, BoardPeriod.Previous, false).Result;
+            T.Eq("s1_wrecking_frontier", prev.periodKey, "real previous season key"); T.True(prev.closed, "archived");
+            T.True(prev.me != null && prev.me.score == 150, "my final season XP is in the archive");
+            var wk = b.GetLeaderboard(BoardType.WeeklyEvent, BoardPeriod.Previous, false).Result;
+            T.Eq("s1_wrecking_frontier_w3", wk.periodKey, "previous week crosses into the last season");
+        });
+        T.Add("BUG08_hint_events_and_practice_not_ranked", () =>
+        {
+            var ev = Db.Season.weeks[0].levels[0]; T.True(ev.HasHint, "event level has hint data");
+            var cfg = LocalBackendService.BuildDailyConfig(Db.Titan, U("2026-10-16T10:00:00")); T.True(!string.IsNullOrEmpty(cfg.hintTarget), "Titan config carries hint");
+            var path = Path.Combine(Path.GetTempPath(), "cv_save_" + Guid.NewGuid() + ".json"); var s = new CampaignSave(path);
+            s.RecordHintAttempt(ev.id, false); s.RecordHintAttempt(ev.id, false);
+            T.True(HintRules.ShowHintButton(ev, s.FailsInRow(ev.id), false), "event: hint from 2nd fail");
+            T.True(!HintRules.ShowHintButton(ev, 9, true), "never ranked"); T.Eq(0, s.BestStars(ev.id), "no stars recorded");
+            s.RecordHintAttempt(ev.id, true); T.Eq(0, s.FailsInRow(ev.id), "win resets"); File.Delete(path);
+        });
+        T.Add("BUG09_exact_fraction_thresholds", () =>
+        {
+            T.Eq(3, StarRules.Compute(true, 5, 8, .625f, .3f), "5/8 = 0.625 exactly → 3★ (was 2★ via 63%)");
+            T.Eq(2, StarRules.Compute(true, 4, 8, .625f, .3f), "4/8 < 0.625");
+            T.Eq(3, StarRules.Compute(true, 3, 5), "3/5 = 0.60 exact"); T.Eq(5, StarRules.MinShotsLeft(8, .625f), "band 5 of 8");
+        });
+        T.Add("BUG10_combo_window_strict", () =>
+        {
+            var c = new ComboTracker(); c.OnShot(); c.OnBreak(0f);
+            T.Eq(1, c.OnBreak(0.8001f), "0.8001 s ends the combo"); T.Eq(2, c.OnBreak(1.6001f), "0.8 s still chains");
+        });
+        T.Add("BUG11_sagged_piece_scores_on_break", () =>
+        {
+            var l = new BreakLedger<string>();
+            T.True(!l.Observe("p", true, false), "sag counts destroyed, no combo"); T.True(l.IsDestroyed("p"), "destroyed");
+            T.True(l.Observe("p", true, true), "later break scores the combo point"); T.True(!l.Observe("p", true, true), "once per piece");
+        });
+        T.Add("BUG01_test_projects_not_ignored", () =>
+        {
+            var gi = File.ReadAllText(Path.Combine(UnityEngine.Resources.Root, "../../../.gitignore"));
+            T.True(gi.Contains("!Tools/**/*.csproj"), "gitignore exception for Tools/*.csproj");
+        });
+        T.Add("SC13_campaign_leaderboard", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount("Google").Wait();
+            T.Eq(4000, b.SubmitCampaignScore(4000).Result, "submitted"); T.Eq(4000, b.SubmitCampaignScore(3000).Result, "best kept");
+            var p = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result;
+            T.True(p.me != null && p.me.score == 4000 && !p.closed, "on the all-time board");
+            T.True(Throws(() => b.SubmitCampaignScore(b.CampaignScoreCeiling() + 1).Wait()), "above content ceiling rejected");
         });
     }
 }

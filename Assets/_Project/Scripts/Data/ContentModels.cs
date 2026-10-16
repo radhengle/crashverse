@@ -67,14 +67,14 @@ namespace Crashverse.Data
 
     [Serializable] public class PowerUpCatalog { public PowerUpData[] powerups; }
 
-    [Serializable] public class TitanArena { public string id; public string name; public string layout; }
+    [Serializable] public class TitanArena { public string id; public string name; public string layout; public string hintTarget; public float hintYaw, hintPitch; }
     [Serializable] public class TitanRule { public string id; public string text; public RuleModifiers mod; }
 
     [Serializable]
     public class TitanTemplates
     {
         public string archetype; public string name; public int resetUtcHour; public int rankedGraceMinutes = 15; public int maxDamageScore;
-        public int perShotLeftBonus; public int baseShots; public TitanArena[] arenas; public TitanRule[] rules;
+        public int perShotLeftBonus; public int baseShots; public int offlineShotDamageCap = 5000; public TitanArena[] arenas; public TitanRule[] rules;
         public MasteryGoal mastery; public Reward[] completionRewards; public float topPercent; public int topPercentBonusShards;
     }
 
@@ -86,6 +86,7 @@ namespace Crashverse.Data
         public string layout; public string ruleId; public string ruleText; public RuleModifiers mod; public int shots;
         public MasteryGoal mastery; public Reward[] completionRewards; public float topPercent; public int topPercentBonusShards;
         public int maxDamageScore; public int perShotLeftBonus; public long resetsAtUnixUtc;
+        public string hintTarget; public float hintYaw, hintPitch; // BUG-08: Titan practice hint
     }
 
     [Serializable] public class DailyRewardsData { public Reward[] days; }

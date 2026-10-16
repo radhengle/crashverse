@@ -11,6 +11,8 @@
 
 # Asset meta noise sometimes
 *.csproj
+# BUG-01: keep the .NET test / compile-check projects (Unity-generated ones at the root stay ignored)
+!Tools/**/*.csproj
 *.unityproj
 *.sln
 *.suo

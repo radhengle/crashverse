@@ -16,6 +16,7 @@ namespace Crashverse.Destruction
 
         readonly List<DestructibleBlock> _pieces = new List<DestructibleBlock>();
         readonly HashSet<DestructibleBlock> _counted = new HashSet<DestructibleBlock>();
+        readonly BreakLedger<DestructibleBlock> _ledger = new BreakLedger<DestructibleBlock>();
         float _totalMass, _destroyedMass, _quietTime, _totalHp;
         public float DamageDealt { get; private set; }
         public float TotalObjectiveHp => _totalHp;
@@ -50,7 +51,7 @@ namespace Crashverse.Destruction
         public void UnregisterAll()
         {
             foreach (var b in _pieces) if (b != null) b.Damaged -= OnDamaged;
-            _pieces.Clear(); _counted.Clear();
+            _pieces.Clear(); _counted.Clear(); _ledger.Clear();
             _totalMass = _destroyedMass = _totalHp = DamageDealt = 0f;
             _quietTime = SettleHoldSeconds;
             FirstImpactRoles.Clear();
@@ -85,7 +86,8 @@ namespace Crashverse.Destruction
                 if (gone)
                 {
                     d += b.Mass;
-                    if (_counted.Add(b) && (b.IsBroken || b.IsOutOfBounds))
+                    // BUG-11: a piece already counted by sagging still scores its combo point when it later breaks or falls off (once per piece)
+                    if (_ledger.Observe(b, true, b.IsBroken || b.IsOutOfBounds))
                         ComboChanged?.Invoke(Combo.OnBreak(Time.time));
                 }
                 var rb = b.Body;

@@ -284,7 +284,7 @@ namespace Crashverse.UI
         {
             if (_s == null || _s.Ctx == null) return;
             int total = _s.Ctx.ShotBudget;
-            int stars = StarRules.ComputeInt(true, _s.ShotsLeft, total, StarRules.ToPctInt(_s.Ctx.level.star3Pct), StarRules.ToPctInt(_s.Ctx.level.star2Pct));
+            int stars = StarRules.Compute(true, _s.ShotsLeft, total, _s.Ctx.level.star3Pct, _s.Ctx.level.star2Pct);
             _shots.text = $"Shots {_s.ShotsLeft}/{total}  {UIFactory.Stars(stars)}";
             for (int i = 0; i < 3; i++)
             {
@@ -358,7 +358,7 @@ namespace Crashverse.UI
             if (!string.IsNullOrEmpty(_r.note)) UIFactory.Label(v, _r.note, Th.captionSp, Th.body, TextAnchor.MiddleCenter, Th);
             UIFactory.Spacer(v, 8);
             // Addendum: free hint from 2nd consecutive fail, never ranked, no ads
-            if (!_r.won && mode == RunMode.Campaign && HintRules.ShowHintButton(lvl, AppServices.Save.FailsInRow(lvl.id), false))
+            if (!_r.won && HintRules.ShowHintButton(lvl, AppServices.Save.FailsInRow(lvl.id), mode == RunMode.TitanRanked)) // BUG-08: campaign, events, Titan practice; never ranked
                 UIFactory.Button(v, "💡 Free Hint", Th.goldShade, () => { _s.Ctx.hintArmed = true; Router.Pop(); _s.Retry(); }, Th, 48);
             var row = UIFactory.HStack(v, Th.gap, Th.buttonL);
             UIFactory.Button(row, "Map", Th.navy500, () => GameplayDirector.ExitToMap(), Th);
@@ -504,6 +504,7 @@ namespace Crashverse.UI
             UIFactory.Button(tabs, "Titan", Th.orange, () => { _board = BoardType.DailyTitan; Load(); }, Th, Th.tabHeight, 0, Th.captionSp);
             UIFactory.Button(tabs, "Event", Th.cyan, () => { _board = BoardType.WeeklyEvent; Load(); }, Th, Th.tabHeight, 0, Th.captionSp);
             UIFactory.Button(tabs, "Season", Th.violet, () => { _board = BoardType.Season; Load(); }, Th, Th.tabHeight, 0, Th.captionSp);
+            UIFactory.Button(tabs, "Campaign", Th.green, () => { _board = BoardType.Campaign; Load(); }, Th, Th.tabHeight, 0, Th.captionSp); // SC-13
             var opts = UIFactory.HStack(v, 4f, Th.tabHeight);
             UIFactory.Button(opts, "Now/Prev", Th.navy500, () => { _period = _period == BoardPeriod.Current ? BoardPeriod.Previous : BoardPeriod.Current; Load(); }, Th, Th.tabHeight, 0, Th.captionSp);
             UIFactory.Button(opts, "Global/Friends", Th.navy500, () => { _friends = !_friends; Load(); }, Th, Th.tabHeight, 0, Th.captionSp);

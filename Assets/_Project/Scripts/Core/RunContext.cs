@@ -26,7 +26,8 @@ namespace Crashverse.Core
         {
             id = "titan_" + c.dayKey, number = 0, name = c.name + " · " + c.arenaName, layout = c.layout, objective = "DESTROY_STRUCTURE",
             shots = c.shots, winThreshold = 0.85f, materials = new[] { "wood", "brick", "steel" }, mastery = c.mastery,
-            forced = new SlotRule[0], lockedSlots = new string[0], requires = "", bossId = "", reward = new Reward[0]
+            forced = new SlotRule[0], lockedSlots = new string[0], requires = "", bossId = "", reward = new Reward[0],
+            hintTarget = c.hintTarget, hintYaw = c.hintYaw, hintPitch = c.hintPitch // BUG-08: practice hint
         };
     }
 

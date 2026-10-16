@@ -245,7 +245,8 @@ def MOD(**k):
 
 titan = {"archetype": "emberforge_titan", "name": "Emberforge Titan", "resetUtcHour": 0, "rankedGraceMinutes": 15,
          "maxDamageScore": 10000, "perShotLeftBonus": 500, "baseShots": 6,
-         "arenas": [{"id": a, "name": n, "layout": "titan_" + a} for a, n in TITAN_ARENAS],
+         "offlineShotDamageCap": 5000,  # SEC-01: max damage gain per unsigned (offline) shot accepted on flush
+         "arenas": [{"id": a, "name": n, "layout": "titan_" + a, "hintTarget": "pelvis", "hintYaw": 0, "hintPitch": 22} for a, n in TITAN_ARENAS],
          "rules": [
             {"id": "heated_steel", "text": "Steel is heated: joints take 3x damage", "mod": MOD(steelJointMult=3)},
             {"id": "brittle_brick", "text": "Cracked kilns: brick HP x0.6", "mod": MOD(brickHpMult=.6)},
@@ -263,7 +264,10 @@ def EL(eid, n, layout, shots):
     return {"id": f"{eid}_e{n}", "number": n, "island": "event", "name": f"Event {n}", "layout": layout,
             "objective": "DESTROY_STRUCTURE", "shots": shots, "winThreshold": .85, "materials": [W, Bk, S],
             "teaches": "", "mastery": M("STARS", 3, "3 stars"), "forced": [], "lockedSlots": [], "requires": "",
-            "bossId": "", "reward": [], "star3Pct": .60, "star2Pct": .30, "starCapIfPowerupUsed": 3, "islandKillY": -2.0, "hintTarget": "", "hintYaw": 0, "hintPitch": 0}
+            "bossId": "", "reward": [], "star3Pct": .60, "star2Pct": .30, "starCapIfPowerupUsed": 3, "islandKillY": -2.0, "hintTarget": LAYOUT_HINT.get(layout, ("", 0, 0))[0],
+            "hintYaw": LAYOUT_HINT.get(layout, ("", 0, 0))[1], "hintPitch": LAYOUT_HINT.get(layout, ("", 0, 0))[2]}  # BUG-08: events reuse campaign hints
+LAYOUT_HINT = {"c1_l01_lookout_hut": HINTS[1], "c1_l03_bakery": HINTS[3], "c1_l06_granary": HINTS[6],
+               "c1_l08_market_arcade": HINTS[8], "c1_l09_lighthouse_gauntlet": HINTS[9], "m1_clockwork_tower": HINTS[7]}
 lays = ["c1_l01_lookout_hut", "c1_l03_bakery", "c1_l06_granary", "c1_l08_market_arcade", "c1_l09_lighthouse_gauntlet"]
 weeks = []
 for wid, name, text, mod in [("magnetic_mayhem", "Magnetic Mayhem", "Magnetised steel: joints take 3x", MOD(steelJointMult=3)),

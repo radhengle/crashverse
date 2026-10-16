@@ -18,7 +18,7 @@ namespace Crashverse.Meta
         /// <returns>The combo count after this break.</returns>
         public int OnBreak(float time)
         {
-            Current = (Current > 0 && time - _lastBreak <= Window + 1e-4f) ? Current + 1 : 1;
+            Current = (Current > 0 && time - _lastBreak <= Window) ? Current + 1 : 1; // BUG-10: strictly <= 0.8 s, no tolerance
             _lastBreak = time;
             if (Current > BestThisRun) BestThisRun = Current;
             return Current;
@@ -36,7 +36,8 @@ namespace Crashverse.Meta
         {
             if (!won) return 0;
             float r = destroyedRatio < 0 ? 0 : destroyedRatio > 1 ? 1 : destroyedRatio;
-            return (int)System.Math.Round(1000.0 * r) + 500 * System.Math.Max(0, shotsLeft) + 50 * System.Math.Max(0, bestCombo) + (mastery ? 1000 : 0);
+            // BUG-05: floor with exact decimal maths (0.8739 → 873, 0.9999 → 999; no float drift such as 0.7f → 699)
+            return (int)decimal.Floor((decimal)r * 1000m) + 500 * System.Math.Max(0, shotsLeft) + 50 * System.Math.Max(0, bestCombo) + (mastery ? 1000 : 0);
         }
     }
 

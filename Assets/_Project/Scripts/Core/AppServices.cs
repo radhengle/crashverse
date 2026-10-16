@@ -19,14 +19,15 @@ namespace Crashverse.Core
         public static System.Collections.Generic.List<StoreItem> StoreItems = new System.Collections.Generic.List<StoreItem>();
         public static System.Collections.Generic.List<string> StoreErrors = new System.Collections.Generic.List<string>();
 
-        static TimeSpan _serverOffset; static bool _synced;
-        /// <summary>SG-20: server time = device + offset measured at launch/resume. Time-gated UI disables when not synced.</summary>
+        static DateTime _serverAnchor; static double _monoAnchor; static bool _synced;
+        static readonly System.Diagnostics.Stopwatch Mono = System.Diagnostics.Stopwatch.StartNew();
+        /// <summary>SG-20 / BUG-03: server time at the last sync advanced by a monotonic timer. The device clock is never read.</summary>
         public static bool TimeSynced => _synced;
-        public static DateTime ServerNow => DateTime.UtcNow + _serverOffset;
+        public static DateTime ServerNow => _serverAnchor.AddSeconds(Mono.Elapsed.TotalSeconds - _monoAnchor);
 
         public static async Task SyncServerTime()
         {
-            try { var s = await Backend.GetServerTimeUtc(); _serverOffset = s - DateTime.UtcNow; _synced = true; }
+            try { var s = await Backend.GetServerTimeUtc(); _serverAnchor = s; _monoAnchor = Mono.Elapsed.TotalSeconds; _synced = true; }
             catch (BackendException) { _synced = false; }
         }
 

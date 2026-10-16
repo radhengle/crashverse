@@ -4,7 +4,7 @@ using Crashverse.Data;
 
 namespace Crashverse.Backend
 {
-    public enum BoardType { DailyTitan = 0, WeeklyEvent = 1, Season = 2 }
+    public enum BoardType { DailyTitan = 0, WeeklyEvent = 1, Season = 2, Campaign = 3 }
     public enum BoardPeriod { Current = 0, Previous = 1 }
     public enum SubmitStatus { Accepted, RejectedInvalid, RejectedDuplicate, RefundedAsPractice, QueuedOffline }
 
@@ -14,11 +14,24 @@ namespace Crashverse.Backend
 
     [Serializable] public class RankedTicket { public string token; public string dayKey; public long issuedUnixUtc; public int shotBudget; }
 
+    /// <summary>
+    /// SEC-01: one settled shot of a ranked run. The client fills the numbers; only the SERVER fills <see cref="receipt"/>
+    /// (HMAC-SHA256 with a per-run key the client never sees). Offline shots have an empty receipt.
+    /// </summary>
     [Serializable]
-    public class RankedResult
+    public class RankedCheckpoint
     {
-        public string token; public int damageScore; public int shotsLeft; public bool killed; public bool partial;
-        public string signature; // HMAC in real backend; local stub uses a checksum
+        public string token; public int shotIndex; public int damageScore; public int shotsLeft; public bool killed;
+        public string receipt;
+    }
+
+    /// <summary>Client-side journal of a ranked run. Sent to the server verbatim; the client never signs or re-signs it.</summary>
+    [Serializable]
+    public class RankedJournal
+    {
+        public string token; public bool final;
+        public List<RankedCheckpoint> checkpoints = new List<RankedCheckpoint>();
+        public RankedCheckpoint Last() => checkpoints.Count > 0 ? checkpoints[checkpoints.Count - 1] : null;
     }
 
     [Serializable] public class SubmitResponse { public SubmitStatus status; public string message; public int finalScore; }

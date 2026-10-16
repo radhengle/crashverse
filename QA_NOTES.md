@@ -62,3 +62,22 @@ Times are shown in device local time with a zone label (e.g. IST) and reset at 0
 - IAP (the store shows validated SKUs; buying shows a toast). Account linking is a local flag. Friends on boards are fake bots.
 - Real server: implement `IBackendService` and set `BackendLocator.Current`. Request signing is an FNV checksum, not HMAC.
 - Audio/VFX polish, post effects, final fonts and icons (emoji placeholders), map art beyond greybox islands.
+
+## Build 0ccfa9b QA report: fixes
+| ID | Fix | Test(s) |
+|---|---|---|
+| SEC-01 | Ranked run reported to the server after every settled shot; server keeps run state and a per-run HMAC-SHA256 key and returns receipts. Journal sent verbatim on relaunch (`FinalizeRanked`); client never signs. Edited/forged entries are ignored and flagged; the offline tail is accepted only step by step within `offlineShotDamageCap` (5000/shot) | SEC01_* (3) |
+| BUG-03 / BUG-12 | `NetworkServerClock` (HTTP Date + monotonic Stopwatch); no SystemClock fallback, unsynced = live-ops refused. App countdowns are monotonic too | BUG03_server_time_ignores_device_clock |
+| BUG-04 | Kill flag kept through queue/relaunch → kill bonus, Titan clear XP and chest | BUG04_offline_kill_keeps_bonus_xp_chest |
+| BUG-05 | Score floors with exact decimal maths | BUG05_score_floor |
+| BUG-06 | Season instances roll over every 28 days (`{id}_r{N}`): XP/tier/claims/premium/event bests reset, campaign untouched | BUG06_season_rollover |
+| BUG-07 | Previous-period keys are the real archives (yesterday, last week across seasons, last season); no fake pre-season board; unclaimed premium tiers (if owned) to inbox | BUG06_*, BUG07_previous_season_board_is_real |
+| BUG-08 | Hint in events and Titan practice (hint data for event levels + Titan arenas; streak via `RecordHintAttempt`), never ranked | BUG08_hint_events_and_practice_not_ranked |
+| BUG-09 | Exact fractional thresholds (0.625 stays 0.625) | BUG09_exact_fraction_thresholds |
+| BUG-10 | Combo window strictly ≤ 0.8 s (no tolerance; measured in Time.time float seconds) | BUG10_combo_window_strict |
+| BUG-11 | `BreakLedger`: destroyed% and combo point tracked separately | BUG11_sagged_piece_scores_on_break |
+| BUG-01 | `.gitignore` keeps `Tools/**/*.csproj`; both projects committed | BUG01_test_projects_not_ignored |
+| SC-13 | Campaign all-time board (sum of best level scores; best kept; content-derived ceiling); "Campaign" tab | SC13_campaign_leaderboard |
+
+Still needs the real server: true tamper resistance (the stub DB is on device), reinstall-proof state, replay-based validation of offline tails.
+The stub's time source is an HTTP HEAD to `LocalBackendService.DefaultTimeUrl` (needs network; otherwise live-ops stay disabled).

@@ -80,6 +80,14 @@ namespace Crashverse.Meta
             return true;
         }
 
+        /// <summary>BUG-08: hint streak for non-campaign modes (events, Titan practice). Touches failsInRow only: no stars, clears or rewards.</summary>
+        public void RecordHintAttempt(string id, bool won)
+        {
+            var p = GetOrAdd(id);
+            if (won) p.failsInRow = 0; else p.failsInRow++;
+            Save();
+        }
+
         public int BestStars(string id) => Get(id)?.bestStars ?? 0;
         public bool IsCleared(string id) => Get(id)?.cleared ?? false;
 

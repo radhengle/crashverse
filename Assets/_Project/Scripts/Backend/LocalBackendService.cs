@@ -10,16 +10,24 @@ namespace Crashverse.Backend
     /// <summary>
     /// Local stand-in for the authoritative server. Reads bundled JSON (ContentDatabase), keeps its own
     /// "server DB" file (separate from the campaign save) and a deterministic fake leaderboard.
-    /// QA: the server clock can be overridden (SetTestClock / SetTestOffset); the override is persisted so it
-    /// survives app restarts. Device clock changes have no effect: only ServerNow is used (SG-20).
-    /// Limitation: because it is on-device, reinstall wipes it; a real server is required for reinstall-proof ranked/streaks.
+    /// Time (BUG-03/BUG-12): ServerNow comes from an authoritative clock (NetworkServerClock: HTTP Date of the backend host,
+    /// advanced monotonically), never from the device clock. QA can override it (SetTestClock / SetTestOffset, persisted).
+    /// Ranked integrity (SEC-01): per-run HMAC key and run state live only in this server DB; the client journal is never trusted
+    /// beyond what the server already signed, plus a plausibility-checked offline tail.
+    /// Limitations of the on-device stub: the DB file is on the device, so reinstall wipes it and a rooted device could edit it.
+    /// Reinstall-proof streaks/ranked and real tamper resistance need the real server behind IBackendService.
     /// </summary>
     public class LocalBackendService : IBackendService
     {
         [Serializable] class Sub { public string playerId; public string name; public int score; public long ticks; public bool friend; }
         [Serializable] class Board { public string key; public int type; public bool processed; public List<Sub> subs = new List<Sub>(); }
         [Serializable] class EventBest { public string levelId; public int stars; }
-        [Serializable] class TicketRec { public string token; public string dayKey; public int shotBudget; public bool used; }
+        [Serializable] class TicketRec
+        {
+            public string token; public string dayKey; public int shotBudget; public bool used;
+            public string key; // SEC-01: per-run HMAC key, server-side only
+            public int lastShotIndex; public int lastDamage; public int lastShotsLeft; public bool lastKilled;
+        }
 
         [Serializable]
         class ServerDb
@@ -37,11 +45,13 @@ namespace Crashverse.Backend
             public List<EventBest> eventBest = new List<EventBest>();
             public List<string> titanClearDays = new List<string>();
             public List<Board> boards = new List<Board>();
-            public bool seasonEndProcessed;
+            public bool seasonEndProcessed; // legacy (pre-rollover saves)
+            public int campaignBest;
         }
 
         readonly ContentDatabase _db;
-        readonly IClock _deviceClock;
+        readonly IClock _clock; // authoritative server clock, never the device clock (BUG-03)
+        public const string DefaultTimeUrl = "https://www.google.com/generate_204";
         readonly string _path;
         ServerDb _s;
         public bool SimulateOffline { get; set; }
@@ -51,7 +61,7 @@ namespace Crashverse.Backend
         public LocalBackendService(ContentDatabase db, IClock clock = null, string path = null)
         {
             _db = db;
-            _deviceClock = clock ?? new SystemClock();
+            _clock = clock ?? new NetworkServerClock(NetworkServerClock.HttpDate(DefaultTimeUrl));
             _path = path ?? Path.Combine(Application.persistentDataPath, "local_server_db.json");
             Load();
             if (string.IsNullOrEmpty(_s.account.playerId))
@@ -69,7 +79,7 @@ namespace Crashverse.Backend
             {
                 if (_s.testFixedUnixMs >= 0)
                     return DateTimeOffset.FromUnixTimeMilliseconds(_s.testFixedUnixMs).UtcDateTime;
-                return _deviceClock.UtcNow.AddMilliseconds(_s.testOffsetMs);
+                return _clock.UtcNow.AddMilliseconds(_s.testOffsetMs);
             }
         }
         /// <summary>Freeze server time at an exact UTC instant (QA).</summary>
@@ -93,11 +103,22 @@ namespace Crashverse.Backend
         }
         void Save() { File.WriteAllText(_path, JsonUtility.ToJson(_s)); }
 
-        void Online() { if (SimulateOffline) throw new BackendException("offline"); Maintenance(); }
+        void Online()
+        {
+            if (SimulateOffline) throw new BackendException("offline");
+            if (_s.testFixedUnixMs < 0 && _clock is ISyncableClock sc && !sc.Synced) throw new BackendException("server time unavailable");
+            Maintenance();
+        }
         static long Unix(DateTime d) => new DateTimeOffset(DateTime.SpecifyKind(d, DateTimeKind.Utc)).ToUnixTimeSeconds();
 
         // ---------------- account / wallet ----------------
-        public Task<DateTime> GetServerTimeUtc() { Online(); return Task.FromResult(ServerNow); }
+        public async Task<DateTime> GetServerTimeUtc()
+        {
+            if (SimulateOffline) throw new BackendException("offline");
+            if (_clock is ISyncableClock sc) await sc.SyncAsync();
+            Online();
+            return ServerNow;
+        }
         public Task<AccountState> GetAccount() { Online(); return Task.FromResult(_s.account); }
 
         /// <summary>Fake OAuth link. SG-19: guest scores on currently open boards become visible.</summary>
@@ -178,7 +199,8 @@ namespace Crashverse.Backend
                 layout = arena.layout, ruleId = rule.id, ruleText = rule.text, mod = rule.mod,
                 shots = Math.Max(1, t.baseShots + rule.mod.shotDelta), mastery = t.mastery, completionRewards = t.completionRewards,
                 topPercent = t.topPercent, topPercentBonusShards = t.topPercentBonusShards, maxDamageScore = t.maxDamageScore,
-                perShotLeftBonus = t.perShotLeftBonus, resetsAtUnixUtc = Unix(UtcDay.NextReset(serverUtc))
+                perShotLeftBonus = t.perShotLeftBonus, resetsAtUnixUtc = Unix(UtcDay.NextReset(serverUtc)),
+                hintTarget = arena.hintTarget, hintYaw = arena.hintYaw, hintPitch = arena.hintPitch
             };
         }
         static int Mod(int a, int n) => ((a % n) + n) % n;
@@ -216,38 +238,100 @@ namespace Crashverse.Backend
             st.attemptUsed = true; st.status = "in_progress";
             var cfg = BuildDailyConfigOrOverride(now);
             var t = new RankedTicket { token = Guid.NewGuid().ToString("N"), dayKey = key, issuedUnixUtc = Unix(now), shotBudget = cfg.shots };
-            _s.tickets.Add(new TicketRec { token = t.token, dayKey = key, shotBudget = cfg.shots });
+            var k = new byte[32]; using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create()) rng.GetBytes(k);
+            _s.tickets.Add(new TicketRec { token = t.token, dayKey = key, shotBudget = cfg.shots, key = Convert.ToBase64String(k),
+                                           lastShotIndex = 0, lastDamage = 0, lastShotsLeft = cfg.shots });
             Save();
             return Task.FromResult(t);
         }
         DailyTitanConfig BuildDailyConfigOrOverride(DateTime now) => GetDailyTitan().Result;
 
-        /// <summary>Deterministic FNV-1a checksum (stand-in for a server HMAC; not secure, stub only).</summary>
-        public static string Sign(RankedResult r)
+        /// <summary>SEC-01: HMAC-SHA256 over the canonical checkpoint with the run's server-held key.</summary>
+        static string Receipt(TicketRec tk, RankedCheckpoint c)
         {
-            string s = $"{r.token}|{r.damageScore}|{r.shotsLeft}|{r.killed}|{r.partial}";
-            uint h = 2166136261;
-            foreach (char c in s) { h ^= c; h *= 16777619; }
-            return h.ToString("x8");
+            using (var h = new System.Security.Cryptography.HMACSHA256(Convert.FromBase64String(tk.key)))
+            {
+                var msg = System.Text.Encoding.UTF8.GetBytes($"{tk.token}|{c.shotIndex}|{c.damageScore}|{c.shotsLeft}|{(c.killed ? 1 : 0)}");
+                return Convert.ToBase64String(h.ComputeHash(msg));
+            }
+        }
+
+        static bool FixedTimeEquals(string a, string b)
+        {
+            if (a == null || b == null || a.Length != b.Length) return false;
+            int d = 0; for (int i = 0; i < a.Length; i++) d |= a[i] ^ b[i];
+            return d == 0;
+        }
+
+        /// <summary>Validates one shot against the previous state (index +1, shots -1, damage monotonic and bounded, nothing after a kill).</summary>
+        string CheckStep(TicketRec tk, int prevIndex, int prevDamage, bool prevKilled, RankedCheckpoint c, int maxGain)
+        {
+            var t = _db.Titan;
+            if (prevKilled) return "run already finished";
+            if (c.shotIndex != prevIndex + 1) return "shot out of order";
+            if (c.shotsLeft != tk.shotBudget - c.shotIndex || c.shotsLeft < 0) return "shot count mismatch";
+            if (c.damageScore < prevDamage || c.damageScore > t.maxDamageScore) return "damage out of range";
+            if (c.damageScore - prevDamage > maxGain) return "implausible damage for one shot";
+            return null;
+        }
+
+        /// <summary>SEC-01: online per-shot report. Server state advances only through validated steps; returns the server receipt.</summary>
+        public Task<RankedCheckpoint> ReportRankedCheckpoint(RankedCheckpoint c)
+        {
+            Online();
+            var tk = _s.tickets.Find(x => x.token == c?.token);
+            if (tk == null) throw new BackendException("Unknown run token");
+            if (tk.used) throw new BackendException("Run already submitted");
+            if (c.shotIndex == tk.lastShotIndex && c.damageScore == tk.lastDamage && c.killed == tk.lastKilled && c.shotsLeft == tk.lastShotsLeft)
+            { c.receipt = Receipt(tk, c); return Task.FromResult(c); } // idempotent retry
+            var err = CheckStep(tk, tk.lastShotIndex, tk.lastDamage, tk.lastKilled, c, _db.Titan.maxDamageScore);
+            if (err != null) throw new BackendException("Checkpoint rejected: " + err);
+            tk.lastShotIndex = c.shotIndex; tk.lastDamage = c.damageScore; tk.lastShotsLeft = c.shotsLeft; tk.lastKilled = c.killed;
+            c.receipt = Receipt(tk, c);
+            Save();
+            return Task.FromResult(c);
         }
 
         /// <summary>
-        /// SG-10/SG-22: a run belongs to the UTC day it started; accepted while serverNow &lt;= nextReset + 15:00.000 (inclusive);
-        /// later submissions are rejected and refunded as practice. SG-11: partial results (app killed) are accepted the same way.
+        /// SEC-01 / BUG-04 / SG-11 / SG-22. Score source of truth = the server's own run state. From the journal the server only takes
+        /// (a) checkpoints it signed (verified; a forged/edited one is ignored and flagged) and (b) an unsigned offline tail after its
+        /// last state, accepted step by step only if plausible (offlineShotDamageCap per shot). The kill flag (and so the kill bonus,
+        /// Titan clear XP and chest) survives queuing. The client never computes a signature.
         /// </summary>
-        public Task<SubmitResponse> SubmitRanked(RankedResult r)
+        public Task<SubmitResponse> FinalizeRanked(RankedJournal j)
         {
             Online();
-            var now = ServerNow;
-            var tk = _s.tickets.Find(t => t.token == r.token);
+            var tk = _s.tickets.Find(x => x.token == j?.token);
             if (tk == null) return Task.FromResult(new SubmitResponse { status = SubmitStatus.RejectedInvalid, message = "Unknown run token" });
             if (tk.used) return Task.FromResult(new SubmitResponse { status = SubmitStatus.RejectedDuplicate, message = "Already submitted" });
+            int idx = tk.lastShotIndex, dmg = tk.lastDamage, left = tk.lastShotsLeft; bool killed = tk.lastKilled;
+            bool tampered = false, usedTail = false;
+            var list = new List<RankedCheckpoint>(j.checkpoints ?? new List<RankedCheckpoint>());
+            list.Sort((x, y) => x.shotIndex.CompareTo(y.shotIndex));
+            foreach (var c in list)
+            {
+                if (c == null || c.token != tk.token) { tampered = true; continue; }
+                if (!string.IsNullOrEmpty(c.receipt))
+                {
+                    if (!FixedTimeEquals(c.receipt, Receipt(tk, c))) tampered = true; // edited after signing
+                    continue; // valid signed checkpoints are already in server state
+                }
+                if (c.shotIndex <= idx) { if (c.shotIndex < idx || c.damageScore != dmg || c.killed != killed) tampered = true; continue; }
+                if (tampered) break; // never extend an edited journal
+                if (CheckStep(tk, idx, dmg, killed, c, _db.Titan.offlineShotDamageCap) != null) { tampered = true; break; }
+                idx = c.shotIndex; dmg = c.damageScore; left = c.shotsLeft; killed = c.killed; usedTail = true;
+            }
+            bool final = j.final || killed || left == 0;
+            var resp = Commit(tk, dmg, left, killed, !final);
+            if (tampered) resp.message += " (journal failed verification; server-held run state used)";
+            else if (usedTail) resp.message += " (offline shots accepted after plausibility checks)";
+            return Task.FromResult(resp);
+        }
+
+        SubmitResponse Commit(TicketRec tk, int damage, int shotsLeft, bool killed, bool partial)
+        {
+            var now = ServerNow; var t = _db.Titan;
             var st = Status(tk.dayKey);
-            var t = _db.Titan;
-            int maxScore = t.maxDamageScore + t.perShotLeftBonus * tk.shotBudget;
-            bool valid = r.signature == Sign(r) && r.damageScore >= 0 && r.damageScore <= t.maxDamageScore &&
-                         r.shotsLeft >= 0 && r.shotsLeft <= tk.shotBudget;
-            if (!valid) return Task.FromResult(new SubmitResponse { status = SubmitStatus.RejectedInvalid, message = "Failed validation" });
             tk.used = true;
             var dayStart = DateTime.ParseExact(tk.dayKey, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture,
                 System.Globalization.DateTimeStyles.AdjustToUniversal | System.Globalization.DateTimeStyles.AssumeUniversal);
@@ -255,13 +339,12 @@ namespace Crashverse.Backend
             if (now > deadline)
             {
                 st.status = "refunded_practice"; Save();
-                return Task.FromResult(new SubmitResponse { status = SubmitStatus.RefundedAsPractice, message = "Submitted after the grace window; counted as practice" });
+                return new SubmitResponse { status = SubmitStatus.RefundedAsPractice, message = "Submitted after the grace window; counted as practice" };
             }
-            int score = TitanScore(r.damageScore, r.shotsLeft, r.killed, t);
-            if (score > maxScore) score = maxScore;
-            st.submitted = true; st.score = score; st.status = r.partial ? "submitted_partial" : "submitted";
+            int score = Math.Min(TitanScore(damage, shotsLeft, killed, t), t.maxDamageScore + t.perShotLeftBonus * tk.shotBudget);
+            st.submitted = true; st.score = score; st.status = partial ? "submitted_partial" : "submitted";
             AddSub(BoardType.DailyTitan, tk.dayKey, score, now);
-            if (r.killed && !_s.titanClearDays.Contains(tk.dayKey))
+            if (killed && !_s.titanClearDays.Contains(tk.dayKey))
             {
                 _s.titanClearDays.Add(tk.dayKey);
                 _s.seasonXp += _db.Season.xpPerTitanClear;
@@ -269,7 +352,7 @@ namespace Crashverse.Backend
                 AddSub(BoardType.Season, SeasonKey(now), _s.seasonXp, now, replace: true);
             }
             Save();
-            return Task.FromResult(new SubmitResponse { status = SubmitStatus.Accepted, finalScore = score, message = "Ranked score accepted" });
+            return new SubmitResponse { status = SubmitStatus.Accepted, finalScore = score, message = "Ranked score accepted" };
         }
 
         /// <summary>DP §3: damage dealt (0..10000) + 500 per shot left, bonus only on a kill.</summary>
@@ -307,12 +390,18 @@ namespace Crashverse.Backend
         }
 
         // ---------------- Season / events ----------------
-        DateTime SeasonStart => DateTime.Parse(_db.Season.startUtc, System.Globalization.CultureInfo.InvariantCulture,
+        // BUG-06: seasons roll over. The bundled season is the template; instance N starts at startUtc + N × length and gets
+        // id "{id}" (N = 0) or "{id}_r{N}". XP, tiers, claims, premium and event bests reset; campaign is untouched.
+        DateTime FirstSeasonStart => DateTime.Parse(_db.Season.startUtc, System.Globalization.CultureInfo.InvariantCulture,
             System.Globalization.DateTimeStyles.AdjustToUniversal);
-        string SeasonKey(DateTime now) => _db.Season.id;
-        string WeekKey(DateTime now) { int w = WeekIndex(now); return _db.Season.id + "_w" + w; }
-        int WeekIndex(DateTime now) => (int)Math.Floor((now - SeasonStart).TotalDays / _db.Season.weekDays);
-        DateTime SeasonEnd => SeasonStart.AddDays(_db.Season.weekDays * _db.Season.weeks.Length);
+        int SeasonDays => _db.Season.weekDays * _db.Season.weeks.Length;
+        int SeasonIndex(DateTime now) => (int)Math.Floor((now - FirstSeasonStart).TotalDays / SeasonDays);
+        DateTime SeasonStartFor(DateTime now) => FirstSeasonStart.AddDays((double)SeasonIndex(now) * SeasonDays);
+        string SeasonIdFor(int n) => n == 0 ? _db.Season.id : n < 0 ? _db.Season.id + "_pre" + (-n) : _db.Season.id + "_r" + n;
+        string SeasonKey(DateTime now) => SeasonIdFor(SeasonIndex(now));
+        string WeekKey(DateTime now) => SeasonKey(now) + "_w" + WeekIndex(now);
+        int WeekIndex(DateTime now) => (int)Math.Floor((now - SeasonStartFor(now)).TotalDays / _db.Season.weekDays);
+        DateTime SeasonEndFor(DateTime now) => SeasonStartFor(now).AddDays(SeasonDays);
 
         public static int TierForXp(SeasonData s, int xp)
         {
@@ -341,9 +430,9 @@ namespace Crashverse.Backend
             int w = WeekIndex(now);
             var st = new SeasonState
             {
-                seasonId = s.id, name = s.name, xp = _s.seasonXp, tier = TierForXp(s, _s.seasonXp), weekIndex = w,
+                seasonId = SeasonKey(now), name = SeasonIndex(now) == 0 ? s.name : s.name.Replace("Season 1", "Season " + (SeasonIndex(now) + 1)), xp = _s.seasonXp, tier = TierForXp(s, _s.seasonXp), weekIndex = w,
                 weekEventId = w >= 0 && w < s.weeks.Length ? s.weeks[w].id : "",
-                weekEndsUnixUtc = Unix(SeasonStart.AddDays((w + 1) * s.weekDays)), seasonEndsUnixUtc = Unix(SeasonEnd),
+                weekEndsUnixUtc = Unix(SeasonStartFor(now).AddDays((w + 1) * s.weekDays)), seasonEndsUnixUtc = Unix(SeasonEndFor(now)),
                 premium = _s.premium, bonusChests = BonusChests(s, _s.seasonXp),
                 claimedFree = new List<int>(_s.claimedFree), claimedPremium = new List<int>(_s.claimedPremium)
             };
@@ -383,6 +472,9 @@ namespace Crashverse.Backend
 
         public Task<int> SubmitEventScore(string eventLevelId, int stars) { ReportEventStars(eventLevelId, stars); return Task.FromResult(WeeklyStars(ServerNow)); }
 
+        /// <summary>Store stub: the premium season track is cosmetic-only (VM-13). Per season; cleared on rollover.</summary>
+        public void GrantPremiumPassStub() { _s.premium = true; Save(); }
+
         public Task<SeasonState> ClaimSeasonTier(int tier, bool premium)
         {
             Online();
@@ -396,17 +488,21 @@ namespace Crashverse.Backend
         }
 
         // ---------------- Leaderboards ----------------
-        string CurrentKey(BoardType b, DateTime now) => b == BoardType.DailyTitan ? UtcDay.Key(now) : b == BoardType.WeeklyEvent ? WeekKey(now) : SeasonKey(now);
+        const string CampaignKey = "campaign_c1_alltime";
+        string CurrentKey(BoardType b, DateTime now) => b == BoardType.DailyTitan ? UtcDay.Key(now) : b == BoardType.WeeklyEvent ? WeekKey(now) :
+            b == BoardType.Campaign ? CampaignKey : SeasonKey(now);
+        /// <summary>BUG-07: the real archived key of the previous period (yesterday / last week, across seasons / last season).</summary>
         string PreviousKey(BoardType b, DateTime now) => b == BoardType.DailyTitan ? UtcDay.Key(now.AddDays(-1)) :
-            b == BoardType.WeeklyEvent ? _db.Season.id + "_w" + (WeekIndex(now) - 1) : "s0_previous";
+            b == BoardType.WeeklyEvent ? WeekKey(now.AddDays(-_db.Season.weekDays)) :
+            b == BoardType.Campaign ? CampaignKey : SeasonIdFor(SeasonIndex(now) - 1);
 
-        Board GetBoard(BoardType type, string key)
+        Board GetBoard(BoardType type, string key, bool create = true)
         {
             var b = _s.boards.Find(x => x.type == (int)type && x.key == key);
-            if (b != null) return b;
+            if (b != null || !create) return b;
             b = new Board { key = key, type = (int)type };
             var rng = new System.Random(StableSeed(key + type));
-            int max = type == BoardType.DailyTitan ? 12000 : type == BoardType.WeeklyEvent ? 15 : 4500;
+            int max = type == BoardType.DailyTitan ? 12000 : type == BoardType.WeeklyEvent ? 15 : type == BoardType.Campaign ? 40000 : 4500;
             var baseT = new DateTime(2026, 1, 1).Ticks;
             for (int i = 0; i < BotCount; i++)
                 b.subs.Add(new Sub { playerId = "bot_" + i, name = BotName(i), score = rng.Next(0, max), ticks = baseT + rng.Next(0, 1000000) * 10000L, friend = i % 17 == 0 });
@@ -432,7 +528,8 @@ namespace Crashverse.Backend
             var now = ServerNow;
             if (b.type == (int)BoardType.DailyTitan) return b.key != UtcDay.Key(now);
             if (b.type == (int)BoardType.WeeklyEvent) return b.key != WeekKey(now);
-            return b.key != SeasonKey(now) || now >= SeasonEnd;
+            if (b.type == (int)BoardType.Campaign) return false;
+            return b.key != SeasonKey(now);
         }
 
         /// <summary>Sort: score desc, ties by earlier submission (DP §3).</summary>
@@ -443,16 +540,43 @@ namespace Crashverse.Backend
             return l;
         }
 
+        /// <summary>
+        /// SC-13: campaign board = sum of best per-level campaign scores. Keeps the player's best; rejects totals above the
+        /// content-derived ceiling (per level: 1000 + 500×shots + 50×pieces + 1000 mastery).
+        /// </summary>
+        public Task<int> SubmitCampaignScore(int totalScore)
+        {
+            Online();
+            if (totalScore < 0 || totalScore > CampaignScoreCeiling()) throw new BackendException("Campaign score rejected");
+            if (totalScore > _s.campaignBest) _s.campaignBest = totalScore;
+            AddSub(BoardType.Campaign, CampaignKey, _s.campaignBest, ServerNow);
+            Save();
+            return Task.FromResult(_s.campaignBest);
+        }
+
+        public int CampaignScoreCeiling()
+        {
+            int sum = 0;
+            foreach (var l in _db.Chapter1.levels)
+            {
+                int pieces = _db.GetLayout(l.layout)?.blocks?.Length ?? 0;
+                sum += 1000 + 500 * l.shots + 50 * pieces + 1000;
+            }
+            return sum;
+        }
+
         public Task<LeaderboardPage> GetLeaderboard(BoardType board, BoardPeriod period, bool friendsOnly)
         {
             Online();
             var now = ServerNow;
             var key = period == BoardPeriod.Current ? CurrentKey(board, now) : PreviousKey(board, now);
-            var b = GetBoard(board, key);
+            // BUG-07: a previous season that never existed for this player (before season 1) is an empty, closed archive, not bots.
+            bool preHistory = board == BoardType.Season && period == BoardPeriod.Previous && SeasonIndex(now) - 1 < 0;
+            var b = preHistory ? new Board { key = key, type = (int)board } : GetBoard(board, key);
             var me = _s.account.playerId;
             bool guest = !_s.account.linked;
             var all = Ranked(b, friendsOnly, me);
-            var page = new LeaderboardPage { board = board, periodKey = key, closed = IsClosed(b), fetchedUnixUtc = Unix(now) };
+            var page = new LeaderboardPage { board = board, periodKey = key, closed = preHistory || IsClosed(b), fetchedUnixUtc = Unix(now) };
             int rank = 0;
             foreach (var x in all)
             {
@@ -486,14 +610,25 @@ namespace Crashverse.Backend
                     _s.inbox.Add(new InboxItem { id = "titan_top_" + b.key, source = "Daily Titan top 10% (" + b.key + ")",
                         reward = new Reward { type = "shard", amount = t.topPercentBonusShards }, expiresUnixUtc = Unix(now.AddDays(30)) });
             }
-            if (!_s.seasonEndProcessed && now >= SeasonEnd)
+            // BUG-06/07: season rollover. Unclaimed reached tiers (free, and premium if owned) go to the inbox for 30 days.
+            var curSeason = SeasonKey(now);
+            if (string.IsNullOrEmpty(_s.seasonId)) _s.seasonId = curSeason;
+            else if (_s.seasonId != curSeason)
             {
-                _s.seasonEndProcessed = true;
+                var old = _s.seasonId;
                 int tier = TierForXp(_db.Season, _s.seasonXp);
+                long exp = Unix(now.AddDays(_db.Season.unclaimedInboxDays));
                 for (int i = 1; i <= tier; i++)
-                    if (!_s.claimedFree.Contains(i))
-                        _s.inbox.Add(new InboxItem { id = "season_tier_" + i, source = "Unclaimed season tier " + i, reward = _db.Season.tiers[i - 1].free,
-                            expiresUnixUtc = Unix(now.AddDays(_db.Season.unclaimedInboxDays)) });
+                {
+                    var tr = _db.Season.tiers[i - 1];
+                    if (!_s.claimedFree.Contains(i) && tr.free != null)
+                        _s.inbox.Add(new InboxItem { id = $"{old}_tier_{i}_free", source = $"Unclaimed season tier {i}", reward = tr.free, expiresUnixUtc = exp });
+                    if (_s.premium && !_s.claimedPremium.Contains(i) && tr.premium != null)
+                        _s.inbox.Add(new InboxItem { id = $"{old}_tier_{i}_premium", source = $"Unclaimed premium tier {i}", reward = tr.premium, expiresUnixUtc = exp });
+                }
+                _s.seasonId = curSeason; _s.seasonXp = 0; _s.bonusChests = 0; _s.premium = false;
+                _s.claimedFree.Clear(); _s.claimedPremium.Clear(); _s.eventBest.Clear();
+                Save();
             }
         }
     }

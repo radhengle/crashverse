@@ -27,7 +27,10 @@ namespace Crashverse.Backend
         Task<DailyTitanConfig> GetDailyTitan();
         Task<RankedStatus> GetRankedStatus();
         Task<RankedTicket> BeginRankedRun();
-        Task<SubmitResponse> SubmitRanked(RankedResult result);
+        /// <summary>SEC-01: report a settled shot; the server validates it against its own run state and returns it with a server receipt.</summary>
+        Task<RankedCheckpoint> ReportRankedCheckpoint(RankedCheckpoint cp);
+        /// <summary>Close a ranked run (normal end, or relaunch after the app was killed). The journal is sent as-is.</summary>
+        Task<SubmitResponse> FinalizeRanked(RankedJournal journal);
 
         Task<DailyRewardState> GetDailyRewardState();
         Task<Wallet> ClaimDailyReward();
@@ -36,6 +39,9 @@ namespace Crashverse.Backend
         Task<SeasonState> ReportEventStars(string eventLevelId, int stars);
         Task<SeasonState> ClaimSeasonTier(int tier, bool premium);
         Task<int> SubmitEventScore(string eventLevelId, int stars);
+
+        /// <summary>SC-13: all-time Chapter 1 campaign board (sum of best per-level scores).</summary>
+        Task<int> SubmitCampaignScore(int totalScore);
 
         Task<LeaderboardPage> GetLeaderboard(BoardType board, BoardPeriod period, bool friendsOnly);
     }

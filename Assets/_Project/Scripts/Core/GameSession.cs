@@ -41,13 +41,14 @@ namespace Crashverse.Core
         float _sinceFire;
         Vector3 _baseGravity = new Vector3(0f, -9.81f, 0f);
         DestructibleBlock _hintBlock;
+        RankedJournal _journal; System.Threading.Tasks.Task _cpTask = System.Threading.Tasks.Task.CompletedTask;
 
         public void Begin(RunContext ctx)
         {
             Ctx = ctx;
             Physics.gravity = _baseGravity * Crashverse.Data.RuleModifiers.M(ctx.mod.gravityScale);
             Retry();
-            if (ctx.mode == RunMode.TitanRanked) JournalTitan(false); // killed before first shot still submits 0 (SG-11)
+            if (ctx.mode == RunMode.TitanRanked) { _journal = new RankedJournal { token = ctx.ticket.token }; TitanRunJournal.Write(_journal); } // killed before first shot still submits 0 (SG-11)
         }
 
         /// <summary>Instant retry: authored layout, full shots and charges, no leftover debris (Contract §4).</summary>
@@ -121,7 +122,7 @@ namespace Crashverse.Core
         void ResolveShot()
         {
             bool won = Boss != null ? Boss.Defeated : tracker.DestroyedRatio + 1e-5f >= Ctx.level.winThreshold;
-            if (Ctx.mode == RunMode.TitanRanked && !won) JournalTitan(false);
+            if (Ctx.mode == RunMode.TitanRanked) CheckpointTitan(won);
             if (won) { End(true); return; }
             if (ShotsLeft <= 0) { End(false); return; }
             if (Boss != null)
@@ -141,11 +142,26 @@ namespace Crashverse.Core
             End(false);
         }
 
-        void JournalTitan(bool killed)
+        /// <summary>SEC-01: journal the settled shot locally, then report it; the server's receipt is stored when it arrives.</summary>
+        void CheckpointTitan(bool killed)
         {
-            var r = new RankedResult { token = Ctx.ticket.token, damageScore = TitanDamageScore, shotsLeft = ShotsLeft, killed = killed, partial = !killed };
-            r.signature = LocalBackendService.Sign(r);
-            TitanRunJournal.Write(r);
+            var cp = new RankedCheckpoint { token = Ctx.ticket.token, shotIndex = Ctx.ShotBudget - ShotsLeft, damageScore = TitanDamageScore, shotsLeft = ShotsLeft, killed = killed };
+            _journal.checkpoints.Add(cp);
+            TitanRunJournal.Write(_journal);
+            var prev = _cpTask;
+            _cpTask = SendCheckpoint(prev, cp);
+        }
+
+        async System.Threading.Tasks.Task SendCheckpoint(System.Threading.Tasks.Task prev, RankedCheckpoint cp)
+        {
+            await prev; // keep shot order
+            try
+            {
+                var signed = await AppServices.Backend.ReportRankedCheckpoint(cp);
+                cp.receipt = signed.receipt;
+                if (_journal != null) TitanRunJournal.Write(_journal);
+            }
+            catch (BackendException) { /* offline: stays unsigned; server checks it as an offline tail on finalize */ }
         }
 
         async void End(bool won)
@@ -172,18 +188,22 @@ namespace Crashverse.Core
                         res.score = CampaignScore.Compute(won, res.ratio, ShotsLeft, combo, mastery);
                         res.firstClear = AppServices.Save.RecordResult(lvl.id, won, stars, mastery, res.score);
                         if (res.firstClear && lvl.reward != null && lvl.reward.Length > 0) await backend.GrantCampaignReward(lvl.id, lvl.reward);
+                        if (won) await backend.SubmitCampaignScore(AppServices.Save.TotalScore()); // SC-13
                         break;
                     case RunMode.Event:
+                        AppServices.Save.RecordHintAttempt(lvl.id, won); // BUG-08: hint streak counts in events
                         if (won) await backend.ReportEventStars(lvl.id, stars); // SG-23: best single run, server-side
                         break;
                     case RunMode.TitanRanked:
                         res.titanScore = LocalBackendService.TitanScore(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
-                        JournalTitan(won);
-                        var r = TitanRunJournal.Read(); r.partial = false; r.signature = LocalBackendService.Sign(r);
-                        res.titanSubmit = await backend.SubmitRanked(r);
-                        TitanRunJournal.Clear();
+                        await _cpTask;
+                        _journal.final = true; TitanRunJournal.Write(_journal); // if offline, the next launch finalizes it as-is
+                        res.titanSubmit = await backend.FinalizeRanked(_journal);
+                        if (res.titanSubmit.status == SubmitStatus.Accepted) res.titanScore = res.titanSubmit.finalScore; // server is authoritative
+                        TitanRunJournal.Clear(); _journal = null;
                         break;
                     case RunMode.TitanPractice:
+                        AppServices.Save.RecordHintAttempt(lvl.id, won); // BUG-08
                         res.titanScore = LocalBackendService.TitanScore(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
                         res.note = "Practice run (not ranked)";
                         break;
@@ -199,7 +219,7 @@ namespace Crashverse.Core
 
         void OnApplicationPause(bool paused)
         {
-            if (paused && Ctx != null && Ctx.mode == RunMode.TitanRanked && State != SessionState.Won && State != SessionState.Failed) JournalTitan(false);
+            if (paused && Ctx != null && Ctx.mode == RunMode.TitanRanked && _journal != null) TitanRunJournal.Write(_journal); // settled shots only; mid-flight damage is never journaled
         }
 
         void OnDestroy() { Physics.gravity = _baseGravity; }

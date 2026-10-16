@@ -53,9 +53,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
-     "hintYaw": 0,
-     "hintPitch": 0
+     "hintTarget": "post0",
+     "hintYaw": 4,
+     "hintPitch": 22
     },
     {
      "id": "magnetic_mayhem_e2",
@@ -87,9 +87,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
-     "hintYaw": 0,
-     "hintPitch": 0
+     "hintTarget": "propL",
+     "hintYaw": -2,
+     "hintPitch": 18
     },
     {
      "id": "magnetic_mayhem_e3",
@@ -121,9 +121,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "brace0",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 24
     },
     {
      "id": "magnetic_mayhem_e4",
@@ -155,9 +155,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "joint",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 26
     },
     {
      "id": "magnetic_mayhem_e5",
@@ -189,9 +189,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "lhRing",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 26
     }
    ]
   },
@@ -238,9 +238,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
-     "hintYaw": 0,
-     "hintPitch": 0
+     "hintTarget": "post0",
+     "hintYaw": 4,
+     "hintPitch": 22
     },
     {
      "id": "seismic_surge_e2",
@@ -272,9 +272,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
-     "hintYaw": 0,
-     "hintPitch": 0
+     "hintTarget": "propL",
+     "hintYaw": -2,
+     "hintPitch": 18
     },
     {
      "id": "seismic_surge_e3",
@@ -306,9 +306,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "brace0",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 24
     },
     {
      "id": "seismic_surge_e4",
@@ -340,9 +340,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "joint",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 26
     },
     {
      "id": "seismic_surge_e5",
@@ -374,9 +374,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "lhRing",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 26
     }
    ]
   },
@@ -423,9 +423,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
-     "hintYaw": 0,
-     "hintPitch": 0
+     "hintTarget": "post0",
+     "hintYaw": 4,
+     "hintPitch": 22
     },
     {
      "id": "gravity_games_e2",
@@ -457,9 +457,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
-     "hintYaw": 0,
-     "hintPitch": 0
+     "hintTarget": "propL",
+     "hintYaw": -2,
+     "hintPitch": 18
     },
     {
      "id": "gravity_games_e3",
@@ -491,9 +491,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "brace0",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 24
     },
     {
      "id": "gravity_games_e4",
@@ -525,9 +525,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "joint",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 26
     },
     {
      "id": "gravity_games_e5",
@@ -559,9 +559,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "lhRing",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 26
     }
    ]
   },
@@ -608,9 +608,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
-     "hintYaw": 0,
-     "hintPitch": 0
+     "hintTarget": "post0",
+     "hintYaw": 4,
+     "hintPitch": 22
     },
     {
      "id": "sonic_rupture_e2",
@@ -642,9 +642,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
-     "hintYaw": 0,
-     "hintPitch": 0
+     "hintTarget": "propL",
+     "hintYaw": -2,
+     "hintPitch": 18
     },
     {
      "id": "sonic_rupture_e3",
@@ -676,9 +676,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "brace0",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 24
     },
     {
      "id": "sonic_rupture_e4",
@@ -710,9 +710,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "joint",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 26
     },
     {
      "id": "sonic_rupture_e5",
@@ -744,9 +744,9 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "",
+     "hintTarget": "lhRing",
      "hintYaw": 0,
-     "hintPitch": 0
+     "hintPitch": 26
     }
    ]
   }
@@ -781,9 +781,9 @@
   "star2Pct": 0.3,
   "starCapIfPowerupUsed": 3,
   "islandKillY": -2.0,
-  "hintTarget": "",
+  "hintTarget": "ring0",
   "hintYaw": 0,
-  "hintPitch": 0
+  "hintPitch": 24
  },
  "tiers": [
   {

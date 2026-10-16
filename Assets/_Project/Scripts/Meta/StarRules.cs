@@ -15,11 +15,17 @@ namespace Crashverse.Meta
         /// <summary>Level data stores 0.60-style fractions; convert once to an integer percent (0.6f → 60).</summary>
         public static int ToPctInt(float frac) => (int)System.Math.Round(frac * 100.0, System.MidpointRounding.AwayFromZero);
 
-        /// <summary>Smallest shotsLeft that satisfies shotsLeft*100 >= pctInt*total (for briefing star bands).</summary>
+        /// <summary>
+        /// BUG-09: exact level fraction, no rounding to whole percent. (decimal)float keeps the authored decimal value
+        /// (0.625f → 0.625, 0.6f → 0.6), so thresholds compare exactly: shotsLeft >= frac × total.
+        /// </summary>
+        public static decimal Frac(float f) => (decimal)f;
+
+        /// <summary>Smallest shotsLeft with shotsLeft >= pct × total (briefing star bands).</summary>
         public static int MinShotsLeft(int shotsTotal, float pct)
         {
-            int p = ToPctInt(pct);
-            for (int k = 0; k <= shotsTotal; k++) if (k * 100 >= p * shotsTotal) return k;
+            decimal need = Frac(pct) * shotsTotal;
+            for (int k = 0; k <= shotsTotal; k++) if (k >= need) return k;
             return shotsTotal;
         }
 
@@ -34,9 +40,17 @@ namespace Crashverse.Meta
             return stars > cap ? cap : stars;
         }
 
+        /// <summary>Level-data entry point: exact fractions (BUG-09). Same results as ComputeInt for whole-percent thresholds.</summary>
         public static int Compute(bool won, int shotsLeft, int shotsTotal, float star3Pct = DefaultStar3Pct,
-                                  float star2Pct = DefaultStar2Pct, int cap = 3) =>
-            ComputeInt(won, shotsLeft, shotsTotal, ToPctInt(star3Pct <= 0 ? DefaultStar3Pct : star3Pct),
-                       ToPctInt(star2Pct <= 0 ? DefaultStar2Pct : star2Pct), cap);
+                                  float star2Pct = DefaultStar2Pct, int cap = 3)
+        {
+            if (!won || shotsTotal <= 0) return 0;
+            if (shotsLeft < 0) shotsLeft = 0;
+            decimal s3 = Frac(star3Pct <= 0 ? DefaultStar3Pct : star3Pct) * shotsTotal;
+            decimal s2 = Frac(star2Pct <= 0 ? DefaultStar2Pct : star2Pct) * shotsTotal;
+            int stars = shotsLeft >= s3 ? 3 : shotsLeft >= s2 ? 2 : 1;
+            if (cap < 1) cap = 1;
+            return stars > cap ? cap : stars;
+        }
     }
 }
