@@ -1,0 +1,212 @@
+event,owner,key,sfx_id,variations,mixer_group,priority,cooldown_ticks,params,notes,status
+ANIM_WRECKER_IDLE_FIDGET,anim,,sfx_wrecker_fidget,,,150,0,0/0,,MISSING
+ANIM_WRECKER_AIM_START,anim,,sfx_wrecker_aim_hum,,,140,0,0/0,,MISSING
+ANIM_WRECKER_AIM_START,anim,,sfx_aim_stretch,,,140,0,0/0,,MISSING
+ANIM_WRECKER_AIM_TICK,anim,,sfx_wrecker_aim_tick,,,150,0,"per 5 deg, throttle 60ms",,MISSING
+ANIM_WRECKER_AIM_CLAMP,anim,,sfx_wrecker_aim_clamp,,,120,0,0/0,,MISSING
+ANIM_WRECKER_AIM_END,anim,,,,,,0,,stop aim loops,silent
+ANIM_WRECKER_FIRE_ANTICIPATE,anim,,sfx_wrecker_breech,SFX/Weapon/sfx_wrecker_breech_01|SFX/Weapon/sfx_wrecker_breech_02,SFX/Weapon,30,0,0/0 at FIRE tap,RESOLVED: Developer accepted 66 ms spawn delay,ok
+ANIM_WRECKER_FIRE,anim,,sfx_cannon_fire,SFX/Weapon/sfx_cannon_fire_01|SFX/Weapon/sfx_cannon_fire_02|SFX/Weapon/sfx_cannon_fire_03|SFX/Weapon/sfx_cannon_fire_04,SFX/Weapon,16,0,+4f/66ms after tap (launch),,ok
+ANIM_WRECKER_MUZZLE_SMOKE,anim,,sfx_wrecker_smoke_tail,,,80,0,2f/33ms,,MISSING
+ANIM_WRECKER_RECOIL_LAND,anim,,sfx_wrecker_recoil_land,,,60,0,12f/200ms,,MISSING
+ANIM_WRECKER_REARM,visual,,,,,,0,,(silent),silent
+ANIM_WRECKER_READY,anim,,sfx_cannon_ready,SFX/Weapon/sfx_cannon_ready_01|SFX/Weapon/sfx_cannon_ready_02,SFX/Weapon,30,0,0/0 at FIRE unlock,DEV HOOK: 1.0 s reload gate still needed,ok
+ANIM_WRECKER_READY,anim,,sfx_cannon_reload,SFX/Weapon/sfx_cannon_reload_loop,SFX/Weapon,72,0,0/0 at FIRE unlock,DEV HOOK: 1.0 s reload gate still needed,ok
+ANIM_WRECKER_SLOT_OUT,anim,,sfx_wrecker_slot_out,,,60,0,0/0,,MISSING
+ANIM_WRECKER_SLOT_IN,anim,,sfx_wrecker_slot_in,,,60,0,9f/150ms,,MISSING
+ANIM_WRECKER_WIN,anim,,sfx_wrecker_win_hop,,,30,0,0/0,,MISSING
+ANIM_WRECKER_FAIL,anim,,sfx_wrecker_fail_droop,,,30,0,0/0,,MISSING
+ANIM_PROJ_LAUNCH,anim,,sfx_projectile_whoosh,,,120,0,0/0,"stop: code, Projectile.Despawn",MISSING
+ANIM_PROJ_SPLIT_POINT,visual,,,,,,0,,(none; PU_SPLIT owns the sound),silent
+IMPACT_WOOD/BRICK/STEEL/STEEL_JOINT,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_projectile_impact (+material layer) (velocity->volume),silent
+IMPACT_TERRAIN,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_impact_terrain,silent
+BREAK_WOOD,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_wood_break,silent
+BREAK_BRICK,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_brick_break,silent
+BREAK_STEEL,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_steel_break,silent
+BREAK_STEEL_JOINT,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_steel_joint_snap,silent
+DAMAGE_STEP,anim,,sfx_wood_crack,SFX/Destruction/Wood/sfx_wood_crack_l_01|SFX/Destruction/Wood/sfx_wood_crack_l_02|SFX/Destruction/Wood/sfx_wood_crack_l_03|SFX/Destruction/Wood/sfx_wood_crack_m_01|SFX/Destruction/Wood/sfx_wood_crack_m_02|SFX/Destruction/Wood/sfx_wood_crack_m_03|SFX/Destruction/Wood/sfx_wood_crack_s_01|SFX/Destruction/Wood/sfx_wood_crack_s_02|SFX/Destruction/Wood/sfx_wood_crack_s_03,SFX/Destruction,96,8,"0/0 (material,step)",cooldown 150ms/block,ok
+DAMAGE_STEP,anim,,sfx_brick_crack,SFX/Destruction/Brick/sfx_brick_crack_l_01|SFX/Destruction/Brick/sfx_brick_crack_l_02|SFX/Destruction/Brick/sfx_brick_crack_l_03|SFX/Destruction/Brick/sfx_brick_crack_m_01|SFX/Destruction/Brick/sfx_brick_crack_m_02|SFX/Destruction/Brick/sfx_brick_crack_m_03|SFX/Destruction/Brick/sfx_brick_crack_s_01|SFX/Destruction/Brick/sfx_brick_crack_s_02|SFX/Destruction/Brick/sfx_brick_crack_s_03,SFX/Destruction,96,8,"0/0 (material,step)",cooldown 150ms/block,ok
+DAMAGE_STEP,anim,,sfx_steel_crack,SFX/Destruction/Steel/sfx_steel_crack_l_01|SFX/Destruction/Steel/sfx_steel_crack_l_02|SFX/Destruction/Steel/sfx_steel_crack_l_03|SFX/Destruction/Steel/sfx_steel_crack_m_01|SFX/Destruction/Steel/sfx_steel_crack_m_02|SFX/Destruction/Steel/sfx_steel_crack_m_03|SFX/Destruction/Steel/sfx_steel_crack_s_01|SFX/Destruction/Steel/sfx_steel_crack_s_02|SFX/Destruction/Steel/sfx_steel_crack_s_03,SFX/Destruction,96,8,"0/0 (material,step)",cooldown 150ms/block,ok
+DAMAGE_STEP,anim,,sfx_glass_crack,SFX/Destruction/Glass/sfx_glass_crack_l_01|SFX/Destruction/Glass/sfx_glass_crack_l_02|SFX/Destruction/Glass/sfx_glass_crack_l_03|SFX/Destruction/Glass/sfx_glass_crack_m_01|SFX/Destruction/Glass/sfx_glass_crack_m_02|SFX/Destruction/Glass/sfx_glass_crack_m_03|SFX/Destruction/Glass/sfx_glass_crack_s_01|SFX/Destruction/Glass/sfx_glass_crack_s_02|SFX/Destruction/Glass/sfx_glass_crack_s_03,SFX/Destruction,96,8,"0/0 (material,step)",cooldown 150ms/block,ok
+DAMAGE_STEP,anim,,sfx_stone_crack,SFX/Destruction/Stone/sfx_stone_crack_l_01|SFX/Destruction/Stone/sfx_stone_crack_l_02|SFX/Destruction/Stone/sfx_stone_crack_l_03|SFX/Destruction/Stone/sfx_stone_crack_m_01|SFX/Destruction/Stone/sfx_stone_crack_m_02|SFX/Destruction/Stone/sfx_stone_crack_m_03|SFX/Destruction/Stone/sfx_stone_crack_s_01|SFX/Destruction/Stone/sfx_stone_crack_s_02|SFX/Destruction/Stone/sfx_stone_crack_s_03,SFX/Destruction,96,8,"0/0 (material,step)",cooldown 150ms/block,ok
+DEBRIS_BURST,anim,,sfx_wood_debris,SFX/Destruction/Wood/sfx_wood_debris_01|SFX/Destruction/Wood/sfx_wood_debris_02|SFX/Destruction/Wood/sfx_wood_debris_03|SFX/Destruction/Wood/sfx_wood_debris_04,SFX/Destruction,200,0,"0/0 (material,count)",1 sound per burst,ok
+DEBRIS_BURST,anim,,sfx_brick_debris,SFX/Destruction/Brick/sfx_brick_debris_01|SFX/Destruction/Brick/sfx_brick_debris_02|SFX/Destruction/Brick/sfx_brick_debris_03|SFX/Destruction/Brick/sfx_brick_debris_04,SFX/Destruction,200,0,"0/0 (material,count)",1 sound per burst,ok
+DEBRIS_BURST,anim,,sfx_steel_debris,SFX/Destruction/Steel/sfx_steel_debris_01|SFX/Destruction/Steel/sfx_steel_debris_02|SFX/Destruction/Steel/sfx_steel_debris_03|SFX/Destruction/Steel/sfx_steel_debris_04,SFX/Destruction,200,0,"0/0 (material,count)",1 sound per burst,ok
+DEBRIS_BURST,anim,,sfx_glass_debris,SFX/Destruction/Glass/sfx_glass_debris_01|SFX/Destruction/Glass/sfx_glass_debris_02|SFX/Destruction/Glass/sfx_glass_debris_03|SFX/Destruction/Glass/sfx_glass_debris_04,SFX/Destruction,96,0,"0/0 (material,count)",1 sound per burst,ok
+DEBRIS_BURST,anim,,sfx_stone_debris,SFX/Destruction/Stone/sfx_stone_debris_01|SFX/Destruction/Stone/sfx_stone_debris_02|SFX/Destruction/Stone/sfx_stone_debris_03|SFX/Destruction/Stone/sfx_stone_debris_04,SFX/Destruction,96,0,"0/0 (material,count)",1 sound per burst,ok
+EXPLODE_CRATE (alias EXPLODE_BARREL),anim,,sfx_explosive_crate,,,40,0,6f/100ms,listen to both names until alias removed,MISSING
+COLLAPSE_CREAK,anim,,sfx_creak_wood,SFX/Destruction/Wood/sfx_creak_wood_01|SFX/Destruction/Wood/sfx_creak_wood_02|SFX/Destruction/Wood/sfx_creak_wood_03|SFX/Destruction/Wood/sfx_creak_wood_04,SFX/Destruction,96,0,0-9f/0-150ms,,ok
+COLLAPSE_CREAK,anim,,sfx_creak_steel,SFX/Destruction/Steel/sfx_creak_steel_01|SFX/Destruction/Steel/sfx_creak_steel_02|SFX/Destruction/Steel/sfx_creak_steel_03|SFX/Destruction/Steel/sfx_creak_steel_04,SFX/Destruction,96,0,0-9f/0-150ms,,ok
+COLLAPSE_LAND,visual,,,,,,0,,(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_wood_collapse|sfx_brick_collapse|sfx_steel_collapse (cooldown 250ms),silent
+DEBRIS_FALL_OFF,anim,,sfx_kill_plane_fall,,,80,0,0/0,,MISSING
+PU_ARM_<NAME>,anim,,sfx_pu_shockwave_arm,SFX/PowerUps/sfx_pu_shockwave_arm,SFX/PowerUps,60,0,0/0,,ok
+PU_ARM_<NAME>,anim,,sfx_pu_splitstrike_arm,SFX/PowerUps/sfx_pu_splitstrike_arm,SFX/PowerUps,60,0,0/0,,ok
+PU_ARM_<NAME>,anim,,sfx_pu_gravity_well_arm,SFX/PowerUps/sfx_pu_gravity_well_arm,SFX/PowerUps,60,0,0/0,,ok
+PU_ARM_<NAME>,anim,,sfx_pu_chain_reactor_arm,SFX/PowerUps/sfx_pu_chain_reactor_arm,SFX/PowerUps,60,0,0/0,,ok
+PU_ARM_<NAME>,anim,,sfx_pu_phase_piercer_arm,SFX/PowerUps/sfx_pu_phase_piercer_arm,SFX/PowerUps,60,0,0/0,,ok
+PU_ARM_<NAME>,anim,,sfx_pu_time_fracture_arm,SFX/PowerUps/sfx_pu_time_fracture_arm,SFX/PowerUps,60,0,0/0,,ok
+PU_DISARM,anim,,sfx_pu_disarm,SFX/PowerUps/sfx_pu_disarm,SFX/PowerUps,60,0,0/0,not Time Fracture,ok
+PU_SHOCKWAVE_IMPACT + _RING,anim,,sfx_pu_shockwave_fx,SFX/PowerUps/sfx_pu_shockwave_fx,SFX/PowerUps,24,0,0/0 (ring 400ms),RING ignored to avoid double,ok
+PU_SPLIT,anim,,sfx_pu_splitstrike_fx,SFX/PowerUps/sfx_pu_splitstrike_fx,SFX/PowerUps,24,0,0/0 at split point,,ok
+PU_GRAVITY_OPEN/LOOP/BURST,anim,,sfx_pu_gravity_well_fx,SFX/PowerUps/sfx_pu_gravity_well_fx_loop,SFX/PowerUps,24,0,0; 9f/150ms; 90f/1500ms,,ok
+PU_CHAIN_PULSE,anim,,sfx_pu_chain_reactor_fx,SFX/PowerUps/sfx_pu_chain_reactor_fx,SFX/PowerUps,24,0,0/0,,ok
+PU_CHAIN_LINK,anim,,sfx_pu_chain_link,SFX/PowerUps/sfx_pu_chain_link_01|SFX/PowerUps/sfx_pu_chain_link_02|SFX/PowerUps/sfx_pu_chain_link_03,SFX/PowerUps,40,0,+5f/80ms per link,,ok
+PU_PHASE_PASS,anim,,sfx_pu_phase_piercer_fx,SFX/PowerUps/sfx_pu_phase_piercer_fx,SFX/PowerUps,24,0,per pass,DEV HOOK needed,ok
+PU_PHASE_HIT,anim,,sfx_pu_phase_hit,SFX/PowerUps/sfx_pu_phase_hit_01|SFX/PowerUps/sfx_pu_phase_hit_02,SFX/PowerUps,40,0,3rd hit,DEV HOOK needed,ok
+PU_TIME_START,anim,,sfx_pu_time_fracture_fx,SFX/PowerUps/sfx_pu_time_fracture_fx_loop,SFX/PowerUps,24,0,0/0 on ARM,,ok
+PU_TIME_WARN,anim,,sfx_pu_time_warn,SFX/PowerUps/sfx_pu_time_warn,SFX/PowerUps,40,0,210f/3500ms real (skipped if shot fired),,ok
+PU_TIME_END,anim,,sfx_pu_time_fracture_end,SFX/PowerUps/sfx_pu_time_fracture_end,SFX/PowerUps,64,0,240f/4000ms real or at impact,,ok
+BOSS_TIDE_INTRO,anim,,sfx_boss_tw_intro,SFX/Boss/Tidewarden/sfx_boss_tw_intro,SFX/Boss,12,0,0/0,music intro: code,ok
+BOSS_TIDE_INTRO,anim,,sfx_boss_tw_roar,SFX/Boss/Tidewarden/sfx_boss_tw_roar_01|SFX/Boss/Tidewarden/sfx_boss_tw_roar_02|SFX/Boss/Tidewarden/sfx_boss_tw_roar_03,SFX/Boss,12,0,0/0,music intro: code,ok
+BOSS_TIDE_ARMS_RISE,anim,,sfx_boss_tw_arms_rise,SFX/Boss/Tidewarden/sfx_boss_tw_arms_rise,SFX/Boss,12,0,60/1000,anim-driven; replaces code trigger at intro+1.0 s,ok
+BOSS_TIDE_JOINT_HIT,anim,,sfx_boss_tw_joint_hit,SFX/Boss/Tidewarden/sfx_boss_tw_joint_hit_01|SFX/Boss/Tidewarden/sfx_boss_tw_joint_hit_02|SFX/Boss/Tidewarden/sfx_boss_tw_joint_hit_03,SFX/Boss,20,0,0/0,,ok
+BOSS_TIDE_JOINT_BREAK,anim,,sfx_boss_tw_shoulder_break,SFX/Boss/Tidewarden/sfx_boss_tw_shoulder_break_01|SFX/Boss/Tidewarden/sfx_boss_tw_shoulder_break_02,SFX/Boss,12,0,0/0,,ok
+BOSS_TIDE_JOINT_BREAK,anim,,sfx_boss_tw_roar,SFX/Boss/Tidewarden/sfx_boss_tw_roar_01|SFX/Boss/Tidewarden/sfx_boss_tw_roar_02|SFX/Boss/Tidewarden/sfx_boss_tw_roar_03,SFX/Boss,12,0,0/0,,ok
+BOSS_TIDE_ARMS_DROP,anim,,sfx_boss_tw_arms_drop,SFX/Boss/Tidewarden/sfx_boss_tw_arms_drop,SFX/Boss,12,0,0/0,,ok
+BOSS_TIDE_ARMS_LAND,anim,,sfx_boss_tw_arms_land,SFX/Boss/Tidewarden/sfx_boss_tw_arms_land,SFX/Boss,14,0,36f/600ms,,ok
+BOSS_TIDE_CHEST_OPEN,anim,,sfx_boss_tw_chest_open,SFX/Boss/Tidewarden/sfx_boss_tw_chest_open,SFX/Boss,14,0,42f/700ms,,ok
+BOSS_TIDE_PHASE2,anim,,sfx_boss_tw_phase2,SFX/Boss/Tidewarden/sfx_boss_tw_phase2,SFX/Boss,12,0,75f/1250ms,mus_stinger_phase2 + P2 music: code on next bar,ok
+BOSS_TIDE_PHASE2,anim,,sfx_boss_tw_core_hum,SFX/Boss/Tidewarden/sfx_boss_tw_core_hum,SFX/Boss,12,0,75f/1250ms,mus_stinger_phase2 + P2 music: code on next bar,ok
+BOSS_TIDE_TELL,anim,,sfx_boss_tw_shutter_tell,SFX/Boss/Tidewarden/sfx_boss_tw_shutter_tell_01|SFX/Boss/Tidewarden/sfx_boss_tw_shutter_tell_02,SFX/Boss,12,0,"pulses 0, 25f (2.4 Hz; CHANGE from 30f/2 Hz requested)",MISMATCH: code glow sin(t*18)~2.9 Hz still - Dev to change to 4*pi,ok
+BOSS_TIDE_SHUTTER_CLOSE,anim,,sfx_boss_tw_shutter_close,SFX/Boss/Tidewarden/sfx_boss_tw_shutter_close_01|SFX/Boss/Tidewarden/sfx_boss_tw_shutter_close_02,SFX/Boss,12,0,18f/300ms (end of tween),MISMATCH: code still teleports - Dev tween needed,ok
+BOSS_TIDE_SHUTTER_OPEN,anim,,sfx_boss_tw_shutter_open,SFX/Boss/Tidewarden/sfx_boss_tw_shutter_open_01|SFX/Boss/Tidewarden/sfx_boss_tw_shutter_open_02,SFX/Boss,12,0,0/0,,ok
+BOSS_TIDE_CORE_HIT,anim,,sfx_boss_tw_core_hit,SFX/Boss/Tidewarden/sfx_boss_tw_core_hit_01|SFX/Boss/Tidewarden/sfx_boss_tw_core_hit_02|SFX/Boss/Tidewarden/sfx_boss_tw_core_hit_03,SFX/Boss,12,0,0/0,,ok
+BOSS_TIDE_CORE_HIT,anim,,sfx_boss_tw_roar,SFX/Boss/Tidewarden/sfx_boss_tw_roar_01|SFX/Boss/Tidewarden/sfx_boss_tw_roar_02|SFX/Boss/Tidewarden/sfx_boss_tw_roar_03,SFX/Boss,12,0,0/0,,ok
+BOSS_TIDE_DEFEAT,anim,,sfx_boss_tw_defeat,SFX/Boss/Tidewarden/sfx_boss_tw_defeat,SFX/Boss,12,0,0/0 (4.0s),mus_stinger_boss_defeat: code,ok
+BOSS_TITAN_RANKED_START,anim,,sfx_titan_ranked_start,SFX/Boss/Titan/sfx_titan_ranked_start,SFX/Boss,14,0,0/0 before intro,,ok
+BOSS_TITAN_INTRO,anim,,sfx_titan_intro,SFX/Boss/Titan/sfx_titan_intro,SFX/Boss,14,0,0/0,,ok
+BOSS_TITAN_INTRO,anim,,sfx_titan_roar,SFX/Boss/Titan/sfx_titan_roar_01|SFX/Boss/Titan/sfx_titan_roar_02|SFX/Boss/Titan/sfx_titan_roar_03,SFX/Boss,14,0,0/0,,ok
+BOSS_TITAN_RULE,anim,,sfx_titan_rule_heated,SFX/Boss/Titan/sfx_titan_rule_heated,SFX/Boss,14,0,after intro (loop),,ok
+BOSS_TITAN_RULE,anim,,sfx_titan_rule_magma,SFX/Boss/Titan/sfx_titan_rule_magma,SFX/Boss,14,0,after intro (loop),,ok
+BOSS_TITAN_RULE,anim,,sfx_titan_rule_steam,SFX/Boss/Titan/sfx_titan_rule_steam,SFX/Boss,14,0,after intro (loop),,ok
+BOSS_TITAN_HIT,anim,,sfx_titan_hit,SFX/Boss/Titan/sfx_titan_hit_01|SFX/Boss/Titan/sfx_titan_hit_02|SFX/Boss/Titan/sfx_titan_hit_03,SFX/Boss,14,0,0/0,,ok
+BOSS_TITAN_STAGE,anim,,sfx_titan_stage_25,SFX/Boss/Titan/sfx_titan_stage_25,SFX/Boss,14,0,0/0 at 25/50/75%,,ok
+BOSS_TITAN_STAGE,anim,,sfx_titan_stage_50,SFX/Boss/Titan/sfx_titan_stage_50,SFX/Boss,14,0,0/0 at 25/50/75%,,ok
+BOSS_TITAN_STAGE,anim,,sfx_titan_stage_75,SFX/Boss/Titan/sfx_titan_stage_75,SFX/Boss,14,0,0/0 at 25/50/75%,,ok
+BOSS_TITAN_STAGE,anim,,sfx_titan_roar,SFX/Boss/Titan/sfx_titan_roar_01|SFX/Boss/Titan/sfx_titan_roar_02|SFX/Boss/Titan/sfx_titan_roar_03,SFX/Boss,14,0,0/0 at 25/50/75%,,ok
+BOSS_TITAN_DEFEAT,anim,,sfx_titan_kill,SFX/Boss/Titan/sfx_titan_kill,SFX/Boss,14,0,0/0,stinger: code,ok
+UI_BTN_PRESS,anim,,sfx_ui_confirm,SFX/UI/sfx_ui_confirm,UI,4,0,0/0 type=confirm|back|error|(default),,ok
+UI_BTN_PRESS,anim,,sfx_ui_back,SFX/UI/sfx_ui_back,UI,4,0,0/0 type=confirm|back|error|(default),,ok
+UI_BTN_PRESS,anim,,sfx_ui_error,SFX/UI/sfx_ui_error,UI,4,0,0/0 type=confirm|back|error|(default),,ok
+UI_BTN_PRESS,anim,,sfx_ui_click,SFX/UI/sfx_ui_click_01|SFX/UI/sfx_ui_click_02|SFX/UI/sfx_ui_click_03,UI,4,0,0/0 type=confirm|back|error|(default),,ok
+UI_TAB,anim,,sfx_ui_tab,SFX/UI/sfx_ui_tab,UI,4,0,0/0,,ok
+UI_TOGGLE,anim,,sfx_ui_toggle,SFX/UI/sfx_ui_toggle,UI,4,0,0/0,,ok
+UI_PANEL_IN,anim,,sfx_ui_modal_open,SFX/UI/sfx_ui_modal_open,UI,4,0,0/0,,ok
+UI_PANEL_OUT,anim,,sfx_ui_panel_out,,,6,0,0/0,,MISSING
+UI_STAR_1/2/3,anim,,sfx_star_1,SFX/Results/sfx_star_1,SFX/Rewards,10,0,150 / 450 / 750 ms,,ok
+UI_STAR_1/2/3,anim,,sfx_star_2,SFX/Results/sfx_star_2,SFX/Rewards,10,0,150 / 450 / 750 ms,,ok
+UI_STAR_1/2/3,anim,,sfx_star_3,SFX/Results/sfx_star_3,SFX/Rewards,10,0,150 / 450 / 750 ms,,ok
+UI_MASTERY_TICK,anim,,sfx_ui_mastery_tick,,,10,0,0/0,,MISSING
+UI_COMBO_UP,anim,,sfx_combo_step,SFX/Combo/sfx_combo_step,SFX/Rewards,30,0,0/0 at x>=3,x2 step: CODE (no anim event below x3),ok
+UI_COMBO_UP,anim,,sfx_combo_tier1,SFX/Combo/sfx_combo_tier1,SFX/Rewards,20,0,0/0 at x>=3,x2 step: CODE (no anim event below x3),ok
+UI_COMBO_TIER,anim,,sfx_combo_tier2,SFX/Combo/sfx_combo_tier2,SFX/Rewards,20,0,0/0 x5/x10/x20,,ok
+UI_COMBO_TIER,anim,,sfx_combo_tier3,SFX/Combo/sfx_combo_tier3,SFX/Rewards,20,0,0/0 x5/x10/x20,,ok
+UI_COMBO_TIER,anim,,sfx_combo_tier4,SFX/Combo/sfx_combo_tier4,SFX/Rewards,20,0,0/0 x5/x10/x20,,ok
+UI_SCORE_TICK,anim,,sfx_ui_score_tick,,,40,0,every 50ms max 12,,MISSING
+UI_DAMAGE_TICK,anim,,sfx_titan_damage_tick,,,14,0,per hit throttle 50ms,,MISSING
+UI_COIN_LAND,anim,,sfx_reward_coin_single,SFX/Reward/sfx_reward_coin_single_01|SFX/Reward/sfx_reward_coin_single_02|SFX/Reward/sfx_reward_coin_single_03,SFX/Rewards,24,0,"700ms per coin, 2/100ms",,ok
+UI_CHEST_SHAKE,anim,,sfx_reward_chest_shake,SFX/Reward/sfx_reward_chest_shake,SFX/Rewards,24,0,0/0,,ok
+UI_CHEST_OPEN,anim,,sfx_reward_chest_open,SFX/Reward/sfx_reward_chest_open,SFX/Rewards,24,0,24f/400ms,,ok
+UI_CLAIM,anim,,sfx_ui_claim_stamp,,,20,0,0/0,,MISSING
+UI_CLAIM,anim,,sfx_reward_daily_claim,,,24,0,0/0,,MISSING
+UI_SHARD_GAIN,anim,,sfx_reward_shard,,,24,0,36f/600ms,,MISSING
+UI_EXTRA_CHARGE,anim,,sfx_reward_extra_charge,,,24,0,42f/700ms,,MISSING
+UI_SEASON_TIER_UP,anim,,sfx_reward_season_tier_up,,,24,0,0/0,,MISSING
+UI_NODE_UNLOCK,anim,,sfx_map_node_unlock,,,20,0,12f/200ms,,MISSING
+UI_MARKER_HOP,anim,,sfx_ui_marker_hop,,,40,0,39f/650ms,,MISSING
+UI_GATE_OPEN,anim,,sfx_ui_gate_open,,,20,0,0/0,,MISSING
+UI_SHOT_SPEND,anim,,sfx_ui_shot_spend,,,60,0,0/0,,MISSING
+UI_CHARGE_SPEND,anim,,sfx_ui_charge_spend,SFX/UI/sfx_ui_charge_spend,UI,50,0,0/0 on FIRE with power-up armed,,ok
+UI_THRESHOLD_HIT,anim,,sfx_ui_threshold_hit,,,12,0,"crossing win threshold (level data, default 85%)",,MISSING
+UI_WIN,anim,,sfx_win_stinger_sfx,,,8,0,0/0,mus_stinger_victory: code,MISSING
+UI_FAIL,anim,,sfx_fail_sfx,,,8,0,0/0,mus_stinger_fail: code; also Titan out-of-shots,MISSING
+UI_HINT_BUTTON_APPEAR,anim,,sfx_hint_button,,,30,0,18f/300ms after Retry,,MISSING
+UI_HINT_SHOW,anim,,sfx_hint_pulse,,,90,0,0/0,,MISSING
+CAM_SLOWMO_START,anim,,,,,,0,,"snapshot SlowMo (LPF) big collapse / boss phase only; never win shot, Titan ranked, or Reduce Motion",silent
+CAM_SLOWMO_END,anim,,,,,,0,,snapshot Default,silent
+IMPACT_GLASS,anim,,,,,,0,,(none; sound owned by PHYS_IMPACT AnimEventBus,silent
+BREAK_GLASS,anim,,,,,,0,,(none; sound owned by PHYS_BREAK AnimEventBus,silent
+reload_start,code,,sfx_cannon_reload,SFX/Weapon/sfx_cannon_reload_loop,SFX/Weapon,72,0,,trigger: Projectile.Impact (first impact of the shot); loop until ready,ok
+combo_step_x2,code,,sfx_combo_step,SFX/Combo/sfx_combo_step,SFX/Rewards,30,0,count,trigger: ComboTracker.OnBreak when Current==2; only x2; x3+ via UI_COMBO_UP,ok
+projectile_despawn,code,,sfx_projectile_whoosh,,,120,0,,trigger: Projectile.Despawn,MISSING
+music_level,code,,,,,,0,chapter/level,trigger: GameSession.Begin,silent
+music_intensity,code,,,,,,0,shotsLeft,trigger: GameSession.ResolveShot / combo>=5,silent
+music_boss_p2,code,,,,,,0,,trigger: BOSS_TIDE_PHASE2 received -> next bar; listens to anim event but plays music only,silent
+stinger_win,code,,,,,,0,stars,trigger: GameSession.End(true); fade level music 0.3s; snapshot Results,silent
+stinger_fail,code,,,,,,0,,trigger: GameSession.End(false) / GiveUp,silent
+snapshot_pause,code,,,,,,0,,trigger: PauseModal Build/OnHide,silent
+snapshot_background,code,,,,,,0,,trigger: GameSession.OnApplicationPause,silent
+titan_rule_stop,code,,sfx_titan_rule_heated,SFX/Boss/Titan/sfx_titan_rule_heated,SFX/Boss,14,0,,trigger: GameSession.End (Titan),ok
+titan_rule_stop,code,,sfx_titan_rule_magma,SFX/Boss/Titan/sfx_titan_rule_magma,SFX/Boss,14,0,,trigger: GameSession.End (Titan),ok
+titan_rule_stop,code,,sfx_titan_rule_steam,SFX/Boss/Titan/sfx_titan_rule_steam,SFX/Boss,14,0,,trigger: GameSession.End (Titan),ok
+BOSS_TIDE_ARMOR_HIT,code,,sfx_boss_tw_hit_armor,SFX/Boss/Tidewarden/sfx_boss_tw_hit_armor_01|SFX/Boss/Tidewarden/sfx_boss_tw_hit_armor_02,SFX/Boss,12,4,non-joint hit on Tidewarden armour,PROPOSED: no anim event yet,ok
+UI_COIN_BURST,code,,sfx_reward_coin_burst,SFX/Reward/sfx_reward_coin_burst_01|SFX/Reward/sfx_reward_coin_burst_02|SFX/Reward/sfx_reward_coin_burst_03,SFX/Rewards,24,0,reward payout >= 10 coins,PROPOSED: play once instead of UI_COIN_LAND singles,ok
+PHYS_IMPACT,phys,material=wood;kind=impact;size=S;tier=any,sfx_wood_impact_s,SFX/Destruction/Wood/sfx_wood_impact_s_01|SFX/Destruction/Wood/sfx_wood_impact_s_02|SFX/Destruction/Wood/sfx_wood_impact_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=wood;kind=impact;size=M;tier=any,sfx_wood_impact_m,SFX/Destruction/Wood/sfx_wood_impact_m_01|SFX/Destruction/Wood/sfx_wood_impact_m_02|SFX/Destruction/Wood/sfx_wood_impact_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=wood;kind=impact;size=L;tier=any,sfx_wood_impact_l,SFX/Destruction/Wood/sfx_wood_impact_l_01|SFX/Destruction/Wood/sfx_wood_impact_l_02|SFX/Destruction/Wood/sfx_wood_impact_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=brick;kind=impact;size=S;tier=any,sfx_brick_impact_s,SFX/Destruction/Brick/sfx_brick_impact_s_01|SFX/Destruction/Brick/sfx_brick_impact_s_02|SFX/Destruction/Brick/sfx_brick_impact_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=brick;kind=impact;size=M;tier=any,sfx_brick_impact_m,SFX/Destruction/Brick/sfx_brick_impact_m_01|SFX/Destruction/Brick/sfx_brick_impact_m_02|SFX/Destruction/Brick/sfx_brick_impact_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=brick;kind=impact;size=L;tier=any,sfx_brick_impact_l,SFX/Destruction/Brick/sfx_brick_impact_l_01|SFX/Destruction/Brick/sfx_brick_impact_l_02|SFX/Destruction/Brick/sfx_brick_impact_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=steel;kind=impact;size=S;tier=any,sfx_steel_impact_s,SFX/Destruction/Steel/sfx_steel_impact_s_01|SFX/Destruction/Steel/sfx_steel_impact_s_02|SFX/Destruction/Steel/sfx_steel_impact_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=steel;kind=impact;size=M;tier=any,sfx_steel_impact_m,SFX/Destruction/Steel/sfx_steel_impact_m_01|SFX/Destruction/Steel/sfx_steel_impact_m_02|SFX/Destruction/Steel/sfx_steel_impact_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=steel;kind=impact;size=L;tier=any,sfx_steel_impact_l,SFX/Destruction/Steel/sfx_steel_impact_l_01|SFX/Destruction/Steel/sfx_steel_impact_l_02|SFX/Destruction/Steel/sfx_steel_impact_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=glass;kind=impact;size=S;tier=any,sfx_glass_impact_s,SFX/Destruction/Glass/sfx_glass_impact_s_01|SFX/Destruction/Glass/sfx_glass_impact_s_02|SFX/Destruction/Glass/sfx_glass_impact_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=glass;kind=impact;size=M;tier=any,sfx_glass_impact_m,SFX/Destruction/Glass/sfx_glass_impact_m_01|SFX/Destruction/Glass/sfx_glass_impact_m_02|SFX/Destruction/Glass/sfx_glass_impact_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=glass;kind=impact;size=L;tier=any,sfx_glass_impact_l,SFX/Destruction/Glass/sfx_glass_impact_l_01|SFX/Destruction/Glass/sfx_glass_impact_l_02|SFX/Destruction/Glass/sfx_glass_impact_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=stone;kind=impact;size=S;tier=any,sfx_stone_impact_s,SFX/Destruction/Stone/sfx_stone_impact_s_01|SFX/Destruction/Stone/sfx_stone_impact_s_02|SFX/Destruction/Stone/sfx_stone_impact_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=stone;kind=impact;size=M;tier=any,sfx_stone_impact_m,SFX/Destruction/Stone/sfx_stone_impact_m_01|SFX/Destruction/Stone/sfx_stone_impact_m_02|SFX/Destruction/Stone/sfx_stone_impact_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_IMPACT,phys,material=stone;kind=impact;size=L;tier=any,sfx_stone_impact_l,SFX/Destruction/Stone/sfx_stone_impact_l_01|SFX/Destruction/Stone/sfx_stone_impact_l_02|SFX/Destruction/Stone/sfx_stone_impact_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only),ok
+PHYS_CRACK,phys,material=wood;kind=crack;size=S;tier=any,sfx_wood_crack_s,SFX/Destruction/Wood/sfx_wood_crack_s_01|SFX/Destruction/Wood/sfx_wood_crack_s_02|SFX/Destruction/Wood/sfx_wood_crack_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=wood;kind=crack;size=M;tier=any,sfx_wood_crack_m,SFX/Destruction/Wood/sfx_wood_crack_m_01|SFX/Destruction/Wood/sfx_wood_crack_m_02|SFX/Destruction/Wood/sfx_wood_crack_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=wood;kind=crack;size=L;tier=any,sfx_wood_crack_l,SFX/Destruction/Wood/sfx_wood_crack_l_01|SFX/Destruction/Wood/sfx_wood_crack_l_02|SFX/Destruction/Wood/sfx_wood_crack_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=brick;kind=crack;size=S;tier=any,sfx_brick_crack_s,SFX/Destruction/Brick/sfx_brick_crack_s_01|SFX/Destruction/Brick/sfx_brick_crack_s_02|SFX/Destruction/Brick/sfx_brick_crack_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=brick;kind=crack;size=M;tier=any,sfx_brick_crack_m,SFX/Destruction/Brick/sfx_brick_crack_m_01|SFX/Destruction/Brick/sfx_brick_crack_m_02|SFX/Destruction/Brick/sfx_brick_crack_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=brick;kind=crack;size=L;tier=any,sfx_brick_crack_l,SFX/Destruction/Brick/sfx_brick_crack_l_01|SFX/Destruction/Brick/sfx_brick_crack_l_02|SFX/Destruction/Brick/sfx_brick_crack_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=steel;kind=crack;size=S;tier=any,sfx_steel_crack_s,SFX/Destruction/Steel/sfx_steel_crack_s_01|SFX/Destruction/Steel/sfx_steel_crack_s_02|SFX/Destruction/Steel/sfx_steel_crack_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=steel;kind=crack;size=M;tier=any,sfx_steel_crack_m,SFX/Destruction/Steel/sfx_steel_crack_m_01|SFX/Destruction/Steel/sfx_steel_crack_m_02|SFX/Destruction/Steel/sfx_steel_crack_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=steel;kind=crack;size=L;tier=any,sfx_steel_crack_l,SFX/Destruction/Steel/sfx_steel_crack_l_01|SFX/Destruction/Steel/sfx_steel_crack_l_02|SFX/Destruction/Steel/sfx_steel_crack_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=glass;kind=crack;size=S;tier=any,sfx_glass_crack_s,SFX/Destruction/Glass/sfx_glass_crack_s_01|SFX/Destruction/Glass/sfx_glass_crack_s_02|SFX/Destruction/Glass/sfx_glass_crack_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=glass;kind=crack;size=M;tier=any,sfx_glass_crack_m,SFX/Destruction/Glass/sfx_glass_crack_m_01|SFX/Destruction/Glass/sfx_glass_crack_m_02|SFX/Destruction/Glass/sfx_glass_crack_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=glass;kind=crack;size=L;tier=any,sfx_glass_crack_l,SFX/Destruction/Glass/sfx_glass_crack_l_01|SFX/Destruction/Glass/sfx_glass_crack_l_02|SFX/Destruction/Glass/sfx_glass_crack_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=stone;kind=crack;size=S;tier=any,sfx_stone_crack_s,SFX/Destruction/Stone/sfx_stone_crack_s_01|SFX/Destruction/Stone/sfx_stone_crack_s_02|SFX/Destruction/Stone/sfx_stone_crack_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=stone;kind=crack;size=M;tier=any,sfx_stone_crack_m,SFX/Destruction/Stone/sfx_stone_crack_m_01|SFX/Destruction/Stone/sfx_stone_crack_m_02|SFX/Destruction/Stone/sfx_stone_crack_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_CRACK,phys,material=stone;kind=crack;size=L;tier=any,sfx_stone_crack_l,SFX/Destruction/Stone/sfx_stone_crack_l_01|SFX/Destruction/Stone/sfx_stone_crack_l_02|SFX/Destruction/Stone/sfx_stone_crack_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",+0.03 pitch per damageStep,ok
+PHYS_BREAK,phys,material=wood;kind=break;size=S;tier=any,sfx_wood_break_s,SFX/Destruction/Wood/sfx_wood_break_s_01|SFX/Destruction/Wood/sfx_wood_break_s_02|SFX/Destruction/Wood/sfx_wood_break_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=wood;kind=break;size=M;tier=any,sfx_wood_break_m,SFX/Destruction/Wood/sfx_wood_break_m_01|SFX/Destruction/Wood/sfx_wood_break_m_02|SFX/Destruction/Wood/sfx_wood_break_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=wood;kind=break;size=L;tier=any,sfx_wood_break_l,SFX/Destruction/Wood/sfx_wood_break_l_01|SFX/Destruction/Wood/sfx_wood_break_l_02|SFX/Destruction/Wood/sfx_wood_break_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=brick;kind=break;size=S;tier=any,sfx_brick_break_s,SFX/Destruction/Brick/sfx_brick_break_s_01|SFX/Destruction/Brick/sfx_brick_break_s_02|SFX/Destruction/Brick/sfx_brick_break_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=brick;kind=break;size=M;tier=any,sfx_brick_break_m,SFX/Destruction/Brick/sfx_brick_break_m_01|SFX/Destruction/Brick/sfx_brick_break_m_02|SFX/Destruction/Brick/sfx_brick_break_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=brick;kind=break;size=L;tier=any,sfx_brick_break_l,SFX/Destruction/Brick/sfx_brick_break_l_01|SFX/Destruction/Brick/sfx_brick_break_l_02|SFX/Destruction/Brick/sfx_brick_break_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=steel;kind=break;size=S;tier=any,sfx_steel_break_s,SFX/Destruction/Steel/sfx_steel_break_s_01|SFX/Destruction/Steel/sfx_steel_break_s_02|SFX/Destruction/Steel/sfx_steel_break_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=steel;kind=break;size=M;tier=any,sfx_steel_break_m,SFX/Destruction/Steel/sfx_steel_break_m_01|SFX/Destruction/Steel/sfx_steel_break_m_02|SFX/Destruction/Steel/sfx_steel_break_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=steel;kind=break;size=L;tier=any,sfx_steel_break_l,SFX/Destruction/Steel/sfx_steel_break_l_01|SFX/Destruction/Steel/sfx_steel_break_l_02|SFX/Destruction/Steel/sfx_steel_break_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=glass;kind=break;size=S;tier=any,sfx_glass_break_s,SFX/Destruction/Glass/sfx_glass_break_s_01|SFX/Destruction/Glass/sfx_glass_break_s_02|SFX/Destruction/Glass/sfx_glass_break_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=glass;kind=break;size=M;tier=any,sfx_glass_break_m,SFX/Destruction/Glass/sfx_glass_break_m_01|SFX/Destruction/Glass/sfx_glass_break_m_02|SFX/Destruction/Glass/sfx_glass_break_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=glass;kind=break;size=L;tier=any,sfx_glass_break_l,SFX/Destruction/Glass/sfx_glass_break_l_01|SFX/Destruction/Glass/sfx_glass_break_l_02|SFX/Destruction/Glass/sfx_glass_break_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=stone;kind=break;size=S;tier=any,sfx_stone_break_s,SFX/Destruction/Stone/sfx_stone_break_s_01|SFX/Destruction/Stone/sfx_stone_break_s_02|SFX/Destruction/Stone/sfx_stone_break_s_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=stone;kind=break;size=M;tier=any,sfx_stone_break_m,SFX/Destruction/Stone/sfx_stone_break_m_01|SFX/Destruction/Stone/sfx_stone_break_m_02|SFX/Destruction/Stone/sfx_stone_break_m_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_BREAK,phys,material=stone;kind=break;size=L;tier=any,sfx_stone_break_l,SFX/Destruction/Stone/sfx_stone_break_l_01|SFX/Destruction/Stone/sfx_stone_break_l_02|SFX/Destruction/Stone/sfx_stone_break_l_03,SFX/Destruction,128,4,"tier,impulse,sizeClass,materialA/B,source",in active cascade: 1 voice + rattle,ok
+PHYS_JOINT_SNAP,phys,material=steel;kind=jointsnap;size=S;tier=any,sfx_steel_jointsnap_s,SFX/Destruction/Steel/sfx_steel_jointsnap_s_01|SFX/Destruction/Steel/sfx_steel_jointsnap_s_02|SFX/Destruction/Steel/sfx_steel_jointsnap_s_03,SFX/Destruction,128,4,"impulse,sizeClass",,ok
+PHYS_JOINT_SNAP,phys,material=steel;kind=jointsnap;size=M;tier=any,sfx_steel_jointsnap_m,SFX/Destruction/Steel/sfx_steel_jointsnap_m_01|SFX/Destruction/Steel/sfx_steel_jointsnap_m_02|SFX/Destruction/Steel/sfx_steel_jointsnap_m_03,SFX/Destruction,128,4,"impulse,sizeClass",,ok
+PHYS_JOINT_SNAP,phys,material=steel;kind=jointsnap;size=L;tier=any,sfx_steel_jointsnap_l,SFX/Destruction/Steel/sfx_steel_jointsnap_l_01|SFX/Destruction/Steel/sfx_steel_jointsnap_l_02|SFX/Destruction/Steel/sfx_steel_jointsnap_l_03,SFX/Destruction,128,4,"impulse,sizeClass",,ok
+PHYS_RATTLE,phys,material=wood;kind=rattle,sfx_wood_debris,SFX/Destruction/Wood/sfx_wood_debris_01|SFX/Destruction/Wood/sfx_wood_debris_02|SFX/Destruction/Wood/sfx_wood_debris_03|SFX/Destruction/Wood/sfx_wood_debris_04,SFX/Destruction,200,5,source=Debris aggregated,"rattleWindowTicks 5, rattleMaxVoices 3",ok
+PHYS_COLLAPSE_END,phys,material=wood;kind=collapse;size=S;count=1-5,sfx_wood_collapse_s,SFX/Destruction/Wood/sfx_wood_collapse_s_01|SFX/Destruction/Wood/sfx_wood_collapse_s_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=wood;kind=collapse;size=M;count=6-20,sfx_wood_collapse_m,SFX/Destruction/Wood/sfx_wood_collapse_m_01|SFX/Destruction/Wood/sfx_wood_collapse_m_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=wood;kind=collapse;size=L;count=21+,sfx_wood_collapse_l,SFX/Destruction/Wood/sfx_wood_collapse_l_01|SFX/Destruction/Wood/sfx_wood_collapse_l_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150,ok
+PHYS_RATTLE,phys,material=brick;kind=rattle,sfx_brick_debris,SFX/Destruction/Brick/sfx_brick_debris_01|SFX/Destruction/Brick/sfx_brick_debris_02|SFX/Destruction/Brick/sfx_brick_debris_03|SFX/Destruction/Brick/sfx_brick_debris_04,SFX/Destruction,200,5,source=Debris aggregated,"rattleWindowTicks 5, rattleMaxVoices 3",ok
+PHYS_COLLAPSE_END,phys,material=brick;kind=collapse;size=S;count=1-5,sfx_brick_collapse_s,SFX/Destruction/Brick/sfx_brick_collapse_s_01|SFX/Destruction/Brick/sfx_brick_collapse_s_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=brick;kind=collapse;size=M;count=6-20,sfx_brick_collapse_m,SFX/Destruction/Brick/sfx_brick_collapse_m_01|SFX/Destruction/Brick/sfx_brick_collapse_m_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=brick;kind=collapse;size=L;count=21+,sfx_brick_collapse_l,SFX/Destruction/Brick/sfx_brick_collapse_l_01|SFX/Destruction/Brick/sfx_brick_collapse_l_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150,ok
+PHYS_RATTLE,phys,material=steel;kind=rattle,sfx_steel_debris,SFX/Destruction/Steel/sfx_steel_debris_01|SFX/Destruction/Steel/sfx_steel_debris_02|SFX/Destruction/Steel/sfx_steel_debris_03|SFX/Destruction/Steel/sfx_steel_debris_04,SFX/Destruction,200,5,source=Debris aggregated,"rattleWindowTicks 5, rattleMaxVoices 3",ok
+PHYS_COLLAPSE_END,phys,material=steel;kind=collapse;size=S;count=1-5,sfx_steel_collapse_s,SFX/Destruction/Steel/sfx_steel_collapse_s_01|SFX/Destruction/Steel/sfx_steel_collapse_s_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=steel;kind=collapse;size=M;count=6-20,sfx_steel_collapse_m,SFX/Destruction/Steel/sfx_steel_collapse_m_01|SFX/Destruction/Steel/sfx_steel_collapse_m_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=steel;kind=collapse;size=L;count=21+,sfx_steel_collapse_l,SFX/Destruction/Steel/sfx_steel_collapse_l_01|SFX/Destruction/Steel/sfx_steel_collapse_l_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150,ok
+PHYS_RATTLE,phys,material=glass;kind=rattle,sfx_glass_debris,SFX/Destruction/Glass/sfx_glass_debris_01|SFX/Destruction/Glass/sfx_glass_debris_02|SFX/Destruction/Glass/sfx_glass_debris_03|SFX/Destruction/Glass/sfx_glass_debris_04,SFX/Destruction,96,5,source=Debris aggregated,"rattleWindowTicks 5, rattleMaxVoices 3",ok
+PHYS_COLLAPSE_END,phys,material=glass;kind=collapse;size=S;count=1-5,sfx_glass_collapse_s,SFX/Destruction/Glass/sfx_glass_collapse_s_01|SFX/Destruction/Glass/sfx_glass_collapse_s_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=glass;kind=collapse;size=M;count=6-20,sfx_glass_collapse_m,SFX/Destruction/Glass/sfx_glass_collapse_m_01|SFX/Destruction/Glass/sfx_glass_collapse_m_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=glass;kind=collapse;size=L;count=21+,sfx_glass_collapse_l,SFX/Destruction/Glass/sfx_glass_collapse_l_01|SFX/Destruction/Glass/sfx_glass_collapse_l_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150,ok
+PHYS_RATTLE,phys,material=stone;kind=rattle,sfx_stone_debris,SFX/Destruction/Stone/sfx_stone_debris_01|SFX/Destruction/Stone/sfx_stone_debris_02|SFX/Destruction/Stone/sfx_stone_debris_03|SFX/Destruction/Stone/sfx_stone_debris_04,SFX/Destruction,96,5,source=Debris aggregated,"rattleWindowTicks 5, rattleMaxVoices 3",ok
+PHYS_COLLAPSE_END,phys,material=stone;kind=collapse;size=S;count=1-5,sfx_stone_collapse_s,SFX/Destruction/Stone/sfx_stone_collapse_s_01|SFX/Destruction/Stone/sfx_stone_collapse_s_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=stone;kind=collapse;size=M;count=6-20,sfx_stone_collapse_m,SFX/Destruction/Stone/sfx_stone_collapse_m_01|SFX/Destruction/Stone/sfx_stone_collapse_m_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150,ok
+PHYS_COLLAPSE_END,phys,material=stone;kind=collapse;size=L;count=21+,sfx_stone_collapse_l,SFX/Destruction/Stone/sfx_stone_collapse_l_01|SFX/Destruction/Stone/sfx_stone_collapse_l_02,SFX/Destruction,32,0,"cascadeId,cascadeCount,dominantMaterial",one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150,ok
+PHYS_COLLAPSE_START,phys,,,,,,0,"cascadeId,cascadeCount(planned)",opens cascade gate; no sound,silent

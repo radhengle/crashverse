@@ -1,0 +1,3846 @@
+{
+ "generated_from": [
+  "anim_audio_map.csv",
+  "audio_events_for_developer.csv",
+  "sfx_list.csv",
+  "ImpactAudioProfile (PR #18 patch)"
+ ],
+ "resources_root": "Assets/_Project/Resources/",
+ "path_note": "Resources.Load<AudioClip>(path), no extension",
+ "phys_source_priority": {
+  "Cannon": 32,
+  "Explosion": 64,
+  "PowerUp": 96,
+  "Debris": 192
+ },
+ "phys_hardness": [
+  "steel",
+  "stone",
+  "brick",
+  "glass",
+  "wood",
+  "terrain"
+ ],
+ "routes": [
+  {
+   "event": "ANIM_WRECKER_IDLE_FIDGET",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_fidget",
+     "variations": [],
+     "group": "",
+     "priority": 150
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_AIM_START",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_aim_hum",
+     "variations": [],
+     "group": "",
+     "priority": 140
+    },
+    {
+     "sfx_id": "sfx_aim_stretch",
+     "variations": [],
+     "group": "",
+     "priority": 140
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_AIM_TICK",
+   "key": {},
+   "owner": "anim",
+   "params": "per 5 deg, throttle 60ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_aim_tick",
+     "variations": [],
+     "group": "",
+     "priority": 150
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_AIM_CLAMP",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_aim_clamp",
+     "variations": [],
+     "group": "",
+     "priority": 120
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_AIM_END",
+   "key": {},
+   "owner": "anim",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "stop aim loops",
+   "clips": []
+  },
+  {
+   "event": "ANIM_WRECKER_FIRE_ANTICIPATE",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 at FIRE tap",
+   "cooldown_ticks": 0,
+   "notes": "RESOLVED: Developer accepted 66 ms spawn delay",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_breech",
+     "variations": [
+      "SFX/Weapon/sfx_wrecker_breech_01",
+      "SFX/Weapon/sfx_wrecker_breech_02"
+     ],
+     "group": "SFX/Weapon",
+     "priority": 30
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_FIRE",
+   "key": {},
+   "owner": "anim",
+   "params": "+4f/66ms after tap (launch)",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_cannon_fire",
+     "variations": [
+      "SFX/Weapon/sfx_cannon_fire_01",
+      "SFX/Weapon/sfx_cannon_fire_02",
+      "SFX/Weapon/sfx_cannon_fire_03",
+      "SFX/Weapon/sfx_cannon_fire_04"
+     ],
+     "group": "SFX/Weapon",
+     "priority": 16
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_MUZZLE_SMOKE",
+   "key": {},
+   "owner": "anim",
+   "params": "2f/33ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_smoke_tail",
+     "variations": [],
+     "group": "",
+     "priority": 80
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_RECOIL_LAND",
+   "key": {},
+   "owner": "anim",
+   "params": "12f/200ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_recoil_land",
+     "variations": [],
+     "group": "",
+     "priority": 60
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_REARM",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(silent)",
+   "clips": []
+  },
+  {
+   "event": "ANIM_WRECKER_READY",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 at FIRE unlock",
+   "cooldown_ticks": 0,
+   "notes": "DEV HOOK: 1.0 s reload gate still needed",
+   "clips": [
+    {
+     "sfx_id": "sfx_cannon_ready",
+     "variations": [
+      "SFX/Weapon/sfx_cannon_ready_01",
+      "SFX/Weapon/sfx_cannon_ready_02"
+     ],
+     "group": "SFX/Weapon",
+     "priority": 30
+    },
+    {
+     "sfx_id": "sfx_cannon_reload",
+     "variations": [
+      "SFX/Weapon/sfx_cannon_reload_loop"
+     ],
+     "group": "SFX/Weapon",
+     "priority": 72
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_SLOT_OUT",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_slot_out",
+     "variations": [],
+     "group": "",
+     "priority": 60
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_SLOT_IN",
+   "key": {},
+   "owner": "anim",
+   "params": "9f/150ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_slot_in",
+     "variations": [],
+     "group": "",
+     "priority": 60
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_WIN",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_win_hop",
+     "variations": [],
+     "group": "",
+     "priority": 30
+    }
+   ]
+  },
+  {
+   "event": "ANIM_WRECKER_FAIL",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_wrecker_fail_droop",
+     "variations": [],
+     "group": "",
+     "priority": 30
+    }
+   ]
+  },
+  {
+   "event": "ANIM_PROJ_LAUNCH",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "stop: code, Projectile.Despawn",
+   "clips": [
+    {
+     "sfx_id": "sfx_projectile_whoosh",
+     "variations": [],
+     "group": "",
+     "priority": 120
+    }
+   ]
+  },
+  {
+   "event": "ANIM_PROJ_SPLIT_POINT",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none; PU_SPLIT owns the sound)",
+   "clips": []
+  },
+  {
+   "event": "IMPACT_WOOD/BRICK/STEEL/STEEL_JOINT",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_projectile_impact (+material layer) (velocity->volume)",
+   "clips": []
+  },
+  {
+   "event": "IMPACT_TERRAIN",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_impact_terrain",
+   "clips": []
+  },
+  {
+   "event": "BREAK_WOOD",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_wood_break",
+   "clips": []
+  },
+  {
+   "event": "BREAK_BRICK",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_brick_break",
+   "clips": []
+  },
+  {
+   "event": "BREAK_STEEL",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_steel_break",
+   "clips": []
+  },
+  {
+   "event": "BREAK_STEEL_JOINT",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_steel_joint_snap",
+   "clips": []
+  },
+  {
+   "event": "DAMAGE_STEP",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 (material,step)",
+   "cooldown_ticks": 8,
+   "notes": "cooldown 150ms/block",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_crack",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_crack_l_01",
+      "SFX/Destruction/Wood/sfx_wood_crack_l_02",
+      "SFX/Destruction/Wood/sfx_wood_crack_l_03",
+      "SFX/Destruction/Wood/sfx_wood_crack_m_01",
+      "SFX/Destruction/Wood/sfx_wood_crack_m_02",
+      "SFX/Destruction/Wood/sfx_wood_crack_m_03",
+      "SFX/Destruction/Wood/sfx_wood_crack_s_01",
+      "SFX/Destruction/Wood/sfx_wood_crack_s_02",
+      "SFX/Destruction/Wood/sfx_wood_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    },
+    {
+     "sfx_id": "sfx_brick_crack",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_crack_l_01",
+      "SFX/Destruction/Brick/sfx_brick_crack_l_02",
+      "SFX/Destruction/Brick/sfx_brick_crack_l_03",
+      "SFX/Destruction/Brick/sfx_brick_crack_m_01",
+      "SFX/Destruction/Brick/sfx_brick_crack_m_02",
+      "SFX/Destruction/Brick/sfx_brick_crack_m_03",
+      "SFX/Destruction/Brick/sfx_brick_crack_s_01",
+      "SFX/Destruction/Brick/sfx_brick_crack_s_02",
+      "SFX/Destruction/Brick/sfx_brick_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    },
+    {
+     "sfx_id": "sfx_steel_crack",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_crack_l_01",
+      "SFX/Destruction/Steel/sfx_steel_crack_l_02",
+      "SFX/Destruction/Steel/sfx_steel_crack_l_03",
+      "SFX/Destruction/Steel/sfx_steel_crack_m_01",
+      "SFX/Destruction/Steel/sfx_steel_crack_m_02",
+      "SFX/Destruction/Steel/sfx_steel_crack_m_03",
+      "SFX/Destruction/Steel/sfx_steel_crack_s_01",
+      "SFX/Destruction/Steel/sfx_steel_crack_s_02",
+      "SFX/Destruction/Steel/sfx_steel_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    },
+    {
+     "sfx_id": "sfx_glass_crack",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_crack_l_01",
+      "SFX/Destruction/Glass/sfx_glass_crack_l_02",
+      "SFX/Destruction/Glass/sfx_glass_crack_l_03",
+      "SFX/Destruction/Glass/sfx_glass_crack_m_01",
+      "SFX/Destruction/Glass/sfx_glass_crack_m_02",
+      "SFX/Destruction/Glass/sfx_glass_crack_m_03",
+      "SFX/Destruction/Glass/sfx_glass_crack_s_01",
+      "SFX/Destruction/Glass/sfx_glass_crack_s_02",
+      "SFX/Destruction/Glass/sfx_glass_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    },
+    {
+     "sfx_id": "sfx_stone_crack",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_crack_l_01",
+      "SFX/Destruction/Stone/sfx_stone_crack_l_02",
+      "SFX/Destruction/Stone/sfx_stone_crack_l_03",
+      "SFX/Destruction/Stone/sfx_stone_crack_m_01",
+      "SFX/Destruction/Stone/sfx_stone_crack_m_02",
+      "SFX/Destruction/Stone/sfx_stone_crack_m_03",
+      "SFX/Destruction/Stone/sfx_stone_crack_s_01",
+      "SFX/Destruction/Stone/sfx_stone_crack_s_02",
+      "SFX/Destruction/Stone/sfx_stone_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    }
+   ]
+  },
+  {
+   "event": "DEBRIS_BURST",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 (material,count)",
+   "cooldown_ticks": 0,
+   "notes": "1 sound per burst",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_debris",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_debris_01",
+      "SFX/Destruction/Wood/sfx_wood_debris_02",
+      "SFX/Destruction/Wood/sfx_wood_debris_03",
+      "SFX/Destruction/Wood/sfx_wood_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 200
+    },
+    {
+     "sfx_id": "sfx_brick_debris",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_debris_01",
+      "SFX/Destruction/Brick/sfx_brick_debris_02",
+      "SFX/Destruction/Brick/sfx_brick_debris_03",
+      "SFX/Destruction/Brick/sfx_brick_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 200
+    },
+    {
+     "sfx_id": "sfx_steel_debris",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_debris_01",
+      "SFX/Destruction/Steel/sfx_steel_debris_02",
+      "SFX/Destruction/Steel/sfx_steel_debris_03",
+      "SFX/Destruction/Steel/sfx_steel_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 200
+    },
+    {
+     "sfx_id": "sfx_glass_debris",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_debris_01",
+      "SFX/Destruction/Glass/sfx_glass_debris_02",
+      "SFX/Destruction/Glass/sfx_glass_debris_03",
+      "SFX/Destruction/Glass/sfx_glass_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    },
+    {
+     "sfx_id": "sfx_stone_debris",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_debris_01",
+      "SFX/Destruction/Stone/sfx_stone_debris_02",
+      "SFX/Destruction/Stone/sfx_stone_debris_03",
+      "SFX/Destruction/Stone/sfx_stone_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    }
+   ]
+  },
+  {
+   "event": "EXPLODE_CRATE (alias EXPLODE_BARREL)",
+   "key": {},
+   "owner": "anim",
+   "params": "6f/100ms",
+   "cooldown_ticks": 0,
+   "notes": "listen to both names until alias removed",
+   "clips": [
+    {
+     "sfx_id": "sfx_explosive_crate",
+     "variations": [],
+     "group": "",
+     "priority": 40
+    }
+   ]
+  },
+  {
+   "event": "COLLAPSE_CREAK",
+   "key": {},
+   "owner": "anim",
+   "params": "0-9f/0-150ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_creak_wood",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_creak_wood_01",
+      "SFX/Destruction/Wood/sfx_creak_wood_02",
+      "SFX/Destruction/Wood/sfx_creak_wood_03",
+      "SFX/Destruction/Wood/sfx_creak_wood_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    },
+    {
+     "sfx_id": "sfx_creak_steel",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_creak_steel_01",
+      "SFX/Destruction/Steel/sfx_creak_steel_02",
+      "SFX/Destruction/Steel/sfx_creak_steel_03",
+      "SFX/Destruction/Steel/sfx_creak_steel_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    }
+   ]
+  },
+  {
+   "event": "COLLAPSE_LAND",
+   "key": {},
+   "owner": "visual",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none) visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_wood_collapse|sfx_brick_collapse|sfx_steel_collapse (cooldown 250ms)",
+   "clips": []
+  },
+  {
+   "event": "DEBRIS_FALL_OFF",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_kill_plane_fall",
+     "variations": [],
+     "group": "",
+     "priority": 80
+    }
+   ]
+  },
+  {
+   "event": "PU_ARM_<NAME>",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_shockwave_arm",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_shockwave_arm"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 60
+    },
+    {
+     "sfx_id": "sfx_pu_splitstrike_arm",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_splitstrike_arm"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 60
+    },
+    {
+     "sfx_id": "sfx_pu_gravity_well_arm",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_gravity_well_arm"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 60
+    },
+    {
+     "sfx_id": "sfx_pu_chain_reactor_arm",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_chain_reactor_arm"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 60
+    },
+    {
+     "sfx_id": "sfx_pu_phase_piercer_arm",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_phase_piercer_arm"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 60
+    },
+    {
+     "sfx_id": "sfx_pu_time_fracture_arm",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_time_fracture_arm"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 60
+    }
+   ]
+  },
+  {
+   "event": "PU_DISARM",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "not Time Fracture",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_disarm",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_disarm"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 60
+    }
+   ]
+  },
+  {
+   "event": "PU_SHOCKWAVE_IMPACT + _RING",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 (ring 400ms)",
+   "cooldown_ticks": 0,
+   "notes": "RING ignored to avoid double",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_shockwave_fx",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_shockwave_fx"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "PU_SPLIT",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 at split point",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_splitstrike_fx",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_splitstrike_fx"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "PU_GRAVITY_OPEN/LOOP/BURST",
+   "key": {},
+   "owner": "anim",
+   "params": "0; 9f/150ms; 90f/1500ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_gravity_well_fx",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_gravity_well_fx_loop"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "PU_CHAIN_PULSE",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_chain_reactor_fx",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_chain_reactor_fx"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "PU_CHAIN_LINK",
+   "key": {},
+   "owner": "anim",
+   "params": "+5f/80ms per link",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_chain_link",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_chain_link_01",
+      "SFX/PowerUps/sfx_pu_chain_link_02",
+      "SFX/PowerUps/sfx_pu_chain_link_03"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 40
+    }
+   ]
+  },
+  {
+   "event": "PU_PHASE_PASS",
+   "key": {},
+   "owner": "anim",
+   "params": "per pass",
+   "cooldown_ticks": 0,
+   "notes": "DEV HOOK needed",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_phase_piercer_fx",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_phase_piercer_fx"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "PU_PHASE_HIT",
+   "key": {},
+   "owner": "anim",
+   "params": "3rd hit",
+   "cooldown_ticks": 0,
+   "notes": "DEV HOOK needed",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_phase_hit",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_phase_hit_01",
+      "SFX/PowerUps/sfx_pu_phase_hit_02"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 40
+    }
+   ]
+  },
+  {
+   "event": "PU_TIME_START",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 on ARM",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_time_fracture_fx",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_time_fracture_fx_loop"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "PU_TIME_WARN",
+   "key": {},
+   "owner": "anim",
+   "params": "210f/3500ms real (skipped if shot fired)",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_time_warn",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_time_warn"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 40
+    }
+   ]
+  },
+  {
+   "event": "PU_TIME_END",
+   "key": {},
+   "owner": "anim",
+   "params": "240f/4000ms real or at impact",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_pu_time_fracture_end",
+     "variations": [
+      "SFX/PowerUps/sfx_pu_time_fracture_end"
+     ],
+     "group": "SFX/PowerUps",
+     "priority": 64
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_INTRO",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "music intro: code",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_intro",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_intro"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    },
+    {
+     "sfx_id": "sfx_boss_tw_roar",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_02",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_03"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_ARMS_RISE",
+   "key": {},
+   "owner": "anim",
+   "params": "60/1000",
+   "cooldown_ticks": 0,
+   "notes": "anim-driven; replaces code trigger at intro+1.0 s",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_arms_rise",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_arms_rise"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_JOINT_HIT",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_joint_hit",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_joint_hit_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_joint_hit_02",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_joint_hit_03"
+     ],
+     "group": "SFX/Boss",
+     "priority": 20
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_JOINT_BREAK",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_shoulder_break",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_shoulder_break_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_shoulder_break_02"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    },
+    {
+     "sfx_id": "sfx_boss_tw_roar",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_02",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_03"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_ARMS_DROP",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_arms_drop",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_arms_drop"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_ARMS_LAND",
+   "key": {},
+   "owner": "anim",
+   "params": "36f/600ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_arms_land",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_arms_land"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_CHEST_OPEN",
+   "key": {},
+   "owner": "anim",
+   "params": "42f/700ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_chest_open",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_chest_open"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_PHASE2",
+   "key": {},
+   "owner": "anim",
+   "params": "75f/1250ms",
+   "cooldown_ticks": 0,
+   "notes": "mus_stinger_phase2 + P2 music: code on next bar",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_phase2",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_phase2"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    },
+    {
+     "sfx_id": "sfx_boss_tw_core_hum",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_core_hum"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_TELL",
+   "key": {},
+   "owner": "anim",
+   "params": "pulses 0, 25f (2.4 Hz; CHANGE from 30f/2 Hz requested)",
+   "cooldown_ticks": 0,
+   "notes": "MISMATCH: code glow sin(t*18)~2.9 Hz still - Dev to change to 4*pi",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_shutter_tell",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_shutter_tell_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_shutter_tell_02"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_SHUTTER_CLOSE",
+   "key": {},
+   "owner": "anim",
+   "params": "18f/300ms (end of tween)",
+   "cooldown_ticks": 0,
+   "notes": "MISMATCH: code still teleports - Dev tween needed",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_shutter_close",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_shutter_close_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_shutter_close_02"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_SHUTTER_OPEN",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_shutter_open",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_shutter_open_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_shutter_open_02"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_CORE_HIT",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_core_hit",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_core_hit_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_core_hit_02",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_core_hit_03"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    },
+    {
+     "sfx_id": "sfx_boss_tw_roar",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_02",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_roar_03"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_DEFEAT",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 (4.0s)",
+   "cooldown_ticks": 0,
+   "notes": "mus_stinger_boss_defeat: code",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_defeat",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_defeat"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TITAN_RANKED_START",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 before intro",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_titan_ranked_start",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_ranked_start"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TITAN_INTRO",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_titan_intro",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_intro"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    },
+    {
+     "sfx_id": "sfx_titan_roar",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_roar_01",
+      "SFX/Boss/Titan/sfx_titan_roar_02",
+      "SFX/Boss/Titan/sfx_titan_roar_03"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TITAN_RULE",
+   "key": {},
+   "owner": "anim",
+   "params": "after intro (loop)",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_titan_rule_heated",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_rule_heated"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    },
+    {
+     "sfx_id": "sfx_titan_rule_magma",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_rule_magma"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    },
+    {
+     "sfx_id": "sfx_titan_rule_steam",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_rule_steam"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TITAN_HIT",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_titan_hit",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_hit_01",
+      "SFX/Boss/Titan/sfx_titan_hit_02",
+      "SFX/Boss/Titan/sfx_titan_hit_03"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TITAN_STAGE",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 at 25/50/75%",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_titan_stage_25",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_stage_25"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    },
+    {
+     "sfx_id": "sfx_titan_stage_50",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_stage_50"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    },
+    {
+     "sfx_id": "sfx_titan_stage_75",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_stage_75"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    },
+    {
+     "sfx_id": "sfx_titan_roar",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_roar_01",
+      "SFX/Boss/Titan/sfx_titan_roar_02",
+      "SFX/Boss/Titan/sfx_titan_roar_03"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TITAN_DEFEAT",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "stinger: code",
+   "clips": [
+    {
+     "sfx_id": "sfx_titan_kill",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_kill"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "UI_BTN_PRESS",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 type=confirm|back|error|(default)",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_confirm",
+     "variations": [
+      "SFX/UI/sfx_ui_confirm"
+     ],
+     "group": "UI",
+     "priority": 4
+    },
+    {
+     "sfx_id": "sfx_ui_back",
+     "variations": [
+      "SFX/UI/sfx_ui_back"
+     ],
+     "group": "UI",
+     "priority": 4
+    },
+    {
+     "sfx_id": "sfx_ui_error",
+     "variations": [
+      "SFX/UI/sfx_ui_error"
+     ],
+     "group": "UI",
+     "priority": 4
+    },
+    {
+     "sfx_id": "sfx_ui_click",
+     "variations": [
+      "SFX/UI/sfx_ui_click_01",
+      "SFX/UI/sfx_ui_click_02",
+      "SFX/UI/sfx_ui_click_03"
+     ],
+     "group": "UI",
+     "priority": 4
+    }
+   ]
+  },
+  {
+   "event": "UI_TAB",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_tab",
+     "variations": [
+      "SFX/UI/sfx_ui_tab"
+     ],
+     "group": "UI",
+     "priority": 4
+    }
+   ]
+  },
+  {
+   "event": "UI_TOGGLE",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_toggle",
+     "variations": [
+      "SFX/UI/sfx_ui_toggle"
+     ],
+     "group": "UI",
+     "priority": 4
+    }
+   ]
+  },
+  {
+   "event": "UI_PANEL_IN",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_modal_open",
+     "variations": [
+      "SFX/UI/sfx_ui_modal_open"
+     ],
+     "group": "UI",
+     "priority": 4
+    }
+   ]
+  },
+  {
+   "event": "UI_PANEL_OUT",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_panel_out",
+     "variations": [],
+     "group": "",
+     "priority": 6
+    }
+   ]
+  },
+  {
+   "event": "UI_STAR_1/2/3",
+   "key": {},
+   "owner": "anim",
+   "params": "150 / 450 / 750 ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_star_1",
+     "variations": [
+      "SFX/Results/sfx_star_1"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 10
+    },
+    {
+     "sfx_id": "sfx_star_2",
+     "variations": [
+      "SFX/Results/sfx_star_2"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 10
+    },
+    {
+     "sfx_id": "sfx_star_3",
+     "variations": [
+      "SFX/Results/sfx_star_3"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 10
+    }
+   ]
+  },
+  {
+   "event": "UI_MASTERY_TICK",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_mastery_tick",
+     "variations": [],
+     "group": "",
+     "priority": 10
+    }
+   ]
+  },
+  {
+   "event": "UI_COMBO_UP",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 at x>=3",
+   "cooldown_ticks": 0,
+   "notes": "x2 step: CODE (no anim event below x3)",
+   "clips": [
+    {
+     "sfx_id": "sfx_combo_step",
+     "variations": [
+      "SFX/Combo/sfx_combo_step"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 30
+    },
+    {
+     "sfx_id": "sfx_combo_tier1",
+     "variations": [
+      "SFX/Combo/sfx_combo_tier1"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 20
+    }
+   ]
+  },
+  {
+   "event": "UI_COMBO_TIER",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 x5/x10/x20",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_combo_tier2",
+     "variations": [
+      "SFX/Combo/sfx_combo_tier2"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 20
+    },
+    {
+     "sfx_id": "sfx_combo_tier3",
+     "variations": [
+      "SFX/Combo/sfx_combo_tier3"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 20
+    },
+    {
+     "sfx_id": "sfx_combo_tier4",
+     "variations": [
+      "SFX/Combo/sfx_combo_tier4"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 20
+    }
+   ]
+  },
+  {
+   "event": "UI_SCORE_TICK",
+   "key": {},
+   "owner": "anim",
+   "params": "every 50ms max 12",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_score_tick",
+     "variations": [],
+     "group": "",
+     "priority": 40
+    }
+   ]
+  },
+  {
+   "event": "UI_DAMAGE_TICK",
+   "key": {},
+   "owner": "anim",
+   "params": "per hit throttle 50ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_titan_damage_tick",
+     "variations": [],
+     "group": "",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "UI_COIN_LAND",
+   "key": {},
+   "owner": "anim",
+   "params": "700ms per coin, 2/100ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_reward_coin_single",
+     "variations": [
+      "SFX/Reward/sfx_reward_coin_single_01",
+      "SFX/Reward/sfx_reward_coin_single_02",
+      "SFX/Reward/sfx_reward_coin_single_03"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "UI_CHEST_SHAKE",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_reward_chest_shake",
+     "variations": [
+      "SFX/Reward/sfx_reward_chest_shake"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "UI_CHEST_OPEN",
+   "key": {},
+   "owner": "anim",
+   "params": "24f/400ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_reward_chest_open",
+     "variations": [
+      "SFX/Reward/sfx_reward_chest_open"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "UI_CLAIM",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_claim_stamp",
+     "variations": [],
+     "group": "",
+     "priority": 20
+    },
+    {
+     "sfx_id": "sfx_reward_daily_claim",
+     "variations": [],
+     "group": "",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "UI_SHARD_GAIN",
+   "key": {},
+   "owner": "anim",
+   "params": "36f/600ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_reward_shard",
+     "variations": [],
+     "group": "",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "UI_EXTRA_CHARGE",
+   "key": {},
+   "owner": "anim",
+   "params": "42f/700ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_reward_extra_charge",
+     "variations": [],
+     "group": "",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "UI_SEASON_TIER_UP",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_reward_season_tier_up",
+     "variations": [],
+     "group": "",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "UI_NODE_UNLOCK",
+   "key": {},
+   "owner": "anim",
+   "params": "12f/200ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_map_node_unlock",
+     "variations": [],
+     "group": "",
+     "priority": 20
+    }
+   ]
+  },
+  {
+   "event": "UI_MARKER_HOP",
+   "key": {},
+   "owner": "anim",
+   "params": "39f/650ms",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_marker_hop",
+     "variations": [],
+     "group": "",
+     "priority": 40
+    }
+   ]
+  },
+  {
+   "event": "UI_GATE_OPEN",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_gate_open",
+     "variations": [],
+     "group": "",
+     "priority": 20
+    }
+   ]
+  },
+  {
+   "event": "UI_SHOT_SPEND",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_shot_spend",
+     "variations": [],
+     "group": "",
+     "priority": 60
+    }
+   ]
+  },
+  {
+   "event": "UI_CHARGE_SPEND",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0 on FIRE with power-up armed",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_charge_spend",
+     "variations": [
+      "SFX/UI/sfx_ui_charge_spend"
+     ],
+     "group": "UI",
+     "priority": 50
+    }
+   ]
+  },
+  {
+   "event": "UI_THRESHOLD_HIT",
+   "key": {},
+   "owner": "anim",
+   "params": "crossing win threshold (level data, default 85%)",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_ui_threshold_hit",
+     "variations": [],
+     "group": "",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "UI_WIN",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "mus_stinger_victory: code",
+   "clips": [
+    {
+     "sfx_id": "sfx_win_stinger_sfx",
+     "variations": [],
+     "group": "",
+     "priority": 8
+    }
+   ]
+  },
+  {
+   "event": "UI_FAIL",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "mus_stinger_fail: code; also Titan out-of-shots",
+   "clips": [
+    {
+     "sfx_id": "sfx_fail_sfx",
+     "variations": [],
+     "group": "",
+     "priority": 8
+    }
+   ]
+  },
+  {
+   "event": "UI_HINT_BUTTON_APPEAR",
+   "key": {},
+   "owner": "anim",
+   "params": "18f/300ms after Retry",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_hint_button",
+     "variations": [],
+     "group": "",
+     "priority": 30
+    }
+   ]
+  },
+  {
+   "event": "UI_HINT_SHOW",
+   "key": {},
+   "owner": "anim",
+   "params": "0/0",
+   "cooldown_ticks": 0,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_hint_pulse",
+     "variations": [],
+     "group": "",
+     "priority": 90
+    }
+   ]
+  },
+  {
+   "event": "CAM_SLOWMO_START",
+   "key": {},
+   "owner": "anim",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "snapshot SlowMo (LPF) big collapse / boss phase only; never win shot, Titan ranked, or Reduce Motion",
+   "clips": []
+  },
+  {
+   "event": "CAM_SLOWMO_END",
+   "key": {},
+   "owner": "anim",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "snapshot Default",
+   "clips": []
+  },
+  {
+   "event": "IMPACT_GLASS",
+   "key": {},
+   "owner": "anim",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none; sound owned by PHYS_IMPACT AnimEventBus",
+   "clips": []
+  },
+  {
+   "event": "BREAK_GLASS",
+   "key": {},
+   "owner": "anim",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "(none; sound owned by PHYS_BREAK AnimEventBus",
+   "clips": []
+  },
+  {
+   "event": "reload_start",
+   "key": {},
+   "owner": "code",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "trigger: Projectile.Impact (first impact of the shot); loop until ready",
+   "clips": [
+    {
+     "sfx_id": "sfx_cannon_reload",
+     "variations": [
+      "SFX/Weapon/sfx_cannon_reload_loop"
+     ],
+     "group": "SFX/Weapon",
+     "priority": 72
+    }
+   ]
+  },
+  {
+   "event": "combo_step_x2",
+   "key": {},
+   "owner": "code",
+   "params": "count",
+   "cooldown_ticks": 0,
+   "notes": "trigger: ComboTracker.OnBreak when Current==2; only x2; x3+ via UI_COMBO_UP",
+   "clips": [
+    {
+     "sfx_id": "sfx_combo_step",
+     "variations": [
+      "SFX/Combo/sfx_combo_step"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 30
+    }
+   ]
+  },
+  {
+   "event": "projectile_despawn",
+   "key": {},
+   "owner": "code",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "trigger: Projectile.Despawn",
+   "clips": [
+    {
+     "sfx_id": "sfx_projectile_whoosh",
+     "variations": [],
+     "group": "",
+     "priority": 120
+    }
+   ]
+  },
+  {
+   "event": "music_level",
+   "key": {},
+   "owner": "code",
+   "params": "chapter/level",
+   "cooldown_ticks": 0,
+   "notes": "trigger: GameSession.Begin",
+   "clips": []
+  },
+  {
+   "event": "music_intensity",
+   "key": {},
+   "owner": "code",
+   "params": "shotsLeft",
+   "cooldown_ticks": 0,
+   "notes": "trigger: GameSession.ResolveShot / combo>=5",
+   "clips": []
+  },
+  {
+   "event": "music_boss_p2",
+   "key": {},
+   "owner": "code",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "trigger: BOSS_TIDE_PHASE2 received -> next bar; listens to anim event but plays music only",
+   "clips": []
+  },
+  {
+   "event": "stinger_win",
+   "key": {},
+   "owner": "code",
+   "params": "stars",
+   "cooldown_ticks": 0,
+   "notes": "trigger: GameSession.End(true); fade level music 0.3s; snapshot Results",
+   "clips": []
+  },
+  {
+   "event": "stinger_fail",
+   "key": {},
+   "owner": "code",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "trigger: GameSession.End(false) / GiveUp",
+   "clips": []
+  },
+  {
+   "event": "snapshot_pause",
+   "key": {},
+   "owner": "code",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "trigger: PauseModal Build/OnHide",
+   "clips": []
+  },
+  {
+   "event": "snapshot_background",
+   "key": {},
+   "owner": "code",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "trigger: GameSession.OnApplicationPause",
+   "clips": []
+  },
+  {
+   "event": "titan_rule_stop",
+   "key": {},
+   "owner": "code",
+   "params": "",
+   "cooldown_ticks": 0,
+   "notes": "trigger: GameSession.End (Titan)",
+   "clips": [
+    {
+     "sfx_id": "sfx_titan_rule_heated",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_rule_heated"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    },
+    {
+     "sfx_id": "sfx_titan_rule_magma",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_rule_magma"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    },
+    {
+     "sfx_id": "sfx_titan_rule_steam",
+     "variations": [
+      "SFX/Boss/Titan/sfx_titan_rule_steam"
+     ],
+     "group": "SFX/Boss",
+     "priority": 14
+    }
+   ]
+  },
+  {
+   "event": "BOSS_TIDE_ARMOR_HIT",
+   "key": {},
+   "owner": "code",
+   "params": "non-joint hit on Tidewarden armour",
+   "cooldown_ticks": 4,
+   "notes": "PROPOSED: no anim event yet",
+   "clips": [
+    {
+     "sfx_id": "sfx_boss_tw_hit_armor",
+     "variations": [
+      "SFX/Boss/Tidewarden/sfx_boss_tw_hit_armor_01",
+      "SFX/Boss/Tidewarden/sfx_boss_tw_hit_armor_02"
+     ],
+     "group": "SFX/Boss",
+     "priority": 12
+    }
+   ]
+  },
+  {
+   "event": "UI_COIN_BURST",
+   "key": {},
+   "owner": "code",
+   "params": "reward payout >= 10 coins",
+   "cooldown_ticks": 0,
+   "notes": "PROPOSED: play once instead of UI_COIN_LAND singles",
+   "clips": [
+    {
+     "sfx_id": "sfx_reward_coin_burst",
+     "variations": [
+      "SFX/Reward/sfx_reward_coin_burst_01",
+      "SFX/Reward/sfx_reward_coin_burst_02",
+      "SFX/Reward/sfx_reward_coin_burst_03"
+     ],
+     "group": "SFX/Rewards",
+     "priority": 24
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "wood",
+    "kind": "impact",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_impact_s",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_impact_s_01",
+      "SFX/Destruction/Wood/sfx_wood_impact_s_02",
+      "SFX/Destruction/Wood/sfx_wood_impact_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "wood",
+    "kind": "impact",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_impact_m",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_impact_m_01",
+      "SFX/Destruction/Wood/sfx_wood_impact_m_02",
+      "SFX/Destruction/Wood/sfx_wood_impact_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "wood",
+    "kind": "impact",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_impact_l",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_impact_l_01",
+      "SFX/Destruction/Wood/sfx_wood_impact_l_02",
+      "SFX/Destruction/Wood/sfx_wood_impact_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "brick",
+    "kind": "impact",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_impact_s",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_impact_s_01",
+      "SFX/Destruction/Brick/sfx_brick_impact_s_02",
+      "SFX/Destruction/Brick/sfx_brick_impact_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "brick",
+    "kind": "impact",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_impact_m",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_impact_m_01",
+      "SFX/Destruction/Brick/sfx_brick_impact_m_02",
+      "SFX/Destruction/Brick/sfx_brick_impact_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "brick",
+    "kind": "impact",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_impact_l",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_impact_l_01",
+      "SFX/Destruction/Brick/sfx_brick_impact_l_02",
+      "SFX/Destruction/Brick/sfx_brick_impact_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "steel",
+    "kind": "impact",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_impact_s",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_impact_s_01",
+      "SFX/Destruction/Steel/sfx_steel_impact_s_02",
+      "SFX/Destruction/Steel/sfx_steel_impact_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "steel",
+    "kind": "impact",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_impact_m",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_impact_m_01",
+      "SFX/Destruction/Steel/sfx_steel_impact_m_02",
+      "SFX/Destruction/Steel/sfx_steel_impact_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "steel",
+    "kind": "impact",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_impact_l",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_impact_l_01",
+      "SFX/Destruction/Steel/sfx_steel_impact_l_02",
+      "SFX/Destruction/Steel/sfx_steel_impact_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "glass",
+    "kind": "impact",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_impact_s",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_impact_s_01",
+      "SFX/Destruction/Glass/sfx_glass_impact_s_02",
+      "SFX/Destruction/Glass/sfx_glass_impact_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "glass",
+    "kind": "impact",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_impact_m",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_impact_m_01",
+      "SFX/Destruction/Glass/sfx_glass_impact_m_02",
+      "SFX/Destruction/Glass/sfx_glass_impact_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "glass",
+    "kind": "impact",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_impact_l",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_impact_l_01",
+      "SFX/Destruction/Glass/sfx_glass_impact_l_02",
+      "SFX/Destruction/Glass/sfx_glass_impact_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "stone",
+    "kind": "impact",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_impact_s",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_impact_s_01",
+      "SFX/Destruction/Stone/sfx_stone_impact_s_02",
+      "SFX/Destruction/Stone/sfx_stone_impact_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "stone",
+    "kind": "impact",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_impact_m",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_impact_m_01",
+      "SFX/Destruction/Stone/sfx_stone_impact_m_02",
+      "SFX/Destruction/Stone/sfx_stone_impact_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_IMPACT",
+   "key": {
+    "material": "stone",
+    "kind": "impact",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "harder material wins; soft layer 0.3 Heavy only; minImpulse 5 (Impact only)",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_impact_l",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_impact_l_01",
+      "SFX/Destruction/Stone/sfx_stone_impact_l_02",
+      "SFX/Destruction/Stone/sfx_stone_impact_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "wood",
+    "kind": "crack",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_crack_s",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_crack_s_01",
+      "SFX/Destruction/Wood/sfx_wood_crack_s_02",
+      "SFX/Destruction/Wood/sfx_wood_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "wood",
+    "kind": "crack",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_crack_m",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_crack_m_01",
+      "SFX/Destruction/Wood/sfx_wood_crack_m_02",
+      "SFX/Destruction/Wood/sfx_wood_crack_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "wood",
+    "kind": "crack",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_crack_l",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_crack_l_01",
+      "SFX/Destruction/Wood/sfx_wood_crack_l_02",
+      "SFX/Destruction/Wood/sfx_wood_crack_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "brick",
+    "kind": "crack",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_crack_s",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_crack_s_01",
+      "SFX/Destruction/Brick/sfx_brick_crack_s_02",
+      "SFX/Destruction/Brick/sfx_brick_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "brick",
+    "kind": "crack",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_crack_m",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_crack_m_01",
+      "SFX/Destruction/Brick/sfx_brick_crack_m_02",
+      "SFX/Destruction/Brick/sfx_brick_crack_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "brick",
+    "kind": "crack",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_crack_l",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_crack_l_01",
+      "SFX/Destruction/Brick/sfx_brick_crack_l_02",
+      "SFX/Destruction/Brick/sfx_brick_crack_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "steel",
+    "kind": "crack",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_crack_s",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_crack_s_01",
+      "SFX/Destruction/Steel/sfx_steel_crack_s_02",
+      "SFX/Destruction/Steel/sfx_steel_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "steel",
+    "kind": "crack",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_crack_m",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_crack_m_01",
+      "SFX/Destruction/Steel/sfx_steel_crack_m_02",
+      "SFX/Destruction/Steel/sfx_steel_crack_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "steel",
+    "kind": "crack",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_crack_l",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_crack_l_01",
+      "SFX/Destruction/Steel/sfx_steel_crack_l_02",
+      "SFX/Destruction/Steel/sfx_steel_crack_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "glass",
+    "kind": "crack",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_crack_s",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_crack_s_01",
+      "SFX/Destruction/Glass/sfx_glass_crack_s_02",
+      "SFX/Destruction/Glass/sfx_glass_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "glass",
+    "kind": "crack",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_crack_m",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_crack_m_01",
+      "SFX/Destruction/Glass/sfx_glass_crack_m_02",
+      "SFX/Destruction/Glass/sfx_glass_crack_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "glass",
+    "kind": "crack",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_crack_l",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_crack_l_01",
+      "SFX/Destruction/Glass/sfx_glass_crack_l_02",
+      "SFX/Destruction/Glass/sfx_glass_crack_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "stone",
+    "kind": "crack",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_crack_s",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_crack_s_01",
+      "SFX/Destruction/Stone/sfx_stone_crack_s_02",
+      "SFX/Destruction/Stone/sfx_stone_crack_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "stone",
+    "kind": "crack",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_crack_m",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_crack_m_01",
+      "SFX/Destruction/Stone/sfx_stone_crack_m_02",
+      "SFX/Destruction/Stone/sfx_stone_crack_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_CRACK",
+   "key": {
+    "material": "stone",
+    "kind": "crack",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "+0.03 pitch per damageStep",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_crack_l",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_crack_l_01",
+      "SFX/Destruction/Stone/sfx_stone_crack_l_02",
+      "SFX/Destruction/Stone/sfx_stone_crack_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "wood",
+    "kind": "break",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_break_s",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_break_s_01",
+      "SFX/Destruction/Wood/sfx_wood_break_s_02",
+      "SFX/Destruction/Wood/sfx_wood_break_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "wood",
+    "kind": "break",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_break_m",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_break_m_01",
+      "SFX/Destruction/Wood/sfx_wood_break_m_02",
+      "SFX/Destruction/Wood/sfx_wood_break_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "wood",
+    "kind": "break",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_break_l",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_break_l_01",
+      "SFX/Destruction/Wood/sfx_wood_break_l_02",
+      "SFX/Destruction/Wood/sfx_wood_break_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "brick",
+    "kind": "break",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_break_s",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_break_s_01",
+      "SFX/Destruction/Brick/sfx_brick_break_s_02",
+      "SFX/Destruction/Brick/sfx_brick_break_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "brick",
+    "kind": "break",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_break_m",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_break_m_01",
+      "SFX/Destruction/Brick/sfx_brick_break_m_02",
+      "SFX/Destruction/Brick/sfx_brick_break_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "brick",
+    "kind": "break",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_break_l",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_break_l_01",
+      "SFX/Destruction/Brick/sfx_brick_break_l_02",
+      "SFX/Destruction/Brick/sfx_brick_break_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "steel",
+    "kind": "break",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_break_s",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_break_s_01",
+      "SFX/Destruction/Steel/sfx_steel_break_s_02",
+      "SFX/Destruction/Steel/sfx_steel_break_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "steel",
+    "kind": "break",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_break_m",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_break_m_01",
+      "SFX/Destruction/Steel/sfx_steel_break_m_02",
+      "SFX/Destruction/Steel/sfx_steel_break_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "steel",
+    "kind": "break",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_break_l",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_break_l_01",
+      "SFX/Destruction/Steel/sfx_steel_break_l_02",
+      "SFX/Destruction/Steel/sfx_steel_break_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "glass",
+    "kind": "break",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_break_s",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_break_s_01",
+      "SFX/Destruction/Glass/sfx_glass_break_s_02",
+      "SFX/Destruction/Glass/sfx_glass_break_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "glass",
+    "kind": "break",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_break_m",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_break_m_01",
+      "SFX/Destruction/Glass/sfx_glass_break_m_02",
+      "SFX/Destruction/Glass/sfx_glass_break_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "glass",
+    "kind": "break",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_break_l",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_break_l_01",
+      "SFX/Destruction/Glass/sfx_glass_break_l_02",
+      "SFX/Destruction/Glass/sfx_glass_break_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "stone",
+    "kind": "break",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_break_s",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_break_s_01",
+      "SFX/Destruction/Stone/sfx_stone_break_s_02",
+      "SFX/Destruction/Stone/sfx_stone_break_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "stone",
+    "kind": "break",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_break_m",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_break_m_01",
+      "SFX/Destruction/Stone/sfx_stone_break_m_02",
+      "SFX/Destruction/Stone/sfx_stone_break_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_BREAK",
+   "key": {
+    "material": "stone",
+    "kind": "break",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "tier,impulse,sizeClass,materialA/B,source",
+   "cooldown_ticks": 4,
+   "notes": "in active cascade: 1 voice + rattle",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_break_l",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_break_l_01",
+      "SFX/Destruction/Stone/sfx_stone_break_l_02",
+      "SFX/Destruction/Stone/sfx_stone_break_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_JOINT_SNAP",
+   "key": {
+    "material": "steel",
+    "kind": "jointsnap",
+    "size": "S",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "impulse,sizeClass",
+   "cooldown_ticks": 4,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_jointsnap_s",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_s_01",
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_s_02",
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_s_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_JOINT_SNAP",
+   "key": {
+    "material": "steel",
+    "kind": "jointsnap",
+    "size": "M",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "impulse,sizeClass",
+   "cooldown_ticks": 4,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_jointsnap_m",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_m_01",
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_m_02",
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_m_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_JOINT_SNAP",
+   "key": {
+    "material": "steel",
+    "kind": "jointsnap",
+    "size": "L",
+    "tier": "any"
+   },
+   "owner": "phys",
+   "params": "impulse,sizeClass",
+   "cooldown_ticks": 4,
+   "notes": "",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_jointsnap_l",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_l_01",
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_l_02",
+      "SFX/Destruction/Steel/sfx_steel_jointsnap_l_03"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 128
+    }
+   ]
+  },
+  {
+   "event": "PHYS_RATTLE",
+   "key": {
+    "material": "wood",
+    "kind": "rattle"
+   },
+   "owner": "phys",
+   "params": "source=Debris aggregated",
+   "cooldown_ticks": 5,
+   "notes": "rattleWindowTicks 5, rattleMaxVoices 3",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_debris",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_debris_01",
+      "SFX/Destruction/Wood/sfx_wood_debris_02",
+      "SFX/Destruction/Wood/sfx_wood_debris_03",
+      "SFX/Destruction/Wood/sfx_wood_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 200
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "wood",
+    "kind": "collapse",
+    "size": "S",
+    "count": "1-5"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_collapse_s",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_collapse_s_01",
+      "SFX/Destruction/Wood/sfx_wood_collapse_s_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "wood",
+    "kind": "collapse",
+    "size": "M",
+    "count": "6-20"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_collapse_m",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_collapse_m_01",
+      "SFX/Destruction/Wood/sfx_wood_collapse_m_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "wood",
+    "kind": "collapse",
+    "size": "L",
+    "count": "21+"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_wood_collapse_l",
+     "variations": [
+      "SFX/Destruction/Wood/sfx_wood_collapse_l_01",
+      "SFX/Destruction/Wood/sfx_wood_collapse_l_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_RATTLE",
+   "key": {
+    "material": "brick",
+    "kind": "rattle"
+   },
+   "owner": "phys",
+   "params": "source=Debris aggregated",
+   "cooldown_ticks": 5,
+   "notes": "rattleWindowTicks 5, rattleMaxVoices 3",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_debris",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_debris_01",
+      "SFX/Destruction/Brick/sfx_brick_debris_02",
+      "SFX/Destruction/Brick/sfx_brick_debris_03",
+      "SFX/Destruction/Brick/sfx_brick_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 200
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "brick",
+    "kind": "collapse",
+    "size": "S",
+    "count": "1-5"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_collapse_s",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_collapse_s_01",
+      "SFX/Destruction/Brick/sfx_brick_collapse_s_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "brick",
+    "kind": "collapse",
+    "size": "M",
+    "count": "6-20"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_collapse_m",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_collapse_m_01",
+      "SFX/Destruction/Brick/sfx_brick_collapse_m_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "brick",
+    "kind": "collapse",
+    "size": "L",
+    "count": "21+"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_brick_collapse_l",
+     "variations": [
+      "SFX/Destruction/Brick/sfx_brick_collapse_l_01",
+      "SFX/Destruction/Brick/sfx_brick_collapse_l_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_RATTLE",
+   "key": {
+    "material": "steel",
+    "kind": "rattle"
+   },
+   "owner": "phys",
+   "params": "source=Debris aggregated",
+   "cooldown_ticks": 5,
+   "notes": "rattleWindowTicks 5, rattleMaxVoices 3",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_debris",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_debris_01",
+      "SFX/Destruction/Steel/sfx_steel_debris_02",
+      "SFX/Destruction/Steel/sfx_steel_debris_03",
+      "SFX/Destruction/Steel/sfx_steel_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 200
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "steel",
+    "kind": "collapse",
+    "size": "S",
+    "count": "1-5"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_collapse_s",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_collapse_s_01",
+      "SFX/Destruction/Steel/sfx_steel_collapse_s_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "steel",
+    "kind": "collapse",
+    "size": "M",
+    "count": "6-20"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_collapse_m",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_collapse_m_01",
+      "SFX/Destruction/Steel/sfx_steel_collapse_m_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "steel",
+    "kind": "collapse",
+    "size": "L",
+    "count": "21+"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_steel_collapse_l",
+     "variations": [
+      "SFX/Destruction/Steel/sfx_steel_collapse_l_01",
+      "SFX/Destruction/Steel/sfx_steel_collapse_l_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_RATTLE",
+   "key": {
+    "material": "glass",
+    "kind": "rattle"
+   },
+   "owner": "phys",
+   "params": "source=Debris aggregated",
+   "cooldown_ticks": 5,
+   "notes": "rattleWindowTicks 5, rattleMaxVoices 3",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_debris",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_debris_01",
+      "SFX/Destruction/Glass/sfx_glass_debris_02",
+      "SFX/Destruction/Glass/sfx_glass_debris_03",
+      "SFX/Destruction/Glass/sfx_glass_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "glass",
+    "kind": "collapse",
+    "size": "S",
+    "count": "1-5"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_collapse_s",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_collapse_s_01",
+      "SFX/Destruction/Glass/sfx_glass_collapse_s_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "glass",
+    "kind": "collapse",
+    "size": "M",
+    "count": "6-20"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_collapse_m",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_collapse_m_01",
+      "SFX/Destruction/Glass/sfx_glass_collapse_m_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "glass",
+    "kind": "collapse",
+    "size": "L",
+    "count": "21+"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_glass_collapse_l",
+     "variations": [
+      "SFX/Destruction/Glass/sfx_glass_collapse_l_01",
+      "SFX/Destruction/Glass/sfx_glass_collapse_l_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_RATTLE",
+   "key": {
+    "material": "stone",
+    "kind": "rattle"
+   },
+   "owner": "phys",
+   "params": "source=Debris aggregated",
+   "cooldown_ticks": 5,
+   "notes": "rattleWindowTicks 5, rattleMaxVoices 3",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_debris",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_debris_01",
+      "SFX/Destruction/Stone/sfx_stone_debris_02",
+      "SFX/Destruction/Stone/sfx_stone_debris_03",
+      "SFX/Destruction/Stone/sfx_stone_debris_04"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 96
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "stone",
+    "kind": "collapse",
+    "size": "S",
+    "count": "1-5"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 1-5; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_collapse_s",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_collapse_s_01",
+      "SFX/Destruction/Stone/sfx_stone_collapse_s_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "stone",
+    "kind": "collapse",
+    "size": "M",
+    "count": "6-20"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 6-20; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_collapse_m",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_collapse_m_01",
+      "SFX/Destruction/Stone/sfx_stone_collapse_m_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_END",
+   "key": {
+    "material": "stone",
+    "kind": "collapse",
+    "size": "L",
+    "count": "21+"
+   },
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount,dominantMaterial",
+   "cooldown_ticks": 0,
+   "notes": "one COLLAPSE_LAND per cascadeId; count 21+; fallbackTicks 150",
+   "clips": [
+    {
+     "sfx_id": "sfx_stone_collapse_l",
+     "variations": [
+      "SFX/Destruction/Stone/sfx_stone_collapse_l_01",
+      "SFX/Destruction/Stone/sfx_stone_collapse_l_02"
+     ],
+     "group": "SFX/Destruction",
+     "priority": 32
+    }
+   ]
+  },
+  {
+   "event": "PHYS_COLLAPSE_START",
+   "key": {},
+   "owner": "phys",
+   "params": "cascadeId,cascadeCount(planned)",
+   "cooldown_ticks": 0,
+   "notes": "opens cascade gate; no sound",
+   "clips": []
+  }
+ ],
+ "validation": {
+  "files_in_pr": 299,
+  "files_referenced": 299,
+  "unreferenced_files": [],
+  "missing_sfx_ids": {
+   "sfx_aim_stretch": [
+    "ANIM_WRECKER_AIM_START"
+   ],
+   "sfx_explosive_crate": [
+    "EXPLODE_CRATE (alias EXPLODE_BARREL)"
+   ],
+   "sfx_fail_sfx": [
+    "UI_FAIL"
+   ],
+   "sfx_hint_button": [
+    "UI_HINT_BUTTON_APPEAR"
+   ],
+   "sfx_hint_pulse": [
+    "UI_HINT_SHOW"
+   ],
+   "sfx_kill_plane_fall": [
+    "DEBRIS_FALL_OFF"
+   ],
+   "sfx_map_node_unlock": [
+    "UI_NODE_UNLOCK"
+   ],
+   "sfx_projectile_whoosh": [
+    "ANIM_PROJ_LAUNCH",
+    "projectile_despawn"
+   ],
+   "sfx_reward_daily_claim": [
+    "UI_CLAIM"
+   ],
+   "sfx_reward_extra_charge": [
+    "UI_EXTRA_CHARGE"
+   ],
+   "sfx_reward_season_tier_up": [
+    "UI_SEASON_TIER_UP"
+   ],
+   "sfx_reward_shard": [
+    "UI_SHARD_GAIN"
+   ],
+   "sfx_titan_damage_tick": [
+    "UI_DAMAGE_TICK"
+   ],
+   "sfx_ui_claim_stamp": [
+    "UI_CLAIM"
+   ],
+   "sfx_ui_gate_open": [
+    "UI_GATE_OPEN"
+   ],
+   "sfx_ui_marker_hop": [
+    "UI_MARKER_HOP"
+   ],
+   "sfx_ui_mastery_tick": [
+    "UI_MASTERY_TICK"
+   ],
+   "sfx_ui_panel_out": [
+    "UI_PANEL_OUT"
+   ],
+   "sfx_ui_score_tick": [
+    "UI_SCORE_TICK"
+   ],
+   "sfx_ui_shot_spend": [
+    "UI_SHOT_SPEND"
+   ],
+   "sfx_ui_threshold_hit": [
+    "UI_THRESHOLD_HIT"
+   ],
+   "sfx_win_stinger_sfx": [
+    "UI_WIN"
+   ],
+   "sfx_wrecker_aim_clamp": [
+    "ANIM_WRECKER_AIM_CLAMP"
+   ],
+   "sfx_wrecker_aim_hum": [
+    "ANIM_WRECKER_AIM_START"
+   ],
+   "sfx_wrecker_aim_tick": [
+    "ANIM_WRECKER_AIM_TICK"
+   ],
+   "sfx_wrecker_fail_droop": [
+    "ANIM_WRECKER_FAIL"
+   ],
+   "sfx_wrecker_fidget": [
+    "ANIM_WRECKER_IDLE_FIDGET"
+   ],
+   "sfx_wrecker_recoil_land": [
+    "ANIM_WRECKER_RECOIL_LAND"
+   ],
+   "sfx_wrecker_slot_in": [
+    "ANIM_WRECKER_SLOT_IN"
+   ],
+   "sfx_wrecker_slot_out": [
+    "ANIM_WRECKER_SLOT_OUT"
+   ],
+   "sfx_wrecker_smoke_tail": [
+    "ANIM_WRECKER_MUZZLE_SMOKE"
+   ],
+   "sfx_wrecker_win_hop": [
+    "ANIM_WRECKER_WIN"
+   ]
+  }
+ }
+}
