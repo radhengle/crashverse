@@ -23,7 +23,10 @@ coord(){ local i l; for i in $(seq 1 120); do
     if [ -n "$l" ]; then echo "$l" | awk -F'|' '{print $4" "$5}'; return 0; fi; sleep 1; done
   echo "calibration: $1/$2 not found" >&2; adb logcat -d > "$OUT/calibration/logcat.txt"; adb exec-out screencap -p > "$OUT/calibration/missing_$2.png"; exit 1; }
 put(){ read -r x y <<<"$3"; export "$1_X=$x" "$1_Y=$y"; echo "$1=$x,$y" | tee -a "$OUT/coords.txt"; }
-ctap(){ adb logcat -c; adb shell input tap "$1" "$2"; sleep "${3:-3}"; } # fresh log: next coord sees only the new screen
+dcheck(){ if adb logcat -d | grep -E "FATAL EXCEPTION|Fatal signal|ANR in $PKG|Unity +: .*Exception" > "$OUT/calibration/err_$1.txt"; then
+    adb exec-out screencap -p > "$OUT/calibration/FAIL_$1.png"; adb logcat -d > "$OUT/calibration/logcat.txt"; echo "FAIL (discovery) at $1"; exit 1; fi
+  adb shell pidof $PKG >/dev/null || { adb logcat -d > "$OUT/calibration/logcat.txt"; echo "FAIL (discovery): app died at $1"; exit 1; }; }
+ctap(){ dcheck "before_tap_$1_$2"; adb logcat -c; adb shell input tap "$1" "$2"; sleep "${3:-3}"; dcheck "after_tap_$1_$2"; } # fresh log for the next coord
 
 M=March; YR=$(( $(date -u +%Y) - 25 ))
 put MONTH AgeGateScreen "$(coord AgeGateScreen Button_Month)"; ctap $MONTH_X $MONTH_Y
@@ -46,7 +49,7 @@ export MISS_TO_X=$(( 540 + $(px 240) )) MISS_TO_Y=$(( 1300 + $(px 20) )) # +60°
 echo "AIM=$AIM_FROM_X,$AIM_FROM_Y->$AIM_TO_X,$AIM_TO_Y MISS->$MISS_TO_X,$MISS_TO_Y density=$D" | tee -a "$OUT/coords.txt"
 SHOTS=${SHOTS_L1:-4}
 for s in $(seq 1 $SHOTS); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $AIM_TO_X $AIM_TO_Y 400; sleep 1; ctap $FIRE_X $FIRE_Y 6
-  adb logcat -d -s Unity | grep -q "CVTAP|ResultsScreen|" && break; done
+  adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 adb exec-out screencap -p > "$OUT/calibration/result.png"
 put RETRY x "$(coord ResultsScreen Button_Retry)"
 adb logcat -d > "$OUT/calibration/logcat.txt"

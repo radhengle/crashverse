@@ -24,6 +24,7 @@ namespace Crashverse.UI
             Canvas.ForceUpdateCanvases(); // log settled layout, not the pre-layout frame
             string name = top != null ? top.GetType().Name : "none";
             Debug.Log("CVTAP|BEGIN|" + name);
+            if (top is ResultsScreen rs) Debug.Log("CVTAP|RESULT|" + (rs.Won ? "win" : "fail"));
             foreach (var b in btns)
             {
                 var rt = (RectTransform)b.transform; var p = RectTransformUtility.WorldToScreenPoint(null, rt.TransformPoint(rt.rect.center));

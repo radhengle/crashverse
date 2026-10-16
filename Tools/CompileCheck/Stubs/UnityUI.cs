@@ -101,7 +101,7 @@ namespace UnityEngine.UI
     public class VerticalLayoutGroup : HorizontalOrVerticalLayoutGroup { }
     public class HorizontalLayoutGroup : HorizontalOrVerticalLayoutGroup { }
     public class ContentSizeFitter : UIBehaviour { public enum FitMode { Unconstrained, MinSize, PreferredSize } public FitMode verticalFit, horizontalFit; }
-    public class ScrollRect : UIBehaviour { public enum MovementType { Unrestricted, Elastic, Clamped } public RectTransform content; public bool horizontal, vertical; public MovementType movementType; public RectTransform viewport; }
+    public class ScrollRect : UIBehaviour { public enum MovementType { Unrestricted, Elastic, Clamped } public RectTransform content; public bool horizontal, vertical; public MovementType movementType; public RectTransform viewport; public float verticalNormalizedPosition; }
     public class RectMask2D : UIBehaviour { }
 }
 

@@ -31,17 +31,24 @@ settle year; tap $YEAR_X $YEAR_Y; settle year_list
 # the year list scrolls: same swipes as calibration until the wanted year is on screen
 for i in $(seq 1 ${YEAR_SWIPES:-0}); do adb shell input swipe 540 1300 540 1000 400; sleep 2; done; settle year_opt
 tap $YEAR_OPT_X $YEAR_OPT_Y; check year
+# QA (BUG-20 proof): Continue must be enabled once Month and Year are set
+for i in $(seq 1 20); do adb logcat -d -s Unity | grep -q "CVTAP|AgeGateScreen|Button_Continue|[0-9]*|[0-9]*|1" && break; sleep 0.5
+  [ $i = 20 ] && { shot FAIL_continue_disabled; echo "FAIL: Continue not enabled after Month+Year"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done
 shot 03_agegate_filled            # Continue must be enabled (visual check / pixel compare)
-settle continue; tap $CONTINUE_X $CONTINUE_Y 4; check continue; shot 04_login
+settle continue; tap $CONTINUE_X $CONTINUE_Y 4; check continue; shot 04_map
 tap $GUEST_X $GUEST_Y 2; check login
 # QA: the map must appear after the automatic guest sign-in within 30 s
 for i in $(seq 1 30); do adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|MapScreen" && break; sleep 1
   [ $i = 30 ] && { shot FAIL_no_map; echo "FAIL: map not reached 30 s after guest sign-in"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done
-shot 05_map
+shot 05_map_guest
 tap $NODE1_X $NODE1_Y; tap $PLAY_X $PLAY_Y 6; check l1_load; shot 06_l1_hud
 for s in $(seq 1 $SHOTS_L1); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $AIM_TO_X $AIM_TO_Y 400; fire "win$s"; sleep 5; check "win_shot$s"; done
-sleep 4; shot 07_result_win       # expect a win (>=85% after settle) on the scripted line
-tap $RETRY_X $RETRY_Y 6; check retry
+result(){ local i r; for i in $(seq 1 40); do r=$(adb logcat -d -s Unity | grep -o "CVTAP|RESULT|[a-z]*" | tail -1 | cut -d'|' -f3); [ -n "$r" ] && { echo "$r"; return 0; }; sleep 1; done
+  shot "FAIL_no_result_$1"; echo "FAIL: no win/fail result detected ($1)" >&2; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
+R1=$(result win); echo "scripted win line result: $R1" | tee "$OUT/result_win.txt"; shot 07_result_win
+[ "$R1" = win ] || echo "::warning::scripted L1 aim line gave '$R1', not a win (aim needs tuning; flow still exercised)"       # expect a win (>=85% after settle) on the scripted line
+adb logcat -c; tap $RETRY_X $RETRY_Y 6; check retry
 for s in $(seq 1 $SHOTS_L1); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $MISS_TO_X $MISS_TO_Y 400; fire "fail$s"; sleep 5; check "fail_shot$s"; done
-sleep 4; shot 08_result_fail
+R2=$(result fail); echo "miss line result: $R2" | tee "$OUT/result_fail.txt"; shot 08_result_fail
+[ "$R2" = fail ] || { echo "FAIL: miss line did not fail ($R2)"; exit 1; }
 adb logcat -d > "$OUT/logcat.txt"; echo "SMOKE PASS (screens in $OUT for visual review)"

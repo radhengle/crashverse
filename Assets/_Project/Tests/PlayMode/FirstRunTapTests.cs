@@ -20,17 +20,6 @@ namespace Crashverse.Tests.PlayMode
     /// </summary>
     public class FirstRunTapTests
     {
-        class FakeTouchInput : BaseInput
-        {
-            public Touch? Current;
-            public override bool touchSupported => true;
-            public override bool mousePresent => false;
-            public override int touchCount => Current.HasValue ? 1 : 0;
-            public override Touch GetTouch(int index) => Current.Value;
-        }
-
-        FakeTouchInput _fake;
-
         [UnitySetUp]
         public IEnumerator Boot()
         {
@@ -52,12 +41,7 @@ namespace Crashverse.Tests.PlayMode
             yield return WaitFor(() => AppServices.Router != null && AppServices.Router.Top is AgeGateScreen, "age gate shown");
             Assert.AreEqual(1, UnityEngine.Object.FindObjectsOfType<UIRouter>().Length, "exactly one UI router");
             Assert.AreEqual(1, UnityEngine.Object.FindObjectsOfType<EventSystem>().Length, "exactly one EventSystem");
-            var module = EventSystem.current.GetComponent<StandaloneInputModule>();
-            Assert.NotNull(module, "UI uses StandaloneInputModule (legacy Input Manager is the active handler)");
-            _fake = EventSystem.current.gameObject.AddComponent<FakeTouchInput>();
-            module.inputOverride = _fake;
-            // Batchmode editor has no window focus; StandaloneInputModule drops all events while unfocused in the editor.
-            EventSystem.current.SendMessage("OnApplicationFocus", true);
+            Assert.NotNull(EventSystem.current.GetComponent<StandaloneInputModule>(), "UI uses StandaloneInputModule (legacy Input Manager is the active handler)");
         }
 
         [UnityTearDown]
@@ -88,6 +72,12 @@ namespace Crashverse.Tests.PlayMode
             StringAssert.Contains("year", gate.Error);
 
             yield return Tap(gate.YearButton);
+            // V-02: the list opens around current year − 18 (full 100-year range still scrolls)
+            Button y18 = null; yield return WaitFor(() => (y18 = UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(x => x.name == "Button_" + (DateTime.UtcNow.Year - 18))) != null, "year −18 item");
+            Canvas.ForceUpdateCanvases();
+            var vsr = y18.GetComponentInParent<ScrollRect>(); var vp = vsr.viewport != null ? vsr.viewport : (RectTransform)vsr.transform; var yrt = (RectTransform)y18.transform;
+            Assert.True(RectTransformUtility.RectangleContainsScreenPoint(vp, RectTransformUtility.WorldToScreenPoint(null, yrt.TransformPoint(yrt.rect.center)), null), "year list opens at current year − 18");
+            Assert.NotNull(UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(x => x.name == "Button_" + (DateTime.UtcNow.Year - 100)), "100-year range kept");
             yield return TapNamed("Button_" + (DateTime.UtcNow.Year - 25));
             Assert.True(gate.ContinueButton.interactable, "Continue enabled once both are set");
             Assert.AreEqual("", gate.Error);
@@ -120,6 +110,8 @@ namespace Crashverse.Tests.PlayMode
             yield return Tap(b);
         }
 
+        /// <summary>QA: batchmode has no reliable focus, so the tap goes straight through the UI event path: GraphicRaycaster
+        /// raycast at the button's screen centre (proves nothing covers it), then pointerDown/Up/Click on what was hit.</summary>
         IEnumerator Tap(Button b)
         {
             var sr = b.GetComponentInParent<ScrollRect>();
@@ -127,24 +119,21 @@ namespace Crashverse.Tests.PlayMode
             Canvas.ForceUpdateCanvases();
             var rt = (RectTransform)b.transform;
             Vector2 p = RectTransformUtility.WorldToScreenPoint(null, rt.TransformPoint(rt.rect.center));
-            int clicks = 0; UnityEngine.Events.UnityAction count = () => clicks++;
-            b.onClick.AddListener(count);
-            _fake.Current = new Touch { fingerId = 0, position = p, phase = TouchPhase.Began, tapCount = 1, type = TouchType.Direct };
+            var es = EventSystem.current; var hits = new System.Collections.Generic.List<RaycastResult>();
+            var ev = new PointerEventData(es) { position = p, button = PointerEventData.InputButton.Left, clickCount = 1 };
+            es.RaycastAll(ev, hits);
+            Assert.IsNotEmpty(hits, $"nothing under {p}");
+            var top = hits[0].gameObject;
+            var target = ExecuteEvents.GetEventHandler<IPointerClickHandler>(top);
+            Assert.AreSame(b.gameObject, target, $"tap at {p} hits '{top.name}' (handler '{target?.name}'), not '{b.name}': something covers it. hits=[{string.Join(", ", hits.Select(h => h.gameObject.name))}]");
+            Assert.True(b.IsInteractable(), b.name + " is not interactable");
+            ev.pointerCurrentRaycast = ev.pointerPressRaycast = hits[0];
+            ev.pressPosition = p; ev.rawPointerPress = top;
+            ev.pointerPress = ExecuteEvents.ExecuteHierarchy(top, ev, ExecuteEvents.pointerDownHandler) ?? target;
             yield return null;
-            _fake.Current = new Touch { fingerId = 0, position = p, phase = TouchPhase.Ended, tapCount = 1, type = TouchType.Direct };
-            yield return null;
-            _fake.Current = null;
-            yield return null;
-            if (b == null) yield break; // the tap navigated away and destroyed the button: it was received
-            b.onClick.RemoveListener(count);
-            if (clicks != 1)
-            {
-                var es = EventSystem.current; var hits = new System.Collections.Generic.List<RaycastResult>();
-                es.RaycastAll(new PointerEventData(es) { position = p }, hits);
-                Assert.Fail($"tap at {p} did not reach '{b.name}'. screen={Screen.width}x{Screen.height} focused={es.isFocused} module={es.currentInputModule?.GetType().Name ?? "none"} " +
-                            $"interactable={b.IsInteractable()} hits=[{string.Join(", ", hits.Select(h => h.gameObject.name + "@" + h.module?.GetType().Name))}] " +
-                            $"btnRect={RectTransformUtility.PixelAdjustRect(rt, b.GetComponentInParent<Canvas>())} canvasScale={b.GetComponentInParent<Canvas>().scaleFactor}");
-            }
+            ExecuteEvents.Execute(ev.pointerPress, ev, ExecuteEvents.pointerUpHandler);
+            ExecuteEvents.Execute(target, ev, ExecuteEvents.pointerClickHandler);
+            yield return null; yield return null;
         }
 
         static void ScrollIntoView(ScrollRect sr, RectTransform item)
