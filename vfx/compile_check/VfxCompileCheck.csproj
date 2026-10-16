@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- VFX-owned compile check (Tools/CompileCheck is not edited by VFX; see OPEN_QUESTIONS Q-D1). -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework><ImplicitUsings>disable</ImplicitUsings><Nullable>disable</Nullable>
+    <LangVersion>9</LangVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems><OutputType>Library</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../Tools/CompileCheck/Stubs/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/**/*.cs" Exclude="../../Assets/_Project/Scripts/Editor/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup><PackageReference Include="Newtonsoft.Json" Version="13.0.3" /></ItemGroup>
+</Project>
