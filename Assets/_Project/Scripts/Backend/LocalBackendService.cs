@@ -23,7 +23,7 @@ namespace Crashverse.Backend
         [Serializable] class Sub { public string playerId; public string name; public int score; public long ticks; public bool friend; }
         [Serializable] class Board { public string key; public int type; public bool processed; public List<Sub> subs = new List<Sub>(); }
         [Serializable] class EventBest { public string levelId; public int stars; }
-        [Serializable] class LevelBestRec { public string levelId; public int best; }
+        [Serializable] class LevelBestRec { public string levelId; public int best; public int stars; }
         [Serializable] class TicketRec
         {
             public string token; public string dayKey; public int shotBudget; public bool used;
@@ -52,6 +52,7 @@ namespace Crashverse.Backend
             public bool seasonEndProcessed; // BUG-15: set when a season end has been processed (rollover idempotency/diagnostics)
             public List<LevelBestRec> campaignLevels = new List<LevelBestRec>(); // BUG-13: server-held best per level
             public List<string> processedReports = new List<string>();
+            public List<string> gemGrants = new List<string>(); // once-only gem source keys (milestones, guardian, weekly event, titan day)
         }
 
         readonly ContentDatabase _db;
@@ -212,6 +213,8 @@ namespace Crashverse.Backend
             Online();
             if (MinorNoConsent(a => a.consentPurchases) && (PurchaseAgeRestrictedMarkets.Count == 0 || PurchaseAgeRestrictedMarkets.Contains(_s.country)))
                 throw new BackendException("AGE_RESTRICTED", 403); // E5: no purchases until consent (all markets); E6: 18+ markets
+            if ((sku == "gems_small" || sku == "gems_large") && !(_db.Store?.flags?.enableGemPacks ?? false))
+                throw new BackendException("GEM_PACKS_DISABLED", 403); // mirrors server PR #1
             // Dev stub never grants (entitlements are server-only): anything unverifiable is reported as pending.
             return Task.FromResult(new PurchaseVerifyResponse { status = string.IsNullOrEmpty(receipt) ? PurchaseStatus.Rejected : PurchaseStatus.Pending, wallet = _s.wallet, season = GetSeasonState().Result });
         }
@@ -305,12 +308,20 @@ namespace Crashverse.Backend
             return Task.FromResult(_s.wallet);
         }
 
+        EconomyData Econ => _db.Economy ?? new EconomyData();
+        void GrantGemsOnce(string key, int gems)
+        {
+            if (gems <= 0 || _s.gemGrants.Contains(key)) return;
+            _s.gemGrants.Add(key); _s.wallet.gems += gems;
+        }
+
         void Grant(Reward r)
         {
             if (r == null) return;
             switch (r.type)
             {
                 case "coins": _s.wallet.coins += r.amount; break;
+                case "gems": _s.wallet.gems += r.amount; break; // earned only (Economy v1)
                 case "shard": _s.wallet.shards += r.amount; break;
                 case "charge": _s.wallet.extraCharges += r.amount; break;
                 case "cosmetic": if (!_s.wallet.cosmetics.Contains(r.id)) _s.wallet.cosmetics.Add(r.id); break;
@@ -483,6 +494,7 @@ namespace Crashverse.Backend
             if (killed && !_s.titanClearDays.Contains(tk.dayKey))
             {
                 _s.titanClearDays.Add(tk.dayKey);
+                GrantGemsOnce("titan:" + tk.dayKey, Econ.gemSources.titanCompletion); // TODO(BE): +titanTop10Bonus at day close (server ranks)
                 _s.seasonXp += _db.Season.xpPerTitanClear;
                 foreach (var cr in t.completionRewards) Grant(cr);
                 AddSub(BoardType.Season, SeasonKey(now), _s.seasonXp, now, replace: true);
@@ -586,6 +598,14 @@ namespace Crashverse.Backend
                 var now = ServerNow;
                 AddSub(BoardType.WeeklyEvent, WeekKey(now), WeeklyStars(now), now, replace: true);
                 AddSub(BoardType.Season, SeasonKey(now), _s.seasonXp, now, replace: true);
+                int w = WeekIndex(now);
+                if (w >= 0 && w < s.weeks.Length && Array.Exists(s.weeks[w].levels, l => l.id == eventLevelId))
+                {
+                    bool all = true, all3 = true;
+                    foreach (var l in s.weeks[w].levels) { int b = BestEventStars(l.id); all &= b >= 1; all3 &= b >= 3; }
+                    if (all) GrantGemsOnce("event:" + s.weeks[w].id + ":clear", Econ.gemSources.eventAllCleared);
+                    if (all3) GrantGemsOnce("event:" + s.weeks[w].id + ":3star", Econ.gemSources.eventAll3Star);
+                }
             }
             Save();
             return Task.FromResult(BuildSeasonState());
@@ -695,6 +715,11 @@ namespace Crashverse.Backend
             if (score > rec.best) rec.best = score;
             bool first = !_s.grantedFirstClears.Contains(lvl.id);
             if (first) { _s.grantedFirstClears.Add(lvl.id); if (lvl.reward != null) foreach (var rw in lvl.reward) Grant(rw); }
+            int stars = Crashverse.Meta.StarRules.Compute(true, r.shotsLeft, lvl.shots, lvl.star3Pct, lvl.star2Pct);
+            if (stars > rec.stars) rec.stars = stars;
+            if (!string.IsNullOrEmpty(lvl.bossId)) GrantGemsOnce("guardian:" + lvl.id, Econ.gemSources.guardianFirstClear);
+            int chapterStars = 0; foreach (var x in _s.campaignLevels) chapterStars += x.stars;
+            foreach (var m in Econ.chapterStarMilestones) if (chapterStars >= m.stars) GrantGemsOnce("stars:c1:" + m.stars, m.gems); // SG-37
             if (!string.IsNullOrEmpty(r.reportId)) _s.processedReports.Add(r.reportId);
             int total = CampaignTotal();
             AddSub(BoardType.Campaign, CampaignKey, total, ServerNow, replace: true);

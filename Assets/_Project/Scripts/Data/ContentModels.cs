@@ -119,6 +119,11 @@ namespace Crashverse.Data
         public bool enableGemPacks;
         public bool IsOn(string flag) => string.IsNullOrEmpty(flag) || (flag == "enableGemPacks" && enableGemPacks); // unknown flags = off
     }
+    /// <summary>Economy v1 (earned-only gems). All values are data (Resources/Data/economy.json), tunable server-side.</summary>
+    [Serializable] public class GemSources { public int dailyDay7, titanCompletion, titanTop10Bonus, eventAllCleared, eventAll3Star, guardianFirstClear, seasonEvery5thTier, achievementMin, achievementMax; }
+    [Serializable] public class StarMilestone { public int stars; public int gems; }
+    [Serializable] public class GemSinks { public int epicSkin, trailOrVfxSkin, frameOrTitle, seasonPremiumTrack; }
+    [Serializable] public class EconomyData { public GemSources gemSources = new GemSources(); public StarMilestone[] chapterStarMilestones = new StarMilestone[0]; public GemSinks gemSinks = new GemSinks(); public int[] coinCosmeticRange; }
     [Serializable] public class StoreCatalog { public StoreFlags flags = new StoreFlags(); public string[] allowedTypes; public StoreItem[] items; }
 
     /// <summary>Default shot tuning (designer data, not code).</summary>

@@ -66,8 +66,8 @@
    "name": "Tidebreaker Frame",
    "type": "frame",
    "cosmetic": true,
-   "priceType": "coins",
-   "price": 800,
+   "priceType": "gems",
+   "price": 60,
    "grants": "",
    "contents": []
   },
@@ -86,8 +86,8 @@
    "name": "Wrecking Frontier Premium Track (cosmetics)",
    "type": "season_pass",
    "cosmetic": true,
-   "priceType": "real",
-   "price": 499,
+   "priceType": "gems",
+   "price": 450,
    "grants": "",
    "contents": []
   },

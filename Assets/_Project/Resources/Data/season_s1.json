@@ -846,9 +846,9 @@
    "tier": 5,
    "xp": 500,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -916,9 +916,9 @@
    "tier": 10,
    "xp": 1000,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -986,9 +986,9 @@
    "tier": 15,
    "xp": 1750,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -1056,9 +1056,9 @@
    "tier": 20,
    "xp": 2500,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -1126,9 +1126,9 @@
    "tier": 25,
    "xp": 3500,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -1198,7 +1198,7 @@
    "free": {
     "type": "chest",
     "amount": 1,
-    "id": "coins:1000;shard:5"
+    "id": "coins:1000;shard:5;gems:10"
    },
    "premium": {
     "type": "cosmetic",

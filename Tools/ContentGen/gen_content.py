@@ -258,7 +258,7 @@ titan = {"archetype": "emberforge_titan", "name": "Emberforge Titan", "resetUtcH
          "completionRewards": [R("coins", 150), R("shard", 1)], "topPercent": .10, "topPercentBonusShards": 3}
 
 daily = {"days": [R("coins", 100), R("charge", 1), R("coins", 150), R("shard", 1), R("coins", 200), R("charge", 1),
-                  R("chest", 1, "coins:300;shard:3")]}
+                  R("chest", 1, "coins:300;shard:3;gems:10")]}
 
 def EL(eid, n, layout, shots):
     return {"id": f"{eid}_e{n}", "number": n, "island": "event", "name": f"Event {n}", "layout": layout,
@@ -279,8 +279,8 @@ for wid, name, text, mod in [("magnetic_mayhem", "Magnetic Mayhem", "Magnetised 
 fin = EL("finale", 1, "m1_clockwork_tower", 5); fin["name"] = "Frontier Finale"
 tiers = []
 for t in range(1, 31):
-    free = R("coins", 50 + 10 * t) if t % 5 else R("shard", 2)
-    if t == 30: free = R("chest", 1, "coins:1000;shard:5")
+    free = R("coins", 50 + 10 * t) if t % 5 else R("chest", 1, "shard:2;gems:10")  # Economy v1: 10 gems every 5th tier
+    if t == 30: free = R("chest", 1, "coins:1000;shard:5;gems:10")
     tiers.append({"tier": t, "xp": sum(100 if k <= 10 else 150 if k <= 20 else 200 for k in range(1, t + 1)), "free": free, "premium": R("cosmetic", 1, f"s1_cosmetic_{t:02d}")})
 season = {"id": "s1_wrecking_frontier", "name": "The Wrecking Frontier - Season 1", "startUtc": "2026-10-12T00:00:00Z",
           "weekDays": 7, "xpPerEventStar": 10, "xpPerTitanClear": 50, "eventStarCapPerLevel": 3, "bonusChestEveryXp": 300, "bonusChestCap": 10, "unclaimedInboxDays": 30, "weeks": weeks, "finale": fin, "tiers": tiers}
@@ -293,12 +293,13 @@ store = {"flags": {"enableGemPacks": False}, "allowedTypes": ["currency_pack", "
   {"sku": "gems_large", "name": "Chest of Gems", "type": "currency_pack", "cosmetic": True, "priceType": "real", "price": 499, "grants": "gems:600", "contents": [], "requiresFlag": "enableGemPacks"},
   {"sku": "skin_brass_baron", "name": "Brass Baron Wrecker", "type": "wrecker_skin", "cosmetic": True, "priceType": "gems", "price": 300, "grants": "", "contents": []},
   {"sku": "trail_confetti", "name": "Confetti Trail", "type": "trail", "cosmetic": True, "priceType": "gems", "price": 120, "grants": "", "contents": []},
-  {"sku": "frame_tidebreaker", "name": "Tidebreaker Frame", "type": "frame", "cosmetic": True, "priceType": "coins", "price": 800, "grants": "", "contents": []},
+  {"sku": "frame_tidebreaker", "name": "Tidebreaker Frame", "type": "frame", "cosmetic": True, "priceType": "gems", "price": 60, "grants": "", "contents": []},
   {"sku": "deco_lighthouse", "name": "Mini Lighthouse Deco", "type": "map_decoration", "cosmetic": True, "priceType": "coins", "price": 500, "grants": "", "contents": []},
-  {"sku": "s1_premium_track", "name": "Wrecking Frontier Premium Track (cosmetics)", "type": "season_pass", "cosmetic": True, "priceType": "real", "price": 499, "grants": "", "contents": []},
+  {"sku": "s1_premium_track", "name": "Wrecking Frontier Premium Track (cosmetics)", "type": "season_pass", "cosmetic": True, "priceType": "gems", "price": 450, "grants": "", "contents": []},
   {"sku": "bundle_harbor", "name": "Harbor Look Bundle", "type": "cosmetic_bundle", "cosmetic": True, "priceType": "gems", "price": 400, "grants": "", "contents": ["skin_brass_baron", "trail_confetti"]},
   {"sku": "emote_salute", "name": "Captain's Salute", "type": "emote", "cosmetic": True, "priceType": "gems", "price": 80, "grants": "", "contents": []}]}
 wrecker = {"defaultDamage": 60, "launchSpeed": 28, "projectileMass": 0.8, "projectileScale": 0.45, "splitSpreadDeg": 8, "aimYawDegPerDp": 0.25, "aimPitchDegPerDp": 0.15}
+economy = json.load(open(os.path.join(OUT, "economy.json")))  # hand-tuned data file (design/Economy_v1_Earned_Gems.md); not generated
 for name, obj in [("wrecker", wrecker), ("store_catalog", store), ("chapter1", chapter), ("powerups", powerups), ("titan_templates", titan),
                   ("daily_rewards", daily), ("season_s1", season)]:
     with open(os.path.join(OUT, name + ".json"), "w") as f:
