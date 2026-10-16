@@ -24,6 +24,19 @@ namespace Crashverse.Editor
             Debug.Log("Crashverse default assets created.");
         }
 
+        /// <summary>Bakes UITheme tokens (ui_system.md) to Resources/UITheme.asset so designers can tweak them; runtime falls back to defaults.</summary>
+        [MenuItem("Crashverse/Create UI Theme")]
+        public static void CreateTheme()
+        {
+            EnsureDir("Assets/_Project/Resources");
+            var t = Crashverse.UI.UITheme.CreateDefault();
+            t.displayFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/_Project/Fonts/LilitaOne-Regular.ttf");
+            t.bodyFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/_Project/Fonts/Nunito-ExtraBold.ttf");
+            AssetDatabase.CreateAsset(t, "Assets/_Project/Resources/UITheme.asset");
+            AssetDatabase.SaveAssets();
+            Debug.Log("UITheme created" + (t.displayFont == null ? " (fonts not imported yet: built-in fallback in use)" : ""));
+        }
+
         static void SaveMat(MaterialDefinition mat, string path)
         {
             AssetDatabase.CreateAsset(mat, path);

@@ -27,6 +27,8 @@ namespace Crashverse.Data
         public string teaches; public MasteryGoal mastery; public SlotRule[] forced; public string[] lockedSlots;
         public string requires; public string bossId; public Reward[] reward;
         public float star3Pct = 0.60f; public float star2Pct = 0.30f; public int starCapIfPowerupUsed = 3; public float islandKillY = -2f; // SG-21
+        public string hintTarget; public float hintYaw; public float hintPitch; // Addendum v1.1 §1
+        public bool HasHint => !string.IsNullOrEmpty(hintTarget);
         public bool IsBoss => !string.IsNullOrEmpty(bossId);
     }
 
@@ -100,4 +102,16 @@ namespace Crashverse.Data
         public int xpPerTitanClear; public int eventStarCapPerLevel = 3; public int bonusChestEveryXp = 300; public int bonusChestCap = 10;
         public int unclaimedInboxDays = 30; public WeeklyEvent[] weeks; public LevelEntry finale; public SeasonTier[] tiers;
     }
+
+    [Serializable]
+    public class StoreItem
+    {
+        public string sku; public string name; public string type; public bool cosmetic; public string priceType; public int price;
+        public string grants; public string[] contents;
+    }
+
+    [Serializable] public class StoreCatalog { public string[] allowedTypes; public StoreItem[] items; }
+
+    /// <summary>Default shot tuning (designer data, not code).</summary>
+    [Serializable] public class WreckerTuning { public float defaultDamage = 60; public float launchSpeed = 28; public float projectileMass = 0.8f; public float projectileScale = 0.45f; public float splitSpreadDeg = 8; }
 }

@@ -1,49 +1,48 @@
+using Crashverse.Destruction;
+using Crashverse.PowerUps;
 using UnityEngine;
 
 namespace Crashverse.Weapons
 {
-    /// <summary>Confirmed fire consumes one move. Aim/cancel does not.</summary>
+    /// <summary>A confirmed fire consumes one shot (GameSession). Aim/cancel never does.</summary>
     public class FireController : MonoBehaviour
     {
         public AimController aim;
-        public GameObject projectilePrefab;
+        public float defaultDamage = 60f;
         public float projectileScale = 0.45f;
+        public float projectileMass = 0.8f;
+        public float splitSpreadDeg = 8f;
+        public bool CanFire { get; set; } = true;
+        public static int ActiveProjectiles => Projectile.Alive.Count;
 
         public event System.Action Fired;
 
-        public bool CanFire { get; set; } = true;
-
-        public void Fire()
+        public bool Fire(ShotModifiers mods)
         {
-            if (!CanFire || aim == null) return;
-            GameObject go;
-            if (projectilePrefab != null)
-                go = Instantiate(projectilePrefab) as GameObject;
-            else
-                go = CreateDefaultProjectile();
-            if (go == null) return;
-            go.transform.localScale = Vector3.one * projectileScale;
-            var proj = go.GetComponent<Projectile>();
-            if (proj == null) proj = go.AddComponent<Projectile>();
-            proj.Launch(aim.GetSpawnPosition(), aim.GetLaunchVelocity());
+            if (!CanFire || aim == null) return false;
+            var go = CreateProjectileObject(projectileScale);
+            go.GetComponent<Rigidbody>().mass = projectileMass;
+            var p = go.GetComponent<Projectile>();
+            p.splitSpreadDeg = splitSpreadDeg;
+            p.Launch(aim.SpawnPosition, aim.LaunchVelocity, defaultDamage, mods);
             aim.CancelAim();
             Fired?.Invoke();
+            return true;
         }
 
-        GameObject CreateDefaultProjectile()
+        public static GameObject CreateProjectileObject(float scale)
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             go.name = "Projectile";
             go.tag = "Projectile";
-            var rb = go.AddComponent<Rigidbody>();
-            rb.mass = 0.8f;
-            rb.useGravity = true;
-            var rend = go.GetComponent<Renderer>();
-            var block = new MaterialPropertyBlock();
-            Color cyan = new Color(0.133f, 0.827f, 0.933f);
-            block.SetColor("_BaseColor", cyan);
-            block.SetColor("_Color", cyan);
-            rend.SetPropertyBlock(block);
+            go.transform.localScale = Vector3.one * scale;
+            go.AddComponent<Rigidbody>();
+            go.AddComponent<Projectile>();
+            var r = go.GetComponent<Renderer>();
+            var b = new MaterialPropertyBlock();
+            var c = MaterialDefinition.Hex(WreckerSpec.Core);
+            b.SetColor("_BaseColor", c); b.SetColor("_Color", c);
+            r.SetPropertyBlock(b);
             return go;
         }
     }

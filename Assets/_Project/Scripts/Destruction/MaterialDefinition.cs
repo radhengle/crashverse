@@ -33,7 +33,7 @@ namespace Crashverse.Destruction
         public float debrisLifetimeSeconds = 2.5f;
 
         [Header("Greybox colour (Art arena_brief)")]
-        public Color baseColor = new Color(0.788f, 0.541f, 0.294f); // wood #C98A4B
+        public Color baseColor = new Color(0.890f, 0.655f, 0.400f); // wood #E3A766 (Art v2)
         public Color darkColor = new Color(0.541f, 0.353f, 0.204f);
         public Color breakFxColor = new Color(0.890f, 0.690f, 0.478f);
 
@@ -51,8 +51,8 @@ namespace Crashverse.Destruction
                     def.jointBreakForce = 450f;
                     def.jointBreakTorque = 450f;
                     def.maxDebrisChunks = 6;
-                    def.baseColor = Hex("C98A4B");
-                    def.darkColor = Hex("8A5A34");
+                    def.baseColor = Hex("E3A766");
+                    def.darkColor = Hex("A8743F");
                     def.breakFxColor = Hex("E3B07A");
                     break;
                 case MaterialKind.Brick:
@@ -63,8 +63,8 @@ namespace Crashverse.Destruction
                     def.jointBreakForce = 900f;
                     def.jointBreakTorque = 900f;
                     def.maxDebrisChunks = 4;
-                    def.baseColor = Hex("B5523B");
-                    def.darkColor = Hex("8E3F2E");
+                    def.baseColor = Hex("D2664C");
+                    def.darkColor = Hex("7A3326");
                     def.breakFxColor = Hex("D9A37E");
                     break;
                 case MaterialKind.Steel:
@@ -75,15 +75,41 @@ namespace Crashverse.Destruction
                     def.jointBreakForce = 2200f;
                     def.jointBreakTorque = 2200f;
                     def.maxDebrisChunks = 3;
-                    def.baseColor = Hex("6B7684");
-                    def.darkColor = Hex("3A3F48");
+                    def.baseColor = Hex("AEB6C2");
+                    def.darkColor = Hex("6B7684");
                     def.breakFxColor = Hex("FFD27A");
                     break;
             }
             return def;
         }
 
-        static Color Hex(string hex)
+        public float smoothness = 0.25f;
+
+        public static MaterialKind? Parse(string s)
+        {
+            switch (s) { case "wood": return MaterialKind.Wood; case "brick": return MaterialKind.Brick; case "steel": return MaterialKind.Steel; }
+            return null;
+        }
+
+        /// <summary>Runtime material with data-driven rule modifiers (Titan/event rules). 0 = unchanged.</summary>
+        public static MaterialDefinition CreateRuntime(MaterialKind kind, Crashverse.Data.RuleModifiers mod)
+        {
+            var d = CreateRuntime(kind);
+            d.smoothness = kind == MaterialKind.Steel ? 0.7f : 0.5f;
+            if (mod == null) return d;
+            switch (kind)
+            {
+                case MaterialKind.Wood: d.maxHp *= Crashverse.Data.RuleModifiers.M(mod.woodHpMult); break;
+                case MaterialKind.Brick: d.maxHp *= Crashverse.Data.RuleModifiers.M(mod.brickHpMult); break;
+                case MaterialKind.Steel:
+                    d.maxHp *= Crashverse.Data.RuleModifiers.M(mod.steelHpMult);
+                    if (mod.steelJointMult > 0) d.jointDamageMultiplier = mod.steelJointMult;
+                    break;
+            }
+            return d;
+        }
+
+        public static Color Hex(string hex)
         {
             ColorUtility.TryParseHtmlString("#" + hex, out var c);
             return c;

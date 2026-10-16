@@ -52,7 +52,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "magnetic_mayhem_e2",
@@ -83,7 +86,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "magnetic_mayhem_e3",
@@ -114,7 +120,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "magnetic_mayhem_e4",
@@ -145,7 +154,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "magnetic_mayhem_e5",
@@ -176,7 +188,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     }
    ]
   },
@@ -222,7 +237,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "seismic_surge_e2",
@@ -253,7 +271,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "seismic_surge_e3",
@@ -284,7 +305,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "seismic_surge_e4",
@@ -315,7 +339,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "seismic_surge_e5",
@@ -346,7 +373,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     }
    ]
   },
@@ -392,7 +422,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "gravity_games_e2",
@@ -423,7 +456,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "gravity_games_e3",
@@ -454,7 +490,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "gravity_games_e4",
@@ -485,7 +524,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "gravity_games_e5",
@@ -516,7 +558,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     }
    ]
   },
@@ -562,7 +607,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "sonic_rupture_e2",
@@ -593,7 +641,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "sonic_rupture_e3",
@@ -624,7 +675,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "sonic_rupture_e4",
@@ -655,7 +709,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     },
     {
      "id": "sonic_rupture_e5",
@@ -686,7 +743,10 @@
      "star3Pct": 0.6,
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
-     "islandKillY": -2.0
+     "islandKillY": -2.0,
+     "hintTarget": "",
+     "hintYaw": 0,
+     "hintPitch": 0
     }
    ]
   }
@@ -720,7 +780,10 @@
   "star3Pct": 0.6,
   "star2Pct": 0.3,
   "starCapIfPowerupUsed": 3,
-  "islandKillY": -2.0
+  "islandKillY": -2.0,
+  "hintTarget": "",
+  "hintYaw": 0,
+  "hintPitch": 0
  },
  "tiers": [
   {

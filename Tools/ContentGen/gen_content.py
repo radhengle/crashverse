@@ -188,13 +188,17 @@ for i, (aid, _) in enumerate(TITAN_ARENAS):
 def M(type, value=0, text="", role=""):
     return {"type": type, "value": value, "role": role, "text": text}
 
+HINTS = {1: ("post0", 4, 22), 2: ("stilt2", 3, 20), 3: ("propL", -2, 18), 4: ("cap", 2, 28), 5: ("pierL", -6, 16),
+         6: ("brace0", 0, 24), 7: ("ring0", 0, 24), 8: ("joint", 0, 26), 9: ("lhRing", 0, 26)}
+
 def LV(n, island, name, layout, mats, shots, teaches, mastery, forced=(), locked=(), boss="", reward=()):
     return {"id": f"c1_l{n:02d}", "number": n, "island": island, "name": name, "layout": layout,
             "objective": "BOSS" if boss else "DESTROY_STRUCTURE", "shots": shots, "winThreshold": .85,
             "materials": mats, "teaches": teaches, "mastery": mastery,
             "forced": [{"slot": s, "powerup": p} for s, p in forced], "lockedSlots": list(locked),
             "requires": f"c1_l{n-1:02d}" if n > 1 else "", "bossId": boss, "reward": list(reward),
-            "star3Pct": .60, "star2Pct": .30, "starCapIfPowerupUsed": 2 if mastery["type"] == "NO_POWERUP" else 3, "islandKillY": -2.0}
+            "star3Pct": .60, "star2Pct": .30, "starCapIfPowerupUsed": 2 if mastery["type"] == "NO_POWERUP" else 3, "islandKillY": -2.0,
+            "hintTarget": HINTS.get(n, ("", 0, 0))[0], "hintYaw": HINTS.get(n, ("", 0, 0))[1], "hintPitch": HINTS.get(n, ("", 0, 0))[2]}
 
 W, Bk, S = "wood", "brick", "steel"
 chapter = {
@@ -259,7 +263,7 @@ def EL(eid, n, layout, shots):
     return {"id": f"{eid}_e{n}", "number": n, "island": "event", "name": f"Event {n}", "layout": layout,
             "objective": "DESTROY_STRUCTURE", "shots": shots, "winThreshold": .85, "materials": [W, Bk, S],
             "teaches": "", "mastery": M("STARS", 3, "3 stars"), "forced": [], "lockedSlots": [], "requires": "",
-            "bossId": "", "reward": [], "star3Pct": .60, "star2Pct": .30, "starCapIfPowerupUsed": 3, "islandKillY": -2.0}
+            "bossId": "", "reward": [], "star3Pct": .60, "star2Pct": .30, "starCapIfPowerupUsed": 3, "islandKillY": -2.0, "hintTarget": "", "hintYaw": 0, "hintPitch": 0}
 lays = ["c1_l01_lookout_hut", "c1_l03_bakery", "c1_l06_granary", "c1_l08_market_arcade", "c1_l09_lighthouse_gauntlet"]
 weeks = []
 for wid, name, text, mod in [("magnetic_mayhem", "Magnetic Mayhem", "Magnetised steel: joints take 3x", MOD(steelJointMult=3)),
@@ -277,7 +281,20 @@ for t in range(1, 31):
 season = {"id": "s1_wrecking_frontier", "name": "The Wrecking Frontier - Season 1", "startUtc": "2026-10-12T00:00:00Z",
           "weekDays": 7, "xpPerEventStar": 10, "xpPerTitanClear": 50, "eventStarCapPerLevel": 3, "bonusChestEveryXp": 300, "bonusChestCap": 10, "unclaimedInboxDays": 30, "weeks": weeks, "finale": fin, "tiers": tiers}
 
-for name, obj in [("chapter1", chapter), ("powerups", powerups), ("titan_templates", titan),
+store = {"allowedTypes": ["currency_pack", "wrecker_skin", "paint", "decal", "trail", "vfx_skin", "avatar", "frame", "title",
+                         "map_decoration", "season_pass", "cosmetic_bundle", "emote", "victory_animation"],
+         "items": [
+  {"sku": "gems_small", "name": "Pouch of Gems", "type": "currency_pack", "cosmetic": True, "priceType": "real", "price": 99, "grants": "gems:100", "contents": []},
+  {"sku": "gems_large", "name": "Chest of Gems", "type": "currency_pack", "cosmetic": True, "priceType": "real", "price": 499, "grants": "gems:600", "contents": []},
+  {"sku": "skin_brass_baron", "name": "Brass Baron Wrecker", "type": "wrecker_skin", "cosmetic": True, "priceType": "gems", "price": 300, "grants": "", "contents": []},
+  {"sku": "trail_confetti", "name": "Confetti Trail", "type": "trail", "cosmetic": True, "priceType": "gems", "price": 120, "grants": "", "contents": []},
+  {"sku": "frame_tidebreaker", "name": "Tidebreaker Frame", "type": "frame", "cosmetic": True, "priceType": "coins", "price": 800, "grants": "", "contents": []},
+  {"sku": "deco_lighthouse", "name": "Mini Lighthouse Deco", "type": "map_decoration", "cosmetic": True, "priceType": "coins", "price": 500, "grants": "", "contents": []},
+  {"sku": "s1_premium_track", "name": "Wrecking Frontier Premium Track (cosmetics)", "type": "season_pass", "cosmetic": True, "priceType": "real", "price": 499, "grants": "", "contents": []},
+  {"sku": "bundle_harbor", "name": "Harbor Look Bundle", "type": "cosmetic_bundle", "cosmetic": True, "priceType": "gems", "price": 400, "grants": "", "contents": ["skin_brass_baron", "trail_confetti"]},
+  {"sku": "emote_salute", "name": "Captain's Salute", "type": "emote", "cosmetic": True, "priceType": "gems", "price": 80, "grants": "", "contents": []}]}
+wrecker = {"defaultDamage": 60, "launchSpeed": 28, "projectileMass": 0.8, "projectileScale": 0.45, "splitSpreadDeg": 8}
+for name, obj in [("wrecker", wrecker), ("store_catalog", store), ("chapter1", chapter), ("powerups", powerups), ("titan_templates", titan),
                   ("daily_rewards", daily), ("season_s1", season)]:
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(obj, f, indent=1)

@@ -2,33 +2,43 @@ using UnityEngine;
 
 namespace Crashverse.Core
 {
-    /// <summary>Light orbit assist around look target; primary aim is on the Wrecker barrel.</summary>
+    /// <summary>
+    /// Gameplay camera (Art v2): starts low behind the Wrecker, ~15° pitch, FOV 50, looking toward the target so the
+    /// Wrecker sits bottom-left. Two-finger drag (or right mouse) orbits within limits; never consumes shots.
+    /// </summary>
     public class OrbitCamera : MonoBehaviour
     {
-        public Transform target;
-        public Vector3 pivotOffset = new Vector3(5f, 6f, 0f);
-        public float distance = 22f;
-        public float minPitch = 15f;
-        public float maxPitch = 55f;
-        public float yaw = 35f;
-        public float pitch = 28f;
-        public float sens = 0.12f;
-        public bool dualFingerOrbit = true;
+        public Vector3 lookAt;
+        public float distance = 22f, yaw = 72f, pitch = 15f;
+        public float minPitch = 8f, maxPitch = 45f, minYaw = 30f, maxYaw = 120f;
+        Vector2 _lastMid; bool _twoFinger;
+
+        public void Frame(Vector3 wrecker, Vector3 target)
+        {
+            lookAt = Vector3.Lerp(wrecker, target, 0.45f) + new Vector3(0f, 4f, 2.5f);
+            var cam = GetComponent<Camera>();
+            if (cam != null) cam.fieldOfView = 50f;
+        }
 
         void LateUpdate()
         {
-            if (target == null) return;
-            // Two-finger / right-mouse orbit (does not consume shots)
-            if (Input.GetMouseButton(1))
+            if (Input.touchCount == 2)
             {
-                yaw += Input.GetAxis("Mouse X") * sens * 10f;
-                pitch -= Input.GetAxis("Mouse Y") * sens * 10f;
-                pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+                Vector2 mid = (Input.GetTouch(0).position + Input.GetTouch(1).position) * 0.5f;
+                if (_twoFinger) Orbit((mid - _lastMid) * 0.15f);
+                _lastMid = mid; _twoFinger = true;
             }
-            Quaternion rot = Quaternion.Euler(pitch, yaw, 0f);
-            Vector3 pivot = target.position + pivotOffset;
-            transform.position = pivot + rot * new Vector3(0f, 0f, -distance);
-            transform.LookAt(pivot);
+            else _twoFinger = false;
+            if (Input.GetMouseButton(1)) Orbit(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * 3f);
+            var rot = Quaternion.Euler(pitch, yaw, 0f);
+            transform.position = lookAt + rot * new Vector3(0f, 0f, -distance);
+            transform.LookAt(lookAt);
+        }
+
+        void Orbit(Vector2 d)
+        {
+            yaw = Mathf.Clamp(yaw + d.x, minYaw, maxYaw);
+            pitch = Mathf.Clamp(pitch - d.y, minPitch, maxPitch);
         }
     }
 }

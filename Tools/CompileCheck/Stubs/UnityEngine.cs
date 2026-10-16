@@ -9,6 +9,7 @@ namespace UnityEngine
         public static void Destroy(Object obj) { }
         public static void Destroy(Object obj, float t) { }
         public static void DestroyImmediate(Object obj) { }
+        public static void DontDestroyOnLoad(Object o) { }
         public static T FindObjectOfType<T>() where T : Object => null;
         public static Object Instantiate(Object original) => original is GameObject g ? new GameObject(g.name) : original;
         public static Object Instantiate(Object original, Transform parent) => Instantiate(original);
@@ -22,6 +23,7 @@ namespace UnityEngine
         public bool activeSelf = true;
         public GameObject() { }
         public GameObject(string name) { this.name = name; }
+        public GameObject(string name, params Type[] comps) { this.name = name; }
         public static GameObject CreatePrimitive(PrimitiveType type) => new GameObject(type.ToString());
         public T AddComponent<T>() where T : Component, new() { var c = new T(); c.gameObject = this; return c; }
         public T GetComponent<T>() where T : class => null;
@@ -63,6 +65,9 @@ namespace UnityEngine
         public void SetParent(Transform p, bool world = true) { parent = p; }
         public Transform GetChild(int i) => null;
         public void LookAt(Vector3 t) { }
+        public void SetAsLastSibling() { }
+        public void RotateAround(Vector3 p, Vector3 a, float d) { }
+        public System.Collections.IEnumerator GetEnumerator() { yield break; }
     }
 
     public struct Vector3
@@ -75,6 +80,8 @@ namespace UnityEngine
         public static Vector3 forward => new Vector3(0, 0, 1);
         public static Vector3 right => new Vector3(1, 0, 0);
         public float sqrMagnitude => x * x + y * y + z * z;
+        public float magnitude => (float)Math.Sqrt(sqrMagnitude);
+        public static Vector3 Lerp(Vector3 a, Vector3 b, float t) => a + (b - a) * t;
         public Vector3 normalized { get { float m = (float)Math.Sqrt(sqrMagnitude); return m > 1e-5f ? new Vector3(x / m, y / m, z / m) : zero; } }
         public static Vector3 operator +(Vector3 a, Vector3 b) => new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
         public static Vector3 operator -(Vector3 a, Vector3 b) => new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
@@ -88,6 +95,8 @@ namespace UnityEngine
         public float x, y, z, w;
         public static Quaternion identity => new Quaternion { w = 1 };
         public static Quaternion Euler(float x, float y, float z) => identity;
+        public static Quaternion FromToRotation(Vector3 a, Vector3 b) => identity;
+        public static Quaternion AngleAxis(float d, Vector3 a) => identity;
         public static Vector3 operator *(Quaternion q, Vector3 v) => v;
     }
 
@@ -115,12 +124,17 @@ namespace UnityEngine
         public static float Min(float a, float b) => Math.Min(a, b);
         public static int Min(int a, int b) => Math.Min(a, b);
         public static float Clamp01(float v) => Clamp(v, 0, 1);
+        public const float PI = (float)Math.PI;
+        public static float Sin(float v) => (float)Math.Sin(v); public static float Cos(float v) => (float)Math.Cos(v);
+        public static int RoundToInt(float v) => (int)Math.Round(v); public static int FloorToInt(float v) => (int)Math.Floor(v);
+        public static float Lerp(float a, float b, float t) => a + (b - a) * Clamp01(t);
     }
 
     public static class Time
     {
         public static float deltaTime = 0.016f;
         public static float fixedDeltaTime = 0.02f;
+        public static float timeScale = 1f, time, unscaledDeltaTime = 0.016f;
     }
 
     public static class Input
@@ -130,9 +144,12 @@ namespace UnityEngine
         public static bool GetMouseButtonDown(int b) => false;
         public static bool GetMouseButtonUp(int b) => false;
         public static float GetAxis(string name) => 0f;
+        public static int touchCount;
+        public static Touch GetTouch(int i) => default;
+        public static bool GetKeyDown(KeyCode k) => false;
     }
 
-    public static class Screen { public static int width = 1080; public static int height = 1920; }
+    public static class Screen { public static int width = 1080; public static int height = 1920; public static float dpi = 420; public static Rect safeArea = new Rect(0, 0, 1080, 1920); public static ScreenOrientation orientation; }
     public static class Application
     {
         public static int targetFrameRate;
@@ -189,6 +206,7 @@ namespace UnityEngine
     public enum CollisionDetectionMode { Discrete, Continuous, ContinuousDynamic, ContinuousSpeculative }
     public enum RigidbodyInterpolation { None, Interpolate, Extrapolate }
     public enum Space { World, Self }
+    public enum ForceMode { Force, Impulse, VelocityChange, Acceleration }
 
     public class Rigidbody : Component
     {
@@ -202,9 +220,13 @@ namespace UnityEngine
         public RigidbodyInterpolation interpolation;
         public float sleepThreshold;
         public void WakeUp() { }
+        public Vector3 position;
+        public void AddForce(Vector3 f, ForceMode m = ForceMode.Force) { }
+        public void AddExplosionForce(float f, Vector3 p, float r, float up = 0f, ForceMode m = ForceMode.Force) { }
     }
 
-    public class Collider : Component { public bool enabled = true; }
+    public class Collider : Component { public bool enabled = true; public bool isTrigger; public Rigidbody attachedRigidbody; }
+    public class MeshCollider : Collider { public Mesh sharedMesh; public bool convex; }
     public class Renderer : Component
     {
         public bool enabled = true;
@@ -214,6 +236,7 @@ namespace UnityEngine
     public class MaterialPropertyBlock
     {
         public void SetColor(string n, Color c) { }
+        public void SetFloat(string n, float f) { }
     }
     public class Joint : Component { public Rigidbody connectedBody; public float breakForce, breakTorque; }
     public class FixedJoint : Joint { }
@@ -231,11 +254,12 @@ namespace UnityEngine
         public float fieldOfView;
         public CameraClearFlags clearFlags;
         public Color backgroundColor;
+        public Vector3 WorldToScreenPoint(Vector3 p) => p;
     }
     public class AudioListener : Behaviour { }
     public class Collision
     {
-        public Collider collider;
+        public Collider collider; public Rigidbody rigidbody; public GameObject gameObject; public Vector3 relativeVelocity;
         public ContactPoint[] contacts = Array.Empty<ContactPoint>();
     }
     public struct ContactPoint { public Vector3 point; }
@@ -288,6 +312,9 @@ namespace UnityEngine
     {
         public float x, y, width, height;
         public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; }
+        public static bool operator ==(Rect a, Rect b) => a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height;
+        public static bool operator !=(Rect a, Rect b) => !(a == b);
+        public override bool Equals(object o) => o is Rect r && r == this; public override int GetHashCode() => 0;
     }
     public class GUIContent { public static GUIContent none = new GUIContent(); }
     public static class GUI

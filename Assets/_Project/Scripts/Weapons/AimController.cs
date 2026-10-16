@@ -1,123 +1,136 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Crashverse.Weapons
 {
     /// <summary>
-    /// Touch-drag aim (mouse fallback). Barrel elevation 5–70°, yaw ±60° (wrecker_brief).
-    /// Aim / cancel is free — does not consume shots (Contract §2).
+    /// Touch drag to aim (mouse fallback). Elevation 5–70°, yaw ±60° (Wrecker brief, unchanged in v2).
+    /// QA-UI-003: a press that starts over any UI element (EventSystem raycast) never starts an aim drag.
+    /// Aim/cancel is free (Contract §2). Draws the trajectory arc and, when a hint is armed, a ghost arc (Addendum §1).
     /// </summary>
     public class AimController : MonoBehaviour
     {
-        public Transform yawPivot;
-        public Transform pitchPivot;
-        public Transform projectileSpawn;
-
-        public float minElevation = 5f;
-        public float maxElevation = 70f;
-        public float minYaw = -60f;
-        public float maxYaw = 60f;
-        public float sensitivity = 0.15f;
+        public Transform yawPivot, pitchPivot, projectileSpawn;
+        public float degreesPerDp = 0.35f;
         public float launchSpeed = 28f;
+        public bool inputEnabled = true;
 
-        float _yaw;
-        float _elevation = 25f;
+        float _yaw, _elevation = WreckerSpec.RestElevation;
         bool _dragging;
-        Vector3 _lastPos;
-        bool _aiming;
+        int _fingerId = -1;
+        Vector2 _last;
+        LineRenderer _arc, _ghost;
 
-        public bool IsAiming => _aiming;
         public float Yaw => _yaw;
         public float Elevation => _elevation;
 
         public void Bind(Transform yaw, Transform pitch, Transform spawn)
         {
-            yawPivot = yaw;
-            pitchPivot = pitch;
-            projectileSpawn = spawn;
-            ApplyRotations();
+            yawPivot = yaw; pitchPivot = pitch; projectileSpawn = spawn;
+            _arc = MakeLine("TrajectoryArc", new Color(1f, 1f, 1f, 0.9f), 0.12f);
+            _ghost = MakeLine("HintGhostArc", new Color(0.13f, 0.83f, 0.93f, 0.45f), 0.2f);
+            _ghost.enabled = false;
+            Apply();
         }
 
-        public void BeginAim()
+        LineRenderer MakeLine(string n, Color c, float w)
         {
-            _aiming = true;
+            var go = new GameObject(n);
+            go.transform.SetParent(transform, false);
+            var lr = go.AddComponent<LineRenderer>();
+            lr.positionCount = 0; lr.startWidth = w; lr.endWidth = w * 0.5f; lr.startColor = c; lr.endColor = c;
+            lr.material = new Material(Shader.Find("Sprites/Default"));
+            return lr;
         }
 
-        public void CancelAim()
+        public void SetAim(float yaw, float elevation)
         {
-            _aiming = false;
-            _dragging = false;
-            // Free — no shot consumed
+            _yaw = Mathf.Clamp(yaw, -WreckerSpec.MaxYaw, WreckerSpec.MaxYaw);
+            _elevation = Mathf.Clamp(elevation, WreckerSpec.MinElevation, WreckerSpec.MaxElevation);
+            Apply();
         }
 
-        public Vector3 GetLaunchVelocity()
+        /// <summary>Shows a ghost arc for the suggested shot until the first shot (Addendum §1).</summary>
+        public void ShowGhost(float yaw, float elevation)
         {
-            if (projectileSpawn == null) return Vector3.forward * launchSpeed;
-            return projectileSpawn.right.normalized * launchSpeed; // barrel along +X of pitch pivot
+            float y = _yaw, e = _elevation;
+            SetAim(yaw, elevation);
+            DrawArc(_ghost);
+            _ghost.enabled = true;
+            SetAim(y, e);
         }
+        public void HideGhost() { if (_ghost != null) _ghost.enabled = false; }
 
-        public Vector3 GetSpawnPosition()
-        {
-            return projectileSpawn != null ? projectileSpawn.position : transform.position + Vector3.up;
-        }
+        public void CancelAim() { _dragging = false; _fingerId = -1; }
+
+        public Vector3 LaunchVelocity => (projectileSpawn != null ? projectileSpawn.right : Vector3.right) * launchSpeed;
+        public Vector3 SpawnPosition => projectileSpawn != null ? projectileSpawn.position : transform.position + Vector3.up * 1.5f;
+
+        static float DpPerPixel => 160f / (Screen.dpi > 1f ? Screen.dpi : 160f);
 
         void Update()
         {
-            // Mouse fallback (editor) + touch
-            if (Input.GetMouseButtonDown(0) && !IsPointerOverFireUi())
-            {
-                _dragging = true;
-                _aiming = true;
-                _lastPos = Input.mousePosition;
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                _dragging = false;
-            }
+            if (!inputEnabled) { _dragging = false; DrawArc(_arc); return; }
+            if (Input.touchCount > 0) HandleTouch();
+            else HandleMouse();
+            DrawArc(_arc);
+        }
 
+        void HandleTouch()
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                var t = Input.GetTouch(i);
+                if (t.phase == TouchPhase.Began && !_dragging && Input.touchCount == 1)
+                {
+                    // QA-UI-003: ignore presses that start on UI
+                    if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(t.fingerId)) continue;
+                    _dragging = true; _fingerId = t.fingerId; _last = t.position;
+                }
+                else if (t.fingerId == _fingerId)
+                {
+                    if (t.phase == TouchPhase.Moved) { Drag(t.position - _last); _last = t.position; }
+                    else if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled) CancelAim();
+                }
+            }
+            if (Input.touchCount > 1) CancelAim(); // two fingers = camera orbit
+        }
+
+        void HandleMouse()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                // QA-UI-003: EventSystem pointer-over-UI check replaces the old screen-percentage exclusion zone
+                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+                _dragging = true; _last = Input.mousePosition;
+            }
+            else if (Input.GetMouseButtonUp(0)) CancelAim();
             if (_dragging && Input.GetMouseButton(0))
             {
-                Vector3 delta = Input.mousePosition - _lastPos;
-                _lastPos = Input.mousePosition;
-                _yaw += delta.x * sensitivity;
-                _elevation += delta.y * sensitivity;
-                _yaw = Mathf.Clamp(_yaw, minYaw, maxYaw);
-                _elevation = Mathf.Clamp(_elevation, minElevation, maxElevation);
-                ApplyRotations();
+                Vector2 p = Input.mousePosition;
+                Drag(p - _last); _last = p;
             }
         }
 
-        void ApplyRotations()
+        void Drag(Vector2 deltaPx)
         {
-            if (yawPivot != null)
-                yawPivot.localRotation = Quaternion.Euler(0f, _yaw, 0f);
-            if (pitchPivot != null)
-                // Elevation around Z so barrel (+X) lifts up
-                pitchPivot.localRotation = Quaternion.Euler(0f, 0f, _elevation);
+            var dp = deltaPx * DpPerPixel;
+            SetAim(_yaw + dp.x * degreesPerDp, _elevation + dp.y * degreesPerDp);
         }
 
-        bool IsPointerOverFireUi()
+        void Apply()
         {
-            // Simple screen-rect check: fire button lower-right
-            var p = Input.mousePosition;
-            return p.x > Screen.width * 0.72f && p.y < Screen.height * 0.28f;
+            if (yawPivot != null) yawPivot.localRotation = Quaternion.Euler(0f, -_yaw, 0f);
+            if (pitchPivot != null) pitchPivot.localRotation = Quaternion.Euler(0f, 0f, _elevation);
         }
 
-        void OnDrawGizmos()
+        void DrawArc(LineRenderer lr)
         {
-            if (projectileSpawn == null) return;
-            Gizmos.color = Color.cyan;
-            Vector3 p = projectileSpawn.position;
-            Vector3 v = GetLaunchVelocity();
-            Vector3 prev = p;
-            float dt = 0.05f;
-            Vector3 vel = v;
-            for (int i = 0; i < 40; i++)
-            {
-                vel += Physics.gravity * dt;
-                p += vel * dt;
-                Gizmos.DrawLine(prev, p);
-                prev = p;
-            }
+            if (lr == null || projectileSpawn == null) return;
+            const int n = 40; const float dt = 0.06f;
+            lr.positionCount = n;
+            Vector3 p = SpawnPosition, v = LaunchVelocity;
+            for (int i = 0; i < n; i++) { lr.SetPosition(i, p); v += Physics.gravity * dt; p += v * dt; }
         }
     }
 }

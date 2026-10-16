@@ -72,7 +72,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "post0",
+   "hintYaw": 4,
+   "hintPitch": 22
   },
   {
    "id": "c1_l02",
@@ -101,7 +104,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "stilt2",
+   "hintYaw": 3,
+   "hintPitch": 20
   },
   {
    "id": "c1_l03",
@@ -131,7 +137,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "propL",
+   "hintYaw": -2,
+   "hintPitch": 18
   },
   {
    "id": "c1_l04",
@@ -161,7 +170,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "cap",
+   "hintYaw": 2,
+   "hintPitch": 28
   },
   {
    "id": "c1_l05",
@@ -191,7 +203,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "pierL",
+   "hintYaw": -6,
+   "hintPitch": 16
   },
   {
    "id": "c1_l06",
@@ -221,7 +236,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "brace0",
+   "hintYaw": 0,
+   "hintPitch": 24
   },
   {
    "id": "c1_l07",
@@ -260,7 +278,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "ring0",
+   "hintYaw": 0,
+   "hintPitch": 24
   },
   {
    "id": "c1_l08",
@@ -296,7 +317,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "joint",
+   "hintYaw": 0,
+   "hintPitch": 26
   },
   {
    "id": "c1_l09",
@@ -327,7 +351,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 2,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "lhRing",
+   "hintYaw": 0,
+   "hintPitch": 26
   },
   {
    "id": "c1_l10",
@@ -374,7 +401,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0
+   "islandKillY": -2.0,
+   "hintTarget": "",
+   "hintYaw": 0,
+   "hintPitch": 0
   }
  ]
 }

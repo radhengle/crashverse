@@ -15,6 +15,14 @@ namespace Crashverse.Meta
         /// <summary>Level data stores 0.60-style fractions; convert once to an integer percent (0.6f → 60).</summary>
         public static int ToPctInt(float frac) => (int)System.Math.Round(frac * 100.0, System.MidpointRounding.AwayFromZero);
 
+        /// <summary>Smallest shotsLeft that satisfies shotsLeft*100 >= pctInt*total (for briefing star bands).</summary>
+        public static int MinShotsLeft(int shotsTotal, float pct)
+        {
+            int p = ToPctInt(pct);
+            for (int k = 0; k <= shotsTotal; k++) if (k * 100 >= p * shotsTotal) return k;
+            return shotsTotal;
+        }
+
         public static int ComputeInt(bool won, int shotsLeft, int shotsTotal, int star3PctInt = DefaultStar3PctInt,
                                      int star2PctInt = DefaultStar2PctInt, int cap = 3)
         {

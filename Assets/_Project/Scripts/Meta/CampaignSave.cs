@@ -9,7 +9,7 @@ namespace Crashverse.Meta
     /// QA-UI-006: the ONLY local unencrypted save. Holds campaign progress (stars, clears, mastery, loadouts,
     /// last node). Wallet, rewards, ranked Titan, season and leaderboard live behind IBackendService.
     /// </summary>
-    [Serializable] public class LevelProgress { public string id; public int bestStars; public bool cleared; public bool mastery; }
+    [Serializable] public class LevelProgress { public string id; public int bestStars; public bool cleared; public bool mastery; public int bestScore; public int failsInRow; public bool hintPending; }
     [Serializable] public class SavedLoadout { public string levelId; public string core; public string module; public string booster; }
 
     [Serializable]
@@ -59,14 +59,36 @@ namespace Crashverse.Meta
             return null;
         }
 
+        LevelProgress GetOrAdd(string id)
+        {
+            var p = Get(id);
+            if (p == null) { p = new LevelProgress { id = id }; Data.levels.Add(p); }
+            return p;
+        }
+
+        public int FailsInRow(string id) => Get(id)?.failsInRow ?? 0;
+        public int BestScore(string id) => Get(id)?.bestScore ?? 0;
+        public int TotalScore() { int s = 0; foreach (var l in Data.levels) s += l.bestScore; return s; }
+
+        /// <summary>Addendum §1: arm the hint for the NEXT attempt only.</summary>
+        public void ArmHint(string id) { GetOrAdd(id).hintPending = true; Save(); }
+        public bool ConsumeHint(string id)
+        {
+            var p = Get(id);
+            if (p == null || !p.hintPending) return false;
+            p.hintPending = false; Save();
+            return true;
+        }
+
         public int BestStars(string id) => Get(id)?.bestStars ?? 0;
         public bool IsCleared(string id) => Get(id)?.cleared ?? false;
 
         /// <summary>Records a result. Lower stars never overwrite a higher best. Returns true on first clear.</summary>
-        public bool RecordResult(string id, bool won, int stars, bool masteryDone)
+        public bool RecordResult(string id, bool won, int stars, bool masteryDone, int score = 0)
         {
-            var p = Get(id);
-            if (p == null) { p = new LevelProgress { id = id }; Data.levels.Add(p); }
+            var p = GetOrAdd(id);
+            if (won) p.failsInRow = 0; else p.failsInRow++;
+            if (score > p.bestScore) p.bestScore = score;
             bool firstClear = won && !p.cleared;
             if (won) p.cleared = true;
             if (stars > p.bestStars) p.bestStars = stars;

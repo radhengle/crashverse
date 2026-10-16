@@ -11,6 +11,8 @@ namespace Crashverse.Data
         public TitanTemplates Titan { get; private set; }
         public DailyRewardsData DailyRewards { get; private set; }
         public SeasonData Season { get; private set; }
+        public StoreCatalog Store { get; private set; }
+        public WreckerTuning Wrecker { get; private set; }
         readonly Dictionary<string, LayoutData> _layouts = new Dictionary<string, LayoutData>();
 
         public static string LoadText(string resourcePath)
@@ -35,6 +37,8 @@ namespace Crashverse.Data
                 Titan = LoadJson<TitanTemplates>("Data/titan_templates"),
                 DailyRewards = LoadJson<DailyRewardsData>("Data/daily_rewards"),
                 Season = LoadJson<SeasonData>("Data/season_s1"),
+                Store = LoadJson<StoreCatalog>("Data/store_catalog"),
+                Wrecker = LoadJson<WreckerTuning>("Data/wrecker") ?? new WreckerTuning(),
             };
         }
 

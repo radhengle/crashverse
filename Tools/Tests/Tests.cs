@@ -294,5 +294,68 @@ static class Tests
             b.GrantCampaignReward(L10.id, L10.reward).Wait(); b.GrantCampaignReward(L10.id, L10.reward).Wait();
             var w = b.GetWallet().Result; T.Eq(500, w.coins, "chest once"); T.True(w.powerUps.Contains("gravity_well"), "gravity well granted");
         });
+
+        // ── Addendum v1.1 ──
+        T.Add("combo_window_and_reset", () =>
+        {
+            var c = new ComboTracker(); c.OnShot();
+            T.Eq(1, c.OnBreak(0f), "first break"); T.Eq(2, c.OnBreak(0.8f), "0.8s inclusive"); T.Eq(3, c.OnBreak(1.5f), "chain");
+            T.True(c.Visible, "shown from x3"); T.Eq(1, c.OnBreak(2.31f), "gap >0.8 restarts");
+            c.OnShot(); T.Eq(0, c.Current, "reset each shot"); T.Eq(3, c.BestThisRun, "best kept for run");
+            T.Eq(0, ComboTracker.PopTier(2), "no pop <3"); T.Eq(1, ComboTracker.PopTier(3), "tier1"); T.Eq(4, ComboTracker.PopTier(25), "tier4");
+        });
+        T.Add("score_formula_wins_only", () =>
+        {
+            T.Eq(1000 + 1000 + 250 + 1000, CampaignScore.Compute(true, 1f, 2, 5, true), "full formula");
+            T.Eq(850, CampaignScore.Compute(true, 0.85f, 0, 0, false), "85% only");
+            T.Eq(0, CampaignScore.Compute(false, 0.84f, 0, 9, false), "fail scores 0");
+            var path = Path.Combine(Path.GetTempPath(), "cv_save_" + Guid.NewGuid() + ".json");
+            var s = new CampaignSave(path); s.RecordResult("c1_l01", true, 3, false, 2000); s.RecordResult("c1_l01", true, 1, false, 900);
+            T.Eq(2000, s.BestScore("c1_l01"), "best score kept"); File.Delete(path);
+        });
+        T.Add("hint_rules", () =>
+        {
+            var lv = Db.GetLevel("c1_l07"); T.True(lv.HasHint, "L7 has hint data");
+            T.True(!HintRules.ShowHintButton(lv, 1, false), "not after 1 fail"); T.True(HintRules.ShowHintButton(lv, 2, false), "from 2nd fail");
+            T.True(!HintRules.ShowHintButton(lv, 5, true), "never in ranked");
+            var path = Path.Combine(Path.GetTempPath(), "cv_save_" + Guid.NewGuid() + ".json");
+            var s = new CampaignSave(path); s.RecordResult(lv.id, false, 0, false); s.RecordResult(lv.id, false, 0, false);
+            T.Eq(2, s.FailsInRow(lv.id), "consecutive fails"); s.ArmHint(lv.id);
+            T.True(s.ConsumeHint(lv.id), "consumed once"); T.True(!s.ConsumeHint(lv.id), "next attempt only");
+            s.RecordResult(lv.id, true, 2, false); T.Eq(0, s.FailsInRow(lv.id), "win resets fails"); File.Delete(path);
+        });
+        T.Add("store_validator", () =>
+        {
+            var errs = StoreValidator.Validate(Db.Store, out var ok);
+            T.Eq(0, errs.Count, "bundled catalog clean"); T.True(ok.Count > 0, "items accepted");
+            var bad = new StoreCatalog { allowedTypes = Db.Store.allowedTypes, items = new[] {
+                new StoreItem { sku = "pu", name = "Charge pack", type = "powerup_pack", cosmetic = true, priceType = "gems", price = 10 },
+                new StoreItem { sku = "nc", name = "Skin", type = Db.Store.allowedTypes[0], cosmetic = false, priceType = "gems", price = 10 },
+                new StoreItem { sku = "gr", name = "Gems?", type = Db.Store.allowedTypes[0], cosmetic = true, priceType = "iap", price = 99, grants = "extra_charges:3" } } };
+            T.Eq(3, StoreValidator.Validate(bad, out var ok2).Count, "all 3 rejected"); T.Eq(0, ok2.Count, "none accepted");
+        });
+        // ── Art v2 Wrecker / UI QA ──
+        T.Add("wrecker_v2_dimensions", () =>
+        {
+            T.Eq(2, Crashverse.Weapons.WreckerSpec.Version, "v2");
+            T.Eq(1.5f, Crashverse.Weapons.WreckerSpec.PivotY, "core y"); T.Eq(0.84f, Crashverse.Weapons.WreckerSpec.BarrelRearDiameter, "barrel rear");
+            T.Eq(0.68f, Crashverse.Weapons.WreckerSpec.BarrelFrontDiameter, "barrel front"); T.Eq(2.3f, Crashverse.Weapons.WreckerSpec.BarrelLength, "barrel len");
+            T.True(Math.Abs(Crashverse.Weapons.WreckerSpec.BarrelEnd - Crashverse.Weapons.WreckerSpec.BarrelStart - 2.3f) < 1e-4, "barrel span");
+            T.Eq(0.9f, Crashverse.Weapons.WreckerSpec.BoosterDiameter, "booster"); T.Eq(1.2f, Crashverse.Weapons.WreckerSpec.FrontWheelDiameter, "front wheel");
+            T.Eq(0.7f, Crashverse.Weapons.WreckerSpec.RearRollerDiameter, "rear roller");
+        });
+        T.Add("ui_theme_qa_minimums", () =>
+        {
+            var th = new Crashverse.UI.UITheme();
+            foreach (var v in new[] { th.minTap, th.buttonL, th.buttonIcon, th.tabHeight, th.mapNode, th.leaderboardRow, th.seasonTier }) T.True(v >= 48f, "tap >=48dp");
+            foreach (var v in new[] { th.captionSp, th.bodySp, th.headingSp }) T.True(v >= 12f, "text >=12sp");
+            T.True(th.hudNumberSp >= 14f, "HUD >=14sp");
+        });
+        T.Add("star_bands_min_shots", () =>
+        {
+            T.Eq(3, StarRules.MinShotsLeft(5, .6f), "5 shots 3*"); T.Eq(2, StarRules.MinShotsLeft(5, .3f), "5 shots 2*");
+            T.Eq(5, StarRules.MinShotsLeft(7, .6f), "7 shots 3*"); T.Eq(3, StarRules.MinShotsLeft(7, .3f), "7 shots 2*");
+            for (int n = 4; n <= 7; n++) T.Eq(3, StarRules.ComputeInt(true, StarRules.MinShotsLeft(n, .6f), n), "band consistent " + n);
+        });
     }
 }

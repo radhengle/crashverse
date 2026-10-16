@@ -1,131 +1,116 @@
 using System.Collections.Generic;
+using Crashverse.Meta;
 using UnityEngine;
 
 namespace Crashverse.Destruction
 {
     /// <summary>
-    /// Tracks destroyedMass / totalObjectiveMass per Contract §1.
-    /// NonObjective pieces are excluded. Settle: no ObjectivePiece RB velocity > 0.15 for 0.75s.
+    /// destroyedMass / totalObjectiveMass (Contract §1). A piece counts as destroyed when broken (HP 0), out of bounds
+    /// (fell off the island), or toppled (dropped more than max(1m, half its height) from its authored position).
+    /// Settle = no dynamic ObjectivePiece faster than 0.15 m/s for 0.75 s. Also tracks Titan damage, combo and roles.
     /// </summary>
     public class DestructionTracker : MonoBehaviour
     {
         public const float SettleVelocityThreshold = 0.15f;
         public const float SettleHoldSeconds = 0.75f;
-        public const float CollapseHeightY = 1.25f; // below this = counted destroyed/toppled
 
         readonly List<DestructibleBlock> _pieces = new List<DestructibleBlock>();
-        float _totalMass;
-        float _destroyedMass;
-        float _settleTimer;
-        bool _settled = true;
+        readonly HashSet<DestructibleBlock> _counted = new HashSet<DestructibleBlock>();
+        float _totalMass, _destroyedMass, _quietTime, _totalHp;
+        public float DamageDealt { get; private set; }
+        public float TotalObjectiveHp => _totalHp;
+        public readonly ComboTracker Combo = new ComboTracker();
+        public readonly HashSet<string> FirstImpactRoles = new HashSet<string>();
+        bool _awaitingFirstImpact;
 
         public float TotalObjectiveMass => _totalMass;
         public float DestroyedMass => _destroyedMass;
-        public float DestroyedRatio => _totalMass > 0.001f ? _destroyedMass / _totalMass : 0f;
-        public bool IsSettled => _settled;
+        public float DestroyedRatio => _totalMass > 0.001f ? Mathf.Clamp01(_destroyedMass / _totalMass) : 0f;
+        public bool IsSettled => _quietTime >= SettleHoldSeconds;
+        public float QuietTime => _quietTime;
+        public IReadOnlyList<DestructibleBlock> Pieces => _pieces;
 
-        public event System.Action<float> RatioChanged;
-        public event System.Action Settled;
+        public event System.Action<int> ComboChanged;
 
-        public void RegisterStructure(IEnumerable<DestructibleBlock> blocks)
+        public void Register(IEnumerable<DestructibleBlock> blocks)
         {
-            _pieces.Clear();
-            _totalMass = 0f;
-            _destroyedMass = 0f;
-            _settleTimer = 0f;
-            _settled = true;
-
+            UnregisterAll();
             foreach (var b in blocks)
             {
-                if (b == null || !b.isObjectivePiece) continue;
+                if (b == null) continue;
+                b.Damaged += OnDamaged;
+                if (!b.isObjectivePiece) continue;
                 _pieces.Add(b);
                 _totalMass += b.Mass;
-                b.Broken += OnBroken;
-                b.Collapsed += OnCollapsed;
+                if (!b.indestructible) _totalHp += b.MaxHp;
             }
-            RatioChanged?.Invoke(DestroyedRatio);
+            Combo.ResetRun();
         }
 
         public void UnregisterAll()
         {
-            foreach (var b in _pieces)
-            {
-                if (b == null) continue;
-                b.Broken -= OnBroken;
-                b.Collapsed -= OnCollapsed;
-            }
-            _pieces.Clear();
-            _totalMass = 0f;
-            _destroyedMass = 0f;
+            foreach (var b in _pieces) if (b != null) b.Damaged -= OnDamaged;
+            _pieces.Clear(); _counted.Clear();
+            _totalMass = _destroyedMass = _totalHp = DamageDealt = 0f;
+            _quietTime = SettleHoldSeconds;
+            FirstImpactRoles.Clear();
         }
 
-        void OnBroken(DestructibleBlock b)
+        /// <summary>Called on each confirmed fire: combos never carry across shots (Addendum §2).</summary>
+        public void OnShotFired()
         {
-            RecalcDestroyed();
-            _settled = false;
-            _settleTimer = 0f;
+            Combo.OnShot();
+            _quietTime = 0f;
+            _awaitingFirstImpact = true;
         }
 
-        void OnCollapsed(DestructibleBlock b)
+        void OnDamaged(DestructibleBlock b, float removed, bool direct)
         {
-            _settled = false;
-            _settleTimer = 0f;
+            if (b.isObjectivePiece) DamageDealt += removed;
+            if (direct && _awaitingFirstImpact) { _awaitingFirstImpact = false; if (!string.IsNullOrEmpty(b.role)) FirstImpactRoles.Add(b.role); }
+            _quietTime = 0f;
         }
 
-        void RecalcDestroyed()
-        {
-            float d = 0f;
-            foreach (var b in _pieces)
-            {
-                if (b == null) continue;
-                if (b.IsBroken)
-                {
-                    d += b.Mass;
-                    continue;
-                }
-                // Toppled below height counts toward objective
-                if (b.transform.position.y < CollapseHeightY)
-                    d += b.Mass;
-            }
-            _destroyedMass = Mathf.Min(d, _totalMass);
-            RatioChanged?.Invoke(DestroyedRatio);
-        }
+        public static bool CountsDestroyed(DestructibleBlock b) =>
+            b.IsBroken || b.IsOutOfBounds || (b.InitialY - b.transform.position.y) > Mathf.Max(1f, b.Height * 0.5f);
 
         void FixedUpdate()
         {
             if (_pieces.Count == 0) return;
-
-            bool anyMoving = false;
+            float d = 0f; bool moving = false;
             foreach (var b in _pieces)
             {
-                if (b == null || b.IsBroken) continue;
-                var rb = b.GetComponent<Rigidbody>();
-                if (rb == null || rb.isKinematic) continue;
-                if (rb.velocity.sqrMagnitude > SettleVelocityThreshold * SettleVelocityThreshold ||
-                    rb.angularVelocity.sqrMagnitude > SettleVelocityThreshold * SettleVelocityThreshold)
+                if (b == null) continue;
+                bool gone = CountsDestroyed(b);
+                if (gone)
                 {
-                    anyMoving = true;
-                    break;
+                    d += b.Mass;
+                    if (_counted.Add(b) && (b.IsBroken || b.IsOutOfBounds))
+                        ComboChanged?.Invoke(Combo.OnBreak(Time.time));
                 }
+                var rb = b.Body;
+                if (!b.IsBroken && !b.IsOutOfBounds && rb != null && !rb.isKinematic &&
+                    (rb.velocity.sqrMagnitude > SettleVelocityThreshold * SettleVelocityThreshold ||
+                     rb.angularVelocity.sqrMagnitude > SettleVelocityThreshold * SettleVelocityThreshold))
+                    moving = true;
             }
+            _destroyedMass = Mathf.Min(d, _totalMass);
+            _quietTime = moving ? 0f : _quietTime + Time.fixedDeltaTime;
+        }
 
-            // Also refresh toppled mass while settling
-            RecalcDestroyed();
-
-            if (anyMoving)
+        /// <summary>Role stats for mastery (SG-04/SG-21), taken after settle.</summary>
+        public void FillRoleStats(RunStats r, IEnumerable<DestructibleBlock> all)
+        {
+            foreach (var b in all)
             {
-                _settled = false;
-                _settleTimer = 0f;
+                if (b == null || string.IsNullOrEmpty(b.role)) continue;
+                r.RoleTotal.TryGetValue(b.role, out var t); r.RoleTotal[b.role] = t + 1;
+                if (b.IsBroken) { r.RoleBroken.TryGetValue(b.role, out var br); r.RoleBroken[b.role] = br + 1; }
+                float y = b.IsOutOfBounds ? float.NegativeInfinity : b.transform.position.y;
+                if (b.IsOutOfBounds) y = -1000f;
+                if (!r.RoleMaxCentreY.TryGetValue(b.role, out var my) || y > my) r.RoleMaxCentreY[b.role] = y;
             }
-            else
-            {
-                _settleTimer += Time.fixedDeltaTime;
-                if (!_settled && _settleTimer >= SettleHoldSeconds)
-                {
-                    _settled = true;
-                    Settled?.Invoke();
-                }
-            }
+            foreach (var role in FirstImpactRoles) r.FirstImpactRoles.Add(role);
         }
     }
 }

@@ -1,0 +1,113 @@
+{
+ "allowedTypes": [
+  "currency_pack",
+  "wrecker_skin",
+  "paint",
+  "decal",
+  "trail",
+  "vfx_skin",
+  "avatar",
+  "frame",
+  "title",
+  "map_decoration",
+  "season_pass",
+  "cosmetic_bundle",
+  "emote",
+  "victory_animation"
+ ],
+ "items": [
+  {
+   "sku": "gems_small",
+   "name": "Pouch of Gems",
+   "type": "currency_pack",
+   "cosmetic": true,
+   "priceType": "real",
+   "price": 99,
+   "grants": "gems:100",
+   "contents": []
+  },
+  {
+   "sku": "gems_large",
+   "name": "Chest of Gems",
+   "type": "currency_pack",
+   "cosmetic": true,
+   "priceType": "real",
+   "price": 499,
+   "grants": "gems:600",
+   "contents": []
+  },
+  {
+   "sku": "skin_brass_baron",
+   "name": "Brass Baron Wrecker",
+   "type": "wrecker_skin",
+   "cosmetic": true,
+   "priceType": "gems",
+   "price": 300,
+   "grants": "",
+   "contents": []
+  },
+  {
+   "sku": "trail_confetti",
+   "name": "Confetti Trail",
+   "type": "trail",
+   "cosmetic": true,
+   "priceType": "gems",
+   "price": 120,
+   "grants": "",
+   "contents": []
+  },
+  {
+   "sku": "frame_tidebreaker",
+   "name": "Tidebreaker Frame",
+   "type": "frame",
+   "cosmetic": true,
+   "priceType": "coins",
+   "price": 800,
+   "grants": "",
+   "contents": []
+  },
+  {
+   "sku": "deco_lighthouse",
+   "name": "Mini Lighthouse Deco",
+   "type": "map_decoration",
+   "cosmetic": true,
+   "priceType": "coins",
+   "price": 500,
+   "grants": "",
+   "contents": []
+  },
+  {
+   "sku": "s1_premium_track",
+   "name": "Wrecking Frontier Premium Track (cosmetics)",
+   "type": "season_pass",
+   "cosmetic": true,
+   "priceType": "real",
+   "price": 499,
+   "grants": "",
+   "contents": []
+  },
+  {
+   "sku": "bundle_harbor",
+   "name": "Harbor Look Bundle",
+   "type": "cosmetic_bundle",
+   "cosmetic": true,
+   "priceType": "gems",
+   "price": 400,
+   "grants": "",
+   "contents": [
+    "skin_brass_baron",
+    "trail_confetti"
+   ]
+  },
+  {
+   "sku": "emote_salute",
+   "name": "Captain's Salute",
+   "type": "emote",
+   "cosmetic": true,
+   "priceType": "gems",
+   "price": 80,
+   "grants": "",
+   "contents": []
+  }
+ ]
+}

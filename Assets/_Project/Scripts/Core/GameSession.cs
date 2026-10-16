@@ -1,133 +1,207 @@
+using Crashverse.Backend;
+using Crashverse.Boss;
 using Crashverse.Destruction;
 using Crashverse.Level;
+using Crashverse.Meta;
+using Crashverse.PowerUps;
 using Crashverse.Weapons;
 using UnityEngine;
 
 namespace Crashverse.Core
 {
-    public enum SessionState
-    {
-        Playing,
-        Settling,
-        Won,
-        Failed
-    }
+    public enum SessionState { Aiming, Resolving, BossTell, Won, Failed }
 
     /// <summary>
-    /// Owns move budget, win/fail/retry per Contract §4–§5.
+    /// One level attempt: shots, power-up charges, settle-gated win/fail (Contract §4), stars (SG-01/24), mastery (SG-03/04),
+    /// combo + campaign score (Addendum), boss rules, Titan scoring and journal. All checks run after physics settles.
     /// </summary>
     public class GameSession : MonoBehaviour
     {
-        public LevelConfig config;
+        public LevelBuilder builder;
         public DestructionTracker tracker;
         public FireController fire;
-        public LevelBuilder builder;
+        public AimController aim;
         public StructuralIntegrity integrity;
+        public KillPlane killPlane;
+        public Vector3 structureBase = new Vector3(10f, 0f, 0f);
 
-        public SessionState State { get; private set; } = SessionState.Playing;
-        public int MovesRemaining { get; private set; }
-        public int LastStars { get; private set; }
-        public int BestStars { get; private set; }
+        public RunContext Ctx { get; private set; }
+        public SessionState State { get; private set; }
+        public int ShotsLeft { get; private set; }
+        public PowerUpRuntime PowerUps { get; private set; }
+        public TidewardenController Boss { get; private set; }
+        public RunResult Result { get; private set; }
+        public bool HintVisible { get; private set; }
+        public int TitanDamageScore => Ctx != null && Ctx.titan != null && tracker.TotalObjectiveHp > 0
+            ? Mathf.Min(Ctx.titan.maxDamageScore, Mathf.RoundToInt(Ctx.titan.maxDamageScore * tracker.DamageDealt / tracker.TotalObjectiveHp)) : 0;
 
-        public event System.Action StateChanged;
-        public event System.Action HudDirty;
+        public event System.Action Changed;
+        public event System.Action<RunResult> Ended;
 
-        Vector3 _towerBase;
+        float _sinceFire;
+        Vector3 _baseGravity = new Vector3(0f, -9.81f, 0f);
+        DestructibleBlock _hintBlock;
 
-        public void Begin(LevelConfig cfg, Vector3 towerBase)
+        public void Begin(RunContext ctx)
         {
-            config = cfg;
-            _towerBase = towerBase;
-            BestStars = 0;
+            Ctx = ctx;
+            Physics.gravity = _baseGravity * Crashverse.Data.RuleModifiers.M(ctx.mod.gravityScale);
             Retry();
+            if (ctx.mode == RunMode.TitanRanked) JournalTitan(false); // killed before first shot still submits 0 (SG-11)
         }
 
+        /// <summary>Instant retry: authored layout, full shots and charges, no leftover debris (Contract §4).</summary>
         public void Retry()
         {
-            DebrisPool.Instance?.ClearAll();
-            builder.Clear();
-            builder.BuildClockworkTower(_towerBase);
-            tracker.UnregisterAll();
-            tracker.RegisterStructure(builder.Blocks);
-            var arr = new Crashverse.Destruction.DestructibleBlock[builder.Blocks.Count];
-            for (int i = 0; i < builder.Blocks.Count; i++) arr[i] = builder.Blocks[i];
+            foreach (var p in Projectile.Alive.ToArray()) if (p != null) Destroy(p.gameObject);
+            Projectile.Alive.Clear();
+            builder.Build(Ctx.layout, structureBase, Ctx.mod);
+            var arr = new DestructibleBlock[builder.Blocks.Count];
+            for (int i = 0; i < arr.Length; i++) arr[i] = builder.Blocks[i];
+            tracker.Register(arr);
             integrity.Bind(arr);
-
-            MovesRemaining = config.shotBudget;
-            LastStars = 0;
-            State = SessionState.Playing;
+            if (killPlane != null) killPlane.Bind(arr);
+            if (Boss != null) Destroy(Boss);
+            Boss = null;
+            if (Ctx.level.IsBoss) { Boss = gameObject.AddComponent<TidewardenController>(); Boss.Bind(builder); Boss.Changed += () => Changed?.Invoke(); }
+            PowerUps = new PowerUpRuntime(Ctx.loadout, AppServices.Content, Ctx.extraChargeSlot);
+            PowerUps.Changed += () => Changed?.Invoke();
+            ShotsLeft = Ctx.ShotBudget;
+            Result = null;
+            State = SessionState.Aiming;
             fire.CanFire = true;
-            fire.Fired -= OnFired;
-            fire.Fired += OnFired;
-            tracker.Settled -= OnSettled;
-            tracker.Settled += OnSettled;
-            tracker.RatioChanged -= OnRatio;
-            tracker.RatioChanged += OnRatio;
-            StateChanged?.Invoke();
-            HudDirty?.Invoke();
+            aim.inputEnabled = true;
+            aim.SetAim(0f, WreckerSpec.RestElevation);
+            SetupHint();
+            Changed?.Invoke();
         }
 
-        void OnFired()
+        void SetupHint()
         {
-            if (State != SessionState.Playing) return;
-            MovesRemaining = MovesRemaining > 0 ? MovesRemaining - 1 : 0;
-            State = SessionState.Settling;
+            HintVisible = false;
+            if (_hintBlock != null) _hintBlock.ClearHighlight();
+            _hintBlock = null;
+            if (!Ctx.hintArmed || !Ctx.level.HasHint) return;
+            Ctx.hintArmed = false; // next attempt only
+            _hintBlock = builder.Find(Ctx.level.hintTarget);
+            aim.ShowGhost(Ctx.level.hintYaw, Ctx.level.hintPitch);
+            HintVisible = true;
+        }
+
+        public bool TryFire()
+        {
+            if (State != SessionState.Aiming || ShotsLeft <= 0) return false;
+            var mods = PowerUps.ConsumeForShot();
+            if (!fire.Fire(mods)) return false;
+            ShotsLeft--;
+            tracker.OnShotFired();
+            _sinceFire = 0f;
+            State = SessionState.Resolving;
             fire.CanFire = false;
-            HudDirty?.Invoke();
-            StateChanged?.Invoke();
-            // If already settled with no motion, settle event may need nudge
-            Invoke(nameof(NudgeSettleCheck), 0.85f);
+            if (HintVisible) { HintVisible = false; aim.HideGhost(); if (_hintBlock != null) _hintBlock.ClearHighlight(); }
+            Changed?.Invoke();
+            return true;
         }
 
-        void NudgeSettleCheck()
+        void Update()
         {
-            if (State != SessionState.Settling) return;
-            if (tracker.IsSettled) OnSettled();
+            if (HintVisible && _hintBlock != null)
+                _hintBlock.SetHighlight(Crashverse.Destruction.MaterialDefinition.Hex("F5C451"), 0.5f + 0.5f * Mathf.Sin(Time.time * 6f));
+            if (State == SessionState.BossTell)
+            {
+                if (Boss == null || !Boss.InTransition) { State = SessionState.Aiming; fire.CanFire = true; Changed?.Invoke(); }
+                return;
+            }
+            if (State != SessionState.Resolving) return;
+            _sinceFire += Time.deltaTime;
+            if (_sinceFire < 0.3f || FireController.ActiveProjectiles > 0 || !tracker.IsSettled) return;
+            ResolveShot();
         }
 
-        void OnRatio(float _)
+        void ResolveShot()
         {
-            HudDirty?.Invoke();
+            bool won = Boss != null ? Boss.Defeated : tracker.DestroyedRatio + 1e-5f >= Ctx.level.winThreshold;
+            if (Ctx.mode == RunMode.TitanRanked && !won) JournalTitan(false);
+            if (won) { End(true); return; }
+            if (ShotsLeft <= 0) { End(false); return; }
+            if (Boss != null)
+            {
+                float tell = Boss.OnShotResolved();
+                if (tell > 0f) { State = SessionState.BossTell; Changed?.Invoke(); return; }
+            }
+            State = SessionState.Aiming;
+            fire.CanFire = true;
+            Changed?.Invoke();
         }
 
-        void OnSettled()
-        {
-            if (State != SessionState.Settling && State != SessionState.Playing) return;
-
-            float ratio = tracker.DestroyedRatio;
-            bool win = ratio >= config.winThreshold;
-
-            if (win)
-            {
-                State = SessionState.Won;
-                LastStars = config.ComputeStars(true, MovesRemaining);
-                
-                if (LastStars > BestStars) BestStars = LastStars;
-                fire.CanFire = false;
-            }
-            else if (MovesRemaining <= 0)
-            {
-                State = SessionState.Failed;
-                LastStars = 0;
-                fire.CanFire = false;
-            }
-            else
-            {
-                State = SessionState.Playing;
-                fire.CanFire = true;
-            }
-            HudDirty?.Invoke();
-            StateChanged?.Invoke();
-        }
-
+        /// <summary>Pause menu "Give Up" (Contract §4 fail path).</summary>
         public void GiveUp()
         {
-            if (State == SessionState.Won) return;
-            State = SessionState.Failed;
-            LastStars = 0;
-            fire.CanFire = false;
-            HudDirty?.Invoke();
-            StateChanged?.Invoke();
+            if (State == SessionState.Won || State == SessionState.Failed) return;
+            End(false);
         }
+
+        void JournalTitan(bool killed)
+        {
+            var r = new RankedResult { token = Ctx.ticket.token, damageScore = TitanDamageScore, shotsLeft = ShotsLeft, killed = killed, partial = !killed };
+            r.signature = LocalBackendService.Sign(r);
+            TitanRunJournal.Write(r);
+        }
+
+        async void End(bool won)
+        {
+            State = won ? SessionState.Won : SessionState.Failed;
+            fire.CanFire = false;
+            aim.inputEnabled = false;
+            var lvl = Ctx.level;
+            int stars = StarRules.Compute(won, ShotsLeft, Ctx.ShotBudget, lvl.star3Pct, lvl.star2Pct,
+                                          PowerUps.AnyUsed ? lvl.starCapIfPowerupUsed : 3);
+            var stats = new RunStats { won = won, shotsUsed = Ctx.ShotBudget - ShotsLeft, shotsLeft = ShotsLeft, stars = stars,
+                                       destroyedRatio = tracker.DestroyedRatio, powerUpUsed = PowerUps.AnyUsed, islandKillY = lvl.islandKillY };
+            tracker.FillRoleStats(stats, builder.Blocks);
+            bool mastery = MasteryEvaluator.Evaluate(lvl.mastery, stats);
+            int combo = tracker.Combo.BestThisRun;
+            var res = new RunResult { won = won, stars = stars, mastery = mastery, bestCombo = combo, ratio = tracker.DestroyedRatio, shotsLeft = ShotsLeft };
+            Result = res;
+            var backend = AppServices.Backend;
+            try
+            {
+                switch (Ctx.mode)
+                {
+                    case RunMode.Campaign:
+                        res.score = CampaignScore.Compute(won, res.ratio, ShotsLeft, combo, mastery);
+                        res.firstClear = AppServices.Save.RecordResult(lvl.id, won, stars, mastery, res.score);
+                        if (res.firstClear && lvl.reward != null && lvl.reward.Length > 0) await backend.GrantCampaignReward(lvl.id, lvl.reward);
+                        break;
+                    case RunMode.Event:
+                        if (won) await backend.ReportEventStars(lvl.id, stars); // SG-23: best single run, server-side
+                        break;
+                    case RunMode.TitanRanked:
+                        res.titanScore = LocalBackendService.TitanScore(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
+                        JournalTitan(won);
+                        var r = TitanRunJournal.Read(); r.partial = false; r.signature = LocalBackendService.Sign(r);
+                        res.titanSubmit = await backend.SubmitRanked(r);
+                        TitanRunJournal.Clear();
+                        break;
+                    case RunMode.TitanPractice:
+                        res.titanScore = LocalBackendService.TitanScore(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
+                        res.note = "Practice run (not ranked)";
+                        break;
+                }
+            }
+            catch (BackendException e)
+            {
+                res.note = Ctx.mode == RunMode.TitanRanked ? "Offline: ranked result queued and will retry" : "Offline: " + e.Message;
+            }
+            Changed?.Invoke();
+            Ended?.Invoke(res);
+        }
+
+        void OnApplicationPause(bool paused)
+        {
+            if (paused && Ctx != null && Ctx.mode == RunMode.TitanRanked && State != SessionState.Won && State != SessionState.Failed) JournalTitan(false);
+        }
+
+        void OnDestroy() { Physics.gravity = _baseGravity; }
     }
 }
