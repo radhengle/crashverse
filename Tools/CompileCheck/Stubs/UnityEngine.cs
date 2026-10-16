@@ -120,6 +120,7 @@ namespace UnityEngine
     public static class Mathf
     {
         public static float PerlinNoise(float x, float y) => 0.5f;
+        public static int CeilToInt(float f) => (int)System.Math.Ceiling(f);
         public static float Clamp(float v, float min, float max) => Math.Min(max, Math.Max(min, v));
         public static int Clamp(int v, int min, int max) => Math.Min(max, Math.Max(min, v));
         public static float Max(float a, float b) => Math.Max(a, b);
@@ -285,6 +286,7 @@ namespace UnityEngine
     {
         public static bool HasKey(string k) => false;
         public static void DeleteAll() { }
+        public static void DeleteKey(string k) { }
         static Dictionary<string, int> _i = new Dictionary<string, int>();
         public static int GetInt(string k, int d = 0) => _i.TryGetValue(k, out var v) ? v : d;
         public static void SetInt(string k, int v) => _i[k] = v;

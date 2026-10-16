@@ -33,7 +33,10 @@ namespace Crashverse.Backend
     [Serializable] public class InputLog { public string attemptToken; public string levelId; public List<InputEvent> events = new List<InputEvent>(); public string clientVersion; }
     [Serializable] public class InputLogResponse { public bool accepted; public string message; }
 
-    [Serializable] public class DeleteAccountResponse { public bool accepted; public string message; public long scheduledUnixUtc; }
+    /// <summary>A4: DELETE /account → scheduled purge time (grace ≤ 7 days, completion ≤ 30 days).</summary>
+    [Serializable] public class DeleteAccountResponse { public bool accepted; public string message; public long scheduledDeletionUnixUtc; }
+
+    public static class AgeBands { public const string Minor = "13to17", Adult = "adult"; }
 
     /// <summary>
     /// SERVER-ONLY. Purchases / premium pass entitlements are granted by the server after store receipt validation.

@@ -547,86 +547,228 @@ namespace Crashverse.UI
                 var item = it;
                 var row = UIFactory.HStack(list, Th.gap, 56f);
                 UIFactory.Label(row, $"{UIFactory.Truncate(item.name, 22)}\n{item.type}", Th.captionSp, Th.white, TextAnchor.MiddleLeft, Th);
-                UIFactory.Button(row, item.priceType == "iap" ? $"${item.price / 100f:0.00}" : $"{item.price} {item.priceType}", Th.green,
-                    () => Router.Toast("Purchase stub: " + item.sku + " (IAP not wired)"), Th, 48, 110, Th.captionSp);
+                if (AgeGate.CanPurchase(AgeGateScreen.Current, AppServices.Account?.consentPurchases ?? false)) // E5/E6: buy hidden for minors without consent
+                    UIFactory.Button(row, item.priceType == "iap" ? $"${item.price / 100f:0.00}" : $"{item.price} {item.priceType}", Th.green,
+                        () => Router.Toast("Purchase stub: " + item.sku + " (IAP not wired)"), Th, 48, 110, Th.captionSp);
             }
             UIFactory.Button(v, "Back", Th.navy500, () => Router.Pop(), Th, 48);
         }
     }
 
-    // ───────────────────────────── Settings (Feel OQ-C2 / Roadmap §6) ─────────────────────────────
+    // ───────────────────────────── Settings (Feel OQ-C2, Deletion/AgeGate reqs A1, F4, F5) ─────────────────────────────
+    // SettingsModal ships in every build; QA tools do not (SEC-02). Map → Settings → Delete account = 2 taps (A1).
     public class SettingsModal : UIScreen
     {
-        public override bool IsModal => true; Text _shake, _motion;
-        // SettingsModal ships in every build; QA tools do not (SEC-02).
+        public override bool IsModal => true; Text _shake, _motion, _hide;
         protected override void Build(RectTransform root)
         {
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
-            var p = UIFactory.TrimPanel("Settings", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 300), Vector2.zero);
+            var p = UIFactory.TrimPanel("Settings", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(330, 560), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
             UIFactory.Label(v, "Settings", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
             var m = Crashverse.Feel.MotionSettings.Current;
             _shake = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceShake(!m.ReduceShake); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
             _motion = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceMotion(!m.ReduceMotion); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
-            UIFactory.Button(v, "Delete account", Th.red, () => Router.Push(new ConfirmModal("Delete account?",
-                "This permanently deletes your account, progress, wallet and leaderboard entries on our servers and this device. This can't be undone.",
-                "Delete", DeleteAccount)), Th, 48); // B6
+            UIFactory.Label(v, "Privacy", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            _hide = UIFactory.Button(v, "", Th.navy500, ToggleHide, Th, 48).GetComponentInChildren<Text>();
+            UIFactory.Label(v, "Account", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            UIFactory.Button(v, "Linked accounts", Th.navy500, () => Router.Push(new LinkedAccountsModal()), Th, 48);
+            UIFactory.Button(v, AccountDeletion.Pending ? "Delete account (pending until online)" : "Delete account", Th.red, () => Router.Push(new DeleteAccountScreen()), Th, 48);
             UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
             Refresh();
         }
-        async void DeleteAccount()
+        async void ToggleHide()
         {
-            try
-            {
-                var flags = await AppServices.Backend.GetFeatureFlags();
-                if (!flags.accountDeletionEnabled) { Router.Toast("Account deletion is unavailable right now. Please try again later."); return; }
-                var r = await AppServices.Backend.DeleteAccount();
-                if (!r.accepted) { Router.Toast("Couldn't delete: " + r.message); return; }
-                AccountDeletion.WipeLocal();
-                Router.Toast("Your account was deleted.", 4f);
-                GameplayDirector.ShowMap();
-            }
-            catch (BackendException) { Router.Toast("You need to be online to delete your account."); }
+            try { AppServices.Account = await AppServices.Backend.SetHideName(!(AppServices.Account?.hideName ?? false)); Refresh(); }
+            catch (BackendException) { Router.Toast("You need to be online to change this."); }
         }
         void Refresh()
         {
             var m = Crashverse.Feel.MotionSettings.Current;
             _shake.text = "Reduce shake: " + (m.ReduceShake ? "ON" : "OFF");
             _motion.text = "Reduce motion: " + (m.ReduceMotion ? "ON" : "OFF") + (m.ReduceMotionIsAuto ? " (system)" : "");
+            _hide.text = "Hide my name on leaderboards: " + ((AppServices.Account?.hideName ?? false) ? "ON" : "OFF");
         }
     }
 
-    // ───────────────────────────── Age gate (B6, placeholder rules) ─────────────────────────────
+    /// <summary>F4/F1: see and manage login links (separate from deletion). Linking is hidden for minors without consent (E5, C3).</summary>
+    public class LinkedAccountsModal : UIScreen
+    {
+        public override bool IsModal => true; RectTransform _v;
+        protected override void Build(RectTransform root)
+        {
+            var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
+            var p = UIFactory.TrimPanel("Links", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 440), Vector2.zero);
+            _v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(_v);
+            Load();
+        }
+        async void Load()
+        {
+            foreach (Transform c in _v) UnityEngine.Object.Destroy(c.gameObject);
+            UIFactory.Label(_v, "Linked accounts", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            try
+            {
+                var acc = AppServices.Account = await AppServices.Backend.GetAccount();
+                var flags = await AppServices.Backend.GetFeatureFlags();
+                if (acc.identities.Count == 0) UIFactory.Label(_v, "Guest account (no login linked)", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+                foreach (var id in acc.identities)
+                {
+                    var prov = (AuthProvider)Enum.Parse(typeof(AuthProvider), id);
+                    UIFactory.Button(_v, "Unlink " + id, Th.navy500, () => Unlink(prov), Th, 48);
+                }
+                var band = AgeGate.FromServer(acc.ageBand);
+                if (AgeGate.CanSocialSignIn(band == AgeGate.Band.Unknown ? AgeGateScreen.Current : band, acc.consentSocial))
+                {
+                    foreach (AuthProvider prov in Enum.GetValues(typeof(AuthProvider)))
+                    {
+                        if (acc.identities.Contains(prov.ToString()) || (prov == AuthProvider.X && !flags.xLoginEnabled)) continue; // X gated by server flag
+                        var pv = prov;
+                        UIFactory.Button(_v, "Link " + pv, Th.green, () => Router.Toast("Sign-in with " + pv + " isn't wired yet"), Th, 48); // TODO(Dev): provider SDKs
+                    }
+                }
+                else UIFactory.Label(_v, "Linking a login needs a parent's permission.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            }
+            catch (BackendException) { UIFactory.Label(_v, "You need to be online to manage linked accounts.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th); }
+            UIFactory.Button(_v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
+        }
+        async void Unlink(AuthProvider p)
+        {
+            try
+            {
+                var tok = await AccountLifecycle.ReauthProvider(p);
+                if (string.IsNullOrEmpty(tok)) { Router.Toast("Please sign in again first."); return; }
+                await AppServices.Backend.Reauthenticate(p, tok);
+                AppServices.Account = await AppServices.Backend.UnlinkAccount(p); Load();
+            }
+            catch (BackendException e) { Router.Toast(e.Code == "LAST_LOGIN" ? "You must keep at least one login method." : "Couldn't unlink: " + e.Code); }
+        }
+    }
+
+    /// <summary>A2/A3/A6: explains the consequences, needs a 2 s press-and-hold, re-auths linked accounts, queues when offline.</summary>
+    public class DeleteAccountScreen : UIScreen
+    {
+        public const float HoldSeconds = 2f;
+        public const string Copy =
+            "Deleting your account removes your account, sign-in links, progress, wallet, leaderboard entries and profile.\n\n" +
+            "We keep only pseudonymised purchase records (see the privacy notice, section 5).\n\n" +
+            "Deletion is completed within 30 days. You can cancel by signing in within 7 days; after that it can't be undone.\n\n" +
+            "Purchases are not refunded and are lost.";
+        public override bool IsModal => true; Text _hold; HoldToConfirm _h;
+        protected override void Build(RectTransform root)
+        {
+            var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.75f)); UIFactory.Stretch(dim.rectTransform);
+            var p = UIFactory.TrimPanel("Delete", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(330, 520), Vector2.zero);
+            var v = UIFactory.VStack(p.transform, Th.gap, 14f); UIFactory.Stretch(v);
+            UIFactory.Label(v, "Delete account", Th.headingSp, Th.red, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Label(v, Copy, Th.captionSp, Th.white, TextAnchor.UpperLeft, Th);
+            if (AccountDeletion.Pending) UIFactory.Label(v, "Your request is pending until you're online.", Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            var btn = UIFactory.Button(v, "", Th.red, () => { }, Th, 56);
+            _hold = btn.GetComponentInChildren<Text>();
+            _h = btn.gameObject.AddComponent<HoldToConfirm>(); _h.seconds = HoldSeconds; _h.Completed = Confirm; // single tap never confirms
+            UIFactory.Button(v, "Keep my account", Th.navy500, () => Router.Pop(), Th, 48);
+        }
+        public override void Tick() { if (_hold != null) _hold.text = _h != null && _h.Progress > 0f ? $"Keep holding… {Mathf.CeilToInt((1f - _h.Progress) * HoldSeconds)}" : "Press and hold to delete"; }
+        async void Confirm()
+        {
+            var b = AppServices.Backend;
+            try
+            {
+                var acc = AppServices.Account ?? await b.GetAccount();
+                if (acc.linked) // A3: fresh re-auth (< 5 min) with a linked provider
+                {
+                    var prov = (AuthProvider)Enum.Parse(typeof(AuthProvider), acc.identities.Count > 0 ? acc.identities[0] : acc.provider);
+                    var tok = await AccountLifecycle.ReauthProvider(prov);
+                    if (string.IsNullOrEmpty(tok)) { Router.Toast("Please sign in again to confirm deletion."); return; }
+                    await b.Reauthenticate(prov, tok);
+                }
+            }
+            catch (BackendException e) when (!e.IsOffline) { Router.Toast("Couldn't verify your sign-in: " + e.Code); return; }
+            catch (BackendException) { } // offline: queue below (re-auth is requested again when it's sent)
+            var res = await AccountDeletion.Request(b);
+            switch (res)
+            {
+                case AccountDeletion.Result.Scheduled: GameBootstrap.RestartFirstRun(); AppServices.Router.Toast("Your account is scheduled for deletion.", 4f); break;
+                case AccountDeletion.Result.PendingOffline: Router.Pop(); Router.Toast("Deletion is pending until you're online.", 4f); break;
+                case AccountDeletion.Result.ReauthRequired: Router.Toast("Please sign in again to confirm deletion.", 4f); break;
+                default: AccountDeletion.Cancel(); Router.Toast("Couldn't delete your account. Please try again."); break;
+            }
+        }
+    }
+
+    /// <summary>Press-and-hold confirmation (A2: cannot confirm with a single tap). Unscaled time.</summary>
+    public class HoldToConfirm : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    {
+        public float seconds = 2f; public Action Completed; bool _down, _fired; float _t;
+        public float Progress => Mathf.Clamp01(_t / seconds);
+        public void OnPointerDown(PointerEventData e) { _down = true; _t = 0f; _fired = false; }
+        public void OnPointerUp(PointerEventData e) { _down = false; _t = 0f; }
+        void Update()
+        {
+            if (!_down || _fired) return;
+            _t += Time.unscaledDeltaTime;
+            if (_t >= seconds) { _fired = true; _down = false; _t = 0f; Completed?.Invoke(); }
+        }
+    }
+
+    // ───────────────────────────── Neutral age gate (§E1/E2) ─────────────────────────────
+    /// <summary>Year + month pickers with no default; no hint of an eligible age. Stores only the band (13+) or a local blocked flag.</summary>
     public class AgeGateScreen : UIScreen
     {
-        public const string PrefKey = "cv_age_band_v" ; // + AgeGate.Version; stores the band only, never the birth date
-        public static bool Needed => UnityEngine.PlayerPrefs.GetInt(PrefKey + AgeGate.Version, 0) == 0;
-        public static AgeGate.Band Current => (AgeGate.Band)UnityEngine.PlayerPrefs.GetInt(PrefKey + AgeGate.Version, 0);
-        readonly System.Action _done; int _year; Text _yearText; Button _ok;
-        public AgeGateScreen(System.Action done) { _done = done; }
+        public const string BandKey = "cv_age_band_v", BlockedKey = "cv_age_blocked";
+        public static bool Blocked => PlayerPrefs.GetInt(BlockedKey, 0) == 1;
+        public static bool Needed => !Blocked && PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0) == 0;
+        public static AgeGate.Band Current => (AgeGate.Band)PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0);
+        /// <summary>TODO(Legal): which age signal is acceptable (store country vs locale). Locale region for now.</summary>
+        public static string Country() { try { return System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName; } catch { return ""; } }
+
+        static readonly string[] Months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        readonly Action<bool> _done; int _year, _month; Button _yearBtn, _monthBtn, _ok;
+        public AgeGateScreen(Action<bool> done) { _done = done; }
         public override bool OnBack() => true; // must answer
         protected override void Build(RectTransform root)
         {
             var bg = UIFactory.Panel("Bg", root, Th.navy900); UIFactory.Stretch(bg.rectTransform);
-            var v = UIFactory.VStack(root, Th.gap * 2, 24f); UIFactory.Place(v, new Vector2(0.5f, 0.5f), new Vector2(320, 360), Vector2.zero);
-            UIFactory.Label(v, "What year were you born?", Th.headingSp, Th.white, TextAnchor.MiddleCenter, Th, true);
-            _year = AppServices.ServerNow.Year > 2000 ? AppServices.ServerNow.Year - 10 : System.DateTime.UtcNow.Year - 10; // neutral start, no "adult" default
-            var row = UIFactory.HStack(v, Th.gap, 56);
-            UIFactory.Button(row, "−10", Th.navy500, () => Step(-10), Th, 48, 64, Th.captionSp);
-            UIFactory.Button(row, "−1", Th.navy500, () => Step(-1), Th, 48, 56, Th.captionSp);
-            _yearText = UIFactory.Label(row, "", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
-            UIFactory.Button(row, "+1", Th.navy500, () => Step(1), Th, 48, 56, Th.captionSp);
-            _ok = UIFactory.Button(v, "Continue", Th.green, Confirm, Th, 56);
-            UIFactory.Label(v, "Used only to set up age-appropriate features. Only an age range is stored on this device.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
-            Step(0);
+            var v = UIFactory.VStack(root, Th.gap * 2, 24f); UIFactory.Place(v, new Vector2(0.5f, 0.5f), new Vector2(320, 380), Vector2.zero);
+            UIFactory.Label(v, "Welcome to CRASHVERSE", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Label(v, "Please enter your date of birth.", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
+            _monthBtn = UIFactory.Button(v, "Month", Th.navy500, PickMonth, Th, 56);
+            _yearBtn = UIFactory.Button(v, "Year", Th.navy500, PickYear, Th, 56);
+            _ok = UIFactory.Button(v, "Continue", Th.green, Confirm, Th, 56); _ok.interactable = false;
+            UIFactory.Label(v, "We only keep an age range, never your date of birth.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
         }
-        void Step(int d) { int now = System.DateTime.UtcNow.Year; _year = Mathf.Clamp(_year + d, now - 100, now); _yearText.text = _year.ToString(); }
+        void PickMonth()
+        {
+            var items = new List<(string, Action)>();
+            for (int i = 0; i < 12; i++) { int m = i + 1; items.Add((Months[i], () => { _month = m; _monthBtn.GetComponentInChildren<Text>().text = Months[m - 1]; Validate(); })); }
+            Router.Push(new ListModal("Month of birth", items));
+        }
+        void PickYear()
+        {
+            var items = new List<(string, Action)>(); int now = DateTime.UtcNow.Year;
+            for (int y = now; y >= now - 100; y--) { int yy = y; items.Add((yy.ToString(), () => { _year = yy; _yearBtn.GetComponentInChildren<Text>().text = yy.ToString(); Validate(); })); } // newest first: no eligible-age default
+            Router.Push(new ListModal("Year of birth", items));
+        }
+        void Validate() => _ok.interactable = _year > 0 && _month > 0;
         void Confirm()
         {
-            var band = AgeGate.Classify(_year, AppServices.TimeSynced ? AppServices.ServerNow.Year : System.DateTime.UtcNow.Year);
-            if (band == AgeGate.Band.Unknown) { Router.Toast("Please pick a valid year"); return; }
-            UnityEngine.PlayerPrefs.SetInt(PrefKey + AgeGate.Version, (int)band); UnityEngine.PlayerPrefs.Save();
-            Router.Pop(); _done?.Invoke();
+            var now = DateTime.UtcNow; // device date is fine here: no server contact is allowed before the gate
+            var band = AgeGate.Classify(_year, _month, now.Year, now.Month);
+            if (band == AgeGate.Band.Unknown) return;
+            if (band == AgeGate.Band.Under13) { PlayerPrefs.SetInt(BlockedKey, 1); PlayerPrefs.Save(); _done?.Invoke(false); return; } // E2: no DOB stored
+            PlayerPrefs.SetInt(BandKey + AgeGate.Version, (int)band); PlayerPrefs.Save();
+            _done?.Invoke(true);
+        }
+    }
+
+    /// <summary>E2: neutral block screen. No back, no retry.</summary>
+    public class BlockedScreen : UIScreen
+    {
+        public override bool OnBack() => true;
+        protected override void Build(RectTransform root)
+        {
+            var bg = UIFactory.Panel("Bg", root, Th.navy900); UIFactory.Stretch(bg.rectTransform);
+            var l = UIFactory.Label(root, "CRASHVERSE isn't available.", Th.headingSp, Th.white, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Place(l.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 120), Vector2.zero);
         }
     }
 

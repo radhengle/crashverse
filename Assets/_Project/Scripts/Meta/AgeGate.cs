@@ -3,27 +3,39 @@ using System;
 namespace Crashverse.Meta
 {
     /// <summary>
-    /// B6 age gate (first launch). PLACEHOLDER RULES — TODO(Security Admin): replace thresholds/behaviour when requirements arrive.
-    /// Only the resulting band is stored (no birth date). Neutral entry: the player picks a year; no default that implies "adult".
+    /// Neutral age gate (Deletion_AgeGate_Requirements §E). The game is 13+. Year + month of birth; only the band is kept
+    /// (never the birth date). Under-13 → blocked locally, no account, no server call. [[LEGAL]] items stay TODO.
     /// </summary>
     public static class AgeGate
     {
-        public enum Band { Unknown = 0, Under13 = 1, Teen = 2, Adult = 3 }
-        public const int MinAgeFull = 13;   // TODO(Security Admin): confirm (COPPA 13 / GDPR-K up to 16 per country)
-        public const int AdultAge = 18;     // TODO(Security Admin)
-        public const int Version = 1;       // bump to re-ask everyone when rules change
+        public enum Band { Unknown = 0, Under13 = 1, Minor13to17 = 2, Adult = 3 }
+        public const int MinAge = 13, AdultAge = 18;
+        public const int Version = 2; // v2 = year+month gate (§E1); re-asks installs that answered v1
 
-        /// <summary>Conservative: assumes the birthday hasn't happened yet this year.</summary>
-        public static Band Classify(int birthYear, int currentYear)
+        /// <summary>Completed years, conservative: a birthday in the current month is treated as not yet reached.</summary>
+        public static int AgeYears(int birthYear, int birthMonth, int nowYear, int nowMonth)
         {
-            if (birthYear <= 1900 || birthYear > currentYear) return Band.Unknown;
-            int age = currentYear - birthYear - 1;
-            return age < MinAgeFull ? Band.Under13 : age < AdultAge ? Band.Teen : Band.Adult;
+            int months = (nowYear * 12 + nowMonth) - (birthYear * 12 + birthMonth);
+            return months <= 0 ? 0 : (months - 1) / 12;
         }
 
-        /// <summary>Placeholder restrictions for Under13: no account linking/email, no public leaderboards names, no store. TODO(Security Admin).</summary>
-        public static bool CanLinkAccount(Band b) => b == Band.Teen || b == Band.Adult;
-        public static bool CanUsePublicLeaderboards(Band b) => b == Band.Teen || b == Band.Adult;
-        public static bool CanPurchase(Band b) => b == Band.Adult; // TODO(Security Admin): parental consent flow
+        public static Band Classify(int birthYear, int birthMonth, int nowYear, int nowMonth)
+        {
+            if (birthMonth < 1 || birthMonth > 12 || birthYear < nowYear - 120 || (birthYear * 12 + birthMonth) > (nowYear * 12 + nowMonth)) return Band.Unknown;
+            int age = AgeYears(birthYear, birthMonth, nowYear, nowMonth);
+            return age < MinAge ? Band.Under13 : age < AdultAge ? Band.Minor13to17 : Band.Adult;
+        }
+
+        public static string ToServer(Band b) => b == Band.Adult ? "adult" : b == Band.Minor13to17 ? "13to17" : "";
+        public static Band FromServer(string s) => s == "adult" ? Band.Adult : s == "13to17" ? Band.Minor13to17 : Band.Unknown;
+
+        // §E5 client mirrors (the server enforces). Under-18 never gets tracking/ads regardless of consent.
+        public static bool CanSocialSignIn(Band b, bool consentSocial) => b == Band.Adult || (b == Band.Minor13to17 && consentSocial);
+        public static bool CanCustomName(Band b, bool consentName) => b == Band.Adult || (b == Band.Minor13to17 && consentName);
+        /// <summary>E5/E6: minors need purchase consent (all markets until consent; plus 18+ markets [[LEGAL]]).</summary>
+        public static bool CanPurchase(Band b, bool consentPurchases) => b == Band.Adult || (b == Band.Minor13to17 && consentPurchases);
+        public static bool AllowTracking(Band b) => false; // analytics/ads are off for everyone today; never for < 18 (DPDP §9)
+        /// <summary>C3: guest "link an account" prompt — never to minors without consent.</summary>
+        public static bool ShowLinkPrompt(Band b, bool linked, bool consentSocial) => !linked && CanSocialSignIn(b, consentSocial);
     }
 }

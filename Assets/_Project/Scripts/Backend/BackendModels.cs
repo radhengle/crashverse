@@ -77,7 +77,23 @@ namespace Crashverse.Backend
         public LeaderboardEntry me; public int totalEntries; public bool meIsGuestHidden; public long fetchedUnixUtc;
     }
 
-    [Serializable] public class AccountState { public string playerId; public string displayName; public bool linked; public string provider; }
+    [Serializable] public class AccountState
+    {
+        public string playerId; public string displayName; public bool linked; public string provider;
+        public List<string> identities = new List<string>();      // F4: linked login providers
+        public long pendingDeletionUnixUtc;                        // A5: >0 while in the 7-day grace period
+        public long deletionWarningAtUnixUtc, guestPurgeAtUnixUtc; // C2: guest inactivity warning (day 335) and purge date (day 365)
+        public string ageBand = "";                                // E3: "13to17" | "adult" (never a birth date)
+        public bool consentSocial, consentName, consentPurchases;  // E4: parental consent scopes (13-17)
+        public bool consentPending;
+        public bool hideName;                                      // F5
+    }
 
-    public class BackendException : Exception { public BackendException(string m) : base(m) { } }
+    public class BackendException : Exception
+    {
+        public string Code { get; } public int Status { get; }
+        public BackendException(string m) : base(m) { Code = m; }
+        public BackendException(string code, int status, string m = null) : base(m ?? code) { Code = code; Status = status; }
+        public bool IsOffline => Code == "offline" || Code == "server time unavailable";
+    }
 }

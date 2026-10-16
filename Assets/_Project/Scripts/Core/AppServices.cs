@@ -10,6 +10,9 @@ namespace Crashverse.Core
     /// <summary>Composition root. Swap Backend for a real server implementation of IBackendService here.</summary>
     public static class AppServices
     {
+        /// <summary>Auth session token: memory only, never persisted (passwords are never stored at all).</summary>
+        public static string SessionToken;
+        public static AccountState Account; // last fetched server account (age band, consent, deletion state)
         public static ContentDatabase Content;
         public static CampaignSave Save;
         public static IBackendService Backend;

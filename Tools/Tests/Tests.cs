@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.IO;
 using Crashverse.Backend;
 using Crashverse.Data;
@@ -40,6 +41,8 @@ static class Tests
     static CampaignSubmitResponse Win(LocalBackendService b, string id, float ratio = 1f, int left = 1, int combo = 0) =>
         b.SubmitCampaignResult(new CampaignRunReport { levelId = id, won = true, destroyedRatio = ratio, shotsLeft = left, bestCombo = combo }).Result;
     static bool Throws(Action a) { try { a(); return false; } catch (Exception) { return true; } }
+    static BackendException Catch(Action a) { try { a(); return null; } catch (AggregateException e) { return e.InnerException as BackendException; } catch (BackendException e) { return e; } }
+    static long Unix(string s) => new DateTimeOffset(U(s)).ToUnixTimeSeconds();
 
     public static void Register()
     {
@@ -756,15 +759,109 @@ static class Tests
             T.True(Throws(() => b.LinkAccount(AuthProvider.X, "tok").Wait()), "X link refused while flag off");
             b.Flags.xLoginEnabled = true; T.True(b.LinkAccount(AuthProvider.X, "tok").Result.linked, "X link once server flag on");
         });
-        T.Add("B6_delete_account_and_age_gate", () =>
+        T.Add("REQ_A3_A4_A5_delete_reauth_grace_cancel", () =>
         {
-            var b = NewBackend("2026-10-16T10:00:00"); b.LinkAccount(AuthProvider.Google, "tok").Wait(); Win(b, "c1_l01");
-            var old = b.GetAccount().Result.playerId;
-            T.True(b.DeleteAccount().Result.accepted, "deleted");
-            var acc = b.GetAccount().Result; T.True(acc.playerId != old && !acc.linked, "fresh guest after deletion");
-            T.Eq(AgeGate.Band.Under13, AgeGate.Classify(2014, 2026)); T.Eq(AgeGate.Band.Teen, AgeGate.Classify(2012, 2026));
-            T.Eq(AgeGate.Band.Adult, AgeGate.Classify(2007, 2026)); T.Eq(AgeGate.Band.Unknown, AgeGate.Classify(2030, 2026));
-            T.True(!AgeGate.CanLinkAccount(AgeGate.Band.Under13) && AgeGate.CanLinkAccount(AgeGate.Band.Teen), "placeholder restrictions");
+            var b = NewBackend("2026-10-16T10:00:00");
+            var g = b.DeleteAccount().Result; T.True(g.accepted, "guest deletes with session only (C1)");
+            T.Eq(Unix("2026-10-23T10:00:00"), g.scheduledDeletionUnixUtc, "7-day grace (A5)");
+            T.True(b.CancelAccountDeletion().Result.pendingDeletionUnixUtc == 0, "cancel in grace");
+            b.LinkAccount(AuthProvider.Google, "tok").Wait(); Win(b, "c1_l01"); var id = b.GetAccount().Result.playerId;
+            var ex = Catch(() => b.DeleteAccount().Wait()); T.Eq("REAUTH_REQUIRED", ex?.Code, "linked needs re-auth (A3)"); T.Eq(401, ex?.Status ?? 0, "401");
+            b.Reauthenticate(AuthProvider.Google, "fresh").Wait();
+            b.SetTestClock(U("2026-10-16T10:06:00")); T.Eq("REAUTH_REQUIRED", Catch(() => b.DeleteAccount().Wait())?.Code, "re-auth older than 5 min rejected");
+            b.Reauthenticate(AuthProvider.Google, "fresh").Wait(); var r = b.DeleteAccount().Result; T.True(r.accepted, "scheduled after fresh re-auth");
+            T.Eq(r.scheduledDeletionUnixUtc, b.DeleteAccount().Result.scheduledDeletionUnixUtc, "idempotent");
+            b.SetTestClock(U("2026-10-23T10:07:00"));
+            var acc = b.GetAccount().Result; T.True(acc.playerId != id && !acc.linked && acc.identities.Count == 0, "purged after grace → new account");
+            var lb = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result;
+            T.True(lb.top.TrueForAll(e => e.playerId != id) && (lb.me == null || lb.me.playerId != id), "no board entry for deleted player (D2 stub)");
+        });
+        T.Add("REQ_A2_A4_A6_client_contract", () =>
+        {
+            var sc = Src("Assets/_Project/Scripts/UI/Screens.cs"); var del = Src("Assets/_Project/Scripts/Core/AccountDeletion.cs");
+            T.True(sc.Contains("HoldToConfirm") && sc.Contains("HoldSeconds = 2f"), "press-and-hold, no single-tap confirm (A2)");
+            foreach (var k in new[] { "pseudonymised purchase", "30 days", "7 days", "not refunded" }) T.True(sc.Contains(k), "copy mentions " + k);
+            foreach (var f in new[] { "campaign_save.json", "titan_ranked_journal.json", "campaign_sync_queue.json", "local_server_db.json" }) T.True(del.Contains(f), "wipes " + f);
+            T.True(del.Contains("PlayerPrefs.DeleteAll") && sc.Contains("RestartFirstRun"), "first-run state after deletion (A4)");
+            T.True(del.Contains("PendingOffline") && del.Contains("PendingKey"), "offline request queued (A6)");
+        });
+        T.Add("REQ_A6_offline_queue_real_flush", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            UnityEngine.PlayerPrefs.SetInt(Crashverse.Core.AccountDeletion.PendingKey, 1);
+            b.SimulateOffline = true; T.Eq(Crashverse.Core.AccountDeletion.Result.PendingOffline, Crashverse.Core.AccountDeletion.Flush(b).Result, "offline stays pending, not faked");
+            T.True(b.GetType() != null && Crashverse.Core.AccountDeletion.Pending, "still queued");
+            b.SimulateOffline = false; T.Eq(Crashverse.Core.AccountDeletion.Result.Scheduled, Crashverse.Core.AccountDeletion.Flush(b).Result, "sent on next connection");
+            T.True(b.GetAccount().Result.pendingDeletionUnixUtc > 0, "server scheduled");
+        });
+        T.Add("REQ_C2_guest_inactivity", () =>
+        {
+            var b = NewBackend("2026-01-01T00:00:00"); b.GetAccount().Wait(); var id = b.GetAccount().Result.playerId;
+            b.SetTestClock(U("2026-11-20T00:00:00")); // 323 days: no warning
+            T.Eq(0L, b.GetAccount().Result.deletionWarningAtUnixUtc, "no warning before day 335");
+            b.SetLastActiveForTests(U("2026-01-01T00:00:00")); b.SetTestClock(U("2026-12-02T00:00:00")); // 335 days idle
+            var a = b.GetAccount().Result; T.True(a.deletionWarningAtUnixUtc > 0, "warning at day 335"); T.Eq(Unix("2027-01-01T00:00:00"), a.guestPurgeAtUnixUtc, "purge date shown");
+            T.Eq(0L, b.KeepAccountActive().Result.deletionWarningAtUnixUtc, "keep my account clears it");
+            b.SetTestClock(U("2027-01-05T00:00:00")); T.Eq(id, b.GetAccount().Result.playerId, "activity reset the clock");
+            b.SetTestClock(U("2028-01-06T00:00:00")); T.True(b.GetAccount().Result.playerId != id, "365 days idle → purged");
+            var l = NewBackend("2026-01-01T00:00:00"); l.LinkAccount(AuthProvider.Google, "t").Wait(); var lid = l.GetAccount().Result.playerId;
+            l.SetTestClock(U("2027-06-01T00:00:00")); T.Eq(lid, l.GetAccount().Result.playerId, "linked accounts not auto-deleted");
+        });
+        T.Add("REQ_E_age_gate_bands", () =>
+        {
+            T.Eq(AgeGate.Band.Under13, AgeGate.Classify(2013, 10, 2026, 10), "turns 13 this month → still under 13 (conservative)");
+            T.Eq(AgeGate.Band.Minor13to17, AgeGate.Classify(2013, 9, 2026, 10), "13 last month");
+            T.Eq(AgeGate.Band.Minor13to17, AgeGate.Classify(2008, 10, 2026, 10), "17 (18 this month, not yet)");
+            T.Eq(AgeGate.Band.Adult, AgeGate.Classify(2008, 9, 2026, 10), "18");
+            T.Eq(AgeGate.Band.Unknown, AgeGate.Classify(2027, 1, 2026, 10), "future"); T.Eq(AgeGate.Band.Unknown, AgeGate.Classify(2000, 13, 2026, 10), "bad month");
+            T.True(!AgeGate.CanPurchase(AgeGate.Band.Minor13to17, false) && AgeGate.CanPurchase(AgeGate.Band.Minor13to17, true), "purchases need consent");
+            T.True(!AgeGate.ShowLinkPrompt(AgeGate.Band.Minor13to17, false, false), "no link prompt to minors without consent (C3)");
+            T.True(!AgeGate.AllowTracking(AgeGate.Band.Adult) && !AgeGate.AllowTracking(AgeGate.Band.Minor13to17), "no tracking");
+            var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
+            int g = sc.IndexOf("public class AgeGateScreen"), e = sc.IndexOf("public class BlockedScreen");
+            var gate = sc.Substring(g, e - g);
+            var copy = string.Join(" ", System.Text.RegularExpressions.Regex.Matches(gate, "\"([^\"]*)\"").Select(m => m.Groups[1].Value));
+            T.True(!copy.Contains("13") && !copy.ToLowerInvariant().Contains("must be") && !copy.ToLowerInvariant().Contains("old enough"), "neutral copy: no age hint (E1)");
+            T.True(gate.Contains("_ok.interactable = false"), "no default selection");
+            T.True(!gate.Contains("SetInt(\"birth") && !gate.Contains("_year)") , "DOB never stored");
+            var boot = Src("Assets/_Project/Scripts/Core/GameBootstrap.cs");
+            T.True(boot.IndexOf("AgeGateScreen.Blocked") < boot.IndexOf("AppServices.Backend =") && boot.IndexOf("AgeGateScreen.Needed") < boot.IndexOf("SyncServerTime"), "gate before any backend traffic (E1/E2)");
+        });
+        T.Add("REQ_E3_E5_E6_server_enforcement", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            b.SetAgeGate("13to17", "IN").Wait(); T.Eq("13to17", b.SetAgeGate("adult", "IN").Result.ageBand, "most restrictive band kept (E3)");
+            T.Eq("MINOR_CONSENT_REQUIRED", Catch(() => b.LinkAccount(AuthProvider.Google, "t").Wait())?.Code, "link 403 without consent");
+            T.Eq("AGE_RESTRICTED", Catch(() => b.VerifyPurchase("gems_100", "r").Wait())?.Code, "purchase 403 AGE_RESTRICTED");
+            T.True(b.RequestParentalConsent("parent@example.com").Result && b.GetAccount().Result.consentPending, "consent request recorded");
+            b.GrantConsentForTests(true, false, false);
+            T.True(b.LinkAccount(AuthProvider.Google, "t").Result.linked, "link allowed with social consent");
+            Win(b, "c1_l01");
+            var me = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result.me; T.True(me.name.StartsWith("Wrecker #"), "generated name until name consent");
+            b.GrantConsentForTests(true, true, false);
+            T.True(!b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result.me.name.StartsWith("Wrecker #"), "real name with consent");
+        });
+        T.Add("REQ_F1_F4_F5_links_and_hide_name", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            b.LinkAccount(AuthProvider.Google, "t").Wait(); b.LinkAccount(AuthProvider.Email, "s").Wait();
+            T.Eq("REAUTH_REQUIRED", Catch(() => b.UnlinkAccount(AuthProvider.Email).Wait())?.Code, "unlink needs re-auth");
+            b.Reauthenticate(AuthProvider.Google, "fresh").Wait();
+            T.True(!b.UnlinkAccount(AuthProvider.Email).Result.identities.Contains("Email"), "unlinked");
+            T.Eq("LAST_LOGIN", Catch(() => b.UnlinkAccount(AuthProvider.Google).Wait())?.Code, "last login kept");
+            Win(b, "c1_l01"); b.SetHideName(true).Wait();
+            var lb = b.GetLeaderboard(BoardType.Campaign, BoardPeriod.Current, false).Result;
+            T.True(lb.me.name.StartsWith("Wrecker #") && lb.top.TrueForAll(e => !e.isMe || e.name.StartsWith("Wrecker #")), "real name never returned when hidden");
+        });
+        T.Add("SECADMIN_unity_services_off_and_no_ad_id", () =>
+        {
+            var uc = Src("ProjectSettings/UnityConnectSettings.asset");
+            T.True(!System.Text.RegularExpressions.Regex.IsMatch(uc, @"m_Enabled:\s*1"), "all Unity services disabled");
+            T.True(uc.Contains("CrashReportingSettings") && uc.Contains("UnityAnalyticsSettings"), "analytics + crash sections present");
+            var man = Src("Assets/Plugins/Android/AndroidManifest.xml");
+            T.True(man.Contains("com.google.android.gms.permission.AD_ID\" tools:node=\"remove\""), "AD_ID removed");
+            var doc = Src("docs/Privacy_And_Account.md");
+            T.True(doc.Contains("AutoLogAppEventsEnabled = false") && doc.Contains("AdvertiserIDCollectionEnabled = false"), "Facebook SDK note");
         });
     }
 }

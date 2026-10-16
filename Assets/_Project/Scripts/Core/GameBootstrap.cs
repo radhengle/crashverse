@@ -15,11 +15,36 @@ namespace Crashverse.Core
     /// </summary>
     public class GameBootstrap : MonoBehaviour
     {
-        async void Awake()
+        static GameBootstrap _instance;
+
+        void Awake() { _instance = this; QualityController.ApplyMid(); Init(); }
+
+        /// <summary>A4: after a confirmed deletion the app restarts in first-run state without a process restart.</summary>
+        public static void RestartFirstRun()
         {
-            QualityController.ApplyMid();
+            GameplayDirector.Reset();
+            if (AppServices.Router != null) Destroy(AppServices.Router.gameObject);
+            AppServices.Router = null; AppServices.Account = null; AppServices.SessionToken = null; // A4 sign-out
+            _instance.Init();
+        }
+
+        async void Init()
+        {
             AppServices.Content = ContentDatabase.LoadBundled();
             AppServices.Save = new CampaignSave();
+            AppServices.Theme = UITheme.Load();
+            AppServices.Router = UIRouter.Create(AppServices.Theme);
+            if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); c.AddComponent<AudioListener>(); }
+
+            // §E1/E2: the age gate comes before any account, sign-in or backend traffic. Blocked installs never get further.
+            if (AgeGateScreen.Blocked) { AppServices.Router.PopAllAndPush(new BlockedScreen()); return; }
+            if (AgeGateScreen.Needed)
+            {
+                var tcs = new System.Threading.Tasks.TaskCompletionSource<bool>();
+                AppServices.Router.PopAllAndPush(new AgeGateScreen(ok => tcs.TrySetResult(ok)));
+                if (!await tcs.Task) { AppServices.Router.PopAllAndPush(new BlockedScreen()); return; }
+            }
+
 #if CRASHVERSE_DEV
             AppServices.Backend = BackendLocator.Current ?? new LocalBackendService(AppServices.Content);
 #else
@@ -30,14 +55,11 @@ namespace Crashverse.Core
             BackendLocator.Current = AppServices.Backend;
             AppServices.StoreErrors = StoreValidator.Validate(AppServices.Content.Store, out AppServices.StoreItems);
             foreach (var e in AppServices.StoreErrors) Debug.LogError("[Store] rejected " + e);
-            AppServices.Theme = UITheme.Load();
-            AppServices.Router = UIRouter.Create(AppServices.Theme);
-            if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); c.AddComponent<AudioListener>(); }
             Crashverse.Feel.FeelDirector.InitSettings(); // persisted Reduce shake / Reduce motion (+ OS auto-on)
-            new GameObject("Quality").AddComponent<QualityController>();
+            if (FindObjectOfType<QualityController>() == null) new GameObject("Quality").AddComponent<QualityController>();
             GameplayDirector.ShowMap();
             await AppServices.SyncServerTime();
-            if (Crashverse.UI.AgeGateScreen.Needed) AppServices.Router.Push(new Crashverse.UI.AgeGateScreen(null)); // B6 first-launch age gate (placeholder rules)
+            await AccountLifecycle.OnConnected(); // E3 band → server, A6 queued deletion, A5 cancel offer, C2 inactivity warning
             var pending = await TitanRunJournal.FlushPending(AppServices.Backend);
             await CampaignResultQueue.Flush(AppServices.Backend); // BUG-14
             if (pending != null) AppServices.Router.Toast("Interrupted ranked run: " + pending.message, 4f);
@@ -46,7 +68,9 @@ namespace Crashverse.Core
         async void OnApplicationPause(bool paused)
         {
             if (paused || AppServices.Backend == null) return;
+            if (AgeGateScreen.Blocked || AgeGateScreen.Needed) return;
             await AppServices.SyncServerTime(); // SG-20: resync on resume
+            await AccountLifecycle.OnConnected();
             if (GameplayDirector.Session == null) { await TitanRunJournal.FlushPending(AppServices.Backend); await CampaignResultQueue.Flush(AppServices.Backend); }
         }
     }
@@ -58,6 +82,13 @@ namespace Crashverse.Core
         public static WorldMapBuilder Map { get; private set; }
         public static GameSession Session { get; private set; }
         public static OrbitCamera RunCamera { get; private set; }
+
+        public static void Reset()
+        {
+            EndRun();
+            if (_mapRoot != null) Object.Destroy(_mapRoot);
+            _mapRoot = null; Map = null;
+        }
 
         public static void ShowMap()
         {

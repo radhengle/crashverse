@@ -37,6 +37,7 @@ namespace Crashverse.Backend
             public long testFixedUnixMs = -1; public long testOffsetMs; // QA clock override
             public AccountState account = new AccountState();
             public string authEmail = ""; public List<string> attempts = new List<string>();
+            public long reauthUnixMs, lastActiveUnix; public string country = "";
             public Wallet wallet = new Wallet();
             public List<InboxItem> inbox = new List<InboxItem>();
             public List<string> grantedFirstClears = new List<string>();
@@ -111,6 +112,7 @@ namespace Crashverse.Backend
         {
             if (SimulateOffline) throw new BackendException("offline");
             if (_s.testFixedUnixMs < 0 && _clock is ISyncableClock sc && !sc.Synced) throw new BackendException("server time unavailable");
+            RunDeletionJob();
             Maintenance();
         }
         static long Unix(DateTime d) => new DateTimeOffset(DateTime.SpecifyKind(d, DateTimeKind.Utc)).ToUnixTimeSeconds();
@@ -125,12 +127,92 @@ namespace Crashverse.Backend
         }
         public Task<AccountState> GetAccount() { Online(); return Task.FromResult(_s.account); }
 
+        // ---------------- Deletion job (D1) + guest inactivity (C2): run lazily on every authenticated call ----------------
+        public const int GraceDays = 7, GuestWarnDays = 335, GuestPurgeDays = 365;
+        void RunDeletionJob()
+        {
+            long now = Unix(ServerNow);
+            var a = _s.account;
+            if (a.pendingDeletionUnixUtc > 0 && now >= a.pendingDeletionUnixUtc) { Purge(); return; }
+            if (!a.linked && _s.lastActiveUnix > 0)
+            {
+                long idle = now - _s.lastActiveUnix;
+                if (idle >= GuestPurgeDays * 86400L) { Purge(); return; }
+                if (idle >= GuestWarnDays * 86400L && a.deletionWarningAtUnixUtc == 0)
+                { a.deletionWarningAtUnixUtc = now; a.guestPurgeAtUnixUtc = _s.lastActiveUnix + GuestPurgeDays * 86400L; }
+            }
+            _s.lastActiveUnix = now; // any authenticated activity resets the inactivity clock
+            Save();
+        }
+        /// <summary>D2 (stub): everything for the player is removed incl. all board entries. D3/D4 detach/pseudonymise are server-side.</summary>
+        void Purge()
+        {
+            var keep = (_s.testFixedUnixMs, _s.testOffsetMs);
+            _s = new ServerDb { testFixedUnixMs = keep.Item1, testOffsetMs = keep.Item2 };
+            _s.account.playerId = "guest_" + Guid.NewGuid().ToString("N").Substring(0, 8); _s.account.displayName = "Guest Wrecker";
+            _s.lastActiveUnix = Unix(ServerNow);
+            Save();
+        }
+        bool FreshReauth => !_s.account.linked || (new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds() - _s.reauthUnixMs) <= 5 * 60 * 1000;
+        bool MinorNoConsent(Func<AccountState, bool> scope) => _s.account.ageBand == AgeBands.Minor && !scope(_s.account);
+        public static string GeneratedName(string playerId) => "Wrecker #" + (Math.Abs((playerId ?? "").GetHashCode()) % 9000 + 1000);
+
+        public Task<bool> Reauthenticate(AuthProvider provider, string credential)
+        {
+            Online();
+            if (string.IsNullOrEmpty(credential) || !_s.account.identities.Contains(provider.ToString())) throw new BackendException("REAUTH_FAILED", 401);
+            _s.reauthUnixMs = new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds(); Save();
+            return Task.FromResult(true);
+        }
+        public Task<AccountState> CancelAccountDeletion() { Online(); _s.account.pendingDeletionUnixUtc = 0; Save(); return Task.FromResult(_s.account); }
+        public Task<AccountState> KeepAccountActive() { Online(); _s.account.deletionWarningAtUnixUtc = 0; _s.account.guestPurgeAtUnixUtc = 0; Save(); return Task.FromResult(_s.account); }
+        public Task<AccountState> UnlinkAccount(AuthProvider provider)
+        {
+            Online();
+            if (!FreshReauth) throw new BackendException("REAUTH_REQUIRED", 401);
+            var a = _s.account; var p = provider.ToString();
+            if (!a.identities.Contains(p)) throw new BackendException("NOT_LINKED", 404);
+            if (a.identities.Count <= 1) throw new BackendException("LAST_LOGIN", 409);
+            a.identities.Remove(p); a.provider = a.identities[0]; Save(); // F2 provider revoke: server-side, best-effort
+            return Task.FromResult(a);
+        }
+        public Task<AccountState> SetAgeGate(string band, string country)
+        {
+            Online();
+            if (band != AgeBands.Minor && band != AgeBands.Adult) throw new BackendException("BAD_BAND", 400);
+            var a = _s.account;
+            if (a.ageBand != AgeBands.Minor) a.ageBand = band; // most restrictive wins; older band needs parental verification/support
+            _s.country = country ?? ""; Save();
+            return Task.FromResult(a);
+        }
+        public Task<bool> RequestParentalConsent(string parentEmail)
+        {
+            Online();
+            if (!ValidEmail(parentEmail)) throw new BackendException("invalid email");
+            _s.account.consentPending = true; Save(); return Task.FromResult(true);
+        }
+#if CRASHVERSE_TESTS
+        public void GrantConsentForTests(bool social, bool name, bool purchases) { var a = _s.account; a.consentSocial = social; a.consentName = name; a.consentPurchases = purchases; a.consentPending = false; Save(); }
+        public void SetLastActiveForTests(DateTime utc) { _s.lastActiveUnix = Unix(utc); Save(); }
+#endif
+        public Task<AccountState> SetHideName(bool hide) { Online(); _s.account.hideName = hide; Save(); return Task.FromResult(_s.account); }
+        public List<string> PurchaseAgeRestrictedMarkets = new List<string>(); // TODO(Legal): markets requiring 18+ for purchases
+        public Task<Wallet> VerifyPurchase(string sku, string receipt)
+        {
+            Online();
+            if (MinorNoConsent(a => a.consentPurchases) && (PurchaseAgeRestrictedMarkets.Count == 0 || PurchaseAgeRestrictedMarkets.Contains(_s.country)))
+                throw new BackendException("AGE_RESTRICTED", 403); // E5: no purchases until consent (all markets); E6: 18+ markets
+            throw new BackendException("SERVER_ONLY", 501, "receipt verification is server-only");
+        }
+
         /// <summary>Fake OAuth link. SG-19: guest scores on currently open boards become visible.</summary>
         public Task<AccountState> LinkAccount(AuthProvider provider, string credential)
         {
             Online();
             if (string.IsNullOrEmpty(credential)) throw new BackendException("missing provider credential");
             if (provider == AuthProvider.X && !Flags.xLoginEnabled) throw new BackendException("X login disabled");
+            if (MinorNoConsent(a => a.consentSocial)) throw new BackendException("MINOR_CONSENT_REQUIRED", 403); // E5
+            if (!_s.account.identities.Contains(provider.ToString())) _s.account.identities.Add(provider.ToString());
             _s.account.linked = true; _s.account.provider = provider.ToString();
             _s.account.displayName = provider + " Wrecker";
             foreach (var b in _s.boards)
@@ -164,11 +246,11 @@ namespace Crashverse.Backend
         public Task<DeleteAccountResponse> DeleteAccount()
         {
             Online();
-            var keepClock = (_s.testFixedUnixMs, _s.testOffsetMs);
-            _s = new ServerDb { testFixedUnixMs = keepClock.Item1, testOffsetMs = keepClock.Item2 };
-            _s.account.playerId = "guest_" + Guid.NewGuid().ToString("N").Substring(0, 8); _s.account.displayName = "Guest Wrecker";
+            if (!FreshReauth) throw new BackendException("REAUTH_REQUIRED", 401); // A3
+            var when = Unix(ServerNow.AddDays(GraceDays));
+            if (_s.account.pendingDeletionUnixUtc == 0) _s.account.pendingDeletionUnixUtc = when; // idempotent
             Save();
-            return Task.FromResult(new DeleteAccountResponse { accepted = true, message = "deleted", scheduledUnixUtc = Unix(ServerNow) });
+            return Task.FromResult(new DeleteAccountResponse { accepted = true, message = "scheduled", scheduledDeletionUnixUtc = _s.account.pendingDeletionUnixUtc });
         }
         public Task<AttemptToken> BeginAttempt(string levelId)
         {
@@ -650,7 +732,7 @@ namespace Crashverse.Backend
                 bool isMe = x.playerId == me;
                 if (isMe && guest) { page.meIsGuestHidden = true; continue; } // guests stored, not listed until linked
                 rank++;
-                var e = new LeaderboardEntry { rank = rank, playerId = x.playerId, name = x.name, score = x.score, submittedTicks = x.ticks, isFriend = x.friend, isMe = isMe };
+                var e = new LeaderboardEntry { rank = rank, playerId = x.playerId, name = x.playerId == _s.account.playerId && (_s.account.hideName || MinorNoConsent(q => q.consentName)) ? GeneratedName(x.playerId) : x.name, score = x.score, submittedTicks = x.ticks, isFriend = x.friend, isMe = isMe };
                 if (isMe) page.me = e;
                 if (rank <= 100) page.top.Add(e);
             }

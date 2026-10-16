@@ -28,3 +28,6 @@ Android 3D destruction puzzle game (Unity 2022.3.50f1 LTS + URP 14). Chapter 1 "
 - **Server-only:** premium/purchase grants (`IServerEntitlements`, no client implementation). The Daily Titan override comes only via `GetDailyTitan()` from the server; no local file path exists.
 - **Interfaces:** `BeginAttempt`/`SubmitInputLog` (single-use attempt tokens), `LinkAccount(provider, credential)`, `AuthEmailRegister/AuthEmailLogin/RequestPasswordReset` (passwords never persisted client-side), `GetFeatureFlags` (X login gated server-side), `DeleteAccount`.
 - **B6 (placeholder rules, TODO Security Admin):** Settings ▸ Delete account → confirm → `DeleteAccount` → local wipe. First-launch age gate stores only an age band (`Meta/AgeGate.cs`).
+
+## Privacy, account deletion and age gate
+See `docs/Privacy_And_Account.md`. In brief: Unity Analytics, crash reporting and other Unity services are disabled (`ProjectSettings/UnityConnectSettings.asset`), AD_ID is removed from the merged manifest, there is a note for the future Facebook SDK, and Deletion_AgeGate_Requirements A–G are mapped to their implementation.

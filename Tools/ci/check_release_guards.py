@@ -42,9 +42,20 @@ def scan(path):
             if not ok: bad.append(f"{path.relative_to(ROOT)}:{n}: '{re.search(sym, code).group(0)}' outside {' / '.join(guards) or '(forbidden)'} guard")
     return bad
 
+def check_config():
+    bad = []
+    uc = (ROOT / "ProjectSettings/UnityConnectSettings.asset")
+    if not uc.exists(): bad.append("ProjectSettings/UnityConnectSettings.asset missing (analytics/crash reporting must be explicitly disabled)")
+    else:
+        if re.search(r"^\s*m_Enabled:\s*1", uc.read_text(), re.M): bad.append("UnityConnectSettings: a Unity service (analytics/crash/perf/ads/IAP) is enabled")
+    man = ROOT / "Assets/Plugins/Android/AndroidManifest.xml"
+    if not man.exists() or not re.search(r'com\.google\.android\.gms\.permission\.AD_ID"\s+tools:node="remove"', man.read_text()):
+        bad.append("Assets/Plugins/Android/AndroidManifest.xml must remove com.google.android.gms.permission.AD_ID")
+    return bad
+
 def main():
     files = [p for p in (ROOT / "Assets").rglob("*.cs") if "Editor" not in p.parts]
-    bad = [b for f in files for b in scan(f)]
+    bad = [b for f in files for b in scan(f)] + check_config()
     if bad:
         print("Release guard check FAILED (dev-only code would ship in release):"); print("\n".join(bad)); return 1
     print(f"Release guard check passed ({len(files)} files)."); return 0
