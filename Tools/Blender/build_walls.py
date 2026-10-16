@@ -25,7 +25,7 @@ def seeds_for(sx,sy,sz,nx,ny,nz,rnd):
                     c=(idx+0.5)/n; c+= (rnd.random()-0.5)*0.5/n; p.append(c*L)
                 S.append(Vector((p[0]-sx/2,p[1]-sy/2,p[2])))
     return S
-CELLSZ={"Wood":(0.25,1.5),"Brick":(0.5,0.25),"Steel":(0.75,0.75),"Glass":(0.75,0.75),"Stone":(0.75,0.5)}
+CELLSZ={"Wood":(0.25,1.5),"Brick":(0.5,0.25),"Steel":(1.0,0.5),"Glass":(0.75,0.75),"Stone":(0.75,0.5)}
 def detail_bm(mat,sx,sy,sz):
     """v3 LOD0 (500-1.5k tris): material cells (planks/bricks/plates/panes/blocks) across the two large axes,
     1 cm proud of a core box on both faces; gaps expose the core (mortar/seams). Bricks unbevelled (12 tris), others 1-seg bevel."""
@@ -37,11 +37,13 @@ def detail_bm(mat,sx,sy,sz):
     while n[sh]*n[lng]>hi: n[max(ax,key=lambda a:n[a])]-=1
     g=0.02 if mat!="Glass" else 0.04
     bm=box_bm(sx,sy,sz); off=[-sx/2,-sy/2,0]
-    for i in range(n[sh]):
-        for j in range(n[lng]):
+    for j in range(n[lng]):
+        stag=(mat=="Brick" and j%2==1)
+        for i in range(n[sh]+(1 if stag else 0)):
             c=[0,0,0]; s=[0,0,0]
-            for a,k in ((sh,i),(lng,j)):
-                L=D[a]/n[a]; c[a]=off[a]+(k+0.5)*L; s[a]=L-g
+            L=D[lng]/n[lng]; c[lng]=off[lng]+(j+0.5)*L; s[lng]=L-g
+            L=D[sh]/n[sh]; a0=off[sh]+(i-(0.5 if stag else 0))*L; a1=a0+L
+            a0=max(a0,off[sh]); a1=min(a1,off[sh]+D[sh]); c[sh]=(a0+a1)/2; s[sh]=(a1-a0)-g
             c[th]=off[th]+D[th]/2; s[th]=D[th]+0.02
             b=box_bm(*s)   # box_bm is z-from-0, xy centred
             for v in b.verts: v.co+=Vector((c[0],c[1],c[2]-s[2]/2))

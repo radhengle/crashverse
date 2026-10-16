@@ -34,7 +34,7 @@ def sheet(kind,out,N=512):
         row=y//bh; xo=(x+(row%2)*bw//2)%N; col=xo//bw; lx=xo%bw; ly=y%bh
         edge=np.minimum(np.minimum(lx,bw-1-lx),np.minimum(ly,bh-1-ly)).astype(float)
         chip=noise(N,6,11)*g*1.2; h=np.clip((edge-chip*0.6)/g,0,1)**0.6
-        tint=rng.uniform(0.9,1.08,(N//bh+2,N//bw+3,3))[row,col]*np.array([1.0,0.98,0.94])
+        tint=rng.uniform(0.9,1.08,(N//bh+2,N//bw+3))[row,col][...,None]*np.array([1.0,0.985,0.96])
         base=hx("#C9B48A")[None,None]*tint*(0.92+0.14*noise(N,12,12)[...,None])
         alb=np.where(h[...,None]>0.2,base,hx("#8A7350")); rough=np.where(h>0.2,0.7,0.85)+0.03*noise(N,8,13)
         metal=np.zeros_like(h); ao=0.55+0.45*h; nstr=7; h=h+0.08*noise(N,8,14)
@@ -48,7 +48,7 @@ def sheet(kind,out,N=512):
         pp=int(1.0*ppm); lx=x%pp; ly=y%pp; edge=np.minimum(np.minimum(lx,pp-1-lx),np.minimum(ly,pp-1-ly))
         h=np.clip(edge/3,0,1); rv=((np.minimum(lx,pp-1-lx)-12)**2+(np.minimum(ly,pp-1-ly)%64-32)**2)<36
         h=h+0.6*rv; brushed=noise(N,2,4)[:, :]*0.06
-        alb=hx("#AEB6C2")[None,None]*(0.97+brushed)[...,None]; alb=np.where((h<0.3)[...,None],hx("#7E8794"),alb)
+        alb=hx("#D5DBE3")[None,None]*(0.97+brushed)[...,None]; alb=np.where((h<0.3)[...,None],hx("#959EAB"),alb)   # lighter so no-probe steel reads >= #9AA3AF (Art b)
         rough=0.3+0.05*noise(N,8,5); metal=np.ones_like(h); ao=0.65+0.35*np.clip(h,0,1); nstr=5
     save(alb,f"{out}/T_{kind}_A.png"); save(normal_from_height(h.astype(float),nstr),f"{out}/T_{kind}_N.png")
     save(np.dstack([ao,rough,metal]),f"{out}/T_{kind}_ORM.png")

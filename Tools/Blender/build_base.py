@@ -18,10 +18,10 @@ def add(dst,b,mi):
     me=bpy.data.meshes.new("t"); b.to_mesh(me); b.free(); dst.from_mesh(me); bpy.data.meshes.remove(me)
 def lod(level):
     bm=bmesh.new()
-    body=box_bm(S,S,H-0.18); 
+    body=box_bm(S,S,H); 
     if level<2: bevel_hard(body,0.06 if level==0 else 0.05,3 if level==0 else 1)
     add(bm,body,0)
-    band=box_bm(S+0.08,S+0.08,0.2); bmesh.ops.translate(band,verts=band.verts,vec=(0,0,H-0.2))
+    band=box_bm(S+0.08,S+0.08,0.2); bmesh.ops.translate(band,verts=band.verts,vec=(0,0,H-0.26))   # band below the granite top edge
     if level<2: bevel_hard(band,0.03,2 if level==0 else 1)
     add(bm,band,1)
     if level==0:
@@ -30,7 +30,7 @@ def lod(level):
                 t=(k+0.5)/6*S-S/2; r=bmesh.new(); bmesh.ops.create_uvsphere(r,u_segments=8,v_segments=4,radius=0.045)
                 for v in r.verts: v.co.y*=0.5
                 rot=Matrix_rot(side); bmesh.ops.transform(r,matrix=rot,verts=r.verts)
-                p=rot@Vector((t,-(S+0.08)/2-0.005,H-0.1)); bmesh.ops.translate(r,verts=r.verts,vec=p-rot@Vector((0,0,0)))
+                p=rot@Vector((t,-(S+0.08)/2-0.005,H-0.16)); bmesh.ops.translate(r,verts=r.verts,vec=p-rot@Vector((0,0,0)))
                 add(bm,r,1)
     uvbox(bm); return bm
 def Matrix_rot(side):

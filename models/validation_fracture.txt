@@ -1,16 +1,16 @@
-Kit_Brick_Floor_Fractured.fbx: frags=16 (spec 12-24) tris max=88 total=936 mass 183.3-313.1 kg UCX=16 JNT=32 ANCHOR=16 -> PASS
-Kit_Brick_Joint_Fractured.fbx: frags=12 (spec 12-24) tris max=56 total=536 mass 62.8-92.0 kg UCX=12 JNT=12 ANCHOR=1 -> PASS
-Kit_Brick_Wall_Fractured.fbx: frags=18 (spec 12-24) tris max=72 total=1000 mass 166.5-317.2 kg UCX=18 JNT=37 ANCHOR=6 -> PASS
+Kit_Brick_Floor_Fractured.fbx: frags=16 (spec 12-24) tris max=68 total=940 mass 216.3-344.0 kg UCX=16 JNT=32 ANCHOR=16 -> PASS
+Kit_Brick_Joint_Fractured.fbx: frags=12 (spec 12-24) tris max=56 total=572 mass 58.7-83.8 kg UCX=12 JNT=13 ANCHOR=1 -> PASS
+Kit_Brick_Wall_Fractured.fbx: frags=18 (spec 12-24) tris max=80 total=1024 mass 182.9-305.0 kg UCX=18 JNT=36 ANCHOR=6 -> PASS
 RESULT: ALL PASS
-Kit_Glass_Wall_Fractured.fbx: frags=12 (spec 8-16) tris max=80 total=668 mass 43.5-69.2 kg UCX=12 JNT=22 ANCHOR=4 -> PASS
+Kit_Glass_Wall_Fractured.fbx: frags=12 (spec 8-16) tris max=68 total=664 mass 41.5-69.8 kg UCX=12 JNT=23 ANCHOR=4 -> PASS
 RESULT: ALL PASS
-Kit_Steel_Floor_Fractured.fbx: frags=6 (spec 4-10) tris max=68 total=308 mass 147.2-230.3 kg UCX=6 JNT=8 ANCHOR=6 -> PASS
-Kit_Steel_Joint_Fractured.fbx: frags=5 (spec 4-10) tris max=44 total=220 mass 33.6-50.8 kg UCX=5 JNT=4 ANCHOR=1 -> PASS
-Kit_Steel_Wall_Fractured.fbx: frags=6 (spec 4-10) tris max=68 total=312 mass 158.1-230.9 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
+Kit_Steel_Floor_Fractured.fbx: frags=6 (spec 4-10) tris max=68 total=308 mass 159.9-204.6 kg UCX=6 JNT=9 ANCHOR=6 -> PASS
+Kit_Steel_Joint_Fractured.fbx: frags=5 (spec 4-10) tris max=44 total=220 mass 38.4-46.0 kg UCX=5 JNT=4 ANCHOR=1 -> PASS
+Kit_Steel_Wall_Fractured.fbx: frags=6 (spec 4-10) tris max=64 total=304 mass 166.8-220.6 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
 RESULT: ALL PASS
-Kit_Stone_Wall_Fractured.fbx: frags=6 (spec 4-10) tris max=56 total=312 mass 1255.7-1871.6 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
+Kit_Stone_Wall_Fractured.fbx: frags=6 (spec 4-10) tris max=64 total=308 mass 1287.9-1767.7 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
 RESULT: ALL PASS
-Kit_Wood_Floor_Fractured.fbx: frags=9 (spec 8-16) tris max=68 total=516 mass 84.5-147.8 kg UCX=9 JNT=15 ANCHOR=9 -> PASS
-Kit_Wood_Joint_Fractured.fbx: frags=8 (spec 8-16) tris max=44 total=352 mass 17.4-21.9 kg UCX=8 JNT=7 ANCHOR=1 -> PASS
-Kit_Wood_Wall_Fractured.fbx: frags=12 (spec 8-16) tris max=88 total=664 mass 67.1-115.3 kg UCX=12 JNT=23 ANCHOR=4 -> PASS
+Kit_Wood_Floor_Fractured.fbx: frags=9 (spec 8-16) tris max=68 total=488 mass 91.8-148.5 kg UCX=9 JNT=15 ANCHOR=9 -> PASS
+Kit_Wood_Joint_Fractured.fbx: frags=8 (spec 8-16) tris max=44 total=352 mass 16.0-21.5 kg UCX=8 JNT=7 ANCHOR=1 -> PASS
+Kit_Wood_Wall_Fractured.fbx: frags=12 (spec 8-16) tris max=80 total=672 mass 71.3-107.5 kg UCX=12 JNT=23 ANCHOR=4 -> PASS
 RESULT: ALL PASS
