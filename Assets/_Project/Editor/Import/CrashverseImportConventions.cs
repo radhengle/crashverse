@@ -1,0 +1,166 @@
+#if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+
+namespace Crashverse.EditorTools.Import
+{
+    /// <summary>
+    /// Single source of truth for model naming, budgets and import policy (VFX & Tech Art, vfx/IMPORT_PIPELINE.md).
+    /// Pure C# (no UnityEditor calls) so the policy is easy to review and unit test.
+    /// Conventions follow models/README.md (3d-modeler/models-v1) and the v3 build scripts (3d-modeler/models-v3).
+    /// </summary>
+    public static class ImportConventions
+    {
+        public const string ModelsRoot = "Assets/_Project/Models/";
+        public const string PrefabRoot = "Assets/_Project/Prefabs/Models";
+        public const string ShaderName = "Crashverse/GlossyPBR";
+        public const string FragmentTag = "Fragment";          // used only if defined in TagManager (Developer-owned)
+
+        public enum AssetClass { Hero, Environment, Kit, KitFractured, Unknown }
+
+        public static bool InScope(string assetPath) => assetPath != null && assetPath.Replace('\\', '/').StartsWith(ModelsRoot, StringComparison.Ordinal);
+
+        public static string FileStem(string assetPath) => Path.GetFileNameWithoutExtension(assetPath);
+
+        public static AssetClass Classify(string assetPath)
+        {
+            string n = StripLodSuffix(FileStem(assetPath));
+            if (n.StartsWith("Kit_", StringComparison.Ordinal)) return n.EndsWith("_Fractured", StringComparison.Ordinal) ? AssetClass.KitFractured : AssetClass.Kit;
+            if (n.StartsWith("Island_", StringComparison.Ordinal) || n.StartsWith("Env_", StringComparison.Ordinal)) return AssetClass.Environment;
+            if (n.StartsWith("Wrecker", StringComparison.Ordinal) || n.StartsWith("Hero_", StringComparison.Ordinal)) return AssetClass.Hero;
+            return AssetClass.Unknown;
+        }
+
+        /// <summary>Static (lightmapped, UV2 generated): island/environment and intact kit pieces. Fragments and the Wrecker move.</summary>
+        public static bool IsStatic(AssetClass c) => c == AssetClass.Environment || c == AssetClass.Kit;
+
+        /// <summary>Only files ending in _Rig or _Anim keep animation; every prop imports with animation off.</summary>
+        public static bool WantsAnimation(string assetPath)
+        {
+            string n = FileStem(assetPath);
+            return n.EndsWith("_Rig", StringComparison.Ordinal) || n.EndsWith("_Anim", StringComparison.Ordinal);
+        }
+
+        // ---------- LOD ----------
+        static readonly Regex LodRx = new Regex(@"^(?<base>.+?)_LOD(?<lvl>[0-2])$", RegexOptions.Compiled);
+
+        /// <summary>Returns LOD level 0-2 for names ending _LOD0/_LOD1/_LOD2, else -1.</summary>
+        public static int LodLevel(string name, out string baseName)
+        {
+            var m = LodRx.Match(name ?? "");
+            if (m.Success) { baseName = m.Groups["base"].Value; return m.Groups["lvl"].Value[0] - '0'; }
+            baseName = name; return -1;
+        }
+        public static string StripLodSuffix(string name) { LodLevel(name, out var b); return b; }
+
+        /// <summary>Screen-relative transition heights (LOD i is used while the object covers more than value i of screen height).
+        /// Last entry is the cull height. Tuned for 6" phones at 720-1080p, landscape, orthographic-ish 35-45 deg FOV.</summary>
+        public static float[] LodHeights(AssetClass c)
+        {
+            switch (c)
+            {
+                case AssetClass.Hero: return new[] { 0.30f, 0.12f, 0.02f };        // Wrecker always near camera; almost never culled
+                case AssetClass.Environment: return new[] { 0.45f, 0.18f, 0.005f }; // island fills screen; tiny cull
+                case AssetClass.Kit:
+                case AssetClass.KitFractured: return new[] { 0.20f, 0.08f, 0.015f };
+                default: return new[] { 0.25f, 0.10f, 0.02f };
+            }
+        }
+
+        // ---------- colliders, sockets, fragments ----------
+        /// <summary>UCX_&lt;Target&gt;[_##] (models README) or &lt;Target&gt;_COL[_##]. Returns target object name or null.</summary>
+        public static string ColliderTarget(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+            if (name.StartsWith("UCX_", StringComparison.Ordinal)) return Regex.Replace(name.Substring(4), @"_\d{2}$", "");
+            var m = Regex.Match(name, @"^(?<t>.+?)_COL(_\d{2})?$");
+            return m.Success ? m.Groups["t"].Value : null;
+        }
+
+        /// <summary>Socket names the gameplay/VFX code looks up. v3 uses Socket_X; v1 used Muzzle_Spawn.</summary>
+        public static readonly string[] HeroSockets = { "Muzzle", "Core", "Module", "Booster", "WheelDust" };
+
+        public static string SocketName(string objName)
+        {
+            if (string.IsNullOrEmpty(objName)) return null;
+            if (objName.StartsWith("Socket_", StringComparison.Ordinal)) return objName.Substring(7);
+            if (objName == "Muzzle_Spawn") return "Muzzle";
+            return null;
+        }
+
+        static readonly Regex FragRx = new Regex(@"_frag_\d{2}$", RegexOptions.Compiled);
+        public static bool IsFragment(string name) => name != null && FragRx.IsMatch(StripLodSuffix(name));
+        public static bool IsJoint(string name) => name != null && name.StartsWith("JNT_", StringComparison.Ordinal);
+        /// <summary>Non-render helper empties that must survive prefab building untouched.</summary>
+        public static bool IsHelper(string name) => SocketName(name) != null || IsJoint(name) || (name != null && (name.StartsWith("Spawn_", StringComparison.Ordinal) || name.StartsWith("ANCHOR", StringComparison.Ordinal) || name.EndsWith("_Hint", StringComparison.Ordinal) || name.StartsWith("VFX_", StringComparison.Ordinal)));
+
+        // ---------- materials / textures ----------
+        public static readonly string[] MapSuffixes = { "_A", "_N", "_ORM", "_E", "_Crack" };
+
+        /// <summary>M_Wrecker -> Wrecker, M_Wood_Inner -> Wood (+inner), M_Wrecker_Emissive -> Wrecker (+emissive). Same rule as the 3D Modeler draft.</summary>
+        public static string TextureAssetForMaterial(string matName, out bool inner, out bool emissive)
+        {
+            string a = matName.StartsWith("M_", StringComparison.Ordinal) ? matName.Substring(2) : matName;
+            inner = a.EndsWith("_Inner", StringComparison.Ordinal); if (inner) a = a.Substring(0, a.Length - 6);
+            emissive = a.EndsWith("_Emissive", StringComparison.Ordinal); if (emissive) a = a.Substring(0, a.Length - 9);
+            return a;
+        }
+
+        public static string MapSuffix(string texStem)
+        {
+            if (texStem == null || !texStem.StartsWith("T_", StringComparison.Ordinal)) return null;
+            foreach (var s in new[] { "_ORM", "_Crack", "_A", "_N", "_E" }) if (texStem.EndsWith(s, StringComparison.Ordinal)) return s;
+            return null;
+        }
+
+        public struct TexturePolicy { public bool sRGB; public bool normal; public int maxSize; public int androidMax; public string astc; }
+
+        /// <summary>Per-map policy. High/Mid share the Android override (1024, ASTC 6x6, normal 5x5); Low gets half resolution through
+        /// QualitySettings.globalTextureMipmapLimit = 1 on the Low quality level (Developer-owned setting, see IMPORT_PIPELINE.md).</summary>
+        public static TexturePolicy PolicyFor(string texStem, string assetPath)
+        {
+            string s = MapSuffix(texStem);
+            bool inner = texStem.Contains("_Inner");
+            var c = Classify(assetPath.Replace("/textures/", "/"));
+            int max = inner ? 256 : (c == AssetClass.Kit || c == AssetClass.KitFractured ? 512 : 1024);
+            switch (s)
+            {
+                case "_N": return new TexturePolicy { sRGB = false, normal = true, maxSize = 2048, androidMax = max, astc = "5x5" };
+                case "_ORM": return new TexturePolicy { sRGB = false, maxSize = 2048, androidMax = max, astc = "6x6" };
+                case "_Crack": return new TexturePolicy { sRGB = false, maxSize = 1024, androidMax = Math.Min(max, 512), astc = "8x8" };
+                case "_E": return new TexturePolicy { sRGB = true, maxSize = 1024, androidMax = Math.Min(max, 512), astc = "8x8" };
+                default: return new TexturePolicy { sRGB = true, maxSize = 2048, androidMax = max, astc = "6x6" };
+            }
+        }
+
+        // ---------- budgets ----------
+        /// <summary>LOD0 triangle budget per prefab (models README v1 table; Wrecker v3 hero build is ~11k LP, pending PM sign-off).</summary>
+        public static int TriBudget(AssetClass c, string stem)
+        {
+            switch (c)
+            {
+                case AssetClass.Hero: return 12000;
+                case AssetClass.Environment: return 2500 * 4;   // v3 island with unique macro map; v1 budget was 2,500
+                case AssetClass.Kit: return 300;
+                case AssetClass.KitFractured: return 300;       // per fragment, checked per renderer
+                default: return 3000;
+            }
+        }
+        public static int FragmentTriBudget = 300;
+
+        /// <summary>Texel density target band in px/m (spec section 4b).</summary>
+        public static void TexelTarget(AssetClass c, out float min, out float max)
+        {
+            switch (c)
+            {
+                case AssetClass.Hero: min = 180; max = 360; break;   // ~256
+                case AssetClass.Kit: case AssetClass.KitFractured: min = 128; max = 256; break;
+                case AssetClass.Environment: min = 16; max = 256; break; // unique macro map; detail tiles separately
+                default: min = 64; max = 512; break;
+            }
+        }
+    }
+}
+#endif
