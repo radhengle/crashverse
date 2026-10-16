@@ -650,7 +650,22 @@ static class Tests
             var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId);
             var lay = PerfL10Fixture.Layout(Db.GetLayout(l10.layout));
             T.True(PerfL10Fixture.IsDevLayout(lay.id), "dev_ layout id");
-            T.Eq(13 + PerfL10Fixture.Layers * PerfL10Fixture.Rows * PerfL10Fixture.Columns + PerfL10Fixture.DropPanes, lay.blocks.Length, "L10 + curtain + drop panes");
+            T.Eq(13 + PerfL10Fixture.Layers * PerfL10Fixture.Rows * PerfL10Fixture.Columns + PerfL10Fixture.DropPanes + 2 * PerfL10Fixture.AnvilPairs, lay.blocks.Length, "L10 + curtain + drop panes + hammer/anvil pairs");
+            // Hammers: a 4 kg steel hammer must break a 12 HP glass anvil on its first hit (ruling #7a maths), and they keep
+            // >= 3 landings per 100 ms; anvils sit outside every fuse's 2.5 m explosion radius so the burst can't pre-break them.
+            for (int i = 0; i < PerfL10Fixture.AnvilPairs; i++)
+            {
+                float v = PerfL10Fixture.G * PerfL10Fixture.HammerT(i);
+                long vmm = (long)Math.Round(v * 1000.0), milli = vmm <= 2000 ? 0 : 4000L * (vmm - 2000) * 500L * 1500L / 1000000000L; // ruling #7a: steel 4 kg, 0.5 HP/(kg·m/s), glass ×1.5 (MaterialDefinition / DebrisDamage; not in this assembly)
+                T.True(milli >= 12000, $"hammer {i} breaks its 12 HP glass anvil ({milli} mHP at {v:0.0} m/s)");
+            }
+            T.True(PerfL10Fixture.AnvilPairs / (PerfL10Fixture.HammerT1 - PerfL10Fixture.HammerT0) >= 30f, "hammers >= 3 per 100 ms");
+            foreach (var bl in lay.blocks)
+                if (bl.role == "anvil") foreach (var f in lay.blocks) if (f.explosive)
+                {
+                    float dx = bl.p[0] - f.p[0], dy = bl.p[1] - f.p[1], dz = bl.p[2] - f.p[2];
+                    T.True(Math.Sqrt(dx * dx + dy * dy + dz * dz) > 2.5, $"{bl.id} outside fuse {f.id} explosion radius");
+                }
             T.True(PerfL10Fixture.DropHeight(0) > 3.5f && PerfL10Fixture.DropHeight(PerfL10Fixture.DropPanes - 1) < 25f, "drop heights 4..22 m");
             T.True(PerfL10Fixture.DropPanes / (PerfL10Fixture.DropT1 - PerfL10Fixture.DropT0) >= 30f, ">= 3 landings per 100 ms over >= 1 s");
             var ids = new HashSet<string>(); foreach (var bl in lay.blocks) T.True(ids.Add(bl.id), "unique id " + bl.id);
