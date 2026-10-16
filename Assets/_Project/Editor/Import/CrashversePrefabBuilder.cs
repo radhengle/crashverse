@@ -77,7 +77,17 @@ namespace Crashverse.EditorTools.Import
             {
                 // Per-file LODs (v3: Wrecker_v2_LOD1.fbx) become children "LOD1"/"LOD2" with helpers and hulls stripped.
                 var lodRenderers = new List<Renderer>[3] { new List<Renderer>(), new List<Renderer>(), new List<Renderer>() };
-                foreach (var kv in files.Where(f => f.Key >= 1))
+                bool lod0Only = C.LodZeroOnly(cls);
+                if (lod0Only)
+                {
+                    foreach (var kv in files.Where(f => f.Key >= 1))
+                        Debug.LogWarning($"[CrashverseImport] {baseName}: fractured kit pieces use LOD0 only; ignoring {kv.Value}.");
+                    var extra = root.GetComponentsInChildren<Transform>(true).Where(t => C.LodLevel(t.name, out _) >= 1).ToArray();
+                    if (extra.Length > 0)
+                        Debug.LogWarning($"[CrashverseImport] {baseName}: fractured kit pieces use LOD0 only; ignoring {extra.Length} LOD1/LOD2 objects ({string.Join(", ", extra.Select(t => t.name).OrderBy(n => n, System.StringComparer.Ordinal))}).");
+                    foreach (var t in extra) if (t != null) Object.DestroyImmediate(t.gameObject);
+                }
+                foreach (var kv in files.Where(f => f.Key >= 1 && !lod0Only))
                 {
                     var lodGo = (GameObject)Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(kv.Value), root.transform);
                     lodGo.name = "LOD" + kv.Key;
@@ -98,7 +108,7 @@ namespace Crashverse.EditorTools.Import
                 var h = C.LodHeights(cls);
                 var lods = new List<LOD>();
                 for (int i = 0; i < 3; i++) if (lodRenderers[i].Count > 0) lods.Add(new LOD(h[i], lodRenderers[i].ToArray()));
-                if (lods.Count > 1)
+                if (lods.Count > 1 && !lod0Only)
                 {
                     // Cull height always sits on the last LOD present.
                     var last = lods[lods.Count - 1]; last.screenRelativeTransitionHeight = h[2]; lods[lods.Count - 1] = last;

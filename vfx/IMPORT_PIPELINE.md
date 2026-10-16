@@ -36,7 +36,7 @@ Sources: models/Model_Spec_v1.md (3D Modeler: rules 3 and 7, colliders), the Phy
 | Name pattern | Meaning | Pipeline does | FBX user properties, stored on `ImportedPhysicsHints` of that object |
 |---|---|---|---|
 | `<Piece>_frag_##` | fragment of a `Kit_*_Fractured` piece; pivot = centre of mass | tagged `Fragment` if the tag exists; ordinal sort; LOD0 renderer | `mass_kg` → `mass` (kg) |
-| `<Piece>_frag_##_LOD1/2`, `<Part>_LOD0/1/2`, `<Asset>_LOD0/1/2.fbx` | LOD meshes | LODGroup | none |
+| `<Part>_LOD0/1/2`, `<Asset>_LOD0/1/2.fbx` | LOD meshes (not used on fractured kit: warned and ignored) | LODGroup | none |
 | `UCX_<Piece>_frag_##` | **fragment hull, exact match, frozen**: exactly one per fragment | convex MeshCollider on the fragment, or on a `COL_<Target>` child if the pivot differs | none |
 | `UCX_<Name>[_##]` | convex hull for a non-fragment (`_##` is the hull index; ≤8 per piece, ≤255 tris) | convex MeshCollider on `<Name>`. **Missing target: error, skipped** | none |
 | `COL_<Target>` | child collider object (created by the pipeline when the hull pivot ≠ target pivot; also accepted when authored) | kept | none |
@@ -87,7 +87,9 @@ Mipmaps and mip streaming are on, Read/Write is off, alpha is none, and aniso is
 ## 3 · Prefabs (menu: Build Prefabs)
 **Hard gate (QA review of #28): the builder refuses to build, logs an error and writes no prefab when:**
 - the LOD0 triangle total is over budget (Wrecker > 12,000, island > 10,000, kit piece > 1,500);
-- or a Wrecker/Hero, island/Environment or kit (intact or fractured) asset is missing any of LOD0, LOD1 or LOD2 (per-file or in-file).
+- or a Wrecker/Hero, island/Environment or **intact** kit asset is missing any of LOD0, LOD1 or LOD2 (per-file or in-file).
+
+**Fractured kit (`Kit_*_Fractured`) is exempt from the LOD rule** (Physics: fragments need no LODs). It builds with LOD0 only and no LODGroup. Any LOD1/LOD2 files or `_LOD1`/`_LOD2` objects get a warning, are ignored, and are left out of the prefab. The 1,500-triangle budget still applies to the fractured LOD0 total.
 
 The validator reports the same conditions as errors (`gate`). Kit pieces under 500 triangles are only a warning.
 
@@ -98,7 +100,8 @@ The validator reports the same conditions as errors (`gate`). Kit pieces under 5
 |---|---|---|---|
 | Hero | 0.30 | 0.12 | 0.02 |
 | Environment | 0.45 | 0.18 | 0.005 |
-| Kit / fractured | 0.20 | 0.08 | 0.015 |
+| Kit (intact) | 0.20 | 0.08 | 0.015 |
+| Fractured kit | no LODGroup | | |
 | Other | 0.25 | 0.10 | 0.02 |
 
 - **Colliders:** each `UCX_`/`_COL` hull becomes a **convex MeshCollider** on its target, or on a `COL_<Target>` child when the pivot differs (**approved by PM**), and the hull renderer object is removed. Fallbacks: a fragment without a hull gets a convex collider from its own mesh, and a model with no collider at all gets one root BoxCollider from the renderer bounds.
@@ -139,7 +142,7 @@ Texel density hint = sqrt(UV area × albedo w × h / world area) over the LOD0 m
 - **Unity EditMode** (`Assets/_Project/Editor/Import/Tests`, asmdef `Crashverse.Import.Tests`, Editor-only, `UNITY_INCLUDE_TESTS`, same layout as `Crashverse.Rules.Tests`):
   - **Naming:** hull targets, fragment, joint, socket and kit-path rules.
   - **Hints:** `ImportedPhysicsHints` (SI values, blank and missing never overwrite).
-  - **Prefab build:** builds a procedural fractured piece at test time under `BuildingKit/__ImportTest`, then deletes it. It checks one convex collider per fragment, the `COL_` child, no root fallback, the error on a missing target, the LODGroup, kept sockets, joints and anchors, ordinal order, and that no physics components are added. **Gate:** over-budget kit and Wrecker are rejected with no prefab, a kit at exactly 1,500 builds, and a missing LOD on kit, island or Wrecker is rejected.
+  - **Prefab build:** builds a procedural fractured piece at test time under `BuildingKit/__ImportTest`, then deletes it. It checks one convex collider per fragment, the `COL_` child, no root fallback, the error on a missing target, the LODGroup, kept sockets, joints and anchors, ordinal order, and that no physics components are added. **Gate:** over-budget kit and Wrecker are rejected with no prefab, a kit at exactly 1,500 builds, and a missing LOD on intact kit, island or Wrecker is rejected. A fractured kit builds with LOD0 only and no LODGroup, ignores LOD objects with a warning, and is rejected when its total is over 1,500.
   - **Material wiring:** checks GlossyPBR maps, `_InnerFace`, no keywords, and texture import (NormalMap, sRGB, Android ASTC and size).
 - Assemblies: `Crashverse.Import` (runtime marker) and `Crashverse.Import.Editor` (Editor-only pipeline).
 

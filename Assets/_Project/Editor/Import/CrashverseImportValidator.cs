@@ -61,6 +61,8 @@ namespace Crashverse.EditorTools.Import
                 if ((cls == C.AssetClass.Kit || cls == C.AssetClass.KitFractured) && !C.KitPathOk(lod0)) Err(baseName, "path", $"kit files must be under {C.KitRoot}");
                 if (cls == C.AssetClass.KitFractured)
                 {
+                    if (files.Keys.Any(k => k >= 1) || all.Any(t => C.LodLevel(t.name, out _) >= 1))
+                        Warn(baseName, "LOD", "fractured kit pieces use LOD0 only: LOD1/LOD2 files or objects are ignored");
                     var hullsByTarget = all.Where(t => t.name.StartsWith("UCX_")).GroupBy(t => C.ColliderTarget(t.name)).ToDictionary(g2 => g2.Key, g2 => g2.Count());
                     foreach (var f in all.Where(t => C.IsFragment(t.name) && C.LodLevel(t.name, out _) <= 0 && !t.name.StartsWith("UCX_")).OrderBy(t => t.name, System.StringComparer.Ordinal))
                     {

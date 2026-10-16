@@ -128,11 +128,7 @@ namespace Crashverse.Tests
             {
                 // Deliberately unsorted.
                 Part("Wall_frag_02", root.transform, new Vector3(1, 0, 0));
-                Part("Wall_frag_02_LOD1", root.transform, new Vector3(1, 0, 0));
                 Part("Wall_frag_01", root.transform, Vector3.zero);
-                Part("Wall_frag_01_LOD1", root.transform, Vector3.zero);
-                Part("Wall_frag_01_LOD2", root.transform, Vector3.zero);
-                Part("Wall_frag_02_LOD2", root.transform, new Vector3(1, 0, 0));
                 Part("UCX_Wall_frag_01", root.transform, Vector3.zero);                 // same pose -> on the fragment
                 Part("UCX_Wall_frag_02", root.transform, new Vector3(1, 0.25f, 0));     // pivot differs -> COL_Wall_frag_02 child
                 Part("UCX_Missing_frag_09", root.transform, Vector3.zero);              // no target -> error, skipped
@@ -162,15 +158,9 @@ namespace Crashverse.Tests
             Assert.IsNull(built.GetComponent<BoxCollider>());
             Assert.IsFalse(built.GetComponentsInChildren<Transform>(true).Any(x => x.name.StartsWith("UCX_")), "hull objects removed");
 
-            // LOD group: LOD0 = fragments, LOD1 = _LOD1 renderers.
-            var lg = built.GetComponent<LODGroup>();
-            Assert.IsNotNull(lg);
-            var lods = lg.GetLODs();
-            Assert.AreEqual(3, lods.Length);
-            CollectionAssert.AreEquivalent(new[] { "Wall_frag_01", "Wall_frag_02" }, lods[0].renderers.Select(r => r.name).ToArray());
-            CollectionAssert.AreEquivalent(new[] { "Wall_frag_01_LOD1", "Wall_frag_02_LOD1" }, lods[1].renderers.Select(r => r.name).ToArray());
-            CollectionAssert.AreEquivalent(new[] { "Wall_frag_01_LOD2", "Wall_frag_02_LOD2" }, lods[2].renderers.Select(r => r.name).ToArray());
-            Assert.AreEqual(C.LodHeights(C.AssetClass.KitFractured)[2], lods[2].screenRelativeTransitionHeight, 1e-5f);
+            // Fractured kit: LOD0 only, no LODGroup (Physics: fragments need no LODs).
+            Assert.IsNull(built.GetComponent<LODGroup>());
+            CollectionAssert.AreEquivalent(new[] { "Wall_frag_01", "Wall_frag_02" }, built.GetComponentsInChildren<Renderer>(true).Select(r => r.name).ToArray());
 
             // Helpers kept.
             Assert.IsNotNull(F("Socket_Muzzle"));
@@ -235,6 +225,25 @@ namespace Crashverse.Tests
             var built = BuildOne("Kit_Test_Ok", path);
             Assert.IsNotNull(built);
             Assert.AreEqual(3, built.GetComponent<LODGroup>().GetLODs().Length);
+        }
+
+        [Test]
+        public void FracturedKitIgnoresLodObjectsWithWarning()
+        {
+            string path = SaveModel("Kit_Test_Lods_Fractured", ("Wall_frag_01", 20), ("Wall_frag_01_LOD1", 10), ("Wall_frag_02", 20), ("Wall_frag_02_LOD2", 5));
+            LogAssert.Expect(LogType.Warning, new Regex(@"Kit_Test_Lods_Fractured: fractured kit pieces use LOD0 only; ignoring 2 LOD1/LOD2 objects"));
+            var built = BuildOne("Kit_Test_Lods_Fractured", path);
+            Assert.IsNotNull(built);
+            Assert.IsNull(built.GetComponent<LODGroup>());
+            CollectionAssert.AreEquivalent(new[] { "Wall_frag_01", "Wall_frag_02" }, built.GetComponentsInChildren<Renderer>(true).Select(r => r.name).ToArray());
+        }
+
+        [Test]
+        public void OverBudgetFracturedTotalIsRejected()
+        {
+            string path = SaveModel("Kit_Test_Heavy_Fractured", ("Heavy_frag_01", 280), ("Heavy_frag_02", 280), ("Heavy_frag_03", 280), ("Heavy_frag_04", 280), ("Heavy_frag_05", 280), ("Heavy_frag_06", 101));
+            LogAssert.Expect(LogType.Error, new Regex(@"Kit_Test_Heavy_Fractured: LOD0 1501 tris over budget 1500\. Prefab NOT built"));
+            Assert.IsNull(BuildOne("Kit_Test_Heavy_Fractured", path));
         }
 
         [TestCase("Kit_Test_NoLod2", "LOD2")]
