@@ -1,0 +1,370 @@
+{
+ "id": "c1_l04_windmill",
+ "blocks": [
+  {
+   "id": "rock",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    5,
+    1.2,
+    5
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "drum0",
+   "mat": "brick",
+   "p": [
+    0,
+    2.2,
+    0
+   ],
+   "s": [
+    2.8,
+    2.0,
+    2.8
+   ],
+   "sup": [
+    "rock"
+   ],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "beamL",
+   "mat": "wood",
+   "p": [
+    -1.2,
+    3.4,
+    1.3
+   ],
+   "s": [
+    1.0,
+    0.4,
+    0.6
+   ],
+   "sup": [
+    "drum0"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "beamR",
+   "mat": "wood",
+   "p": [
+    1.2,
+    3.4,
+    1.3
+   ],
+   "s": [
+    1.0,
+    0.4,
+    0.6
+   ],
+   "sup": [
+    "drum0"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "drum1F",
+   "mat": "brick",
+   "p": [
+    0,
+    4.6,
+    0.6
+   ],
+   "s": [
+    2.4,
+    2.0,
+    1.2
+   ],
+   "sup": [
+    "beamL",
+    "beamR"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "drum1B",
+   "mat": "brick",
+   "p": [
+    0,
+    4.6,
+    -0.6
+   ],
+   "s": [
+    2.4,
+    2.0,
+    1.2
+   ],
+   "sup": [
+    "beamL",
+    "beamR"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "cap",
+   "mat": "wood",
+   "p": [
+    0,
+    5.8,
+    1.2
+   ],
+   "s": [
+    2.4,
+    0.4,
+    0.4
+   ],
+   "sup": [
+    "drum1F",
+    "drum1B"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "drum2",
+   "mat": "brick",
+   "p": [
+    0,
+    7.0,
+    0
+   ],
+   "s": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "sup": [
+    "cap"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "hub",
+   "mat": "wood",
+   "p": [
+    0,
+    7.4,
+    1.3
+   ],
+   "s": [
+    0.8,
+    0.8,
+    0.6
+   ],
+   "sup": [
+    "drum2"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roof",
+   "mat": "brick",
+   "p": [
+    0,
+    8.4,
+    0
+   ],
+   "s": [
+    2.4,
+    0.8,
+    2.4
+   ],
+   "sup": [
+    "drum2"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sail0",
+   "mat": "wood",
+   "p": [
+    0,
+    8.6,
+    1.8
+   ],
+   "s": [
+    0.5,
+    1.6,
+    0.1
+   ],
+   "sup": [
+    "hub"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sail1",
+   "mat": "wood",
+   "p": [
+    0,
+    6.2,
+    1.8
+   ],
+   "s": [
+    0.5,
+    1.6,
+    0.1
+   ],
+   "sup": [
+    "hub"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sail2",
+   "mat": "wood",
+   "p": [
+    -1.2,
+    7.4,
+    1.8
+   ],
+   "s": [
+    1.6,
+    0.5,
+    0.1
+   ],
+   "sup": [
+    "hub"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sail3",
+   "mat": "wood",
+   "p": [
+    1.2,
+    7.4,
+    1.8
+   ],
+   "s": [
+    1.6,
+    0.5,
+    0.1
+   ],
+   "sup": [
+    "hub"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}
