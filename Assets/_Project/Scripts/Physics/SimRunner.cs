@@ -22,6 +22,10 @@ namespace Crashverse.Sim
         public bool Ranked { get; private set; }
         public long Seed { get; private set; }
         public SimRng Rng { get; private set; } = new SimRng(0);
+        /// <summary>Incremented by every BeginRun (fresh start and Retry), so systems can reset per run without guessing.</summary>
+        public int RunId { get; private set; }
+        /// <summary>Raised at the end of BeginRun (fresh start and Retry).</summary>
+        public static event Action<SimRunner> RunStarted;
 
         /// <summary>Called for each input as it is applied, before physics for that tick.</summary>
         public event Action<int, InputEvent> InputApplied;
@@ -61,7 +65,7 @@ namespace Crashverse.Sim
         /// <summary>Start (or restart on Retry) a run. Clears inputs, resets tick and RNG.</summary>
         public void BeginRun(long seed, bool ranked)
         {
-            Seed = seed; Ranked = ranked; Tick = 0; Running = true;
+            Seed = seed; Ranked = ranked; Tick = 0; Running = true; RunId++;
             if (ImpactEventEmitter.Instance != null) ImpactEventEmitter.Instance.ResetRun();
             Rng = new SimRng(seed);
             _inputs.Clear();
@@ -70,8 +74,10 @@ namespace Crashverse.Sim
             {
                 if (!_ownsMode) { _prevMode = Physics.simulationMode; _ownsMode = true; }
                 Physics.simulationMode = SimulationMode.Script;
+                SimLayers.ApplyRankedMatrix();
             }
             else RestoreMode();
+            RunStarted?.Invoke(this);
         }
 
         public void EndRun() { Running = false; RestoreMode(); }
