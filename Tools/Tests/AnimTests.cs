@@ -62,6 +62,8 @@ static class AnimTests
             T.True(ShakeRouter.TryGetPhys("PHYS_IMPACT", ShakeRouter.MatSteel, ShakeRouter.TierHeavy, out s, out f) && s.freq == 6 && f == ShakeFamily.Impact, "phys impact by material");
             T.True(ShakeRouter.TryGetPhys("PHYS_BREAK", ShakeRouter.MatBrick, ShakeRouter.TierMedium, out s, out _) && s.pos == 0.04f, "phys break by material");
             T.True(!ShakeRouter.TryGetPhys("PHYS_CRACK", 0, 2, out _, out _) && !ShakeRouter.TryGetPhys("PHYS_COLLAPSE_START", 0, 2, out _, out _), "crack / collapse start silent");
+            T.True(ShakeRouter.TryGet("IMPACT_GLASS", out s, out f) && s.Equals(ShakeTable.ImpactWood) && f == ShakeFamily.Impact && ShakeRouter.TryGet("BREAK_GLASS", out s) && s.Equals(ShakeTable.ImpactWood), "glass light like wood");
+            T.True(ShakeRouter.TryGetPhys("PHYS_BREAK", ShakeRouter.MatGlass, 2, out s, out _) && s.Equals(ShakeTable.ImpactWood), "phys glass break light");
             T.True(ShakeRouter.IsImpact("IMPACT_TERRAIN") && !ShakeRouter.IsImpact("BREAK_STEEL_JOINT"), "impact family");
         });
         T.Add("SHAKE_dispatcher_dedupe_and_haptics", () =>

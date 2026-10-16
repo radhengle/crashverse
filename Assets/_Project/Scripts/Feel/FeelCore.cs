@@ -335,7 +335,7 @@ namespace Crashverse.Feel
             switch (evt)
             {
                 case AnimEvents.WreckerFire: spec = ShakeTable.Fire; fam = ShakeFamily.Fire; return true;
-                case ImpactWood: case BreakWood: spec = ShakeTable.ImpactWood; fam = ShakeFamily.Impact; return true;
+                case ImpactWood: case BreakWood: case AnimMaterial.ImpactGlass: case AnimMaterial.BreakGlass: spec = ShakeTable.ImpactWood; fam = ShakeFamily.Impact; return true; // glass = light, like wood (02/07)
                 case ImpactBrick: spec = ShakeTable.BrickHit; fam = ShakeFamily.Impact; return true;
                 case ImpactSteel: case ImpactSteelJoint: spec = ShakeTable.SteelRing; fam = ShakeFamily.Impact; return true;
                 case ImpactTerrain: spec = ShakeTable.Terrain; fam = ShakeFamily.Impact; return true;
@@ -365,7 +365,7 @@ namespace Crashverse.Feel
                     return true;
                 case PhysBreak:
                     fam = ShakeFamily.Break;
-                    spec = material == MatBrick ? ShakeTable.BrickBreak : material == MatSteel ? ShakeTable.JointBreak : ShakeTable.ImpactWood;
+                    spec = material == MatBrick ? ShakeTable.BrickBreak : material == MatSteel ? ShakeTable.JointBreak : ShakeTable.ImpactWood; // wood + glass (MatGlass) light
                     return true;
                 case PhysCrack: case PhysCollapseStart: spec = default; fam = ShakeFamily.None; return false;
                 default: return TryGet(evt, out spec, out fam);
