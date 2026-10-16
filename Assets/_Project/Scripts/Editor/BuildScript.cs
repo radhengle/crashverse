@@ -24,6 +24,21 @@ namespace Crashverse.EditorTools
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
             // Release: arm64 + v7a. Dev: also x86_64 so QA can run it on emulators/Chromebooks.
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64 | (release ? 0 : AndroidArchitecture.X86_64);
+            // BUG-21: every dev build must be signed with the same persistent dev key (GameCI otherwise makes a fresh debug
+            // keystore per runner, so a new build can't update the old one) and carry an increasing versionCode.
+            var vc = Environment.GetEnvironmentVariable("CRASHVERSE_VERSION_CODE");
+            if (int.TryParse(vc, out var code) && code > 0) PlayerSettings.Android.bundleVersionCode = code;
+            else if (Environment.GetEnvironmentVariable("CI") != null) { Debug.LogError("CRASHVERSE_VERSION_CODE missing in CI"); EditorApplication.Exit(1); }
+            var ks = Environment.GetEnvironmentVariable("CRASHVERSE_KEYSTORE_PATH");
+            if (!string.IsNullOrEmpty(ks))
+            {
+                PlayerSettings.Android.useCustomKeystore = true;
+                PlayerSettings.Android.keystoreName = System.IO.Path.GetFullPath(ks);
+                PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable("CRASHVERSE_KEYSTORE_PASS");
+                PlayerSettings.Android.keyaliasName = Environment.GetEnvironmentVariable("CRASHVERSE_KEYALIAS_NAME");
+                PlayerSettings.Android.keyaliasPass = Environment.GetEnvironmentVariable("CRASHVERSE_KEYALIAS_PASS");
+            }
+            else if (Environment.GetEnvironmentVariable("CI") != null) { Debug.LogError("CRASHVERSE_KEYSTORE_PATH missing in CI: refusing a throwaway debug key"); EditorApplication.Exit(1); }
             var opts = new BuildPlayerOptions
             {
                 scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray(),

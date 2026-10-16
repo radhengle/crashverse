@@ -52,3 +52,7 @@ Tools/CompileCheck/obj/
 Tools/Tests/bin/
 Tools/Tests/obj/
 Assets/csc.rsp
+*.keystore
+*.jks
+*.p12
+build-secrets/

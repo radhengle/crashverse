@@ -88,6 +88,14 @@ jobs:
           restore-keys: |
             Library-Android-${{ env.CRASHVERSE_BUILD_PROFILE }}-
 
+      - name: Decode persistent dev keystore (never committed; separate from the Play upload key)
+        env:
+          DEV_KEYSTORE_BASE64: ${{ secrets.DEV_KEYSTORE_BASE64 }}
+        run: |
+          set -e
+          [ -n "$DEV_KEYSTORE_BASE64" ] || { echo "::error::DEV_KEYSTORE_BASE64 secret missing"; exit 1; }
+          mkdir -p build-secrets && umask 077 && echo "$DEV_KEYSTORE_BASE64" | base64 -d > build-secrets/dev.keystore
+
       - name: Build APK
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
         env:
@@ -95,6 +103,11 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           CRASHVERSE_BUILD_PROFILE: ${{ env.CRASHVERSE_BUILD_PROFILE }}
+          CRASHVERSE_VERSION_CODE: ${{ github.run_number }}
+          CRASHVERSE_KEYSTORE_PATH: build-secrets/dev.keystore
+          CRASHVERSE_KEYSTORE_PASS: ${{ secrets.DEV_KEYSTORE_PASS }}
+          CRASHVERSE_KEYALIAS_NAME: ${{ secrets.DEV_KEYALIAS_NAME }}
+          CRASHVERSE_KEYALIAS_PASS: ${{ secrets.DEV_KEYALIAS_PASS }}
         with:
           targetPlatform: Android
           unityVersion: 2022.3.50f1
@@ -104,6 +117,15 @@ jobs:
           versioning: Custom # no git-derived versioning (it ran `git fetch`, which fails without persisted credentials)
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
+          androidKeystoreName: build-secrets/dev.keystore
+          androidKeystoreBase64: ${{ secrets.DEV_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.DEV_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.DEV_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.DEV_KEYALIAS_PASS }}
+
+      - name: Remove keystore from the workspace
+        if: always()
+        run: rm -rf build-secrets
 
       - name: Assert 64-bit native libs (arm64-v8a libil2cpp.so + libunity.so)
         run: |
@@ -114,6 +136,25 @@ jobs:
             grep -q "lib/arm64-v8a/$lib" native_libs.txt || { echo "::error::$f is missing lib/arm64-v8a/$lib"; exit 1; }
           done
 
+      - name: Verify signature, cert pin, versionCode, no testOnly (publish gate)
+        env:
+          EXPECTED_VC: ${{ github.run_number }}
+        run: |
+          set -e
+          f=$(ls build/Android/*.apk | head -1)
+          BT=$(ls -d /usr/local/lib/android/sdk/build-tools/* 2>/dev/null | sort -V | tail -1)
+          if [ -z "$BT" ]; then # free-disk-space removed the SDK: fetch build-tools
+            curl -sSLo bt.zip https://dl.google.com/android/repository/build-tools_r34-linux.zip && unzip -q bt.zip -d bt && BT=$(ls -d bt/*)
+          fi
+          "$BT/apksigner" verify --print-certs -v "$f" | tee sig.txt
+          grep -q "Verified using v2 scheme (APK Signature Scheme v2): true" sig.txt || { echo "::error::not v2-signed"; exit 1; }
+          sha=$(grep -m1 "Signer #1 certificate SHA-256 digest" sig.txt | awk '{print $NF}')
+          [ "$sha" = "$(tr -d ' \n' < Tools/ci/dev_cert_sha256.txt)" ] || { echo "::error::signing cert $sha != pinned dev cert (Tools/ci/dev_cert_sha256.txt)"; exit 1; }
+          "$BT/aapt2" dump badging "$f" | tee badging.txt | head -3
+          grep -q "versionCode='$EXPECTED_VC'" badging.txt || { echo "::error::versionCode is not run_number $EXPECTED_VC"; exit 1; }
+          if "$BT/aapt2" dump xmltree --file AndroidManifest.xml "$f" | grep -qi testOnly; then echo "::error::testOnly set"; exit 1; fi
+          echo "OK cert=$sha versionCode=$EXPECTED_VC"
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -121,3 +162,40 @@ jobs:
           path: build/Android/*.apk
           if-no-files-found: error
           retention-days: 14
+
+  emulator-smoke:
+    name: Install + launch on x86_64 emulator (publish gate)
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: crashverse-android-apk
+          path: apk
+      - name: adb install + launch, assert process alive and no fatal crash
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            adb install -r "$(ls apk/*.apk | head -1)"
+            adb logcat -c
+            adb shell monkey -p com.crashverse.game -c android.intent.category.LAUNCHER 1
+            sleep 30
+            adb shell pidof com.crashverse.game || { adb logcat -d | tail -200; echo "::error::app not running 30 s after launch"; exit 1; }
+            if adb logcat -d | grep -E "FATAL EXCEPTION|Fatal signal|ANR in com.crashverse"; then echo "::error::crash/ANR"; exit 1; fi
+            adb exec-out screencap -p > launch.png
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: emulator-launch-screenshot
+          path: launch.png
+          if-no-files-found: warn
