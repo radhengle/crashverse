@@ -29,7 +29,7 @@ concurrency:
 jobs:
   guards:
     name: Release guards + tests (B1)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     env:
@@ -56,12 +56,23 @@ jobs:
     name: GameCI Unity Android (${{ github.event.inputs.profile || 'dev' }})
     needs: guards
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     env:
       CRASHVERSE_BUILD_PROFILE: ${{ github.event.inputs.profile || 'dev' }}
     steps:
+      - name: Free disk space (unityci editor image is large)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: false
+
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:

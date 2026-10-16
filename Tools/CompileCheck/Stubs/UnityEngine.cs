@@ -157,7 +157,7 @@ namespace UnityEngine
     public static class Application
     {
         public static int targetFrameRate;
-        public static string persistentDataPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "crashverse_test");
+        public static string persistentDataPath = System.IO.Directory.CreateDirectory(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "crashverse_test")).FullName; // exists on fresh CI runners
         public static void Quit() { }
         public static RuntimePlatform platform = RuntimePlatform.LinuxEditor;
     }
