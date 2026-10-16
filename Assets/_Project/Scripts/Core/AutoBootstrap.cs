@@ -7,10 +7,10 @@ namespace Crashverse.Core
     /// </summary>
     public static class AutoBootstrap
     {
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         /// <summary>Set by a dev scene driver (e.g. the L10 perf stage) in Awake so the normal map/age-gate boot doesn't run there.</summary>
         public static bool SuppressForDevScene;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Boot()
         {
             if (SuppressForDevScene) return;
