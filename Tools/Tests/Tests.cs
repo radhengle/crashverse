@@ -650,6 +650,25 @@ static class Tests
             T.True(!rm.SlowMoAllowed(false, false) && !rm.FidgetEnabled(QualityTier.High), "reduce motion kills slow-mo/fidget");
             T.True(Ease.OutBackOrQuad(0.5f, true) <= 1f, "no overshoot with reduce motion");
         });
+        T.Add("SETTINGS_45_defaults", () =>
+        {
+            var g = new Crashverse.Core.GameSettings(new MemIntPrefs());
+            T.Eq(80, g.MusicPercent, "music default 80%"); T.Eq(100, g.SfxPercent, "sfx default 100%");
+            T.Eq(1, g.Quality, "quality default Mid"); T.Eq("Medium", Crashverse.Core.GameSettings.QualityName(g.Quality));
+            T.Eq(0.8f, g.MusicVolume, "music 0.8"); T.Eq(1f, new Crashverse.Core.GameSettings(null).SfxVolume, "null prefs = defaults");
+            var mo = new MotionSettings(new MemPrefs(), false); T.True(!mo.ReduceShake && !mo.ReduceMotion, "motion off by default");
+        });
+        T.Add("SETTINGS_45_persist_clamp_and_cycle", () =>
+        {
+            var prefs = new MemIntPrefs(); var g = new Crashverse.Core.GameSettings(prefs); int fired = 0; g.Changed += () => fired++;
+            g.SetMusicPercent(30); g.SetSfxPercent(0); g.SetQuality(2);
+            var g2 = new Crashverse.Core.GameSettings(prefs);
+            T.Eq(30, g2.MusicPercent, "music persists"); T.Eq(0, g2.SfxPercent, "sfx 0 persists (mute)"); T.Eq(2, g2.Quality, "quality persists");
+            T.Eq(3, fired, "Changed fires per set");
+            g.SetMusicPercent(150); T.Eq(100, g.MusicPercent, "clamp high"); g.SetSfxPercent(-10); T.Eq(0, g.SfxPercent, "clamp low");
+            prefs.Set(Crashverse.Core.GameSettings.KeyQuality, 9); T.Eq(2, g.Quality, "corrupt quality clamped");
+            g.SetQuality(2); T.Eq(0, g.NextQuality(), "High→Low"); g.SetQuality(0); T.Eq(1, g.NextQuality(), "Low→Mid");
+        });
         T.Add("FEEL_win_threshold_per_level_default_085", () =>
         {
             T.Eq(0.85f, new LevelEntry().winThreshold, "default 0.85 field");
@@ -918,6 +937,13 @@ static class Tests
             var imp = Src("Assets/_Project/Scripts/Editor/MusicImportRules.cs"); T.True(imp.Contains("AudioClipLoadType.Streaming"), "all music streamed");
         });
     }
+}
+
+class MemIntPrefs : Crashverse.Core.IIntPrefs
+{
+    readonly Dictionary<string, int> _d = new Dictionary<string, int>();
+    public bool TryGet(string k, out int v) => _d.TryGetValue(k, out v);
+    public void Set(string k, int v) => _d[k] = v;
 }
 
 class MemPrefs : IMotionPrefs

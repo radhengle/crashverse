@@ -12,8 +12,12 @@ namespace Crashverse.Perf
 
         void Awake()
         {
-            ApplyMid();
+            ApplySaved(); // #45: persisted graphics quality (default Mid)
         }
+
+        /// <summary>Applies the tier saved in GameSettings (0 Low, 1 Mid, 2 High).</summary>
+        public static void ApplySaved() => Apply(Crashverse.Core.GameSettings.Current.Quality);
+        public static void Apply(int q) { if (q == 0) ApplyLow(); else if (q == 2) ApplyHigh(); else ApplyMid(); }
 
         public static void Toggle()
         {
