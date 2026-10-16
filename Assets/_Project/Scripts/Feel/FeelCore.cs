@@ -395,13 +395,40 @@ namespace Crashverse.Feel
         public bool Submit(string evt, int frame, float nowMs) => ShakeRouter.TryGet(evt, out var s, out var f) && Submit(s, f, frame, nowMs);
         public bool SubmitPhys(string evt, int material, int tier, int frame, float nowMs) => ShakeRouter.TryGetPhys(evt, material, tier, out var s, out var f) && Submit(s, f, frame, nowMs);
 
+        CollapseHapticMerge _collapse;
+
+        /// <summary>COLLAPSE_LAND with its `material` param (wood/glass/brick/stone/steel). Haptic merges per 40 ms window, strongest material wins (haptics.md §4).</summary>
+        public bool SubmitCollapse(string evt, string material, int frame, float nowMs)
+        {
+            if (!ShakeRouter.TryGet(evt, out var s, out var f)) return false;
+            if (f != ShakeFamily.Collapse) return Submit(s, f, frame, nowMs);
+            if (HapticsOn) _collapse.Add(material, nowMs);
+            return SubmitShakeOnly(s, f, frame);
+        }
+
         public bool Submit(in ShakeSpec s, ShakeFamily fam, int frame, float nowMs)
+        {
+            if (fam == ShakeFamily.Collapse) { if (HapticsOn) _collapse.Add(null, nowMs); return SubmitShakeOnly(s, fam, frame); }
+            if (!SubmitShakeOnly(s, fam, frame)) return false;
+            if (HapticsOn) Haptics.Pulse(HapticBuckets.For(Strength(s)), nowMs);
+            return true;
+        }
+
+        /// <summary>Call once per frame (real ms): flushes a closed collapse merge window as one pulse.</summary>
+        public void Tick(float nowMs)
+        {
+            int b = _collapse.Flush(nowMs);
+            if (b > 0 && HapticsOn) Haptics.Pulse(b, nowMs);
+        }
+
+        bool HapticsOn => Haptics != null && (Settings == null || Settings.HapticsEffective);
+
+        bool SubmitShakeOnly(in ShakeSpec s, ShakeFamily fam, int frame)
         {
             int i = (int)fam; float k = Strength(s);
             if (fam != ShakeFamily.None && _frame[i] == frame && k <= _strength[i]) return false; // same family, same frame, not stronger → drop
             if (fam != ShakeFamily.None) { _frame[i] = frame; _strength[i] = k; }
             _stack.Add(s); // ×0 under Reduce shake / Reduce motion via ShakeStack.Scale
-            if (Haptics != null && (Settings == null || Settings.HapticsEffective)) Haptics.Pulse(HapticBuckets.For(k), nowMs);
             return true;
         }
     }

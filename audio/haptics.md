@@ -33,7 +33,7 @@ Each bucket is a single `VibrationEffect.createOneShot(ms, amp)`, built once and
 | `BREAK_BRICK`, `PHYS_BREAK` (unknown material) | BrickBreak 0.04 / 0.4° | 0.27 | 2 `impact` |
 | `BOSS_TIDE_CORE_HIT`, `BOSS_TITAN_HIT` | BrickBreak | 0.27 | 2 `impact` |
 | `BREAK_STEEL_JOINT`, `BOSS_TIDE_JOINT_BREAK`, `PHYS_JOINT_SNAP` | JointBreak 0.06 / 0.6° | 0.40 | 2 `impact` |
-| `COLLAPSE_LAND`, `PHYS_COLLAPSE_END`, `BOSS_TIDE_ARMS_LAND` | CollapseLand 0.08 / 0.8° | 0.53 | 3 `break_med` 40 ms / 180 |
+| `COLLAPSE_LAND`, `PHYS_COLLAPSE_END`, `BOSS_TIDE_ARMS_LAND` | CollapseLand 0.08 / 0.8° | 0.53 | merged per 40 ms window (§4): wood/glass 2, brick/stone/unknown 3 `break_med`, steel 4. ✅ Sound Manager |
 | `PU_GRAVITY_BURST` | GravityBurst 0.08 / 0.8° | 0.53 | 3 `break_med` |
 | `EXPLODE_CRATE` (alias `EXPLODE_BARREL`), `PU_CHAIN_PULSE` | Explosion 0.10 / 1.0° | 0.67 | 3 `break_med` |
 | `BOSS_TIDE_PHASE2`, `BOSS_TIDE_DEFEAT`, `BOSS_TITAN_STAGE`, `BOSS_TITAN_DEFEAT` | BossPhase 0.12 / 1.2° | 0.80 | 4 `boom` 60 ms / 255 ★ |
@@ -62,21 +62,24 @@ Enforced at one point (`ShakeDispatcher.Submit`), so every caller (`CameraShake.
 - Exception: a **stronger** bucket may cut in within 40 ms (★ cancels a lower one). Equal or weaker pulses are dropped.
 - Per-frame family dedupe runs before the gate (one impact pulse per frame, the strongest).
 - Suppressed pulses (toggle/Reduce motion) don't touch the gate.
+- **COLLAPSE_LAND merge** ✅ *confirmed by Sound Manager*: the haptic for every landing that arrives within 40 ms of the first one is merged into **one** pulse, sent when the window closes (≤ 40 ms latency, `ShakeDispatcher.Tick`). Its strength comes from the strongest material in the window: **steel > stone > brick > glass > wood** (`CollapseHapticMerge`). The `material` param travels on the bus payload, and if it's missing the default is bucket 3. Camera shake is still deduped per frame as before.
 
-## 5. Timing alignment with SFX / animation (pending Sound Manager/Animator confirmation)
+## 5. Timing alignment with SFX / animation
 
-The pulse fires on the **same frame** as the routed event, i.e. the frame the SFX trigger and the shake start (all `0 / 0` offsets in `audio_sync_table.md` unless noted):
+Status: rows marked ✅ were **confirmed by Sound Manager**. Rows marked ⏳ are **pending Animator confirmation**.
 
-| Event | Offset (frame / ms) | Note |
-|---|---|---|
-| `ANIM_WRECKER_FIRE` | 0 at launch = +4 f / 66 ms after FIRE tap | pulse on launch with cannon boom, not on tap. *Confirm.* |
-| `IMPACT_*` / `BREAK_*` | 0 / 0 | with material hit / snap SFX |
-| `EXPLODE_CRATE` | 6 / 100 after swell | pulse at the blast, not swell start. *Confirm the SFX transient is at 100 ms.* |
-| `COLLAPSE_LAND` | 0 / 0 per segment contact | multiple segments within 40 ms are merged by the gate. *Confirm that's acceptable vs. per-material thuds.* |
-| `PU_GRAVITY_BURST` | 90 / 1500 | pulse on implode+burst. *Confirm the transient sits at the start of BURST.* |
-| `PU_CHAIN_PULSE` | 0; links +5 f (80 ms) each | only the PULSE vibrates; `PU_CHAIN_LINK` doesn't. *Should each link tick?* |
-| `BOSS_TIDE_ARMS_LAND` | 36 / 600 after ARMS_DROP | |
-| `BOSS_TIDE_PHASE2` | 75 / 1250 | |
-| `BOSS_TIDE_DEFEAT` | 0 / 0 (clip 4.0 s) | single `boom` at start. *Want a second pulse at the final collapse?* |
+The pulse fires on the **same frame** as the routed event, which is the SFX transient (all `0 / 0` offsets in `audio_sync_table.md` unless noted).
 
-Android vibrator latency (~10–30 ms) isn't compensated. Sound Manager: confirm whether the SFX lead/lag needs a haptic offset.
+| # | Event | Offset (frame / ms) | Rule | Status |
+|---|---|---|---|---|
+| 1 | `ANIM_WRECKER_FIRE` | at launch = +4 f / 66 ms after FIRE tap | pulse at launch with the cannon boom, **not** on the tap (raised on WreckerState.Recoil) | ✅ Sound Manager |
+| 2 | `EXPLODE_CRATE` | 6 / 100 after swell start | the event is raised at the peak, so the pulse lands on the 100 ms peak, not at swell start | ✅ Sound Manager |
+| 3 | `COLLAPSE_LAND` | 0 / 0 per segment contact | landings within 40 ms → one pulse, strongest material (§4) | ✅ Sound Manager |
+| 4 | `PU_GRAVITY_BURST` | 90 / 1500 | does the peak sit at BURST start? | ⏳ Animator |
+| 5 | `PU_CHAIN_PULSE` | 0; links +5 f (80 ms) each | only PULSE vibrates. Should each `PU_CHAIN_LINK` tick? | ⏳ Animator |
+| 6 | `BOSS_TIDE_DEFEAT` | 0 / 0 (clip 4.0 s) | single `boom` at start. Second pulse at the final collapse? | ⏳ Animator |
+| 7 | Haptic lead offset | `HapticTiming.LeadMs`, default **−20 ms** | see below | ✅ Sound Manager |
+| 8 | `BREAK_STEEL` (unrouted → no haptic); `IMPACT_TERRAIN` provisional shake | — | intended? | ⏳ Animator |
+| — | `BOSS_TIDE_ARMS_LAND` 36 / 600, `BOSS_TIDE_PHASE2` 75 / 1250, `IMPACT_*`/`BREAK_*` 0 / 0 | | on the event | as routed |
+
+**Lead offset (row 7):** config field `HapticTiming.LeadMs` (default −20 ms, negative = before the audio peak). Scheduled time = `eventMs + max(0, peakDelayMs + LeadMs)`, so a pulse **never fires before its triggering event**. Every routed event is raised at its own transient today (peakDelay 0), so the −20 ms lead clamps to 0 and pulses stay synchronous. The lead only shifts a pulse if an event later carries a known delay to its peak, e.g. 100 ms → fires at +80 ms. Android vibrator latency (~10–30 ms) is otherwise not compensated.

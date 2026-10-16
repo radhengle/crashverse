@@ -71,7 +71,7 @@ static class AnimTests
             var st = new ShakeStack(); var h = new RecHaptics(); var prefs = new AnimMemPrefs(); var m = new MotionSettings(prefs, false);
             var d = new ShakeDispatcher(st) { Haptics = h, Settings = m };
             T.True(d.Submit("BREAK_STEEL_JOINT", 1, 0f), "joint shake"); T.True(!d.Submit("PHYS_JOINT_SNAP", 1, 0f), "PHYS_JOINT_SNAP same frame deduped");
-            T.True(d.Submit(AnimEvents.CollapseLand, 1, 0f) && !d.Submit("PHYS_COLLAPSE_END", 1, 0f), "COLLAPSE_LAND + PHYS_COLLAPSE_END → one");
+            T.True(d.Submit(AnimEvents.CollapseLand, 1, 0f) && !d.Submit("PHYS_COLLAPSE_END", 1, 0f), "COLLAPSE_LAND + PHYS_COLLAPSE_END → one"); d.Tick(50f); // flush collapse haptic window
             T.True(d.Submit("IMPACT_WOOD", 2, 100f) && d.Submit(AnimEvents.BossTideCoreHit, 2, 100f) && !d.Submit("IMPACT_WOOD", 2, 100f), "impact family: stronger may replace, weaker dropped");
             T.True(d.Submit("BREAK_STEEL_JOINT", 3, 200f), "next frame allowed"); T.Eq(5, st.Count, "5 shakes in the pool");
             T.Eq(5, h.Calls, "haptics driven by the same accepted events"); T.Eq(HapticBuckets.For(0.4f), h.Last, "joint 0.06/0.6° → strength 0.4 bucket");
@@ -94,6 +94,29 @@ static class AnimTests
             var g = new GatedRec(); var d2 = new ShakeDispatcher(new ShakeStack()) { Haptics = g, Settings = new MotionSettings(new AnimMemPrefs(), false) };
             d2.Submit("IMPACT_WOOD", 1, 0f); d2.Submit("BREAK_BRICK", 2, 10f); d2.Submit("IMPACT_BRICK", 3, 30f); T.Eq(2, g.Fired, "0 fires, 10 stronger cuts in, 30 dropped (<40 ms)");
             d2.Submit("IMPACT_WOOD", 5, 49f); T.Eq(2, g.Fired, "still inside 40 ms of the last pulse"); d2.Submit("IMPACT_WOOD", 6, 50f); T.Eq(3, g.Fired, "40 ms rate limit still applies; fires again at +40 ms");
+        });
+        T.Add("HAPTICS_collapse_merge_material_priority", () =>
+        {
+            T.True(CollapseHapticMerge.Rank("steel") > CollapseHapticMerge.Rank("stone") && CollapseHapticMerge.Rank("stone") > CollapseHapticMerge.Rank("brick")
+                && CollapseHapticMerge.Rank("brick") > CollapseHapticMerge.Rank("glass") && CollapseHapticMerge.Rank("glass") > CollapseHapticMerge.Rank("wood"), "steel > stone > brick > glass > wood");
+            var mg = new CollapseHapticMerge(); mg.Add("wood", 0f); mg.Add("steel", 15f); mg.Add("glass", 39f);
+            T.Eq(0, mg.Flush(39.9f), "window still open"); T.Eq(CollapseHapticMerge.Rank("steel"), mg.WinnerRank, "steel wins regardless of order");
+            T.Eq(4, mg.Flush(40f), "one pulse at steel strength"); T.Eq(0, mg.Flush(100f), "only once");
+            var h = new RecHaptics(); var d = new ShakeDispatcher(new ShakeStack()) { Haptics = h, Settings = new MotionSettings(new AnimMemPrefs(), false) };
+            d.SubmitCollapse("COLLAPSE_LAND", "wood", 1, 0f); d.SubmitCollapse("COLLAPSE_LAND", "stone", 1, 5f); d.SubmitCollapse("COLLAPSE_LAND", "glass", 2, 30f);
+            d.Tick(20f); T.Eq(0, h.Calls, "no pulse inside the window");
+            d.Tick(41f); T.Eq(1, h.Calls, "3 landings in 40 ms → 1 pulse"); T.Eq(3, h.Last, "stone strength (bucket 3)");
+            d.SubmitCollapse("COLLAPSE_LAND", "wood", 3, 100f); d.Tick(140f); T.Eq(2, h.Calls, "next window"); T.Eq(2, h.Last, "wood alone = bucket 2");
+            d.SubmitCollapse("COLLAPSE_LAND", "steel", 4, 200f); d.Tick(240f); T.Eq(4, h.Last, "steel alone = bucket 4"); d.SubmitCollapse("COLLAPSE_LAND", "wood", 5, 250f); d.Tick(290f);
+            T.Eq(4, h.Calls, "landings 50 ms apart → separate pulses");
+        });
+        T.Add("HAPTICS_lead_offset_clamp", () =>
+        {
+            T.Eq(-20f, HapticTiming.LeadMs, "default lead −20 ms");
+            T.Eq(1000f, HapticTiming.FireAtMs(1000f), "synchronous event: −20 ms clamped, never before the event");
+            T.Eq(1080f, HapticTiming.FireAtMs(1000f, 100f), "known +100 ms peak → 20 ms before the peak");
+            T.Eq(1000f, HapticTiming.FireAtMs(1000f, 10f), "peak 10 ms after event: clamped to the event");
+            T.Eq(1030f, HapticTiming.FireAtMs(1000f, 0f, 30f), "positive lead (lag) honoured");
         });
         T.Add("HAPTICS_buckets_and_gate", () =>
         {
