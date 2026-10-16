@@ -88,6 +88,8 @@ medallion(300).save('slices/block_medallion_300.png')
 lock='/workspace/art/v1/crashverse_title_lockup.png'
 login=Image.open('/workspace/art/v2/screens/01_login.png').convert('RGBA')
 def title_logo():
+    o=Image.open('/workspace/art/v1/brand/crashverse_wordmark.png').convert('RGBA'); return o.resize((980,round(o.height*980/o.width)),Image.LANCZOS)
+def _old_title_logo():
     import numpy as np
     f=lil(190); parts=[('CRASH',((255,226,90),(255,140,20))),('VERSE',((80,220,255),(150,90,250)))]
     ws=[f.getbbox(t)[2] for t,_ in parts]; tw=sum(ws)+10; th=230
