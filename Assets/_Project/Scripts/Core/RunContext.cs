@@ -18,6 +18,8 @@ namespace Crashverse.Core
         public bool hintArmed;
         public DailyTitanConfig titan;
         public RankedTicket ticket;
+        /// <summary>Sim seed for this attempt (AttemptToken.seed for scored runs). Same seed + same tick-ordered inputs = same run.</summary>
+        public long seed;
         public int ShotBudget => System.Math.Max(1, level.shots + (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? 0 : mod.shotDelta));
         public bool IsTitan => mode == RunMode.TitanRanked || mode == RunMode.TitanPractice;
 

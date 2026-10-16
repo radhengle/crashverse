@@ -77,6 +77,8 @@ namespace UnityEngine
         public static Vector3 zero => new Vector3(0, 0, 0);
         public static Vector3 one => new Vector3(1, 1, 1);
         public static Vector3 up => new Vector3(0, 1, 0);
+        public static Vector3 down => new Vector3(0, -1, 0);
+        public static Vector3 operator -(Vector3 a) => new Vector3(-a.x, -a.y, -a.z);
         public static Vector3 back => new Vector3(0, 0, -1);
         public static Vector3 forward => new Vector3(0, 0, 1);
         public static Vector3 right => new Vector3(1, 0, 0);
@@ -197,7 +199,12 @@ namespace UnityEngine
         public static float sleepThreshold;
         public static int defaultSolverIterations;
         public static Collider[] OverlapSphere(Vector3 p, float r) => Array.Empty<Collider>();
+        public static SimulationMode simulationMode = SimulationMode.FixedUpdate;
+        public static void Simulate(float step) { }
+        public static void IgnoreLayerCollision(int a, int b, bool ignore) { }
     }
+    public enum SimulationMode { FixedUpdate, Update, Script }
+    [AttributeUsage(AttributeTargets.Class)] public sealed class DefaultExecutionOrderAttribute : Attribute { public DefaultExecutionOrderAttribute(int order) { } }
     public static class RenderSettings
     {
         public static Rendering.AmbientMode ambientMode;
@@ -246,7 +253,7 @@ namespace UnityEngine
         public void SetColor(string n, Color c) { }
         public void SetFloat(string n, float f) { }
     }
-    public class Joint : Component { public Rigidbody connectedBody; public float breakForce, breakTorque; }
+    public class Joint : Component { public Rigidbody connectedBody; public float breakForce, breakTorque; public Vector3 currentForce; }
     public class FixedJoint : Joint { }
     public class Light : Behaviour
     {
@@ -269,8 +276,9 @@ namespace UnityEngine
     {
         public Collider collider; public Rigidbody rigidbody; public GameObject gameObject; public Vector3 relativeVelocity;
         public ContactPoint[] contacts = Array.Empty<ContactPoint>();
+        public Vector3 impulse; public int contactCount => contacts.Length; public ContactPoint GetContact(int i) => contacts[i];
     }
-    public struct ContactPoint { public Vector3 point; }
+    public struct ContactPoint { public Vector3 point; public Vector3 normal; }
     public static class Gizmos
     {
         public static Color color;

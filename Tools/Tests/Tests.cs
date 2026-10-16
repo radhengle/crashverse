@@ -6,6 +6,7 @@ using Crashverse.Data;
 using Crashverse.Level;
 using Crashverse.Meta;
 using Crashverse.Feel;
+using Crashverse.Data.Dev;
 using System.Collections.Generic;
 
 static class Tests
@@ -612,6 +613,77 @@ static class Tests
             T.Eq(3, DebrisBudget.Chunks("wood", QualityTier.Low)); T.Eq(6, DebrisBudget.Chunks("wood", QualityTier.Mid));
             var l = new DebrisLedger<string>(3); l.Add("a"); l.Add("b"); l.Add("c"); l.MarkSettled("b");
             T.Eq("b", l.Add("d"), "oldest SETTLED recycled first"); T.Eq("a", l.Add("e"), "else oldest"); T.Eq(3, l.Count, "never above cap");
+        });
+        T.Add("FEEL_debris_chunks_glass_stone", () =>
+        {
+            T.Eq(10, DebrisBudget.Chunks("glass", QualityTier.Mid), "glass shatters into many shards"); T.Eq(5, DebrisBudget.Chunks("glass", QualityTier.Low));
+            T.Eq(5, DebrisBudget.Chunks("stone", QualityTier.Mid), "stone crumbles into chunks"); T.Eq(2, DebrisBudget.Chunks("stone", QualityTier.Low));
+            T.True(DebrisBudget.Chunks("glass", QualityTier.Mid) > DebrisBudget.Chunks("stone", QualityTier.Mid), "glass > stone fragments");
+        });
+        T.Add("CONTENT_chapter1_has_no_glass", () =>
+        {
+            var root = new DirectoryInfo(AppContext.BaseDirectory);
+            while (root != null && !Directory.Exists(Path.Combine(root.FullName, "Assets/_Project"))) root = root.Parent;
+            T.True(root != null, "repo root found");
+            // Dev-only fixtures (PerfL10Fixture, id prefix "dev_") are generated in code for Scenes/Dev and never shipped as JSON;
+            // they are excluded by id, and none may appear in the shipped layout folder.
+            foreach (var f in Directory.GetFiles(Path.Combine(root.FullName, "Assets/_Project/Resources/Data/Layouts"), "*.json"))
+                T.True(!PerfL10Fixture.IsDevLayout(Path.GetFileNameWithoutExtension(f)), "no dev_ layout in shipped Layouts: " + Path.GetFileName(f));
+            foreach (var f in Directory.GetFiles(Path.Combine(root.FullName, "Assets/_Project/Resources/Data/Layouts"), "*.json"))
+                T.True(!File.ReadAllText(f).Contains("\"mat\": \"glass\"") && !File.ReadAllText(f).Contains("\"mat\":\"glass\""), "glass is Neon (ch3+) only: " + Path.GetFileName(f));
+        });
+        T.Add("PERF_L10_fixture_deterministic", () =>
+        {
+            var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId); var baseLayout = Db.GetLayout(l10.layout);
+            string a = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(baseLayout));
+            string b = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(Db.GetLayout(l10.layout)));
+            T.Eq(a, b, "same L10 input -> identical perf layout");
+            T.Eq(Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Script()), Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Script()), "same script");
+            T.Eq(0x4C31305045524631L, PerfL10Fixture.Seed, "fixed long seed");
+            var sc = PerfL10Fixture.Script();
+            T.True(sc[0].type == "arm" && sc[1].type == "fire" && sc[0].tick < sc[1].tick && sc[0].tick > 0, "arm then fire, tick-ordered, after tick 0");
+            T.Eq(8000, sc[1].y, "fixed-point elevation 8.000 deg"); T.Eq(0, sc[1].x, "yaw 0");
+            T.Eq(baseLayout.blocks.Length, 13, "base L10 layout unchanged (13 blocks)");
+        });
+        T.Add("PERF_L10_fixture_hits_caps_and_mixes_materials", () =>
+        {
+            var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId);
+            var lay = PerfL10Fixture.Layout(Db.GetLayout(l10.layout));
+            T.True(PerfL10Fixture.IsDevLayout(lay.id), "dev_ layout id");
+            T.Eq(13 + PerfL10Fixture.Layers * PerfL10Fixture.Rows * PerfL10Fixture.Columns, lay.blocks.Length, "L10 + curtain");
+            var ids = new HashSet<string>(); foreach (var bl in lay.blocks) T.True(ids.Add(bl.id), "unique id " + bl.id);
+            foreach (var bl in lay.blocks) if (bl.sup != null) foreach (var s in bl.sup) T.True(ids.Contains(s), "support exists " + s);
+            var mats = new HashSet<string>(); int midChunks = 0, breakable = 0, fuse = 0;
+            foreach (var bl in lay.blocks)
+            {
+                mats.Add(bl.mat);
+                if (bl.indestructible) continue;
+                breakable++; if (bl.explosive) fuse++;
+                midChunks += DebrisBudget.Chunks(bl.mat, QualityTier.Mid);
+            }
+            foreach (var m in new[] { "wood", "brick", "steel", "glass" }) T.True(mats.Contains(m), "has " + m);
+            T.True(midChunks >= 4 * DebrisBudget.Cap(QualityTier.Mid), $"potential Mid debris {midChunks} >= 4x cap 60");
+            T.True(breakable >= 60, $"breakable pieces {breakable} >= 60 (3 per 100 ms for >= 1 s needs >= 30)");
+            T.Eq(PerfL10Fixture.Layers * PerfL10Fixture.Columns, fuse, "explosive fuse row per layer");
+            // Fuse pieces must chain (Explosion radius 2.5 m) and sit inside Chain Reactor radius (3 m) of the base centre
+            float pitch = PerfL10Fixture.PieceD + PerfL10Fixture.Gap; T.True(pitch < 2.5f, "fuse spacing < explosion radius");
+            var lvl = PerfL10Fixture.Level(l10);
+            T.True(!lvl.IsBoss && lvl.layout == lay.id && Array.IndexOf(lvl.materials, "glass") >= 0, "perf level: no boss, dev layout, glass allowed");
+            T.True(Array.IndexOf(l10.materials, "glass") < 0, "shipped c1_l10 still has no glass");
+        });
+        T.Add("PERF_L10_stats_saturation_and_hash", () =>
+        {
+            var st = new PerfL10Stats(); int fire = 50;
+            for (int w = 0; w < 12; w++) for (int k = 0; k < 3; k++) st.OnEvent(fire + w * 5 + k, 2, w * 10 + k, 1, k == 0 ? "Glass" : "Wood", fire);
+            st.OnEvent(fire + 12 * 5, 2, 999, 1, "Brick", fire); // window 12: only 1 break
+            T.Eq(1200, st.SaturatedMs, "12 saturated windows = 1200 ms");
+            ulong h = st.Hash; var st2 = new PerfL10Stats();
+            for (int w = 0; w < 12; w++) for (int k = 0; k < 3; k++) st2.OnEvent(fire + w * 5 + k, 2, w * 10 + k, 1, k == 0 ? "Glass" : "Wood", fire);
+            st2.OnEvent(fire + 12 * 5, 2, 999, 1, "Brick", fire);
+            T.Eq(h, st2.Hash, "same event stream -> same hash");
+            st2.OnEvent(200, 5, -1, 1, null, fire); T.True(st2.Hash != h, "extra event changes hash");
+            T.Eq(3, st.MaterialsBroken, "3 materials"); st.SampleDebris(61); st.SampleDebris(40); T.Eq(61, st.PeakDebris, "peak debris");
+            st.Reset(); T.Eq(0, st.SaturatedMs, "reset"); T.Eq(0, st.Breaks, "reset breaks");
         });
         T.Add("FEEL_debris_mass_counts_on_source", () =>
         {

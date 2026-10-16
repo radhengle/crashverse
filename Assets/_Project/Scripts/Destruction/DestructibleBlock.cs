@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Crashverse.Data;
+using Crashverse.Sim;
 using UnityEngine;
 
 namespace Crashverse.Destruction
@@ -30,6 +31,7 @@ namespace Crashverse.Destruction
         Color _baseColor;
         bool _broken, _collapsed, _outOfBounds;
         int _damageStep;
+        int _crackStep; // 0..3, ImpactEvent Crack steps at 33/66/90% damage
 
         public bool IsBroken => _broken;
         public bool IsCollapsed => _collapsed;
@@ -90,6 +92,7 @@ namespace Crashverse.Destruction
             float removed = Mathf.Min(currentHp, dmg);
             currentHp -= dmg;
             UpdateDamageVisual();
+            if (currentHp > 0f) _crackStep = CrackSteps.Advance(_crackStep, CrackSteps.StepFor(CrackSteps.DamagePermille(currentHp, MaxHp)), s => ImpactReport.Crack(this, s));
             Damaged?.Invoke(this, removed, directHit);
             if (currentHp <= 0f) Break();
             return removed;
@@ -109,10 +112,11 @@ namespace Crashverse.Destruction
             if (_broken) return;
             _broken = true;
             currentHp = 0f;
+            ImpactReport.Break(this);
             DestroyOwnJoints();
             if (DebrisPool.Instance != null && material != null)
                 {
-                int chunks = Crashverse.Feel.DebrisBudget.Chunks(material.kind == MaterialKind.Wood ? "wood" : material.kind == MaterialKind.Brick ? "brick" : "steel", Crashverse.Perf.QualityController.FeelTier);
+                int chunks = Crashverse.Feel.DebrisBudget.Chunks(MaterialDefinition.KeyOf(material.kind), DebrisPool.ChunkTier); // ranked: tier-independent
                 if (chunks > 0) DebrisPool.Instance.SpawnBurst(transform.position, transform.localScale, material, Mathf.Min(chunks, material.maxDebrisChunks)); // visual only; mass counted on this piece
             }
             if (_renderer != null) _renderer.enabled = false;
@@ -122,7 +126,7 @@ namespace Crashverse.Destruction
             Body.detectCollisions = false;
             var mp = GetComponent<MovingPart>(); if (mp != null) mp.enabled = false;
             Broken?.Invoke(this);
-            if (explosive) Explosion.Detonate(transform.position, 2.5f, 80f, this);
+            if (explosive) Explosion.Detonate(transform.position, 2.5f, 80f, this); // Explosion source (scope pushed inside)
             NotifyDependents();
         }
 
@@ -130,6 +134,7 @@ namespace Crashverse.Destruction
         {
             if (_collapsed || _broken || indestructible && !isObjectivePiece) return;
             _collapsed = true;
+            ImpactReport.Collapse(this);
             DestroyOwnJoints();
             var mp = GetComponent<MovingPart>(); if (mp != null) mp.enabled = false;
             Body.isKinematic = false;
@@ -165,9 +170,9 @@ namespace Crashverse.Destruction
         {
             get
             {
-                if (_supports.Count == 0) return false; // grounded
-                foreach (var s in _supports) if (s != null && !s._broken && !s._collapsed && !s._outOfBounds) return false;
-                return true;
+                int remaining = 0;
+                foreach (var s in _supports) if (s != null && !s._broken && !s._collapsed && !s._outOfBounds) remaining++;
+                return SupportRule.ShouldCollapse(_supports.Count, remaining); // ALL supports gone; none at all = grounded
             }
         }
 
@@ -177,20 +182,33 @@ namespace Crashverse.Destruction
             if (SupportLost) ForceCollapse();
         }
 
-        /// <summary>Falling pieces damage what they hit (chain collapses, DP L4).</summary>
+        /// <summary>
+        /// Falling pieces / debris damage what they hit (chain collapses, DP L4; Level Rulings v1 §7). Only OnCollisionEnter
+        /// (an impact) is considered; resting contact (Stay) never damages. Damage is queued and applied at the start of the
+        /// next sim tick in stable order (DebrisDamageQueue), not in PhysX callback order.
+        /// </summary>
         void OnCollisionEnter(Collision c)
         {
             if (_broken || c.rigidbody == null || c.rigidbody.isKinematic) return;
-            float v = c.relativeVelocity.magnitude;
-            if (v < 4f) return;
-            float dmg = Mathf.Min(60f, (v - 4f) * c.rigidbody.mass * 2.5f);
             if (c.gameObject.GetComponent<Crashverse.Weapons.Projectile>() != null) return; // projectile applies its own damage
-            ApplyDamage(dmg, false, splash: true);
+            var hitBlock = c.gameObject.GetComponent<DestructibleBlock>();
+            Vector3 cp = c.contactCount > 0 ? c.GetContact(0).point : transform.position, cn = c.contactCount > 0 ? c.GetContact(0).normal : Vector3.up;
+            ImpactReport.Collision(this, hitBlock, c.collider, c.impulse.magnitude, c.relativeVelocity.magnitude, cp, cn, ImpactSourceKind.Debris);
+            int speed = DebrisDamage.ToMmPerS(c.relativeVelocity.magnitude);
+            int mult = material != null ? material.debrisDamageTakenPermille : DebrisMaterialMult.Neutral; // ruling #7a: TARGET (this piece) material
+            int milli = DebrisDamage.ComputeMilliHp(speed, DebrisDamage.ToGrams(c.rigidbody.mass), mult, false, DebrisDamageQueue.Config);
+            if (milli <= 0) return;
+            var other = c.gameObject.GetComponent<DestructibleBlock>();
+            DebrisDamageQueue.Enqueue(this, other != null ? other.blockId : "~" + c.gameObject.name, milli);
         }
 
         void OnJointBreak(float breakForce)
         {
-            if (!_broken) ApplyDamage(MaxHp * 0.5f, false, splash: true);
+            if (_broken) return;
+            DestructibleBlock other = null;
+            foreach (var j in GetComponents<Joint>()) if (j != null && j.currentForce.magnitude >= j.breakForce * 0.999f && j.connectedBody != null) { other = j.connectedBody.GetComponent<DestructibleBlock>(); break; }
+            ImpactReport.JointSnap(this, other, breakForce);
+            using (ImpactSourceScope.Push(ImpactSourceKind.Debris)) ApplyDamage(MaxHp * 0.5f, false, splash: true);
         }
 
         public void SetHighlight(Color c, float amount)
@@ -216,8 +234,10 @@ namespace Crashverse.Destruction
     public static class Explosion
     {
         /// <summary>Radius inclusive, centre-to-centre (SG-08).</summary>
-        public static void Detonate(Vector3 at, float radius, float damage, DestructibleBlock source)
+        public static void Detonate(Vector3 at, float radius, float damage, DestructibleBlock source,
+                                    ImpactSourceKind kind = ImpactSourceKind.Explosion, int sourceId = 0)
         {
+            using var _ = ImpactSourceScope.Push(kind, sourceId); // barrels/explosive pieces = Explosion; Gravity Well burst = PowerUp 3
             foreach (var c in Physics.OverlapSphere(at, radius))
             {
                 var b = c.GetComponentInParent<DestructibleBlock>();

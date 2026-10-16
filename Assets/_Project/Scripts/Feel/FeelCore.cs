@@ -115,10 +115,11 @@ namespace Crashverse.Feel
     public static class DebrisBudget
     {
         public static int Cap(QualityTier t) => t == QualityTier.Low ? 25 : t == QualityTier.High ? 90 : 60;
-        /// <summary>Chunks per broken piece. Low tier halves wood 6→3, brick 4→2 (visual only; mass counts on the source piece).</summary>
+        /// <summary>Chunks per broken piece. Low tier halves wood 6→3, brick 4→2, glass 10→5, stone 5→2 (visual only; mass counts on the source piece).</summary>
         public static int Chunks(string material, QualityTier t)
         {
-            int n = material == "wood" ? 6 : material == "brick" ? 4 : 0;
+            // glass shatters into many small shards; stone crumbles into a few heavy chunks (starting tunables)
+            int n = material == "wood" ? 6 : material == "brick" ? 4 : material == "glass" ? 10 : material == "stone" ? 5 : 0;
             return t == QualityTier.Low ? n / 2 : n;
         }
     }

@@ -17,6 +17,8 @@ namespace Crashverse.Editor
             SaveMat(MaterialDefinition.CreateRuntime(MaterialKind.Wood), "Assets/_Project/Data/Materials/Mat_Wood.asset");
             SaveMat(MaterialDefinition.CreateRuntime(MaterialKind.Brick), "Assets/_Project/Data/Materials/Mat_Brick.asset");
             SaveMat(MaterialDefinition.CreateRuntime(MaterialKind.Steel), "Assets/_Project/Data/Materials/Mat_Steel.asset");
+            SaveMat(MaterialDefinition.CreateRuntime(MaterialKind.Glass), "Assets/_Project/Data/Materials/Mat_Glass.asset"); // Neon (ch3+) only
+            SaveMat(MaterialDefinition.CreateRuntime(MaterialKind.Stone), "Assets/_Project/Data/Materials/Mat_Stone.asset");
 
             var level = LevelConfig.CreateM1ClockworkTower();
             AssetDatabase.CreateAsset(level, "Assets/_Project/Data/Levels/Level_m1_clockwork_tower.asset");
