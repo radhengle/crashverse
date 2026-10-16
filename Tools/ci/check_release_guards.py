@@ -42,6 +42,8 @@ def scan(path):
             if not ok: bad.append(f"{path.relative_to(ROOT)}:{n}: '{re.search(sym, code).group(0)}' outside {' / '.join(guards) or '(forbidden)'} guard")
     return bad
 
+MIN_TARGET_SDK = 35
+
 def check_config():
     bad = []
     uc = (ROOT / "ProjectSettings/UnityConnectSettings.asset")
@@ -51,6 +53,10 @@ def check_config():
     man = ROOT / "Assets/Plugins/Android/AndroidManifest.xml"
     if not man.exists() or not re.search(r'com\.google\.android\.gms\.permission\.AD_ID"\s+tools:node="remove"', man.read_text()):
         bad.append("Assets/Plugins/Android/AndroidManifest.xml must remove com.google.android.gms.permission.AD_ID")
+    ps = (ROOT / "ProjectSettings/ProjectSettings.asset").read_text()
+    m = re.search(r"^\s*AndroidTargetSdkVersion:\s*(\d+)", ps, re.M)
+    if not m or int(m.group(1)) < MIN_TARGET_SDK:
+        bad.append(f"AndroidTargetSdkVersion must be >= {MIN_TARGET_SDK} (Play requirement, release/VERSIONING_AND_SIGNING.md)")
     return bad
 
 def main():
