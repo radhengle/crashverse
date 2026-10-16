@@ -57,6 +57,6 @@ namespace UnityEngine
         public SizeOverLifetimeModule sizeOverLifetime { get; } = new SizeOverLifetimeModule();
         public LimitVelocityOverLifetimeModule limitVelocityOverLifetime { get; } = new LimitVelocityOverLifetimeModule();
         public TextureSheetAnimationModule textureSheetAnimation { get; } = new TextureSheetAnimationModule();
-        public int particleCount; public void Play(bool withChildren) { } public void Stop(bool withChildren, ParticleSystemStopBehavior b) { }
+        public int particleCount; public void Emit(int n) { } public void Play(bool withChildren) { } public void Stop(bool withChildren, ParticleSystemStopBehavior b) { }
     }
 }
