@@ -50,7 +50,7 @@ export AIM_FROM_X=540 AIM_FROM_Y=1300
 export AIM_TO_X=$(( 540 + $(px 16) )) AIM_TO_Y=$(( 1300 + $(px 20) ))   # +4° yaw, −3° pitch
 export MISS_TO_X=$(( 540 + $(px 240) )) MISS_TO_Y=$(( 1300 + $(px 20) )) # +60° yaw: misses the tower
 echo "AIM=$AIM_FROM_X,$AIM_FROM_Y->$AIM_TO_X,$AIM_TO_Y MISS->$MISS_TO_X,$MISS_TO_Y density=$D" | tee -a "$OUT/coords.txt"
-SHOTS=${SHOTS_L1:-4}
+SHOTS=$(( ${SHOTS_L1:-4} * 3 ))  # FIRE is ignored while reloading/settling: keep trying until a result
 for s in $(seq 1 $SHOTS); do ctap $HINT_X $HINT_Y 1; ctap $FIRE_X $FIRE_Y 6
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 adb exec-out screencap -p > "$OUT/calibration/result.png"

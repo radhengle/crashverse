@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEditor.Rendering;
 
 namespace Crashverse.EditorTools
 {
@@ -31,6 +32,9 @@ namespace Crashverse.EditorTools
             var rdPath = Dir + "/URP_Renderer.asset";
             var rd = AssetDatabase.LoadAssetAtPath<UniversalRendererData>(rdPath);
             if (rd == null) { rd = ScriptableObject.CreateInstance<UniversalRendererData>(); AssetDatabase.CreateAsset(rd, rdPath); }
+            // dev-build-6 attempt 1 rendered black: a CreateInstance'd renderer has null shader/post-process resources in batchmode.
+            ResourceReloader.TryReloadAllNullIn(rd, UniversalRenderPipelineAsset.packagePath);
+            EditorUtility.SetDirty(rd);
 
             var assets = new UniversalRenderPipelineAsset[Tiers.Length];
             for (int i = 0; i < Tiers.Length; i++)
@@ -38,6 +42,7 @@ namespace Crashverse.EditorTools
                 var t = Tiers[i]; var path = $"{Dir}/URP_{t.name}.asset";
                 var a = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(path);
                 if (a == null) { a = UniversalRenderPipelineAsset.Create(rd); AssetDatabase.CreateAsset(a, path); }
+                ResourceReloader.TryReloadAllNullIn(a, UniversalRenderPipelineAsset.packagePath);
                 a.msaaSampleCount = t.msaa; a.renderScale = t.scale; a.shadowDistance = t.shadowDist; a.shadowCascadeCount = t.cascades; a.supportsHDR = t.hdr;
                 EditorUtility.SetDirty(a); assets[i] = a;
             }
