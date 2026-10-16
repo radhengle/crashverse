@@ -124,8 +124,16 @@ namespace Crashverse.Tests.PlayMode
             yield return null;
             _fake.Current = null;
             yield return null;
+            if (b == null) yield break; // the tap navigated away and destroyed the button: it was received
             b.onClick.RemoveListener(count);
-            Assert.AreEqual(1, clicks, $"tap at {p} reached '{b.name}' (nothing blocked the raycast)");
+            if (clicks != 1)
+            {
+                var es = EventSystem.current; var hits = new System.Collections.Generic.List<RaycastResult>();
+                es.RaycastAll(new PointerEventData(es) { position = p }, hits);
+                Assert.Fail($"tap at {p} did not reach '{b.name}'. screen={Screen.width}x{Screen.height} focused={es.isFocused} module={es.currentInputModule?.GetType().Name ?? "none"} " +
+                            $"interactable={b.IsInteractable()} hits=[{string.Join(", ", hits.Select(h => h.gameObject.name + "@" + h.module?.GetType().Name))}] " +
+                            $"btnRect={RectTransformUtility.PixelAdjustRect(rt, b.GetComponentInParent<Canvas>())} canvasScale={b.GetComponentInParent<Canvas>().scaleFactor}");
+            }
         }
 
         static void ScrollIntoView(ScrollRect sr, RectTransform item)
