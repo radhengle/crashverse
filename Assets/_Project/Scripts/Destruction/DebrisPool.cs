@@ -14,13 +14,16 @@ namespace Crashverse.Destruction
     {
         public static DebrisPool Instance { get; private set; }
 
-        int maxActiveDebris => Crashverse.Feel.DebrisBudget.Cap(Crashverse.Perf.QualityController.FeelTier);
+        /// <summary>Ranked: one tier-independent cap (DebrisRules.RankedSimCap) because debris collides with scoring pieces.</summary>
+        int maxActiveDebris => DebrisRules.SimCap(IsRanked, Crashverse.Feel.DebrisBudget.Cap(Crashverse.Perf.QualityController.FeelTier));
+        /// <summary>Tier used for chunk counts: Mid in ranked runs (tier-independent), the device tier otherwise.</summary>
+        public static Crashverse.Feel.QualityTier ChunkTier => IsRanked ? Crashverse.Feel.QualityTier.Mid : Crashverse.Perf.QualityController.FeelTier;
+        static bool IsRanked => SimRunner.Instance != null && SimRunner.Instance.Running && SimRunner.Instance.Ranked;
         readonly Crashverse.Feel.DebrisLedger<DebrisPiece> _ledger = new Crashverse.Feel.DebrisLedger<DebrisPiece>(60);
         [SerializeField] int prewarm = 24; // minimum; actual prewarm = max(prewarm, tier cap)
-        const long DebrisStreamSalt = 0x44454252; // "DEBR"
-        SimRng _rng = new SimRng(DebrisStreamSalt);
-        int _rngRunTick = -1; long _rngSeed = long.MinValue;
-        int _created;
+        SimRng _rng = new SimRng(DebrisRules.RngSeed(0));
+        int _runId = -1;
+        readonly List<DebrisPiece> _all = new List<DebrisPiece>(); // creation order; defines the free-list order after a reset
 
         readonly Queue<DebrisPiece> _free = new Queue<DebrisPiece>();
         readonly List<DebrisPiece> _active = new List<DebrisPiece>();
@@ -33,28 +36,41 @@ namespace Crashverse.Destruction
             _root.SetParent(transform);
             Prewarm();
             Crashverse.Perf.QualityController.TierChanged += Prewarm;
+            SimRunner.RunStarted += OnRunStarted;
+            if (SimRunner.Instance != null && SimRunner.Instance.Running) OnRunStarted(SimRunner.Instance);
         }
 
         /// <summary>Top the pool up to max(prewarm, current tier cap).</summary>
         void Prewarm()
         {
             int target = Mathf.Max(prewarm, maxActiveDebris);
-            while (_created < target) _free.Enqueue(CreatePiece());
+            while (_all.Count < target) _free.Enqueue(CreatePiece());
             _ledger.Cap = maxActiveDebris;
         }
 
-        /// <summary>Debris RNG stream, re-forked whenever SimRunner starts a new run (new seed or Retry).</summary>
+        void OnRunStarted(SimRunner sim) => ResetForRun(sim.Seed, sim.RunId);
+
+        /// <summary>
+        /// Every run start and Retry: recycle all debris, rebuild the free list in creation order, re-seed the debris RNG from
+        /// the run seed. Lifetimes restart from each piece's Activate, so a Retry is identical to a fresh start.
+        /// </summary>
+        public void ResetForRun(long runSeed, int runId)
+        {
+            for (int i = 0; i < _active.Count; i++) if (_active[i] != null) _active[i].Deactivate();
+            _active.Clear(); _ledger.Clear(); _free.Clear();
+            Prewarm();
+            for (int i = 0; i < _all.Count; i++) { _all[i].Deactivate(); _free.Enqueue(_all[i]); }
+            _rng = new SimRng(DebrisRules.RngSeed(runSeed));
+            _runId = runId;
+        }
+
+        /// <summary>Debris RNG stream; also re-seeds lazily if the pool missed a RunStarted (created mid-run).</summary>
         SimRng Rng
         {
             get
             {
                 var sim = SimRunner.Instance;
-                if (sim != null && (sim.Seed != _rngSeed || sim.Tick < _rngRunTick))
-                {
-                    _rng = new SimRng(sim.Seed ^ DebrisStreamSalt);
-                    _rngSeed = sim.Seed;
-                }
-                if (sim != null) _rngRunTick = sim.Tick;
+                if (sim != null && sim.Running && sim.RunId != _runId) ResetForRun(sim.Seed, sim.RunId);
                 return _rng;
             }
         }
@@ -62,26 +78,29 @@ namespace Crashverse.Destruction
         void OnDestroy()
         {
             Crashverse.Perf.QualityController.TierChanged -= Prewarm;
+            SimRunner.RunStarted -= OnRunStarted;
             if (Instance == this) Instance = null;
         }
 
         DebrisPiece CreatePiece()
         {
-            _created++;
             var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
             go.name = "Debris";
             go.tag = "Debris";
+            go.layer = SimLayers.Debris; // fixed layer; ranked matrix in SimLayers
             go.transform.SetParent(_root);
             go.SetActive(false);
             var rb = go.AddComponent<Rigidbody>();
             rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
             rb.sleepThreshold = 0.08f;
             var piece = go.AddComponent<DebrisPiece>();
+            _all.Add(piece);
             return piece;
         }
 
         public void SpawnBurst(Vector3 pos, Vector3 parentScale, MaterialDefinition mat, int count)
         {
+            var rng = Rng; // before touching the free list: may reset the pool for a new run
             for (int i = 0; i < count; i++)
             {
                 _ledger.Cap = maxActiveDebris;
@@ -89,7 +108,6 @@ namespace Crashverse.Destruction
 
                 var piece = _free.Count > 0 ? _free.Dequeue() : CreatePiece();
                 float s = Mathf.Clamp(Mathf.Min(parentScale.x, Mathf.Min(parentScale.y, parentScale.z)) * 0.35f, 0.15f, 0.55f);
-                var rng = Rng;
                 piece.transform.position = pos + rng.InsideUnitSphere() * 0.4f;
                 piece.transform.rotation = rng.Rotation();
                 piece.transform.localScale = Vector3.one * s;
