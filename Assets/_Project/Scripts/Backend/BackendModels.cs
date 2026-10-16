@@ -83,7 +83,8 @@ namespace Crashverse.Backend
         public List<string> identities = new List<string>();      // F4: linked login providers
         public long pendingDeletionUnixUtc;                        // A5: >0 while in the 7-day grace period
         public long deletionWarningAtUnixUtc, guestPurgeAtUnixUtc; // C2: guest inactivity warning (day 335) and purge date (day 365)
-        public string ageBand = "";                                // E3: "13to17" | "adult" (never a birth date)
+        public string ageBand = "";                                // E3: under13|13to15|16to17|adult (never a birth date)
+        public bool requiresParentalConsent = true;                // from /v1/agegate (server, per market); default restrictive
         public bool consentSocial, consentName, consentPurchases;  // E4: parental consent scopes (13-17)
         public bool consentPending;
         public bool hideName;                                      // F5

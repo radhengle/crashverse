@@ -156,7 +156,9 @@ namespace Crashverse.Backend
         /// <summary>Guests need no re-auth (C1). Linked accounts need the token from /auth/reauth, under 5 minutes old.</summary>
         bool FreshReauth(string token) => !_s.account.linked ||
             (!string.IsNullOrEmpty(token) && token == _s.reauthToken && (new DateTimeOffset(ServerNow).ToUnixTimeMilliseconds() - _s.reauthUnixMs) <= 5 * 60 * 1000);
-        bool MinorNoConsent(Func<AccountState, bool> scope) => _s.account.ageBand == AgeBands.Minor && !scope(_s.account);
+        /// <summary>Stub of the server's per-market consent config (real values live server-side). TODO(Legal).</summary>
+        public HashSet<string> ConsentRequiredBands = new HashSet<string> { AgeBands.Age13to15, AgeBands.Age16to17 };
+        bool MinorNoConsent(Func<AccountState, bool> scope) => ConsentRequiredBands.Contains(_s.account.ageBand) && !scope(_s.account);
         public static string GeneratedName(string playerId) => "Wrecker #" + (Math.Abs((playerId ?? "").GetHashCode()) % 9000 + 1000);
 
         public Task<ReauthResponse> Reauthenticate(LinkCredential c)
@@ -188,10 +190,12 @@ namespace Crashverse.Backend
             if (b == Crashverse.Meta.AgeGate.Band.Under13) throw new BackendException("AGE_BLOCKED", 403);
             var band = Crashverse.Meta.AgeGate.ToServer(b);
             var a = _s.account;
-            if (a.ageBand != AgeBands.Minor) a.ageBand = band; // most restrictive wins; older band needs parental verification/support
-            _s.country = country ?? ""; Save();
-            bool minor = a.ageBand == AgeBands.Minor;
-            return Task.FromResult(new AgeGateResponse { band = a.ageBand, requiresParentalConsent = minor && !(a.consentSocial && a.consentName && a.consentPurchases) }); // TODO(Legal): per-market consent ages
+            var prev = Crashverse.Meta.AgeGate.FromServer(a.ageBand);
+            if (prev == Crashverse.Meta.AgeGate.Band.Unknown || b < prev) a.ageBand = band; // most restrictive wins; older band needs verification/support
+            _s.country = country ?? "";
+            a.requiresParentalConsent = ConsentRequiredBands.Contains(a.ageBand);
+            Save();
+            return Task.FromResult(new AgeGateResponse { band = a.ageBand, requiresParentalConsent = a.requiresParentalConsent });
         }
         public Task<ConsentRequestResponse> RequestParentalConsent(string parentEmail)
         {

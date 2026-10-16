@@ -70,7 +70,18 @@ namespace Crashverse.Backend
     [Serializable] public class VisibilityResponse { public bool hideName; }                                  // POST /profile/visibility
     public static class ConsentStatus { public const string None = "none", Pending = "pending", Granted = "granted", Denied = "denied", Withdrawn = "withdrawn"; }
 
-    public static class AgeBands { public const string Minor = "13to17", Adult = "adult"; }
+    /// <summary>Exactly the server's band strings. The client never derives consent from these.</summary>
+    public static class AgeBands { public const string Under13 = "under13", Age13to15 = "13to15", Age16to17 = "16to17", Adult = "adult"; }
+
+    /// <summary>Server routes (PR #1, backend/server-v0): everything under /v1.</summary>
+    public static class ApiRoutes
+    {
+        public const string Prefix = "/v1";
+        public const string Attempts = Prefix + "/attempts", Score = Prefix + "/score", Reauth = Prefix + "/auth/reauth",
+            AccountDelete = Prefix + "/account/delete", AccountDeleteCancel = Prefix + "/account/delete/cancel", KeepActive = Prefix + "/account/keep-active",
+            AgeGate = Prefix + "/agegate", ParentalConsentRequest = Prefix + "/consent/parental/request", ParentalConsentStatus = Prefix + "/consent/parental/status",
+            ProfileVisibility = Prefix + "/profile/visibility", PurchaseVerify = Prefix + "/purchase/verify";
+    }
 
     /// <summary>
     /// SERVER-ONLY. Purchases / premium pass entitlements are granted by the server after store receipt validation.

@@ -199,14 +199,15 @@ namespace Crashverse.Feel
     }
 
     // ───────────── Tidewarden shutter (05_bosses) ─────────────
-    /// <summary>Shutter tell (exactly 2 Hz over the last 1 s before close) and open/close tweens (close 300 ms ease-in cubic, open 350 ms ease-out-back).</summary>
+    /// <summary>Shutter tell (pulseHz from VisualConfig, 2.4 Hz = 25 f, beat-locked to 144 BPM; animation/05_bosses.md) and open/close tweens (close 300 ms ease-in cubic, open 350 ms ease-out-back).</summary>
     public static class TideShutter
     {
-        public const float TellSeconds = 1f, CloseMs = 300f, OpenMs = 350f, Travel = 1.7f;
-        /// <summary>0.6 + 0.4·(0.5 + 0.5·sin(4π·t)). Reduce Motion keeps the tell as colour with amplitude ×0.5 (07).</summary>
-        public static float TellIntensity(float tSinceStart, bool reduceMotion)
+        public const float TellSeconds = 1f, CloseMs = 300f, OpenMs = 350f, Travel = 1.7f, DefaultPulseHz = 2.4f;
+        /// <summary>0.6 + 0.4·(0.5 + 0.5·sin(2π·pulseHz·(t − tellStart))). Reduce Motion keeps the tell as colour with amplitude ×0.5 (07).</summary>
+        public static float TellIntensity(double tSinceStart, bool reduceMotion, float pulseHz = DefaultPulseHz)
         {
-            float p = 0.5f + 0.5f * (float)Math.Sin(4.0 * Math.PI * tSinceStart);
+            if (tSinceStart < 0) return 0f; // quantized start not reached yet
+            float p = 0.5f + 0.5f * (float)Math.Sin(tSinceStart * 2.0 * Math.PI * pulseHz);
             return 0.6f + 0.4f * (reduceMotion ? 0.5f : 1f) * p;
         }
         /// <summary>Height above the closed pose for a tween: closing goes Travel→0 with ease-in cubic; opening 0→Travel with ease-out-back (quad under Reduce Motion).</summary>

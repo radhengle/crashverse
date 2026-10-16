@@ -20,6 +20,7 @@ namespace Crashverse.Audio
         public static MusicPlayer Ensure()
         {
             if (Instance != null) return Instance;
+            MusicTracks.JsonSource = () => Resources.Load<TextAsset>("Audio/music_tracks")?.text;
             var go = new GameObject("Music"); DontDestroyOnLoad(go);
             return Instance = go.AddComponent<MusicPlayer>();
         }
@@ -46,6 +47,12 @@ namespace Crashverse.Audio
         }
 
         // ───────────── Public API ─────────────
+        /// <summary>Beat clock of the playing base track (for beat-locked visuals). False when no music is playing.</summary>
+        public bool TryBeatClock(out double nowDsp, out double baseStartDsp, out double bpm)
+        {
+            nowDsp = AudioSettings.dspTime; baseStartDsp = _baseStartDsp; bpm = _baseTrack?.bpm ?? 0;
+            return _activeBase != null && _activeBase.isPlaying && bpm > 0;
+        }
         /// <summary>Starts a base track on the next safe DSP time (intro plays once, then the loop region).</summary>
         public void PlayBase(string id, double atDsp = -1)
         {

@@ -8,9 +8,10 @@ namespace Crashverse.Meta
     /// </summary>
     public static class AgeGate
     {
-        public enum Band { Unknown = 0, Under13 = 1, Minor13to17 = 2, Adult = 3 }
-        public const int MinAge = 13, AdultAge = 18;
-        public const int Version = 2; // v2 = year+month gate (§E1); re-asks installs that answered v1
+        /// <summary>Server bands (PM/Backend 16 Oct): under13 | 13to15 | 16to17 | adult. Consent rules are NOT computed here.</summary>
+        public enum Band { Unknown = 0, Under13 = 1, Age13to15 = 2, Age16to17 = 3, Adult = 4 }
+        public const int MinAge = 13;
+        public const int Version = 3; // v3 = 4-band server set; re-asks installs that answered v2
 
         /// <summary>Completed years, conservative: a birthday in the current month is treated as not yet reached.</summary>
         public static int AgeYears(int birthYear, int birthMonth, int nowYear, int nowMonth)
@@ -19,23 +20,22 @@ namespace Crashverse.Meta
             return months <= 0 ? 0 : (months - 1) / 12;
         }
 
+        /// <summary>Local use is limited to the E2 under-13 block (no account, no server call). The authoritative band comes from /v1/agegate.</summary>
         public static Band Classify(int birthYear, int birthMonth, int nowYear, int nowMonth)
         {
             if (birthMonth < 1 || birthMonth > 12 || birthYear < nowYear - 120 || (birthYear * 12 + birthMonth) > (nowYear * 12 + nowMonth)) return Band.Unknown;
             int age = AgeYears(birthYear, birthMonth, nowYear, nowMonth);
-            return age < MinAge ? Band.Under13 : age < AdultAge ? Band.Minor13to17 : Band.Adult;
+            return age < 13 ? Band.Under13 : age < 16 ? Band.Age13to15 : age < 18 ? Band.Age16to17 : Band.Adult;
         }
 
-        public static string ToServer(Band b) => b == Band.Adult ? "adult" : b == Band.Minor13to17 ? "13to17" : "";
-        public static Band FromServer(string s) => s == "adult" ? Band.Adult : s == "13to17" ? Band.Minor13to17 : Band.Unknown;
+        public static string ToServer(Band b) => b == Band.Under13 ? "under13" : b == Band.Age13to15 ? "13to15" : b == Band.Age16to17 ? "16to17" : b == Band.Adult ? "adult" : "";
+        public static Band FromServer(string s) => s == "under13" ? Band.Under13 : s == "13to15" ? Band.Age13to15 : s == "16to17" ? Band.Age16to17 : s == "adult" ? Band.Adult : Band.Unknown;
 
-        // §E5 client mirrors (the server enforces). Under-18 never gets tracking/ads regardless of consent.
-        public static bool CanSocialSignIn(Band b, bool consentSocial) => b == Band.Adult || (b == Band.Minor13to17 && consentSocial);
-        public static bool CanCustomName(Band b, bool consentName) => b == Band.Adult || (b == Band.Minor13to17 && consentName);
-        /// <summary>E5/E6: minors need purchase consent (all markets until consent; plus 18+ markets [[LEGAL]]).</summary>
-        public static bool CanPurchase(Band b, bool consentPurchases) => b == Band.Adult || (b == Band.Minor13to17 && consentPurchases);
-        public static bool AllowTracking(Band b) => false; // analytics/ads are off for everyone today; never for < 18 (DPDP §9)
-        /// <summary>C3: guest "link an account" prompt — never to minors without consent.</summary>
-        public static bool ShowLinkPrompt(Band b, bool linked, bool consentSocial) => !linked && CanSocialSignIn(b, consentSocial);
+        /// <summary>Acts only on the server's answer: if /v1/agegate said requiresParentalConsent, the feature waits for the
+        /// server-granted consent flag. No age→consent mapping lives in the client (per-market server config).</summary>
+        public static bool Allowed(bool requiresParentalConsent, bool serverConsentFlag) => !requiresParentalConsent || serverConsentFlag;
+        public static bool AllowTracking() => false; // analytics/ads are off for everyone today
+        /// <summary>C3: guest "link an account" prompt, only where the server allows social sign-in.</summary>
+        public static bool ShowLinkPrompt(bool linked, bool requiresParentalConsent, bool consentSocial) => !linked && Allowed(requiresParentalConsent, consentSocial);
     }
 }

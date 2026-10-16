@@ -547,7 +547,7 @@ namespace Crashverse.UI
                 var item = it;
                 var row = UIFactory.HStack(list, Th.gap, 56f);
                 UIFactory.Label(row, $"{UIFactory.Truncate(item.name, 22)}\n{item.type}", Th.captionSp, Th.white, TextAnchor.MiddleLeft, Th);
-                if (AgeGate.CanPurchase(AgeGateScreen.Current, AppServices.Account?.consentPurchases ?? false)) // E5/E6: buy hidden for minors without consent
+                if (AgeGate.Allowed(AgeGateScreen.RequiresConsent, AppServices.Account?.consentPurchases ?? false)) // E5/E6: server decides (requiresParentalConsent + consent flags)
                     UIFactory.Button(row, item.priceType == "iap" ? $"${item.price / 100f:0.00}" : $"{item.price} {item.priceType}", Th.green,
                         () => Router.Toast("Purchase stub: " + item.sku + " (IAP not wired)"), Th, 48, 110, Th.captionSp);
             }
@@ -616,8 +616,7 @@ namespace Crashverse.UI
                     var prov = (AuthProvider)Enum.Parse(typeof(AuthProvider), id);
                     UIFactory.Button(_v, "Unlink " + id, Th.navy500, () => Unlink(prov), Th, 48);
                 }
-                var band = AgeGate.FromServer(acc.ageBand);
-                if (AgeGate.CanSocialSignIn(band == AgeGate.Band.Unknown ? AgeGateScreen.Current : band, acc.consentSocial))
+                if (AgeGate.Allowed(AgeGateScreen.RequiresConsent, acc.consentSocial))
                 {
                     foreach (AuthProvider prov in Enum.GetValues(typeof(AuthProvider)))
                     {
@@ -724,8 +723,12 @@ namespace Crashverse.UI
         {
             PendingDob = null;
             var local = Current; var band = serverBand == AgeGate.Band.Unknown ? local : (local == AgeGate.Band.Unknown ? serverBand : (AgeGate.Band)Math.Min((int)local, (int)serverBand)); // most restrictive
-            PlayerPrefs.SetInt(BandKey + AgeGate.Version, (int)band); PlayerPrefs.SetInt(SubmittedKey + AgeGate.Version, 1); PlayerPrefs.Save();
+            PlayerPrefs.SetInt(BandKey + AgeGate.Version, (int)band); PlayerPrefs.SetInt(SubmittedKey + AgeGate.Version, 1);
+            PlayerPrefs.SetInt(ConsentKey, requiresConsent ? 1 : 0); PlayerPrefs.Save();
         }
+        public const string ConsentKey = "cv_requires_parental_consent";
+        /// <summary>The server's requiresParentalConsent from /v1/agegate. Until the server answers: restrictive (true).</summary>
+        public static bool RequiresConsent => PlayerPrefs.GetInt(ConsentKey, 1) == 1;
         public static AgeGate.Band Current => (AgeGate.Band)PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0);
         /// <summary>TODO(Legal): which age signal is acceptable (store country vs locale). Locale region for now.</summary>
         public static string Country() { try { return System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName; } catch { return ""; } }
