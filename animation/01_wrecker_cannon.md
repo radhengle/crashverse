@@ -38,7 +38,7 @@ No Charge state: shot power is fixed for every shot (Gameplay_Feel_Answers_v1 OQ
 ## Aim (drag/track) rules
 - Input (OQ-A2, approved): drag anywhere to aim, then **tap FIRE** to fire immediately (no confirm). **Releasing the drag never fires.** Drag on playfield outside HUD; horizontal Δ → yaw target, vertical Δ → pitch target. Sensitivity data-driven (`aimYawDegPerDp` 0.25°/dp, `aimPitchDegPerDp` 0.15°/dp — approved starting values, OQ-A3). Trajectory preview shows the arc to the first impact point only (no bounces).
 - **Clamps:** yaw ±60°, pitch 5°–70° (brief). Hitting a clamp: 60 ms rubber-band of 1.5° + soft tick sound; no overshoot past the limit in data.
-- **Smoothing:** critically damped spring, ω = 18 rad/s (≈ 120 ms to 95%) at mid/high; 30-fps tier ω = 14. Max angular speed 240°/s. Spring runs in `Update` with `Time.unscaledDeltaTime` (so it stays responsive under Time Fracture / slow-mo).
+- **Smoothing:** critically damped spring, ω = 30 rad/s (≈ 120 ms catch-up: ~87% at 120 ms, 95% at ~158 ms) at mid/high; 30-fps tier ω = 24. Max angular speed 240°/s. Spring runs in `Update` with `Time.unscaledDeltaTime` (so it stays responsive under Time Fracture / slow-mo).
 - Wheels spin on yaw change (carriage turns on rollers), ratio from wheel radius.
 - The trajectory arc (gameplay/UI) reads the **target** angles, not the smoothed visual pose, so aim is never laggy; the barrel catches up visually. Firing while the spring hasn't settled fires along the target (projectile uses target angles) — barrel snaps the remaining delta in the 66 ms anticipation.
 - Free Hint ghost arc (Addendum §1) shown during first aim; no cannon change.
@@ -93,7 +93,7 @@ Fire: amplitude 0.06 m pos / 0.6° rot, 9 Hz, 180 ms, decay ease-out quad, direc
 | Tier | Budget | Fallback |
 |---|---|---|
 | Mid (60) | Animator on wrecker ≤0.1 ms; 1 SkinnedMesh not needed — rigid hierarchy (transform anim only); muzzle VFX ≤ 24 particles | — |
-| Low (30) | ≤0.05 ms | Idle fidget off; muzzle sparks 6→0 (flash quad only); smoke = 1 flipbook quad; Booster ring spin by shader UV, not transform; spring ω 14 |
+| Low (30) | ≤0.05 ms | Idle fidget off; muzzle sparks 6→0 (flash quad only); smoke = 1 flipbook quad; Booster ring spin by shader UV, not transform; spring ω 24 |
 Use `Animator.cullingMode = AlwaysAnimate` for wrecker (on screen always), `CullCompletely` for decor.
 
 ## Reduce Motion

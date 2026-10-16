@@ -32,10 +32,10 @@ namespace Crashverse.Feel
             WreckerMuzzleSmoke = "ANIM_WRECKER_MUZZLE_SMOKE", WreckerRecoilLand = "ANIM_WRECKER_RECOIL_LAND", WreckerReArm = "ANIM_WRECKER_REARM",
             WreckerSlotOut = "ANIM_WRECKER_SLOT_OUT", WreckerSlotIn = "ANIM_WRECKER_SLOT_IN", WreckerWin = "ANIM_WRECKER_WIN", WreckerFail = "ANIM_WRECKER_FAIL",
             WreckerReady = "ANIM_WRECKER_READY", ReloadStart = "GAME_WRECKER_RELOAD_START", // READY name per anim_audio_map.csv
-            ProjLaunch = "ANIM_PROJ_LAUNCH", ProjApex = "ANIM_PROJ_APEX", PuSplitApex = "PU_SPLIT_APEX", PuPhasePass = "PU_PHASE_PASS", PuPhaseHit = "PU_PHASE_HIT",
+            ProjLaunch = "ANIM_PROJ_LAUNCH", ProjSplitPoint = "ANIM_PROJ_SPLIT_POINT", PuSplit = "PU_SPLIT", PuPhasePass = "PU_PHASE_PASS", PuPhaseHit = "PU_PHASE_HIT",
             PuTimeStart = "PU_TIME_START", PuTimeWarn = "PU_TIME_WARN", PuTimeEnd = "PU_TIME_END",
             CollapseLand = "COLLAPSE_LAND", DebrisFallOff = "DEBRIS_FALL_OFF",
-            BossTitanStage = "BOSS_TITAN_STAGE", BossTitanDefeat = "BOSS_TITAN_DEFEAT", BossTitanSurvive = "BOSS_TITAN_SURVIVE", BossTitanHit = "BOSS_TITAN_HIT",
+            BossTitanStage = "BOSS_TITAN_STAGE", BossTitanDefeat = "BOSS_TITAN_DEFEAT", BossTitanHit = "BOSS_TITAN_HIT",
             BossTideTell = "BOSS_TIDE_TELL", BossTideShutterClose = "BOSS_TIDE_SHUTTER_CLOSE", BossTideShutterOpen = "BOSS_TIDE_SHUTTER_OPEN", BossTidePhase2 = "BOSS_TIDE_PHASE2", BossTideCoreHit = "BOSS_TIDE_CORE_HIT", BossTideDefeat = "BOSS_TIDE_DEFEAT",
             UiBtnPress = "UI_BTN_PRESS", UiComboUp = "UI_COMBO_UP", UiComboTier = "UI_COMBO_TIER", UiStar = "UI_STAR_", UiMasteryTick = "UI_MASTERY_TICK",
             UiWin = "UI_WIN", UiShotSpend = "UI_SHOT_SPEND", UiThresholdHit = "UI_THRESHOLD_HIT", CamSlowMoStart = "CAM_SLOWMO_START";
@@ -505,7 +505,7 @@ namespace Crashverse.Feel
             else { AnimEventBus.Raise(AnimEvents.BossTitanHit); if (State == TitanAnimState.Idle) Go(TitanAnimState.Hit); }
         }
         public void Kill() { AnimEventBus.Raise(AnimEvents.BossTitanDefeat); Go(TitanAnimState.Defeat); }
-        public void OutOfShots() { if (State != TitanAnimState.Defeat) { AnimEventBus.Raise(AnimEvents.BossTitanSurvive); Go(TitanAnimState.Survive); } }
+        public void OutOfShots() { if (State != TitanAnimState.Defeat) Go(TitanAnimState.Survive); } // spec 04: no survive event (retired); results flow owns the fail beat
         protected override float DurationMs(TitanAnimState s) => s == TitanAnimState.Intro ? IntroMs : s == TitanAnimState.Hit ? HitMs : s == TitanAnimState.Stage ? StageMs : s == TitanAnimState.Survive ? SurviveMs : -1f;
         protected override void OnTimeout(TitanAnimState s) => Go(TitanAnimState.Idle);
     }

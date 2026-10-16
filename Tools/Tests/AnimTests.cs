@@ -42,18 +42,25 @@ static class AnimTests
             var z = new FloatTween(); z.Start(1f, 2f, 0f, EaseType.OutBack); T.True(z.Done && Near(2f, z.Value), "zero duration = instant");
             var b = new FloatTween(); b.Start(0f, 1.3f, 150f, EaseType.OutBack); float mx = 0; for (int i = 0; i < 20; i++) mx = Math.Max(mx, b.Tick(0.01f)); T.True(mx > 1.3f, "out-back tween overshoots its target");
         });
+        T.Add("ANIM_event_names_current", () =>
+        {
+            T.Eq("ANIM_PROJ_SPLIT_POINT", AnimEvents.ProjSplitPoint); T.Eq("PU_SPLIT", AnimEvents.PuSplit);
+            var root = System.IO.Path.Combine(UnityEngine.Resources.Root, "../../..");
+            foreach (var f in System.IO.Directory.GetFiles(System.IO.Path.Combine(root, "Assets"), "*.cs", System.IO.SearchOption.AllDirectories))
+            { var t = System.IO.File.ReadAllText(f); T.True(!t.Contains("ANIM_PROJ_APEX") && !t.Contains("PU_SPLIT_APEX") && !t.Contains("\"BOSS_TITAN_SURVIVE\""), "no retired event names in " + System.IO.Path.GetFileName(f)); }
+        });
         T.Add("ANIM_aim_spring_critically_damped", () =>
         {
             float x = 0f, v = 0f; var w = AimSpring.OmegaMid; float prev = 0f; bool mono = true;
             for (int i = 0; i < 120; i++) { AimSpring.Step(ref x, ref v, 10f, w, 1f / 60f, 0f); if (x < prev - 1e-5f || x > 10f + 1e-4f) mono = false; prev = x; }
             T.True(mono, "no overshoot, monotonic (critically damped)"); T.True(Near(10f, x, 0.01f), "converges within 2 s");
             x = 0; v = 0; for (int i = 0; i < 7; i++) AimSpring.Step(ref x, ref v, 1f, w, 1f / 60f, 0f); // ≈ 117 ms
-            T.True(x > 0.55f && x < 0.7f, $"ω=18: ~63% at ~120 ms (got {x:0.00})");
-            T.True(Near(0.2636f, AimSpring.SettleTime95(18f), 0.002f), "95% at ~0.26 s for ω=18");
+            T.True(x > 0.82f && x < 0.92f, $"ω=30: ~87% at ~120 ms (got {x:0.00})");
+            T.True(Near(0.1581f, AimSpring.SettleTime95(30f), 0.002f), "95% at ~0.16 s for ω=30");
             x = 0; v = 0; AimSpring.Step(ref x, ref v, 60f, 1000f, 0.1f); T.True(x <= 24f + 1e-3f, "max 240°/s cap");
             float a = 0, va = 0, c = 0, vc = 0; AimSpring.Step(ref a, ref va, 5f, w, 0.1f, 0f); for (int i = 0; i < 10; i++) AimSpring.Step(ref c, ref vc, 5f, w, 0.01f, 0f);
             T.True(Near(a, c, 1e-3f), "exact solution: frame-rate independent (1×100 ms == 10×10 ms)");
-            T.Eq(14f, AimSpring.Omega(QualityTier.Low), "low tier ω 14"); T.Eq(18f, AimSpring.Omega(QualityTier.High), "mid/high ω 18");
+            T.Eq(24f, AimSpring.Omega(QualityTier.Low), "low tier ω 24"); T.Eq(30f, AimSpring.Omega(QualityTier.High), "mid/high ω 30");
         });
         T.Add("ANIM_cannon_fire_cycle_curves", () =>
         {

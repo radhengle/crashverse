@@ -65,13 +65,13 @@ namespace Crashverse.Feel
     }
 
     /// <summary>
-    /// 01 Aim smoothing: critically damped spring (ω = 18 rad/s on mid/high, 14 on low; spec 01 says "≈120 ms to 95%", but at ω = 18 the 120 ms point is ~63% — see SettleTime95), max 240°/s.
+    /// 01 Aim smoothing: critically damped spring (ω = 30 rad/s on mid/high, 24 on low — ~87% caught up at 120 ms, 95% at ~158 ms; matches spec 01 "≈120 ms catch-up"), max 240°/s.
     /// Runs on unscaled time so aim stays responsive under Time Fracture / slow-mo. The trajectory arc and the shot always use the
     /// TARGET angles; only the visible barrel lags.
     /// </summary>
     public static class AimSpring
     {
-        public const float OmegaMid = 18f, OmegaLow = 14f, MaxDegPerSec = 240f;
+        public const float OmegaMid = 30f, OmegaLow = 24f, MaxDegPerSec = 240f;
         public static float Omega(QualityTier tier) => tier == QualityTier.Low ? OmegaLow : OmegaMid;
 
         /// <summary>Advances <paramref name="x"/>/<paramref name="v"/> toward <paramref name="target"/> (exact critically-damped solution, stable for any dt).</summary>
@@ -92,7 +92,7 @@ namespace Crashverse.Feel
             }
         }
 
-        /// <summary>Seconds for a unit step (from rest, no speed cap) to reach 95%: ω·t ≈ 4.744, so ~0.26 s at ω = 18. At ω = 18 the 120 ms mark is the ~63% rise (ω·t ≈ 2.15).</summary>
+        /// <summary>Seconds for a unit step (from rest, no speed cap) to reach 95%: ω·t ≈ 4.744, so ~0.158 s at ω = 30. At ω = 30 the 120 ms mark is the ~87% rise (ω·t = 3.6).</summary>
         public static float SettleTime95(float omega) => 4.744f / omega;
     }
 
