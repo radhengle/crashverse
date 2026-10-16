@@ -8,11 +8,11 @@ def load():
     for l in list(bpy.data.lights): bpy.data.lights.remove(l)
     return [o for o in bpy.data.objects if o.type=='MESH' and not o.hide_render]
 objs=load(); rig.setup(SAMP); rig.ground(5.5)
-rig.shoot(f"{OUT}/Wrecker_v2_gameplay.png",objs,(-0.35,1.0,0.42),lens=40,fill=1.15)          # low behind (+Y = back), barrel toward target
+rig.shoot(f"{OUT}/Wrecker_v2_gameplay.png",objs,(0.8,-1.0,0.5),lens=35,fill=1.0)          # full 3/4 front (muzzle = -Y)
 rig.shoot(f"{OUT}/Wrecker_v2_beauty.png",objs,(1.0,-0.55,0.28),lens=70,dof=True,fill=1.0,fstop=2.0)
 tt=[]
 sc=bpy.context.scene; sc.render.resolution_x=sc.render.resolution_y=720; sc.cycles.samples=max(32,SAMP//2)
 for k in range(8):
     a=2*math.pi*k/8; p=f"{OUT}/tt/Wrecker_v2_tt_{k}.png"; os.makedirs(f"{OUT}/tt",exist_ok=True)
     rig.shoot(p,objs,(math.sin(a),-math.cos(a),0.35),lens=50,fill=1.05); tt.append(p)
-rig.strip(tt,f"{OUT}/Wrecker_v2_turntable.png",4,360,"Wrecker_v2 turntable (8 x 45 deg) - Blender preview, final look in Unity")
+rig.strip(tt,f"{OUT}/Wrecker_v2_turntable.png",4,360,"Wrecker_v2 turntable (8 x 45 deg) - Blender Filmic preview, final look sign-off in Unity ACES")

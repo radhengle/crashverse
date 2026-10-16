@@ -37,17 +37,17 @@ MAT={}
 def mk(key,**kw): MAT[key]=hp.HPMat("HP_"+key,**kw); return MAT[key]
 _wood=[None]
 def wood_col(nt):
-    c,b=grain(nt,hp.lin("#E3A766")); _wood[0]=b; return mixc(nt,edge_mask(nt,0.015,0.9,5),c,hp.lin("#F7CB92"))
+    c,b=grain(nt,hp.lin("#D9965A"),scale=18,amt=0.42); _wood[0]=b; return mixc(nt,edge_mask(nt,0.02,0.85,5),c,hp.lin("#F0C08A"))
 mk("wood",color=wood_col,rough=lambda nt:mixf(nt,edge_mask(nt),0.62,0.55),metal=0.0,bump=lambda nt:_wood[0] or hp.noise_bump(nt,60,0.2,0.002))
-mk("wood_dk",color=lambda nt:grain(nt,hp.lin("#B5793F"))[0],rough=0.66,metal=0.0,bump=lambda nt:hp.noise_bump(nt,50,0.25,0.002))
+mk("wood_dk",color=lambda nt:grain(nt,hp.lin("#8A5A34"),scale=18,amt=0.4)[0],rough=0.66,metal=0.0,bump=lambda nt:hp.noise_bump(nt,50,0.25,0.002))
 mk("navy",color=lambda nt:mixc(nt,edge_mask(nt,0.012,0.93,7),hp.lin("#3E4C6E"),hp.lin("#C9D0DA")),
    rough=lambda nt:mixf(nt,edge_mask(nt,0.012,0.93,7),0.32,0.3),metal=lambda nt:mixf(nt,edge_mask(nt,0.012,0.93,7),0.0,1.0),
    bump=lambda nt:hp.noise_bump(nt,180,0.06,0.0006))
-mk("gold",color=lambda nt:mixc(nt,edge_mask(nt,0.008,0.9,9),hp.lin("#F2BE55"),hp.lin("#FFE08A")),rough=0.25,metal=1.0,bump=lambda nt:hp.noise_bump(nt,300,0.05,0.0004))
+mk("gold",color=lambda nt:mixc(nt,edge_mask(nt,0.008,0.9,9),hp.lin("#C99436"),hp.lin("#FFE08A")),rough=0.25,metal=1.0,bump=lambda nt:hp.noise_bump(nt,300,0.05,0.0004))
 mk("iron",color=hp.lin("#8A93A0"),rough=lambda nt:mixf(nt,edge_mask(nt),0.42,0.3),metal=1.0,bump=lambda nt:hp.noise_bump(nt,220,0.12,0.0006))
 mk("steel",color=hp.lin("#C8CFD8"),rough=0.3,metal=1.0,bump=lambda nt:hp.noise_bump(nt,400,0.05,0.0003))
 mk("rubber",color=hp.lin("#2E323B"),rough=0.7,metal=0.0,bump=lambda nt:hp.noise_bump(nt,120,0.2,0.001))
-mk("bore",color=hp.lin("#1B2130"),rough=0.6,metal=0.0)
+mk("bore",color=hp.lin("#07080C"),rough=0.85,metal=0.0)
 mk("core",color=hp.lin("#22D3EE"),rough=0.08,metal=0.0,emis=hp.lin("#22D3EE"))
 mk("core_hi",color=hp.lin("#C9FBFF"),rough=0.05,metal=0.0,emis=hp.lin("#BFF6FF"))
 mk("violet",color=hp.lin("#8B5CF6"),rough=0.22,metal=0.0)
@@ -176,7 +176,7 @@ bar=Part(); MB=RY
 prof=[(0.0001,-1.02),(0.07,-1.015),(0.1,-0.99),(0.1,-0.95),(0.06,-0.93),(0.06,-0.86),(0.2,-0.84),(0.3,-0.8),(0.37,-0.76),(0.44,-0.72),(0.44,-0.66),(rb(-0.62),-0.62)]
 prof+=[(rb(a),a) for a in (0.3,1.25)]+[(rb(1.38)+0.035,1.42),(rb(1.5)+0.05,1.5),(rb(1.6)+0.03,1.6),(0.27,1.6),(0.25,1.45)]
 bar.add(lathe(prof,32,MB),"navy",0.0)
-bar.add(lathe([(0.25,1.45),(0.0001,1.45)],24,MB),"bore")
+bar.add(lathe([(0.25,1.45),(0.24,1.1),(0.0001,1.1)],24,MB),"bore")
 for a in (-0.45,0.3,1.15):                                                                                           # gold bands with beads
     r=rb(a); bar.add(lathe([(r-0.005,a-0.075),(r+0.035,a-0.06),(r+0.05,a),(r+0.035,a+0.06),(r-0.005,a+0.075)],32,MB),"gold")
 for sx in (1,-1):                                                                                                     # trunnions
@@ -239,6 +239,12 @@ for M_ in TYRE_RIVETS:
     p=Part().add(dome(0.016,8,M_),"steel"); o_=obj("HPR",p,(0.97,A(0.15),0.6)); o_.parent=None; o_.matrix_world=Matrix.Translation((0.97,A(0.15),0.6)); o_.modifiers.new("b",'BEVEL').segments=2; HP.append(o_); hpx.append(o_)
 for n in ("Wheel_FL","Wheel_RL"):
     m=mirror_hp([h for h in HP if h.name==n+"_HP"][0]); HP.append(m)
+# ---------- smooth shading by angle (removes faceting on barrel/rings) ----------
+for o in O.values():
+    for p_ in o.data.polygons: p_.use_smooth=True
+    bm=bmesh.new(); bm.from_mesh(o.data)
+    for e in bm.edges: e.smooth = not (len(e.link_faces)==2 and e.calc_face_angle(0)>math.radians(40))
+    bm.to_mesh(o.data); bm.free()
 # ---------- LP: halve symmetric objects, unwrap uniques, then mirror ----------
 SYM=["Carriage","Barrel","Slot_Core","Slot_Module","Slot_Booster"]
 for n in SYM:

@@ -1,6 +1,6 @@
 # Island_Sunnyville v3 (<=10k LOD0, per-file LOD0/1/2 per PR #28). Blender -Y = forward (-> Unity +Z), +Z up, +X = left, 1u = 1 m
 # Hierarchy depth 1 (exporter bake bug); runtime parent in custom prop attach_to.
-import sys,os,bpy,bmesh,math,random; sys.path.insert(0,os.path.dirname(__file__)); from cv_lib import *
+import subprocess,sys,os,bpy,bmesh,math,random; sys.path.insert(0,os.path.dirname(__file__)); from cv_lib import *
 import bake as BK
 from mathutils import Vector, Matrix
 M_ROOT="/workspace/wt/3d-modeler-v3/models"; A_ROOT="/workspace/wt/3d-modeler-v3/Assets/_Project/Models"
@@ -53,7 +53,7 @@ def island(rx,ry,depth,seg,cap=0.6,rings=7,terrace=True):
     for i in range(seg): bm.faces.new([inner[i],inner[(i+1)%seg],c])
     band(top,inner) if False else None
     for i in range(seg): bm.faces.new([inner[(i+1)%seg],inner[i],top[i],top[(i+1)%seg]])
-    lip=ring(1.0,-cap); band(top,lip); prev=lip
+    over=ring(1.03,-0.3); band(top,over); lip=ring(1.0,-cap); band(over,lip); prev=lip   # grass edge overhang
     for r in range(1,rings+1):                                     # rounded (sin) profile, strata bands
         t=r/(rings+1); k=math.cos(t*math.pi/2)**0.8; z=-cap-depth*t
         cur=[bm.verts.new((v.co.x*k*Rn.uniform(0.95,1.04),v.co.y*k*Rn.uniform(0.95,1.04),z)) for v in lip]; band(prev,cur); prev=cur
@@ -63,11 +63,12 @@ def island(rx,ry,depth,seg,cap=0.6,rings=7,terrace=True):
     def col(f):
         z=f.calc_center_median().z
         if z>-0.13: return "grass"
-        if z>-cap: return "grass_dk"
-        b=int((-z-cap)/(depth/(rings+1)))
-        return ["cliff","cliff_dk","cliff_lt","cliff"][b%4]
+        if z>-cap: return "grass_shade"
+        t=(-z-cap)/depth; b=int(t*(rings+1)); h=hash((round(f.calc_center_median().x,1),round(f.calc_center_median().y,1)))%3
+        if t>0.55: return ["cliff_deep","cliff_deep2"][b%2]
+        return ["cliff","cliff_dk","cliff_lt","cliff","cliff_deep"][b%5]
     paint(bm,col); return bm
-bm=island(30,12.5,13,64,rings=14)
+bm=island(30,12.5,13,56,rings=14)
 # terraces: two soft raised grass tiers at the back rim (out of the play area)
 for (x,y,rx,ry,h) in ((0,-9.5,22,3.2,0.7),(-6,-10.8,12,1.8,1.4)):
     t=bm_cyl(1,0.9,h,40,"grass_dk",'Z',(0,0,h/2),bev=0.15)
@@ -81,14 +82,18 @@ for (x,y,rx,ry,h) in ((0,-9.5,22,3.2,0.7),(-6,-10.8,12,1.8,1.4)):
 merge(bm,bm_cyl(3.2,3.3,0.1,40,"sand",'Z',(0,18,0.05),bev=0.03))            # Wrecker sand pad
 # sand path from pad to arena centre with stepping stones
 for k in range(7):
-    y=15-k*2.2; merge(bm,bm_box((math.sin(k*0.7)*0.8,y,0.03),(1.6,2.1,0.06),"sand",0.02,1))
+    y=15-k*2.2; merge(bm,bm_box((math.sin(k*0.7)*0.8,y,0.03),(1.6,2.1,0.06),"path",0.02,1))
     for s in (-1,1):
         merge(bm,bm_box((math.sin(k*0.7)*0.8+s*0.45,y+Rn.uniform(-0.4,0.4),0.08),(0.5,0.5,0.12),"stone",0.04,2)) if (k+s)%2 else None
 # trees + bushes
 def tree(x,y,s):
     t=bm_cyl(0.18*s,0.13*s,1.2*s,10,"trunk",'Z',(x,y,0.6*s))
-    c=bmesh.new(); bmesh.ops.create_icosphere(c,subdivisions=2 if s>=1.1 else 1,radius=0.9*s); paint(c,lambda f:"leaf" if f.calc_center_median().z>-0.2*s else "leaf_dk")
-    bmesh.ops.translate(c,verts=c.verts,vec=(x,y,1.75*s)); merge(t,c); return t
+    blobs=((0,0,1.75,0.8,"leaf"),(0.45,0.2,1.5,0.6,"leaf_dk"),(-0.4,-0.25,1.95,0.58,"grass_lt")) if s>=1.0 else ((0,0,1.7,0.85,"leaf"),(0.35,-0.2,1.95,0.55,"grass_lt"))
+    for bx,by,bz,br,cl in blobs:
+        c=bmesh.new(); bmesh.ops.create_icosphere(c,subdivisions=1,radius=br*s); paint(c,lambda f,cl=cl:cl if f.calc_center_median().z>-0.25*br*s else "leaf_dk")
+        for v in c.verts: v.co.z*=0.85
+        bmesh.ops.translate(c,verts=c.verts,vec=(x+bx*s,y+by*s,bz*s)); merge(t,c)
+    return t
 for x,y,s in ((-25,-3,1.3),(-21,-8,1.5),(23,4,1.2),(21,-6,1.4),(-10,-9.5,1.1),(12,-9.5,1.0),(5,9,0.8)):
     merge(bm,tree(x,y,s))
 for x,y,s in ((-17,3,0.6),(-14,-6,0.5),(16,6,0.55),(18,-3,0.6),(3,10,0.5),(9,9,0.5)):
@@ -101,7 +106,10 @@ def house(x,y,z,w,dp,h,wall):
     r=bmesh.new(); vs=[r.verts.new(p) for p in ((x-w/2-0.12,y-dp/2-0.12,z+h),(x+w/2+0.12,y-dp/2-0.12,z+h),(x+w/2+0.12,y+dp/2+0.12,z+h),(x-w/2-0.12,y+dp/2+0.12,z+h),(x-w/2-0.12,y,z+h+0.75*w),(x+w/2+0.12,y,z+h+0.75*w))]
     for f in ((0,1,5,4),(2,3,4,5),(0,4,3),(1,2,5),(0,3,2,1)): r.faces.new([vs[i] for i in f])
     bmesh.ops.recalc_face_normals(r,faces=r.faces); paint(r,lambda f:"roof"); bevel_hard(r,0.03,1,40); merge(b,r)
-    merge(b,bm_box((x,y-dp/2-0.01,z+0.35),(0.3,0.03,0.6),"wood_dk")); return b
+    merge(b,bm_box((x,y+dp/2+0.015,z+0.36),(0.42,0.03,0.72),"white")); merge(b,bm_box((x,y+dp/2+0.03,z+0.34),(0.3,0.03,0.62),"wood_dk"))   # door + frame (faces +Y, camera side)
+    for wx in (-w*0.3,w*0.3):
+        merge(b,bm_box((x+wx,y+dp/2+0.015,z+h*0.62),(0.34,0.03,0.3),"white")); merge(b,bm_box((x+wx,y+dp/2+0.03,z+h*0.62),(0.24,0.03,0.2),"window"))
+    return b
 merge(bm,house(-16,-9.4,0.7,1.6,1.3,1.1,"wood")); merge(bm,house(-8,-10.8,1.4,1.4,1.1,1.0,"white")); merge(bm,house(15,-9.3,0.7,1.5,1.2,1.0,"brick"))
 merge(bm,bm_cyl(0.32,0.32,0.8,16,"brick",'Z',(4.2,16.2,0.4),bev=0.03))       # barrel (indestructible deco, not the explosive gameplay barrel)
 merge(bm,bm_box((-4.0,16.6,0.35),(0.7,0.7,0.7),"wood",0.04))                # crate
@@ -119,10 +127,10 @@ for k in range(14):
     b=bmesh.new(); bmesh.ops.create_icosphere(b,subdivisions=1,radius=s); paint(b,lambda f:"stone")
     for v in b.verts: v.co=Vector((v.co.x*Rn.uniform(0.8,1.3),v.co.y*Rn.uniform(0.8,1.3),v.co.z*0.6))
     bmesh.ops.translate(b,verts=b.verts,vec=(30*r*math.cos(a),12.5*r*math.sin(a),0.1)); merge(bm,b)
-for k in range(20):
-    x=Rn.uniform(-24,24); y=Rn.uniform(-8,9)
-    if abs(x)<2.5 and y>-2: continue
-    merge(bm,bm_cyl(0.08,0.05,0.12,6,"leaf_dk" if k%3 else "roof",'Z',(x,y,0.06)))
+for k in range(44):   # grass tufts (3-sided, 4 tris)
+    x=Rn.uniform(-26,26); y=Rn.uniform(-9,10)
+    if (x/30)**2+(y/12.5)**2>0.8 or (abs(x)<2.5 and y>-2): continue
+    merge(bm,bm_cyl(0.18,0.0,0.32,3,"grass_lt",'Z',(x,y,0.15)))
 for x in (-2.2,2.2):
     merge(bm,bm_cyl(0.06,0.06,1.6,8,"wood_dk",'Z',(x,13.0,0.8))); merge(bm,bm_sphere(0.16,10,6,"white",(x,13.0,1.7)))
 isl=mesh_from_bm("Island_Sunnyville_Mesh",bm,[M],root)
@@ -141,7 +149,10 @@ for i in range(len(pts)-1): wf.faces.new([wf.verts[2*i],wf.verts[2*i+1],wf.verts
 sp=bmesh.new(); bmesh.ops.create_icosphere(sp,subdivisions=1,radius=1.1)
 for v in sp.verts: v.co.z*=0.55
 bmesh.ops.translate(sp,verts=sp.verts,vec=(31,0,-12)); merge(wf,sp)
-MV=bpy.data.materials.new("M_VFX_Placeholder"); MV.use_nodes=True; MV.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value=(0.55,0.85,1,1)
+ft=bmesh.new(); bmesh.ops.create_icosphere(ft,subdivisions=1,radius=0.8)
+for v in ft.verts: v.co.z*=0.4; v.co.y*=1.3
+bmesh.ops.translate(ft,verts=ft.verts,vec=(29.4,0,0.05)); merge(wf,ft)
+MV=bpy.data.materials.new("M_VFX_Placeholder"); MV.use_nodes=True; _p=MV.node_tree.nodes["Principled BSDF"]; _p.inputs["Base Color"].default_value=(0.85,0.95,1,1); _p.inputs["Alpha"].default_value=0.7; _p.inputs["Roughness"].default_value=0.15; _p.inputs["Emission Color"].default_value=(1,1,1,1); _p.inputs["Emission Strength"].default_value=0.15; MV.blend_method='BLEND' 
 wfo=mesh_from_bm("VFX_Waterfall_Placeholder",wf,[MV],root); wfo["vfx_replace"]="waterfall"
 uvl=wfo.data.uv_layers.new(name="UV0")
 for poly in wfo.data.polygons:
@@ -151,7 +162,7 @@ report(); print("TOTAL_ISLAND",sum(TR.values()))
 obs=[o for o in bpy.data.objects if o.type=='MESH' and not o.name.startswith(("UCX","VFX_"))]
 cells={o.name:BK.face_cells(o) for o in obs}
 tx=os.path.join(d,"textures"); paths,td,area=BK.bake(obs,2048,"Island",tx)
-gen_tex("detail",tx)
+gen_tex("detail",tx); subprocess.check_call(["/usr/bin/python3",os.path.join(os.path.dirname(__file__),"island_post.py"),tx]); [im.reload() for im in bpy.data.images if im.filepath]
 MI_=material_pbr("M_Island",paths["Albedo"],paths["Normal"],paths["ORM"])
 for o in obs:
     o.data.materials.append(MI_); cl=cells[o.name]

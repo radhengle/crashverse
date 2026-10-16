@@ -1,6 +1,6 @@
 """Preview rig (VFX spec 4b/§3 + art/m1b arena brief): sun #FFF2D6 from upper back-left w/ soft shadows, gradient ambient
 sky #8CC8FF / equator #DCEFFF / ground #6FAE5A, raytraced AO + reflections (stands in for one probe), Filmic exposure 0
-(Unity uses ACES), bloom thr 1.0 int ~0.4, light DoF on beauty only. Captions: 'Blender preview, final look in Unity'."""
+(Unity uses ACES), bloom thr 1.0 int ~0.4, light DoF on beauty only. Captions: 'Blender Filmic preview, final look sign-off in Unity ACES'."""
 import bpy, math, os, subprocess
 from mathutils import Vector, Matrix
 def lin(h): return tuple((int(h[i:i+2],16)/255)**2.2 for i in (1,3,5))+(1,)
@@ -42,7 +42,7 @@ def shoot(path,objs,dirv,lens=50,dof=False,fill=1.0,fstop=2.8,target=None):
     cam.data.dof.use_dof=dof
     if dof: cam.data.dof.focus_distance=dist; cam.data.dof.aperture_fstop=fstop
     sc.render.filepath=path; bpy.ops.render.render(write_still=True); bpy.data.objects.remove(cam); caption(path); print("PREVIEW",path,flush=True)
-def caption(path,text="Blender preview, final look in Unity"):
+def caption(path,text="Blender Filmic preview, final look sign-off in Unity ACES"):
     subprocess.check_call(["/usr/bin/python3","-c",f"""
 from PIL import Image,ImageDraw,ImageFont
 im=Image.open({path!r}).convert('RGB'); d=ImageDraw.Draw(im); w,h=im.size

@@ -7,11 +7,13 @@ HERE=os.path.dirname(os.path.abspath(__file__))
 NAMES=["wood","wood_dk","brick","mortar","steel","steel_dk","navy","gold",
        "cyan","violet","orange","outline","grass","cliff","sand","roof",
        "cliff_dk","cliff_lt","leaf","leaf_dk","stone","water","cyan_lt","gold_dk",
-       "wood_in","brick_in","steel_in","grass_dk","navy_lt","violet_dk","white","trunk"]
+       "wood_in","brick_in","steel_in","grass_dk","navy_lt","violet_dk","white","trunk",
+       "grass_lt","grass_shade","path","path_edge","cliff_deep","cliff_deep2","window","foam"]
 PAL=["#E3A766","#A8703A","#D2664C","#7A3326","#AEB6C2","#5B6472","#3E4C6E","#E8B04B",
      "#22D3EE","#8B5CF6","#FF7A1A","#101828","#7ED957","#C98A4B","#F2D49B","#4D7BC4",
      "#8E5A32","#DDA36A","#3FA34D","#2E7D3A","#A9B0B8","#8CD8FF","#BFF6FF","#B98424",
-     "#C68A52","#B0533D","#949CA8","#5DBB45","#5A6E9A","#6A3FC4","#F4F7FB","#7A4A26"]
+     "#C68A52","#B0533D","#949CA8","#5DBB45","#5A6E9A","#6A3FC4","#F4F7FB","#7A4A26",
+     "#A6F07A","#4CA83A","#C79A62","#8C6B45","#6B4A33","#4E3626","#9BD8FF","#FFFFFF"]
 CELL={n:i for i,n in enumerate(NAMES)}
 SRC="/workspace/crashverse/models_src"   # .blend sources live outside git (PM rule)
 GRID=8; CPX=256//GRID
