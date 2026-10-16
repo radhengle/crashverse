@@ -52,7 +52,7 @@ namespace Crashverse.UI
             GUI.Box(new Rect(pad, pad, 340, 150), GUIContent.none);
             GUI.Label(new Rect(pad + 12, pad + 8, 320, 32), "CRASHVERSE", _title);
             GUI.Label(new Rect(pad + 12, pad + 44, 320, 28),
-                $"{_session.config.displayName}  |  Shots {_session.MovesRemaining}/{_session.config.moveBudget}", _body);
+                $"{_session.config.displayName}  |  Shots {_session.MovesRemaining}/{_session.config.shotBudget}", _body);
 
             float pct = _session.tracker != null ? _session.tracker.DestroyedRatio * 100f : 0f;
             GUI.Label(new Rect(pad + 12, pad + 74, 320, 28),

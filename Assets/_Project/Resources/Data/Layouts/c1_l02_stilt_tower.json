@@ -1,0 +1,236 @@
+{
+ "id": "c1_l02_stilt_tower",
+ "blocks": [
+  {
+   "id": "stilt0",
+   "mat": "wood",
+   "p": [
+    -1.2,
+    2.5,
+    -1.2
+   ],
+   "s": [
+    0.35,
+    5,
+    0.35
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stilt1",
+   "mat": "wood",
+   "p": [
+    1.2,
+    2.5,
+    -1.2
+   ],
+   "s": [
+    0.35,
+    5,
+    0.35
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stilt2",
+   "mat": "wood",
+   "p": [
+    -1.2,
+    2.5,
+    1.2
+   ],
+   "s": [
+    0.35,
+    5,
+    0.35
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stilt3",
+   "mat": "wood",
+   "p": [
+    1.2,
+    2.5,
+    1.2
+   ],
+   "s": [
+    0.35,
+    5,
+    0.35
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "braceF",
+   "mat": "wood",
+   "p": [
+    0,
+    2,
+    1.2
+   ],
+   "s": [
+    2.4,
+    0.25,
+    0.25
+   ],
+   "sup": [
+    "stilt2",
+    "stilt3"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "braceB",
+   "mat": "wood",
+   "p": [
+    0,
+    2,
+    -1.2
+   ],
+   "s": [
+    2.4,
+    0.25,
+    0.25
+   ],
+   "sup": [
+    "stilt0",
+    "stilt1"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "platform",
+   "mat": "wood",
+   "p": [
+    0,
+    5.15,
+    0
+   ],
+   "s": [
+    3,
+    0.3,
+    3
+   ],
+   "sup": [
+    "stilt0",
+    "stilt1",
+    "stilt2",
+    "stilt3"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "tank",
+   "mat": "wood",
+   "p": [
+    0,
+    6.6,
+    0
+   ],
+   "s": [
+    2.4,
+    2.6,
+    2.4
+   ],
+   "sup": [
+    "platform"
+   ],
+   "joint": false,
+   "role": "tank",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "tankLid",
+   "mat": "wood",
+   "p": [
+    0,
+    8.05,
+    0
+   ],
+   "s": [
+    2.6,
+    0.3,
+    2.6
+   ],
+   "sup": [
+    "tank"
+   ],
+   "joint": false,
+   "role": "tank",
+   "nonObj": false,
+   "color": "4D7BC4",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

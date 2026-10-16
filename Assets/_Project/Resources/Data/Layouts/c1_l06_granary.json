@@ -1,0 +1,211 @@
+{
+ "id": "c1_l06_granary",
+ "blocks": [
+  {
+   "id": "plinth",
+   "mat": "brick",
+   "p": [
+    0,
+    0.5,
+    0
+   ],
+   "s": [
+    4,
+    1,
+    4
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "silo0",
+   "mat": "brick",
+   "p": [
+    0,
+    2.0,
+    0
+   ],
+   "s": [
+    2.6,
+    2.0,
+    2.6
+   ],
+   "sup": [
+    "plinth"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "brace0",
+   "mat": "steel",
+   "p": [
+    0,
+    3.2,
+    0
+   ],
+   "s": [
+    3.0,
+    0.4,
+    3.0
+   ],
+   "sup": [
+    "silo0"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "silo1",
+   "mat": "brick",
+   "p": [
+    0,
+    4.4,
+    0
+   ],
+   "s": [
+    2.6,
+    2.0,
+    2.6
+   ],
+   "sup": [
+    "brace0"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "brace1",
+   "mat": "steel",
+   "p": [
+    0,
+    5.6,
+    0
+   ],
+   "s": [
+    3.0,
+    0.4,
+    3.0
+   ],
+   "sup": [
+    "silo1"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "silo2",
+   "mat": "brick",
+   "p": [
+    0,
+    6.8,
+    0
+   ],
+   "s": [
+    2.6,
+    2.0,
+    2.6
+   ],
+   "sup": [
+    "brace1"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "brace2",
+   "mat": "steel",
+   "p": [
+    0,
+    8.0,
+    0
+   ],
+   "s": [
+    3.0,
+    0.4,
+    3.0
+   ],
+   "sup": [
+    "silo2"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roof",
+   "mat": "brick",
+   "p": [
+    0,
+    8.6,
+    0
+   ],
+   "s": [
+    3.2,
+    0.8,
+    3.2
+   ],
+   "sup": [
+    "brace2"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "4D7BC4",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

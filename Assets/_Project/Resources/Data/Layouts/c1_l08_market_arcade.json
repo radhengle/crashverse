@@ -1,0 +1,390 @@
+{
+ "id": "c1_l08_market_arcade",
+ "blocks": [
+  {
+   "id": "col0",
+   "mat": "brick",
+   "p": [
+    -6,
+    1.75,
+    0
+   ],
+   "s": [
+    0.8,
+    3.5,
+    0.8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "col1",
+   "mat": "brick",
+   "p": [
+    -3,
+    1.75,
+    0
+   ],
+   "s": [
+    0.8,
+    3.5,
+    0.8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "col2",
+   "mat": "brick",
+   "p": [
+    0,
+    1.75,
+    0
+   ],
+   "s": [
+    0.8,
+    3.5,
+    0.8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "col3",
+   "mat": "brick",
+   "p": [
+    3,
+    1.75,
+    0
+   ],
+   "s": [
+    0.8,
+    3.5,
+    0.8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "col4",
+   "mat": "brick",
+   "p": [
+    6,
+    1.75,
+    0
+   ],
+   "s": [
+    0.8,
+    3.5,
+    0.8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "beam0",
+   "mat": "wood",
+   "p": [
+    -4.5,
+    3.75,
+    0
+   ],
+   "s": [
+    3.2,
+    0.4,
+    1.2
+   ],
+   "sup": [
+    "col0",
+    "col1"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "beam1",
+   "mat": "wood",
+   "p": [
+    -1.5,
+    3.75,
+    0
+   ],
+   "s": [
+    3.2,
+    0.4,
+    1.2
+   ],
+   "sup": [
+    "col1",
+    "col2"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "beam2",
+   "mat": "wood",
+   "p": [
+    1.5,
+    3.75,
+    0
+   ],
+   "s": [
+    3.2,
+    0.4,
+    1.2
+   ],
+   "sup": [
+    "col2",
+    "col3"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "beam3",
+   "mat": "wood",
+   "p": [
+    4.5,
+    3.75,
+    0
+   ],
+   "s": [
+    3.2,
+    0.4,
+    1.2
+   ],
+   "sup": [
+    "col3",
+    "col4"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "joint",
+   "mat": "steel",
+   "p": [
+    0,
+    4.2,
+    0
+   ],
+   "s": [
+    1.4,
+    0.5,
+    1.4
+   ],
+   "sup": [
+    "beam1",
+    "beam2"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stall0",
+   "mat": "wood",
+   "p": [
+    -4.5,
+    4.9,
+    0
+   ],
+   "s": [
+    2.4,
+    1.0,
+    1.0
+   ],
+   "sup": [
+    "beam0"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stall1",
+   "mat": "wood",
+   "p": [
+    -1.5,
+    4.9,
+    0
+   ],
+   "s": [
+    2.4,
+    1.0,
+    1.0
+   ],
+   "sup": [
+    "beam1",
+    "joint"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stall2",
+   "mat": "wood",
+   "p": [
+    1.5,
+    4.9,
+    0
+   ],
+   "s": [
+    2.4,
+    1.0,
+    1.0
+   ],
+   "sup": [
+    "beam2",
+    "joint"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stall3",
+   "mat": "wood",
+   "p": [
+    4.5,
+    4.9,
+    0
+   ],
+   "s": [
+    2.4,
+    1.0,
+    1.0
+   ],
+   "sup": [
+    "beam3"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "crate",
+   "mat": "wood",
+   "p": [
+    7.5,
+    0.5,
+    1.5
+   ],
+   "s": [
+    0.9,
+    0.9,
+    0.9
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "",
+   "nonObj": true,
+   "color": "E5484D",
+   "explosive": true,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

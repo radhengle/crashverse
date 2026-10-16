@@ -1,0 +1,27 @@
+# Spec Gap Answers v1 (answers QA SG-00 to SG-20)
+Owner: Game designer · Applies to Design Pack v1 (DP) and M1 contract v0.2 · All numbers are tunable data unless noted.
+
+- **SG-00** The DP header now reads "v1 approved by PM".
+- **SG-01** Stars use the percentage of shots left on every level, with thresholds per level (default 3★ ≥ 0.60, 2★ ≥ 0.30). Compare exactly with ≥ and don't round. At 5 shots, 3 left gives 3★. `LevelConfig.cs:56` has to change to match (this is Developer's fix).
+- **SG-02** Shots and moves are the same thing. Use "shots" in UI and data from now on.
+- **SG-03** Mastery goals are a separate tick and never change stars. The one exception is L9 "No power-up used": using any power-up on L9 caps that run at 2★. Treat L8 "3★" as a tick that turns on when the player earns 3★.
+- **SG-04** All checks run after physics settles. L2: superseded by SG-21. L4 "wall hit": the first impact of any projectile lands on a piece tagged `Wall`. L7 "crown intact": at least 80% of the crown's pieces are unbroken (HP > 0) when the win fires, even if they've fallen. L3 "95%": destroyed objective mass ≥ 0.95, measured after settle.
+- **SG-05** A turn is one shot. Phase 2 opens with the shutter open. It then toggles after every shot (open, closed, open, …). The tell is a turn-based state: during the last 1s of the settle before it closes, the shutter glows orange. A shot fired while it's closed hits brick for no core damage.
+- **SG-06** "Defeat with 3 shots left" means ≥ 3.
+- **SG-07** The chapter chest, the Gravity Well unlock and the bridge are granted on the first clear only. Replays pay normal level coins.
+- **SG-08** Radii are inclusive (≤ 4.0m, ≤ 3.0m) and measured centre to centre. Splitstrike: each split does 50% of the shot's final damage after Core modifiers. Shockwave's 40 damage is splash and is not multiplied by the 2× joint bonus. The direct hit still gets the 2× multiplier.
+- **SG-09** Loadout is saved per level, both locally and in the profile. The first visit uses the last loadout the player used anywhere. Each slot only accepts its own type, so duplicates can't happen. Tapping a filled slot opens the picker to swap, and dragging a tile out clears it. Tiles a level forces are pre-filled and locked.
+- **SG-10** A ranked attempt belongs to the UTC day it started on. It's accepted if submitted within 15 minutes after reset; after that it's rejected and refunded as a practice run.
+- **SG-11** Killing the app mid-ranked submits what had happened so far, with damage dealt up to the last settled shot. The attempt is used up, and there's no resume.
+- **SG-12** The top 10% is worked out once the daily board closes (00:00 UTC plus the 15-minute grace window). Bonus shards land in the inbox within 1 hour.
+- **SG-13** Offline: ranked play and leaderboard viewing are disabled. Practice works offline. Daily reward claims need the server. A ranked result is queued locally (signed) and retried until it's accepted or past the SG-10 window, and the player always sees its status. Nothing is dropped silently.
+- **SG-14** The streak never breaks or resets. Missing days just pause it, including across seasons.
+- **SG-15** Every day boundary is 00:00 UTC (05:30 IST): daily rewards, Titan and daily boards.
+- **SG-16** Season XP: each event star is worth 10 XP and each Daily Titan clear is worth 50. Tiers cost 100 XP each for tiers 1–10, 150 for 11–20 and 200 for 21–30, so 4,500 XP in total. Past tier 30, every 300 XP grants a bonus chest, capped at 10 per season. Event stars are capped at 3 per event level.
+- **SG-17** When a season ends, unclaimed tier rewards the player earned are auto-sent to the inbox and kept for 30 days. Owned items are never removed.
+- **SG-18** Weekly events run Monday 00:00 UTC to Monday 00:00 UTC. Seasons start and end on those Mondays. Old boards stay archived and read-only, showing the player's final rank and the top 100: the previous day, the previous week and the previous season.
+- **SG-19** Guests can play ranked and their scores are stored. When they link an account, scores from the current open boards move over and get listed. Scores from closed boards don't.
+- **SG-20** Only server time counts. The client syncs at launch and on resume, and countdowns use the server offset. Changing the device clock does nothing: resets, rewards and ranked attempts are all checked on the server. If server time can't be reached, time-gated actions are disabled.
+- **SG-21** L2 mastery now reads "Topple the tank off the island edge". It ticks when the tank piece's centre falls below the island's kill plane (y < islandKillY, set in the level data), checked after settle. The DP table is updated to match.
+- **SG-22** The cutoff is inclusive. A submission stamped by the server at exactly 00:15:00.000 UTC is accepted, and anything after that is rejected and refunded as practice.
+- **SG-23** The cap applies to the best run: an event level contributes its best single run's stars, at most 3, and runs are never added together. Season XP only counts stars above the previous best.

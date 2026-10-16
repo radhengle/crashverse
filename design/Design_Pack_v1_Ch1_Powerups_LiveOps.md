@@ -1,8 +1,8 @@
 # CRASHVERSE — Design Pack v1 (Chapter 1, Power-ups, Live Ops)
-Owner: Game designer · Status: draft for PM approval · Compatible with M1 contract v0.1
+Owner: Game designer · Status: v1 approved by PM (2026-10-16); spec gaps answered in Spec_Gap_Answers_v1.md · Compatible with M1 contract v0.1
 All names, bosses and content are original to CRASHVERSE. Reference boards inform feel only (floating islands, numbered nodes, cannon vs. towers, power-up tiles, fiery daily boss) — no copied layouts, characters or art.
 
-M1 compatibility: every Ch1 level uses the M1 rules (DESTROY_STRUCTURE ≥85% objective mass, shot budget, stars from shots remaining, clean retry). New levels change only data: shot budget, materials, layout, extra optional mastery goal. Star bands scale with budget: 3★ = ≥ 60% shots left, 2★ = ≥ 30%, 1★ = any win (M1's 5-shot table matches this).
+M1 compatibility: every Ch1 level uses the M1 rules (DESTROY_STRUCTURE ≥85% objective mass, shot budget, stars from shots remaining, clean retry). New levels change only data: shot budget, materials, layout, extra optional mastery goal. Stars (PM decision SG-01): each level stores its own thresholds in level data as % of shots left. Default bands: 3★ = shotsLeft/budget ≥ 0.60, 2★ ≥ 0.30, 1★ = any win. No rounding. This replaces the old M1 5-shot table (see M1 contract v0.2).
 
 ---
 ## 1. Chapter 1 — Sunnyville Isles (L1–10)
@@ -11,7 +11,7 @@ Map: a chain of 4 floating islands linked by rope bridges and a sky-tram. Number
 | L | Island | Structure | Materials | Shots | New thing taught | Mastery goal (optional) |
 |---|---|---|---|---|---|---|
 | 1 | Harbor Isle | Wooden lookout hut | wood | 4 | Aim + fire, trajectory arc | Clear in 1 shot |
-| 2 | Harbor Isle | Stilt water tower | wood | 4 | Hit supports, not walls | Topple tank into sea |
+| 2 | Harbor Isle | Stilt water tower | wood | 4 | Hit supports, not walls | Topple tank off the island edge |
 | 3 | Harbor Isle | Brick bakery + wood props | wood, brick | 5 | Brick needs support loss | ≥95% destroyed |
 | 4 | Mill Isle | Windmill (rotating sails, static hub) | wood, brick | 5 | Collapse chains between pieces | 3★ with no wall hits |
 | 5 | Mill Isle | Twin cottages on one bridge | wood, brick | 5 | One shot, two targets (bridge) | Both in 1 shot |

@@ -1,0 +1,39 @@
+{
+ "days": [
+  {
+   "type": "coins",
+   "amount": 100,
+   "id": ""
+  },
+  {
+   "type": "charge",
+   "amount": 1,
+   "id": ""
+  },
+  {
+   "type": "coins",
+   "amount": 150,
+   "id": ""
+  },
+  {
+   "type": "shard",
+   "amount": 1,
+   "id": ""
+  },
+  {
+   "type": "coins",
+   "amount": 200,
+   "id": ""
+  },
+  {
+   "type": "charge",
+   "amount": 1,
+   "id": ""
+  },
+  {
+   "type": "chest",
+   "amount": 1,
+   "id": "coins:300;shard:3"
+  }
+ ]
+}

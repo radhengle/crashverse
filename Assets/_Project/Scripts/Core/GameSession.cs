@@ -38,7 +38,7 @@ namespace Crashverse.Core
         {
             config = cfg;
             _towerBase = towerBase;
-            BestStars = StarProgressStore.GetBest(cfg.levelId);
+            BestStars = 0;
             Retry();
         }
 
@@ -53,7 +53,7 @@ namespace Crashverse.Core
             for (int i = 0; i < builder.Blocks.Count; i++) arr[i] = builder.Blocks[i];
             integrity.Bind(arr);
 
-            MovesRemaining = config.moveBudget;
+            MovesRemaining = config.shotBudget;
             LastStars = 0;
             State = SessionState.Playing;
             fire.CanFire = true;
@@ -101,8 +101,8 @@ namespace Crashverse.Core
             {
                 State = SessionState.Won;
                 LastStars = config.ComputeStars(true, MovesRemaining);
-                StarProgressStore.Submit(config.levelId, LastStars);
-                BestStars = StarProgressStore.GetBest(config.levelId);
+                
+                if (LastStars > BestStars) BestStars = LastStars;
                 fire.CanFire = false;
             }
             else if (MovesRemaining <= 0)

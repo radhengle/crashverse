@@ -1,0 +1,130 @@
+{
+ "powerups": [
+  {
+   "id": "shockwave",
+   "name": "Shockwave Core",
+   "slot": "Core",
+   "effect": "SHOCKWAVE",
+   "charges": 1,
+   "unlockType": "level_reached",
+   "unlockLevelId": "c1_l07",
+   "unlockText": "Unlocks at Sunnyville L7",
+   "p": {
+    "damage": 40,
+    "linkDepth": 1,
+    "count": 0,
+    "damageMult": 1,
+    "radius": 0,
+    "duration": 0,
+    "burstDamage": 0,
+    "passCount": 0,
+    "slowFactor": 1
+   }
+  },
+  {
+   "id": "splitstrike",
+   "name": "Splitstrike",
+   "slot": "Module",
+   "effect": "SPLIT",
+   "charges": 1,
+   "unlockType": "level_reached",
+   "unlockLevelId": "c1_l08",
+   "unlockText": "Unlocks at Sunnyville L8",
+   "p": {
+    "damage": 0,
+    "linkDepth": 0,
+    "count": 3,
+    "damageMult": 0.5,
+    "radius": 0,
+    "duration": 0,
+    "burstDamage": 0,
+    "passCount": 0,
+    "slowFactor": 1
+   }
+  },
+  {
+   "id": "gravity_well",
+   "name": "Gravity Well",
+   "slot": "Module",
+   "effect": "GRAVITY_WELL",
+   "charges": 1,
+   "unlockType": "reward",
+   "unlockLevelId": "c1_l10",
+   "unlockText": "Reward for defeating the Tidewarden",
+   "p": {
+    "damage": 0,
+    "linkDepth": 0,
+    "count": 0,
+    "damageMult": 1,
+    "radius": 4,
+    "duration": 1.5,
+    "burstDamage": 60,
+    "passCount": 0,
+    "slowFactor": 1
+   }
+  },
+  {
+   "id": "chain_reactor",
+   "name": "Chain Reactor",
+   "slot": "Core",
+   "effect": "CHAIN_REACTOR",
+   "charges": 2,
+   "unlockType": "level_reached",
+   "unlockLevelId": "c2_l03",
+   "unlockText": "Unlocks at Gearstorm City L3",
+   "p": {
+    "damage": 0,
+    "linkDepth": 0,
+    "count": 0,
+    "damageMult": 1,
+    "radius": 3,
+    "duration": 0,
+    "burstDamage": 80,
+    "passCount": 0,
+    "slowFactor": 1
+   }
+  },
+  {
+   "id": "phase_piercer",
+   "name": "Phase Piercer",
+   "slot": "Booster",
+   "effect": "PHASE_PIERCE",
+   "charges": 1,
+   "unlockType": "level_reached",
+   "unlockLevelId": "c2_l07",
+   "unlockText": "Unlocks at Gearstorm City L7",
+   "p": {
+    "damage": 0,
+    "linkDepth": 0,
+    "count": 0,
+    "damageMult": 1,
+    "radius": 0,
+    "duration": 0,
+    "burstDamage": 0,
+    "passCount": 2,
+    "slowFactor": 1
+   }
+  },
+  {
+   "id": "time_fracture",
+   "name": "Time Fracture",
+   "slot": "Booster",
+   "effect": "TIME_FRACTURE",
+   "charges": 1,
+   "unlockType": "level_reached",
+   "unlockLevelId": "c3_l03",
+   "unlockText": "Unlocks at Neon District L3",
+   "p": {
+    "damage": 0,
+    "linkDepth": 0,
+    "count": 0,
+    "damageMult": 1,
+    "radius": 0,
+    "duration": 4,
+    "burstDamage": 0,
+    "passCount": 0,
+    "slowFactor": 0.25
+   }
+  }
+ ]
+}

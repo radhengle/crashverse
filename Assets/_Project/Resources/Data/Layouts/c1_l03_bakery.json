@@ -1,0 +1,239 @@
+{
+ "id": "c1_l03_bakery",
+ "blocks": [
+  {
+   "id": "base",
+   "mat": "brick",
+   "p": [
+    0,
+    0.4,
+    0
+   ],
+   "s": [
+    5,
+    0.8,
+    3.5
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallL",
+   "mat": "brick",
+   "p": [
+    -2.2,
+    2,
+    0
+   ],
+   "s": [
+    0.5,
+    2.4,
+    3.2
+   ],
+   "sup": [
+    "base"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallR",
+   "mat": "brick",
+   "p": [
+    2.2,
+    2,
+    0
+   ],
+   "s": [
+    0.5,
+    2.4,
+    3.2
+   ],
+   "sup": [
+    "base"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallB",
+   "mat": "brick",
+   "p": [
+    0,
+    2,
+    -1.5
+   ],
+   "s": [
+    3.9,
+    2.4,
+    0.4
+   ],
+   "sup": [
+    "base"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "propL",
+   "mat": "wood",
+   "p": [
+    -1.0,
+    2,
+    1.4
+   ],
+   "s": [
+    0.35,
+    2.4,
+    0.35
+   ],
+   "sup": [
+    "base"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "propR",
+   "mat": "wood",
+   "p": [
+    1.0,
+    2,
+    1.4
+   ],
+   "s": [
+    0.35,
+    2.4,
+    0.35
+   ],
+   "sup": [
+    "base"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "lintel",
+   "mat": "wood",
+   "p": [
+    0,
+    3.35,
+    1.4
+   ],
+   "s": [
+    4.6,
+    0.3,
+    0.4
+   ],
+   "sup": [
+    "propL",
+    "propR"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roofSlab",
+   "mat": "brick",
+   "p": [
+    0,
+    3.75,
+    0
+   ],
+   "s": [
+    5,
+    0.5,
+    3.6
+   ],
+   "sup": [
+    "lintel",
+    "wallB"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "chimney",
+   "mat": "brick",
+   "p": [
+    1.5,
+    4.8,
+    -0.8
+   ],
+   "s": [
+    0.7,
+    1.6,
+    0.7
+   ],
+   "sup": [
+    "roofSlab"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

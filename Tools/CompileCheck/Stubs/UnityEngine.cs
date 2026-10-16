@@ -133,7 +133,34 @@ namespace UnityEngine
     }
 
     public static class Screen { public static int width = 1080; public static int height = 1920; }
-    public static class Application { public static int targetFrameRate; }
+    public static class Application
+    {
+        public static int targetFrameRate;
+        public static string persistentDataPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "crashverse_test");
+        public static void Quit() { }
+        public static RuntimePlatform platform = RuntimePlatform.LinuxEditor;
+    }
+    public enum RuntimePlatform { LinuxEditor, Android }
+    public class TextAsset : Object { public string text; }
+    public static class Resources
+    {
+        public static string Root = "../../Assets/_Project/Resources";
+        public static T Load<T>(string path) where T : Object
+        {
+            var f = System.IO.Path.Combine(Root, path + ".json");
+            if (!System.IO.File.Exists(f)) return null;
+            object ta = new TextAsset { text = System.IO.File.ReadAllText(f) };
+            return ta as T;
+        }
+        public static T GetBuiltinResource<T>(string n) where T : Object, new() => new T();
+    }
+    public static class JsonUtility
+    {
+        static readonly System.Text.Json.JsonSerializerOptions O = new System.Text.Json.JsonSerializerOptions { IncludeFields = true };
+        public static T FromJson<T>(string json) => System.Text.Json.JsonSerializer.Deserialize<T>(json, O);
+        public static string ToJson(object o) => System.Text.Json.JsonSerializer.Serialize(o, o.GetType(), O);
+        public static string ToJson(object o, bool pretty) => ToJson(o);
+    }
     public static class QualitySettings
     {
         public static string[] names = { "Low", "Mid" };
@@ -217,7 +244,7 @@ namespace UnityEngine
         public static Color color;
         public static void DrawLine(Vector3 a, Vector3 b) { }
     }
-    public static class Debug { public static void Log(object m) { } }
+    public static class Debug { public static void Log(object m) { } public static void LogError(object m) { System.Console.WriteLine("ERR " + m); } public static void LogWarning(object m) { } }
     public static class Random
     {
         public static Vector3 insideUnitSphere => Vector3.one;

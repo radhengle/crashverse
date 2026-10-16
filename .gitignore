@@ -47,3 +47,5 @@ Thumbs.db
 Tools/CompileCheck/bin/
 Tools/CompileCheck/obj/
 *.zip
+Tools/Tests/bin/
+Tools/Tests/obj/

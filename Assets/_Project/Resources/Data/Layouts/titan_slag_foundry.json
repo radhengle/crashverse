@@ -1,0 +1,288 @@
+{
+ "id": "titan_slag_foundry",
+ "blocks": [
+  {
+   "id": "legL",
+   "mat": "steel",
+   "p": [
+    -1.08,
+    2,
+    0
+   ],
+   "s": [
+    1,
+    4,
+    1
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "leg",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "legR",
+   "mat": "steel",
+   "p": [
+    1.08,
+    2,
+    0
+   ],
+   "s": [
+    1,
+    4,
+    1
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "leg",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pelvis",
+   "mat": "steel",
+   "p": [
+    0,
+    4.3,
+    0
+   ],
+   "s": [
+    2.8800000000000003,
+    0.6,
+    1.4
+   ],
+   "sup": [
+    "legL",
+    "legR"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "belly",
+   "mat": "brick",
+   "p": [
+    0,
+    5.6,
+    0
+   ],
+   "s": [
+    2.52,
+    2,
+    1.8
+   ],
+   "sup": [
+    "pelvis"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "chest",
+   "mat": "brick",
+   "p": [
+    0,
+    7.6,
+    0
+   ],
+   "s": [
+    3.06,
+    2,
+    2
+   ],
+   "sup": [
+    "belly"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "neck",
+   "mat": "steel",
+   "p": [
+    0,
+    8.9,
+    0
+   ],
+   "s": [
+    1,
+    0.6,
+    1
+   ],
+   "sup": [
+    "chest"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "head",
+   "mat": "wood",
+   "p": [
+    0,
+    9.8,
+    0
+   ],
+   "s": [
+    1.8,
+    1.2,
+    1.6
+   ],
+   "sup": [
+    "neck"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "E5484D",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "shL",
+   "mat": "steel",
+   "p": [
+    -1.9800000000000002,
+    8.2,
+    0
+   ],
+   "s": [
+    0.9,
+    0.9,
+    0.9
+   ],
+   "sup": [
+    "chest"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "shR",
+   "mat": "steel",
+   "p": [
+    1.9800000000000002,
+    8.2,
+    0
+   ],
+   "s": [
+    0.9,
+    0.9,
+    0.9
+   ],
+   "sup": [
+    "chest"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "armL",
+   "mat": "brick",
+   "p": [
+    -2.16,
+    6.5,
+    0
+   ],
+   "s": [
+    0.8,
+    2.6,
+    0.8
+   ],
+   "sup": [
+    "shL"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "armR",
+   "mat": "brick",
+   "p": [
+    2.16,
+    6.5,
+    0
+   ],
+   "s": [
+    0.8,
+    2.6,
+    0.8
+   ],
+   "sup": [
+    "shR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

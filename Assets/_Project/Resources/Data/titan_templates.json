@@ -1,0 +1,125 @@
+{
+ "archetype": "emberforge_titan",
+ "name": "Emberforge Titan",
+ "resetUtcHour": 0,
+ "rankedGraceMinutes": 15,
+ "maxDamageScore": 10000,
+ "perShotLeftBonus": 500,
+ "baseShots": 6,
+ "arenas": [
+  {
+   "id": "forge_floor",
+   "name": "Forge Floor",
+   "layout": "titan_forge_floor"
+  },
+  {
+   "id": "caldera_rim",
+   "name": "Caldera Rim",
+   "layout": "titan_caldera_rim"
+  },
+  {
+   "id": "slag_foundry",
+   "name": "Slag Foundry",
+   "layout": "titan_slag_foundry"
+  },
+  {
+   "id": "ash_bridge",
+   "name": "Ash Bridge",
+   "layout": "titan_ash_bridge"
+  }
+ ],
+ "rules": [
+  {
+   "id": "heated_steel",
+   "text": "Steel is heated: joints take 3x damage",
+   "mod": {
+    "steelJointMult": 3,
+    "woodHpMult": 0,
+    "brickHpMult": 0,
+    "steelHpMult": 0,
+    "gravityScale": 0,
+    "shotDelta": 0
+   }
+  },
+  {
+   "id": "brittle_brick",
+   "text": "Cracked kilns: brick HP x0.6",
+   "mod": {
+    "steelJointMult": 0,
+    "woodHpMult": 0,
+    "brickHpMult": 0.6,
+    "steelHpMult": 0,
+    "gravityScale": 0,
+    "shotDelta": 0
+   }
+  },
+  {
+   "id": "petrified_wood",
+   "text": "Petrified wood: wood HP x2",
+   "mod": {
+    "steelJointMult": 0,
+    "woodHpMult": 2,
+    "brickHpMult": 0,
+    "steelHpMult": 0,
+    "gravityScale": 0,
+    "shotDelta": 0
+   }
+  },
+  {
+   "id": "low_gravity",
+   "text": "Thermal updraft: gravity x0.6",
+   "mod": {
+    "steelJointMult": 0,
+    "woodHpMult": 0,
+    "brickHpMult": 0,
+    "steelHpMult": 0,
+    "gravityScale": 0.6,
+    "shotDelta": 0
+   }
+  },
+  {
+   "id": "tight_budget",
+   "text": "Ration the cannon: -1 shot",
+   "mod": {
+    "steelJointMult": 0,
+    "woodHpMult": 0,
+    "brickHpMult": 0,
+    "steelHpMult": 0,
+    "gravityScale": 0,
+    "shotDelta": -1
+   }
+  },
+  {
+   "id": "tempered_steel",
+   "text": "Tempered plates: steel HP x1.5, joints 2.5x",
+   "mod": {
+    "steelJointMult": 2.5,
+    "woodHpMult": 0,
+    "brickHpMult": 0,
+    "steelHpMult": 1.5,
+    "gravityScale": 0,
+    "shotDelta": 0
+   }
+  }
+ ],
+ "mastery": {
+  "type": "SHOTS_LEFT_AT_LEAST",
+  "value": 2,
+  "role": "",
+  "text": "Topple with 2 shots left"
+ },
+ "completionRewards": [
+  {
+   "type": "coins",
+   "amount": 150,
+   "id": ""
+  },
+  {
+   "type": "shard",
+   "amount": 1,
+   "id": ""
+  }
+ ],
+ "topPercent": 0.1,
+ "topPercentBonusShards": 3
+}

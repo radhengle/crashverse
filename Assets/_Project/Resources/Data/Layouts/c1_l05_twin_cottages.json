@@ -1,0 +1,184 @@
+{
+ "id": "c1_l05_twin_cottages",
+ "blocks": [
+  {
+   "id": "pierL",
+   "mat": "brick",
+   "p": [
+    -3.2,
+    1.5,
+    0
+   ],
+   "s": [
+    1.2,
+    3,
+    1.6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pierR",
+   "mat": "brick",
+   "p": [
+    3.2,
+    1.5,
+    0
+   ],
+   "s": [
+    1.2,
+    3,
+    1.6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "deck",
+   "mat": "wood",
+   "p": [
+    0,
+    3.15,
+    0
+   ],
+   "s": [
+    7.6,
+    0.3,
+    1.8
+   ],
+   "sup": [
+    "pierL",
+    "pierR"
+   ],
+   "joint": false,
+   "role": "bridge",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "cotA",
+   "mat": "brick",
+   "p": [
+    -1.7,
+    4.1,
+    0
+   ],
+   "s": [
+    1.8,
+    1.6,
+    1.5
+   ],
+   "sup": [
+    "deck"
+   ],
+   "joint": false,
+   "role": "target",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roofA",
+   "mat": "wood",
+   "p": [
+    -1.7,
+    5.1,
+    0
+   ],
+   "s": [
+    2.0,
+    0.4,
+    1.7
+   ],
+   "sup": [
+    "cotA"
+   ],
+   "joint": false,
+   "role": "target",
+   "nonObj": false,
+   "color": "4D7BC4",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "cotB",
+   "mat": "brick",
+   "p": [
+    1.7,
+    4.1,
+    0
+   ],
+   "s": [
+    1.8,
+    1.6,
+    1.5
+   ],
+   "sup": [
+    "deck"
+   ],
+   "joint": false,
+   "role": "target",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roofB",
+   "mat": "wood",
+   "p": [
+    1.7,
+    5.1,
+    0
+   ],
+   "s": [
+    2.0,
+    0.4,
+    1.7
+   ],
+   "sup": [
+    "cotB"
+   ],
+   "joint": false,
+   "role": "target",
+   "nonObj": false,
+   "color": "4D7BC4",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

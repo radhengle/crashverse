@@ -1,0 +1,339 @@
+{
+ "id": "c1_l10_tidewarden",
+ "blocks": [
+  {
+   "id": "stack",
+   "mat": "brick",
+   "p": [
+    0,
+    1.5,
+    0
+   ],
+   "s": [
+    5,
+    3,
+    4
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "",
+   "nonObj": true,
+   "color": "5A2A20",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "hips",
+   "mat": "brick",
+   "p": [
+    0,
+    3.6,
+    0
+   ],
+   "s": [
+    3,
+    1.2,
+    2.2
+   ],
+   "sup": [
+    "stack"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "torso",
+   "mat": "brick",
+   "p": [
+    0,
+    5.6,
+    0
+   ],
+   "s": [
+    3.4,
+    2.8,
+    2.4
+   ],
+   "sup": [
+    "hips"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "shoulderL",
+   "mat": "steel",
+   "p": [
+    -2.2,
+    6.6,
+    0
+   ],
+   "s": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "sup": [
+    "torso"
+   ],
+   "joint": true,
+   "role": "shoulder",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "shoulderR",
+   "mat": "steel",
+   "p": [
+    2.2,
+    6.6,
+    0
+   ],
+   "s": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "sup": [
+    "torso"
+   ],
+   "joint": true,
+   "role": "shoulder",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "armL",
+   "mat": "brick",
+   "p": [
+    -2.4,
+    4.9,
+    0
+   ],
+   "s": [
+    0.8,
+    2.4,
+    0.8
+   ],
+   "sup": [
+    "shoulderL"
+   ],
+   "joint": false,
+   "role": "arm",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "armR",
+   "mat": "brick",
+   "p": [
+    2.4,
+    4.9,
+    0
+   ],
+   "s": [
+    0.8,
+    2.4,
+    0.8
+   ],
+   "sup": [
+    "shoulderR"
+   ],
+   "joint": false,
+   "role": "arm",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "armorTop",
+   "mat": "wood",
+   "p": [
+    0,
+    6.3,
+    1.35
+   ],
+   "s": [
+    3.2,
+    0.9,
+    0.3
+   ],
+   "sup": [
+    "torso"
+   ],
+   "joint": false,
+   "role": "armor",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "armorBot",
+   "mat": "wood",
+   "p": [
+    0,
+    5.1,
+    1.35
+   ],
+   "s": [
+    3.2,
+    0.9,
+    0.3
+   ],
+   "sup": [
+    "torso"
+   ],
+   "joint": false,
+   "role": "armor",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "core",
+   "mat": "steel",
+   "p": [
+    0,
+    5.7,
+    1.0
+   ],
+   "s": [
+    1.0,
+    1.0,
+    0.4
+   ],
+   "sup": [
+    "torso"
+   ],
+   "joint": false,
+   "role": "core",
+   "nonObj": false,
+   "color": "FFB347",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "shutter",
+   "mat": "brick",
+   "p": [
+    0,
+    5.7,
+    1.75
+   ],
+   "s": [
+    1.4,
+    1.4,
+    0.25
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "shutter",
+   "nonObj": true,
+   "color": "",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "head",
+   "mat": "wood",
+   "p": [
+    0,
+    7.6,
+    0
+   ],
+   "s": [
+    1.6,
+    1.2,
+    1.6
+   ],
+   "sup": [
+    "torso"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "lamp",
+   "mat": "wood",
+   "p": [
+    0,
+    8.5,
+    0
+   ],
+   "s": [
+    1.0,
+    0.6,
+    1.0
+   ],
+   "sup": [
+    "head"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "E8B04B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}
