@@ -25,6 +25,8 @@ namespace Crashverse.Sim
 
         /// <summary>Called for each input as it is applied, before physics for that tick.</summary>
         public event Action<int, InputEvent> InputApplied;
+        /// <summary>Called first each tick: apply contact results gathered during the previous step (stable order).</summary>
+        public event Action<int> ContactsFlush;
         /// <summary>Called once per tick after inputs, before Physics.Simulate.</summary>
         public event Action<int> Ticked;
         /// <summary>Called once per tick after Physics.Simulate (collision callbacks for this tick have run). Used to flush
@@ -79,6 +81,7 @@ namespace Crashverse.Sim
         {
             if (!Running) return;
             int t = Tick;
+            ContactsFlush?.Invoke(t);
             _inputs.Drain(t, (tick, e) => InputApplied?.Invoke(tick, e));
             Ticked?.Invoke(t);
             if (Ranked) Physics.Simulate(Step);

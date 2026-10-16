@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Crashverse.Data;
+using Crashverse.Sim;
 using UnityEngine;
 
 namespace Crashverse.Destruction
@@ -165,9 +166,9 @@ namespace Crashverse.Destruction
         {
             get
             {
-                if (_supports.Count == 0) return false; // grounded
-                foreach (var s in _supports) if (s != null && !s._broken && !s._collapsed && !s._outOfBounds) return false;
-                return true;
+                int remaining = 0;
+                foreach (var s in _supports) if (s != null && !s._broken && !s._collapsed && !s._outOfBounds) remaining++;
+                return SupportRule.ShouldCollapse(_supports.Count, remaining); // ALL supports gone; none at all = grounded
             }
         }
 
@@ -177,15 +178,21 @@ namespace Crashverse.Destruction
             if (SupportLost) ForceCollapse();
         }
 
-        /// <summary>Falling pieces damage what they hit (chain collapses, DP L4).</summary>
+        /// <summary>
+        /// Falling pieces / debris damage what they hit (chain collapses, DP L4; Level Rulings v1 §7). Only OnCollisionEnter
+        /// (an impact) is considered; resting contact (Stay) never damages. Damage is queued and applied at the start of the
+        /// next sim tick in stable order (DebrisDamageQueue), not in PhysX callback order.
+        /// </summary>
         void OnCollisionEnter(Collision c)
         {
             if (_broken || c.rigidbody == null || c.rigidbody.isKinematic) return;
-            float v = c.relativeVelocity.magnitude;
-            if (v < 4f) return;
-            float dmg = Mathf.Min(60f, (v - 4f) * c.rigidbody.mass * 2.5f);
             if (c.gameObject.GetComponent<Crashverse.Weapons.Projectile>() != null) return; // projectile applies its own damage
-            ApplyDamage(dmg, false, splash: true);
+            int speed = DebrisDamage.ToMmPerS(c.relativeVelocity.magnitude);
+            int mult = material != null ? material.debrisDamageTakenPermille : DebrisMaterialMult.Neutral; // ruling #7a: TARGET (this piece) material
+            int milli = DebrisDamage.ComputeMilliHp(speed, DebrisDamage.ToGrams(c.rigidbody.mass), mult, false, DebrisDamageQueue.Config);
+            if (milli <= 0) return;
+            var other = c.gameObject.GetComponent<DestructibleBlock>();
+            DebrisDamageQueue.Enqueue(this, other != null ? other.blockId : "~" + c.gameObject.name, milli);
         }
 
         void OnJointBreak(float breakForce)

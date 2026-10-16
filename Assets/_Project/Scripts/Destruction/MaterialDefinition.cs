@@ -31,6 +31,8 @@ namespace Crashverse.Destruction
         [Header("Debris")]
         public int maxDebrisChunks = 6;
         public float debrisLifetimeSeconds = 2.5f;
+        /// <summary>Ruling #7a: multiplier on debris damage this material TAKES, in permille (1000 = 1.0). Wood 1.0, brick 1.1, steel 0.8.</summary>
+        public int debrisDamageTakenPermille = 1000;
 
         [Header("Greybox colour (Art arena_brief)")]
         public Color baseColor = new Color(0.890f, 0.655f, 0.400f); // wood #E3A766 (Art v2)
@@ -51,6 +53,7 @@ namespace Crashverse.Destruction
                     def.jointBreakForce = 450f;
                     def.jointBreakTorque = 450f;
                     def.maxDebrisChunks = 6;
+                    def.debrisDamageTakenPermille = 1000;
                     def.baseColor = Hex(Crashverse.Core.VisualConfig.Current.woodHex);
                     def.darkColor = Hex("A8743F");
                     def.breakFxColor = Hex("E3B07A");
@@ -63,6 +66,7 @@ namespace Crashverse.Destruction
                     def.jointBreakForce = 900f;
                     def.jointBreakTorque = 900f;
                     def.maxDebrisChunks = 4;
+                    def.debrisDamageTakenPermille = 1100;
                     def.baseColor = Hex(Crashverse.Core.VisualConfig.Current.brickHex);
                     def.darkColor = Hex("7A3326");
                     def.breakFxColor = Hex("D9A37E");
@@ -74,6 +78,7 @@ namespace Crashverse.Destruction
                     def.jointDamageMultiplier = 2.0f; // Contract §3
                     def.jointBreakForce = 2200f;
                     def.jointBreakTorque = 2200f;
+                    def.debrisDamageTakenPermille = 800;
                     def.maxDebrisChunks = 3;
                     def.baseColor = Hex(Crashverse.Core.VisualConfig.Current.steelHex);
                     def.darkColor = Hex("6B7684");
