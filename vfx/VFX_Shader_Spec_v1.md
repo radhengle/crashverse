@@ -70,7 +70,7 @@ Debris fade = scale to 0 (no alpha) per 03. Dust = 1 flipbook quad on Low.
 
 ## 4b · Texture & mesh authoring conventions (agreed with 3D Modeler)
 - **Per asset:** 1024² albedo (sRGB), normal (**OpenGL Y+**, linear, Unity "Normal map" import), ORM (linear: **R occlusion, G roughness, B metallic**). Low tier gets the same files with Max Size 512 via platform override.
-- **Texel density:** 512 px/m for structures and props (1024 for 2 m pieces), 1024 px/m for the Wrecker hero; fragments share their parent's texture.
+- **Texel density (3D Modeler, final numbers in the models README on branch `3d-modeler/models-v3`):** Wrecker_v2 ≈256 px/m on a 1024–2048 texture set; building kit 128–256 px/m on tiling wood, brick and steel sheets; island = unique 1024 macro map + tiling detail. Fragments share their parent's texture.
 - **Material values:** steel metallic 1, roughness 0.3; wood/brick metallic 0, roughness 0.55–0.75; gold trim metallic 1, roughness 0.25. Albedo stays bright (sRGB 50–240), no baked lighting in albedo except AO in ORM.R.
 - **Vertex colour:** R = damage mask (cracks/darken only where R>0), A = flex weight (hit wobble). G/B free.
 - **UVs:** UV0 unique, non-overlapping; UV2 lightmap UVs on static pieces (Unity "Generate Lightmap UVs" allowed).
