@@ -16,6 +16,7 @@ Shader "Crashverse/GlossyPBR"
         [NoScaleOffset] _ORMMap ("ORM (R AO, G Rough, B Metal)", 2D) = "white" {}
         _Roughness ("Roughness x", Range(0,1)) = 1
         _Metallic ("Metallic x", Range(0,1)) = 1
+        _MetalReflectFloor ("Metal Reflect Floor (never-dark steel, Art)", Color) = (0.604,0.639,0.686,1)
         _OcclusionStrength ("AO Strength", Range(0,1)) = 1
         [HDR] _EmissionColor ("Emission (HDR, Core ~2.5)", Color) = (0,0,0,1)
         [NoScaleOffset] _EmissionMap ("Emission Mask", 2D) = "white" {}
@@ -49,7 +50,7 @@ Shader "Crashverse/GlossyPBR"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
     CBUFFER_START(UnityPerMaterial)
         float4 _BaseMap_ST;
-        half4 _BaseColor, _EmissionColor, _ShadeColor, _RimColor, _RimDirWS, _CrackColor, _HitFlashColor, _InnerColor;
+        half4 _BaseColor, _EmissionColor, _ShadeColor, _RimColor, _RimDirWS, _CrackColor, _HitFlashColor, _InnerColor, _MetalReflectFloor;
         half _BumpScale, _Roughness, _Metallic, _OcclusionStrength;
         half _Terminator, _TerminatorOffset, _ShadeStrength, _RimIntensity, _RimPower;
         half _DamageStep, _DarkenPerStep, _HitFlash, _FlexAmount, _InnerFace, _InnerRoughness, _LowSpec, _LowRoughness;
@@ -161,7 +162,12 @@ Shader "Crashverse/GlossyPBR"
                 MixRealtimeAndBakedGI(L, n, bakedGI);
 
                 // Indirect: SH/lightmap diffuse + GlossyEnvironmentReflection (box projection / blending via keywords)
-                half3 gi = GlobalIllumination(brdf, bakedGI, ao, i.positionWS, n, v);
+                // Expanded URP GlobalIllumination so metals get a reflection floor (Art: steel never renders dark).
+                half3 reflWS = reflect(-v, n);
+                half3 envSpec = GlossyEnvironmentReflection(reflWS, i.positionWS, brdf.perceptualRoughness, ao);
+                envSpec = lerp(envSpec, max(envSpec, _MetalReflectFloor.rgb * ao), metal);
+                half fresnelTerm = Pow4(1.0h - saturate(dot(n, v)));
+                half3 gi = EnvironmentBRDF(brdf, bakedGI * ao, envSpec, fresnelTerm);
 
                 // Direct: GGX spec from URP + stylised terminator on the diffuse/irradiance term
                 half ndlRaw = dot(n, L.direction);
@@ -309,7 +315,7 @@ Shader "Crashverse/GlossyPBR"
                 half3 h = normalize(L.direction + v);
                 half gloss = 1.0h - _LowRoughness; // Low tier: scalar roughness (no ORM fetch)
                 half spec = step(0.5h, pow(saturate(dot(n, h)), exp2(gloss * 8.0h + 2.0h))) * band * _LowSpec * (1.0h - _InnerFace);
-                half3 col = albedo.rgb * (L.color * lerp(shade, 1.0h, band) + i.sh * 0.6h) + spec + Rim(n, v) * _RimColor.rgb + _EmissionColor.rgb;
+                half3 col = albedo.rgb * (L.color * lerp(shade, 1.0h, band) + lerp(i.sh * 0.6h, max(i.sh * 0.6h, _MetalReflectFloor.rgb), _Metallic)) + spec + Rim(n, v) * _RimColor.rgb + _EmissionColor.rgb;
                 col = ApplyDamage(col, i.uv, i.color.r);
                 col = ApplyFlash(col);
                 return half4(MixFog(col, i.fog), 1);

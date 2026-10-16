@@ -48,6 +48,8 @@ Reference: `/workspace/art/m1b/arena_brief_v2.md` (key #FFF2D6 1.4 at (50°, -35
 ### Reflection probes per arena
 1 baked box-projected probe covering the play diorama (bounds = island top + 6 m up), resolution 256 (High) / 128 (Mid), HDR, box projection on; 1 lower-priority probe for the sky/satellite islands at 64. Re-bake when arena layout changes. Wrecker gets its own anchor override to the arena probe. No realtime probes.
 
+**Rule (Art, steel metallic 1 "never renders dark"):** every arena scene ships (a) its baked probes above, baked before merge, and (b) Environment Reflections = Custom `Assets/_Project/VFX/Lighting/T_SkyFallback_Cube.png`, a bright gradient-sky cubemap (#8CC8FF / #DCEFFF / #6FAE5A, generated, import notes in that folder's README). It is never the black default skybox. As a backstop, CrashverseGlossyPBR applies `_MetalReflectFloor` (default #9AA3AF) as `max()` on the environment specular, weighted by metallic, on both High/Mid and Low. Modeler keeps steel albedo ≥ #9AA3AF without a probe.
+
 ### Post (one global Volume per tier)
 - Tonemapping **ACES**, post-exposure **0** (Modeler preview rig matches). Colour grade that keeps the bright palette: Colour Adjustments saturation +15, contrast +10 (compensates ACES desaturation), White Balance temperature +5; Lift/Gamma/Gain neutral; Shadows-Midtones-Highlights: shadows tinted slightly to #5B6FA8 (≤5%).
 - Bloom: threshold 1.0, intensity 0.4 (High; Mid same, low-quality filtering), scatter 0.6; Core emissive ≈2.5 so only Core/power-ups bloom.
