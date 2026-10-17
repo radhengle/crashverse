@@ -70,7 +70,10 @@ namespace Crashverse.Backend
     [Serializable] public class VisibilityResponse { public bool hideName; }                                  // POST /profile/visibility
     public static class ConsentStatus { public const string None = "none", Pending = "pending", Granted = "granted", Denied = "denied", Withdrawn = "withdrawn"; }
 
-    public static class AgeBands { public const string Minor = "13to17", Adult = "adult"; }
+    /// <summary>L3: server age bands (PM decision). under13 is never issued an account; 13to15 and 16to17 are minors (server-enforced limits
+    /// until parental consent where the market requires it); consent ages per market are server config (needs legal review).</summary>
+    public static class AgeBands { public const string Under13 = "under13", Teen13to15 = "13to15", Teen16to17 = "16to17", Adult = "adult";
+        public static bool IsMinor(string band) => band == Teen13to15 || band == Teen16to17; }
 
     /// <summary>
     /// SERVER-ONLY. Purchases / premium pass entitlements are granted by the server after store receipt validation.

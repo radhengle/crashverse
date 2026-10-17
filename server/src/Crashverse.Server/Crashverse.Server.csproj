@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Crashverse.Server</RootNamespace>
+    <NoWarn>$(NoWarn);CS0649;CS1998</NoWarn>
+  </PropertyGroup>
+  <!-- Shared rules + wire models: compiled from the Unity client sources (no UnityEngine refs).
+       When Developer's Crashverse.Rules asmdef lands, point these links at that folder instead. -->
+  <PropertyGroup><ClientScripts>$(MSBuildThisFileDirectory)../../../Assets/_Project/Scripts/</ClientScripts></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(ClientScripts)Data/ContentModels.cs" Link="Shared/ContentModels.cs" />
+    <Compile Include="$(ClientScripts)Data/Clock.cs" Link="Shared/Clock.cs" />
+    <!-- PR #5 moves this to Rules/; link whichever exists so the server builds before and after that merge. -->
+    <Compile Include="$(ClientScripts)Rules/WinRule.cs" Link="Shared/WinRule.cs" Condition="Exists('$(ClientScripts)Rules/WinRule.cs')" />
+    <Compile Include="$(ClientScripts)Meta/WinRule.cs" Link="Shared/WinRule.cs" Condition="!Exists('$(ClientScripts)Rules/WinRule.cs') And Exists('$(ClientScripts)Meta/WinRule.cs')" />
+    <!-- PR #5 moves this to Rules/; link whichever exists so the server builds before and after that merge. -->
+    <Compile Include="$(ClientScripts)Rules/StarRules.cs" Link="Shared/StarRules.cs" Condition="Exists('$(ClientScripts)Rules/StarRules.cs')" />
+    <Compile Include="$(ClientScripts)Meta/StarRules.cs" Link="Shared/StarRules.cs" Condition="!Exists('$(ClientScripts)Rules/StarRules.cs') And Exists('$(ClientScripts)Meta/StarRules.cs')" />
+    <Compile Include="$(ClientScripts)Meta/ComboTracker.cs" Link="Shared/ComboTracker.cs" />
+    <Compile Include="$(ClientScripts)Meta/StoreValidator.cs" Link="Shared/StoreValidator.cs" />
+    <Compile Include="$(ClientScripts)Backend/BackendModels.cs" Link="Shared/BackendModels.cs" />
+    <Compile Include="$(ClientScripts)Backend/ServerContracts.cs" Link="Shared/ServerContracts.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Cloud.Firestore" Version="3.10.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.1.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2" />
+  </ItemGroup>
+</Project>
