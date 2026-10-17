@@ -1,0 +1,38 @@
+{
+ "source": "design/Economy_v1_Earned_Gems.md (server-tunable; gems are earned only in v1)",
+ "gemSources": {
+  "dailyDay7": 10,
+  "titanCompletion": 3,
+  "titanTop10Bonus": 5,
+  "eventAllCleared": 15,
+  "eventAll3Star": 10,
+  "guardianFirstClear": 25,
+  "seasonEvery5thTier": 10,
+  "achievementMin": 5,
+  "achievementMax": 25
+ },
+ "chapterStarMilestones": [
+  {
+   "stars": 10,
+   "gems": 5
+  },
+  {
+   "stars": 20,
+   "gems": 10
+  },
+  {
+   "stars": 30,
+   "gems": 20
+  }
+ ],
+ "gemSinks": {
+  "epicSkin": 300,
+  "trailOrVfxSkin": 120,
+  "frameOrTitle": 60,
+  "seasonPremiumTrack": 450
+ },
+ "coinCosmeticRange": [
+  500,
+  3000
+ ]
+}

@@ -67,7 +67,7 @@ Board style: painterly, high-detail 3D renders, dense props, strong rim light, g
 | C-02 | 8 power-ups (Mega Bomb, Multi Shot, Guided Rocket, Time Freeze, Shield, Earthquake, Laser Beam, Black Hole); 4 untyped slots | 6 power-ups (Shockwave, Splitstrike, Gravity Well, Chain Reactor, Phase Piercer, Time Fracture); 3 typed slots Core/Module/Booster | DP §2 |
 | C-03 | "Steps Left" | "Shots" in UI and data | GA SG-02 |
 | C-04 | Seasons: "New Theme Every Week"; list Sunny Shores / Frozen Peaks / Neon City / Jurassic World | Weekly event inside a 4-week season (Magnetic Mayhem, Seismic Surge, Gravity Games, Sonic Rupture); regions Sunnyville / Gearstorm / Neon / Crystal / Titan's Reach | DP §3, master §5 |
-| C-05 | Season name "Jurassic World" | — | **Legal flag:** a third-party film trademark regardless of board ownership; needs PM/legal review |
+| C-05 | Season name "Jurassic World" (renamed to **Primeval Peaks**, design/Art_v2_Decisions_v1.md) | — | **Legal flag:** a third-party film trademark regardless of board ownership; needs PM/legal review |
 | C-06 | Login with Google, Facebook, Instagram, X, Email (no guest) | Guest play required; Instagram is a separate feasibility item; official provider assets | master §11, DP |
 | C-07 | Every 10th level = "Hard Level" | L10 = Guardian boss (Tidewarden) with phases | DP §1 |
 | C-08 | Daily boss shows a Boss HP bar, "Steps Left 8" | Daily Titan: score = damage; 1 ranked + practice; rules readable without hidden HP math (Tidewarden) | DP §1, §3 |

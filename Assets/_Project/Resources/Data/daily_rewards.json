@@ -33,7 +33,7 @@
   {
    "type": "chest",
    "amount": 1,
-   "id": "coins:300;shard:3"
+   "id": "coins:300;shard:3;gems:10"
   }
  ]
 }

@@ -358,6 +358,53 @@ static class Tests
                 new StoreItem { sku = "gr", name = "Gems?", type = Db.Store.allowedTypes[0], cosmetic = true, priceType = "iap", price = 99, grants = "extra_charges:3" } } };
             T.Eq(3, StoreValidator.Validate(bad, out var ok2).Count, "all 3 rejected"); T.Eq(0, ok2.Count, "none accepted");
         });
+        T.Add("ECON_v1_earned_gems_data", () =>
+        {
+            var e = Db.Economy; var g = e.gemSources;
+            T.True(g.dailyDay7 == 10 && g.titanCompletion == 3 && g.titanTop10Bonus == 5 && g.eventAllCleared == 15 && g.eventAll3Star == 10 && g.guardianFirstClear == 25 && g.seasonEvery5thTier == 10, "gem sources from data");
+            T.Eq(3, e.chapterStarMilestones.Length, "10/20/30★ milestones"); T.Eq(20, e.chapterStarMilestones[2].gems);
+            var store = new System.Collections.Generic.Dictionary<string, StoreItem>(); foreach (var i in Db.Store.items) store[i.sku] = i;
+            T.True(store["s1_premium_track"].priceType == "gems" && store["s1_premium_track"].price == e.gemSinks.seasonPremiumTrack && e.gemSinks.seasonPremiumTrack == 450, "premium track 450 gems");
+            T.True(store["skin_brass_baron"].price == e.gemSinks.epicSkin && store["trail_confetti"].price == e.gemSinks.trailOrVfxSkin && store["frame_tidebreaker"].price == e.gemSinks.frameOrTitle, "sink prices match economy data");
+            StoreValidator.Validate(Db.Store, out var ok);
+            T.True(!ok.Exists(i => i.priceType == "real" || i.priceType == "iap"), "nothing sold for real money in v1");
+            T.True(ok.TrueForAll(i => i.cosmetic), "sinks are cosmetic only");
+            T.True(Db.DailyRewards.days[6].id.Contains("gems:10"), "Day 7 chest +10 gems");
+            foreach (var t in Db.Season.tiers) if (t.tier % 5 == 0) T.True(t.free.id != null && t.free.id.Contains("gems:10"), "tier " + t.tier + " +10 gems");
+        });
+        T.Add("ECON_gem_grants_once", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            int g0 = b.GetWallet().Result.gems;
+            Win(b, "c1_l01", 1f, 3, 0); Win(b, "c1_l01", 1f, 3, 0);
+            T.True(b.GetWallet().Result.gems >= g0, "no gem loss");
+            var src = Src("Assets/_Project/Scripts/Backend/LocalBackendService.cs");
+            T.True(src.Contains("GrantGemsOnce(\"guardian:") && src.Contains("GrantGemsOnce(\"stars:c1:") && src.Contains(":clear\", Econ.gemSources.eventAllCleared"), "guardian / milestones / event sources wired from data");
+        });
+        T.Add("ECON_gem_packs_disabled_handled", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            var ex = Catch(() => b.VerifyPurchase("gems_small", "r").Wait()); T.Eq("GEM_PACKS_DISABLED", ex?.Code, "403 GEM_PACKS_DISABLED"); T.Eq(403, ex?.Status ?? 0, "403");
+            T.True(!PurchaseErrors.Message("GEM_PACKS_DISABLED").Contains("GEM_"), "friendly copy, no raw code");
+        });
+        T.Add("RENAME_primeval_peaks", () =>
+        {
+            foreach (var f in Directory.GetFiles(Path.Combine(UnityEngine.Resources.Root, "../../../Assets"), "*", SearchOption.AllDirectories))
+            {
+                if (f.EndsWith(".meta") || f.EndsWith(".png") || f.EndsWith(".ogg") || f.EndsWith(".fbx")) continue;
+                T.True(File.ReadAllText(f).IndexOf("Jurassic", StringComparison.OrdinalIgnoreCase) < 0, "no 'Jurassic' in " + Path.GetFileName(f));
+            }
+        });
+        T.Add("store_gem_packs_flagged_off_v1", () =>
+        {
+            T.True(!Db.Store.flags.enableGemPacks, "enableGemPacks=false in v1 data");
+            StoreValidator.Validate(Db.Store, out var ok);
+            T.True(!ok.Exists(i => i.sku == "gems_small" || i.sku == "gems_large" || i.type == "currency_pack"), "Pouch (99) / Chest (499) hidden: no UI, not purchasable");
+            T.True(ok.Exists(i => i.sku == "s1_premium_track"), "cosmetic premium track still listed");
+            var on = new StoreCatalog { flags = new StoreFlags { enableGemPacks = true }, allowedTypes = Db.Store.allowedTypes, items = Db.Store.items };
+            StoreValidator.Validate(on, out var ok3); T.True(ok3.Exists(i => i.sku == "gems_small"), "flag on → listed");
+            var gen = Src("Tools/ContentGen/gen_content.py"); T.True(gen.Contains("\"enableGemPacks\": False") && gen.Contains("\"requiresFlag\": \"enableGemPacks\""), "generator keeps the flag off");
+        });
         // ── Art v2 Wrecker / UI QA ──
         T.Add("wrecker_v2_dimensions", () =>
         {
