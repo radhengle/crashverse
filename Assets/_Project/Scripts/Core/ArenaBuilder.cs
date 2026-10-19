@@ -78,6 +78,36 @@ namespace Crashverse.Core
             AddCloud(root, new Vector3(-20f, 8.5f, 19f), 1.0f);
             AddCloud(root, new Vector3(2f, 10f, 22f), 1.2f);
             AddCloud(root, new Vector3(22f, 7.8f, 18f), 0.9f);
+
+            // Warm cliff strata and dark fracture marks make the floating rock read as layered stone.
+            for (int band = 0; band < 3; band++)
+            {
+                var ledge = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                RenderMaterials.Apply(ledge); ledge.name = "CliffStrata_" + band;
+                ledge.transform.SetParent(root, false);
+                ledge.transform.position = new Vector3(0f, -2.0f - band * 2.0f, 0f);
+                ledge.transform.localScale = new Vector3(48f - band * 8f, 0.9f, 19f - band * 3f);
+                Paint(ledge.GetComponent<Renderer>(), band == 1 ? "#9A6037" : "#6B4226", 0.12f);
+                var c = ledge.GetComponent<Collider>(); if (c != null) Destroy(c);
+            }
+
+            Vector3[] fractures =
+            {
+                new Vector3(-21f, -2.0f, 0f), new Vector3(-16f, -4.0f, 1.5f),
+                new Vector3(-8f, -2.7f, 4.0f), new Vector3(7f, -3.5f, 3.0f),
+                new Vector3(15f, -2.1f, -1.5f), new Vector3(22f, -4.2f, -1.0f)
+            };
+            for (int i = 0; i < fractures.Length; i++)
+            {
+                var crack = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                RenderMaterials.Apply(crack); crack.name = "CliffFracture";
+                crack.transform.SetParent(root, false);
+                crack.transform.position = fractures[i];
+                crack.transform.rotation = Quaternion.Euler(0f, (i % 2 == 0) ? 18f : -22f, (i % 2 == 0) ? 14f : -12f);
+                crack.transform.localScale = new Vector3(1.8f + (i % 3) * 0.55f, 0.06f, 0.08f);
+                Paint(crack.GetComponent<Renderer>(), "#4A2E18", 0.05f);
+                var c = crack.GetComponent<Collider>(); if (c != null) Destroy(c);
+            }
         }
 
         static void AddSatellite(Transform root, Vector3 pos, Vector3 scale, VisualConfig vc)
