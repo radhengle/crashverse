@@ -116,8 +116,8 @@ namespace Crashverse.Core
                 RenderMaterials.Apply(frond); frond.name = "PalmFrond";
                 frond.transform.SetParent(root, false);
                 frond.transform.position = pos + Vector3.up * (height + 0.05f) +
-                    new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * 0.72f, -0.18f, Mathf.Sin(angle * Mathf.Deg2Rad) * 0.72f);
-                frond.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Sin(angle * Mathf.Deg2Rad) * 22f);
+                    new Vector3(Mathf.Cos(angle * (Mathf.PI / 180f)) * 0.72f, -0.18f, Mathf.Sin(angle * (Mathf.PI / 180f)) * 0.72f);
+                frond.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Sin(angle * (Mathf.PI / 180f)) * 22f);
                 frond.transform.localScale = new Vector3(0.95f, 0.18f, 0.34f);
                 Paint(frond.GetComponent<Renderer>(), leaf % 2 == 0 ? "#7BE36A" : "#2F7D32", 0.32f);
                 c = frond.GetComponent<Collider>(); if (c != null) Destroy(c);
