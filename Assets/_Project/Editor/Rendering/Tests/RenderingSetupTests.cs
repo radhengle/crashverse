@@ -26,7 +26,9 @@ namespace Crashverse.Rendering.Tests
         {
             var names = QualitySettings.names;
             foreach (var t in Tiers) CollectionAssert.Contains(names, t, $"Quality tier '{t}' missing");
-            var so = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/QualitySettings.asset")[0]);
+            var settings = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/QualitySettings.asset");
+            Assert.IsNotEmpty(settings, "QualitySettings.asset must exist in the project.");
+            var so = new SerializedObject(settings[0]);
             var levels = so.FindProperty("m_QualitySettings");
             var bad = new List<string>();
             for (int i = 0; i < levels.arraySize; i++)
@@ -41,14 +43,19 @@ namespace Crashverse.Rendering.Tests
         [Test]
         public void RequiredShaders_ExistAndAreAlwaysIncluded()
         {
-            var included = Editor.RequiredShaders.AlwaysIncluded();
+            // Synchronize before asserting. A fresh CI checkout has no editor menu interaction;
+            // the build preprocessor performs the same operation for player builds.
+            var missing = Crashverse.Rendering.Editor.RequiredShaders.Ensure();
+            Assert.IsEmpty(missing, "Required shaders could not be resolved: " + string.Join(", ", missing));
+
+            var included = Crashverse.Rendering.Editor.RequiredShaders.AlwaysIncluded();
             var problems = new List<string>();
-            foreach (var n in Editor.RequiredShaders.Names)
+            foreach (var n in Crashverse.Rendering.Editor.RequiredShaders.Names)
             {
                 var s = Shader.Find(n);
                 if (s == null) problems.Add(n + " (not found)");
                 else if (!s.isSupported) problems.Add(n + " (not supported)");
-                else if (!included.Contains(s)) problems.Add(n + " (not in Always Included; run Crashverse/Rendering/Sync Always-Included Shaders)");
+                else if (!included.Contains(s)) problems.Add(n + " (not in Always Included after sync)");
             }
             Assert.IsEmpty(problems, string.Join("\n", problems));
         }
