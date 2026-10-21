@@ -23,6 +23,12 @@ namespace Crashverse.EditorTools
             // QA: Play needs 64-bit. IL2CPP + ARMv7|ARM64 in code too, so the build never depends on ProjectSettings alone.
             PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64;
+            // APK-05: portrait only, no autorotation.
+            PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
+            PlayerSettings.allowedAutorotateToPortrait = false; PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
+            PlayerSettings.allowedAutorotateToLandscapeLeft = false; PlayerSettings.allowedAutorotateToLandscapeRight = false;
+            // APK-03: release = non-development (non-debuggable); dev keeps Development as before.
+            EditorUserBuildSettings.development = !release;
             var opts = new BuildPlayerOptions
             {
                 scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray(),
