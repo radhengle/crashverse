@@ -43,6 +43,9 @@ jobs:
       - name: Dev-only symbols must be guarded (fails release if LocalBackendService/test clock/QA tools leak)
         run: python3 Tools/ci/check_release_guards.py
 
+      - name: Release guard self-tests
+        run: python3 Tools/ci/test_check_release_guards.py
+
       - name: Compile check (release defines, no CRASHVERSE_DEV)
         run: dotnet build Tools/CompileCheck
 
@@ -113,6 +116,12 @@ jobs:
           for lib in libil2cpp.so libunity.so; do
             grep -q "lib/arm64-v8a/$lib" native_libs.txt || { echo "::error::$f is missing lib/arm64-v8a/$lib"; exit 1; }
           done
+
+      - name: Release guard on built output (no dev aim hook symbols in IL2CPP metadata)
+        if: env.CRASHVERSE_BUILD_PROFILE == 'release'
+        run: |
+          set -e
+          for f in build/Android/*.apk; do python3 Tools/ci/check_release_guards.py --built "$f"; done
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
