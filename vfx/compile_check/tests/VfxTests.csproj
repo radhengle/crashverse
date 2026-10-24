@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Runs the Unity EditMode tests in Assets/_Project/Scripts/VFX/Tests outside Unity (engine-free Crashverse.VFX.Core only). -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework><ImplicitUsings>disable</ImplicitUsings><Nullable>disable</Nullable>
+    <LangVersion>9</LangVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems><OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../../../Assets/_Project/Scripts/VFX/Core/**/*.cs" />
+    <Compile Include="../../../Assets/_Project/Scripts/VFX/Tests/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnitLite" Version="3.14.0" />
+  </ItemGroup>
+</Project>

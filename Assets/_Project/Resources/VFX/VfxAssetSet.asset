@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf4b472dba2d2e8693fde0623074a045, type: 3}
+  m_Name: VfxAssetSet
+  m_EditorClassIdentifier: 
+  assets:
+    particleShader: {fileID: 4800000, guid: 98a06475f0699f09417aac723e04b574, type: 3}
+    puffFlipbook: {fileID: 2800000, guid: 76167a033c1e4a5116626d3e87b35ada, type: 3}
+    sparkStreak: {fileID: 2800000, guid: ce09766ab04a59377171d7a211b7d82d, type: 3}
+    ring: {fileID: 2800000, guid: 438034efee88ef270cbee1185ff1d699, type: 3}
+    debrisAtlas: {fileID: 2800000, guid: 451e09ab45f07ea68bddef55c1d8cbaa, type: 3}
+    muzzleFlash: {fileID: 2800000, guid: 7d0dc1b1963017f7d52e524c3e59a2a0, type: 3}
+  crackMask: {fileID: 2800000, guid: db611e27fb34a5ca3d793e872bc04d6a, type: 3}
