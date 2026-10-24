@@ -4,7 +4,8 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Crashverse.Backend"
+        "Crashverse.Backend",
+        "Crashverse.Rules"
     ],
     "includePlatforms": [
         "Editor"
