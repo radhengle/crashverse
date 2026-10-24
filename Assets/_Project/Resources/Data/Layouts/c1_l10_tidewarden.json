@@ -10,15 +10,15 @@
     0
    ],
    "s": [
-    5,
+    4,
     3,
-    4
+    5
    ],
    "sup": [],
    "joint": false,
-   "role": "",
+   "role": "island",
    "nonObj": true,
-   "color": "5A2A20",
+   "color": "8A8A8A",
    "explosive": false,
    "indestructible": true,
    "spinAxis": [],
@@ -34,9 +34,9 @@
     0
    ],
    "s": [
-    3,
+    2.2,
     1.2,
-    2.2
+    3
    ],
    "sup": [
     "stack"
@@ -60,9 +60,9 @@
     0
    ],
    "s": [
-    3.4,
+    2.4,
     2.8,
-    2.4
+    3.4
    ],
    "sup": [
     "hips"
@@ -81,14 +81,14 @@
    "id": "shoulderL",
    "mat": "steel",
    "p": [
-    -2.2,
+    0,
     6.6,
-    0
+    -2.2
    ],
    "s": [
-    1.0,
-    1.0,
-    1.0
+    1,
+    1,
+    1
    ],
    "sup": [
     "torso"
@@ -107,14 +107,14 @@
    "id": "shoulderR",
    "mat": "steel",
    "p": [
-    2.2,
+    0,
     6.6,
-    0
+    2.2
    ],
    "s": [
-    1.0,
-    1.0,
-    1.0
+    1,
+    1,
+    1
    ],
    "sup": [
     "torso"
@@ -133,9 +133,9 @@
    "id": "armL",
    "mat": "brick",
    "p": [
-    -2.4,
+    0,
     4.9,
-    0
+    -2.4
    ],
    "s": [
     0.8,
@@ -147,7 +147,7 @@
    ],
    "joint": false,
    "role": "arm",
-   "nonObj": false,
+   "nonObj": true,
    "color": "",
    "explosive": false,
    "indestructible": false,
@@ -159,9 +159,9 @@
    "id": "armR",
    "mat": "brick",
    "p": [
-    2.4,
+    0,
     4.9,
-    0
+    2.4
    ],
    "s": [
     0.8,
@@ -173,7 +173,7 @@
    ],
    "joint": false,
    "role": "arm",
-   "nonObj": false,
+   "nonObj": true,
    "color": "",
    "explosive": false,
    "indestructible": false,
@@ -185,14 +185,14 @@
    "id": "armorTop",
    "mat": "wood",
    "p": [
-    0,
+    -1.35,
     6.3,
-    1.35
+    0
    ],
    "s": [
-    3.2,
+    0.3,
     0.9,
-    0.3
+    3.2
    ],
    "sup": [
     "torso"
@@ -211,14 +211,14 @@
    "id": "armorBot",
    "mat": "wood",
    "p": [
-    0,
+    -1.35,
     5.1,
-    1.35
+    0
    ],
    "s": [
-    3.2,
+    0.3,
     0.9,
-    0.3
+    3.2
    ],
    "sup": [
     "torso"
@@ -237,14 +237,14 @@
    "id": "core",
    "mat": "steel",
    "p": [
-    0,
+    -1.4,
     5.7,
-    1.0
+    0
    ],
    "s": [
-    1.0,
-    1.0,
-    0.4
+    0.4,
+    1,
+    1
    ],
    "sup": [
     "torso"
@@ -263,14 +263,14 @@
    "id": "shutter",
    "mat": "brick",
    "p": [
-    0,
+    -1.75,
     5.7,
-    1.75
+    0
    ],
    "s": [
+    0.25,
     1.4,
-    1.4,
-    0.25
+    1.4
    ],
    "sup": [],
    "joint": false,
@@ -318,9 +318,9 @@
     0
    ],
    "s": [
-    1.0,
+    1,
     0.6,
-    1.0
+    1
    ],
    "sup": [
     "head"
