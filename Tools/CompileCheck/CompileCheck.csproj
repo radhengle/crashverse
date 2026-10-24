@@ -28,6 +28,7 @@
     <Compile Include="../../Assets/_Project/Scripts/Audio/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Physics/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Physics/Core/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Dev/**/*.cs" Exclude="../../Assets/_Project/Scripts/Dev/**/Tests/**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

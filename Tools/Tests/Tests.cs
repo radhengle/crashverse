@@ -6,6 +6,7 @@ using Crashverse.Data;
 using Crashverse.Level;
 using Crashverse.Meta;
 using Crashverse.Feel;
+using Crashverse.Data.Dev;
 using System.Collections.Generic;
 
 static class Tests
@@ -683,8 +684,94 @@ static class Tests
             var root = new DirectoryInfo(AppContext.BaseDirectory);
             while (root != null && !Directory.Exists(Path.Combine(root.FullName, "Assets/_Project"))) root = root.Parent;
             T.True(root != null, "repo root found");
+            // Dev-only fixtures (PerfL10Fixture, id prefix "dev_") are generated in code for Scenes/Dev and never shipped as JSON;
+            // they are excluded by id, and none may appear in the shipped layout folder.
+            foreach (var f in Directory.GetFiles(Path.Combine(root.FullName, "Assets/_Project/Resources/Data/Layouts"), "*.json"))
+                T.True(!PerfL10Fixture.IsDevLayout(Path.GetFileNameWithoutExtension(f)), "no dev_ layout in shipped Layouts: " + Path.GetFileName(f));
             foreach (var f in Directory.GetFiles(Path.Combine(root.FullName, "Assets/_Project/Resources/Data/Layouts"), "*.json"))
                 T.True(!File.ReadAllText(f).Contains("\"mat\": \"glass\"") && !File.ReadAllText(f).Contains("\"mat\":\"glass\""), "glass is Neon (ch3+) only: " + Path.GetFileName(f));
+        });
+        T.Add("PERF_L10_fixture_deterministic", () =>
+        {
+            var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId); var baseLayout = Db.GetLayout(l10.layout);
+            string a = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(baseLayout));
+            string b = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(Db.GetLayout(l10.layout)));
+            T.Eq(a, b, "same L10 input -> identical perf layout");
+            T.Eq(Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Script()), Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Script()), "same script");
+            T.Eq(0x4C31305045524631L, PerfL10Fixture.Seed, "fixed long seed");
+            var sc = PerfL10Fixture.Script();
+            T.True(sc[0].type == "arm" && sc[1].type == "fire" && sc[0].tick < sc[1].tick && sc[0].tick > 0, "arm then fire, tick-ordered, after tick 0");
+            T.Eq(8000, sc[1].y, "fixed-point elevation 8.000 deg"); T.Eq(0, sc[1].x, "yaw 0");
+            T.Eq(baseLayout.blocks.Length, 13, "base L10 layout unchanged (13 blocks)");
+        });
+        T.Add("PERF_L10_fixture_hits_caps_and_mixes_materials", () =>
+        {
+            var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId);
+            var lay = PerfL10Fixture.Layout(Db.GetLayout(l10.layout));
+            T.True(PerfL10Fixture.IsDevLayout(lay.id), "dev_ layout id");
+            T.Eq(13 + PerfL10Fixture.Layers * PerfL10Fixture.Rows * PerfL10Fixture.Columns + PerfL10Fixture.DropPanes + 2 * PerfL10Fixture.AnvilPairs, lay.blocks.Length, "L10 + curtain + drop panes + hammer/anvil pairs");
+            // Hammers: a 4 kg steel hammer must break a 12 HP glass anvil on its first hit (ruling #7a maths), and they keep
+            // >= 3 landings per 100 ms; anvils sit outside every fuse's 2.5 m explosion radius so the burst can't pre-break them.
+            for (int i = 0; i < PerfL10Fixture.AnvilPairs; i++)
+            {
+                float v = PerfL10Fixture.G * PerfL10Fixture.HammerT(i);
+                long vmm = (long)Math.Round(v * 1000.0), milli = vmm <= 2000 ? 0 : 4000L * (vmm - 2000) * 500L * 1500L / 1000000000L; // ruling #7a: steel 4 kg, 0.5 HP/(kg·m/s), glass ×1.5 (MaterialDefinition / DebrisDamage; not in this assembly)
+                T.True(milli >= 12000, $"hammer {i} breaks its 12 HP glass anvil ({milli} mHP at {v:0.0} m/s)");
+            }
+            T.True(PerfL10Fixture.AnvilPairs / (PerfL10Fixture.HammerT1 - PerfL10Fixture.HammerT0) >= 30f, "hammers >= 3 per 100 ms");
+            foreach (var bl in lay.blocks)
+                if (bl.role == "anvil") foreach (var f in lay.blocks) if (f.explosive)
+                {
+                    float dx = bl.p[0] - f.p[0], dy = bl.p[1] - f.p[1], dz = bl.p[2] - f.p[2];
+                    T.True(Math.Sqrt(dx * dx + dy * dy + dz * dz) > 2.5, $"{bl.id} outside fuse {f.id} explosion radius");
+                }
+            T.True(PerfL10Fixture.DropHeight(0) > 3.5f && PerfL10Fixture.DropHeight(PerfL10Fixture.DropPanes - 1) < 25f, "drop heights 4..22 m");
+            T.True(PerfL10Fixture.DropPanes / (PerfL10Fixture.DropT1 - PerfL10Fixture.DropT0) >= 30f, ">= 3 landings per 100 ms over >= 1 s");
+            var ids = new HashSet<string>(); foreach (var bl in lay.blocks) T.True(ids.Add(bl.id), "unique id " + bl.id);
+            foreach (var bl in lay.blocks) if (bl.sup != null) foreach (var s in bl.sup) T.True(ids.Contains(s), "support exists " + s);
+            var mats = new HashSet<string>(); int midChunks = 0, breakable = 0, fuse = 0;
+            foreach (var bl in lay.blocks)
+            {
+                mats.Add(bl.mat);
+                if (bl.indestructible) continue;
+                breakable++; if (bl.explosive) fuse++;
+                midChunks += DebrisBudget.Chunks(bl.mat, QualityTier.Mid);
+            }
+            foreach (var m in new[] { "wood", "brick", "steel", "glass" }) T.True(mats.Contains(m), "has " + m);
+            T.True(midChunks >= 4 * DebrisBudget.Cap(QualityTier.Mid), $"potential Mid debris {midChunks} >= 4x cap 60");
+            T.True(breakable >= 60, $"breakable pieces {breakable} >= 60 (3 per 100 ms for >= 1 s needs >= 30)");
+            T.Eq(PerfL10Fixture.Layers * PerfL10Fixture.Columns, fuse, "explosive fuse row per layer");
+            // Fuse pieces must chain (Explosion radius 2.5 m) and sit inside Chain Reactor radius (3 m) of the base centre
+            float pitch = PerfL10Fixture.PieceD + PerfL10Fixture.Gap; T.True(pitch < 2.5f, "fuse spacing < explosion radius");
+            var lvl = PerfL10Fixture.Level(l10);
+            T.True(!lvl.IsBoss && lvl.layout == lay.id && Array.IndexOf(lvl.materials, "glass") >= 0, "perf level: no boss, dev layout, glass allowed");
+            T.True(Array.IndexOf(l10.materials, "glass") < 0, "shipped c1_l10 still has no glass");
+        });
+        T.Add("PERF_L10_scripted_shot_hits_curtain_analytic", () =>
+        {
+            // Same step as PhysX/aim preview at 50 Hz (v += g dt; p += v dt). Gravity 9.81 x RuleModifiers (0 = unchanged; the
+            // x1.2 gravity ruling is not applied in code yet). Spawn = Wrecker (WreckerX, 0) + pivot (PivotY) + SpawnAlong along elevation.
+            double th = PerfL10Fixture.AimElevationDeg * Math.PI / 180.0, dt = 0.02, g = 9.81, r = 0.45 * 0.5;
+            double x = Crashverse.Weapons.WreckerSpec.WreckerX + Crashverse.Weapons.WreckerSpec.SpawnAlong * Math.Cos(th), y = Crashverse.Weapons.WreckerSpec.PivotY + Crashverse.Weapons.WreckerSpec.SpawnAlong * Math.Sin(th);
+            double vx = PerfL10Fixture.LaunchSpeed * Math.Cos(th), vy = PerfL10Fixture.LaunchSpeed * Math.Sin(th);
+            double face = 10.0 + PerfL10Fixture.CurtainX - PerfL10Fixture.PieceW * 0.5; int steps = 0; // structureBase x = 10
+            while (x + r < face && y > -6 && steps < 500) { vy -= g * dt; x += vx * dt; y += vy * dt; steps++; }
+            int row = (int)Math.Floor(y / (PerfL10Fixture.PieceH + PerfL10Fixture.Gap));
+            T.True(y > 0 && row >= 1 && row <= 3, $"8 deg / 28 m/s reaches the curtain face at y={y:0.00} (row {row}) after {steps} ticks");
+        });
+        T.Add("PERF_L10_stats_saturation_and_hash", () =>
+        {
+            var st = new PerfL10Stats(); int fire = 50;
+            for (int w = 0; w < 12; w++) for (int k = 0; k < 3; k++) st.OnEvent(fire + w * 5 + k, 2, w * 10 + k, 1, k == 0 ? "Glass" : "Wood", fire);
+            st.OnEvent(fire + 12 * 5, 2, 999, 1, "Brick", fire); // window 12: only 1 break
+            T.Eq(1200, st.SaturatedMs, "12 saturated windows = 1200 ms");
+            ulong h = st.Hash; var st2 = new PerfL10Stats();
+            for (int w = 0; w < 12; w++) for (int k = 0; k < 3; k++) st2.OnEvent(fire + w * 5 + k, 2, w * 10 + k, 1, k == 0 ? "Glass" : "Wood", fire);
+            st2.OnEvent(fire + 12 * 5, 2, 999, 1, "Brick", fire);
+            T.Eq(h, st2.Hash, "same event stream -> same hash");
+            st2.OnEvent(200, 5, -1, 1, null, fire); T.True(st2.Hash != h, "extra event changes hash");
+            T.Eq(3, st.MaterialsBroken, "3 materials"); st.SampleDebris(61); st.SampleDebris(40); T.Eq(61, st.PeakDebris, "peak debris");
+            st.Reset(); T.Eq(0, st.SaturatedMs, "reset"); T.Eq(0, st.Breaks, "reset breaks");
         });
         T.Add("FEEL_debris_mass_counts_on_source", () =>
         {

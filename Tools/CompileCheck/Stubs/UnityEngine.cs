@@ -18,6 +18,7 @@ namespace UnityEngine
     public class GameObject : Object
     {
         public Transform transform { get; } = new Transform(); public T[] GetComponentsInChildren<T>(bool inc = false) => new T[0];
+        public UnityEngine.SceneManagement.Scene scene => default;
         public string tag;
         public int layer;
         public bool activeSelf = true;
