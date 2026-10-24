@@ -71,5 +71,126 @@ static class V2Tests
             T.Eq(150, PowerUpRulesV2.TimeFreezeEndTick(100, 200, 150) - 0, "end tick = impact");
             T.Eq(300, PowerUpRulesV2.TimeFreezeEndTick(100, 200, 400), "end tick = arm + 200");
         });
+
+        // ---------- Target UI rules ----------
+        T.Add("v2_profile_guest_create_and_persist", () =>
+        {
+            var path = Tmp();
+            try
+            {
+                var p = new PlayerProgress(path);
+                T.True(!p.Data.profile.created, "fresh: no profile");
+                T.True(ProfileRules.SocialProviders.All(x => !ProfileRules.SocialSignInEnabled(x)), "social sign-in all Coming soon");
+                T.Eq("Google,Facebook,Instagram,X,Email", string.Join(",", ProfileRules.SocialProviders), "providers");
+                T.True(p.CreateProfile("ab", 0, 0, 4, 3) != null, "2 chars rejected");
+                T.True(p.CreateProfile("<<>>!", 0, 0, 4, 3) != null, "symbols-only rejected"); T.Eq("badname", ProfileRules.Clean("bad<name>"), "symbols stripped"); T.True(ProfileRules.ValidateName("bad<n>") != null, "raw symbols invalid");
+                T.True(p.CreateProfile("Sam", 4, 0, 4, 3) != null, "avatar out of range");
+                T.True(p.CreateProfile("Sam", 0, 3, 4, 3) != null, "badge out of range");
+                T.True(!p.Data.profile.created, "still none");
+                T.Eq(null, p.CreateProfile("  Wreck  Master_7 ", 3, 2, 4, 3), "valid");
+                var q = new PlayerProgress(path);
+                T.True(q.Data.profile.created, "persisted");
+                T.Eq("Wreck Master_7", q.Data.profile.name, "cleaned name");
+                T.Eq(3, q.Data.profile.avatar, "avatar 4"); T.Eq(2, q.Data.profile.badge, "badge 3");
+                T.Eq(null, ProfileRules.ValidateName(ProfileRules.DefaultName(12345)), "default name valid");
+                T.Eq(ProfileRules.DefaultName(7), ProfileRules.DefaultName(7), "default name deterministic");
+                T.Eq(4, Db.Meta.avatars.Length, "4 avatars"); T.Eq(3, Db.Meta.badges.Length, "3 badges");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        });
+        T.Add("v2_rewards_coins_gems_chest", () =>
+        {
+            var r = Db.Meta.levelRewards; var ch = Db.Chapter1;
+            var l5 = ch.levels.First(l => l.number == 5); var l10 = ch.levels.First(l => l.number == 10); var l1 = ch.levels[0];
+            var a = RewardRules.ForLevel(r, l1, true, 3, 0, true);
+            T.Eq(r.coinsFirstClear + 3 * r.coinsPerStar, a.coins, "first clear coins"); T.Eq(r.gemsFirst3Star, a.gems, "first 3-star gems"); T.Eq(0, a.chests, "no chest on L1");
+            T.Eq(1, RewardRules.ForLevel(r, l5, true, 1, 0, true).chests, "chest every 5 levels");
+            var h = RewardRules.ForLevel(r, l10, true, 3, 0, true);
+            T.Eq(r.coinsFirstClear + 3 * r.coinsPerStar + r.hardBonusCoins, h.coins, "hard bonus coins"); T.Eq(r.gemsFirst3Star + r.hardBonusGems, h.gems, "hard bonus gems");
+            T.Eq(r.replayCoins, RewardRules.ForLevel(r, l1, true, 3, 3, false).coins, "replay coins");
+            T.Eq(r.coinsPerStar, RewardRules.ForLevel(r, l1, true, 3, 2, false).coins, "new star only");
+            T.True(RewardRules.ForLevel(r, l1, false, 0, 0, false).IsEmpty, "loss: nothing");
+            var path = Tmp();
+            try
+            {
+                var p = new PlayerProgress(path); p.Grant(h); p.Save();
+                var q = new PlayerProgress(path); T.Eq(h.coins, q.Data.coins, "coins saved"); T.Eq(1, h.chests, "L10 first clear has a chest"); T.Eq(1, q.Data.chests, "chest saved");
+                var c1 = q.OpenChest(Db.Meta.chest); T.True(c1 != null && c1.coins > 0, "chest opens"); T.Eq(1, q.Data.chestsOpened, "counted");
+                T.True(q.OpenChest(Db.Meta.chest).IsEmpty, "no chest left");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        });
+        T.Add("v2_hard_every_10th", () =>
+        {
+            var ch = Db.Chapter1;
+            T.Eq("10", string.Join(",", ch.levels.Where(HardLevelRules.IsHard).Select(l => l.number)), "L10 hard in ch1");
+            var l10 = ch.levels.First(l => l.number == 10);
+            T.True(HardLevelRules.Shots(l10) < l10.shots, "tighter steps"); T.Eq(ch.levels[0].shots, HardLevelRules.Shots(ch.levels[0]), "normal unchanged"); T.True(HardLevelRules.ThemeDarken(l10) < 1f, "darker theme");
+            T.Eq(MapNodeKind.Hard, WorldMapRules.KindFor(l10), "skull node"); T.Eq(MapNodeKind.Normal, WorldMapRules.KindFor(ch.levels[0]), "normal");
+        });
+        T.Add("v2_world_map_path_and_states", () =>
+        {
+            var ch = Db.Chapter1; var path = Tmp();
+            try
+            {
+                var save = new CampaignSave(path);
+                T.Eq(MapNodeState.Open, WorldMapRules.StateFor(ch.levels[0], save), "L1 open");
+                T.Eq(MapNodeState.Locked, WorldMapRules.StateFor(ch.levels[1], save), "L2 locked");
+                T.Eq(0, WorldMapRules.Frontier(ch, save), "frontier L1");
+                save.RecordResult(ch.levels[0].id, true, 2, false, 100);
+                T.Eq(MapNodeState.Cleared, WorldMapRules.StateFor(ch.levels[0], save), "L1 cleared");
+                T.Eq(MapNodeState.Open, WorldMapRules.StateFor(ch.levels[1], save), "L2 open");
+                T.Eq(1, WorldMapRules.Frontier(ch, save), "frontier L2");
+                for (int i = 0; i < 12; i++) { T.True(WorldMapRules.X(i) >= 0.15f && WorldMapRules.X(i) <= 0.85f, "x in map " + i); }
+                T.True(WorldMapRules.Y(1) > WorldMapRules.Y(0), "path goes up");
+                T.True(WorldMapRules.ContentHeight(10) > WorldMapRules.Y(9), "content fits");
+                float bx = WorldMapRules.DailyBossX(1); T.True(Math.Abs(bx - WorldMapRules.X(1)) > 0.2f, "daily boss beside the path");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        });
+        T.Add("v2_daily_boss_seeded_by_date", () =>
+        {
+            var d = Db.Meta.dailyBoss;
+            var a = DailyBossRules.ForDate("20261024", d); var b = DailyBossRules.ForDate("20261024", d); var c = DailyBossRules.ForDate("20261025", d);
+            T.Eq(a.layout, b.layout, "same date same layout"); T.Eq(a.shots, b.shots, "same shots"); T.Eq(a.name, b.name, "same boss");
+            T.Eq("daily_20261024", a.id, "id"); T.True(a.shots >= d.baseShots && a.shots <= d.baseShots + d.shotSpread, "shots in range");
+            T.True(Db.GetLayout(a.layout) != null, "layout exists");
+            T.True(a.id != c.id, "next day differs");
+            T.Eq("20261024", DailyBossRules.DateKey(new DateTime(2026, 10, 24, 23, 59, 0)), "key");
+            int distinct = Enumerable.Range(0, 30).Select(i => DailyBossRules.ForDate(DailyBossRules.DateKey(new DateTime(2026, 11, 1).AddDays(i)), d).layout).Distinct().Count();
+            T.True(distinct >= 2, "rotates layouts over a month");
+            T.Eq(1f, DailyBossRules.HpFraction(0f, 0.9f), "full HP"); T.Eq(0f, DailyBossRules.HpFraction(0.9f, 0.9f), "dead at threshold");
+            var path = Tmp();
+            try
+            {
+                var p = new PlayerProgress(path);
+                T.True(!p.RecordDailyBossWin("20261024", d.reward).IsEmpty, "first win pays"); T.True(p.RecordDailyBossWin("20261024", d.reward).IsEmpty, "once per day");
+                T.Eq(d.reward.coins, p.Data.coins, "reward coins");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        });
+        T.Add("v2_seasons_and_achievements", () =>
+        {
+            var m = Db.Meta; var ch = Db.Chapter1;
+            T.Eq(4, m.seasons.Length, "4 seasons");
+            T.Eq("Sunny Shores,Frozen Peaks,Neon City,Primeval Peaks", string.Join(",", m.seasons.Select(s => s.name)), "names");
+            T.Eq("bg_season_primeval_peaks", m.seasons[3].bg, "season 4 bg");
+            T.Eq("Sunny Shores", SeasonRules.ForLevel(m, 7).name, "L7 season 1");
+            var path = Tmp();
+            try
+            {
+                var save = new CampaignSave(path);
+                T.Eq("Sunny Shores", SeasonRules.Current(m, ch, save).name, "current");
+                T.True(SeasonRules.IsOpen(m.seasons[0], ch, save) && !SeasonRules.IsOpen(m.seasons[1], ch, save), "S1 open, S2 coming soon");
+                T.Eq(10, SeasonRules.LevelsInSeason(m.seasons[0], ch), "10 levels in S1");
+                save.RecordResult(ch.levels[0].id, true, 3, false, 1);
+                T.Eq(3, SeasonRules.StarsInSeason(m.seasons[0], ch, save), "season stars");
+                T.True(m.achievements.Length >= 6, "achievement stubs");
+                foreach (var a in m.achievements) T.True(a.target > 0 && !string.IsNullOrEmpty(a.name), "achievement " + a.id);
+                var first = m.achievements.First(a => a.type == "levels_cleared");
+                T.Eq(1, AchievementRules.Progress(first, ch, save, null), "1 level cleared");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        });
     }
 }

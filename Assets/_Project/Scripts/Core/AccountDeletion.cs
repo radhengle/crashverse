@@ -12,7 +12,7 @@ namespace Crashverse.Core
     public static class AccountDeletion
     {
         public const string PendingKey = "cv_delete_pending";
-        public static readonly string[] LocalFiles = { "campaign_save.json", "campaign_save.json.tmp", "titan_ranked_journal.json", "campaign_sync_queue.json", "local_server_db.json" };
+        public static readonly string[] LocalFiles = { "campaign_save.json", "campaign_save.json.tmp", "titan_ranked_journal.json", "campaign_sync_queue.json", "local_server_db.json", "progress_v2.json", "progress_v2.json.tmp" };
         public static bool Pending => PlayerPrefs.GetInt(PendingKey, 0) == 1;
 
         public enum Result { Scheduled, PendingOffline, ReauthRequired, Failed }
