@@ -31,17 +31,9 @@ namespace Crashverse.UI
             var note = UIFactory.Label(foot, "Online sign-in is coming soon. Your progress is saved on this device.", Th.captionSp, Color.white, TextAnchor.MiddleCenter, Th);
             note.GetComponent<LayoutElement>().minHeight = 36f; UIArt.Pop(note, V2.Ink, 1f);
         }
-        static Color ProviderColor(string p)
-        {
-            switch (p)
-            {
-                case "Google": return UITheme.H("4285F4");
-                case "Facebook": return UITheme.H("1877F2");
-                case "Instagram": return UITheme.H("C13584");
-                case "X": return UITheme.H("111111");
-                default: return UITheme.H("5B6472");
-            }
-        }
+        /// <summary>QA V2-02 / PM: text-only, disabled, neutral (no provider brand colours or imitation logos). The official provider
+        /// buttons and logos come only with the real sign-in SDKs.</summary>
+        static Color ProviderColor(string p) => UITheme.H("5B6472");
     }
 
     // ───────────────────────────── Target UI §2: Create Profile ─────────────────────────────
