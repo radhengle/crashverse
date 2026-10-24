@@ -252,8 +252,20 @@ namespace Crashverse.Sim
         public ImpactAudioProfile audioProfile;
         readonly ImpactEventBuffer _buffer = new ImpactEventBuffer();
         public readonly CascadeTracker Cascades = new CascadeTracker();
+        public CascadeSession Session { get; private set; }
+        public ImpactReportConfig reportConfig = ImpactReportConfig.Default;
+        public readonly ImpactPairThrottle Throttle = new ImpactPairThrottle();
+        /// <summary>Tick an event raised right now is tagged with (ImpactTickPolicy).</summary>
+        public int Tick => CurrentTick;
+        /// <summary>Add a fully built event to this tick's buffer (wiring helpers in ImpactReport).</summary>
+        public void Add(ImpactEvent e) => _buffer.Add(e);
         SimRunner _runner;
-        static readonly Action<ImpactEvent> Emit = e => AnimEventBus.Raise(ImpactEvents.NameOf(e.kind), e);
+        static readonly Action<ImpactEvent> Emit = e =>
+        {
+            string name = ImpactEvents.NameOf(e.kind);
+            AnimEventBus.Raise(name, e);
+            PhysShakeHook.Submit(name, e); // camera shake only via CameraShake.AddPhys (#29); never moves the camera here
+        };
 
         public ImpactTierThresholds Thresholds => audioProfile != null ? audioProfile.thresholds : ImpactTierThresholds.Default;
         int CurrentTick => _runner != null ? ImpactTickPolicy.Tag(_runner.Tick, _runner.InTick) : 0;
@@ -261,17 +273,29 @@ namespace Crashverse.Sim
 
         void OnEnable()
         {
-            Instance = this;
+#if CRASHVERSE_CAMERASHAKE
+            if (PhysShakeHook.Sink == null) PhysShakeHook.Sink = Crashverse.Feel.CameraShake.AddPhys; // TODO(#29): make unconditional once #29 merges
+#endif
+            Instance = this; if (Session == null) Session = new CascadeSession(Cascades);
             _runner = SimRunner.Instance != null ? SimRunner.Instance : FindObjectOfType<SimRunner>();
             if (_runner != null) { _runner.Stepped += OnStepped; _runner.TickBegin += OnTickBegin; }
         }
         void OnDisable() { if (_runner != null) { _runner.Stepped -= OnStepped; _runner.TickBegin -= OnTickBegin; } if (Instance == this) Instance = null; }
 
         /// <summary>Call from SimRunner.BeginRun / Retry so cascade ids replay identically.</summary>
-        public void ResetRun() { _buffer.Clear(); Cascades.Reset(); }
+        public void ResetRun() { _buffer.Clear(); Cascades.Reset(); Session?.Reset(); Throttle.Clear(); ImpactSourceScope.ResetForTests(); }
 
         // See ImpactTickPolicy: ranked flushes after its own Physics.Simulate; non-ranked flushes the previous step at the next tick start.
-        void OnStepped(int tick) { if (ImpactTickPolicy.FlushOnStepped(Ranked)) _buffer.Flush(Emit); }
+        void OnStepped(int tick)
+        {
+            // Close a quiet cascade (collapse ended) on the sim tick, then flush (ranked).
+            if (Session != null && Session.TryEnd(tick, reportConfig.cascadeQuietTicks, out int id, out int n, out var counts))
+            {
+                var e = ImpactEvent.Make(CurrentTick, ImpactKind.CollapseEnd, 0f, 0f, Thresholds);
+                e.cascadeId = id; e.cascadeCount = n; e.materialCounts = counts; e.dominantMaterial = counts.Dominant; _buffer.Add(e);
+            }
+            if (ImpactTickPolicy.FlushOnStepped(Ranked)) _buffer.Flush(Emit);
+        }
         void OnTickBegin(int tick) { if (ImpactTickPolicy.FlushOnTickBegin(Ranked)) _buffer.Flush(Emit); }
 
         public void Report(ImpactKind kind, float impulse, float massKg, int pieceId, int matA, int matB, Vector3 pos, Vector3 normal,

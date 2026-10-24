@@ -24,7 +24,8 @@ namespace Crashverse.Destruction
 
         static void Apply(DestructibleBlock target, int milliHp)
         {
-            if (target != null) target.ApplyDamage(milliHp / 1000f, false, splash: true);
+            if (target == null) return;
+            using (ImpactSourceScope.Push(ImpactSourceKind.Debris)) target.ApplyDamage(milliHp / 1000f, false, splash: true);
         }
 
         public static void ResetForTests() { _acc.Clear(); if (_hooked != null) _hooked.ContactsFlush -= Flush; _hooked = null; }

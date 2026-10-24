@@ -98,8 +98,8 @@ namespace Crashverse.Sim
             if (!Running) { Tick++; return; } // clock only: no inputs, no scripted step
             int t = Tick;
             InTick = true;
-            TickBegin?.Invoke(t);
-            ContactsFlush?.Invoke(t);
+            TickBegin?.Invoke(t);      // non-ranked: impact events from the previous auto-sim step (tagged t-1)
+            ContactsFlush?.Invoke(t);  // debris damage queued from the previous step; resulting Crack/Break tagged t
             _inputs.Drain(t, (tick, e) => InputApplied?.Invoke(tick, e));
             Ticked?.Invoke(t);
             if (Ranked) Physics.Simulate(Step);

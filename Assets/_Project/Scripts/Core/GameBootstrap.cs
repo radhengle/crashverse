@@ -146,6 +146,9 @@ namespace Crashverse.Core
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
             int fx = RenderMaterials.FixAll(_runRoot); if (fx > 0) Debug.LogWarning($"[BUG-23] run: {fx} renderers had no usable material");
+            // #18/#20: PHYS_* ImpactEvents (Impact/Crack/Break/JointSnap/CollapseStart/End with pieceIds) on AnimEventBus.
+            // Added after Begin so it binds to the SimRunner that Begin created. Presentation only; never read by the sim.
+            if (Crashverse.Sim.ImpactEventEmitter.Instance == null) levelGo.AddComponent<Crashverse.Sim.ImpactEventEmitter>();
             levelGo.AddComponent<Crashverse.Feel.FeelDirector>().Bind(s, RunCamera, aim);
             AppServices.Router.Push(new HudScreen(s));
         }
