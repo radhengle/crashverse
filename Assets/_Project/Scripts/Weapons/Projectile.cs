@@ -17,8 +17,8 @@ namespace Crashverse.Weapons
 
         Rigidbody _rb;
         Collider _col;
-        float _life;
-        bool _spent, _splitDone; float _age, _splitAt;
+        int _launchTick; // sim tick at Launch; life/age are measured in ticks (0.02 s)
+        bool _spent, _splitDone; float _splitAt;
         /// <summary>First impact of any projectile (Time Fracture hold-until-impact, camera ImpactFrame).</summary>
         public static event System.Action<Projectile> FirstImpact;
         public static Projectile Latest;
@@ -38,21 +38,23 @@ namespace Crashverse.Weapons
         /// <param name="splitAtSeconds">OQ-P2: min(apex, 70% predicted flight); &lt;0 = use apex.</param>
         public void Launch(Vector3 pos, Vector3 vel, float dmg, ShotModifiers m, float splitAtSeconds = -1f)
         {
-            _age = 0f; _splitAt = splitAtSeconds; Latest = this;
+            _launchTick = Crashverse.Sim.SimRunner.NowTick; _splitAt = splitAtSeconds; Latest = this;
             if (_rb == null) Awake();
             transform.position = pos;
             damage = dmg; mods = m ?? new ShotModifiers();
             _rb.velocity = vel;
-            _life = lifeSeconds; _spent = false; _splitDone = !mods.split;
+            _spent = false; _splitDone = !mods.split;
             if (_col != null) _col.isTrigger = mods.pierce; // Phase Piercer passes through pieces
         }
 
-        void Update()
+        /// <summary>Ticks since Launch (0.02 s each).</summary>
+        int AgeTicks => Crashverse.Sim.SimRunner.NowTick - _launchTick;
+
+        void FixedUpdate()
         {
-            _life -= Time.deltaTime;
-            if (_life <= 0f || (KillPlane.Instance != null && transform.position.y < KillPlane.Instance.killY)) { Despawn(); return; }
-            _age += Time.deltaTime;
-            if (!_splitDone && (_splitAt >= 0f ? _age >= _splitAt : _rb.velocity.y <= 0f)) Split();
+            int age = AgeTicks;
+            if (age >= Crashverse.Sim.SimTime.SecondsToTicks(lifeSeconds) || (KillPlane.Instance != null && transform.position.y < KillPlane.Instance.killY)) { Despawn(); return; }
+            if (!_splitDone && (_splitAt >= 0f ? age >= Crashverse.Sim.SimTime.SecondsToTicks(_splitAt) : _rb.velocity.y <= 0f)) Split();
         }
 
         /// <summary>Splitstrike: at apex, 3 projectiles each doing 50% of the shot's final damage (SG-08).</summary>

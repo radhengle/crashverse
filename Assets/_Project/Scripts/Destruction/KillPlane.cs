@@ -17,6 +17,7 @@ namespace Crashverse.Destruction
 
         public void Bind(DestructibleBlock[] blocks) { _blocks = blocks ?? new DestructibleBlock[0]; }
 
+        /// <summary>Height check once per sim tick (FixedUpdate); no time maths.</summary>
         void FixedUpdate()
         {
             for (int i = 0; i < _blocks.Length; i++)
@@ -28,7 +29,7 @@ namespace Crashverse.Destruction
         }
     }
 
-    /// <summary>Kinematic rotating part (L4 windmill sails). Time Fracture scales speed globally.</summary>
+    /// <summary>Kinematic rotating part (L4 windmill sails). Time Fracture scales speed globally. Advances one sim tick (0.02 s) per FixedUpdate.</summary>
     public class MovingPart : MonoBehaviour
     {
         public Vector3 axis = Vector3.right;
@@ -38,7 +39,7 @@ namespace Crashverse.Destruction
 
         void FixedUpdate()
         {
-            float a = degreesPerSecond * GlobalSpeedScale * Time.fixedDeltaTime;
+            float a = degreesPerSecond * GlobalSpeedScale * Crashverse.Sim.SimTime.Step;
             transform.RotateAround(pivotWorld, axis, a);
         }
     }
