@@ -62,7 +62,7 @@ namespace Crashverse.EditorTools
                 QualitySettings.anisotropicFiltering = t.anisotropic;
                 QualitySettings.lodBias = t.lodBias;
                 QualitySettings.maximumLODLevel = t.maximumLODLevel;
-                QualitySettings.shadows = t.mainShadows ? (t.softShadows ? ShadowQuality.All : ShadowQuality.HardOnly) : ShadowQuality.Disable;
+                QualitySettings.shadows = t.mainShadows ? (t.softShadows ? UnityEngine.ShadowQuality.All : UnityEngine.ShadowQuality.HardOnly) : UnityEngine.ShadowQuality.Disable;
                 QualitySettings.shadowDistance = t.shadowDistance;
                 QualitySettings.shadowCascades = t.cascades;
                 QualitySettings.shadowCascade2Split = t.cascade2Split;
