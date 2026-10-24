@@ -1,0 +1,26 @@
+BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Floor.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Floor_Fractured.fbx meshes checked: 32 -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx meshes checked: 24 -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Wall_Fractured.fbx meshes checked: 36 -> PASS
+BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx meshes checked: 24 -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Floor.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Floor_Fractured.fbx meshes checked: 12 -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx meshes checked: 10 -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Wall.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Wall_Fractured.fbx meshes checked: 12 -> PASS
+BuildingKit/Kit_Stone/Kit_Stone_Wall.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Stone/Kit_Stone_Wall_Fractured.fbx meshes checked: 12 -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Floor.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Floor_Fractured.fbx meshes checked: 18 -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx meshes checked: 16 -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx meshes checked: 4 -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Wall_Fractured.fbx meshes checked: 24 -> PASS
+Island_Sunnyville/Island_Sunnyville_LOD0.fbx meshes checked: 5 -> PASS
+Wrecker_v2/Wrecker_v2_LOD0.fbx meshes checked: 11 -> PASS
+TRANSFORM RESULT: ALL PASS
