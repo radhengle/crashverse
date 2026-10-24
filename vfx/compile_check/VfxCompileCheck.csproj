@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- VFX-owned compile check (Tools/CompileCheck is not edited by VFX; see OPEN_QUESTIONS Q-D1). Stubs, not a Unity compile. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework><ImplicitUsings>disable</ImplicitUsings><Nullable>disable</Nullable>
+    <LangVersion>9</LangVersion><EnableDefaultCompileItems>false</EnableDefaultCompileItems><OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- ParticleStubs.cs (#35) is a subset of Stubs/VfxUnityStubs.cs, so it is excluded here to avoid duplicate types. -->
+    <Compile Include="../../Tools/CompileCheck/Stubs/**/*.cs" Exclude="../../Tools/CompileCheck/Stubs/ParticleStubs.cs" />
+    <Compile Include="Stubs/VfxUnityStubs.cs" />
+    <Compile Include="Stubs/VfxAnimationCurveStub.cs" Condition="!Exists('../../Tools/CompileCheck/Stubs/AnimationCurveStub.cs')" />
+    <Compile Include="../../Assets/_Project/Scripts/**/*.cs" Exclude="../../Assets/_Project/Scripts/**/Editor/**/*.cs;../../Assets/_Project/Scripts/**/Tests/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup><PackageReference Include="Newtonsoft.Json" Version="13.0.3" /></ItemGroup>
+</Project>

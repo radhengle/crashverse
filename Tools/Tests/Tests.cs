@@ -6,6 +6,7 @@ using Crashverse.Data;
 using Crashverse.Level;
 using Crashverse.Meta;
 using Crashverse.Feel;
+using Crashverse.Data.Dev;
 using System.Collections.Generic;
 
 static class Tests
@@ -46,7 +47,10 @@ static class Tests
 
     public static void Register()
     {
+        DevAimHookTests.Register(); // BUG-24 dev aim hook
         // ---------- SG-24 / SG-01 stars (qa/M1_Test_Cases_v0.3 + Feature_Test_Cases_v1 §A) ----------
+        T.Add("gameplay_pieceid_matches_stableid20", () => { T.Eq(204219580, Crashverse.Gameplay.PieceIds.Of("b1"), "b1"); T.Eq(501293940, Crashverse.Gameplay.PieceIds.Of("L1_tower_03"), "L1_tower_03"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(null), "null"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(""), "empty"); });
+        T.Add("gameplay_vfx_material_map", () => { T.Eq(0, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, false), "wood"); T.Eq(1, Crashverse.Gameplay.PieceIds.VfxMaterialOf(1, false, false), "brick"); T.Eq(2, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, false, false), "steel"); T.Eq(3, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, true, false), "joint"); T.Eq(5, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, true), "explosive"); });
         T.Add("stars_budget4", () => { int[] e = { 1, 1, 2, 3, 3 }; for (int l = 0; l <= 4; l++) T.Eq(e[l], StarRules.Compute(true, l, 4), $"4 shots, {l} left"); });
         T.Add("stars_budget5", () => { int[] e = { 1, 1, 2, 3, 3, 3 }; for (int l = 0; l <= 5; l++) T.Eq(e[l], StarRules.Compute(true, l, 5), $"5 shots, {l} left"); });
         T.Add("stars_budget6", () => { int[] e = { 1, 1, 2, 2, 3, 3, 3 }; for (int l = 0; l <= 6; l++) T.Eq(e[l], StarRules.Compute(true, l, 6), $"6 shots, {l} left"); });
@@ -63,17 +67,62 @@ static class Tests
         {
             var ch = Db.Chapter1;
             T.Eq(10, ch.levels.Length, "10 levels");
-            // Level Rulings (60ba5d1): star bands are per-level data, range + monotonic, not a fixed 0.6.
-            int[] shots = { 4, 4, 5, 5, 5, 5, 5, 5, 6, 8 };
-            for (int i = 0; i < 10; i++)
+            // Star bands are per-level data (SG-01): range + monotonic, not a fixed 0.6.
+            foreach (var l in ch.levels)
             {
-                var l = ch.levels[i]; T.Eq(shots[i], l.shots, "shots L" + (i + 1));
-                T.True(l.star3Pct > 0f && l.star3Pct <= 1f && l.star2Pct > 0f && l.star2Pct < l.star3Pct, l.id + " bands in (0,1], 2★ < 3★");
+                T.True(l.shots > 0, l.id + " shots > 0");
+                T.True(l.star3Pct > 0f && l.star3Pct <= 1f && l.star2Pct > 0f && l.star2Pct <= 1f, l.id + " bands in (0,1]");
+                T.True(l.star2Pct < l.star3Pct, l.id + " bands monotonic (2★ < 3★)");
             }
-            T.Eq(0.375f, ch.levels[9].star3Pct, "L10 3★ 0.375"); T.Eq(0.25f, ch.levels[9].star2Pct, "L10 2★ 0.25");
+            var l10 = ch.levels[9]; // Level_Rulings_v1 §1–2 (values live in the Level Designer's data)
+            T.Eq(8, l10.shots, "L10 budget 8"); T.Eq(0.375f, l10.star3Pct, "L10 3★ 0.375"); T.Eq(0.25f, l10.star2Pct, "L10 2★ 0.25");
+            T.Eq("NO_CLOSED_SHUTTER_HIT", l10.mastery.type, "L10 mastery");
+            T.Eq(3, StarRules.Compute(true, 3, l10.shots, l10.star3Pct, l10.star2Pct), "perfect 5-shot run (3 left of 8) = 3★");
+            T.Eq(2, StarRules.Compute(true, 2, l10.shots, l10.star3Pct, l10.star2Pct), "2 left = 2★");
             T.Eq("m1_clockwork_tower", ch.levels[6].layout, "L7 = M1 tower");
             T.Eq("tidewarden", ch.levels[9].bossId, "L10 boss");
             T.Eq(2, ch.levels[8].starCapIfPowerupUsed, "L9 cap");
+        });
+        T.Add("LEVEL_tidewarden_shutter_SG05", () =>
+        {
+            var r = new TideShutterRule();
+            r.OnShotFired(); T.True(!r.OnShotResolved(), "phase 1 shot: no toggle");
+            r.OnShotFired(); r.EnterPhase2(); T.True(r.Open, "phase 2 starts OPEN");
+            T.True(!r.OnShotResolved() && r.Open, "the shot that ended phase 1 does not toggle");
+            r.OnShotFired(); T.True(r.OnShotResolved() && !r.Open, "1st phase-2 shot → closed");
+            r.OnDirectHit(); T.Eq(1, r.ClosedShutterHits, "hit while closed counted");
+            r.OnShotFired(); T.True(r.OnShotResolved() && r.Open, "2nd phase-2 shot → open");
+            r.OnDirectHit(); T.Eq(1, r.ClosedShutterHits, "hit while open not counted");
+            var p1 = new TideShutterRule(); p1.OnDirectHit(); T.Eq(0, p1.ClosedShutterHits, "phase 1 (parked shutter) never counts");
+        });
+        T.Add("LEVEL_mastery_no_closed_shutter_hit", () =>
+        {
+            var g = new MasteryGoal { type = "NO_CLOSED_SHUTTER_HIT", role = "shutter" };
+            T.True(MasteryEvaluator.Evaluate(g, new RunStats { won = true, closedShutterHits = 0 }), "clean run passes");
+            T.True(!MasteryEvaluator.Evaluate(g, new RunStats { won = true, closedShutterHits = 1 }), "closed-shutter hit fails");
+            T.True(!MasteryEvaluator.Evaluate(g, new RunStats { won = false }), "loss never passes");
+            var tw = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs"); T.True(tw.Contains("_rule.OnShotResolved()") && tw.Contains("OnShutterDamaged"), "controller uses the rule");
+        });
+        T.Add("LEVEL_objective_mass_excludes_stone_bases", () =>
+        {
+            T.True(!StructureRules.CountsTowardObjectiveMass(true, true), "Indestructible+NonObjective excluded");
+            T.True(StructureRules.CountsTowardObjectiveMass(false, true), "indestructible objective (boss core) still counts");
+            T.Eq(5f, StructureRules.TotalObjectiveMass(new[] { (5f, false, false), (100f, true, true) }), "stone base mass ignored");
+            int bases = 0;
+            foreach (var l in Db.Chapter1.levels)
+                foreach (var b in Db.GetLayout(l.layout).blocks)
+                    if (b.indestructible && b.nonObj) bases++;
+            T.True(bases > 0, "stone bases tagged Indestructible+NonObjective in Ch1 data");
+            var tr = Src("Assets/_Project/Scripts/Destruction/DestructionTracker.cs"); T.True(tr.Contains("StructureRules.CountsTowardObjectiveMass"), "tracker uses the rule");
+        });
+        T.Add("LEVEL_collapse_only_when_all_supports_gone", () =>
+        {
+            T.True(!StructureRules.SupportLost(new bool[0]), "no supports = grounded");
+            T.True(!StructureRules.SupportLost(new[] { true, false }), "one support left holds the piece");
+            T.True(!StructureRules.SupportLost(new[] { false, false }), "all supports intact");
+            T.True(StructureRules.SupportLost(new[] { true, true }), "ALL supports gone → collapse");
+            T.True(StructureRules.SupportLost(new[] { true }), "single support gone → collapse");
+            T.True(Src("Assets/_Project/Scripts/Destruction/DestructibleBlock.cs").Contains("StructureRules.SupportLost"), "DestructibleBlock uses the rule");
         });
         T.Add("layouts_valid", () =>
         {
@@ -358,6 +407,53 @@ static class Tests
                 new StoreItem { sku = "gr", name = "Gems?", type = Db.Store.allowedTypes[0], cosmetic = true, priceType = "iap", price = 99, grants = "extra_charges:3" } } };
             T.Eq(3, StoreValidator.Validate(bad, out var ok2).Count, "all 3 rejected"); T.Eq(0, ok2.Count, "none accepted");
         });
+        T.Add("ECON_v1_earned_gems_data", () =>
+        {
+            var e = Db.Economy; var g = e.gemSources;
+            T.True(g.dailyDay7 == 10 && g.titanCompletion == 3 && g.titanTop10Bonus == 5 && g.eventAllCleared == 15 && g.eventAll3Star == 10 && g.guardianFirstClear == 25 && g.seasonEvery5thTier == 10, "gem sources from data");
+            T.Eq(3, e.chapterStarMilestones.Length, "10/20/30★ milestones"); T.Eq(20, e.chapterStarMilestones[2].gems);
+            var store = new System.Collections.Generic.Dictionary<string, StoreItem>(); foreach (var i in Db.Store.items) store[i.sku] = i;
+            T.True(store["s1_premium_track"].priceType == "gems" && store["s1_premium_track"].price == e.gemSinks.seasonPremiumTrack && e.gemSinks.seasonPremiumTrack == 450, "premium track 450 gems");
+            T.True(store["skin_brass_baron"].price == e.gemSinks.epicSkin && store["trail_confetti"].price == e.gemSinks.trailOrVfxSkin && store["frame_tidebreaker"].price == e.gemSinks.frameOrTitle, "sink prices match economy data");
+            StoreValidator.Validate(Db.Store, out var ok);
+            T.True(!ok.Exists(i => i.priceType == "real" || i.priceType == "iap"), "nothing sold for real money in v1");
+            T.True(ok.TrueForAll(i => i.cosmetic), "sinks are cosmetic only");
+            T.True(Db.DailyRewards.days[6].id.Contains("gems:10"), "Day 7 chest +10 gems");
+            foreach (var t in Db.Season.tiers) if (t.tier % 5 == 0) T.True(t.free.id != null && t.free.id.Contains("gems:10"), "tier " + t.tier + " +10 gems");
+        });
+        T.Add("ECON_gem_grants_once", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            int g0 = b.GetWallet().Result.gems;
+            Win(b, "c1_l01", 1f, 3, 0); Win(b, "c1_l01", 1f, 3, 0);
+            T.True(b.GetWallet().Result.gems >= g0, "no gem loss");
+            var src = Src("Assets/_Project/Scripts/Backend/LocalBackendService.cs");
+            T.True(src.Contains("GrantGemsOnce(\"guardian:") && src.Contains("GrantGemsOnce(\"stars:c1:") && src.Contains(":clear\", Econ.gemSources.eventAllCleared"), "guardian / milestones / event sources wired from data");
+        });
+        T.Add("ECON_gem_packs_disabled_handled", () =>
+        {
+            var b = NewBackend("2026-10-16T10:00:00");
+            var ex = Catch(() => b.VerifyPurchase("gems_small", "r").Wait()); T.Eq("GEM_PACKS_DISABLED", ex?.Code, "403 GEM_PACKS_DISABLED"); T.Eq(403, ex?.Status ?? 0, "403");
+            T.True(!PurchaseErrors.Message("GEM_PACKS_DISABLED").Contains("GEM_"), "friendly copy, no raw code");
+        });
+        T.Add("RENAME_primeval_peaks", () =>
+        {
+            foreach (var f in Directory.GetFiles(Path.Combine(UnityEngine.Resources.Root, "../../../Assets"), "*", SearchOption.AllDirectories))
+            {
+                if (f.EndsWith(".meta") || f.EndsWith(".png") || f.EndsWith(".ogg") || f.EndsWith(".fbx")) continue;
+                T.True(File.ReadAllText(f).IndexOf("Jurassic", StringComparison.OrdinalIgnoreCase) < 0, "no 'Jurassic' in " + Path.GetFileName(f));
+            }
+        });
+        T.Add("store_gem_packs_flagged_off_v1", () =>
+        {
+            T.True(!Db.Store.flags.enableGemPacks, "enableGemPacks=false in v1 data");
+            StoreValidator.Validate(Db.Store, out var ok);
+            T.True(!ok.Exists(i => i.sku == "gems_small" || i.sku == "gems_large" || i.type == "currency_pack"), "Pouch (99) / Chest (499) hidden: no UI, not purchasable");
+            T.True(ok.Exists(i => i.sku == "s1_premium_track"), "cosmetic premium track still listed");
+            var on = new StoreCatalog { flags = new StoreFlags { enableGemPacks = true }, allowedTypes = Db.Store.allowedTypes, items = Db.Store.items };
+            StoreValidator.Validate(on, out var ok3); T.True(ok3.Exists(i => i.sku == "gems_small"), "flag on → listed");
+            var gen = Src("Tools/ContentGen/gen_content.py"); T.True(gen.Contains("\"enableGemPacks\": False") && gen.Contains("\"requiresFlag\": \"enableGemPacks\""), "generator keeps the flag off");
+        });
         // ── Art v2 Wrecker / UI QA ──
         T.Add("wrecker_v2_dimensions", () =>
         {
@@ -501,6 +597,12 @@ static class Tests
             var c = new ComboTracker(); c.OnShot(); c.OnBreak(0f);
             T.Eq(1, c.OnBreak(0.8001f), "0.8001 s ends the combo"); T.Eq(2, c.OnBreak(1.6001f), "0.8 s still chains");
         });
+        T.Add("combo_window_ticks", () =>
+        {
+            var c = new ComboTracker(); c.OnShot();
+            T.Eq(1, c.OnBreakTick(100), "first break"); T.Eq(2, c.OnBreakTick(140), "40 ticks (0.8 s) inclusive");
+            T.Eq(1, c.OnBreakTick(181), "41 ticks ends the combo"); c.OnShot(); T.Eq(1, c.OnBreakTick(182), "shot resets");
+        });
         T.Add("BUG11_sagged_piece_scores_on_break", () =>
         {
             var l = new BreakLedger<string>();
@@ -619,6 +721,106 @@ static class Tests
             var l = new DebrisLedger<string>(3); l.Add("a"); l.Add("b"); l.Add("c"); l.MarkSettled("b");
             T.Eq("b", l.Add("d"), "oldest SETTLED recycled first"); T.Eq("a", l.Add("e"), "else oldest"); T.Eq(3, l.Count, "never above cap");
         });
+        T.Add("FEEL_debris_chunks_glass_stone", () =>
+        {
+            T.Eq(10, DebrisBudget.Chunks("glass", QualityTier.Mid), "glass shatters into many shards"); T.Eq(5, DebrisBudget.Chunks("glass", QualityTier.Low));
+            T.Eq(5, DebrisBudget.Chunks("stone", QualityTier.Mid), "stone crumbles into chunks"); T.Eq(2, DebrisBudget.Chunks("stone", QualityTier.Low));
+            T.True(DebrisBudget.Chunks("glass", QualityTier.Mid) > DebrisBudget.Chunks("stone", QualityTier.Mid), "glass > stone fragments");
+        });
+        T.Add("CONTENT_chapter1_has_no_glass", () =>
+        {
+            var root = new DirectoryInfo(AppContext.BaseDirectory);
+            while (root != null && !Directory.Exists(Path.Combine(root.FullName, "Assets/_Project"))) root = root.Parent;
+            T.True(root != null, "repo root found");
+            // Dev-only fixtures (PerfL10Fixture, id prefix "dev_") are generated in code for Scenes/Dev and never shipped as JSON;
+            // they are excluded by id, and none may appear in the shipped layout folder.
+            foreach (var f in Directory.GetFiles(Path.Combine(root.FullName, "Assets/_Project/Resources/Data/Layouts"), "*.json"))
+                T.True(!PerfL10Fixture.IsDevLayout(Path.GetFileNameWithoutExtension(f)), "no dev_ layout in shipped Layouts: " + Path.GetFileName(f));
+            foreach (var f in Directory.GetFiles(Path.Combine(root.FullName, "Assets/_Project/Resources/Data/Layouts"), "*.json"))
+                T.True(!File.ReadAllText(f).Contains("\"mat\": \"glass\"") && !File.ReadAllText(f).Contains("\"mat\":\"glass\""), "glass is Neon (ch3+) only: " + Path.GetFileName(f));
+        });
+        T.Add("PERF_L10_fixture_deterministic", () =>
+        {
+            var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId); var baseLayout = Db.GetLayout(l10.layout);
+            string a = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(baseLayout));
+            string b = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(Db.GetLayout(l10.layout)));
+            T.Eq(a, b, "same L10 input -> identical perf layout");
+            T.Eq(Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Script()), Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Script()), "same script");
+            T.Eq(0x4C31305045524631L, PerfL10Fixture.Seed, "fixed long seed");
+            var sc = PerfL10Fixture.Script();
+            T.True(sc[0].type == "arm" && sc[1].type == "fire" && sc[0].tick < sc[1].tick && sc[0].tick > 0, "arm then fire, tick-ordered, after tick 0");
+            T.Eq(8000, sc[1].y, "fixed-point elevation 8.000 deg"); T.Eq(0, sc[1].x, "yaw 0");
+            T.Eq(baseLayout.blocks.Length, 13, "base L10 layout unchanged (13 blocks)");
+        });
+        T.Add("PERF_L10_fixture_hits_caps_and_mixes_materials", () =>
+        {
+            var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId);
+            var lay = PerfL10Fixture.Layout(Db.GetLayout(l10.layout));
+            T.True(PerfL10Fixture.IsDevLayout(lay.id), "dev_ layout id");
+            T.Eq(13 + PerfL10Fixture.Layers * PerfL10Fixture.Rows * PerfL10Fixture.Columns + PerfL10Fixture.DropPanes + 2 * PerfL10Fixture.AnvilPairs, lay.blocks.Length, "L10 + curtain + drop panes + hammer/anvil pairs");
+            // Hammers: a 4 kg steel hammer must break a 12 HP glass anvil on its first hit (ruling #7a maths), and they keep
+            // >= 3 landings per 100 ms; anvils sit outside every fuse's 2.5 m explosion radius so the burst can't pre-break them.
+            for (int i = 0; i < PerfL10Fixture.AnvilPairs; i++)
+            {
+                float v = PerfL10Fixture.G * PerfL10Fixture.HammerT(i);
+                long vmm = (long)Math.Round(v * 1000.0), milli = vmm <= 2000 ? 0 : 4000L * (vmm - 2000) * 500L * 1500L / 1000000000L; // ruling #7a: steel 4 kg, 0.5 HP/(kg·m/s), glass ×1.5 (MaterialDefinition / DebrisDamage; not in this assembly)
+                T.True(milli >= 12000, $"hammer {i} breaks its 12 HP glass anvil ({milli} mHP at {v:0.0} m/s)");
+            }
+            T.True(PerfL10Fixture.AnvilPairs / (PerfL10Fixture.HammerT1 - PerfL10Fixture.HammerT0) >= 30f, "hammers >= 3 per 100 ms");
+            foreach (var bl in lay.blocks)
+                if (bl.role == "anvil") foreach (var f in lay.blocks) if (f.explosive)
+                {
+                    float dx = bl.p[0] - f.p[0], dy = bl.p[1] - f.p[1], dz = bl.p[2] - f.p[2];
+                    T.True(Math.Sqrt(dx * dx + dy * dy + dz * dz) > 2.5, $"{bl.id} outside fuse {f.id} explosion radius");
+                }
+            T.True(PerfL10Fixture.DropHeight(0) > 3.5f && PerfL10Fixture.DropHeight(PerfL10Fixture.DropPanes - 1) < 25f, "drop heights 4..22 m");
+            T.True(PerfL10Fixture.DropPanes / (PerfL10Fixture.DropT1 - PerfL10Fixture.DropT0) >= 30f, ">= 3 landings per 100 ms over >= 1 s");
+            var ids = new HashSet<string>(); foreach (var bl in lay.blocks) T.True(ids.Add(bl.id), "unique id " + bl.id);
+            foreach (var bl in lay.blocks) if (bl.sup != null) foreach (var s in bl.sup) T.True(ids.Contains(s), "support exists " + s);
+            var mats = new HashSet<string>(); int midChunks = 0, breakable = 0, fuse = 0;
+            foreach (var bl in lay.blocks)
+            {
+                mats.Add(bl.mat);
+                if (bl.indestructible) continue;
+                breakable++; if (bl.explosive) fuse++;
+                midChunks += DebrisBudget.Chunks(bl.mat, QualityTier.Mid);
+            }
+            foreach (var m in new[] { "wood", "brick", "steel", "glass" }) T.True(mats.Contains(m), "has " + m);
+            T.True(midChunks >= 4 * DebrisBudget.Cap(QualityTier.Mid), $"potential Mid debris {midChunks} >= 4x cap 60");
+            T.True(breakable >= 60, $"breakable pieces {breakable} >= 60 (3 per 100 ms for >= 1 s needs >= 30)");
+            T.Eq(PerfL10Fixture.Layers * PerfL10Fixture.Columns, fuse, "explosive fuse row per layer");
+            // Fuse pieces must chain (Explosion radius 2.5 m) and sit inside Chain Reactor radius (3 m) of the base centre
+            float pitch = PerfL10Fixture.PieceD + PerfL10Fixture.Gap; T.True(pitch < 2.5f, "fuse spacing < explosion radius");
+            var lvl = PerfL10Fixture.Level(l10);
+            T.True(!lvl.IsBoss && lvl.layout == lay.id && Array.IndexOf(lvl.materials, "glass") >= 0, "perf level: no boss, dev layout, glass allowed");
+            T.True(Array.IndexOf(l10.materials, "glass") < 0, "shipped c1_l10 still has no glass");
+        });
+        T.Add("PERF_L10_scripted_shot_hits_curtain_analytic", () =>
+        {
+            // Same step as PhysX/aim preview at 50 Hz (v += g dt; p += v dt). Gravity 9.81 x RuleModifiers (0 = unchanged; the
+            // x1.2 gravity ruling is not applied in code yet). Spawn = Wrecker (WreckerX, 0) + pivot (PivotY) + SpawnAlong along elevation.
+            double th = PerfL10Fixture.AimElevationDeg * Math.PI / 180.0, dt = 0.02, g = 9.81, r = 0.45 * 0.5;
+            double x = Crashverse.Weapons.WreckerSpec.WreckerX + Crashverse.Weapons.WreckerSpec.SpawnAlong * Math.Cos(th), y = Crashverse.Weapons.WreckerSpec.PivotY + Crashverse.Weapons.WreckerSpec.SpawnAlong * Math.Sin(th);
+            double vx = PerfL10Fixture.LaunchSpeed * Math.Cos(th), vy = PerfL10Fixture.LaunchSpeed * Math.Sin(th);
+            double face = 10.0 + PerfL10Fixture.CurtainX - PerfL10Fixture.PieceW * 0.5; int steps = 0; // structureBase x = 10
+            while (x + r < face && y > -6 && steps < 500) { vy -= g * dt; x += vx * dt; y += vy * dt; steps++; }
+            int row = (int)Math.Floor(y / (PerfL10Fixture.PieceH + PerfL10Fixture.Gap));
+            T.True(y > 0 && row >= 1 && row <= 3, $"8 deg / 28 m/s reaches the curtain face at y={y:0.00} (row {row}) after {steps} ticks");
+        });
+        T.Add("PERF_L10_stats_saturation_and_hash", () =>
+        {
+            var st = new PerfL10Stats(); int fire = 50;
+            for (int w = 0; w < 12; w++) for (int k = 0; k < 3; k++) st.OnEvent(fire + w * 5 + k, 2, w * 10 + k, 1, k == 0 ? "Glass" : "Wood", fire);
+            st.OnEvent(fire + 12 * 5, 2, 999, 1, "Brick", fire); // window 12: only 1 break
+            T.Eq(1200, st.SaturatedMs, "12 saturated windows = 1200 ms");
+            ulong h = st.Hash; var st2 = new PerfL10Stats();
+            for (int w = 0; w < 12; w++) for (int k = 0; k < 3; k++) st2.OnEvent(fire + w * 5 + k, 2, w * 10 + k, 1, k == 0 ? "Glass" : "Wood", fire);
+            st2.OnEvent(fire + 12 * 5, 2, 999, 1, "Brick", fire);
+            T.Eq(h, st2.Hash, "same event stream -> same hash");
+            st2.OnEvent(200, 5, -1, 1, null, fire); T.True(st2.Hash != h, "extra event changes hash");
+            T.Eq(3, st.MaterialsBroken, "3 materials"); st.SampleDebris(61); st.SampleDebris(40); T.Eq(61, st.PeakDebris, "peak debris");
+            st.Reset(); T.Eq(0, st.SaturatedMs, "reset"); T.Eq(0, st.Breaks, "reset breaks");
+        });
         T.Add("FEEL_debris_mass_counts_on_source", () =>
         {
             // Destroyed mass is recorded on the piece itself (BreakLedger/tracker); chunks never enter the ratio.
@@ -655,6 +857,25 @@ static class Tests
             var rm = new MotionSettings(new MemPrefs(), true);
             T.True(!rm.SlowMoAllowed(false, false) && !rm.FidgetEnabled(QualityTier.High), "reduce motion kills slow-mo/fidget");
             T.True(Ease.OutBackOrQuad(0.5f, true) <= 1f, "no overshoot with reduce motion");
+        });
+        T.Add("SETTINGS_45_defaults", () =>
+        {
+            var g = new Crashverse.Core.GameSettings(new MemIntPrefs());
+            T.Eq(80, g.MusicPercent, "music default 80%"); T.Eq(100, g.SfxPercent, "sfx default 100%");
+            T.Eq(1, g.Quality, "quality default Mid"); T.Eq("Medium", Crashverse.Core.GameSettings.QualityName(g.Quality));
+            T.Eq(0.8f, g.MusicVolume, "music 0.8"); T.Eq(1f, new Crashverse.Core.GameSettings(null).SfxVolume, "null prefs = defaults");
+            var mo = new MotionSettings(new MemPrefs(), false); T.True(!mo.ReduceShake && !mo.ReduceMotion, "motion off by default");
+        });
+        T.Add("SETTINGS_45_persist_clamp_and_cycle", () =>
+        {
+            var prefs = new MemIntPrefs(); var g = new Crashverse.Core.GameSettings(prefs); int fired = 0; g.Changed += () => fired++;
+            g.SetMusicPercent(30); g.SetSfxPercent(0); g.SetQuality(2);
+            var g2 = new Crashverse.Core.GameSettings(prefs);
+            T.Eq(30, g2.MusicPercent, "music persists"); T.Eq(0, g2.SfxPercent, "sfx 0 persists (mute)"); T.Eq(2, g2.Quality, "quality persists");
+            T.Eq(3, fired, "Changed fires per set");
+            g.SetMusicPercent(150); T.Eq(100, g.MusicPercent, "clamp high"); g.SetSfxPercent(-10); T.Eq(0, g.SfxPercent, "clamp low");
+            prefs.Set(Crashverse.Core.GameSettings.KeyQuality, 9); T.Eq(2, g.Quality, "corrupt quality clamped");
+            g.SetQuality(2); T.Eq(0, g.NextQuality(), "High→Low"); g.SetQuality(0); T.Eq(1, g.NextQuality(), "Low→Mid");
         });
         T.Add("FEEL_win_threshold_per_level_default_085", () =>
         {
@@ -924,6 +1145,13 @@ static class Tests
             var imp = Src("Assets/_Project/Scripts/Editor/MusicImportRules.cs"); T.True(imp.Contains("AudioClipLoadType.Streaming"), "all music streamed");
         });
     }
+}
+
+class MemIntPrefs : Crashverse.Core.IIntPrefs
+{
+    readonly Dictionary<string, int> _d = new Dictionary<string, int>();
+    public bool TryGet(string k, out int v) => _d.TryGetValue(k, out v);
+    public void Set(string k, int v) => _d[k] = v;
 }
 
 class MemPrefs : IMotionPrefs

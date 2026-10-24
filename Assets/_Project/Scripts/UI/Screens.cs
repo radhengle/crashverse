@@ -235,16 +235,26 @@ namespace Crashverse.UI
     /// <summary>Simple vertical picker modal.</summary>
     public class ListModal : UIScreen
     {
-        readonly string _title; readonly List<(string label, Action act)> _items;
+        readonly string _title; readonly List<(string label, Action act)> _items; readonly int _start; ScrollRect _sr;
         public override bool IsModal => true;
-        public ListModal(string title, List<(string, Action)> items) { _title = title; _items = items; }
+        /// <param name="startIndex">item scrolled to the top when the list opens (the whole list stays reachable)</param>
+        public ListModal(string title, List<(string, Action)> items, int startIndex = 0) { _title = title; _items = items; _start = startIndex; }
+        public override void OnShow()
+        {
+            if (_sr == null || _start <= 0) return;
+            Canvas.ForceUpdateCanvases();
+            var vp = _sr.viewport != null ? _sr.viewport : (RectTransform)_sr.transform;
+            float overflow = _sr.content.rect.height - vp.rect.height; if (overflow <= 0) return;
+            float per = _sr.content.rect.height / Mathf.Max(1, _items.Count);
+            _sr.verticalNormalizedPosition = 1f - Mathf.Clamp01(_start * per / overflow);
+        }
         protected override void Build(RectTransform root)
         {
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
             var p = UIFactory.TrimPanel("List", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(300, 420), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
             UIFactory.Label(v, _title, Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
-            var list = UIFactory.Scroll(v, Th.gap, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1;
+            var list = UIFactory.Scroll(v, Th.gap, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1; _sr = sr;
             foreach (var it in _items) { var a = it.act; UIFactory.Button(list, it.label, Th.navy500, () => { Router.Pop(); a(); }, Th, 48, 0, Th.bodySp); }
             UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
         }
@@ -254,7 +264,10 @@ namespace Crashverse.UI
     public class HudScreen : UIScreen
     {
         readonly GameSession _s; Text _shots, _pct, _combo, _status; Image _bar; Button _fire; Button[] _pu = new Button[3];
-        float _comboT;
+        // 06 UI motion (unscaled time, Reduce Motion variants): combo pop, % bar fill + win tick pop, shots punch.
+        readonly Crashverse.Feel.ComboUiStateMachine _comboSm = new Crashverse.Feel.ComboUiStateMachine();
+        RectTransform _tick; Image _tickImg; Crashverse.Feel.FloatTween _fill; float _fillShown, _fillTarget = -1f, _tickMs = -1f, _shotMs = -1f;
+        bool _tickHit; int _lastShots = -1;
         public override bool BlocksWorldInput => false;
         public HudScreen(GameSession s) { _s = s; }
 
@@ -269,17 +282,24 @@ namespace Crashverse.UI
             var barBg = UIFactory.Panel("Bar", root, Th.navy700); UIFactory.Band(barBg.rectTransform, true, 10f, 64f, 24f); barBg.raycastTarget = false;
             _bar = UIFactory.Panel("Fill", barBg.transform, Th.green); UIFactory.Stretch(_bar.rectTransform); _bar.raycastTarget = false;
             _bar.type = Image.Type.Filled; _bar.fillMethod = Image.FillMethod.Horizontal;
-            var tick = UIFactory.Panel("WinTick", barBg.transform, Th.white); tick.raycastTarget = false;
+            var tick = UIFactory.Panel("WinTick", barBg.transform, Th.white); tick.raycastTarget = false; _tickImg = tick; _tick = tick.rectTransform;
             var trt = tick.rectTransform; trt.anchorMin = new Vector2(_s.Ctx.level.winThreshold, 0); trt.anchorMax = new Vector2(_s.Ctx.level.winThreshold, 1); trt.sizeDelta = new Vector2(2, 6);
             _status = UIFactory.Label(root, "", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th); UIFactory.Band(_status.rectTransform, true, 24f, 80f);
-            _combo = UIFactory.Label(root, "", Th.titleSp, Th.orange, TextAnchor.MiddleCenter, Th, true); UIFactory.Place(_combo.rectTransform, new Vector2(0.5f, 0.7f), new Vector2(240, 48), Vector2.zero);
+            _combo = UIFactory.Label(root, "", Th.titleSp, Th.violet, TextAnchor.MiddleCenter, Th, true); // COMBO is violet (asset_list ui_label_combo)
+            _combo.rectTransform.localScale = Vector3.zero; UIFactory.Place(_combo.rectTransform, new Vector2(0.5f, 0.7f), new Vector2(240, 48), Vector2.zero);
             // bottom: power-ups left, FIRE right (thumb zone)
             var pu = UIFactory.HStack(root, Th.gap, 64f); UIFactory.Place(pu, new Vector2(0f, 0f), new Vector2(220, 64), new Vector2(Th.edgeGestureInset, Th.edgeGestureInset + 8));
             for (int i = 0; i < 3; i++) { int idx = i; _pu[i] = UIFactory.Button(pu, "", Th.navy500, () => _s.PowerUps.ToggleArm(idx), Th, 64, 64, Th.captionSp); }
             _fire = UIFactory.Button(root, "FIRE", Th.orange, () => _s.TryFire(), Th, 88, 88, Th.titleSp);
             UIFactory.Place((RectTransform)_fire.transform, new Vector2(1f, 0f), new Vector2(88, 88), new Vector2(-Th.edgeGestureInset, Th.edgeGestureInset + 8));
+#if CRASHVERSE_DEV || DEVELOPMENT_BUILD
+            // BUG-24: dev-only "aim at practice hint" so CI smoke can play a known-winning L1 line deterministically.
+            var hint = UIFactory.Button(root, "HINT", Th.navy500, () => _s.aim.SetAim(_s.Ctx.level.hintYaw, _s.Ctx.level.hintPitch), Th, 64, 64, Th.captionSp);
+            hint.gameObject.name = "Button_DevAimHint";
+            UIFactory.Place((RectTransform)hint.transform, new Vector2(1f, 0f), new Vector2(64, 64), new Vector2(-Th.edgeGestureInset - 104, Th.edgeGestureInset + 8));
+#endif
             _s.Changed += Refresh; _s.Ended += OnEnded;
-            _s.tracker.ComboChanged += n => { if (n >= ComboTracker.ShowFrom) { _combo.text = "x" + n; _comboT = 0.8f; _combo.fontSize = Mathf.RoundToInt(Th.titleSp + 4 * ComboTracker.PopTier(n)); } };
+            _s.tracker.ComboChanged += n => { if (n >= ComboTracker.ShowFrom) _combo.text = "COMBO x" + n; _comboSm.OnCombo(n); }; // shows from x3; pop sizes escalate at x5/x10/x20
             Refresh();
         }
 
@@ -287,6 +307,9 @@ namespace Crashverse.UI
         {
             if (_s == null || _s.Ctx == null) return;
             int total = _s.Ctx.ShotBudget;
+            if (_lastShots >= 0 && _s.ShotsLeft < _lastShots) { _shotMs = 0f; _comboSm.OnShot(); Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiShotSpend); } // new shot: punch + combo out
+            if (_lastShots >= 0 && _s.ShotsLeft > _lastShots) { _tickHit = false; _fillTarget = -1f; _tickImg.color = Th.white; } // Retry: tick re-arms
+            _lastShots = _s.ShotsLeft;
             int stars = StarRules.Compute(true, _s.ShotsLeft, total, _s.Ctx.level.star3Pct, _s.Ctx.level.star2Pct);
             _shots.text = $"Shots {_s.ShotsLeft}/{total}  {UIFactory.Stars(stars)}";
             for (int i = 0; i < 3; i++)
@@ -309,8 +332,25 @@ namespace Crashverse.UI
             if (_s == null || _s.tracker == null) return;
             float r = _s.tracker.DestroyedRatio;
             _pct.text = Mathf.FloorToInt(r * 100f) + "%" + (_s.Ctx.IsTitan ? $"  {_s.TitanDamageScore}" : "");
-            _bar.fillAmount = r;
-            if (_comboT > 0f) { _comboT -= Time.deltaTime; if (_comboT <= 0f) _combo.text = ""; }
+            float dt = Time.unscaledDeltaTime; bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
+
+            // % bar: 400 ms ease-out toward the latest ratio (re-targets on change, never allocates)
+            if (r != _fillTarget) { if (_fillTarget < 0f) _fillShown = r; _fillTarget = r; _fill.Start(_fillShown, r, Crashverse.Feel.UiMotionMath.BarFillMs, Crashverse.Feel.EaseType.OutQuad); }
+            _fillShown = _fill.Tick(dt); _bar.fillAmount = _fillShown;
+
+            // 85% win tick (level winThreshold): pops 1→1.4→1 in 250 ms when the fill reaches it, then stays gold. Reduce Motion: colour only.
+            float thr = _s.Ctx.level.winThreshold;
+            if (!_tickHit && Crashverse.Feel.UiMotionMath.ReachedThreshold(_fillShown, thr))
+            { _tickHit = true; _tickMs = 0f; _tickImg.color = Th.goldTrim; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiThresholdHit); }
+            if (_tickMs >= 0f) { float k = Crashverse.Feel.UiMotionMath.TickScale(_tickMs, rm); _tick.localScale = new Vector3(k, k, 1f); _tickMs += dt * 1000f; if (_tickMs >= Crashverse.Feel.UiMotionMath.TickPopMs) { _tickMs = -1f; _tick.localScale = Vector3.one; } }
+
+            // COMBO xN pop (ComboUiStateMachine raises UI_COMBO_UP / UI_COMBO_TIER)
+            _comboSm.Tick(dt);
+            float cs = Crashverse.Feel.UiMotionMath.ComboScale(_comboSm.State, _comboSm.ElapsedMs, _comboSm.N, rm);
+            _combo.rectTransform.localScale = new Vector3(cs, cs, 1f);
+
+            // shots-left punch 1.25 (200 ms)
+            if (_shotMs >= 0f) { float k = Crashverse.Feel.UiMotionMath.ShotPunchScale(_shotMs, rm); _shots.rectTransform.localScale = new Vector3(k, k, 1f); _shotMs += dt * 1000f; if (_shotMs >= Crashverse.Feel.UiMotionMath.ShotPunchMs) { _shotMs = -1f; _shots.rectTransform.localScale = Vector3.one; } }
         }
 
         void OnEnded(RunResult r) => Router.Push(new ResultsScreen(_s, r));
@@ -342,21 +382,54 @@ namespace Crashverse.UI
     // ───────────────────────────── Results (mockups 05/06) ─────────────────────────────
     public class ResultsScreen : UIScreen
     {
+        public bool Won => _r != null && _r.won; // dev tap probe / smoke script
         readonly GameSession _s; readonly RunResult _r;
+        // 06 win sequence: stars pop one by one (0→1.3→1, 250 ms, 300 ms stagger), mastery tick, score count-up (600 ms). Unscaled; tap = skip.
+        readonly Text[] _star = new Text[3]; Text _mastery, _score; string _scoreFmt; float _seqMs; bool _starRaised0, _starRaised1, _starRaised2, _masteryRaised;
         public override bool IsModal => true;
         public ResultsScreen(GameSession s, RunResult r) { _s = s; _r = r; }
+        /// <summary>QA C-1/C-3 (smoke + probe): the win sequence (stars, mastery, score count-up) has reached its final frame.</summary>
+        public bool SequenceDone => _seqMs >= Crashverse.Feel.WinSequence.Steps[5].startMs + Crashverse.Feel.UiMotionMath.ResultsScoreMs + 100f;
+        int _doneFrame = -1;
+        /// <summary>QA C-1b/C-3b: the logic finishing isn't enough on a slow GPU (the API 36 frame lagged ~1 s): final values are in
+        /// the labels (score text, earned stars at scale 1) AND 10 more frames have been rendered since.</summary>
+        public bool SettledOnScreen
+        {
+            get
+            {
+                if (!SequenceDone) return false;
+                if (_score != null && _score.text != ScoreLabelFinal) return false;
+                for (int i = 0; i < 3; i++) if (_star[i] != null && i < _r.stars && System.Math.Abs(_star[i].rectTransform.localScale.x - 1f) > 0.01f) return false;
+                if (_doneFrame < 0) _doneFrame = Time.frameCount;
+                return Time.frameCount - _doneFrame >= 10;
+            }
+        }
+        public string ScoreLabel => _score != null ? _score.text : "";
+        string ScoreLabelFinal => "Score " + _r.score + _scoreFmt;
+        public int Score => _r != null ? _r.score : 0; public int Stars => _r != null ? _r.stars : 0; public float Ratio => _r != null ? _r.ratio : 0f;
+        /// <summary>QA C-4 (PX-8): "So close!" only when the run was actually close; a 0% or far-off run doesn't get it.</summary>
+        public static string FailTitle(float ratio, float threshold) => ratio >= threshold * 0.6f ? "So close!" : "Out of shots!";
         protected override void Build(RectTransform root)
         {
             var lvl = _s.Ctx.level; var mode = _s.Ctx.mode;
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.55f)); UIFactory.Stretch(dim.rectTransform);
             var p = UIFactory.TrimPanel("Results", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 470), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 16f); UIFactory.Stretch(v);
-            UIFactory.Label(v, _r.won ? (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? "TITAN DOWN!" : "SMASHED!") : "So close!", Th.titleSp, _r.won ? Th.goldFill : Th.red, TextAnchor.MiddleCenter, Th, true);
-            if (_r.won && !_s.Ctx.IsTitan) UIFactory.Label(v, UIFactory.Stars(_r.stars), 40, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Label(v, _r.won ? (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? "TITAN DOWN!" : "SMASHED!") : FailTitle(_r.ratio, lvl.winThreshold), Th.titleSp, _r.won ? Th.goldFill : Th.red, TextAnchor.MiddleCenter, Th, true);
+            if (_r.won && !_s.Ctx.IsTitan)
+            {
+                var sr = UIFactory.HStack(v, Th.gap, 48f);
+                for (int i = 0; i < 3; i++)
+                {
+                    bool earned = i < _r.stars;
+                    _star[i] = UIFactory.Label(sr, earned ? "★" : "☆", 40, earned ? Th.goldFill : Th.navy700, TextAnchor.MiddleCenter, Th, true);
+                    _star[i].rectTransform.localScale = Vector3.zero;
+                }
+            }
             UIFactory.Label(v, $"Destroyed {Mathf.FloorToInt(_r.ratio * 100)}% (need {Mathf.RoundToInt(lvl.winThreshold * 100)}%)   Shots left {_r.shotsLeft}", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
-            if (lvl.mastery != null) UIFactory.Label(v, (_r.mastery ? "◆ Mastery complete: " : "◇ Mastery: ") + lvl.mastery.text, Th.captionSp, _r.mastery ? Th.cyan : Th.body, TextAnchor.MiddleCenter, Th);
+            if (lvl.mastery != null) _mastery = UIFactory.Label(v, (_r.mastery ? "◆ Mastery complete: " : "◇ Mastery: ") + lvl.mastery.text, Th.captionSp, _r.mastery ? Th.cyan : Th.body, TextAnchor.MiddleCenter, Th);
             if (_r.bestCombo >= ComboTracker.ShowFrom) UIFactory.Label(v, "Best combo x" + _r.bestCombo, Th.bodySp, Th.orange, TextAnchor.MiddleCenter, Th);
-            if (mode == RunMode.Campaign && _r.won) UIFactory.Label(v, $"Score {_r.score}  (best {AppServices.Save.BestScore(lvl.id)})", Th.bodySp, Th.goldFill, TextAnchor.MiddleCenter, Th);
+            if (mode == RunMode.Campaign && _r.won) { _scoreFmt = "  (best " + AppServices.Save.BestScore(lvl.id) + ")"; _score = UIFactory.Label(v, "Score 0" + _scoreFmt, Th.bodySp, Th.goldFill, TextAnchor.MiddleCenter, Th); }
             if (_s.Ctx.IsTitan) UIFactory.Label(v, $"Titan score {_r.titanScore}" + (_r.titanSubmit != null ? $"\n{_r.titanSubmit.status}: {_r.titanSubmit.message}" : ""), Th.bodySp, Th.orange, TextAnchor.MiddleCenter, Th);
             if (_r.firstClear && lvl.reward != null) foreach (var rw in lvl.reward) UIFactory.Label(v, $"+{rw.amount} {rw.type} {rw.id}", Th.captionSp, Th.green, TextAnchor.MiddleCenter, Th);
             if (!string.IsNullOrEmpty(_r.note)) UIFactory.Label(v, _r.note, Th.captionSp, Th.body, TextAnchor.MiddleCenter, Th);
@@ -365,12 +438,53 @@ namespace Crashverse.UI
             if (!_r.won && HintRules.ShowHintButton(lvl, AppServices.Save.FailsInRow(lvl.id), mode == RunMode.TitanRanked)) // BUG-08: campaign, events, Titan practice; never ranked
                 UIFactory.Button(v, "💡 Free Hint", Th.goldShade, () => { _s.Ctx.hintArmed = true; Router.Pop(); _s.Retry(); }, Th, 48);
             var row = UIFactory.HStack(v, Th.gap, Th.buttonL);
+            row.GetComponent<LayoutElement>().flexibleHeight = 0f; // QA C-4: the force-expanding HStack soaked up the panel's spare height
             UIFactory.Button(row, "Map", Th.navy500, () => GameplayDirector.ExitToMap(), Th);
             if (mode != RunMode.TitanRanked) UIFactory.Button(row, "Retry", Th.navy500, () => { Router.Pop(); _s.Retry(); }, Th);
             var next = NextLevel(lvl);
             if (_r.won && mode == RunMode.Campaign && next != null && UnlockRules.IsLevelUnlocked(next, AppServices.Save))
                 UIFactory.Button(row, "Next", Th.green, () => { GameplayDirector.ExitToMap(); AppServices.Router.Push(new BriefingScreen(next, RunMode.Campaign, null)); }, Th);
+            // QA C-4b: the panel hugs its content (the fail panel kept the win panel's 470 height, leaving a big empty area)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(v);
+            float h = LayoutUtility.GetPreferredHeight(v);
+            if (h > 0f) p.rectTransform.sizeDelta = new Vector2(320f, Mathf.Clamp(h, 240f, 470f));
         }
+        public override void Tick()
+        {
+            if (_seqMs > 4000f) return; // sequence finished
+            bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
+            if (Input.GetMouseButtonDown(0) || Input.touchCount > 0) _seqMs = Mathf.Max(_seqMs, 3000f); // tap skips to the final state (06)
+            _seqMs += Time.unscaledDeltaTime * 1000f;
+            for (int i = 0; i < 3; i++)
+            {
+                if (_star[i] == null) continue;
+                float ms = Crashverse.Feel.UiMotionMath.MsIntoStar(_seqMs, i);
+                bool earned = i < _r.stars;
+                float k = Crashverse.Feel.UiMotionMath.StarScale(ms, earned, rm);
+                _star[i].rectTransform.localScale = new Vector3(k, k, 1f);
+                if (earned && ms >= Crashverse.Feel.UiMotionMath.StarPeakMs) RaiseStar(i);
+            }
+            if (_mastery != null)
+            {
+                float ms = _seqMs - Crashverse.Feel.WinSequence.Steps[4].startMs; // "Mastery" step (1200 ms)
+                // v1 mastery row: appears at 1200 ms; if achieved, gold ping 1 → 1.2 → 1 (150 ms; Reduce Motion 1.1)
+                float k = ms <= 0f ? 0f : _r.mastery && ms < 150f ? 1f + (rm ? 0.1f : 0.2f) * Mathf.Sin(Mathf.PI * ms / 150f) : 1f;
+                _mastery.rectTransform.localScale = new Vector3(k, k, 1f);
+                if (_r.mastery && ms >= 150f && !_masteryRaised) { _masteryRaised = true; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiMasteryTick); }
+            }
+            if (_score != null)
+            {
+                float ms = _seqMs - Crashverse.Feel.WinSequence.Steps[5].startMs; // "Score" step (1500 ms)
+                _score.text = "Score " + Crashverse.Feel.UiMotionMath.CountUp(0, _r.score, ms, Crashverse.Feel.UiMotionMath.ResultsScoreMs) + _scoreFmt;
+            }
+        }
+
+        void RaiseStar(int i)
+        {
+            if (i == 0) { if (_starRaised0) return; _starRaised0 = true; } else if (i == 1) { if (_starRaised1) return; _starRaised1 = true; } else { if (_starRaised2) return; _starRaised2 = true; }
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiStar + (i + 1)); // UI_STAR_1..3 at the pop peak
+        }
+
         static LevelEntry NextLevel(LevelEntry l)
         {
             var ls = AppServices.Content.Chapter1.levels;
@@ -559,23 +673,47 @@ namespace Crashverse.UI
     // SettingsModal ships in every build; QA tools do not (SEC-02). Map → Settings → Delete account = 2 taps (A1).
     public class SettingsModal : UIScreen
     {
-        public override bool IsModal => true; Text _shake, _motion, _hide;
+        // #45: Audio (Music/SFX volume), Graphics quality, Motion (Reduce shake locked under Reduce motion), Haptics (#29/#37).
+        public override bool IsModal => true; Text _shake, _motion, _haptics, _hide, _music, _sfx, _quality; Button _shakeBtn;
         protected override void Build(RectTransform root)
         {
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
-            var p = UIFactory.TrimPanel("Settings", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(330, 560), Vector2.zero);
-            var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
-            UIFactory.Label(v, "Settings", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
-            var m = Crashverse.Feel.MotionSettings.Current;
-            _shake = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceShake(!m.ReduceShake); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
+            // root is the SafeArea rect (UIFramework), so the stretched panel never sits under a notch / nav bar.
+            var p = UIFactory.TrimPanel("Settings", root, Th); UIFactory.Stretch(p.rectTransform, 16f);
+            var outer = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(outer);
+            UIFactory.Label(outer, "Settings", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            var v = UIFactory.Scroll(outer, Th.gap, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1; // small phones: scroll, rows stay 48dp
+            var g = Crashverse.Core.GameSettings.Current; var m = Crashverse.Feel.MotionSettings.Current;
+
+            UIFactory.Label(v, "Audio", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            _music = Stepper(v, () => g.SetMusicPercent(g.MusicPercent - Crashverse.Core.GameSettings.Step), () => g.SetMusicPercent(g.MusicPercent + Crashverse.Core.GameSettings.Step));
+            _sfx = Stepper(v, () => g.SetSfxPercent(g.SfxPercent - Crashverse.Core.GameSettings.Step), () => g.SetSfxPercent(g.SfxPercent + Crashverse.Core.GameSettings.Step));
+
+            UIFactory.Label(v, "Graphics", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            _quality = UIFactory.Button(v, "", Th.navy500, () => { g.SetQuality(g.NextQuality()); Crashverse.Perf.QualityController.ApplySaved(); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
+
+            UIFactory.Label(v, "Motion", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            _shakeBtn = UIFactory.Button(v, "", Th.navy500, () => { if (!m.ReduceShakeLocked) m.SetReduceShake(!m.ReduceShake); Refresh(); }, Th, 48);
+            _shake = _shakeBtn.GetComponentInChildren<Text>();
             _motion = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceMotion(!m.ReduceMotion); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
+            _haptics = UIFactory.Button(v, "", Th.navy500, () => { m.SetHaptics(!m.HapticsEnabled); Refresh(); }, Th, 48).GetComponentInChildren<Text>(); // default ON; suppressed while Reduce motion is ON (haptics.md)
+
             UIFactory.Label(v, "Privacy", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
             _hide = UIFactory.Button(v, "", Th.navy500, ToggleHide, Th, 48).GetComponentInChildren<Text>();
             UIFactory.Label(v, "Account", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
             UIFactory.Button(v, "Linked accounts", Th.navy500, () => Router.Push(new LinkedAccountsModal()), Th, 48);
             UIFactory.Button(v, AccountDeletion.Pending ? "Delete account (pending until online)" : "Delete account", Th.red, () => Router.Push(new DeleteAccountScreen()), Th, 48);
-            UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
+            UIFactory.Button(outer, "Close", Th.navy500, () => Router.Pop(), Th, 48);
             Refresh();
+        }
+        /// <summary>[ − ]  label  [ + ] row; both buttons 48×48dp.</summary>
+        Text Stepper(RectTransform parent, Action down, Action up)
+        {
+            var row = UIFactory.HStack(parent, Th.gap, 48f);
+            UIFactory.Button(row, "\u2212", Th.navy500, () => { down(); Refresh(); }, Th, 48, 48);
+            var t = UIFactory.Label(row, "", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            UIFactory.Button(row, "+", Th.navy500, () => { up(); Refresh(); }, Th, 48, 48);
+            return t;
         }
         async void ToggleHide()
         {
@@ -584,9 +722,15 @@ namespace Crashverse.UI
         }
         void Refresh()
         {
-            var m = Crashverse.Feel.MotionSettings.Current;
-            _shake.text = "Reduce shake: " + (m.ReduceShake ? "ON" : "OFF");
+            var g = Crashverse.Core.GameSettings.Current; var m = Crashverse.Feel.MotionSettings.Current;
+            _music.text = $"Music: {g.MusicPercent}%";
+            _sfx.text = $"Sound effects: {g.SfxPercent}%";
+            _quality.text = "Graphics quality: " + Crashverse.Core.GameSettings.QualityName(g.Quality);
+            // 07: Reduce motion implies Reduce shake → row shows ON, greyed and locked; the stored choice comes back when Reduce motion is turned off.
+            _shake.text = "Reduce shake: " + (m.ReduceShakeEffective ? "ON" : "OFF") + (m.ReduceShakeLocked ? " (included in Reduce motion)" : "");
+            _shakeBtn.interactable = !m.ReduceShakeLocked;
             _motion.text = "Reduce motion: " + (m.ReduceMotion ? "ON" : "OFF") + (m.ReduceMotionIsAuto ? " (system)" : "");
+            _haptics.text = "Haptics: " + (m.HapticsEnabled ? "ON" : "OFF") + (m.HapticsLockedByReduceMotion ? " (off while Reduce motion is on)" : "");
             _hide.text = "Hide my name on leaderboards: " + ((AppServices.Account?.hideName ?? false) ? "ON" : "OFF");
         }
     }
@@ -731,19 +875,28 @@ namespace Crashverse.UI
         public static string Country() { try { return System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName; } catch { return ""; } }
 
         static readonly string[] Months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-        readonly Action<bool> _done; int _year, _month; Button _yearBtn, _monthBtn, _ok;
+        readonly Action<bool> _done; int _year, _month; Button _yearBtn, _monthBtn, _ok; Text _err;
+        public string Error => _err != null ? _err.text : "";
         public AgeGateScreen(Action<bool> done) { _done = done; }
         public override bool OnBack() => true; // must answer
         protected override void Build(RectTransform root)
         {
             var bg = UIFactory.Panel("Bg", root, Th.navy900); UIFactory.Stretch(bg.rectTransform);
-            var v = UIFactory.VStack(root, Th.gap * 2, 24f); UIFactory.Place(v, new Vector2(0.5f, 0.5f), new Vector2(320, 380), Vector2.zero);
+            var v = UIFactory.VStack(root, Th.gap * 2, 24f); UIFactory.Place(v, new Vector2(0.5f, 0.5f), new Vector2(320, 440), Vector2.zero); // QA C-7: room for the 2-line privacy note
             UIFactory.Label(v, "Welcome to CRASHVERSE", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
             UIFactory.Label(v, "Please enter your date of birth.", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
             _monthBtn = UIFactory.Button(v, "Month", Th.navy500, PickMonth, Th, 56);
             _yearBtn = UIFactory.Button(v, "Year", Th.navy500, PickYear, Th, 56);
             _ok = UIFactory.Button(v, "Continue", Th.green, Confirm, Th, 56); _ok.interactable = false;
-            UIFactory.Label(v, "We only keep an age range, never your date of birth.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            _err = UIFactory.Label(v, "Choose your birth month and year.", Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th);
+            var priv = UIFactory.Label(v, "We only keep an age range, never your date of birth.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            TwoLines(_err); TwoLines(priv); // QA C-7: the wrapped second line was clipped
+        }
+        static void TwoLines(Text t)
+        {
+            t.horizontalOverflow = HorizontalWrapMode.Wrap; t.verticalOverflow = VerticalWrapMode.Overflow;
+            var le = t.gameObject.GetComponent<LayoutElement>() ?? t.gameObject.AddComponent<LayoutElement>();
+            le.minHeight = le.preferredHeight = (float)System.Math.Ceiling(t.fontSize * 2.6f);
         }
         void PickMonth()
         {
@@ -751,13 +904,28 @@ namespace Crashverse.UI
             for (int i = 0; i < 12; i++) { int m = i + 1; items.Add((Months[i], () => { _month = m; _monthBtn.GetComponentInChildren<Text>().text = Months[m - 1]; Validate(); })); }
             Router.Push(new ListModal("Month of birth", items));
         }
+        /// <summary>Index the year list opens at: middle of now..now−100 (neutral, not tied to any age threshold).</summary>
+        public const int YearListMiddle = 50;
         void PickYear()
         {
             var items = new List<(string, Action)>(); int now = DateTime.UtcNow.Year;
             for (int y = now; y >= now - 100; y--) { int yy = y; items.Add((yy.ToString(), () => { _year = yy; _yearBtn.GetComponentInChildren<Text>().text = yy.ToString(); Validate(); })); } // newest first: no eligible-age default
-            Router.Push(new ListModal("Year of birth", items));
+            // Security (PR #52): neutral start, no eligible-age anchor: opens at the middle of the 100-year range (or the year
+            // already picked, on reopen); every year still scrolls. Smoke + tap tests select the year by name.
+            Router.Push(new ListModal("Year of birth", items, _year > 0 ? now - _year : YearListMiddle));
         }
-        void Validate() => _ok.interactable = _year > 0 && _month > 0;
+        /// <summary>Continue stays disabled until both are picked and the date isn't in the future; the caption says what's missing.</summary>
+        void Validate()
+        {
+            var now = DateTime.UtcNow;
+            string e = _month == 0 && _year == 0 ? "Choose your birth month and year."
+                     : _month == 0 ? "Choose your birth month."
+                     : _year == 0 ? "Choose your birth year."
+                     : (_year == now.Year && _month > now.Month) ? "That date is in the future. Check the month and year." : "";
+            _err.text = e; _ok.interactable = e.Length == 0;
+        }
+        /// <summary>Test hooks (PlayMode tap tests).</summary>
+        public Button MonthButton => _monthBtn; public Button YearButton => _yearBtn; public Button ContinueButton => _ok;
         void Confirm()
         {
             var now = DateTime.UtcNow; // device date is fine here: no server contact is allowed before the gate

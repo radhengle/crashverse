@@ -1,0 +1,143 @@
+# Unity compile + EditMode tests on every PR to main (CI is the only Unity compile we have).
+# Actions pinned by SHA (Security B7). Unity secrets are only available to same-repo branches.
+name: Unity EditMode tests
+
+on:
+  pull_request:
+  push:
+    branches: [ main, 'integration/**' ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unity-tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  editmode:
+    name: Unity compile + EditMode tests
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Free disk space (unityci editor image is large)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: false
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: true   # was false; rule out OOM (exit 139 in run 38945007534)
+
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          lfs: false
+          persist-credentials: false
+
+      - name: Release guards + logic tests (fast fail)
+        run: |
+          python3 Tools/ci/check_release_guards.py
+          python3 Tools/ci/test_check_release_guards.py
+          dotnet build Tools/CompileCheck
+          dotnet build Tools/CompileCheck -p:CrashverseDev=true
+          dotnet run --project Tools/Tests
+
+      - name: Cache Library
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: Library
+          key: Library-v2-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-v2-
+
+      - name: Dev define for tests (PlayMode boots the game with the local backend; not committed)
+        run: printf -- '-define:CRASHVERSE_DEV\n' > Assets/csc.rsp
+
+      - name: EditMode + PlayMode tests
+        id: tests
+        continue-on-error: true # run 38945007534: editor SIGSEGV (exit 139, burst_signal_handler) during domain load before any test; retried below
+        uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1 (docker-based; v4.3.2 needs an unauthenticated CLI download that 403s)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.50f1
+          testMode: all
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: EditMode test results
+
+      - name: Clear crashed run state
+        if: steps.tests.outcome == 'failure' && hashFiles('test-results/*.xml') == ''
+        run: sudo rm -rf test-results Library/ScriptAssemblies Library/Bee || true
+
+      - name: EditMode + PlayMode tests (retry after editor crash)
+        id: tests_retry
+        if: steps.tests.outcome == 'failure' && hashFiles('test-results/*.xml') == ''
+        uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1 (docker-based; v4.3.2 needs an unauthenticated CLI download that 403s)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.50f1
+          testMode: all
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: EditMode test results
+
+      - name: Fail on 0 tests, skips or failures (QA retro #9 false green)
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import glob, sys, xml.etree.ElementTree as ET
+          files = glob.glob("test-results/*.xml"); tot = {"total": 0, "passed": 0, "failed": 0, "skipped": 0, "inconclusive": 0}
+          if not files: sys.exit("::error::no test result XML produced")
+          for f in files:
+              r = ET.parse(f).getroot(); print(f, {k: r.get(k) for k in tot})
+              for k in tot: tot[k] += int(r.get(k) or 0)
+          pm = sum(int(ET.parse(f).getroot().get("total") or 0) for f in files if "playmode" in f.lower())
+          print("TOTAL", tot, "playmode", pm)
+          if tot["total"] == 0: sys.exit("::error::0 tests ran")
+          if pm == 0: sys.exit("::error::0 PlayMode tests ran (BUG-20 tap tests missing)")
+          if tot["skipped"] or tot["inconclusive"]: sys.exit("::error::tests skipped/inconclusive")
+          if tot["failed"]: sys.exit("::error::tests failed")
+          PY
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: editmode-test-results
+          path: test-results
+          if-no-files-found: error
+          retention-days: 14
+
+  # Required-able aggregate: mark ONLY this check as required in branch protection.
+  # Fails unless every test job concluded 'success' (skipped/cancelled/failure => fail). No path filters on this workflow,
+  # so it runs on every PR; there is no "nothing relevant changed" pass.
+  unity-tests-gate:
+    name: unity-tests-gate
+    needs: [ editmode ]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    permissions: {}
+    steps:
+      - name: Require all Unity test jobs = success
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          echo "$RESULTS"
+          python3 - <<'PY'
+          import json, os, sys
+          needs = json.loads(os.environ["RESULTS"]); bad = {k: v["result"] for k, v in needs.items() if v["result"] != "success"}
+          if not needs: sys.exit("::error::gate has no upstream jobs")
+          if bad: sys.exit(f"::error::Unity tests not green: {bad} (skipped/cancelled count as failure)")
+          print("unity-tests-gate: all test jobs succeeded:", list(needs))
+          PY

@@ -1,7 +1,9 @@
 {
     "name": "Crashverse.Backend",
     "rootNamespace": "Crashverse.Backend",
-    "references": [],
+    "references": [
+        "Crashverse.Rules"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -12,6 +12,7 @@ namespace Crashverse.Data
         public DailyRewardsData DailyRewards { get; private set; }
         public SeasonData Season { get; private set; }
         public StoreCatalog Store { get; private set; }
+        public EconomyData Economy { get; private set; }
         public WreckerTuning Wrecker { get; private set; }
         readonly Dictionary<string, LayoutData> _layouts = new Dictionary<string, LayoutData>();
 
@@ -38,6 +39,7 @@ namespace Crashverse.Data
                 DailyRewards = LoadJson<DailyRewardsData>("Data/daily_rewards"),
                 Season = LoadJson<SeasonData>("Data/season_s1"),
                 Store = LoadJson<StoreCatalog>("Data/store_catalog"),
+                Economy = LoadJson<EconomyData>("Data/economy") ?? new EconomyData(),
                 Wrecker = LoadJson<WreckerTuning>("Data/wrecker") ?? new WreckerTuning(),
             };
         }

@@ -2,121 +2,25 @@
  "id": "c1_l09_lighthouse_gauntlet",
  "blocks": [
   {
-   "id": "sea0",
-   "mat": "brick",
-   "p": [
-    -4,
-    0.75,
-    2.5
-   ],
-   "s": [
-    2,
-    1.5,
-    0.8
-   ],
-   "sup": [],
-   "joint": false,
-   "role": "seawall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "sea1",
-   "mat": "brick",
-   "p": [
-    -2,
-    0.75,
-    2.5
-   ],
-   "s": [
-    2,
-    1.5,
-    0.8
-   ],
-   "sup": [],
-   "joint": false,
-   "role": "seawall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "sea2",
+   "id": "rock",
    "mat": "brick",
    "p": [
     0,
-    0.75,
-    2.5
+    0.6,
+    0
    ],
    "s": [
-    2,
-    1.5,
-    0.8
+    6,
+    1.2,
+    12
    ],
    "sup": [],
    "joint": false,
-   "role": "seawall",
-   "nonObj": false,
-   "color": "",
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
    "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "sea3",
-   "mat": "brick",
-   "p": [
-    2,
-    0.75,
-    2.5
-   ],
-   "s": [
-    2,
-    1.5,
-    0.8
-   ],
-   "sup": [],
-   "joint": false,
-   "role": "seawall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "sea4",
-   "mat": "brick",
-   "p": [
-    4,
-    0.75,
-    2.5
-   ],
-   "s": [
-    2,
-    1.5,
-    0.8
-   ],
-   "sup": [],
-   "joint": false,
-   "role": "seawall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
+   "indestructible": true,
    "spinAxis": [],
    "pivot": [],
    "spinDps": 0.0
@@ -125,48 +29,24 @@
    "id": "lhBase",
    "mat": "brick",
    "p": [
-    0,
-    1.25,
-    -1
-   ],
-   "s": [
-    3,
-    2.5,
-    3
-   ],
-   "sup": [],
-   "joint": false,
-   "role": "",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "lhShaft0",
-   "mat": "brick",
-   "p": [
-    0,
-    3.5,
-    -1
-   ],
-   "s": [
+    1,
     2.2,
-    2,
-    2.2
+    -3
+   ],
+   "s": [
+    2.6,
+    2.0,
+    2.6
    ],
    "sup": [
-    "lhBase"
+    "rock"
    ],
    "joint": false,
-   "role": "",
-   "nonObj": false,
-   "color": "",
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
    "explosive": false,
-   "indestructible": false,
+   "indestructible": true,
    "spinAxis": [],
    "pivot": [],
    "spinDps": 0.0
@@ -175,17 +55,17 @@
    "id": "lhRing",
    "mat": "steel",
    "p": [
-    0,
-    4.75,
-    -1
+    1,
+    3.45,
+    -3
    ],
    "s": [
-    2.6,
+    2.8,
     0.5,
-    2.6
+    2.8
    ],
    "sup": [
-    "lhShaft0"
+    "lhBase"
    ],
    "joint": true,
    "role": "steel_joint",
@@ -198,17 +78,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "lhShaft1",
+   "id": "lhShaft0",
    "mat": "brick",
    "p": [
-    0,
-    6,
-    -1
+    1,
+    4.7,
+    -3
    ],
    "s": [
+    2.2,
     2.0,
-    2,
-    2.0
+    2.2
    ],
    "sup": [
     "lhRing"
@@ -224,12 +104,38 @@
    "spinDps": 0.0
   },
   {
+   "id": "lhShaft1",
+   "mat": "brick",
+   "p": [
+    1,
+    6.7,
+    -3
+   ],
+   "s": [
+    2.0,
+    2.0,
+    2.0
+   ],
+   "sup": [
+    "lhShaft0"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
    "id": "lhGallery",
    "mat": "wood",
    "p": [
-    0,
-    7.2,
-    -1
+    1,
+    7.9,
+    -3
    ],
    "s": [
     2.8,
@@ -253,9 +159,9 @@
    "id": "lhLantern",
    "mat": "wood",
    "p": [
-    0,
-    8.1,
-    -1
+    1,
+    8.8,
+    -3
    ],
    "s": [
     1.6,
@@ -279,9 +185,9 @@
    "id": "lhCap",
    "mat": "brick",
    "p": [
-    0,
-    9.1,
-    -1
+    1,
+    9.8,
+    -3
    ],
    "s": [
     1.9,
@@ -295,6 +201,270 @@
    "role": "",
    "nonObj": false,
    "color": "4D7BC4",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "breakwater",
+   "mat": "brick",
+   "p": [
+    -2.0,
+    2.0,
+    3
+   ],
+   "s": [
+    0.6,
+    1.6,
+    5.0
+   ],
+   "sup": [
+    "rock"
+   ],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "propA",
+   "mat": "wood",
+   "p": [
+    -1.0,
+    2.0,
+    2
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "rock"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "propB",
+   "mat": "wood",
+   "p": [
+    -1.0,
+    2.0,
+    4
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "rock"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "seaDeck",
+   "mat": "brick",
+   "p": [
+    -0.6,
+    3.0,
+    3
+   ],
+   "s": [
+    1.6,
+    0.5,
+    4.4
+   ],
+   "sup": [
+    "propA",
+    "propB"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sea0",
+   "mat": "brick",
+   "p": [
+    -0.6,
+    4.0,
+    1.5
+   ],
+   "s": [
+    1.0,
+    1.5,
+    1.4
+   ],
+   "sup": [
+    "seaDeck"
+   ],
+   "joint": false,
+   "role": "seawall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sea1",
+   "mat": "brick",
+   "p": [
+    -0.6,
+    4.0,
+    3.0
+   ],
+   "s": [
+    1.0,
+    1.5,
+    1.4
+   ],
+   "sup": [
+    "seaDeck"
+   ],
+   "joint": false,
+   "role": "seawall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sea2",
+   "mat": "brick",
+   "p": [
+    -0.6,
+    4.0,
+    4.5
+   ],
+   "s": [
+    1.0,
+    1.5,
+    1.4
+   ],
+   "sup": [
+    "seaDeck"
+   ],
+   "joint": false,
+   "role": "seawall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "seaCrest",
+   "mat": "brick",
+   "p": [
+    -0.6,
+    5.0,
+    3
+   ],
+   "s": [
+    1.2,
+    0.5,
+    4.6
+   ],
+   "sup": [
+    "sea0",
+    "sea1",
+    "sea2"
+   ],
+   "joint": false,
+   "role": "seawall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "bellTower",
+   "mat": "wood",
+   "p": [
+    -0.6,
+    6.0,
+    3
+   ],
+   "s": [
+    1.0,
+    1.5,
+    1.0
+   ],
+   "sup": [
+    "seaCrest"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "catwalk",
+   "mat": "wood",
+   "p": [
+    0.2,
+    7.9,
+    0
+   ],
+   "s": [
+    0.8,
+    0.3,
+    4.6
+   ],
+   "sup": [
+    "lhGallery",
+    "bellTower"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
    "explosive": false,
    "indestructible": false,
    "spinAxis": [],

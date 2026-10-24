@@ -49,6 +49,37 @@ namespace Crashverse.UI
         }
     }
 
+    /// <summary>Paints the four strips outside Screen.safeArea (status bar, cutout, gesture bar). Never covers the safe area, never takes taps.</summary>
+    public class SafeAreaInsets : MonoBehaviour
+    {
+        readonly RectTransform[] _s = new RectTransform[4]; Rect _last; int _w, _h;
+        public void Build(Color c)
+        {
+            for (int i = 0; i < 4; i++) { var img = UIFactory.Panel("Inset" + i, transform, c); img.raycastTarget = false; _s[i] = img.rectTransform; _s[i].SetAsFirstSibling(); }
+            Apply();
+        }
+        void Update() { if (Screen.safeArea != _last || _w != Screen.width || _h != Screen.height) Apply(); }
+        public static Rect[] Strips(Rect safe, float w, float h) => new[]
+        {
+            new Rect(0, safe.yMax / h, 1, 1 - safe.yMax / h),        // top: anchors (x, yMin, width, height) normalised
+            new Rect(0, 0, 1, safe.yMin / h),                          // bottom
+            new Rect(0, safe.yMin / h, safe.xMin / w, safe.height / h), // left
+            new Rect(safe.xMax / w, safe.yMin / h, 1 - safe.xMax / w, safe.height / h), // right
+        };
+        void Apply()
+        {
+            _last = Screen.safeArea; _w = Screen.width; _h = Screen.height;
+            if (Screen.width <= 0 || Screen.height <= 0 || _s[0] == null) return;
+            var r = Strips(_last, Screen.width, Screen.height);
+            for (int i = 0; i < 4; i++)
+            {
+                _s[i].anchorMin = new Vector2(r[i].x, r[i].y); _s[i].anchorMax = new Vector2(r[i].x + r[i].width, r[i].y + r[i].height);
+                _s[i].offsetMin = _s[i].offsetMax = Vector2.zero;
+                _s[i].gameObject.SetActive(r[i].width > 0 && r[i].height > 0);
+            }
+        }
+    }
+
     /// <summary>A full-screen page. OnBack returns true if handled; otherwise the router pops it.</summary>
     public abstract class UIScreen
     {
@@ -95,16 +126,26 @@ namespace Crashverse.UI
                 var es = new GameObject("EventSystem");
                 DontDestroyOnLoad(es);
                 var sys = es.AddComponent<EventSystem>();
+                // BUG-20: Active Input Handling is the legacy Input Manager (activeInputHandler: 0, no com.unity.inputsystem),
+                // so StandaloneInputModule is the matching module. It needs the Submit/Cancel/Horizontal/Vertical axes in
+                // ProjectSettings/InputManager.asset; without them ShouldActivateModule throws every frame and no tap is processed.
                 es.AddComponent<StandaloneInputModule>();
                 sys.pixelDragThreshold = Mathf.RoundToInt(10f * (Screen.dpi > 1 ? Screen.dpi : 160f) / 160f); // map pan ≥10dp cancels tap
             }
             var r = go.AddComponent<UIRouter>();
             r.Theme = theme; r.Canvas = canvas;
+            // BUG-20 top bar: the app renders under the status bar/cutout (androidRenderOutsideSafeArea), so paint the area
+            // outside SafeArea with the app background instead of the camera clear colour. Never takes taps.
+            // L2: only the strips outside the safe area are painted; the 3D world inside it stays visible.
+            go.AddComponent<SafeAreaInsets>().Build(theme.navy900);
             var safe = UIFactory.Rect("SafeArea", go.transform);
             UIFactory.Stretch(safe);
             safe.gameObject.AddComponent<SafeArea>();
             r.SafeRoot = safe;
             r._toast = new UIToast(r);
+#if CRASHVERSE_DEV || DEVELOPMENT_BUILD
+            go.AddComponent<UITapProbe>();
+#endif
             return r;
         }
 

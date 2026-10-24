@@ -8,7 +8,7 @@ namespace Crashverse.Backend
     public enum BoardPeriod { Current = 0, Previous = 1 }
     public enum SubmitStatus { Accepted, RejectedInvalid, RejectedDuplicate, RefundedAsPractice, QueuedOffline }
 
-    [Serializable] public class Wallet { public int coins; public int shards; public int extraCharges; public List<string> cosmetics = new List<string>(); public List<string> powerUps = new List<string>(); }
+    [Serializable] public class Wallet { public int coins; public int gems; public int shards; public int extraCharges; public List<string> cosmetics = new List<string>(); public List<string> powerUps = new List<string>(); }
 
     [Serializable] public class InboxItem { public string id; public string source; public Reward reward; public long expiresUnixUtc; public bool claimed; }
 

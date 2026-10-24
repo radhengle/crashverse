@@ -145,7 +145,8 @@ Developer can mark M1 level systems **done** when all of the following pass:
 - **Base:** brick plinth (heavy, mostly non-critical) with **two wood scaffold wings** (easy early breaks — teaching shots).
 - **Mid:** hollow tower shaft — brick walls + **three steel ring-joints** at 1/3, 1/2, and 2/3 height. Destroying a steel joint should drop the segment above it.
 - **Crown:** wood + brick clock house (high objective mass). If mid joints fail in sequence, crown collapses for free.
-- **Critical path (intended 3★):** one shot opens a wood wing → exposes lower steel joint → second shot breaks middle steel joint → third shot (or gravity) finishes crown. Extra shots = safety / recovery.
+- **Note (v0.2, Level Rulings #4):** 3★ = 2-shot clear, 2★ = 3-shot clear.
+- **Critical path (original v0.1 intent):** one shot opens a wood wing → exposes lower steel joint → second shot breaks middle steel joint → third shot (or gravity) finishes crown. Extra shots = safety / recovery.
 
 ### Layout constraints (greybox)
 - Camera: angled 3D, full tower readable on phone without constant orbit

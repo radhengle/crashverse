@@ -3,12 +3,13 @@ using UnityEngine;
 namespace Crashverse.Destruction
 {
     /// <summary>
-    /// Periodically re-evaluates support graphs so unsupported blocks collapse.
+    /// Re-evaluates support graphs every EvalEveryTicks sim ticks (5 = 0.1 s) so unsupported blocks collapse.
     /// </summary>
     public class StructuralIntegrity : MonoBehaviour
     {
         DestructibleBlock[] _blocks;
-        float _timer;
+        public const int EvalEveryTicks = 5;
+        int _lastEvalTick = int.MinValue;
 
         public void Bind(DestructibleBlock[] blocks)
         {
@@ -18,9 +19,9 @@ namespace Crashverse.Destruction
         void FixedUpdate()
         {
             if (_blocks == null) return;
-            _timer += Time.fixedDeltaTime;
-            if (_timer < 0.1f) return;
-            _timer = 0f;
+            int now = Crashverse.Sim.SimRunner.NowTick;
+            if (_lastEvalTick != int.MinValue && now >= _lastEvalTick && now - _lastEvalTick < EvalEveryTicks) return;
+            _lastEvalTick = now;
             for (int i = 0; i < _blocks.Length; i++)
             {
                 var b = _blocks[i];

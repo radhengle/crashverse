@@ -26,6 +26,8 @@ namespace Crashverse.Core
             if (cam != null) cam.fieldOfView = cc.fov;
         }
 
+        bool _rmb; Vector2 _lastMouse;
+
         void LateUpdate()
         {
             if (Input.touchCount == 2)
@@ -35,7 +37,10 @@ namespace Crashverse.Core
                 _lastMid = mid; _twoFinger = true;
             }
             else _twoFinger = false;
-            if (Input.GetMouseButton(1)) Orbit(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * 3f);
+            // Editor right-drag orbit from the mouse position delta: no InputManager axes needed (BUG-20).
+            Vector2 mp = Input.mousePosition;
+            if (Input.GetMouseButton(1) && _rmb) Orbit((mp - _lastMouse) * CameraConfig.Current.orbitDegPerPx);
+            _rmb = Input.GetMouseButton(1); _lastMouse = mp;
             var rot = Quaternion.Euler(pitch, yaw, 0f);
             var look = followWeight > 0f ? Vector3.Lerp(lookAt, followTarget, followWeight) : lookAt;
             transform.position = look + rot * new Vector3(0f, 0f, -distance) + feelOffset;

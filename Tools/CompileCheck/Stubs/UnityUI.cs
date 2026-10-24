@@ -29,7 +29,7 @@ namespace UnityEngine
     public enum VerticalWrapMode { Truncate, Overflow }
     public enum ScreenOrientation { Portrait, PortraitUpsideDown, LandscapeLeft, LandscapeRight, AutoRotation }
     public enum RenderMode { ScreenSpaceOverlay, ScreenSpaceCamera, WorldSpace }
-    public class Canvas : Behaviour { public RenderMode renderMode; public int sortingOrder; public float scaleFactor = 1f; }
+    public class Canvas : Behaviour { public static void ForceUpdateCanvases() { } public RenderMode renderMode; public int sortingOrder; public float scaleFactor = 1f; }
     public class Mesh : Object
     {
         public Vector3[] vertices; public int[] triangles; public Vector3[] normals; public Vector2[] uv;
@@ -43,8 +43,8 @@ namespace UnityEngine
         public Material sharedMaterial, material;
         public void SetPosition(int i, Vector3 p) { } public void SetPositions(Vector3[] p) { }
     }
-    public class Material : Object { public Material(Shader s) { } public Color color; public void SetColor(string n, Color c) { } }
-    public class Shader : Object { public static Shader Find(string n) => new Shader(); }
+    public class Material : Object { public Material(Shader s) { } public Shader shader; public Color color; public void SetColor(string n, Color c) { } }
+    public class Shader : Object { public static Shader Find(string n) => new Shader(); public bool isSupported = true; }
     public enum TouchPhase { Began, Moved, Stationary, Ended, Canceled }
     public struct Touch { public int fingerId; public Vector2 position; public Vector2 deltaPosition; public TouchPhase phase; }
     public enum KeyCode { Escape, Space, Return }
@@ -91,21 +91,26 @@ namespace UnityEngine.UI
         public bool resizeTextForBestFit; public int resizeTextMinSize, resizeTextMaxSize;
     }
     public struct ColorBlock { public Color normalColor, highlightedColor, pressedColor, selectedColor, disabledColor; }
-    public class Selectable : UIBehaviour { public bool interactable = true; public ColorBlock colors; public Image image; public Graphic targetGraphic; }
+    public class Selectable : UIBehaviour { public bool interactable = true; public ColorBlock colors; public Image image; public Graphic targetGraphic; public bool IsInteractable() => interactable; }
     public class Button : Selectable { public class ButtonClickedEvent : UnityEngine.Events.UnityEvent { } public ButtonClickedEvent onClick = new ButtonClickedEvent(); }
     public class CanvasScaler : UIBehaviour { public enum ScaleMode { ConstantPixelSize, ScaleWithScreenSize, ConstantPhysicalSize } public ScaleMode uiScaleMode; public float scaleFactor = 1f; }
     public class GraphicRaycaster : UIBehaviour { }
+    public static class LayoutRebuilder { public static void ForceRebuildLayoutImmediate(RectTransform rt) { } }
+    public static class LayoutUtility { public static float GetPreferredHeight(RectTransform rt) => 0f; }
     public class LayoutElement : UIBehaviour { public float minHeight, minWidth, preferredHeight, preferredWidth, flexibleHeight, flexibleWidth; }
     public class LayoutGroup : UIBehaviour { public RectOffset padding = new RectOffset(); public TextAnchor childAlignment; }
     public class HorizontalOrVerticalLayoutGroup : LayoutGroup { public float spacing; public bool childControlHeight, childControlWidth, childForceExpandHeight, childForceExpandWidth; }
     public class VerticalLayoutGroup : HorizontalOrVerticalLayoutGroup { }
     public class HorizontalLayoutGroup : HorizontalOrVerticalLayoutGroup { }
     public class ContentSizeFitter : UIBehaviour { public enum FitMode { Unconstrained, MinSize, PreferredSize } public FitMode verticalFit, horizontalFit; }
-    public class ScrollRect : UIBehaviour { public enum MovementType { Unrestricted, Elastic, Clamped } public RectTransform content; public bool horizontal, vertical; public MovementType movementType; }
+    public class ScrollRect : UIBehaviour { public enum MovementType { Unrestricted, Elastic, Clamped } public RectTransform content; public bool horizontal, vertical; public MovementType movementType; public RectTransform viewport; public float verticalNormalizedPosition; }
     public class RectMask2D : UIBehaviour { }
 }
 
 namespace UnityEngine
 {
+    public static class RectTransformUtility { public static Vector2 WorldToScreenPoint(Camera c, Vector3 p) => new Vector2(p.x, p.y); public static bool RectangleContainsScreenPoint(RectTransform r, Vector2 p, Camera c) => true; }
+
     public class RectOffset { public RectOffset() { } public RectOffset(int l, int r, int t, int b) { } }
 }
+namespace UnityEngine { public static class GameObjectExt2 { } }

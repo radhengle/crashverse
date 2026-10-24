@@ -8,6 +8,8 @@ namespace Crashverse.Weapons
     /// QA-UI-003: a press that starts over any UI element (EventSystem raycast) never starts an aim drag.
     /// Fixed shot power, no charge (OQ-A1). Releasing a drag never fires; FIRE is a button tap (OQ-A2). Aim stays live during reload.
     /// Aim/cancel is free (Contract §2). Draws the trajectory arc and, when a hint is armed, a ghost arc (Addendum §1).
+    /// Animation Spec 01: the visible barrel follows the TARGET aim through a critically damped spring (Feel.AimSpring, unscaled time);
+    /// the arc, LaunchVelocity and SpawnPosition are computed from the target angles, so smoothing never changes where a shot goes.
     /// </summary>
     public class AimController : MonoBehaviour
     {
@@ -17,6 +19,11 @@ namespace Crashverse.Weapons
         public bool inputEnabled = true;
 
         float _yaw, _elevation = WreckerSpec.RestElevation;
+        // Visible (smoothed) pose + spring velocities; visualPitchOffsetDeg is additive cosmetic pitch (idle breath, recoil kick, ready dip).
+        float _visYaw, _visPitch = WreckerSpec.RestElevation, _velYaw, _velPitch, _snapLeft;
+        Vector3 _pitchRestLocal;
+        bool _clampedLast;
+        public float visualPitchOffsetDeg;
         bool _dragging;
         int _fingerId = -1;
         Vector2 _last;
@@ -29,10 +36,11 @@ namespace Crashverse.Weapons
         public void Bind(Transform yaw, Transform pitch, Transform spawn)
         {
             yawPivot = yaw; pitchPivot = pitch; projectileSpawn = spawn;
+            _pitchRestLocal = pitch != null ? pitch.localPosition : Vector3.zero;
             _arc = MakeLine("TrajectoryArc", new Color(1f, 1f, 1f, 0.9f), 0.12f);
             _ghost = MakeLine("HintGhostArc", new Color(0.13f, 0.83f, 0.93f, 0.45f), 0.2f);
             _ghost.enabled = false;
-            Apply();
+            SnapVisualNow();
         }
 
         LineRenderer MakeLine(string n, Color c, float w)
@@ -45,12 +53,18 @@ namespace Crashverse.Weapons
             return lr;
         }
 
+        /// <summary>Sets the TARGET aim (clamped: yaw ±60°, elevation 5–70°). The visible barrel catches up in LateUpdate.</summary>
         public void SetAim(float yaw, float elevation)
         {
             _yaw = Mathf.Clamp(yaw, -WreckerSpec.MaxYaw, WreckerSpec.MaxYaw);
             _elevation = Mathf.Clamp(elevation, WreckerSpec.MinElevation, WreckerSpec.MaxElevation);
-            Apply();
         }
+
+        /// <summary>Visible barrel jumps to the target (Bind, Retry: deterministic reset, no catch-up).</summary>
+        public void SnapVisualNow() { _visYaw = _yaw; _visPitch = _elevation; _velYaw = _velPitch = 0f; _snapLeft = 0f; Apply(); }
+
+        /// <summary>Closes the remaining visual gap linearly over <paramref name="seconds"/> (FIRE: inside the 66 ms anticipation, 01).</summary>
+        public void SnapVisual(float seconds) { if (seconds <= 0f) SnapVisualNow(); else _snapLeft = seconds; }
 
         /// <summary>Shows a ghost arc for the suggested shot until the first shot (Addendum §1).</summary>
         public void ShowGhost(float yaw, float elevation)
@@ -65,8 +79,31 @@ namespace Crashverse.Weapons
 
         public void CancelAim() { _dragging = false; _fingerId = -1; }
 
-        public Vector3 LaunchVelocity => (projectileSpawn != null ? projectileSpawn.right : Vector3.right) * launchSpeed;
-        public Vector3 SpawnPosition => projectileSpawn != null ? projectileSpawn.position : transform.position + Vector3.up * 1.5f;
+        /// <summary>Barrel rotation for the TARGET aim, relative to the yaw pivot's parent (same chain WreckerBuilder builds: yaw about Y, elevation about Z).</summary>
+        Quaternion TargetLocalRotation => Quaternion.Euler(0f, -_yaw, 0f) * Quaternion.Euler(0f, 0f, _elevation);
+
+        public Vector3 LaunchVelocity
+        {
+            get
+            {
+                if (projectileSpawn == null || yawPivot == null) return (projectileSpawn != null ? projectileSpawn.right : Vector3.right) * launchSpeed;
+                var dirLocal = TargetLocalRotation * Vector3.right;
+                var par = yawPivot.parent;
+                return (par != null ? par.TransformDirection(dirLocal) : dirLocal) * launchSpeed;
+            }
+        }
+
+        public Vector3 SpawnPosition
+        {
+            get
+            {
+                if (projectileSpawn == null) return transform.position + Vector3.up * 1.5f;
+                if (yawPivot == null) return projectileSpawn.position;
+                var local = yawPivot.localPosition + Quaternion.Euler(0f, -_yaw, 0f) * (_pitchRestLocal + Quaternion.Euler(0f, 0f, _elevation) * projectileSpawn.localPosition);
+                var par = yawPivot.parent;
+                return par != null ? par.TransformPoint(local) : local;
+            }
+        }
 
         static float DpPerPixel => 160f / (Screen.dpi > 1f ? Screen.dpi : 160f);
 
@@ -92,7 +129,8 @@ namespace Crashverse.Weapons
                 else if (t.fingerId == _fingerId)
                 {
                     if (t.phase == TouchPhase.Moved) { Drag(t.position - _last); _last = t.position; }
-                    else if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled) CancelAim();
+                    else if (t.phase == TouchPhase.Ended) { var rest = t.position - _last; if (rest.x != 0f || rest.y != 0f) Drag(rest); CancelAim(); } // a flick shorter than a frame has no Moved phase: keep its delta
+                    else if (t.phase == TouchPhase.Canceled) CancelAim();
                 }
             }
             if (Input.touchCount > 1) CancelAim(); // two fingers = camera orbit
@@ -114,16 +152,43 @@ namespace Crashverse.Weapons
             }
         }
 
-        void Drag(Vector2 deltaPx)
+        /// <summary>P0 (dev-build-6 phone test): +yaw turns the barrel toward world +z (Euler(0, -yaw, 0)), which is SCREEN-LEFT
+        /// from the run camera (yaw 72°, looking down +x). So a finger moving right (+x px) must DEcrease yaw; it used to add,
+        /// which mirrored aiming. PlayMode FirstRunTapTests checks the on-screen direction through the real camera.</summary>
+        internal void Drag(Vector2 deltaPx)
         {
             var dp = deltaPx * DpPerPixel;
-            SetAim(_yaw + dp.x * yawDegPerDp, _elevation + dp.y * pitchDegPerDp);
+            float wantYaw = _yaw - dp.x * yawDegPerDp, wantEl = _elevation + dp.y * pitchDegPerDp;
+            SetAim(wantYaw, wantEl);
+            bool clamped = wantYaw != _yaw || wantEl != _elevation;
+            if (clamped && !_clampedLast) Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.WreckerAimClamp); // once per contact
+            _clampedLast = clamped;
         }
 
+        void LateUpdate()
+        {
+            float dt = Time.unscaledDeltaTime; // aim stays responsive under hit stop / slow-mo / Time Fracture (01)
+            if (_snapLeft > 0f)
+            {
+                float k = Mathf.Min(1f, dt / _snapLeft);
+                _visYaw += (_yaw - _visYaw) * k; _visPitch += (_elevation - _visPitch) * k; _velYaw = _velPitch = 0f;
+                _snapLeft -= dt;
+            }
+            else
+            {
+                float w = Crashverse.Feel.AimSpring.Omega(Crashverse.Perf.QualityController.FeelTier);
+                Crashverse.Feel.AimSpring.Step(ref _visYaw, ref _velYaw, _yaw, w, dt);
+                Crashverse.Feel.AimSpring.Step(ref _visPitch, ref _velPitch, _elevation, w, dt);
+            }
+            Apply();
+        }
+
+        /// <summary>Applies the VISIBLE pose. Cosmetic pitch offset never pushes the barrel past the 5–70° limits.</summary>
         void Apply()
         {
-            if (yawPivot != null) yawPivot.localRotation = Quaternion.Euler(0f, -_yaw, 0f);
-            if (pitchPivot != null) pitchPivot.localRotation = Quaternion.Euler(0f, 0f, _elevation);
+            if (yawPivot != null) yawPivot.localRotation = Quaternion.Euler(0f, -_visYaw, 0f);
+            if (pitchPivot != null)
+                pitchPivot.localRotation = Quaternion.Euler(0f, 0f, Mathf.Clamp(_visPitch + visualPitchOffsetDeg, WreckerSpec.MinElevation, WreckerSpec.MaxElevation));
         }
 
         /// <summary>Seconds from launch to the first impact of the current aim (used by Splitstrike's 70% rule). 0 if none found.</summary>

@@ -54,7 +54,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "post",
-     "hintYaw": 1.0,
+     "hintYaw": 0.0,
      "hintPitch": 11.0
     },
     {
@@ -88,7 +88,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "propL",
-     "hintYaw": 3.0,
+     "hintYaw": -3.0,
      "hintPitch": 10.0
     },
     {
@@ -122,7 +122,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "braceL",
-     "hintYaw": 2.0,
+     "hintYaw": -3.0,
      "hintPitch": 14.0
     },
     {
@@ -156,7 +156,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "key1",
-     "hintYaw": 2.0,
+     "hintYaw": -1.5,
      "hintPitch": 15.0
     },
     {
@@ -190,8 +190,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "lhRing",
-     "hintYaw": -2.0,
-     "hintPitch": 12.5
+     "hintYaw": -5.5,
+     "hintPitch": 14.0
     }
    ]
   },
@@ -239,7 +239,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "post",
-     "hintYaw": 1.0,
+     "hintYaw": 0.0,
      "hintPitch": 11.0
     },
     {
@@ -273,7 +273,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "propL",
-     "hintYaw": 3.0,
+     "hintYaw": -3.0,
      "hintPitch": 10.0
     },
     {
@@ -307,7 +307,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "braceL",
-     "hintYaw": 2.0,
+     "hintYaw": -3.0,
      "hintPitch": 14.0
     },
     {
@@ -341,7 +341,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "key1",
-     "hintYaw": 2.0,
+     "hintYaw": -1.5,
      "hintPitch": 15.0
     },
     {
@@ -375,8 +375,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "lhRing",
-     "hintYaw": -2.0,
-     "hintPitch": 12.5
+     "hintYaw": -5.5,
+     "hintPitch": 14.0
     }
    ]
   },
@@ -424,8 +424,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "post",
-     "hintYaw": 1.0,
-     "hintPitch": 17.5
+     "hintYaw": 0.0,
+     "hintPitch": 17.0
     },
     {
      "id": "gravity_games_e2",
@@ -458,7 +458,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "propL",
-     "hintYaw": 3.0,
+     "hintYaw": -3.0,
      "hintPitch": 16.0
     },
     {
@@ -492,8 +492,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "braceL",
-     "hintYaw": 2.0,
-     "hintPitch": 20.0
+     "hintYaw": -3.0,
+     "hintPitch": 20.5
     },
     {
      "id": "gravity_games_e4",
@@ -526,8 +526,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "key1",
-     "hintYaw": 2.0,
-     "hintPitch": 21.5
+     "hintYaw": -1.5,
+     "hintPitch": 21.0
     },
     {
      "id": "gravity_games_e5",
@@ -560,8 +560,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "lhRing",
-     "hintYaw": -2.0,
-     "hintPitch": 18.5
+     "hintYaw": -5.5,
+     "hintPitch": 20.5
     }
    ]
   },
@@ -609,7 +609,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "post",
-     "hintYaw": 1.0,
+     "hintYaw": 0.0,
      "hintPitch": 11.0
     },
     {
@@ -643,7 +643,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "propL",
-     "hintYaw": 3.0,
+     "hintYaw": -3.0,
      "hintPitch": 10.0
     },
     {
@@ -677,7 +677,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "braceL",
-     "hintYaw": 2.0,
+     "hintYaw": -3.0,
      "hintPitch": 14.0
     },
     {
@@ -711,7 +711,7 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "key1",
-     "hintYaw": 2.0,
+     "hintYaw": -1.5,
      "hintPitch": 15.0
     },
     {
@@ -745,8 +745,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "lhRing",
-     "hintYaw": -2.0,
-     "hintPitch": 12.5
+     "hintYaw": -5.5,
+     "hintPitch": 14.0
     }
    ]
   }
@@ -782,8 +782,8 @@
   "starCapIfPowerupUsed": 3,
   "islandKillY": -2.0,
   "hintTarget": "scaffold",
-  "hintYaw": 3.0,
-  "hintPitch": 10.5
+  "hintYaw": 0.0,
+  "hintPitch": 10.0
  },
  "tiers": [
   {
@@ -846,9 +846,9 @@
    "tier": 5,
    "xp": 500,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -916,9 +916,9 @@
    "tier": 10,
    "xp": 1000,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -986,9 +986,9 @@
    "tier": 15,
    "xp": 1750,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -1056,9 +1056,9 @@
    "tier": 20,
    "xp": 2500,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -1126,9 +1126,9 @@
    "tier": 25,
    "xp": 3500,
    "free": {
-    "type": "shard",
-    "amount": 2,
-    "id": ""
+    "type": "chest",
+    "amount": 1,
+    "id": "shard:2;gems:10"
    },
    "premium": {
     "type": "cosmetic",
@@ -1198,7 +1198,7 @@
    "free": {
     "type": "chest",
     "amount": 1,
-    "id": "coins:1000;shard:5"
+    "id": "coins:1000;shard:5;gems:10"
    },
    "premium": {
     "type": "cosmetic",

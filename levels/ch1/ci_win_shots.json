@@ -1,0 +1,1054 @@
+{
+ "_doc": "BUG-24: known-winning aim for every Ch1 level's best line, in each form CI can consume.\nGeometry is the same as Developer's Tools/ContentGen/derive_hints.py (PR #12): Wrecker at x=-20, pivot y=1.5,\nspawn 1.95 m along the barrel, +yaw -> +z, structureBase (10,0,0), launchSpeed 28 (wrecker.json), low arc.\nOn top of that it ray-marches the arc (dt 0.01 s) against every intact box in the layout and reports the FIRST\npiece the shot actually hits (sim.py removes broken/collapsed pieces between shots).\nOutputs ci_win_shots.json: world target, yaw/elevation (g x1.0 and x1.2), drag from rest in dp and in px at\n1080x2340 / 420 dpi, and whether the arc's first hit is the intended piece.",
+ "_assumptions": {
+  "wrecker": [
+   -20.0,
+   0,
+   0
+  ],
+  "pivotY": 1.5,
+  "spawnAlong": 1.95,
+  "structureBase": [
+   10.0,
+   0.0,
+   0.0
+  ],
+  "launchSpeed": 28.0,
+  "restElevation": 25.0,
+  "yawDegPerDp": 0.25,
+  "pitchDegPerDp": 0.15,
+  "screen": "1080x2340 @ 420 dpi, drag from (540,1300); drag right = +yaw, drag UP (smaller y) = +elevation"
+ },
+ "levels": [
+  {
+   "id": "c1_l01",
+   "layout": "c1_l01_lookout_hut",
+   "line": "post",
+   "shots_budget": 4,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "post",
+     "powerup": null,
+     "world": [
+      9.4,
+      2.2,
+      0.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 0.0,
+       "elevation": 10.78,
+       "hintYaw": 0.0,
+       "hintPitch": 11.0,
+       "drag_dp": [
+        0.0,
+        -94.8
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1549
+       ],
+       "first_hit": "post"
+      },
+      "1.2": {
+       "yaw": 0.0,
+       "elevation": 12.78,
+       "hintYaw": 0.0,
+       "hintPitch": 13.0,
+       "drag_dp": [
+        0.0,
+        -81.5
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1514
+       ],
+       "first_hit": "post"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l02",
+   "layout": "c1_l02_stilt_tower",
+   "line": "sill",
+   "shots_budget": 4,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "sill",
+     "powerup": null,
+     "world": [
+      9.8,
+      1.4,
+      0.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 0.0,
+       "elevation": 9.32,
+       "hintYaw": 0.0,
+       "hintPitch": 9.5,
+       "drag_dp": [
+        0.0,
+        -104.5
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1574
+       ],
+       "first_hit": "sill"
+      },
+      "1.2": {
+       "yaw": 0.0,
+       "elevation": 11.34,
+       "hintYaw": 0.0,
+       "hintPitch": 11.5,
+       "drag_dp": [
+        0.0,
+        -91.1
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1539
+       ],
+       "first_hit": "sill"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l03",
+   "layout": "c1_l03_bakery",
+   "line": "propL, propR",
+   "shots_budget": 5,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "propL",
+     "powerup": null,
+     "world": [
+      8.6,
+      1.9,
+      -1.6
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": -3.2,
+       "elevation": 9.91,
+       "hintYaw": -3.0,
+       "hintPitch": 10.0,
+       "drag_dp": [
+        -12.8,
+        -100.6
+       ],
+       "swipe": [
+        540,
+        1300,
+        506,
+        1564
+       ],
+       "first_hit": "propL"
+      },
+      "1.2": {
+       "yaw": -3.2,
+       "elevation": 11.83,
+       "hintYaw": -3.0,
+       "hintPitch": 12.0,
+       "drag_dp": [
+        -12.8,
+        -87.8
+       ],
+       "swipe": [
+        540,
+        1300,
+        506,
+        1530
+       ],
+       "first_hit": "propL"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 2,
+     "target": "propR",
+     "powerup": null,
+     "world": [
+      8.6,
+      1.9,
+      1.6
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 3.2,
+       "elevation": 9.91,
+       "hintYaw": 3.0,
+       "hintPitch": 10.0,
+       "drag_dp": [
+        12.8,
+        -100.6
+       ],
+       "swipe": [
+        540,
+        1300,
+        574,
+        1564
+       ],
+       "first_hit": "propR"
+      },
+      "1.2": {
+       "yaw": 3.2,
+       "elevation": 11.83,
+       "hintYaw": 3.0,
+       "hintPitch": 12.0,
+       "drag_dp": [
+        12.8,
+        -87.8
+       ],
+       "swipe": [
+        540,
+        1300,
+        574,
+        1530
+       ],
+       "first_hit": "propR"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l04",
+   "layout": "c1_l04_windmill",
+   "line": "beamL, beamR",
+   "shots_budget": 5,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "beamL",
+     "powerup": null,
+     "world": [
+      8.7,
+      3.4,
+      -1.2
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": -2.39,
+       "elevation": 13.02,
+       "hintYaw": -2.5,
+       "hintPitch": 13.0,
+       "drag_dp": [
+        -9.6,
+        -79.9
+       ],
+       "swipe": [
+        540,
+        1300,
+        515,
+        1510
+       ],
+       "first_hit": "beamL"
+      },
+      "1.2": {
+       "yaw": -2.39,
+       "elevation": 15.0,
+       "hintYaw": -2.5,
+       "hintPitch": 15.0,
+       "drag_dp": [
+        -9.6,
+        -66.7
+       ],
+       "swipe": [
+        540,
+        1300,
+        515,
+        1475
+       ],
+       "first_hit": "beamL"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 2,
+     "target": "beamR",
+     "powerup": null,
+     "world": [
+      8.7,
+      3.4,
+      1.2
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 2.39,
+       "elevation": 13.02,
+       "hintYaw": 2.5,
+       "hintPitch": 13.0,
+       "drag_dp": [
+        9.6,
+        -79.9
+       ],
+       "swipe": [
+        540,
+        1300,
+        565,
+        1510
+       ],
+       "first_hit": "beamR"
+      },
+      "1.2": {
+       "yaw": 2.39,
+       "elevation": 15.0,
+       "hintYaw": 2.5,
+       "hintPitch": 15.0,
+       "drag_dp": [
+        9.6,
+        -66.7
+       ],
+       "swipe": [
+        540,
+        1300,
+        565,
+        1475
+       ],
+       "first_hit": "beamR"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l05",
+   "layout": "c1_l05_twin_cottages",
+   "line": "bridge",
+   "shots_budget": 5,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "bridge",
+     "powerup": null,
+     "world": [
+      10.0,
+      3.0,
+      0.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 0.0,
+       "elevation": 12.56,
+       "hintYaw": 0.0,
+       "hintPitch": 12.5,
+       "drag_dp": [
+        0.0,
+        -82.9
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1518
+       ],
+       "first_hit": "bridge"
+      },
+      "1.2": {
+       "yaw": 0.0,
+       "elevation": 14.64,
+       "hintYaw": 0.0,
+       "hintPitch": 14.5,
+       "drag_dp": [
+        0.0,
+        -69.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1481
+       ],
+       "first_hit": "bridge"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l06",
+   "layout": "c1_l06_granary",
+   "line": "braceL, braceR",
+   "shots_budget": 5,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "braceL",
+     "powerup": null,
+     "world": [
+      9.1,
+      3.85,
+      -1.4
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": -2.75,
+       "elevation": 14.04,
+       "hintYaw": -3.0,
+       "hintPitch": 14.0,
+       "drag_dp": [
+        -11.0,
+        -73.1
+       ],
+       "swipe": [
+        540,
+        1300,
+        511,
+        1492
+       ],
+       "first_hit": "braceL"
+      },
+      "1.2": {
+       "yaw": -2.75,
+       "elevation": 16.07,
+       "hintYaw": -3.0,
+       "hintPitch": 16.0,
+       "drag_dp": [
+        -11.0,
+        -59.5
+       ],
+       "swipe": [
+        540,
+        1300,
+        511,
+        1456
+       ],
+       "first_hit": "braceL"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 2,
+     "target": "braceR",
+     "powerup": null,
+     "world": [
+      9.1,
+      3.85,
+      1.4
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 2.75,
+       "elevation": 14.04,
+       "hintYaw": 3.0,
+       "hintPitch": 14.0,
+       "drag_dp": [
+        11.0,
+        -73.1
+       ],
+       "swipe": [
+        540,
+        1300,
+        569,
+        1492
+       ],
+       "first_hit": "braceR"
+      },
+      "1.2": {
+       "yaw": 2.75,
+       "elevation": 16.07,
+       "hintYaw": 3.0,
+       "hintPitch": 16.0,
+       "drag_dp": [
+        11.0,
+        -59.5
+       ],
+       "swipe": [
+        540,
+        1300,
+        569,
+        1456
+       ],
+       "first_hit": "braceR"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l07",
+   "layout": "m1_clockwork_tower",
+   "line": "scaffold, ring0",
+   "shots_budget": 5,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "scaffold",
+     "powerup": null,
+     "world": [
+      8.3,
+      1.9,
+      0.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 0.0,
+       "elevation": 9.79,
+       "hintYaw": 0.0,
+       "hintPitch": 10.0,
+       "drag_dp": [
+        0.0,
+        -101.4
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1566
+       ],
+       "first_hit": "scaffold"
+      },
+      "1.2": {
+       "yaw": 0.0,
+       "elevation": 11.68,
+       "hintYaw": 0.0,
+       "hintPitch": 11.5,
+       "drag_dp": [
+        0.0,
+        -88.8
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1533
+       ],
+       "first_hit": "scaffold"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 2,
+     "target": "ring0",
+     "powerup": null,
+     "world": [
+      10.0,
+      1.45,
+      0.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 0.0,
+       "elevation": 9.5,
+       "hintYaw": 0.0,
+       "hintPitch": 9.5,
+       "drag_dp": [
+        0.0,
+        -103.3
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1571
+       ],
+       "first_hit": "ring0"
+      },
+      "1.2": {
+       "yaw": 0.0,
+       "elevation": 11.53,
+       "hintYaw": 0.0,
+       "hintPitch": 11.5,
+       "drag_dp": [
+        0.0,
+        -89.8
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1536
+       ],
+       "first_hit": "ring0"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l08",
+   "layout": "c1_l08_market_arcade",
+   "line": "key0, splitstrike:key1+key2+key3",
+   "shots_budget": 5,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "key0",
+     "powerup": null,
+     "world": [
+      8.9,
+      4.25,
+      -2.25
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": -4.45,
+       "elevation": 14.82,
+       "hintYaw": -4.5,
+       "hintPitch": 15.0,
+       "drag_dp": [
+        -17.8,
+        -67.9
+       ],
+       "swipe": [
+        540,
+        1300,
+        493,
+        1478
+       ],
+       "first_hit": "key0"
+      },
+      "1.2": {
+       "yaw": -4.45,
+       "elevation": 16.85,
+       "hintYaw": -4.5,
+       "hintPitch": 17.0,
+       "drag_dp": [
+        -17.8,
+        -54.3
+       ],
+       "swipe": [
+        540,
+        1300,
+        493,
+        1443
+       ],
+       "first_hit": "key0"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 2,
+     "target": "key2",
+     "powerup": "splitstrike",
+     "world": [
+      8.9,
+      4.25,
+      0.75
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 1.49,
+       "elevation": 14.8,
+       "hintYaw": 1.5,
+       "hintPitch": 15.0,
+       "drag_dp": [
+        5.9,
+        -68.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        556,
+        1479
+       ],
+       "first_hit": "key2"
+      },
+      "1.2": {
+       "yaw": 1.49,
+       "elevation": 16.83,
+       "hintYaw": 1.5,
+       "hintPitch": 17.0,
+       "drag_dp": [
+        5.9,
+        -54.5
+       ],
+       "swipe": [
+        540,
+        1300,
+        556,
+        1443
+       ],
+       "first_hit": "key2"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l09",
+   "layout": "c1_l09_lighthouse_gauntlet",
+   "line": "lhRing, seaDeck",
+   "shots_budget": 6,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "lhRing",
+     "powerup": null,
+     "world": [
+      11.0,
+      3.45,
+      -3.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": -5.53,
+       "elevation": 13.75,
+       "hintYaw": -5.5,
+       "hintPitch": 14.0,
+       "drag_dp": [
+        -22.1,
+        -75.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        482,
+        1497
+       ],
+       "first_hit": "lhRing"
+      },
+      "1.2": {
+       "yaw": -5.53,
+       "elevation": 15.96,
+       "hintYaw": -5.5,
+       "hintPitch": 16.0,
+       "drag_dp": [
+        -22.1,
+        -60.3
+       ],
+       "swipe": [
+        540,
+        1300,
+        482,
+        1458
+       ],
+       "first_hit": "lhRing"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 2,
+     "target": "seaDeck",
+     "powerup": null,
+     "world": [
+      9.4,
+      3.0,
+      3.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 5.83,
+       "elevation": 12.43,
+       "hintYaw": 6.0,
+       "hintPitch": 12.5,
+       "drag_dp": [
+        23.3,
+        -83.8
+       ],
+       "swipe": [
+        540,
+        1300,
+        601,
+        1520
+       ],
+       "first_hit": "seaDeck"
+      },
+      "1.2": {
+       "yaw": 5.83,
+       "elevation": 14.47,
+       "hintYaw": 6.0,
+       "hintPitch": 14.5,
+       "drag_dp": [
+        23.3,
+        -70.2
+       ],
+       "swipe": [
+        540,
+        1300,
+        601,
+        1484
+       ],
+       "first_hit": "seaDeck"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  },
+  {
+   "id": "c1_l10",
+   "layout": "c1_l10_tidewarden",
+   "line": "shoulderL, shoulderR, core(open), any(closed), core(open)",
+   "shots_budget": 8,
+   "shots": [
+    {
+     "shot": 1,
+     "target": "shoulderL",
+     "powerup": null,
+     "world": [
+      10.0,
+      6.6,
+      -2.2
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": -4.19,
+       "elevation": 19.62,
+       "hintYaw": -4.0,
+       "hintPitch": 19.5,
+       "drag_dp": [
+        -16.8,
+        -35.8
+       ],
+       "swipe": [
+        540,
+        1300,
+        496,
+        1394
+       ],
+       "first_hit": "shoulderL"
+      },
+      "1.2": {
+       "yaw": -4.19,
+       "elevation": 21.86,
+       "hintYaw": -4.0,
+       "hintPitch": 22.0,
+       "drag_dp": [
+        -16.8,
+        -21.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        496,
+        1355
+       ],
+       "first_hit": "shoulderL"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 2,
+     "target": "shoulderR",
+     "powerup": null,
+     "world": [
+      10.0,
+      6.6,
+      2.2
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 4.19,
+       "elevation": 19.62,
+       "hintYaw": 4.0,
+       "hintPitch": 19.5,
+       "drag_dp": [
+        16.8,
+        -35.8
+       ],
+       "swipe": [
+        540,
+        1300,
+        584,
+        1394
+       ],
+       "first_hit": "shoulderR"
+      },
+      "1.2": {
+       "yaw": 4.19,
+       "elevation": 21.86,
+       "hintYaw": 4.0,
+       "hintPitch": 22.0,
+       "drag_dp": [
+        16.8,
+        -21.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        584,
+        1355
+       ],
+       "first_hit": "shoulderR"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 3,
+     "target": "core",
+     "powerup": null,
+     "world": [
+      8.6,
+      5.7,
+      0.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 0.0,
+       "elevation": 17.71,
+       "hintYaw": 0.0,
+       "hintPitch": 17.5,
+       "drag_dp": [
+        0.0,
+        -48.6
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1428
+       ],
+       "first_hit": "core"
+      },
+      "1.2": {
+       "yaw": 0.0,
+       "elevation": 19.76,
+       "hintYaw": 0.0,
+       "hintPitch": 20.0,
+       "drag_dp": [
+        0.0,
+        -35.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1392
+       ],
+       "first_hit": "core"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 4,
+     "target": "head",
+     "powerup": null,
+     "world": [
+      10.0,
+      7.6,
+      0.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 0.0,
+       "elevation": 21.55,
+       "hintYaw": 0.0,
+       "hintPitch": 21.5,
+       "drag_dp": [
+        0.0,
+        -23.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1360
+       ],
+       "first_hit": "head"
+      },
+      "1.2": {
+       "yaw": 0.0,
+       "elevation": 23.82,
+       "hintYaw": 0.0,
+       "hintPitch": 24.0,
+       "drag_dp": [
+        0.0,
+        -7.9
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1321
+       ],
+       "first_hit": "head"
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 5,
+     "target": "core",
+     "powerup": null,
+     "world": [
+      8.6,
+      5.7,
+      0.0
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 0.0,
+       "elevation": 17.71,
+       "hintYaw": 0.0,
+       "hintPitch": 17.5,
+       "drag_dp": [
+        0.0,
+        -48.6
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1428
+       ],
+       "first_hit": "core"
+      },
+      "1.2": {
+       "yaw": 0.0,
+       "elevation": 19.76,
+       "hintYaw": 0.0,
+       "hintPitch": 20.0,
+       "drag_dp": [
+        0.0,
+        -35.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        540,
+        1392
+       ],
+       "first_hit": "core"
+      }
+     },
+     "clear": true
+    }
+   ],
+   "all_clear": true
+  }
+ ]
+}

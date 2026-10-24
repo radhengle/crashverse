@@ -6,7 +6,7 @@ Implementation: Cinemachine Impulse (or equivalent), perlin noise, all values da
 | Trigger | Amplitude pos / rot | Freq | Duration (ms / f) | Decay |
 |---|---|---|---|---|
 | Fire | 0.06 m / 0.6° | 9 Hz | 180 / 11 | ease-out quad |
-| Impact wood | 0.02 / 0.2° | 14 | 100 / 6 | out |
+| Impact wood / glass | 0.02 / 0.2° | 14 | 100 / 6 | out |
 | Impact brick break | 0.04 / 0.4° | 12 | 150 / 9 | out |
 | Steel joint break | 0.06 / 0.6° | 12 | 150 / 9 | out |
 | Segment collapse land | 0.08 / 0.8° | 8 | 250 / 15 | out cubic |
@@ -64,7 +64,7 @@ Setting `ReduceMotion` (bool, **default OFF**), stored in local player prefs + p
 | Hit stop (02) | capped at 33 ms (2 f) and timeScale 0.3 (not 0.05) |
 | Flashes (muzzle, hit flash, joint ring, core hit, combo edge flash) | peak emissive/additive intensity ×0.4, alpha ≤ 0.5, duration ≥ 100 ms ramps (no 1–2 f strobe) |
 | Full-screen flashes / overlays | none: x20 combo edge flash off, Time Fracture overlay = static 25% tint fading 300 ms, boss defeat flare off, win rays static |
-| Repeating pulses (shutter tell 2 Hz, hint pulse, PowerArmed) | **gameplay tells kept** (shutter tell is a rule signal, DP L10) but as colour change, amplitude ×0.5, no brightness strobe > 3 Hz |
+| Repeating pulses (shutter tell 2.4 Hz, hint pulse, PowerArmed) | **gameplay tells kept** (shutter tell is a rule signal, DP L10) but as colour change, amplitude ×0.5, no brightness strobe > 3 Hz |
 | Camera blends (FollowShot) | FollowShot off: camera stays in AimCam framing; blends ≥ 400 ms ease-in-out |
 | UI motion (06) | overshoots removed (out-back → out-quad), scale pops capped 1.1, confetti ×0.25, coin fly kept (4 coins) |
 | Idle fidget / breathing loops | fidget off, idle amplitudes ×0.5 |
@@ -74,10 +74,17 @@ Gameplay, timings that affect input, and audio are unchanged (audio events still
 - 01 Cannon: no fire shake; muzzle flash ×0.4; recoil motion kept (readability); fidget off.
 - 02 Impacts: hit flash capped; hit stop ≤33 ms; particle counts unchanged.
 - 03 Collapse: no collapse-land shake; dust unchanged.
-- 04 Power-ups: Shockwave ring/Chain arcs alpha ≤0.5; Time Fracture no full-screen crack animation; Gravity burst no shake.
+- 04 Power-ups: Shockwave ring/Chain arcs alpha ≤0.5; Shockwave rapid link flashes collapse into ONE 100 ms tint (alpha ≤0.5, ease-out) per activation; Time Fracture no full-screen crack animation, keeps its static 30% env desaturation (a non-flashing state cue) under the static 25% tint; Gravity burst no shake.
 - 05 Bosses: phase change/defeat no shake or flare; shutter tell kept as colour change.
 - 06 UI: see table; star pops 0→1.1→1.
 - 07: shake 0, slow-mo off, FollowShot off.
 
 ### Settings UI toggles
 Two rows, in order "Reduce Screen Shake", "Reduce Motion"; each row (v1 style: navy panel, label 36 px+, ON/OFF pill switch, row hit box ≥144 px). Toggle motion: knob slides 150 ms ease-out-quad, track colour cross-fade 150 ms (navy → cyan ON), no overshoot/bounce **in either mode**;  Preview: none (no shake demo). Toggle sfx `UI_TOGGLE`. Default OFF; Reduce Motion auto-ON with Android "Remove animations" (above).
+
+## Haptics timing (Animator decisions, 17 Oct, for audio/haptics.md and PR #37)
+- Haptics follow Reduce Motion (PM): off when Reduce Motion is on.
+- PU_GRAVITY_BURST: light tick at 1500 ms (implode start), peak pulse at 1600 ms when the burst ring fires.
+- Chain Reactor: medium pulse on PU_CHAIN_PULSE, then a light tick for each PU_CHAIN_LINK (80 ms stagger, so it clears the 40 ms rate limit). At most 5 link ticks per activation.
+- BOSS_TIDE_DEFEAT: strong pulse at 0 ms, then a second medium pulse at BOSS_TIDE_DEFEAT_COLLAPSE (+3500 ms).
+- BREAK_STEEL (non-joint): shake 0.03 m / 0.3° for 150 ms, light haptic. IMPACT_TERRAIN: 0.01 m for 80 ms is now final, with no haptic.

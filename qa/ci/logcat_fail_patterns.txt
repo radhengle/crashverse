@@ -1,0 +1,15 @@
+# Extended regexes (grep -E), one per line; any match in logcat fails the smoke run.
+# Crashes / ANR
+FATAL EXCEPTION
+Fatal signal
+ANR in 
+Unity +: .*Exception
+# Code stripping / missing types (BUG-24 root cause: BoxCollider/SphereCollider stripped; fix via link.xml)
+Could not produce class with ID
+The class named .* is missing
+[Mm]issing [Ss]cript
+The referenced script .* is missing
+Missing type
+Unable to find type
+TypeLoadException
+MissingMethodException
