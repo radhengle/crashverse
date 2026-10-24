@@ -1,0 +1,112 @@
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+
+namespace Crashverse.Rendering.Tests
+{
+    /// <summary>Guards against magenta/unlit output on device: URP assigned everywhere, shaders shipped, no renderer without a material.</summary>
+    public class RenderingSetupTests
+    {
+        static readonly string[] Tiers = { "Low", "Mid", "High" };
+
+        [Test]
+        public void GraphicsSettings_HasUrpAsset()
+        {
+            Assert.IsInstanceOf<UniversalRenderPipelineAsset>(GraphicsSettings.defaultRenderPipeline,
+                "GraphicsSettings > Scriptable Render Pipeline must be a URP asset (otherwise Built-in renders URP materials magenta).");
+        }
+
+        [Test]
+        public void QualitySettings_HasLowMidHigh_EachWithUrpAsset()
+        {
+            var names = QualitySettings.names;
+            foreach (var t in Tiers) CollectionAssert.Contains(names, t, $"Quality tier '{t}' missing");
+            var settings = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/QualitySettings.asset");
+            Assert.IsNotEmpty(settings, "QualitySettings.asset must exist in the project.");
+            var so = new SerializedObject(settings[0]);
+            var levels = so.FindProperty("m_QualitySettings");
+            var bad = new List<string>();
+            for (int i = 0; i < levels.arraySize; i++)
+            {
+                var lvl = levels.GetArrayElementAtIndex(i);
+                var rp = lvl.FindPropertyRelative("customRenderPipeline").objectReferenceValue;
+                if (!(rp is UniversalRenderPipelineAsset)) bad.Add(lvl.FindPropertyRelative("name").stringValue);
+            }
+            Assert.IsEmpty(bad, "Quality levels without a URP asset: " + string.Join(", ", bad));
+        }
+
+        [Test]
+        public void RequiredShaders_ExistAndAreAlwaysIncluded()
+        {
+            // Synchronize before asserting. A fresh CI checkout has no editor menu interaction;
+            // the build preprocessor performs the same operation for player builds.
+            var missing = Crashverse.Rendering.Editor.RequiredShaders.Ensure();
+            Assert.IsEmpty(missing, "Required shaders could not be resolved: " + string.Join(", ", missing));
+
+            var included = Crashverse.Rendering.Editor.RequiredShaders.AlwaysIncluded();
+            var problems = new List<string>();
+            foreach (var n in Crashverse.Rendering.Editor.RequiredShaders.Names)
+            {
+                var s = Shader.Find(n);
+                if (s == null) problems.Add(n + " (not found)");
+                else if (!s.isSupported) problems.Add(n + " (not supported)");
+                else if (!included.Contains(s)) problems.Add(n + " (not in Always Included after sync)");
+            }
+            Assert.IsEmpty(problems, string.Join("\n", problems));
+        }
+
+        [Test]
+        public void Prefabs_NoRendererMissingMaterial()
+        {
+            var problems = new List<string>();
+            foreach (var guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/_Project" }))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (go) Check(go.GetComponentsInChildren<Renderer>(true), path, problems);
+            }
+            Assert.IsEmpty(problems, "Renderers with missing materials (magenta on device):\n" + string.Join("\n", problems));
+        }
+
+        [Test]
+        public void BuildScenes_NoRendererMissingMaterial()
+        {
+            var setup = EditorSceneManager.GetSceneManagerSetup();
+            var problems = new List<string>();
+            try
+            {
+                foreach (var s in EditorBuildSettings.scenes.Where(s => s.enabled))
+                {
+                    var scene = EditorSceneManager.OpenScene(s.path, OpenSceneMode.Single);
+                    foreach (var root in scene.GetRootGameObjects())
+                        Check(root.GetComponentsInChildren<Renderer>(true), s.path, problems);
+                }
+            }
+            finally { if (setup.Length > 0) EditorSceneManager.RestoreSceneManagerSetup(setup); }
+            Assert.IsEmpty(problems, "Renderers with missing materials (magenta on device):\n" + string.Join("\n", problems));
+        }
+
+        static void Check(IEnumerable<Renderer> renderers, string where, List<string> problems)
+        {
+            foreach (var r in renderers)
+            {
+                var mats = r.sharedMaterials;
+                if (mats.Length == 0) { problems.Add($"{where}: {Path(r.transform)} has no materials"); continue; }
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    var m = mats[i];
+                    if (m == null) problems.Add($"{where}: {Path(r.transform)} slot {i} is null");
+                    else if (m.shader == null || m.shader.name == "Hidden/InternalErrorShader" || !m.shader.isSupported)
+                        problems.Add($"{where}: {Path(r.transform)} slot {i} '{m.name}' has broken shader");
+                }
+            }
+        }
+
+        static string Path(Transform t) => t.parent == null ? t.name : Path(t.parent) + "/" + t.name;
+    }
+}
