@@ -145,6 +145,11 @@ static class V2Tests
                 T.True(WorldMapRules.Y(1) > WorldMapRules.Y(0), "path goes up");
                 T.True(WorldMapRules.ContentHeight(10) > WorldMapRules.Y(9), "content fits");
                 float bx = WorldMapRules.DailyBossX(1); T.True(Math.Abs(bx - WorldMapRules.X(1)) > 0.2f, "daily boss beside the path");
+                for (int f = 0; f < 10; f++) for (int i = 0; i < 10; i++)
+                {
+                    float dx = (WorldMapRules.DailyBossX(f) - WorldMapRules.X(i)) * 320f, dy = WorldMapRules.DailyBossY(f) - WorldMapRules.Y(i);
+                    T.True(Math.Sqrt(dx * dx + dy * dy) > 42f + 38f, $"daily boss (frontier {f}) clear of node {i + 1} on a 320 dp map");
+                }
             }
             finally { if (File.Exists(path)) File.Delete(path); }
         });

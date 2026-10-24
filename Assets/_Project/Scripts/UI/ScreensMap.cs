@@ -120,7 +120,7 @@ namespace Crashverse.UI
             // season banner (ribbon) under the bar
             var s = SeasonRules.Current(meta, AppServices.Content.Chapter1, AppServices.Save);
             var rib = V2.RoundPanel("SeasonBanner", root, UITheme.H("E11D48"));
-            UIFactory.Place(rib.rectTransform, new Vector2(0f, 1f), new Vector2(170f, 56f), new Vector2(92f, -92f));
+            UIFactory.Place(rib.rectTransform, new Vector2(0f, 1f), new Vector2(170f, 56f), new Vector2(8f, -62f));
             var rl = V2.Title(rib.transform, s != null ? $"SEASON {s.number}\n{s.name.ToUpperInvariant()}" : "SEASON 1", Th.captionSp, Th.goldFill, Th); UIFactory.Stretch(rl.rectTransform, 2f);
         }
 

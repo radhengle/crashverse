@@ -26,7 +26,7 @@ namespace Crashverse.Meta
 
         /// <summary>Daily Boss node sits beside the path near the player's frontier, on the side away from the path.</summary>
         public static float DailyBossX(int frontier) => X(frontier) > 0.5f ? 0.2f : 0.8f;
-        public static float DailyBossY(int frontier) => Y(frontier) + Spacing * 0.5f;
+        public static float DailyBossY(int frontier) => Y(frontier); // level with the frontier, >= 0.3 map widths across: never overlaps a node
 
         /// <summary>Index of the first not-cleared, unlocked level (the "you are here" node), or the last level.</summary>
         public static int Frontier(ChapterData ch, CampaignSave save)
