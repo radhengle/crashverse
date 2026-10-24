@@ -84,6 +84,7 @@ namespace Crashverse.UI
             var tx = Label(img.transform, label, sp > 0 ? sp : t.headingSp, t.white, TextAnchor.MiddleCenter, t, display: true);
             Stretch(tx.rectTransform, 4f);
             tx.resizeTextForBestFit = true; tx.resizeTextMinSize = 12; tx.resizeTextMaxSize = tx.fontSize;
+            img.gameObject.AddComponent<UiButtonMotion>().pressType = UiButtonMotion.TypeForLabel(label); // 06 press/release + UI_BTN_PRESS
             return b;
         }
 

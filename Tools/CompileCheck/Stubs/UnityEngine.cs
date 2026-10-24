@@ -11,13 +11,15 @@ namespace UnityEngine
         public static void DestroyImmediate(Object obj) { }
         public static void DontDestroyOnLoad(Object o) { }
         public static T FindObjectOfType<T>() where T : Object => null;
+        public static T[] FindObjectsOfType<T>() where T : Object => new T[0];
         public static Object Instantiate(Object original) => original is GameObject g ? new GameObject(g.name) : original;
         public static Object Instantiate(Object original, Transform parent) => Instantiate(original);
     }
 
     public class GameObject : Object
     {
-        public Transform transform { get; } = new Transform();
+        public Transform transform { get; } = new Transform(); public T[] GetComponentsInChildren<T>(bool inc = false) => new T[0];
+        public UnityEngine.SceneManagement.Scene scene => default;
         public string tag;
         public int layer;
         public bool activeSelf = true;
@@ -42,6 +44,7 @@ namespace UnityEngine
         public T GetComponentInChildren<T>() where T : class => null;
         public T GetComponentInParent<T>() where T : class => null;
         public T[] GetComponents<T>() where T : class => Array.Empty<T>();
+        public T[] GetComponentsInChildren<T>(bool includeInactive = false) where T : class => Array.Empty<T>();
     }
 
     public class Behaviour : Component { public bool enabled = true; }
@@ -58,13 +61,17 @@ namespace UnityEngine
         public Quaternion rotation = Quaternion.identity;
         public Quaternion localRotation = Quaternion.identity;
         public Vector3 right => localRotation * Vector3.right;
+        public void SetAsFirstSibling() { }
         public Vector3 forward => localRotation * Vector3.forward;
         public Vector3 up => localRotation * Vector3.up;
         public int childCount => 0;
         public Transform parent;
+        public Transform root => parent == null ? this : parent.root;
         public void SetParent(Transform p, bool world = true) { parent = p; }
         public Transform GetChild(int i) => null;
         public void LookAt(Vector3 t) { }
+        public Vector3 TransformPoint(Vector3 p) => position + rotation * p;
+        public Vector3 TransformDirection(Vector3 d) => rotation * d;
         public void SetAsLastSibling() { }
         public void RotateAround(Vector3 p, Vector3 a, float d) { }
         public System.Collections.IEnumerator GetEnumerator() { yield break; }
@@ -77,6 +84,8 @@ namespace UnityEngine
         public static Vector3 zero => new Vector3(0, 0, 0);
         public static Vector3 one => new Vector3(1, 1, 1);
         public static Vector3 up => new Vector3(0, 1, 0);
+        public static Vector3 down => new Vector3(0, -1, 0);
+        public static Vector3 operator -(Vector3 a) => new Vector3(-a.x, -a.y, -a.z);
         public static Vector3 back => new Vector3(0, 0, -1);
         public static Vector3 forward => new Vector3(0, 0, 1);
         public static Vector3 right => new Vector3(1, 0, 0);
@@ -136,11 +145,14 @@ namespace UnityEngine
 
     public static class Time
     {
+        public static double unscaledTimeAsDouble;
         public static float unscaledTime;
         public static float deltaTime = 0.016f;
         public static float fixedDeltaTime = 0.02f;
         public static float fixedTime;
+        public static double fixedTimeAsDouble;
         public static float timeScale = 1f, time, unscaledDeltaTime = 0.016f;
+        public static int frameCount;
     }
 
     public static class Input
@@ -197,10 +209,16 @@ namespace UnityEngine
         public static float sleepThreshold;
         public static int defaultSolverIterations;
         public static Collider[] OverlapSphere(Vector3 p, float r) => Array.Empty<Collider>();
+        public static SimulationMode simulationMode = SimulationMode.FixedUpdate;
+        public static void Simulate(float step) { }
+        public static void IgnoreLayerCollision(int a, int b, bool ignore) { }
     }
+    public enum SimulationMode { FixedUpdate, Update, Script }
+    [AttributeUsage(AttributeTargets.Class)] public sealed class DefaultExecutionOrderAttribute : Attribute { public DefaultExecutionOrderAttribute(int order) { } }
     public static class RenderSettings
     {
         public static Rendering.AmbientMode ambientMode;
+        public static Light sun;
         public static Color ambientSkyColor, ambientEquatorColor, ambientGroundColor, ambientLight, fogColor;
         public static float ambientIntensity, fogStartDistance, fogEndDistance;
         public static bool fog;
@@ -237,7 +255,7 @@ namespace UnityEngine
     public class MeshCollider : Collider { public Mesh sharedMesh; public bool convex; }
     public class Renderer : Component
     {
-        public bool enabled = true;
+        public bool enabled = true; public Material sharedMaterial; public Material material;
         public void GetPropertyBlock(MaterialPropertyBlock b) { }
         public void SetPropertyBlock(MaterialPropertyBlock b) { }
     }
@@ -246,7 +264,7 @@ namespace UnityEngine
         public void SetColor(string n, Color c) { }
         public void SetFloat(string n, float f) { }
     }
-    public class Joint : Component { public Rigidbody connectedBody; public float breakForce, breakTorque; }
+    public class Joint : Component { public Rigidbody connectedBody; public float breakForce, breakTorque; public Vector3 currentForce; }
     public class FixedJoint : Joint { }
     public class Light : Behaviour
     {
@@ -269,8 +287,9 @@ namespace UnityEngine
     {
         public Collider collider; public Rigidbody rigidbody; public GameObject gameObject; public Vector3 relativeVelocity;
         public ContactPoint[] contacts = Array.Empty<ContactPoint>();
+        public Vector3 impulse; public int contactCount => contacts.Length; public ContactPoint GetContact(int i) => contacts[i];
     }
-    public struct ContactPoint { public Vector3 point; }
+    public struct ContactPoint { public Vector3 point; public Vector3 normal; }
     public static class Gizmos
     {
         public static Color color;
@@ -279,6 +298,7 @@ namespace UnityEngine
     public static class Debug { public static void Log(object m) { } public static void LogError(object m) { System.Console.WriteLine("ERR " + m); } public static void LogWarning(object m) { } }
     public static class Random
     {
+        public static int Range(int min, int max) => min;
         public static float value => 0.5f;
         public static Vector3 insideUnitSphere => Vector3.one;
         public static Quaternion rotation => Quaternion.identity;
@@ -324,6 +344,8 @@ namespace UnityEngine
     {
         public float x, y, width, height;
         public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; }
+        public float xMin => x; public float yMin => y; public float xMax => x + width; public float yMax => y + height;
+        public Vector2 center => new Vector2(x + width / 2, y + height / 2);
         public static bool operator ==(Rect a, Rect b) => a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height;
         public static bool operator !=(Rect a, Rect b) => !(a == b);
         public override bool Equals(object o) => o is Rect r && r == this; public override int GetHashCode() => 0;
@@ -347,7 +369,7 @@ namespace UnityEngine
     {
         public AudioClip clip; public bool loop, playOnAwake, isPlaying; public float volume = 1f, spatialBlend; public int priority, timeSamples;
         public UnityEngine.Audio.AudioMixerGroup outputAudioMixerGroup;
-        public void PlayScheduled(double t) { isPlaying = true; } public void SetScheduledEndTime(double t) { } public void Stop() { isPlaying = false; }
+        public void PlayScheduled(double t) { isPlaying = true; } public void Play() { isPlaying = true; } public void SetScheduledEndTime(double t) { } public void Stop() { isPlaying = false; }
     }
 
 }
@@ -356,4 +378,5 @@ namespace UnityEngine.Rendering
 {
     public enum AmbientMode { Skybox, Trilight, Flat, Custom }
 }
-namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } }
+namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } public class AudioMixer : UnityEngine.Object { public AudioMixerGroup[] FindMatchingGroups(string subPath) => new AudioMixerGroup[0]; } }
+

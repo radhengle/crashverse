@@ -14,10 +14,12 @@
     <Compile Include="../../Assets/_Project/Scripts/Destruction/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Weapons/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Level/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Gameplay/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/UI/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Perf/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Data/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Meta/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Rules/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Backend/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/PowerUps/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Boss/**/*.cs" />
@@ -25,6 +27,10 @@
     <Compile Include="../../Assets/_Project/Scripts/LiveOps/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Feel/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Physics/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Physics/Core/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Dev/**/*.cs" Exclude="../../Assets/_Project/Scripts/Dev/**/Tests/**" />
+    <Compile Include="../../Assets/_Project/Scripts/DevHooks/**/*.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

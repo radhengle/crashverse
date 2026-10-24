@@ -1,0 +1,74 @@
+name: Build AudioMixer asset
+
+# Generates Assets/_Project/Resources/Audio/CrashverseMixer.mixer from audio/mixer_spec.md via
+# CrashverseMixerBuilder.BuildMixer (Unity 2022.3.50f1) and uploads it as an artifact. It never commits.
+# workflow_dispatch only works once this file is on the default branch, so it also runs on pushes to
+# audio/library-v1 that touch the builder or this workflow (SFX-only pushes don't trigger it).
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Rebuild even if the mixer already matches the spec"
+        type: boolean
+        default: false
+  push:
+    branches: [ audio/library-v1 ]
+    paths:
+      - 'Assets/_Project/Editor/Audio/CrashverseMixerBuilder.cs'
+      - '.github/workflows/build-mixer.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-mixer-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mixer:
+    name: Unity 2022.3.50f1 -executeMethod CrashverseMixerBuilder.BuildMixer
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Free disk space (unityci editor image is large)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: true
+
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          lfs: false
+          persist-credentials: false
+
+      - name: Build mixer
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneLinux64
+          unityVersion: 2022.3.50f1
+          buildMethod: CrashverseMixerBuilder.BuildMixer
+          customParameters: ${{ github.event.inputs.force == 'true' && '-cvForceRebuild' || '' }}
+          versioning: None
+
+      - name: Show result
+        if: always()
+        run: |
+          ls -la Assets/_Project/Resources/Audio/ || true
+          head -c 3000 Assets/_Project/Resources/Audio/CrashverseMixer.mixer || true
+
+      - name: Upload mixer artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: crashverse-mixer
+          path: |
+            Assets/_Project/Resources/Audio/CrashverseMixer.mixer
+            Assets/_Project/Resources/Audio/CrashverseMixer.mixer.meta
+            Assets/_Project/Resources/Audio.meta
+          if-no-files-found: error
+          retention-days: 14

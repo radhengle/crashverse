@@ -2,7 +2,10 @@ using UnityEngine;
 
 namespace Crashverse.Perf
 {
-    /// <summary>Mid = 60 fps target; Low = 30 fps target. Sleep thresholds + fixed timestep.</summary>
+    /// <summary>
+    /// Tiers vary visuals, frame-rate target and debris caps only (25 low / 60 mid / 90 high, Feel.DebrisBudget).
+    /// Physics is identical on every tier so scored runs replay the same: fixed 0.02 s step, 6 solver iterations, sleep 0.08.
+    /// </summary>
     public class QualityController : MonoBehaviour
     {
         public enum Tier { Mid, Low, High }
@@ -10,10 +13,27 @@ namespace Crashverse.Perf
         public static event System.Action TierChanged;
         public static Tier Current { get; private set; } = Tier.Mid;
 
+        public const float FixedStep = 0.02f;   // 50 Hz, all tiers (matches ProjectSettings/TimeManager.asset)
+        public const int SolverIterations = 6;   // all tiers
+        public const float SleepThreshold = 0.08f; // all tiers
+        public static int DebrisCap => Crashverse.Feel.DebrisBudget.Cap(FeelTier);
+
+        /// <summary>Physics settings shared by every tier. Never vary these per device.</summary>
+        public static void LockPhysics()
+        {
+            Time.fixedDeltaTime = FixedStep;
+            Physics.defaultSolverIterations = SolverIterations;
+            Physics.sleepThreshold = SleepThreshold;
+        }
+
         void Awake()
         {
-            ApplyMid();
+            ApplySaved(); // #45: persisted graphics quality (default Mid)
         }
+
+        /// <summary>Applies the tier saved in GameSettings (0 Low, 1 Mid, 2 High).</summary>
+        public static void ApplySaved() => Apply(Crashverse.Core.GameSettings.Current.Quality);
+        public static void Apply(int q) { if (q == 0) ApplyLow(); else if (q == 2) ApplyHigh(); else ApplyMid(); }
 
         public static void Toggle()
         {
@@ -27,9 +47,7 @@ namespace Crashverse.Perf
             Current = Tier.Mid; TierChanged?.Invoke();
             Application.targetFrameRate = 60;
             QualitySettings.SetQualityLevel(QualitySettings.names.Length > 1 ? 1 : 0, true);
-            Time.fixedDeltaTime = 0.02f; // 50 Hz physics
-            Physics.sleepThreshold = 0.08f;
-            Physics.defaultSolverIterations = 6;
+            LockPhysics();
         }
 
         public static void ApplyLow()
@@ -37,9 +55,7 @@ namespace Crashverse.Perf
             Current = Tier.Low; TierChanged?.Invoke();
             Application.targetFrameRate = 30;
             QualitySettings.SetQualityLevel(0, true);
-            Time.fixedDeltaTime = 0.0333333f; // lighter physics step
-            Physics.sleepThreshold = 0.12f;
-            Physics.defaultSolverIterations = 4;
+            LockPhysics();
         }
     
         /// <summary>High tier: 60 fps, 90 debris rigidbodies (OQ-D1).</summary>
@@ -48,9 +64,7 @@ namespace Crashverse.Perf
             Current = Tier.High; TierChanged?.Invoke();
             Application.targetFrameRate = 60;
             QualitySettings.SetQualityLevel(QualitySettings.names.Length - 1, true);
-            Time.fixedDeltaTime = 0.02f;
-            Physics.sleepThreshold = 0.08f;
-            Physics.defaultSolverIterations = 8;
+            LockPhysics();
         }
     }
 }

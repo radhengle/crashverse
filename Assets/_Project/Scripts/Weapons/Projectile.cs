@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Crashverse.Destruction;
 using Crashverse.PowerUps;
+using Crashverse.Sim;
 using UnityEngine;
 
 namespace Crashverse.Weapons
@@ -17,8 +18,8 @@ namespace Crashverse.Weapons
 
         Rigidbody _rb;
         Collider _col;
-        float _life;
-        bool _spent, _splitDone; float _age, _splitAt;
+        int _launchTick; // sim tick at Launch; life/age are measured in ticks (0.02 s)
+        bool _spent, _splitDone; float _splitAt;
         /// <summary>First impact of any projectile (Time Fracture hold-until-impact, camera ImpactFrame).</summary>
         public static event System.Action<Projectile> FirstImpact;
         public static Projectile Latest;
@@ -38,28 +39,34 @@ namespace Crashverse.Weapons
         /// <param name="splitAtSeconds">OQ-P2: min(apex, 70% predicted flight); &lt;0 = use apex.</param>
         public void Launch(Vector3 pos, Vector3 vel, float dmg, ShotModifiers m, float splitAtSeconds = -1f)
         {
-            _age = 0f; _splitAt = splitAtSeconds; Latest = this;
+            _launchTick = Crashverse.Sim.SimRunner.NowTick; _splitAt = splitAtSeconds; Latest = this;
             if (_rb == null) Awake();
-            transform.position = pos;
+            // Interpolated body: moving only the transform leaves the physics body at the spawn origin (it then hit the island
+            // at x≈0 on the first tick, L1HINT run 40066075213). Move the body itself, then the transform.
+            _rb.position = pos; transform.position = pos; _rb.angularVelocity = Vector3.zero;
             damage = dmg; mods = m ?? new ShotModifiers();
             _rb.velocity = vel;
-            _life = lifeSeconds; _spent = false; _splitDone = !mods.split;
+            _spent = false; _splitDone = !mods.split;
             if (_col != null) _col.isTrigger = mods.pierce; // Phase Piercer passes through pieces
+            Trace($"launch tick={_launchTick}");
         }
 
-        void Update()
+        /// <summary>Ticks since Launch (0.02 s each).</summary>
+        int AgeTicks => Crashverse.Sim.SimRunner.NowTick - _launchTick;
+
+        void FixedUpdate()
         {
-            _life -= Time.deltaTime;
-            if (_life <= 0f || (KillPlane.Instance != null && transform.position.y < KillPlane.Instance.killY)) { Despawn(); return; }
-            _age += Time.deltaTime;
-            if (!_splitDone && (_splitAt >= 0f ? _age >= _splitAt : _rb.velocity.y <= 0f)) Split();
+            int age = AgeTicks;
+            if (age >= Crashverse.Sim.SimTime.SecondsToTicks(lifeSeconds) || (KillPlane.Instance != null && transform.position.y < KillPlane.Instance.killY)) { Despawn(age >= Crashverse.Sim.SimTime.SecondsToTicks(lifeSeconds) ? "life" : "killplane"); return; }
+            if (!_splitDone && (_splitAt >= 0f ? age >= Crashverse.Sim.SimTime.SecondsToTicks(_splitAt) : _rb.velocity.y <= 0f)) Split();
         }
 
         /// <summary>Splitstrike: at apex, 3 projectiles each doing 50% of the shot's final damage (SG-08).</summary>
         void Split()
         {
             _splitDone = true;
-            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.PuSplitApex);
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.ProjSplitPoint); // spec 05: split point (apex or 70% flight), no sound
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.PuSplit);
             float d = damage * mods.splitDamageMult;
             var child = mods.CloneWithoutSplit();
             int extra = Mathf.Max(0, mods.splitCount - 1);
@@ -68,17 +75,17 @@ namespace Crashverse.Weapons
                 float ang = (i % 2 == 0 ? 1 : -1) * splitSpreadDeg * (1 + i / 2);
                 var go = FireController.CreateProjectileObject(transform.localScale.x);
                 var p = go.GetComponent<Projectile>();
-                p.splitSpreadDeg = splitSpreadDeg;
+                p.splitSpreadDeg = splitSpreadDeg; p._isSplitChild = true;
                 p.Launch(transform.position, Quaternion.AngleAxis(ang, Vector3.up) * _rb.velocity, d, child);
             }
-            damage = d; mods = child;
+            damage = d; mods = child; _isSplitChild = true;
         }
 
         void OnTriggerEnter(Collider other)
         {
             if (_spent || !mods.pierce) return;
             var b = other.GetComponentInParent<DestructibleBlock>();
-            if (b == null) { Impact(null, transform.position); return; } // ground
+            if (b == null) { Trace($"trigger '{other.name}' (root '{other.transform.root.name}')"); Impact(null, transform.position); return; } // ground
             if (b.IsBroken || !_pierced.Add(b)) return;
             if (_pierced.Count > mods.pierceCount)
             {
@@ -91,8 +98,17 @@ namespace Crashverse.Weapons
         void OnCollisionEnter(Collision c)
         {
             if (_spent) return;
-            Impact(c.collider.GetComponentInParent<DestructibleBlock>(), c.contacts.Length > 0 ? c.contacts[0].point : transform.position);
+            var hb = c.collider.GetComponentInParent<DestructibleBlock>();
+            Vector3 cp = c.contactCount > 0 ? c.GetContact(0).point : transform.position, cn = c.contactCount > 0 ? c.GetContact(0).normal : -transform.forward;
+            Trace($"collide '{c.collider.name}' (root '{c.collider.transform.root.name}') block={(hb != null ? hb.name : "-")} at {cp}");
+            if (hb != null) ImpactReport.Collision(hb, null, c.collider, c.impulse.magnitude, c.relativeVelocity.magnitude, cp, cn, ShotSource, ShotSourceId);
+            Impact(hb, cp);
         }
+
+        /// <summary>Direct-hit source: Cannon for plain shots; PowerUp+id when the hit itself is a power-up effect (Phase Piercer 3rd piece, Splitstrike child).</summary>
+        ImpactSourceKind ShotSource => mods.pierce || _isSplitChild ? ImpactSourceKind.PowerUp : ImpactSourceKind.Cannon;
+        int ShotSourceId => mods.pierce ? PowerUpIds.PhasePiercer : _isSplitChild ? PowerUpIds.Splitstrike : PowerUpIds.None;
+        bool _isSplitChild;
 
         void Impact(DestructibleBlock hit, Vector3 at)
         {
@@ -101,12 +117,14 @@ namespace Crashverse.Weapons
             FirstImpact?.Invoke(this);
             if (hit != null)
             {
-                hit.ApplyDamage(damage, directHit: true); // steel joints take 2x here
-                if (mods.shockwave) Shockwave(hit);
+                if (_pierced.Count > 0 && mods.pierce && _rb != null) // trigger hit: no contact impulse, use momentum
+                    ImpactReport.Collision(hit, null, null, _rb.mass * _rb.velocity.magnitude, _rb.velocity.magnitude, at, -_rb.velocity.normalized, ShotSource, ShotSourceId);
+                using (ImpactSourceScope.Push(ShotSource, ShotSourceId)) hit.ApplyDamage(damage, directHit: true); // steel joints take 2x here
+                if (mods.shockwave) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.Shockwave)) Shockwave(hit);
             }
-            if (mods.chainReactor) ChainReactor(at);
+            if (mods.chainReactor) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.ChainReactor)) ChainReactor(at);
             if (mods.gravityWell) GravityWellEffect.Spawn(at, mods.gwRadius, mods.gwDuration, mods.gwBurst);
-            Despawn();
+            Despawn(hit != null ? "hit " + hit.name : "impact");
         }
 
         /// <summary>40 splash to every piece connected 1 support link deep; not multiplied by the joint bonus (SG-08).</summary>
@@ -137,8 +155,12 @@ namespace Crashverse.Weapons
             }
         }
 
-        void Despawn()
+        [System.Diagnostics.Conditional("UNITY_EDITOR"), System.Diagnostics.Conditional("DEVELOPMENT_BUILD")]
+        void Trace(string msg) => Debug.Log($"CVPROJ {msg} pos={transform.position} v={(_rb != null ? _rb.velocity : Vector3.zero)} age={AgeTicks}");
+
+        void Despawn(string why = "")
         {
+            Trace("despawn " + why);
             gameObject.SetActive(false);
             Destroy(gameObject, 0.05f);
         }

@@ -26,11 +26,21 @@ namespace Crashverse.Audio
 
         void Awake()
         {
+            // Mixer groups per audio/mixer_spec.md; null (master) when the CrashverseMixer asset isn't in the build yet.
+            baseGroup ??= MixerRouting.Group("Music/Base"); layerGroup ??= MixerRouting.Group("Music/Layers"); stingerGroup ??= MixerRouting.Group("Music/Stingers");
             _baseA = Src("BaseA", baseGroup); _baseB = Src("BaseB", baseGroup);
             _layerA = Src("LayerA", layerGroup); _layerB = Src("LayerB", layerGroup); _stinger = Src("Stinger", stingerGroup);
             AnimEventBus.Raised += OnEvent;
+            Crashverse.Core.GameSettings.Current.Changed += ApplyVolume; ApplyVolume();
         }
-        void OnDestroy() { AnimEventBus.Raised -= OnEvent; if (Instance == this) Instance = null; }
+        /// <summary>#45: Music volume slider. Each source gain (crossfade/handover) is multiplied by _mv; changes rescale live sources.</summary>
+        float _mv = 1f; // player music volume (0..1); every source gain below is multiplied by it
+        void ApplyVolume()
+        {
+            float old = _mv, nv = Crashverse.Core.GameSettings.Current.MusicVolume; _mv = nv;
+            foreach (var s in new[] { _baseA, _baseB, _layerA, _layerB, _stinger }) if (s != null) s.volume = old > 0f ? s.volume / old * nv : (s.isPlaying ? nv : s.volume);
+        }
+        void OnDestroy() { Crashverse.Core.GameSettings.Current.Changed -= ApplyVolume; AnimEventBus.Raised -= OnEvent; if (Instance == this) Instance = null; }
 
         AudioSource Src(string n, UnityEngine.Audio.AudioMixerGroup g)
         {
@@ -41,6 +51,7 @@ namespace Crashverse.Audio
         static AudioClip Load(string id)
         {
             var c = Resources.Load<AudioClip>("Music/" + id);
+            if (c == null) { if (MissingClipLog.Sink == null) MissingClipLog.Sink = m => Debug.LogWarning(m); MissingClipLog.Report("Music", id, "Music/" + id); return null; }
             if (c != null && c.loadType != AudioClipLoadType.Streaming) Debug.LogWarning($"[Music] {id} must be imported as Streaming (mixing_unity.md)");
             return c;
         }
@@ -51,11 +62,12 @@ namespace Crashverse.Audio
         {
             var t = MusicTracks.Get(id); var clip = Load(id);
             StopLayers(); _p2Pending = false;
+            if (t == null) Debug.LogWarning($"[Music] unknown track id '{id}' (not in MusicTracks)");
             if (t == null || clip == null) { StopBase(); _baseTrack = null; return; }
             double at = atDsp > 0 ? atDsp : AudioSettings.dspTime + 0.1;
             if (_activeBase != null && _activeBase.isPlaying) _activeBase.SetScheduledEndTime(at);
             var src = _activeBase == _baseA ? _baseB : _baseA;
-            src.clip = clip; src.timeSamples = 0; src.volume = 1f;
+            src.clip = clip; src.timeSamples = 0; src.volume = _mv;
             src.loop = !t.HasIntro; // whole-file loops use native looping on one source
             src.PlayScheduled(at);
             _activeBase = src; _baseTrack = t; _baseStartDsp = at; _v.Base = id;
@@ -104,14 +116,14 @@ namespace Crashverse.Audio
             StartStinger(st.id, plan.stingerDsp);
             var p2 = MusicTracks.Get("tidewarden_p2"); var clip = Load(p2.id);
             if (clip == null) return;
-            var src = other; src.clip = clip; src.loop = true; src.timeSamples = 0; src.volume = 1f; src.PlayScheduled(plan.p2StartDsp);
+            var src = other; src.clip = clip; src.loop = true; src.timeSamples = 0; src.volume = _mv; src.PlayScheduled(plan.p2StartDsp);
             _activeBase = src; _baseTrack = p2; _baseStartDsp = plan.p2StartDsp; _v.Base = p2.id;
         }
 
         public void StopAll(float fadeSeconds = 0.3f) { StopBase(); StopLayers(); } // win/fail: mixer snapshot handles the 0.3 s fade
 
         // ───────────── internals ─────────────
-        void StartStinger(string id, double at) { var c = Load(id); if (c == null) return; _stinger.clip = c; _stinger.loop = false; _stinger.PlayScheduled(at); }
+        void StartStinger(string id, double at) { var c = Load(id); if (c == null) return; _stinger.clip = c; _stinger.loop = false; _stinger.volume = _mv; _stinger.PlayScheduled(at); }
         void StopBase() { _baseA.Stop(); _baseB.Stop(); _activeBase = null; _v.Base = null; _nextHandoverDsp = -1; }
         void StopLayers() { _layerA.Stop(); _layerB.Stop(); _activeLayer = _oldLayer = null; _v.SetLayer(null, AudioSettings.dspTime); _v.CrossfadeStartDsp = -1; }
 
@@ -119,7 +131,7 @@ namespace Crashverse.Audio
         void PrepareHandover()
         {
             var next = _activeBase == _baseA ? _baseB : _baseA;
-            next.clip = _activeBase.clip; next.loop = false; next.volume = 1f;
+            next.clip = _activeBase.clip; next.loop = false; next.volume = _mv;
             next.timeSamples = _baseTrack.loopStart;
             next.PlayScheduled(_nextHandoverDsp);
             next.SetScheduledEndTime(_nextHandoverDsp + _baseTrack.LoopSeconds);
@@ -137,8 +149,8 @@ namespace Crashverse.Audio
             }
             // Equal-power layer crossfade.
             float t = _v.CrossfadeT(now);
-            if (_activeLayer != null) _activeLayer.volume = EqualPower.In(t);
-            if (_oldLayer != null) { _oldLayer.volume = EqualPower.Out(t); if (t >= 1f) { _oldLayer.Stop(); _oldLayer = null; } }
+            if (_activeLayer != null) _activeLayer.volume = EqualPower.In(t) * _mv;
+            if (_oldLayer != null) { _oldLayer.volume = EqualPower.Out(t) * _mv; if (t >= 1f) { _oldLayer.Stop(); _oldLayer = null; } }
             var st = _v.Tick(now, out _);
             if (st != null) StartStinger(st, now + 0.02);
         }

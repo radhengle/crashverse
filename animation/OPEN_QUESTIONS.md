@@ -2,7 +2,7 @@
 No gameplay or art-direction changes were made; the items below need an owner's decision.
 
 ## PM / Art
-- **OQ-X3 Muzzle flash colour:** spec uses Booster orange + white (muzzle = Booster ring). Confirm, and whether Core inner-tint should colour the trail.
+- ~~**OQ-X3 Muzzle flash colour**~~ RESOLVED (PM/Art, 2026-10-16): muzzle flash is Core cyan #22D3EE + white, not Booster orange (01 updated; code const `WreckerSpec.MuzzleFlash`).
 - **OQ-X4 Tidewarden/Titan rigs** don't exist yet — bone counts (≤40) are a proposal for the 3D artist.
 - **OQ-X5 Wrecker "win/fail" emotes** vs store "victory animations" (Addendum §4.6): default ones here are free, skins override — confirm.
 
@@ -23,7 +23,7 @@ No gameplay or art-direction changes were made; the items below need an owner's 
 - ~~OQ-C1~~ No win-shot slow-mo. ~~OQ-C3~~ Slow-mo off only in Titan ranked. (OQ-C2 → Reduce Shake + Reduce Motion, both OFF.)
 
 ## Still open — PM / Art (OQ-X)
-- OQ-X3, OQ-X4, OQ-X5 (above).
+- OQ-X4, OQ-X5 (above). (OQ-X3 resolved.)
 - **OQ-X7 (new, from designer):** HUD "power" bar becomes a loadout-effect preview, not a power meter — PM to route to Art; UI motion for it not yet specced.
 - **OQ-X8 (new):** Gearstorm explosive crates / energy core assets (from OQ-P4) — PM to schedule with Art.
 - **OQ-X9 (new):** Designer notes answers may be revisited after the reference-board parity decision.

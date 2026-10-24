@@ -17,7 +17,8 @@ namespace Crashverse.Destruction
         readonly List<DestructibleBlock> _pieces = new List<DestructibleBlock>();
         readonly HashSet<DestructibleBlock> _counted = new HashSet<DestructibleBlock>();
         readonly BreakLedger<DestructibleBlock> _ledger = new BreakLedger<DestructibleBlock>();
-        float _totalMass, _destroyedMass, _quietTime, _totalHp;
+        float _totalMass, _destroyedMass, _totalHp;
+        int _quietTicks; // sim ticks (0.02 s) without movement
         public float DamageDealt { get; private set; }
         public float TotalObjectiveHp => _totalHp;
         public readonly ComboTracker Combo = new ComboTracker();
@@ -27,8 +28,8 @@ namespace Crashverse.Destruction
         public float TotalObjectiveMass => _totalMass;
         public float DestroyedMass => _destroyedMass;
         public float DestroyedRatio => _totalMass > 0.001f ? Mathf.Clamp01(_destroyedMass / _totalMass) : 0f;
-        public bool IsSettled => _quietTime >= SettleHoldSeconds;
-        public float QuietTime => _quietTime;
+        public bool IsSettled => _quietTicks >= Crashverse.Sim.SimTime.SecondsToTicks(SettleHoldSeconds);
+        public float QuietTime => _quietTicks * Crashverse.Sim.SimTime.Step;
         public IReadOnlyList<DestructibleBlock> Pieces => _pieces;
 
         public event System.Action<int> ComboChanged;
@@ -40,7 +41,7 @@ namespace Crashverse.Destruction
             {
                 if (b == null) continue;
                 b.Damaged += OnDamaged;
-                if (!b.isObjectivePiece) continue;
+                if (!b.isObjectivePiece || !Crashverse.Meta.StructureRules.CountsTowardObjectiveMass(!b.isObjectivePiece, b.indestructible)) continue; // stone bases excluded (§6)
                 _pieces.Add(b);
                 _totalMass += b.Mass;
                 if (!b.indestructible) _totalHp += b.MaxHp;
@@ -53,7 +54,7 @@ namespace Crashverse.Destruction
             foreach (var b in _pieces) if (b != null) b.Damaged -= OnDamaged;
             _pieces.Clear(); _counted.Clear(); _ledger.Clear();
             _totalMass = _destroyedMass = _totalHp = DamageDealt = 0f;
-            _quietTime = SettleHoldSeconds;
+            _quietTicks = Crashverse.Sim.SimTime.SecondsToTicks(SettleHoldSeconds);
             FirstImpactRoles.Clear();
         }
 
@@ -61,7 +62,7 @@ namespace Crashverse.Destruction
         public void OnShotFired()
         {
             Combo.OnShot();
-            _quietTime = 0f;
+            _quietTicks = 0;
             _awaitingFirstImpact = true;
         }
 
@@ -69,7 +70,7 @@ namespace Crashverse.Destruction
         {
             if (b.isObjectivePiece) DamageDealt += removed;
             if (direct && _awaitingFirstImpact) { _awaitingFirstImpact = false; if (!string.IsNullOrEmpty(b.role)) FirstImpactRoles.Add(b.role); }
-            _quietTime = 0f;
+            _quietTicks = 0;
         }
 
         public static bool CountsDestroyed(DestructibleBlock b) =>
@@ -88,7 +89,7 @@ namespace Crashverse.Destruction
                     d += b.Mass;
                     // BUG-11: a piece already counted by sagging still scores its combo point when it later breaks or falls off (once per piece)
                     if (_ledger.Observe(b, true, b.IsBroken || b.IsOutOfBounds))
-                        ComboChanged?.Invoke(Combo.OnBreak(Time.time));
+                        ComboChanged?.Invoke(Combo.OnBreakTick(Crashverse.Sim.SimRunner.NowTick));
                 }
                 var rb = b.Body;
                 if (!b.IsBroken && !b.IsOutOfBounds && rb != null && !rb.isKinematic &&
@@ -97,7 +98,7 @@ namespace Crashverse.Destruction
                     moving = true;
             }
             _destroyedMass = Mathf.Min(d, _totalMass);
-            _quietTime = moving ? 0f : _quietTime + Time.fixedDeltaTime;
+            _quietTicks = moving ? 0 : _quietTicks + 1; // one FixedUpdate = one sim tick
         }
 
         /// <summary>Role stats for mastery (SG-04/SG-21), taken after settle.</summary>

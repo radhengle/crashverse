@@ -15,7 +15,11 @@ namespace Crashverse.Boss
     {
         public const float TellSeconds = 1f;
         public const int CoreHitsToWin = 2;
-        public int Phase { get; private set; } = 1;
+        public int Phase => _rule.Phase;
+        readonly Crashverse.Meta.TideShutterRule _rule = new Crashverse.Meta.TideShutterRule();
+        public int ClosedShutterHits => _rule.ClosedShutterHits;
+        /// <summary>GameSession calls this when a shot is actually fired (before it resolves).</summary>
+        public void OnShotFired() => _rule.OnShotFired();
         public bool ShutterOpen { get; private set; }
         public int CoreHits { get; private set; }
         public bool Defeated { get; private set; }
@@ -37,11 +41,12 @@ namespace Crashverse.Boss
                 switch (x.role)
                 {
                     case "shoulder": _shoulders.Add(x); x.Broken += _ => CheckPhase(); break;
-                    case "armor": _armor.Add(x); break;
+                    case "armor": _armor.Add(x); x.Damaged += OnArmorDamaged; break;
                     case "core": _core = x; x.Damaged += OnCoreDamaged; break;
-                    case "shutter": _shutter = x; _shutterClosedPos = x.transform.position; break;
+                    case "shutter": _shutter = x; _shutterClosedPos = x.transform.position; x.Damaged += OnShutterDamaged; break;
                 }
             }
+            Crashverse.Feel.TideDefeatEvent.Reset(); // new boss instance → new defeat
             SetShutter(false); // phase 1: chest is covered by armour; shutter parked closed
         }
 
@@ -49,15 +54,23 @@ namespace Crashverse.Boss
         {
             if (Phase != 1) return;
             foreach (var s in _shoulders) if (!s.IsBroken) return;
-            Phase = 2;
+            _rule.EnterPhase2();
             foreach (var a in _armor) if (!a.IsBroken) a.Break(); // chest opens
             Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTidePhase2); // music: stinger at bar end → P2
             SetShutter(true); // SG-05: phase 2 opens with the shutter open
             Changed?.Invoke();
         }
 
+        void OnArmorDamaged(DestructibleBlock b, float _, bool direct)
+        {
+            if (Crashverse.Audio.BossSfxRules.ArmorHit(Phase, direct, Defeated)) Crashverse.Audio.SfxPlayer.PlayCode("BOSS_TIDE_ARMOR_HIT"); // code-owned route, cooldown 4 ticks
+        }
+
+        void OnShutterDamaged(DestructibleBlock b, float _, bool direct) { if (direct) { _rule.OnDirectHit(); Changed?.Invoke(); } }
+
         void OnCoreDamaged(DestructibleBlock b, float _, bool direct)
         {
+            if (direct && Phase == 2 && !ShutterOpen) _rule.OnDirectHit();
             if (!direct || Phase != 2 || !ShutterOpen || Defeated) return;
             CoreHits++;
             if (CoreHits >= CoreHitsToWin) Defeat();
@@ -67,15 +80,21 @@ namespace Crashverse.Boss
         void Defeat()
         {
             Defeated = true;
+            Crashverse.Feel.TideDefeatEvent.RaiseOnce(); // BOSS_TIDE_DEFEAT: haptic boom + music stinger; once per defeat. TODO(anim): moves to the rig defeat clip when it lands
             foreach (var x in _all) if (x != _shutter && x.isObjectivePiece && !x.IsBroken) x.ForceCollapse(); // collapse cinematic
             if (_core != null) _core.SetHighlight(Color.white, 1f);
+            _defeatCollapse.Start(); // BOSS_TIDE_DEFEAT_COLLAPSE at +3500 ms unscaled. TODO(anim): moves to an anim event at frame 210 when the rig clip lands
         }
+
+        readonly Crashverse.Feel.TideDefeatCollapseTimer _defeatCollapse = new Crashverse.Feel.TideDefeatCollapseTimer();
+        void OnDisable() { _defeatCollapse.Cancel(); Crashverse.Feel.TideDefeatEvent.Reset(); } // level exit / reset (GameSession destroys this component)
 
         /// <summary>Called by GameSession after each shot resolves in phase 2. Returns the tell duration to wait (0 if opening).</summary>
         public float OnShotResolved()
         {
             if (Phase != 2 || Defeated) return 0f;
-            if (ShutterOpen) { _tellTimer = TellSeconds; _tellT = 0f; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideTell); return TellSeconds + Crashverse.Feel.TideShutter.CloseMs / 1000f; } // tell 1 s, then 300 ms close tween
+            if (!_rule.OnShotResolved()) return 0f; // SG-05: the shot that ended phase 1 doesn't toggle the shutter
+            if (!_rule.Open) { _tellTimer = TellSeconds; _tellT = 0f; Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTideTell); return TellSeconds + Crashverse.Feel.TideShutter.CloseMs / 1000f; } // tell 1 s, then 300 ms close tween
             SetShutter(true);
             return 0f;
         }
@@ -84,6 +103,7 @@ namespace Crashverse.Boss
 
         void Update()
         {
+            _defeatCollapse.Tick(Time.unscaledDeltaTime * 1000f); // unscaled: hit stop / slow-mo don't stretch it
             if (_shutter == null) return;
             bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
             if (_tellTimer > 0f)

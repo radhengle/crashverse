@@ -1,0 +1,30 @@
+BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx: meshes=3 materials=['M_Gold', 'M_Granite'] -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Floor.fbx: meshes=3 materials=['M_Brick'] -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Floor_Fractured.fbx: meshes=16 materials=['M_Brick', 'M_Brick_Inner'] -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx: meshes=3 materials=['M_Brick'] -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx: meshes=12 materials=['M_Brick', 'M_Brick_Inner'] -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx: meshes=3 materials=['M_Brick'] -> PASS
+BuildingKit/Kit_Brick/Kit_Brick_Wall_Fractured.fbx: meshes=18 materials=['M_Brick', 'M_Brick_Inner'] -> PASS
+BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx: meshes=3 materials=['M_Glass'] -> PASS
+BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx: meshes=12 materials=['M_Glass', 'M_Glass_Inner'] -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Floor.fbx: meshes=3 materials=['M_Steel'] -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Floor_Fractured.fbx: meshes=6 materials=['M_Steel', 'M_Steel_Inner'] -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx: meshes=3 materials=['M_Steel'] -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx: meshes=5 materials=['M_Steel', 'M_Steel_Inner'] -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Wall.fbx: meshes=3 materials=['M_Steel'] -> PASS
+BuildingKit/Kit_Steel/Kit_Steel_Wall_Fractured.fbx: meshes=6 materials=['M_Steel', 'M_Steel_Inner'] -> PASS
+BuildingKit/Kit_Stone/Kit_Stone_Wall.fbx: meshes=3 materials=['M_Stone'] -> PASS
+BuildingKit/Kit_Stone/Kit_Stone_Wall_Fractured.fbx: meshes=6 materials=['M_Stone', 'M_Stone_Inner'] -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Floor.fbx: meshes=3 materials=['M_Wood'] -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Floor_Fractured.fbx: meshes=9 materials=['M_Wood', 'M_Wood_Inner'] -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx: meshes=3 materials=['M_Wood'] -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx: meshes=8 materials=['M_Wood', 'M_Wood_Inner'] -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx: meshes=3 materials=['M_Wood'] -> PASS
+BuildingKit/Kit_Wood/Kit_Wood_Wall_Fractured.fbx: meshes=12 materials=['M_Wood', 'M_Wood_Inner'] -> PASS
+Island_Sunnyville/Island_Sunnyville_LOD0.fbx: meshes=4 materials=['M_Island', 'M_VFX_Placeholder'] -> PASS
+Island_Sunnyville/Island_Sunnyville_LOD1.fbx: meshes=4 materials=['M_Island', 'M_VFX_Placeholder'] -> PASS
+Island_Sunnyville/Island_Sunnyville_LOD2.fbx: meshes=4 materials=['M_Island', 'M_VFX_Placeholder'] -> PASS
+Wrecker_v2/Wrecker_v2_LOD0.fbx: meshes=9 materials=['M_Wrecker', 'M_Wrecker_Emissive'] -> PASS
+Wrecker_v2/Wrecker_v2_LOD1.fbx: meshes=9 materials=['M_Wrecker', 'M_Wrecker_Emissive'] -> PASS
+Wrecker_v2/Wrecker_v2_LOD2.fbx: meshes=9 materials=['M_Wrecker', 'M_Wrecker_Emissive'] -> PASS
+MESHDATA RESULT: ALL PASS

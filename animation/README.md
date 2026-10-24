@@ -44,3 +44,6 @@ v1 (`art/v1/`) is canonical for layout, data and states; v2 is only the visual/s
 - Gameplay values (radii, durations, HP) are read from data assets so VFX match rules.
 - Aim & UI use unscaled time; settle uses scaled sim time.
 - Low tier: halve particles, flipbooks instead of meshes, no extra full-screen passes, fidgets off.
+
+## Particle budget (PM decision, via VFX & Tech Artist, 16 Oct)
+One global particle budget: 150 live particles for impacts + 80 for the active power-up. When full, the oldest particles are culled first. Brick debris chunk colour: body #D2664C, chipped faces #E9997C, dust #D9A37E (art bible / arena_brief_v2).

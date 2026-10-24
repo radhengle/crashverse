@@ -1,3 +1,4 @@
+using Crashverse.Core;
 using System.Collections.Generic;
 using Crashverse.Data;
 using Crashverse.Destruction;
@@ -31,7 +32,7 @@ namespace Crashverse.Level
                     var kind = MaterialDefinition.Parse(bd.mat) ?? MaterialKind.Wood;
                     mats[bd.mat] = mat = MaterialDefinition.CreateRuntime(kind, mod);
                 }
-                var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                var go = GameObject.CreatePrimitive(PrimitiveType.Cube); RenderMaterials.Apply(go);
                 go.name = bd.id;
                 go.transform.SetParent(structureRoot, false);
                 go.transform.localPosition = V(bd.p);
@@ -41,6 +42,7 @@ namespace Crashverse.Level
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 var block = go.AddComponent<DestructibleBlock>();
                 block.Configure(bd, mat);
+                Crashverse.Gameplay.PieceFeedbackWiring.Attach(block); // VFX #31 DamageFeedback, pieceId = StableId.Of(blockId)
                 if (bd.spinDps > 0f && bd.spinAxis != null && bd.spinAxis.Length == 3)
                 {
                     var mp = go.AddComponent<MovingPart>();

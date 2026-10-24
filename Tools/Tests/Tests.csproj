@@ -13,6 +13,7 @@
     <Compile Include="../CompileCheck/Stubs/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Data/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Meta/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Rules/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Backend/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Level/LevelConfig.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Weapons/WreckerSpec.cs" />
@@ -20,8 +21,15 @@
     <Compile Include="../../Assets/_Project/Scripts/Core/TitanRunJournal.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Core/CampaignResultQueue.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Core/AccountDeletion.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Core/GameSettings.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Feel/FeelCore.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Gameplay/Core/PieceIds.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Feel/AnimMotion.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Feel/Haptics.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Feel/UiMotionMath.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/MusicCore.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Audio/SfxCore.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/DevHooks/DevAimCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

@@ -34,7 +34,8 @@ namespace Crashverse.Core
             AppServices.Save = new CampaignSave();
             AppServices.Theme = UITheme.Load();
             AppServices.Router = UIRouter.Create(AppServices.Theme);
-            if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); c.AddComponent<AudioListener>(); }
+            if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); }
+            Crashverse.Audio.AudioListenerGuard.Ensure(); Crashverse.Audio.SfxPlayer.Ensure(); // P0 no-sound: exactly one listener + SFX router
 
             // §E1/E2: the age gate comes before any account, sign-in or backend traffic. Blocked installs never get further.
             if (AgeGateScreen.Blocked) { AppServices.Router.PopAllAndPush(new BlockedScreen()); return; }
@@ -98,6 +99,7 @@ namespace Crashverse.Core
                 _mapRoot = new GameObject("MapWorld");
                 Map = _mapRoot.AddComponent<WorldMapBuilder>();
                 Map.Build(AppServices.Content.Chapter1);
+                int f = RenderMaterials.FixAll(_mapRoot); if (f > 0) Debug.LogWarning($"[BUG-23] map: {f} renderers had no usable material");
             }
             _mapRoot.SetActive(true);
             Crashverse.Audio.MusicPlayer.Ensure().PlayBase("sunnyville_map_loop");
@@ -144,8 +146,24 @@ namespace Crashverse.Core
             RunCamera.enabled = true;
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
-            levelGo.AddComponent<Crashverse.Feel.FeelDirector>().Bind(s, RunCamera, aim);
+            int fx = RenderMaterials.FixAll(_runRoot); if (fx > 0) Debug.LogWarning($"[BUG-23] run: {fx} renderers had no usable material");
+            // #18/#20: PHYS_* ImpactEvents (Impact/Crack/Break/JointSnap/CollapseStart/End with pieceIds) on AnimEventBus.
+            // Added after Begin so it binds to the SimRunner that Begin created. Presentation only; never read by the sim.
+            if (Crashverse.Sim.ImpactEventEmitter.Instance == null) levelGo.AddComponent<Crashverse.Sim.ImpactEventEmitter>();
+            var feel = levelGo.AddComponent<Crashverse.Feel.FeelDirector>(); feel.Bind(s, RunCamera, aim); feel.BindWrecker(wb); // 01 cannon parts
             AppServices.Router.Push(new HudScreen(s));
+#if CRASHVERSE_DEV
+            // BUG-24 automation: dev-only aim hook (inert without the cv_dev_aim launch extra; never in ranked).
+            Crashverse.DevHooks.DevAimHook.Attach(levelGo, new Crashverse.DevHooks.DevAimTarget
+            {
+                maxYaw = Weapons.WreckerSpec.MaxYaw, minPitch = Weapons.WreckerSpec.MinElevation, maxPitch = Weapons.WreckerSpec.MaxElevation,
+                isRanked = () => s.Ctx != null && s.Ctx.mode == RunMode.TitanRanked,
+                readyToFire = () => s.State == SessionState.Aiming && s.Gate.Ready && s.ShotsLeft > 0,
+                setAim = (y, p) => aim.SetAim(y, p),
+                fire = () => s.TryFire(),
+                markNonRanked = () => { s.DevHookUsed = true; if (s.Ctx.mode == RunMode.TitanRanked) s.Ctx.mode = RunMode.TitanPractice; },
+            });
+#endif
         }
 
         public static void EndRun()

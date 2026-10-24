@@ -114,7 +114,7 @@ namespace Crashverse.PowerUps
                 rb.AddForce((at - rb.position).normalized * 25f * rb.mass);
             }
             if (_t > 0f) return;
-            Explosion.Detonate(at, _radius, _burst, null);
+            Explosion.Detonate(at, _radius, _burst, null, Crashverse.Sim.ImpactSourceKind.PowerUp, Crashverse.Sim.PowerUpIds.GravityWell);
             Destroy(gameObject);
         }
     }

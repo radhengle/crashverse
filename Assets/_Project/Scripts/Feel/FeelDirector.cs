@@ -36,37 +36,76 @@ namespace Crashverse.Feel
         }
 
         GameSession _s; OrbitCamera _cam; AimController _aim; Transform _barrel; Vector3 _barrelRest;
+        // 01 cannon parts (WreckerBuilder): Module pod on the barrel top (slot swap + bob), Core orb (ready glow).
+        Transform _pod, _core; Vector3 _podRestPos, _podRestScale; Renderer _coreRenderer; MaterialPropertyBlock _coreMpb; Color _coreBase;
+        float _idleMs, _readyMs = -1f; bool[] _armedLast = new bool[3]; PowerUps.PowerUpRuntime _puSeen;
         readonly WreckerAnimStateMachine _wrecker = new WreckerAnimStateMachine();
         readonly CameraStateMachine _camSm = new CameraStateMachine();
         readonly ShakeStack _shake = new ShakeStack();
+        ShakeDispatcher _dispatch; static IHaptics _haptics; // one vibrator wrapper per app
+        static readonly System.Func<int> FrameFn = () => Time.frameCount; static readonly System.Func<float> NowFn = () => Time.unscaledTime * 1000f;
         readonly TimeScaleGovernor _time = new TimeScaleGovernor();
         TitanAnimStateMachine _titan;
-        float _seed; int _lastTitanDmg;
+        float _seed, _noisePhase; int _lastTitanDmg;
 
         public void Bind(GameSession s, OrbitCamera cam, AimController aim)
         {
             _s = s; _cam = cam; _aim = aim;
             _barrel = aim != null ? aim.pitchPivot : null; if (_barrel != null) _barrelRest = _barrel.localPosition;
             var m = MotionSettings.Current;
-            _wrecker.Settings = m; _camSm.Settings = m; _time.Settings = m;
+            _wrecker.Settings = m; _camSm.Settings = m; _time.Settings = m; Dispatch.Settings = m;
             _titan = s.Ctx != null && s.Ctx.titan != null ? new TitanAnimStateMachine(s.Ctx.titan.maxDamageScore) : null;
             _seed = Random.value * 100f;
         }
 
-        void OnEnable() { AnimEventBus.Raised += OnEvent; Projectile.FirstImpact += OnImpact; }
-        void OnDisable() { AnimEventBus.Raised -= OnEvent; Projectile.FirstImpact -= OnImpact; Time.timeScale = 1f; }
-
-        void OnEvent(string e, object _)
+        /// <summary>Optional: hands the procedural Wrecker's slot parts to the director (cannon idle bob, slot swap, ready glow).</summary>
+        public void BindWrecker(WreckerBuilder wb)
         {
-            switch (e)
+            if (wb == null) return;
+            _pod = wb.modulePod; _core = wb.coreOrb;
+            if (_pod != null) { _podRestPos = _pod.localPosition; _podRestScale = _pod.localScale; }
+            if (_core != null)
             {
-                case AnimEvents.ReloadStart: _wrecker.GateReady = false; _wrecker.Fire(); _camSm.Fire(); _time.OnShotFired(); break;
-                case AnimEvents.WreckerFire: _shake.Add(ShakeTable.Fire); break;
-                case AnimEvents.WreckerReady: _wrecker.GateReady = true; _camSm.Settled(_s != null && (_s.State == SessionState.Won || _s.State == SessionState.Failed)); break;
+                _coreRenderer = _core.GetComponent<Renderer>();
+                _coreMpb = new MaterialPropertyBlock(); // allocated once; reused every frame
+                _coreBase = Crashverse.Destruction.MaterialDefinition.Hex(WreckerSpec.Core);
             }
         }
 
-        void OnImpact(Projectile p) { _camSm.FirstImpact(); _shake.Add(ShakeTable.ImpactWood); _time.HitStop(50f); }
+        ShakeDispatcher Dispatch
+        {
+            get
+            {
+                if (_dispatch == null)
+                {
+                    if (_haptics == null) _haptics = Application.platform == RuntimePlatform.Android ? (IHaptics)new AndroidHaptics() : NullHaptics.Instance;
+                    _dispatch = new ShakeDispatcher(_shake) { Haptics = _haptics, Settings = MotionSettings.Current };
+                }
+                return _dispatch;
+            }
+        }
+
+        void OnEnable() { AnimEventBus.Raised += OnEvent; Projectile.FirstImpact += OnImpact; CameraShake.Frame = FrameFn; CameraShake.NowMs = NowFn; CameraShake.Bind(Dispatch); }
+        void OnDisable() { AnimEventBus.Raised -= OnEvent; Projectile.FirstImpact -= OnImpact; CameraShake.Unbind(_dispatch); _shake.Clear(); Time.timeScale = 1f; }
+
+        void OnEvent(string e, object _)
+        {
+            // 07 shake table, routed by event name (fire, impacts, breaks, collapse, explosions, gravity burst, boss phase/defeat).
+            // PHYS_* with payloads should come via CameraShake.AddPhys (tier/material aware); name-only PHYS rows are still routed here, deduped by family per frame.
+            if (e == AnimEvents.CollapseLand && _ is string mat) Dispatch.SubmitCollapse(e, mat, Time.frameCount, Time.unscaledTime * 1000f); // `material` param
+            else Dispatch.Submit(e, Time.frameCount, Time.unscaledTime * 1000f);
+            switch (e)
+            {
+                case AnimEvents.ReloadStart: _wrecker.GateReady = false; _wrecker.Fire(); _camSm.Fire(); _time.OnShotFired(); break;
+                case AnimEvents.WreckerReady: _readyMs = 0f; _wrecker.GateReady = true; _camSm.Settled(_s != null && (_s.State == SessionState.Won || _s.State == SessionState.Failed)); break;
+            }
+        }
+
+        void OnImpact(Projectile p)
+        {
+            _camSm.FirstImpact(); _time.HitStop(50f);
+            Dispatch.Submit(ShakeTable.ImpactWood, ShakeFamily.Impact, Time.frameCount, Time.unscaledTime * 1000f); // one impact shake per frame (IMPACT_* / PHYS_IMPACT may also arrive; strongest wins)
+        }
 
         void Update()
         {
@@ -74,30 +113,22 @@ namespace Crashverse.Feel
             float rdt = Time.unscaledDeltaTime; var tier = Perf.QualityController.FeelTier; var m = MotionSettings.Current;
             _wrecker.Tier = tier;
             if (_aim != null) _wrecker.SetAiming(_aim.Dragging);
-            _wrecker.Tick(rdt); _camSm.Tick(rdt);
+            _wrecker.Tick(rdt); _camSm.Tick(rdt); Dispatch.Tick(Time.unscaledTime * 1000f); // collapse haptic merge window
             if (_titan != null && _s.TitanDamageScore != _lastTitanDmg) { _lastTitanDmg = _s.TitanDamageScore; _titan.OnDamage(_lastTitanDmg); } // only on change (was raising HIT every frame)
 
             bool ranked = _s.Ctx != null && _s.Ctx.mode == RunMode.TitanRanked;
             float ts = _time.Tick(rdt);
             if (!ranked) Time.timeScale = ts; // Titan ranked never alters time (OQ-C3)
 
-            // Barrel recoil: 0.15 m back, out-expo in, out-quad return (02); none under Reduce motion.
-            if (_barrel != null)
-            {
-                float k = 0f;
-                if (!m.ReduceMotion)
-                {
-                    if (_wrecker.State == WreckerState.Recoil) k = Ease.OutExpo(_wrecker.ElapsedMs / WreckerAnimStateMachine.RecoilMs);
-                    else if (_wrecker.State == WreckerState.Recover) k = 1f - Ease.OutQuad(_wrecker.ElapsedMs / WreckerAnimStateMachine.RecoverMs);
-                }
-                _barrel.localPosition = _barrelRest + Vector3.back * (0.15f * k);
-            }
+            bool rm = m.ReduceMotion;
+            TickCannon(rdt, rm);
 
             if (_cam != null)
             {
                 _shake.Scale = m.ShakeScale(tier);
                 var (pos, rot) = _shake.Tick(rdt);
-                float t = Time.unscaledTime * 25f + _seed;
+                _noisePhase += rdt * Mathf.Max(6f, _shake.Frequency); // 07 table frequency (6–14 Hz), amplitude-weighted
+                float t = _noisePhase + _seed;
                 _cam.feelOffset = new Vector3(Mathf.PerlinNoise(t, 0f) - 0.5f, Mathf.PerlinNoise(0f, t) - 0.5f, 0f) * (2f * pos);
                 _cam.feelRollDeg = (Mathf.PerlinNoise(t, t) - 0.5f) * 2f * rot;
                 bool follow = _camSm.State == CamState.FollowShot && Projectile.Latest != null && m.FollowShotEnabled;
@@ -105,5 +136,52 @@ namespace Crashverse.Feel
                 if (follow) _cam.followTarget = Projectile.Latest.transform.position;
             }
         }
+        /// <summary>
+        /// 01 cannon motion, code-driven until rigs exist. Barrel slide (anticipation 0.03 → recoil 0.25 m → recover, overshoot ≤ 0.02 m),
+        /// pitch kick +4° (clamped to 70° by AimController), idle breathing ±0.6° / 2400 ms, Ready dip −1.5° + Core glow 1.0→1.4→1.0
+        /// (300 ms), Module pod slot swap 450 ms on arm/disarm. Reduce Motion: recoil kept without overshoot, breathing ×0.5, glow ×0.4.
+        /// </summary>
+        void TickCannon(float rdt, bool rm)
+        {
+            var st = _wrecker.State; float ms = _wrecker.ElapsedMs;
+            if (_barrel != null) _barrel.localPosition = _barrelRest + Vector3.back * WreckerMotion.SlideBack(st, ms, rm);
+
+            bool idle = st == WreckerState.Idle || st == WreckerState.Fidget;
+            _idleMs = idle ? _idleMs + rdt * 1000f : 0f;
+            float pitch = WreckerMotion.KickDeg(st, ms, rm) + (idle ? WreckerMotion.IdleBreathDeg(_idleMs, rm) : 0f);
+            if (_readyMs >= 0f)
+            {
+                pitch += WreckerMotion.ReadyDipDegAt(_readyMs, rm);
+                _readyMs += rdt * 1000f;
+                if (_readyMs >= WreckerMotion.ReadyMs) _readyMs = -1f;
+                SetCoreGlow(_readyMs < 0f ? 1f : WreckerMotion.ReadyGlow(_readyMs, MotionSettings.Current.FlashScale)); // ends exactly on the base colour
+            }
+            if (_aim != null) _aim.visualPitchOffsetDeg = pitch;
+
+            // Slot swap: any arm/disarm change on the power-up slots (PowerUpRuntime.ToggleArm) → 450 ms swap on the Module pod.
+            var pu = _s.PowerUps;
+            if (pu != _puSeen) { _puSeen = pu; for (int i = 0; i < _armedLast.Length; i++) _armedLast[i] = Armed(pu, i); } // Retry rebuilds the runtime: no swap
+            else if (pu != null)
+                for (int i = 0; i < _armedLast.Length; i++) { bool a = Armed(pu, i); if (a != _armedLast[i]) { _armedLast[i] = a; _wrecker.SlotSwap(); } }
+
+            if (_pod != null)
+            {
+                float sc = st == WreckerState.SlotSwap ? WreckerMotion.SlotSwapScale(ms, rm) : 1f;
+                _pod.localScale = _podRestScale * sc; // scales about the pod's own centre on the barrel top (silhouette rule 4)
+                _pod.localPosition = _podRestPos + Vector3.up * (idle ? WreckerMotion.PodBobMeters(_idleMs, rm) : 0f);
+            }
+        }
+
+        /// <summary>Core "glow" until a real emissive material exists: lerps the orb toward white (×(g−1)). Keeps WreckerBuilder's other block values.</summary>
+        void SetCoreGlow(float g)
+        {
+            if (_coreRenderer == null) return;
+            _coreRenderer.GetPropertyBlock(_coreMpb);
+            var c = Color.Lerp(_coreBase, Color.white, g - 1f);
+            _coreMpb.SetColor("_BaseColor", c); _coreMpb.SetColor("_Color", c);
+            _coreRenderer.SetPropertyBlock(_coreMpb);
+        }
+
+        static bool Armed(PowerUps.PowerUpRuntime pu, int i) => pu != null && pu.Slots != null && i < pu.Slots.Length && pu.Slots[i] != null && pu.Slots[i].armed;
     }
 }
