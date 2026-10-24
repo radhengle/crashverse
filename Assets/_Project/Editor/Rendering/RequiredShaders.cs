@@ -17,9 +17,8 @@ namespace Crashverse.Rendering.Editor
     {
         public static readonly string[] Names =
         {
-            "Universal Render Pipeline/Lit",
-            "Universal Render Pipeline/Unlit",
-            "Universal Render Pipeline/Particles/Unlit",
+            // URP Lit/Unlit/Particles are NOT always-included: URP Lit alone is 1.47M variants and fails the player build
+            // (run 40060951260). World renderers use Resources/Materials/CV_SimpleLit.mat, which ships its shader by reference.
             "Sprites/Default",              // AimController LineRenderer (Shader.Find)
             "Crashverse/GlossyPBR",
             "Crashverse/GlossyToon",
