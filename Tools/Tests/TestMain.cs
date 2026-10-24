@@ -21,7 +21,7 @@ static class T
     static int Main()
     {
         UnityEngine.Resources.Root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../Assets/_Project/Resources"));
-        Tests.Register();
+        Tests.Register(); SfxTests.Register();
         foreach (var (n, a) in Cases)
         {
             try { a(); } catch (Exception e) { _fail++; Console.WriteLine($"FAIL {n}: threw {e.GetType().Name}: {e.Message}"); }

@@ -26,6 +26,8 @@ namespace Crashverse.Audio
 
         void Awake()
         {
+            // Mixer groups per audio/mixer_spec.md; null (master) when the CrashverseMixer asset isn't in the build yet.
+            baseGroup ??= MixerRouting.Group("Music/Base"); layerGroup ??= MixerRouting.Group("Music/Layers"); stingerGroup ??= MixerRouting.Group("Music/Stingers");
             _baseA = Src("BaseA", baseGroup); _baseB = Src("BaseB", baseGroup);
             _layerA = Src("LayerA", layerGroup); _layerB = Src("LayerB", layerGroup); _stinger = Src("Stinger", stingerGroup);
             AnimEventBus.Raised += OnEvent;
@@ -41,6 +43,7 @@ namespace Crashverse.Audio
         static AudioClip Load(string id)
         {
             var c = Resources.Load<AudioClip>("Music/" + id);
+            if (c == null) { if (MissingClipLog.Sink == null) MissingClipLog.Sink = m => Debug.LogWarning(m); MissingClipLog.Report("Music", id, "Music/" + id); return null; }
             if (c != null && c.loadType != AudioClipLoadType.Streaming) Debug.LogWarning($"[Music] {id} must be imported as Streaming (mixing_unity.md)");
             return c;
         }
@@ -51,6 +54,7 @@ namespace Crashverse.Audio
         {
             var t = MusicTracks.Get(id); var clip = Load(id);
             StopLayers(); _p2Pending = false;
+            if (t == null) Debug.LogWarning($"[Music] unknown track id '{id}' (not in MusicTracks)");
             if (t == null || clip == null) { StopBase(); _baseTrack = null; return; }
             double at = atDsp > 0 ? atDsp : AudioSettings.dspTime + 0.1;
             if (_activeBase != null && _activeBase.isPlaying) _activeBase.SetScheduledEndTime(at);

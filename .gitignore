@@ -58,3 +58,7 @@ Assets/csc.rsp
 build-secrets/
 __pycache__/
 *.pyc
+
+# Generated from audio/sfx_routing.json by SfxRoutingSync (editor/build)
+Assets/_Project/Resources/Audio/sfx_routing.json
+Assets/_Project/Resources/Audio/sfx_routing.json.meta

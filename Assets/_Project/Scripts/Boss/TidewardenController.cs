@@ -37,7 +37,7 @@ namespace Crashverse.Boss
                 switch (x.role)
                 {
                     case "shoulder": _shoulders.Add(x); x.Broken += _ => CheckPhase(); break;
-                    case "armor": _armor.Add(x); break;
+                    case "armor": _armor.Add(x); x.Damaged += OnArmorDamaged; break;
                     case "core": _core = x; x.Damaged += OnCoreDamaged; break;
                     case "shutter": _shutter = x; _shutterClosedPos = x.transform.position; break;
                 }
@@ -54,6 +54,11 @@ namespace Crashverse.Boss
             Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.BossTidePhase2); // music: stinger at bar end → P2
             SetShutter(true); // SG-05: phase 2 opens with the shutter open
             Changed?.Invoke();
+        }
+
+        void OnArmorDamaged(DestructibleBlock b, float _, bool direct)
+        {
+            if (Crashverse.Audio.BossSfxRules.ArmorHit(Phase, direct, Defeated)) Crashverse.Audio.SfxPlayer.PlayCode("BOSS_TIDE_ARMOR_HIT"); // code-owned route, cooldown 4 ticks
         }
 
         void OnCoreDamaged(DestructibleBlock b, float _, bool direct)

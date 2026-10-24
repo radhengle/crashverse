@@ -34,7 +34,8 @@ namespace Crashverse.Core
             AppServices.Save = new CampaignSave();
             AppServices.Theme = UITheme.Load();
             AppServices.Router = UIRouter.Create(AppServices.Theme);
-            if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); c.AddComponent<AudioListener>(); }
+            if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); }
+            Crashverse.Audio.AudioListenerGuard.Ensure(); Crashverse.Audio.SfxPlayer.Ensure(); // P0 no-sound: exactly one listener + SFX router
 
             // §E1/E2: the age gate comes before any account, sign-in or backend traffic. Blocked installs never get further.
             if (AgeGateScreen.Blocked) { AppServices.Router.PopAllAndPush(new BlockedScreen()); return; }
