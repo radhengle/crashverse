@@ -66,6 +66,7 @@ namespace UnityEngine
         public Vector3 up => localRotation * Vector3.up;
         public int childCount => 0;
         public Transform parent;
+        public Transform root => parent == null ? this : parent.root;
         public void SetParent(Transform p, bool world = true) { parent = p; }
         public Transform GetChild(int i) => null;
         public void LookAt(Vector3 t) { }
