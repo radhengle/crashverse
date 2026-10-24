@@ -46,6 +46,7 @@ namespace Crashverse.Weapons
             _rb.velocity = vel;
             _spent = false; _splitDone = !mods.split;
             if (_col != null) _col.isTrigger = mods.pierce; // Phase Piercer passes through pieces
+            Trace($"launch tick={_launchTick}");
         }
 
         /// <summary>Ticks since Launch (0.02 s each).</summary>
@@ -54,7 +55,7 @@ namespace Crashverse.Weapons
         void FixedUpdate()
         {
             int age = AgeTicks;
-            if (age >= Crashverse.Sim.SimTime.SecondsToTicks(lifeSeconds) || (KillPlane.Instance != null && transform.position.y < KillPlane.Instance.killY)) { Despawn(); return; }
+            if (age >= Crashverse.Sim.SimTime.SecondsToTicks(lifeSeconds) || (KillPlane.Instance != null && transform.position.y < KillPlane.Instance.killY)) { Despawn(age >= Crashverse.Sim.SimTime.SecondsToTicks(lifeSeconds) ? "life" : "killplane"); return; }
             if (!_splitDone && (_splitAt >= 0f ? age >= Crashverse.Sim.SimTime.SecondsToTicks(_splitAt) : _rb.velocity.y <= 0f)) Split();
         }
 
@@ -82,7 +83,7 @@ namespace Crashverse.Weapons
         {
             if (_spent || !mods.pierce) return;
             var b = other.GetComponentInParent<DestructibleBlock>();
-            if (b == null) { Impact(null, transform.position); return; } // ground
+            if (b == null) { Trace($"trigger '{other.name}' (root '{other.transform.root.name}')"); Impact(null, transform.position); return; } // ground
             if (b.IsBroken || !_pierced.Add(b)) return;
             if (_pierced.Count > mods.pierceCount)
             {
@@ -97,6 +98,7 @@ namespace Crashverse.Weapons
             if (_spent) return;
             var hb = c.collider.GetComponentInParent<DestructibleBlock>();
             Vector3 cp = c.contactCount > 0 ? c.GetContact(0).point : transform.position, cn = c.contactCount > 0 ? c.GetContact(0).normal : -transform.forward;
+            Trace($"collide '{c.collider.name}' (root '{c.collider.transform.root.name}') block={(hb != null ? hb.name : "-")} at {cp}");
             if (hb != null) ImpactReport.Collision(hb, null, c.collider, c.impulse.magnitude, c.relativeVelocity.magnitude, cp, cn, ShotSource, ShotSourceId);
             Impact(hb, cp);
         }
@@ -120,7 +122,7 @@ namespace Crashverse.Weapons
             }
             if (mods.chainReactor) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.ChainReactor)) ChainReactor(at);
             if (mods.gravityWell) GravityWellEffect.Spawn(at, mods.gwRadius, mods.gwDuration, mods.gwBurst);
-            Despawn();
+            Despawn(hit != null ? "hit " + hit.name : "impact");
         }
 
         /// <summary>40 splash to every piece connected 1 support link deep; not multiplied by the joint bonus (SG-08).</summary>
@@ -151,8 +153,12 @@ namespace Crashverse.Weapons
             }
         }
 
-        void Despawn()
+        [System.Diagnostics.Conditional("UNITY_EDITOR"), System.Diagnostics.Conditional("DEVELOPMENT_BUILD")]
+        void Trace(string msg) => Debug.Log($"CVPROJ {msg} pos={transform.position} v={(_rb != null ? _rb.velocity : Vector3.zero)} age={AgeTicks}");
+
+        void Despawn(string why = "")
         {
+            Trace("despawn " + why);
             gameObject.SetActive(false);
             Destroy(gameObject, 0.05f);
         }
