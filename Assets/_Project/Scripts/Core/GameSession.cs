@@ -82,6 +82,7 @@ namespace Crashverse.Core
             foreach (var p in Projectile.Alive.ToArray()) if (p != null) Destroy(p.gameObject);
             Projectile.Alive.Clear();
             builder.Build(Ctx.layout, structureBase, Ctx.mod);
+            EnsureHeroSlot();
             var arr = new DestructibleBlock[builder.Blocks.Count];
             for (int i = 0; i < arr.Length; i++) arr[i] = builder.Blocks[i];
             tracker.Register(arr);
@@ -283,7 +284,9 @@ namespace Crashverse.Core
                 {
                     case RunMode.Campaign:
                         res.score = CampaignScore.Compute(won, res.ratio, ShotsLeft, combo, mastery);
+                        int prevBest = AppServices.Save.BestStars(lvl.id);
                         res.firstClear = AppServices.Save.RecordResult(lvl.id, won, stars, mastery, res.score);
+                        GrantLocalRewards(res, lvl, won, stars, prevBest); // v2: local wallet, before any (offline) sync
                         if (won)
                         {
                             // BUG-13/14: raw stats only, queued first; the server validates, scores, grants first-clear rewards and totals
@@ -305,6 +308,12 @@ namespace Crashverse.Core
                         if (res.titanSubmit.status == SubmitStatus.Accepted) res.titanScore = res.titanSubmit.finalScore; // server is authoritative
                         TitanRunJournal.Clear(); _journal = null;
                         break;
+                    case RunMode.DailyBoss:
+                        if (PowerUps.AnyUsed && AppServices.Progress != null) AppServices.Progress.Data.powerUpsUsed++;
+                        if (won && AppServices.Progress != null)
+                            res.rewards = AppServices.Progress.RecordDailyBossWin(lvl.id.StartsWith("daily_") ? lvl.id.Substring(6) : lvl.id, AppServices.Content.Meta.dailyBoss.reward);
+                        AppServices.Progress?.Save();
+                        break;
                     case RunMode.TitanPractice:
                         AppServices.Save.RecordHintAttempt(lvl.id, won); // BUG-08
                         res.titanScore = TitanScoring.Score(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
@@ -320,7 +329,34 @@ namespace Crashverse.Core
             Ended?.Invoke(res);
         }
 
-        void OnApplicationPause(bool paused)
+        /// <summary>Target UI §6: level complete rewards into the local wallet (progress_v2.json). Server stays offline in v2.</summary>
+        void GrantLocalRewards(RunResult res, Crashverse.Data.LevelEntry lvl, bool won, int stars, int prevBest)
+        {
+            var p = AppServices.Progress; if (p == null) return;
+            if (PowerUps.AnyUsed) p.Data.powerUpsUsed++;
+            res.rewards = RewardRules.ForLevel(AppServices.Content.Meta.levelRewards, lvl, won, stars, prevBest, res.firstClear);
+            p.Grant(res.rewards);
+            if (won && res.firstClear && HardLevelRules.IsHard(lvl)) p.Data.hardCleared++;
+            p.Save();
+        }
+
+        /// <summary>v2 hero building slot: one "HeroSlot" anchor per level (keep|gatehouse). Empty until the Bld_* model ships;
+        /// if a prefab named after the FBX is under Resources/HeroBuildings it is placed there, with colliders stripped (presentation only).</summary>
+        void EnsureHeroSlot()
+        {
+            if (transform.Find("HeroSlot") != null) return;
+            var hs = Ctx.level.heroSlot; var p = HeroSlotRules.Position(hs);
+            var go = new GameObject("HeroSlot"); go.transform.SetParent(transform, false);
+            go.transform.position = structureBase + new Vector3(p[0], p[1], p[2]);
+            go.transform.rotation = Quaternion.Euler(0f, hs != null ? hs.rotY : 0f, 0f);
+            if (hs == null || string.IsNullOrEmpty(hs.fbx) || HeroSlotRules.Validate(hs) != null) return;
+            var prefab = Resources.Load<GameObject>("HeroBuildings/" + hs.fbx);
+            if (prefab == null) return;
+            var m = (GameObject)Instantiate(prefab, go.transform);
+            foreach (var c in m.GetComponentsInChildren<Collider>()) Destroy(c);
+        }
+
+                void OnApplicationPause(bool paused)
         {
             if (paused && Ctx != null && Ctx.mode == RunMode.TitanRanked && _journal != null) TitanRunJournal.Write(_journal); // settled shots only; mid-flight damage is never journaled
         }

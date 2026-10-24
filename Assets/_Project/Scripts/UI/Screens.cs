@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Crashverse.Backend;
 using Crashverse.Core;
 using Crashverse.Data;
+using Crashverse.Destruction;
 using Crashverse.Meta;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,107 +13,7 @@ namespace Crashverse.UI
 {
     // ───────────────────────────── Map (mockup 02) ─────────────────────────────
     /// <summary>Island map: node buttons projected on 3D anchors, drag-to-pan (≥10dp threshold via EventSystem), gates, live-ops entry points.</summary>
-    public class MapScreen : UIScreen
-    {
-        public override bool BlocksWorldInput => false;
-        readonly Dictionary<string, RectTransform> _nodes = new Dictionary<string, RectTransform>();
-        readonly Dictionary<string, RectTransform> _gates = new Dictionary<string, RectTransform>();
-        RectTransform _layer; Text _stars, _wallet; Button _titanBtn, _dailyBtn, _seasonBtn;
-
-        protected override void Build(RectTransform root)
-        {
-            var c = AppServices.Content; var save = AppServices.Save;
-            var drag = UIFactory.Panel("PanSurface", root, new Color(0, 0, 0, 0)); UIFactory.Stretch(drag.rectTransform);
-            drag.gameObject.AddComponent<MapPanSurface>();
-            _layer = UIFactory.Rect("Nodes", root); UIFactory.Stretch(_layer);
-            foreach (var l in c.Chapter1.levels)
-            {
-                var lvl = l;
-                bool open = UnlockRules.IsLevelUnlocked(lvl, save);
-                float size = lvl.IsBoss ? Th.bossNode : Th.mapNode;
-                var b = UIFactory.Button(_layer, open ? lvl.number.ToString() : "🔒", open ? (lvl.IsBoss ? Th.red : Th.goldShade) : Th.locked,
-                    () => { if (UnlockRules.IsLevelUnlocked(lvl, save)) Router.Push(new BriefingScreen(lvl, RunMode.Campaign, null)); else Router.Toast(LockReason(lvl)); },
-                    Th, size, size);
-                var rt = (RectTransform)b.transform; rt.sizeDelta = new Vector2(size, size + 16);
-                var st = UIFactory.Label(b.transform, UIFactory.Stars(save.BestStars(lvl.id)) + (save.Get(lvl.id)?.mastery == true ? " ◆" : ""), Th.captionSp, Th.goldFill, TextAnchor.UpperCenter, Th);
-                UIFactory.Place(st.rectTransform, new Vector2(0.5f, 0f), new Vector2(110, 20), new Vector2(0, -20));
-                _nodes[lvl.id] = rt;
-            }
-            foreach (var isl in c.Chapter1.islands)
-            {
-                if (string.IsNullOrEmpty(isl.gateAfterLevel) || UnlockRules.IsIslandOpen(isl, save)) continue;
-                var lab = UIFactory.Label(_layer, "🔒 Clear L" + c.GetLevel(isl.gateAfterLevel)?.number, Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
-                lab.rectTransform.sizeDelta = new Vector2(110, 24);
-                _gates[isl.id] = lab.rectTransform;
-            }
-            // top bar
-            var top = UIFactory.Panel("TopBar", root, new Color(Th.navy900.r, Th.navy900.g, Th.navy900.b, 0.85f));
-            UIFactory.Band(top.rectTransform, true, 56f);
-            var tr = UIFactory.HStack(top.transform, Th.gap, 56f); UIFactory.Stretch(tr, 4f);
-            _stars = UIFactory.Label(tr, "", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
-            _wallet = UIFactory.Label(tr, "", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
-            UIFactory.Button(tr, "Store", Th.violet, () => Router.Push(new StoreScreen()), Th, 48, 80, Th.bodySp);
-            UIFactory.Button(tr, "Settings", Th.navy500, () => Router.Push(new SettingsModal()), Th, 48, 96, Th.captionSp);
-#if CRASHVERSE_DEV || DEVELOPMENT_BUILD
-            UIFactory.Button(tr, "⚙", Th.navy500, () => Router.Push(new QADebugModal()), Th, 48, 48, Th.bodySp); // SEC-02: dev builds only
-#endif
-            // bottom dock
-            var dock = UIFactory.Panel("Dock", root, new Color(Th.navy900.r, Th.navy900.g, Th.navy900.b, 0.85f));
-            UIFactory.Band(dock.rectTransform, false, 64f);
-            var dr = UIFactory.HStack(dock.transform, Th.gap, 56f); UIFactory.Stretch(dr, 4f);
-            _titanBtn = UIFactory.Button(dr, "Titan", Th.orange, () => Router.Push(new TitanScreen()), Th, 52, 0, Th.bodySp);
-            _dailyBtn = UIFactory.Button(dr, "Daily", Th.green, () => Router.Push(new DailyRewardsScreen()), Th, 52, 0, Th.bodySp);
-            _seasonBtn = UIFactory.Button(dr, "Season", Th.cyan, () => Router.Push(new SeasonScreen()), Th, 52, 0, Th.bodySp);
-            UIFactory.Button(dr, "Ranks", Th.navy500, () => Router.Push(new LeaderboardScreen()), Th, 52, 0, Th.bodySp);
-            UIFactory.Button(dr, "◎", Th.navy500, () => GameplayDirector.Map.FocusLevel(save.Data.lastPlayedLevel), Th, 52, 52, Th.bodySp); // recenter
-        }
-
-        string LockReason(LevelEntry l)
-        {
-            var req = AppServices.Content.GetLevel(l.requires);
-            return req != null ? $"Clear Level {req.number} to unlock" : "Locked";
-        }
-
-        public override async void OnShow()
-        {
-            _stars.text = "★ " + UnlockRules.TotalStars(AppServices.Content.Chapter1, AppServices.Save) + "/30";
-            try { var w = await AppServices.Backend.GetWallet(); _wallet.text = $"🪙{w.coins}  💎{w.shards}"; }
-            catch (BackendException) { _wallet.text = "offline"; }
-            bool live = AppServices.TimeSynced && AppServices.Backend.IsOnline; // SG-20: time-gated UI disabled while unsynced
-            _titanBtn.interactable = live; _dailyBtn.interactable = live; _seasonBtn.interactable = live;
-        }
-
-        public override void Tick()
-        {
-            var cam = Camera.main; var map = GameplayDirector.Map;
-            if (cam == null || map == null) return;
-            float scale = Router.Canvas.scaleFactor;
-            foreach (var kv in _nodes) Project(cam, map.NodePositions[kv.Key], kv.Value, scale);
-            foreach (var kv in _gates) if (map.GatePositions.TryGetValue(kv.Key, out var p)) Project(cam, p, kv.Value, scale);
-        }
-
-        void Project(Camera cam, Vector3 world, RectTransform rt, float scale)
-        {
-            var sp = cam.WorldToScreenPoint(world);
-            rt.gameObject.SetActive(sp.z > 0);
-            rt.anchorMin = rt.anchorMax = Vector2.zero;
-            var safe = Screen.safeArea;
-            rt.anchoredPosition = new Vector2((sp.x - safe.x) / scale, (sp.y - safe.y) / scale);
-        }
-
-        public override bool OnBack() => false; // root: router asks to quit
-    }
-
-    /// <summary>Drag pans the map camera; EventSystem's drag threshold (10dp) keeps taps on nodes from panning.</summary>
-    public class MapPanSurface : MonoBehaviour, IDragHandler
-    {
-        public void OnDrag(PointerEventData e)
-        {
-            var map = GameplayDirector.Map; if (map == null) return;
-            float dpi = Screen.dpi > 1 ? Screen.dpi : 160f;
-            map.Pan(-e.delta.x / dpi * 160f * Crashverse.Core.CameraConfig.Current.mapPanUnitsPerDp);
-        }
-    }
+    // MapScreen moved to ScreensMap.cs (target UI v2: 2D scrolling journey).
 
     // ───────────────────────────── Briefing / loadout (mockup 03) ─────────────────────────────
     public class BriefingScreen : UIScreen
@@ -263,42 +164,85 @@ namespace Crashverse.UI
     // ───────────────────────────── HUD (mockup 04) ─────────────────────────────
     public class HudScreen : UIScreen
     {
-        readonly GameSession _s; Text _shots, _pct, _combo, _status; Image _bar; Button _fire; Button[] _pu = new Button[3];
+        readonly GameSession _s; Text _shots, _pct, _combo, _status; Image _bar, _bossBar; Button _fire; Button[] _pu = new Button[3]; Image[] _puIcon = new Image[3];
+        Image[] _hudStars; RectTransform _strip; Image[] _stripTiles; List<DestructibleBlock>[] _bands; float _stripT;
         // 06 UI motion (unscaled time, Reduce Motion variants): combo pop, % bar fill + win tick pop, shots punch.
         readonly Crashverse.Feel.ComboUiStateMachine _comboSm = new Crashverse.Feel.ComboUiStateMachine();
         RectTransform _tick; Image _tickImg; Crashverse.Feel.FloatTween _fill; float _fillShown, _fillTarget = -1f, _tickMs = -1f, _shotMs = -1f;
         bool _tickHit; int _lastShots = -1;
         public override bool BlocksWorldInput => false;
         public HudScreen(GameSession s) { _s = s; }
+        const int StripBands = 5;
 
+        // Target UI §6/§7/§8: Steps Left box, destruction % bar, building strip (right), pause (bottom-left), power-ups, FIRE; boss HP bar on the Daily Boss.
         protected override void Build(RectTransform root)
         {
-            var top = UIFactory.Panel("Top", root, new Color(0, 0, 0, 0)); UIFactory.Band(top.rectTransform, true, 64f, 0f, Th.edgeGestureInset);
-            top.raycastTarget = false;
-            var tr = UIFactory.HStack(top.transform, Th.gap, 56f); UIFactory.Stretch(tr);
-            UIFactory.Button(tr, "II", Th.navy500, () => Router.Push(new PauseModal(_s)), Th, 48, 48);
-            _shots = UIFactory.Label(tr, "", Th.hudNumberSp, Th.white, TextAnchor.MiddleCenter, Th, true);
-            _pct = UIFactory.Label(tr, "", Th.hudNumberSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
-            var barBg = UIFactory.Panel("Bar", root, Th.navy700); UIFactory.Band(barBg.rectTransform, true, 10f, 64f, 24f); barBg.raycastTarget = false;
-            _bar = UIFactory.Panel("Fill", barBg.transform, Th.green); UIFactory.Stretch(_bar.rectTransform); _bar.raycastTarget = false;
+            bool dark = _s.Ctx.IsHard || _s.Ctx.mode == RunMode.DailyBoss;
+            if (dark) { var tint = UIFactory.Panel("HardTint", root, new Color(0.22f, 0f, 0.06f, 0.16f)); UIFactory.Stretch(tint.rectTransform); tint.raycastTarget = false; }
+            float inset = Th.edgeGestureInset;
+            // Steps Left
+            var box = V2.Card("StepsLeft", root, Th); box.raycastTarget = false;
+            UIFactory.Place(box.rectTransform, new Vector2(0f, 1f), new Vector2(96f, 92f), new Vector2(inset, -6f));
+            var bv = UIFactory.VStack(box.transform, 0f, 4f); UIFactory.Stretch(bv);
+            UIFactory.Label(bv, "Steps Left", Th.captionSp, Color.white, TextAnchor.MiddleCenter, Th, true);
+            _shots = UIFactory.Label(bv, "", Th.hudNumberSp, Color.white, TextAnchor.MiddleCenter, Th, true); _shots.fontStyle = FontStyle.Bold; UIArt.Pop(_shots, V2.Ink, 2f);
+            V2.Stars(bv, 3, 18f, 1f, out _hudStars);
+            // destruction % bar
+            var barBg = V2.RoundPanel("Bar", root, new Color(0f, 0f, 0f, 0.55f));
+            var brt = barBg.rectTransform; brt.anchorMin = new Vector2(0f, 1f); brt.anchorMax = new Vector2(1f, 1f); brt.pivot = new Vector2(0.5f, 1f);
+            brt.offsetMin = new Vector2(inset + 104f, -40f); brt.offsetMax = new Vector2(-inset - 8f, -14f);
+            _bar = UIFactory.Panel("Fill", barBg.transform, Th.goldFill); UIFactory.Stretch(_bar.rectTransform, 3f); _bar.raycastTarget = false;
             _bar.type = Image.Type.Filled; _bar.fillMethod = Image.FillMethod.Horizontal;
             var tick = UIFactory.Panel("WinTick", barBg.transform, Th.white); tick.raycastTarget = false; _tickImg = tick; _tick = tick.rectTransform;
-            var trt = tick.rectTransform; trt.anchorMin = new Vector2(_s.Ctx.level.winThreshold, 0); trt.anchorMax = new Vector2(_s.Ctx.level.winThreshold, 1); trt.sizeDelta = new Vector2(2, 6);
-            _status = UIFactory.Label(root, "", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th); UIFactory.Band(_status.rectTransform, true, 24f, 80f);
+            var trt = tick.rectTransform; trt.anchorMin = new Vector2(_s.Ctx.level.winThreshold, 0); trt.anchorMax = new Vector2(_s.Ctx.level.winThreshold, 1); trt.sizeDelta = new Vector2(3, 4);
+            _pct = UIFactory.Label(barBg.transform, "", Th.bodySp, Color.white, TextAnchor.MiddleRight, Th, true); UIFactory.Stretch(_pct.rectTransform, 2f); _pct.rectTransform.offsetMax = new Vector2(-8f, 0f);
+            _pct.fontStyle = FontStyle.Bold; UIArt.Pop(_pct, V2.Ink, 1.5f);
+            float below = 46f;
+            if (_s.Ctx.mode == RunMode.DailyBoss)
+            {
+                var hp = V2.RoundPanel("BossHp", root, new Color(0f, 0f, 0f, 0.6f)); var hrt = hp.rectTransform;
+                hrt.anchorMin = new Vector2(0f, 1f); hrt.anchorMax = new Vector2(1f, 1f); hrt.pivot = new Vector2(0.5f, 1f);
+                hrt.offsetMin = new Vector2(inset + 104f, -76f); hrt.offsetMax = new Vector2(-inset - 8f, -48f);
+                _bossBar = UIFactory.Panel("Hp", hp.transform, UITheme.H("DC2626")); UIFactory.Stretch(_bossBar.rectTransform, 3f); _bossBar.raycastTarget = false;
+                _bossBar.type = Image.Type.Filled; _bossBar.fillMethod = Image.FillMethod.Horizontal; _bossBar.fillAmount = 1f;
+                var sk = UIArt.Icon(hp.transform, UIArt.Skull, 30f); UIFactory.Place(sk.rectTransform, new Vector2(0f, 0.5f), new Vector2(30f, 30f), new Vector2(-6f, 0f));
+                var hl = UIFactory.Label(hp.transform, "BOSS HP · " + UIFactory.Truncate(_s.Ctx.level.name, 18), Th.captionSp, Color.white, TextAnchor.MiddleCenter, Th, true); UIFactory.Stretch(hl.rectTransform); UIArt.Pop(hl, V2.Ink, 1f);
+                below = 82f;
+            }
+            _status = UIFactory.Label(root, "", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th); UIFactory.Band(_status.rectTransform, true, 24f, below + 50f); UIArt.Pop(_status, V2.Ink, 1f);
             _combo = UIFactory.Label(root, "", Th.titleSp, Th.violet, TextAnchor.MiddleCenter, Th, true); // COMBO is violet (asset_list ui_label_combo)
             _combo.rectTransform.localScale = Vector3.zero; UIFactory.Place(_combo.rectTransform, new Vector2(0.5f, 0.7f), new Vector2(240, 48), Vector2.zero);
-            // bottom: power-ups left, FIRE right (thumb zone)
-            var pu = UIFactory.HStack(root, Th.gap, 64f); UIFactory.Place(pu, new Vector2(0f, 0f), new Vector2(220, 64), new Vector2(Th.edgeGestureInset, Th.edgeGestureInset + 8));
-            for (int i = 0; i < 3; i++) { int idx = i; _pu[i] = UIFactory.Button(pu, "", Th.navy500, () => _s.PowerUps.ToggleArm(idx), Th, 64, 64, Th.captionSp); }
-            _fire = UIFactory.Button(root, "FIRE", Th.orange, () => _s.TryFire(), Th, 88, 88, Th.titleSp);
-            UIFactory.Place((RectTransform)_fire.transform, new Vector2(1f, 0f), new Vector2(88, 88), new Vector2(-Th.edgeGestureInset, Th.edgeGestureInset + 8));
+            // building strip (right edge): the structure in 5 height bands, top band first; each tile fades as its band falls
+            _strip = UIFactory.Rect("BuildingStrip", root); UIFactory.Place(_strip, new Vector2(1f, 0.5f), new Vector2(46f, StripBands * 50f), new Vector2(-inset - 4f, 40f));
+            var sv = _strip.gameObject.AddComponent<VerticalLayoutGroup>(); sv.spacing = 4f; sv.childControlHeight = sv.childControlWidth = true; sv.childForceExpandHeight = sv.childForceExpandWidth = false;
+            _stripTiles = new Image[StripBands];
+            for (int i = 0; i < StripBands; i++)
+            {
+                var t = V2.RoundPanel("Band" + (StripBands - i), _strip, new Color(0.95f, 0.75f, 0.35f, 0.9f)); var le = t.gameObject.AddComponent<LayoutElement>(); le.minHeight = le.preferredHeight = 46f; le.minWidth = le.preferredWidth = 46f;
+                var o = t.gameObject.AddComponent<Outline>(); o.effectColor = new Color(0.04f, 0.07f, 0.17f, 0.8f); o.effectDistance = new Vector2(2f, -2f);
+                _stripTiles[i] = t;
+            }
+            // pause bottom-left; power-ups bottom centre; FIRE bottom-right (thumb zone)
+            var pause = V2.RoundButton(root, "II", Th.navy500, () => Router.Push(new PauseModal(_s)), Th, 52f, "Button_II");
+            UIFactory.Place((RectTransform)pause.transform, new Vector2(0f, 0f), new Vector2(52, 52), new Vector2(inset, inset + 8));
+            var pu = UIFactory.HStack(root, Th.gap, 64f); UIFactory.Place(pu, new Vector2(0f, 0f), new Vector2(212, 64), new Vector2(inset + 60f, inset + 8));
+            for (int i = 0; i < 3; i++)
+            {
+                int idx = i; _pu[i] = UIFactory.Button(pu, "", Th.navy500, () => _s.PowerUps.ToggleArm(idx), Th, 64, 64, Th.captionSp);
+                _pu[i].gameObject.name = "Button_PowerUp" + (i + 1); _pu[i].image.sprite = V2.Rounded; _pu[i].image.type = Image.Type.Sliced;
+                var tx = _pu[i].GetComponentInChildren<Text>(); tx.alignment = TextAnchor.LowerRight; UIArt.Pop(tx, V2.Ink, 1.5f);
+                _puIcon[i] = UIArt.Icon(_pu[i].transform, null, 56f); UIFactory.Stretch(_puIcon[i].rectTransform, 4f); _puIcon[i].transform.SetAsFirstSibling();
+            }
+            _fire = V2.RoundButton(root, "FIRE", Th.orange, () => _s.TryFire(), Th, 88f);
+            UIFactory.Place((RectTransform)_fire.transform, new Vector2(1f, 0f), new Vector2(88, 88), new Vector2(-inset, inset + 8));
 #if CRASHVERSE_DEV || DEVELOPMENT_BUILD
-            // BUG-24: dev-only "aim at practice hint" so CI smoke can play a known-winning L1 line deterministically.
+            // BUG-24: dev-only "aim at practice hint" so CI smoke can play a known-winning L1 line deterministically. Never in release.
             var hint = UIFactory.Button(root, "HINT", Th.navy500, () => _s.aim.SetAim(_s.Ctx.level.hintYaw, _s.Ctx.level.hintPitch), Th, 64, 64, Th.captionSp);
             hint.gameObject.name = "Button_DevAimHint";
-            UIFactory.Place((RectTransform)hint.transform, new Vector2(1f, 0f), new Vector2(64, 64), new Vector2(-Th.edgeGestureInset - 104, Th.edgeGestureInset + 8));
+            UIFactory.Place((RectTransform)hint.transform, new Vector2(1f, 0f), new Vector2(64, 64), new Vector2(-inset - 104, inset + 8));
 #endif
             _s.Changed += Refresh; _s.Ended += OnEnded;
+            _s.StepProtected += () => Router.Toast("🛡 Shield: step protected!");
             _s.tracker.ComboChanged += n => { if (n >= ComboTracker.ShowFrom) _combo.text = "COMBO x" + n; _comboSm.OnCombo(n); }; // shows from x3; pop sizes escalate at x5/x10/x20
             Refresh();
         }
@@ -308,23 +252,49 @@ namespace Crashverse.UI
             if (_s == null || _s.Ctx == null) return;
             int total = _s.Ctx.ShotBudget;
             if (_lastShots >= 0 && _s.ShotsLeft < _lastShots) { _shotMs = 0f; _comboSm.OnShot(); Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.UiShotSpend); } // new shot: punch + combo out
-            if (_lastShots >= 0 && _s.ShotsLeft > _lastShots) { _tickHit = false; _fillTarget = -1f; _tickImg.color = Th.white; } // Retry: tick re-arms
+            if (_lastShots >= 0 && _s.ShotsLeft > _lastShots) { _tickHit = false; _fillTarget = -1f; _tickImg.color = Th.white; } // Retry / shield refund: tick re-arms
             _lastShots = _s.ShotsLeft;
             int stars = StarRules.Compute(true, _s.ShotsLeft, total, _s.Ctx.level.star3Pct, _s.Ctx.level.star2Pct);
-            _shots.text = $"Shots {_s.ShotsLeft}/{total}  {UIFactory.Stars(stars)}";
+            _shots.text = _s.ShotsLeft.ToString();
+            for (int i = 0; i < 3; i++) V2.SetStar(_hudStars[i], i < stars);
             for (int i = 0; i < 3; i++)
             {
                 var st = _s.PowerUps.Slots[i];
                 _pu[i].gameObject.SetActive(st != null);
                 if (st == null) continue;
-                UIFactory.SetLabel(_pu[i], $"{UIFactory.Truncate(st.data.name, 9)}\n×{st.charges}");
-                _pu[i].image.color = st.armed ? Th.goldShade : Th.navy500;
+                UIFactory.SetLabel(_pu[i], "×" + st.charges);
+                _puIcon[i].sprite = UIArt.Get(UIArt.PowerUpIcon(st.data.id)); _puIcon[i].color = st.charges > 0 || st.armed ? Color.white : new Color(0.4f, 0.4f, 0.45f, 1f);
+                _pu[i].image.color = st.armed ? Th.goldTrim : V2.SlotColor(st.data.slot);
                 _pu[i].interactable = _s.State == SessionState.Aiming && (st.charges > 0 || st.armed);
             }
             _fire.interactable = _s.State == SessionState.Aiming && _s.ShotsLeft > 0;
             _status.text = _s.State == SessionState.Resolving ? "Settling…" : _s.State == SessionState.BossTell ? "The Tidewarden shifts!" :
                 _s.Boss != null ? $"Core hits {_s.Boss.CoreHits}/{Crashverse.Boss.TidewardenController.CoreHitsToWin} · Shutter {(_s.Boss.ShutterOpen ? "OPEN" : "closed")}" :
-                _s.HintVisible ? "💡 Follow the ghost arc" : _s.Ctx.titan != null ? _s.Ctx.titan.ruleText : "";
+                _s.HintVisible ? "💡 Follow the ghost arc" : _s.Ctx.titan != null ? _s.Ctx.titan.ruleText : _s.Ctx.IsHard ? "HARD LEVEL" : "";
+        }
+
+        /// <summary>Building strip: 5 height bands of objective pieces (bottom→top); a tile's alpha follows the share of its band still standing.</summary>
+        void TickStrip()
+        {
+            var pieces = _s.tracker.Pieces;
+            if (_bands == null)
+            {
+                if (pieces == null || pieces.Count == 0) return;
+                float lo = float.MaxValue, hi = float.MinValue;
+                foreach (var b in pieces) { if (b == null || !b.isObjectivePiece) continue; lo = Mathf.Min(lo, b.InitialY); hi = Mathf.Max(hi, b.InitialY); }
+                _bands = new List<DestructibleBlock>[StripBands]; for (int i = 0; i < StripBands; i++) _bands[i] = new List<DestructibleBlock>();
+                float span = Mathf.Max(0.01f, hi - lo);
+                foreach (var b in pieces) { if (b == null || !b.isObjectivePiece) continue; int k = Mathf.Clamp((int)((b.InitialY - lo) / span * StripBands), 0, StripBands - 1); _bands[k].Add(b); }
+            }
+            if ((_stripT -= Time.unscaledDeltaTime) > 0f) return; _stripT = 0.25f;
+            for (int i = 0; i < StripBands; i++)
+            {
+                var band = _bands[StripBands - 1 - i]; float tot = 0f, up = 0f; // tile 0 = top band
+                foreach (var b in band) { if (b == null) continue; tot += b.Mass; if (!DestructionTracker.CountsDestroyed(b)) up += b.Mass; }
+                bool any = tot > 0f; float f = any ? up / tot : 0f;
+                _stripTiles[i].gameObject.SetActive(any);
+                _stripTiles[i].color = f > 0.6f ? new Color(0.95f, 0.75f, 0.35f, 0.95f) : f > 0.25f ? new Color(0.95f, 0.45f, 0.2f, 0.9f) : new Color(0.35f, 0.35f, 0.4f, 0.6f);
+            }
         }
 
         public override void Tick()
@@ -332,6 +302,8 @@ namespace Crashverse.UI
             if (_s == null || _s.tracker == null) return;
             float r = _s.tracker.DestroyedRatio;
             _pct.text = Mathf.FloorToInt(r * 100f) + "%" + (_s.Ctx.IsTitan ? $"  {_s.TitanDamageScore}" : "");
+            if (_bossBar != null) _bossBar.fillAmount = _s.BossHpFraction;
+            TickStrip();
             float dt = Time.unscaledDeltaTime; bool rm = Crashverse.Feel.MotionSettings.Current.ReduceMotion;
 
             // % bar: 400 ms ease-out toward the latest ratio (re-targets on change, never allocates)
@@ -385,7 +357,7 @@ namespace Crashverse.UI
         public bool Won => _r != null && _r.won; // dev tap probe / smoke script
         readonly GameSession _s; readonly RunResult _r;
         // 06 win sequence: stars pop one by one (0→1.3→1, 250 ms, 300 ms stagger), mastery tick, score count-up (600 ms). Unscaled; tap = skip.
-        readonly Text[] _star = new Text[3]; Text _mastery, _score; string _scoreFmt; float _seqMs; bool _starRaised0, _starRaised1, _starRaised2, _masteryRaised;
+        Image[] _star = new Image[3]; Text _mastery, _score; string _scoreFmt; float _seqMs; bool _starRaised0, _starRaised1, _starRaised2, _masteryRaised;
         public override bool IsModal => true;
         public ResultsScreen(GameSession s, RunResult r) { _s = s; _r = r; }
         /// <summary>QA C-1/C-3 (smoke + probe): the win sequence (stars, mastery, score count-up) has reached its final frame.</summary>
@@ -415,23 +387,29 @@ namespace Crashverse.UI
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.55f)); UIFactory.Stretch(dim.rectTransform);
             var p = UIFactory.TrimPanel("Results", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 470), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 16f); UIFactory.Stretch(v);
-            UIFactory.Label(v, _r.won ? (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? "TITAN DOWN!" : "SMASHED!") : FailTitle(_r.ratio, lvl.winThreshold), Th.titleSp, _r.won ? Th.goldFill : Th.red, TextAnchor.MiddleCenter, Th, true);
+            // Target UI §6: big stars, "Level N Completed!", rewards (coins, gems, chest), Next Level
             if (_r.won && !_s.Ctx.IsTitan)
             {
-                var sr = UIFactory.HStack(v, Th.gap, 48f);
-                for (int i = 0; i < 3; i++)
-                {
-                    bool earned = i < _r.stars;
-                    _star[i] = UIFactory.Label(sr, earned ? "★" : "☆", 40, earned ? Th.goldFill : Th.navy700, TextAnchor.MiddleCenter, Th, true);
-                    _star[i].rectTransform.localScale = Vector3.zero;
-                }
+                V2.Stars(v, _r.stars, 64f, 6f, out _star);
+                for (int i = 0; i < 3; i++) _star[i].rectTransform.localScale = Vector3.zero;
             }
+            string title = !_r.won ? FailTitle(_r.ratio, lvl.winThreshold) : _s.Ctx.IsTitan ? "TITAN DOWN!" : mode == RunMode.DailyBoss ? "BOSS DEFEATED!"
+                         : mode == RunMode.Campaign && lvl.number > 0 ? $"Level {lvl.number}\nCompleted!" : "SMASHED!";
+            V2.Title(v, title, Th.titleSp, _r.won ? Th.goldFill : Th.red, Th).GetComponent<LayoutElement>().minHeight = _r.won && lvl.number > 0 ? 76f : 44f;
             UIFactory.Label(v, $"Destroyed {Mathf.FloorToInt(_r.ratio * 100)}% (need {Mathf.RoundToInt(lvl.winThreshold * 100)}%)   Shots left {_r.shotsLeft}", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
             if (lvl.mastery != null) _mastery = UIFactory.Label(v, (_r.mastery ? "◆ Mastery complete: " : "◇ Mastery: ") + lvl.mastery.text, Th.captionSp, _r.mastery ? Th.cyan : Th.body, TextAnchor.MiddleCenter, Th);
             if (_r.bestCombo >= ComboTracker.ShowFrom) UIFactory.Label(v, "Best combo x" + _r.bestCombo, Th.bodySp, Th.orange, TextAnchor.MiddleCenter, Th);
             if (mode == RunMode.Campaign && _r.won) { _scoreFmt = "  (best " + AppServices.Save.BestScore(lvl.id) + ")"; _score = UIFactory.Label(v, "Score 0" + _scoreFmt, Th.bodySp, Th.goldFill, TextAnchor.MiddleCenter, Th); }
             if (_s.Ctx.IsTitan) UIFactory.Label(v, $"Titan score {_r.titanScore}" + (_r.titanSubmit != null ? $"\n{_r.titanSubmit.status}: {_r.titanSubmit.message}" : ""), Th.bodySp, Th.orange, TextAnchor.MiddleCenter, Th);
-            if (_r.firstClear && lvl.reward != null) foreach (var rw in lvl.reward) UIFactory.Label(v, $"+{rw.amount} {rw.type} {rw.id}", Th.captionSp, Th.green, TextAnchor.MiddleCenter, Th);
+            if (_r.firstClear && lvl.reward != null) foreach (var rw in lvl.reward) UIFactory.Label(v, rw.type == "powerup" ? "Unlocked: " + (AppServices.Content.GetPowerUp(rw.id)?.name ?? rw.id) : $"+{rw.amount} {rw.type} {rw.id}", Th.captionSp, Th.green, TextAnchor.MiddleCenter, Th);
+            if (_r.rewards != null && !_r.rewards.IsEmpty)
+            {
+                V2.Title(v, "Rewards", Th.headingSp, Color.white, Th);
+                var rr = UIFactory.HStack(v, Th.gap, 40f); rr.GetComponent<LayoutElement>().flexibleHeight = 0f;
+                if (_r.rewards.coins > 0) V2.Pill(rr, UIArt.Coin, "+" + _r.rewards.coins, Th, 88f).transform.parent.name = "Reward_Coins";
+                if (_r.rewards.gems > 0) V2.Pill(rr, UIArt.Gem, "+" + _r.rewards.gems, Th, 72f).transform.parent.name = "Reward_Gems";
+                if (_r.rewards.chests > 0) V2.Pill(rr, UIArt.Chest, "+" + _r.rewards.chests, Th, 72f).transform.parent.name = "Reward_Chest";
+            }
             if (!string.IsNullOrEmpty(_r.note)) UIFactory.Label(v, _r.note, Th.captionSp, Th.body, TextAnchor.MiddleCenter, Th);
             UIFactory.Spacer(v, 8);
             // Addendum: free hint from 2nd consecutive fail, never ranked, no ads
@@ -443,11 +421,11 @@ namespace Crashverse.UI
             if (mode != RunMode.TitanRanked) UIFactory.Button(row, "Retry", Th.navy500, () => { Router.Pop(); _s.Retry(); }, Th);
             var next = NextLevel(lvl);
             if (_r.won && mode == RunMode.Campaign && next != null && UnlockRules.IsLevelUnlocked(next, AppServices.Save))
-                UIFactory.Button(row, "Next", Th.green, () => { GameplayDirector.ExitToMap(); AppServices.Router.Push(new BriefingScreen(next, RunMode.Campaign, null)); }, Th);
+                V2.Glossy(v, "Next Level", Th.green, () => { GameplayDirector.ExitToMap(); AppServices.Router.Push(new LevelSelectScreen(next)); }, Th, Th.buttonL, 0f, Th.headingSp, "Button_NextLevel");
             // QA C-4b: the panel hugs its content (the fail panel kept the win panel's 470 height, leaving a big empty area)
             LayoutRebuilder.ForceRebuildLayoutImmediate(v);
             float h = LayoutUtility.GetPreferredHeight(v);
-            if (h > 0f) p.rectTransform.sizeDelta = new Vector2(320f, Mathf.Clamp(h, 240f, 470f));
+            if (h > 0f) p.rectTransform.sizeDelta = new Vector2(320f, Mathf.Clamp(h, 240f, 600f));
         }
         public override void Tick()
         {

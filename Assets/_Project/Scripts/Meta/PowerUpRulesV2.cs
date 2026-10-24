@@ -18,6 +18,22 @@ namespace Crashverse.Meta
         public static bool IsKnownEffect(string e) => Array.IndexOf(Effects, e) >= 0;
 
         /// <summary>Unlock order = order in powerups.json (spec AC1: the picker shows the 8 tiles in unlock order).</summary>
+        /// <summary>Target UI §10 power-ups grid caption under each icon.</summary>
+        public static string Tagline(string effect)
+        {
+            switch (effect)
+            {
+                case "MEGA_BOMB": return "Bigger Blast";
+                case "SPLIT": return "3 Shots at Once";
+                case "GUIDED": return "Auto Target";
+                case "TIME_FRACTURE": return "Slows Time";
+                case "SHIELD": return "Protects Steps";
+                case "SHOCKWAVE": return "Shakes Building";
+                case "PHASE_PIERCE": return "Precision Hit";
+                case "GRAVITY_WELL": return "Pulls & Destroys";
+                default: return "";
+            }
+        }
         public static PowerUpData[] InUnlockOrder(PowerUpCatalog c) => c?.powerups ?? new PowerUpData[0];
 
         /// <summary>Mega Bomb: peak damage at the centre, linear falloff to 0 at the radius (inclusive edge = 0).</summary>

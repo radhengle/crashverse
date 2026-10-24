@@ -4,7 +4,7 @@ using Crashverse.Meta;
 
 namespace Crashverse.Core
 {
-    public enum RunMode { Campaign, Event, TitanRanked, TitanPractice }
+    public enum RunMode { Campaign, Event, TitanRanked, TitanPractice, DailyBoss }
 
     /// <summary>Everything one attempt needs. Retry re-uses it (same loadout, full shots and charges).</summary>
     public class RunContext
@@ -41,5 +41,7 @@ namespace Crashverse.Core
     {
         public bool won; public int stars; public bool mastery; public int score; public int bestCombo; public float ratio;
         public int shotsLeft; public bool firstClear; public int titanScore; public SubmitResponse titanSubmit; public string note;
+        /// <summary>v2 local rewards granted for this run (coins, gems, chest); empty when nothing was earned.</summary>
+        public Crashverse.Data.RewardBundle rewards = new Crashverse.Data.RewardBundle();
     }
 }

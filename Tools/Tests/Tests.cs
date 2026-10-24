@@ -926,8 +926,17 @@ static class Tests
         T.Add("SEC02_qa_tools_dev_only", () =>
         {
             var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
-            int gear = sc.IndexOf("new QADebugModal()"); int guard = sc.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", gear);
-            T.True(guard > 0 && sc.IndexOf("#endif", guard) > gear, "gear button guarded");
+            int gears = 0;
+            foreach (var f in Directory.GetFiles(Path.Combine(UnityEngine.Resources.Root, "../../../Assets/_Project/Scripts/UI"), "*.cs"))
+            {
+                var src = File.ReadAllText(f);
+                for (int gear = src.IndexOf("new QADebugModal()"); gear >= 0; gear = src.IndexOf("new QADebugModal()", gear + 1))
+                {
+                    gears++; int guard = src.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", gear);
+                    T.True(guard > 0 && src.IndexOf("#endif", guard) > gear && src.LastIndexOf("#endif", gear) < guard, "gear button guarded in " + Path.GetFileName(f));
+                }
+            }
+            T.True(gears >= 1, "QA gear button exists (dev)");
             int cls = sc.IndexOf("public class QADebugModal"); int g2 = sc.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", cls);
             T.True(g2 > 0 && sc.IndexOf("#endif", g2) > cls, "QADebugModal class guarded");
         });

@@ -32,6 +32,7 @@ namespace Crashverse.Core
         {
             AppServices.Content = ContentDatabase.LoadBundled();
             AppServices.Save = new CampaignSave();
+            AppServices.Progress = new PlayerProgress();
             AppServices.Theme = UITheme.Load();
             AppServices.Router = UIRouter.Create(AppServices.Theme);
             if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); }
@@ -91,20 +92,20 @@ namespace Crashverse.Core
             _mapRoot = null; Map = null;
         }
 
+        /// <summary>
+        /// Target UI v2: the world map is a 2D scrolling path (MapScreen) over the art pack backgrounds, so no 3D map world is built.
+        /// First run (no local guest profile yet) goes through Login → Create Profile first.
+        /// </summary>
         public static void ShowMap()
         {
             EndRun();
-            if (_mapRoot == null)
-            {
-                _mapRoot = new GameObject("MapWorld");
-                Map = _mapRoot.AddComponent<WorldMapBuilder>();
-                Map.Build(AppServices.Content.Chapter1);
-                int f = RenderMaterials.FixAll(_mapRoot); if (f > 0) Debug.LogWarning($"[BUG-23] map: {f} renderers had no usable material");
-            }
-            _mapRoot.SetActive(true);
             Crashverse.Audio.MusicPlayer.Ensure().PlayBase("sunnyville_map_loop");
-            Map.FocusLevel(AppServices.Save.Data.lastPlayedLevel);
             var r = AppServices.Router;
+            if (AppServices.Progress != null && !AppServices.Progress.Data.profile.created)
+            {
+                if (!(r.Top is LoginScreen) && !(r.Top is ProfileScreen)) r.PopAllAndPush(new LoginScreen());
+                return;
+            }
             if (r.Top is MapScreen) return;
             r.PopAllAndPush(new MapScreen());
         }
@@ -112,11 +113,11 @@ namespace Crashverse.Core
         public static void StartRun(RunContext ctx)
         {
             EndRun();
-            if (_mapRoot != null) _mapRoot.SetActive(false);
             _runRoot = new GameObject("Run");
             var arena = new GameObject("Arena").AddComponent<ArenaBuilder>();
             arena.transform.SetParent(_runRoot.transform);
             arena.Build();
+            if (ctx.IsHard || ctx.mode == RunMode.DailyBoss) ArenaBuilder.DarkTheme(0.55f); // v2: hard level / Daily Boss dark theme
             new GameObject("DebrisPool").AddComponent<DebrisPool>().transform.SetParent(_runRoot.transform);
 
             var wreckerGo = new GameObject("Wrecker");
