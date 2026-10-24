@@ -404,8 +404,8 @@ static class Tests
             T.Eq(0, errs.Count, "bundled catalog clean"); T.True(ok.Count > 0, "items accepted");
             var bad = new StoreCatalog { allowedTypes = Db.Store.allowedTypes, items = new[] {
                 new StoreItem { sku = "pu", name = "Charge pack", type = "powerup_pack", cosmetic = true, priceType = "gems", price = 10 },
-                new StoreItem { sku = "nc", name = "Skin", type = Db.Store.allowedTypes[0], cosmetic = false, priceType = "gems", price = 10 },
-                new StoreItem { sku = "gr", name = "Gems?", type = Db.Store.allowedTypes[0], cosmetic = true, priceType = "iap", price = 99, grants = "extra_charges:3" } } };
+                new StoreItem { sku = "nc", name = "Skin", type = Db.Store.allowedTypes[1], cosmetic = false, priceType = "gems", price = 10 },
+                new StoreItem { sku = "gr", name = "Gems?", type = Db.Store.allowedTypes[1], cosmetic = true, priceType = "iap", price = 99, grants = "extra_charges:3" } } };
             T.Eq(3, StoreValidator.Validate(bad, out var ok2).Count, "all 3 rejected"); T.Eq(0, ok2.Count, "none accepted");
         });
         T.Add("ECON_v1_earned_gems_data", () =>
@@ -452,7 +452,8 @@ static class Tests
             T.True(!ok.Exists(i => i.sku == "gems_small" || i.sku == "gems_large" || i.type == "currency_pack"), "Pouch (99) / Chest (499) hidden: no UI, not purchasable");
             T.True(ok.Exists(i => i.sku == "s1_premium_track"), "cosmetic premium track still listed");
             var on = new StoreCatalog { flags = new StoreFlags { enableGemPacks = true }, allowedTypes = Db.Store.allowedTypes, items = Db.Store.items };
-            StoreValidator.Validate(on, out var ok3); T.True(ok3.Exists(i => i.sku == "gems_small"), "flag on → listed");
+            StoreValidator.Validate(on, out var ok3); T.True(!ok3.Exists(i => StoreValidator.IsGemPack(i)), "V2-12: even with the catalog flag on, this client lists no real-money gem pack");
+            T.True(Src("server/src/Crashverse.Server/Domain/Models.cs").Contains("public bool EnableGemPacks = false;") && Src("server/src/Crashverse.Server/Domain/Models.cs").Contains("env(\"ENABLE_GEM_PACKS\") == \"true\""), "server switch ENABLE_GEM_PACKS, default off");
             var gen = Src("Tools/ContentGen/gen_content.py"); T.True(gen.Contains("\"enableGemPacks\": False") && gen.Contains("\"requiresFlag\": \"enableGemPacks\""), "generator keeps the flag off");
         });
         // ── Art v2 Wrecker / UI QA ──
