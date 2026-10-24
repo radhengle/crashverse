@@ -1,8 +1,8 @@
 # Extended regexes (grep -E), one per line; any match in logcat fails the smoke run.
-# Crashes / ANR
+# Crashes / ANR (ANR: our package only; a system-app ANR such as com.google.android.gms during emulator boot is not ours, and our own death is caught by the pidof check)
 FATAL EXCEPTION
 Fatal signal
-ANR in 
+ANR in com\.crashverse\.game
 Unity +: .*Exception
 # Code stripping / missing types (BUG-24 root cause: BoxCollider/SphereCollider stripped; fix via link.xml)
 Could not produce class with ID
