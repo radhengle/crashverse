@@ -99,7 +99,7 @@ namespace Crashverse.Tests.PlayMode
         /// Logs every block and each shot's sampled path so a miss is diagnosable from the CI log alone.</summary>
         IEnumerator PlayHintLineToResult()
         {
-            var s = GameBootstrap.Session; Assert.NotNull(s, "session");
+            var s = GameplayDirector.Session; Assert.NotNull(s, "session");
             var lvl = s.Ctx.level;
             Debug.Log($"L1HINT level={lvl.id} hint=({lvl.hintYaw},{lvl.hintPitch}) shots={s.ShotsLeft} win={lvl.winThreshold} gravity={Physics.gravity}");
             foreach (var b in UnityEngine.Object.FindObjectsOfType<Crashverse.Destruction.DestructibleBlock>())
