@@ -18,6 +18,11 @@ if ! adb install -r -g "$APK" > "$OUT/install.txt" 2>&1; then
   code=$(grep -o "INSTALL_[A-Z_]*" "$OUT/install.txt" | head -1); cat "$OUT/install.txt"
   echo "::error::adb install failed on API $(adb shell getprop ro.build.version.sdk | tr -d '\r'): ${code:-unknown}"; exit 1; fi
 cat "$OUT/install.txt"; adb shell pm clear $PKG >/dev/null; adb logcat -c
+# QA V2-01: one continuous capture of EVERY buffer (main/system/crash/events incl. am_finish_activity, am_destroy_activity,
+# configuration_changed) for the whole run. The per-tap `logcat -c` below only resets what the coordinate lookups read; this
+# stream keeps everything. On exit: Android's own record of why the process ended (ApplicationExitInfo).
+adb logcat -b all -v threadtime > "$OUT/logcat_all.txt" 2>&1 & LCPID=$!
+trap 'adb shell dumpsys activity exit-info $PKG > "$OUT/exit_info.txt" 2>&1 || true; adb shell dumpsys activity activities > "$OUT/activities.txt" 2>&1 || true; kill $LCPID 2>/dev/null || true' EXIT
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null
 
 # coord <Screen> <Button> -> "x y" from the newest probe dump of that screen (waits up to 40 s)
@@ -41,6 +46,7 @@ export BIRTH_YEAR=$YR
 put MONTH AgeGateScreen "$(coord AgeGateScreen Button_Month)"; ctap $MONTH_X $MONTH_Y
 put MONTH_OPT AgeGateScreen "$(coord ListModal Button_$M)";   ctap $MONTH_OPT_X $MONTH_OPT_Y
 put YEAR AgeGateScreen "$(coord AgeGateScreen Button_Year)";  ctap $YEAR_X $YEAR_Y
+put YEAR_MID x "$(coord ListModal Button_$(( $(date -u +%Y) - 50 )))"   # the item the list opens on (release launch check taps it; adult)
 pick_year "$YR" || { adb logcat -d > "$OUT/calibration/logcat.txt"; adb exec-out screencap -p > "$OUT/calibration/missing_year.png"; echo "::error::calibration: year $YR not reachable"; exit 1; }
 put YEAR_OPT x "$PICKED_X $PICKED_Y"; ctap $YEAR_OPT_X $YEAR_OPT_Y
 put CONTINUE x "$(coord AgeGateScreen Button_Continue)"; ctap $CONTINUE_X $CONTINUE_Y 5

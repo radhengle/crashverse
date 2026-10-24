@@ -290,8 +290,9 @@ jobs:
           retention-days: 7
 
   emulator-smoke:
-    name: Emulator smoke API ${{ matrix.api }} x86_64 1080x2340 (publish gate)
-    needs: build
+    name: Emulator smoke API ${{ matrix.api }} x86_64 1080x2340 #${{ matrix.rep }} (publish gate)
+    needs: [build, build-release]
+    if: always() && needs.build.result == 'success' # build-release runs on PRs only (skipped otherwise)
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -299,6 +300,10 @@ jobs:
       fail-fast: false
       matrix:
         api: [34, 36] # 36 = Android 16, the user's Nothing Phone 3a. arm64 images can't boot on x86 runners.
+        rep: [1]
+        include: # QA V2-01: API 34 three times per run (stability evidence for the age-gate teardown)
+          - { api: 34, rep: 2 }
+          - { api: 34, rep: 3 }
     steps:
       - name: Checkout (scripts only)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -315,6 +320,11 @@ jobs:
         with:
           name: crashverse-android-apk
           path: apk
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        if: needs.build-release.result == 'success'
+        with:
+          name: crashverse-android-apk-release-unsigned
+          path: rel
       - name: QA first-run flow (age gate → map → L1 → win → retry → fail)
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
@@ -325,11 +335,12 @@ jobs:
           cores: 4
           ram-size: 4096M
           emulator-options: -no-window -gpu swangle_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340 # ANGLE on SwiftShader-Vulkan: the GL translator caps vertex uniforms at 256 and URP Simple Lit fails to link (run 40062717341)
-          script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out
+          # then (PRs) the release variant: launch it and get past the age gate (QA V2-08)
+          script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out && if [ -d rel ]; then bash Tools/ci/release_launch.sh "$(ls rel/*.apk | head -1)" smoke_out; fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: emulator-smoke-api${{ matrix.api }}
+          name: emulator-smoke-api${{ matrix.api }}-${{ matrix.rep }}
           path: smoke_out
           if-no-files-found: error
           retention-days: 14
