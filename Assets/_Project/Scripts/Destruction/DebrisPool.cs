@@ -101,7 +101,8 @@ namespace Crashverse.Destruction
             return piece;
         }
 
-        public void SpawnBurst(Vector3 pos, Vector3 parentScale, MaterialDefinition mat, int count)
+        /// <param name="pieceId">Source piece id (PieceIds.Of(blockId)); stamped on every chunk, overwritten on pooled reuse.</param>
+        public void SpawnBurst(Vector3 pos, Vector3 parentScale, MaterialDefinition mat, int count, int pieceId = -1)
         {
             var rng = Rng; // before touching the free list: may reset the pool for a new run
             for (int i = 0; i < count; i++)
@@ -114,6 +115,7 @@ namespace Crashverse.Destruction
                 piece.transform.position = pos + rng.InsideUnitSphere() * 0.4f;
                 piece.transform.rotation = rng.Rotation();
                 piece.transform.localScale = Vector3.one * s;
+                piece.PieceId = pieceId;
                 piece.Activate(mat, SimTime.SecondsToTicks(mat != null ? mat.debrisLifetimeSeconds : 2.5f), rng);
                 _active.Add(piece); _ledger.Add(piece);
             }
@@ -171,6 +173,8 @@ namespace Crashverse.Destruction
         int _lifeTicks;
         int _maxLifeTicks;
         Color _color;
+        /// <summary>Source piece id (VFX #31 / Physics #20). -1 while pooled.</summary>
+        public int PieceId { get; set; } = -1;
 
         public void Activate(MaterialDefinition mat, int lifeTicks, SimRng rng)
         {
@@ -193,6 +197,7 @@ namespace Crashverse.Destruction
 
         public void Deactivate()
         {
+            PieceId = -1;
             if (_rb != null)
             {
                 _rb.velocity = Vector3.zero;

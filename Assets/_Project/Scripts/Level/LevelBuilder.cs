@@ -42,6 +42,7 @@ namespace Crashverse.Level
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 var block = go.AddComponent<DestructibleBlock>();
                 block.Configure(bd, mat);
+                Crashverse.Gameplay.PieceFeedbackWiring.Attach(block); // VFX #31 DamageFeedback, pieceId = StableId.Of(blockId)
                 if (bd.spinDps > 0f && bd.spinAxis != null && bd.spinAxis.Length == 3)
                 {
                     var mp = go.AddComponent<MovingPart>();
