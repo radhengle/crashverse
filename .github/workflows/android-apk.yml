@@ -130,10 +130,6 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           CRASHVERSE_BUILD_PROFILE: ${{ env.CRASHVERSE_BUILD_PROFILE }}
           CRASHVERSE_VERSION_CODE: ${{ github.run_number }}
-          CRASHVERSE_KEYSTORE_PATH: ${{ env.CV_SIGN == 'true' && 'build-secrets/dev.keystore' || '' }}
-          CRASHVERSE_KEYSTORE_PASS: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_PASS || '' }}
-          CRASHVERSE_KEYALIAS_NAME: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_NAME || '' }}
-          CRASHVERSE_KEYALIAS_PASS: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_PASS || '' }}
         with:
           targetPlatform: Android
           unityVersion: 2022.3.62f3
@@ -144,12 +140,9 @@ jobs:
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
           androidTargetSdkVersion: AndroidApiLevel35 # release blocker: target Android 15; GameCI installs platforms;android-35
-          customParameters: -crashverseProfile ${{ env.CRASHVERSE_BUILD_PROFILE }} # GameCI's docker doesn't forward CRASHVERSE_* env (QA R-3)
-          androidKeystoreName: ${{ env.CV_SIGN == 'true' && 'build-secrets/dev.keystore' || '' }}
-          androidKeystoreBase64: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_BASE64 || '' }}
-          androidKeystorePass: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_PASS || '' }}
-          androidKeyaliasName: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_NAME || '' }}
-          androidKeyaliasPass: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_PASS || '' }}
+          # GameCI's docker doesn't forward CRASHVERSE_* env (QA R-3). Security #55 M-1: no keystore or password goes to GameCI/Unity
+          # (it would put them on Unity's argv, echoed in the public log); the step below signs on the runner with passwords from env.
+          customParameters: -crashverseProfile ${{ env.CRASHVERSE_BUILD_PROFILE }} -crashverseSignAfter
 
       - name: Assert built APK (arm64 libs, allowBackup=false, portrait-only, release non-debuggable)
         run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" "$CRASHVERSE_BUILD_PROFILE"
@@ -171,6 +164,7 @@ jobs:
           set -e
           sudo chown -R "$(id -u):$(id -g)" build build-secrets # written by the GameCI container as root
           f=$(ls build/Android/*.apk | head -1)
+          zip -q -d "$f" 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*.EC' 'META-INF/*.DSA' 'META-INF/MANIFEST.MF' || true # drop Unity's debug-key v1 signature
           "$BT/zipalign" -f -P 16 -v 4 "$f" aligned.apk > /dev/null
           "$BT/apksigner" sign --ks build-secrets/dev.keystore --ks-pass env:KS_PASS --ks-key-alias "$KA_NAME" --key-pass env:KA_PASS \
             --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --out "$f" aligned.apk
@@ -201,6 +195,7 @@ jobs:
             grep -qF "Verified using $v: true" sig.txt || { echo "::error::not signed with $v"; exit 1; }
           done
           "$BT/zipalign" -c -P 16 4 "$f" || { echo "::error::not zipaligned (-P 16)"; exit 1; }
+          [ "$(grep -c 'Signer #[0-9]* certificate SHA-256 digest' sig.txt)" = 1 ] || { echo "::error::expected exactly one signer"; exit 1; }
           sha=$(grep -m1 "Signer #1 certificate SHA-256 digest" sig.txt | awk '{print $NF}')
           [ "$sha" = "$(tr -d ' \n' < Tools/ci/dev_cert_sha256.txt)" ] || { echo "::error::signing cert $sha != pinned dev cert (Tools/ci/dev_cert_sha256.txt)"; exit 1; }
           "$BT/aapt2" dump badging "$f" | tee badging.txt | head -3
@@ -278,7 +273,7 @@ jobs:
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
           androidTargetSdkVersion: AndroidApiLevel35
-          customParameters: -crashverseProfile release
+          customParameters: -crashverseProfile release -crashverseEmulatorAbi # + x86_64 so the release variant runs on the CI emulator (QA V2-08)
       - name: Assert built release APK (non-debuggable, targetSdk 35, arm64, 16 KB report)
         run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" release
       - name: Release guard on built output (no dev symbols in IL2CPP metadata)

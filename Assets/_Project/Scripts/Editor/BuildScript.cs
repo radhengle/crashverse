@@ -43,14 +43,20 @@ namespace Crashverse.EditorTools
             PlayerSettings.allowedAutorotateToPortrait = false; PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
             PlayerSettings.allowedAutorotateToLandscapeLeft = false; PlayerSettings.allowedAutorotateToLandscapeRight = false;
             // Release: arm64 + v7a. Dev: also x86_64 so QA can run it on emulators/Chromebooks.
-            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64 | (release ? 0 : AndroidArchitecture.X86_64);
+            // QA V2-08: the PR-only release check APK adds x86_64 (-crashverseEmulatorAbi) so the release variant can be launched on
+            // the x86_64 CI emulator. Never used for the AAB (refused below) or anything published.
+            bool emuAbi = release && HasArg("-crashverseEmulatorAbi");
+            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64 | (release && !emuAbi ? 0 : AndroidArchitecture.X86_64);
+            // Security #55 M-1: -crashverseSignAfter = Unity never sees a keystore or password (GameCI would put them on Unity's argv);
+            // the workflow signs afterwards on the runner (apksigner/jarsigner with passwords from env) and pins the certificate.
+            bool signAfter = HasArg("-crashverseSignAfter");
             // BUG-21: every dev build must be signed with the same persistent dev key (GameCI otherwise makes a fresh debug
             // keystore per runner, so a new build can't update the old one) and carry an increasing versionCode.
             // GameCI's docker only forwards its own variables (ANDROID_*), so read those first, then ours.
             string Env(params string[] names) { foreach (var n in names) { var v = Environment.GetEnvironmentVariable(n); if (!string.IsNullOrEmpty(v)) return v; } return null; }
             var vc = Env("ANDROID_VERSION_CODE", "CRASHVERSE_VERSION_CODE");
             if (int.TryParse(vc, out var code) && code > 0) PlayerSettings.Android.bundleVersionCode = code;
-            else if (Environment.GetEnvironmentVariable("CI") != null) { Debug.LogError("CRASHVERSE_VERSION_CODE missing in CI"); EditorApplication.Exit(1); }
+            else if (Environment.GetEnvironmentVariable("CI") != null && !signAfter) { Debug.LogError("CRASHVERSE_VERSION_CODE missing in CI"); EditorApplication.Exit(1); }
             var ks = Env("ANDROID_KEYSTORE_NAME", "CRASHVERSE_KEYSTORE_PATH");
             if (!string.IsNullOrEmpty(ks))
             {
@@ -68,7 +74,9 @@ namespace Crashverse.EditorTools
             { Debug.LogError("Refusing a release build signed with the dev key"); EditorApplication.Exit(1); return; }
             // PR #8 (folded): signed release AAB for Play, upload key from the release environment's secrets (never the dev key, see above)
             bool aab = WantsAab();
-            if (aab && (!release || !PlayerSettings.Android.useCustomKeystore)) { Debug.LogError("AAB builds are release-only and need the upload keystore"); EditorApplication.Exit(1); return; }
+            if (aab && (!release || (!PlayerSettings.Android.useCustomKeystore && !signAfter))) { Debug.LogError("AAB builds are release-only and need the upload keystore or -crashverseSignAfter"); EditorApplication.Exit(1); return; }
+            if (aab && emuAbi) { Debug.LogError("-crashverseEmulatorAbi is for the PR check APK only, never an AAB"); EditorApplication.Exit(1); return; }
+            if (signAfter && PlayerSettings.Android.useCustomKeystore) { Debug.LogError("-crashverseSignAfter with a keystore passed to Unity: remove the androidKeystore* inputs"); EditorApplication.Exit(1); return; }
             EditorUserBuildSettings.buildAppBundle = aab;
             var opts = new BuildPlayerOptions
             {
@@ -92,6 +100,8 @@ namespace Crashverse.EditorTools
             for (int i = 0; i + 1 < args.Length; i++) if (args[i] == "-crashverseProfile") return args[i + 1];
             return Environment.GetEnvironmentVariable("CRASHVERSE_BUILD_PROFILE") ?? "dev";
         }
+
+        public static bool HasArg(string a) => Environment.GetCommandLineArgs().Contains(a);
 
         /// <summary>Android App Bundle when GameCI is asked for one (androidExportType: androidAppBundle → ANDROID_EXPORT_TYPE).</summary>
         public static bool WantsAab() =>

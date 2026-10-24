@@ -24,7 +24,9 @@ DEV_SYMBOLS = {
 HOOK_TOKENS = ["DevAimHookCore", "DevAimHook", "DevAimCommandParser", "DevAimCommand", "DevAimTarget", "DevHookUsed",
                "ReportDevAimResult", "markNonRanked", "dev_aim_cmd.json", "CRASHVERSE_DEV_AIM", "cv_dev_aim", "Crashverse.DevHooks"]
 # Built-output only (QA R-3): the dev HINT button, the tap probe and the QA panel must not exist in a release player.
-BUILT_ONLY_TOKENS = ["Button_DevAimHint", "UITapProbe", "QADebugModal"]
+BUILT_ONLY_TOKENS = ["Button_DevAimHint", "UITapProbe", "QADebugModal",
+                     # Security #55 L-55-5: dev backend + test clock must not reach a release binary either
+                     "LocalBackendService", "DevOverride", "SetTestClock", "AdvanceTestClock", "ClearTestClock", "TestClockActive"]
 HOOK_SYM = re.compile("|".join(re.escape(t) for t in HOOK_TOKENS))
 HOOK_DIR = ("Assets", "_Project", "Scripts", "DevHooks")
 HOOK_ASMDEF = "Assets/_Project/Scripts/DevHooks/Crashverse.DevHooks.asmdef"

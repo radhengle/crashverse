@@ -1,0 +1,1 @@
+UNSET: paste the Play upload certificate SHA-256 here (keytool -list -v, "SHA256:" line) before the first signed AAB run
