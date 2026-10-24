@@ -58,6 +58,9 @@ public sealed class Ctx
     public IFacebookTokenVerifier Facebook; public IXAuthClient X; public IEmailSender Email; public IParentalConsentMailer ConsentMailer; public ConsentAgeTable ConsentAges; public EconomyConfig Economy; public ICaptchaVerifier Captcha; public ISecretProvider Secrets; public IPlayDeveloperApi Play;
     public IPushAuthVerifier PushAuth; public IReplayWorker Replay; public ISampler Sampler;
 
+    /// <summary>Security event log (stderr → Cloud Logging). Tests replace it to capture lines.</summary>
+    public Action<string> SecurityLog = m => Console.Error.WriteLine("[security] " + m);
+
     public DateTime Now => Clock.UtcNow;
     /// <summary>Store SKU as sold right now: catalog-accepted AND its feature flag on. Gem packs (catalog requiresFlag "enableGemPacks",
     /// or ServerOptions.GemPackSkus) resolve only with ENABLE_GEM_PACKS; an unknown requiresFlag fails closed.</summary>

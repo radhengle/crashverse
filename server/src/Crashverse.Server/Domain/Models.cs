@@ -70,6 +70,9 @@ public sealed class ServerOptions
         o.PurchaseBindingSecretVersion = env("SECRET_VERSION_PURCHASE_BINDING");
         o.PurchaseBindingPreviousSecretVersion = env("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS") is { Length: > 0 } pv ? pv : null;
         o.DeletionPepperSecretVersion = env("SECRET_VERSION_DELETION_PEPPER");
+        o.PreviousAcceptUntilRaw = env("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL") is { Length: > 0 } au ? au : null;
+        o.PreviousAcceptUntilUnixMs = ParseUtcDate(o.PreviousAcceptUntilRaw);
+        if (int.TryParse(env("SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS"), out var md) && md > 0) o.PreviousAcceptUntilMaxDays = Math.Min(md, PreviousAcceptUntilHardCeilingDays); // hard ceiling, whatever is configured
         if (int.TryParse(env("TAX_RETENTION_DAYS"), out var tax) && tax > 0) o.TaxRetentionDays = tax;
         // CRASHVERSE_ENV gates the run summary too: never honoured in prod, even in "Development" ASP.NET environment.
         if (o.Env == CrashverseEnv.Prod) o.AllowClientRunSummary = false;
@@ -81,6 +84,28 @@ public sealed class ServerOptions
     public byte[] PreviousObfuscationPepper; public string PreviousObfuscationPepperVersion;
     /// <summary>Low-3: pinned Secret Manager versions (SECRET_VERSION_PURCHASE_BINDING, _PURCHASE_BINDING_PREVIOUS, _DELETION_PEPPER).</summary>
     public string PurchaseBindingSecretVersion, PurchaseBindingPreviousSecretVersion, DeletionPepperSecretVersion;
+    /// <summary>SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL: ISO-8601 UTC date or date-time ("2026-12-31" or "2026-12-31T00:00:00Z")
+    /// after which the previous purchase-binding secret is no longer accepted. Tie it to the Play refund window: set it to the rotation
+    /// date plus the longest period in which Play can still send a refund/void or a late verify for a purchase bound with the old secret
+    /// (refunds can arrive months after purchase), then drop _PREVIOUS. Prod refuses to start if _PREVIOUS is set without it or after it.
+    /// A date-only value means the end of that UTC day.</summary>
+    public string PreviousAcceptUntilRaw; public long? PreviousAcceptUntilUnixMs;
+    /// <summary>SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL_MAX_DAYS (default 400): prod refuses to start if ACCEPT_UNTIL is further
+    /// than this from now. Keep it at the Play refund window plus a margin, so an old secret can't be kept alive indefinitely.</summary>
+    public int PreviousAcceptUntilMaxDays = 400;
+    /// <summary>Hard ceiling for _ACCEPT_UNTIL_MAX_DAYS: a configured value above it is clamped to it.</summary>
+    public const int PreviousAcceptUntilHardCeilingDays = 730;
+    public static long? ParseUtcDate(string s)
+    {
+        if (string.IsNullOrEmpty(s)) return null;
+        var st = System.Globalization.DateTimeStyles.AdjustToUniversal | System.Globalization.DateTimeStyles.AssumeUniversal;
+        if (System.Text.RegularExpressions.Regex.IsMatch(s, @"^\d{4}-\d{2}-\d{2}$") &&
+            DateTime.TryParseExact(s, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, st, out var d))
+            return new DateTimeOffset(DateTime.SpecifyKind(d, DateTimeKind.Utc)).AddDays(1).ToUnixTimeMilliseconds() - 1;
+        if ((s.EndsWith("Z") || s.EndsWith("+00:00")) && DateTimeOffset.TryParse(s, System.Globalization.CultureInfo.InvariantCulture, st, out var t))
+            return t.ToUnixTimeMilliseconds();
+        return null; // not ISO UTC: treated as missing
+    }
 }
 
 public static class RefundPolicies { public const string GemDebt = "gemDebt"; public const string FloorAtZero = "floorAtZero"; }

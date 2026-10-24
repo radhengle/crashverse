@@ -142,6 +142,10 @@ public sealed class DataLifecycleService
         return counts;
     }
 
+    /// <summary>A used age token's jti record is kept one hour past the token's expiry (clock-skew margin), so single use stays enforced
+    /// until it is purged.</summary>
+    public const long AgeTokenUsePurgeGraceMs = 60 * 60 * 1000;
+
     public sealed class RetentionReport { public int inputLogsCleared; public int purchasesExpired; public int ageTokenUsesExpired; }
 
     /// <summary>S3: input logs are kept 90 days (InputLogRetentionDays), then stripped from the run. Pseudonymised purchase rows are
@@ -171,7 +175,7 @@ public sealed class DataLifecycleService
         {
             var u = JsonSerializer.Deserialize<IdentityDoc>(json, new JsonSerializerOptions { IncludeFields = true });
             long exp = u.expiresUnixMs > 0 ? u.expiresUnixMs : u.linkedUnixMs;
-            if (exp > 0 && exp <= _x.NowMs) { await _x.Db.LifecyclePurge("ageTokenUses", id); rep.ageTokenUsesExpired++; }
+            if (exp > 0 && exp + AgeTokenUsePurgeGraceMs <= _x.NowMs) { await _x.Db.LifecyclePurge("ageTokenUses", id); rep.ageTokenUsesExpired++; }
         }
         return rep;
     }

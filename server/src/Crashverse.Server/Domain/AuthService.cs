@@ -37,8 +37,11 @@ public sealed class AuthService
         if (string.IsNullOrEmpty(id) || pid == null) return false;
         if (id == ObfuscatedId(pid)) return true;
         var o = _x.Opt;
-        return o.PreviousObfuscationPepper != null && o.PreviousObfuscationPepperVersion != null
-            && id == o.PreviousObfuscationPepperVersion + "_" + Hash.HmacHex(o.PreviousObfuscationPepper, pid)[..40];
+        if (o.PreviousObfuscationPepper == null || o.PreviousObfuscationPepperVersion == null) return false;
+        if (o.PreviousAcceptUntilUnixMs is not long until || _x.NowMs > until) return false; // fail closed: no date = never accepted; past it = window closed
+        bool ok = id == o.PreviousObfuscationPepperVersion + "_" + Hash.HmacHex(o.PreviousObfuscationPepper, pid)[..40];
+        if (ok) _x.SecurityLog($"purchase binding verified with PREVIOUS secret {o.PreviousObfuscationPepperVersion} for {_x.Pseudo(pid)} (accept until {(o.PreviousAcceptUntilUnixMs is long u ? DateTimeOffset.FromUnixTimeMilliseconds(u).ToString("O") : "unset")})");
+        return ok;
     }
 
     public string VerifyAccess(string bearer)

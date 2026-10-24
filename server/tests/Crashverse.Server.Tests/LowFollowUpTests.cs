@@ -41,7 +41,7 @@ public class LowFollowUpTests
         Assert.Equal(expSec * 1000, (await h.X.Db.Get<IdentityDoc>("ageTokenUses", "j-old")).expiresUnixMs);
         var r0 = await new DataLifecycleService(h.X).Retention();
         Assert.Equal(0, r0.ageTokenUsesExpired);
-        h.Advance(TimeSpan.FromMinutes(11));
+        h.Advance(TimeSpan.FromMinutes(11 + 60)); // expiry + 1 h grace (security-followups)
         var r1 = await new DataLifecycleService(h.X).Retention();
         Assert.Equal(1, r1.ageTokenUsesExpired);
         Assert.Null(await h.X.Db.Get<IdentityDoc>("ageTokenUses", "j-old"));
@@ -78,13 +78,13 @@ public class LowFollowUpTests
         Assert.Contains("SECRET_VERSION_DELETION_PEPPER must pin", unpinned.Message);
 
         var s = new VersionedSecrets();
-        var pinned = Prod(new() { ["SECRET_VERSION_PURCHASE_BINDING"] = "3", ["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS"] = "2", ["SECRET_VERSION_DELETION_PEPPER"] = "1" }, s);
+        var pinned = Prod(new() { ["SECRET_VERSION_PURCHASE_BINDING"] = "3", ["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS"] = "2", ["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL"] = DateTime.UtcNow.AddDays(30).ToString("yyyy-MM-dd"), ["SECRET_VERSION_DELETION_PEPPER"] = "1" }, s);
         Assert.DoesNotContain("SECRET_VERSION", pinned.Message);
         Assert.DoesNotContain("purchase-binding secret", pinned.Message); Assert.DoesNotContain("previous purchase-binding", pinned.Message);
         Assert.Contains("purchase-binding-pepper@3", s.Asked); Assert.Contains("purchase-binding-pepper@2", s.Asked); Assert.Contains("deletion-pepper@1", s.Asked);
         Assert.DoesNotContain(s.Asked, a => a.EndsWith("@latest"));
 
-        var gone = Prod(new() { ["SECRET_VERSION_PURCHASE_BINDING"] = "3", ["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS"] = "2", ["SECRET_VERSION_DELETION_PEPPER"] = "1" }, new VersionedSecrets { Missing = { "2" } });
+        var gone = Prod(new() { ["SECRET_VERSION_PURCHASE_BINDING"] = "3", ["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS"] = "2", ["SECRET_VERSION_PURCHASE_BINDING_PREVIOUS_ACCEPT_UNTIL"] = DateTime.UtcNow.AddDays(30).ToString("yyyy-MM-dd"), ["SECRET_VERSION_DELETION_PEPPER"] = "1" }, new VersionedSecrets { Missing = { "2" } });
         Assert.Contains("previous purchase-binding secret version not loaded", gone.Message);
         var curGone = Prod(new() { ["SECRET_VERSION_PURCHASE_BINDING"] = "3", ["SECRET_VERSION_DELETION_PEPPER"] = "1" }, new VersionedSecrets { Missing = { "3" } });
         Assert.Contains("purchase-binding secret", curGone.Message);
@@ -96,7 +96,7 @@ public class LowFollowUpTests
         await using var h = await Harness.Start();
         var auth = new AuthService(h.X); var s = await h.Guest(); var other = await h.Guest();
         var oldId = auth.ObfuscatedId(s.pid);              // binding made before rotation
-        h.X.Opt.PreviousObfuscationPepper = h.X.Opt.ObfuscationPepper; h.X.Opt.PreviousObfuscationPepperVersion = h.X.Opt.ObfuscationPepperVersion;
+        h.X.Opt.PreviousObfuscationPepper = h.X.Opt.ObfuscationPepper; h.X.Opt.PreviousObfuscationPepperVersion = h.X.Opt.ObfuscationPepperVersion; h.X.Opt.PreviousAcceptUntilUnixMs = h.X.NowMs + 86_400_000;
         h.X.Opt.ObfuscationPepper = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32); h.X.Opt.ObfuscationPepperVersion = "v9";
         var newId = auth.ObfuscatedId(s.pid);
         Assert.NotEqual(oldId, newId); Assert.StartsWith("v9_", newId);
