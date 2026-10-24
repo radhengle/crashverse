@@ -42,6 +42,12 @@ namespace Crashverse.Core
 
         public event System.Action Changed;
         public event System.Action<RunResult> Ended;
+        /// <summary>Power-ups v2 Shield: raised after settle when the shielded shot was refunded ("Step protected").</summary>
+        public event System.Action StepProtected;
+        public int ShieldRefunds { get; private set; }
+        /// <summary>Daily Boss: HP shown as the share of the win threshold still standing (1 = full, 0 = defeated).</summary>
+        public float BossHpFraction => Ctx != null && Ctx.dailyBoss ? Crashverse.Meta.DailyBossRules.HpFraction(tracker.DestroyedRatio, Ctx.level.winThreshold) : 1f;
+        ShotModifiers _shotMods; float _ratioBeforeShot; int _bossHitsBefore; float _steerRefYaw;
 
         /// <summary>Content Roadmap §5: FIRE unlocks when settled AND ≥ 1.0 s since the shot; raises GAME_WRECKER_READY (reload-beat hook).</summary>
         public readonly Crashverse.Feel.ReloadGate Gate = new Crashverse.Feel.ReloadGate();
@@ -89,7 +95,7 @@ namespace Crashverse.Core
             PowerUps = new PowerUpRuntime(Ctx.loadout, AppServices.Content, Ctx.extraChargeSlot);
             PowerUps.Changed += () => Changed?.Invoke();
             ShotsLeft = Ctx.ShotBudget;
-            Gate.Reset(); Inputs.Clear(); _firePending = false;
+            Gate.Reset(); Inputs.Clear(); _firePending = false; _shotMods = null; ShieldRefunds = 0;
             _sim.BeginRun(Ctx.seed, Ctx.mode == RunMode.TitanRanked);
             Result = null;
             State = SessionState.Aiming;
@@ -133,6 +139,7 @@ namespace Crashverse.Core
             if (State != SessionState.Aiming || ShotsLeft <= 0 || !Gate.Ready) return;
             aim.SetAim(InputRecorder.FromFixed(e.x), InputRecorder.FromFixed(e.y)); // fire from the quantized aim the server replays
             var mods = PowerUps.ConsumeForShot();
+            _shotMods = mods; _ratioBeforeShot = tracker.DestroyedRatio; _bossHitsBefore = Boss != null ? Boss.CoreHits : 0; _steerRefYaw = InputRecorder.FromFixed(e.x);
             float yaw = InputRecorder.FromFixed(e.x), elev = InputRecorder.FromFixed(e.y); // frozen at the tap (quantized)
             // Anim Spec 01: launch is 66 ms after the tap (breech anticipation); record the tick of the REAL launch so a replay matches.
             if (!fire.Fire(mods, () => Inputs.Record(Tick, "fire", yaw, elev))) return;
@@ -151,6 +158,7 @@ namespace Crashverse.Core
         void OnSimTick(int tick)
         {
             if (State != SessionState.Resolving) return;
+            SteerGuided(tick);
             if (!Gate.Tick(SimRunner.Step, FireController.ActiveProjectiles == 0 && tracker.IsSettled)) return; // aim stays live; only FIRE waits
             ResolveShot();
         }
@@ -166,8 +174,40 @@ namespace Crashverse.Core
             }
         }
 
+        /// <summary>
+        /// Guided Rocket (v2): for up to steerTicks after launch the player's drag (the live aim yaw) steers the rocket at up to
+        /// turnRate deg/s. The per-tick turn is quantized and recorded as a "steer" InputEvent, so a replay applies the same values.
+        /// </summary>
+        void SteerGuided(int tick)
+        {
+            if (_shotMods == null || !_shotMods.guided) return;
+            var p = Projectile.Latest;
+            if (p == null || p.IsSpent || !p.mods.guided) return;
+            float want = aim.Yaw - _steerRefYaw;
+            float deg = Crashverse.Meta.PowerUpRulesV2.Quantize(Crashverse.Meta.PowerUpRulesV2.SteerForTick(want, p.TicksSinceLaunch, _shotMods.steerTicks, _shotMods.turnRate));
+            if (deg == 0f) return;
+            _steerRefYaw += deg;
+            Inputs.Record(tick, "steer", deg, 0f);
+            p.Steer(deg);
+        }
+
+        /// <summary>Shield (v2): after settle, refund the shot if it destroyed &lt; threshold of the objective (boss: &lt; 5% of max HP).</summary>
+        void ResolveShield()
+        {
+            if (_shotMods == null || !_shotMods.shield) return;
+            bool boss = Boss != null || Ctx.dailyBoss;
+            float objFrac = tracker.DestroyedRatio - _ratioBeforeShot;
+            float bossFrac = Boss != null ? (Boss.CoreHits - _bossHitsBefore) / (float)Crashverse.Boss.TidewardenController.CoreHitsToWin
+                           : Ctx.dailyBoss ? objFrac / Mathf.Max(0.01f, Ctx.level.winThreshold) : objFrac;
+            float thr = _shotMods.shieldThreshold; _shotMods = null;
+            if (!Crashverse.Meta.PowerUpRulesV2.ShieldRefunds(boss, objFrac, bossFrac, thr)) return;
+            ShotsLeft++; ShieldRefunds++;
+            StepProtected?.Invoke();
+        }
+
         void ResolveShot()
         {
+            ResolveShield();
             bool won = Boss != null ? Boss.Defeated : WinRule.Meets(tracker.DestroyedRatio, Ctx.level.winThreshold); // BUG-17: same rule as the server
             if (Ctx.mode == RunMode.TitanRanked) CheckpointTitan(won);
             if (won) { End(true); return; }

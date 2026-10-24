@@ -210,7 +210,7 @@
     "brick",
     "steel"
    ],
-   "teaches": "Joint sequencing; first power-up pick (Shockwave)",
+   "teaches": "Joint sequencing; first power-up pick (Earthquake)",
    "mastery": {
     "type": "ROLE_INTACT",
     "value": 0.8,
@@ -220,7 +220,7 @@
    "forced": [
     {
      "slot": "Core",
-     "powerup": "shockwave"
+     "powerup": "earthquake"
     }
    ],
    "lockedSlots": [
@@ -252,7 +252,7 @@
     "brick",
     "steel"
    ],
-   "teaches": "Choose loadout deliberately (Splitstrike)",
+   "teaches": "Choose loadout deliberately (Multi Shot)",
    "mastery": {
     "type": "STARS",
     "value": 3,
@@ -262,7 +262,7 @@
    "forced": [
     {
      "slot": "Module",
-     "powerup": "splitstrike"
+     "powerup": "multi_shot"
     }
    ],
    "lockedSlots": [],
@@ -345,7 +345,7 @@
     {
      "type": "powerup",
      "amount": 1,
-     "id": "gravity_well"
+     "id": "black_hole"
     },
     {
      "type": "gate",

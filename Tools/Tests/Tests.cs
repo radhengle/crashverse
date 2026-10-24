@@ -48,6 +48,7 @@ static class Tests
     public static void Register()
     {
         DevAimHookTests.Register(); // BUG-24 dev aim hook
+        V2Tests.Register(); // target UI, power-ups v2, seasons (integration/v2)
         // ---------- SG-24 / SG-01 stars (qa/M1_Test_Cases_v0.3 + Feature_Test_Cases_v1 §A) ----------
         T.Add("gameplay_pieceid_matches_stableid20", () => { T.Eq(204219580, Crashverse.Gameplay.PieceIds.Of("b1"), "b1"); T.Eq(501293940, Crashverse.Gameplay.PieceIds.Of("L1_tower_03"), "L1_tower_03"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(null), "null"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(""), "empty"); });
         T.Add("gameplay_vfx_material_map", () => { T.Eq(0, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, false), "wood"); T.Eq(1, Crashverse.Gameplay.PieceIds.VfxMaterialOf(1, false, false), "brick"); T.Eq(2, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, false, false), "steel"); T.Eq(3, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, true, false), "joint"); T.Eq(5, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, true), "explosive"); });
@@ -157,13 +158,13 @@ static class Tests
             for (int i = 1; i <= 7; i++) save.RecordResult($"c1_l{i:00}", true, 1, false);
             var L7 = Db.GetLevel("c1_l07"); var L8 = Db.GetLevel("c1_l08");
             var lo = Loadout.Resolve(L7, null, Db, save);
-            T.Eq("shockwave", lo[Slot.Core], "L7 forced shockwave");
+            T.Eq("earthquake", lo[Slot.Core], "L7 forced earthquake (v2: was shockwave)");
             T.True(Loadout.IsSlotLocked(L7, Slot.Module), "L7 module locked");
             var lo8 = Loadout.Resolve(L8, null, Db, save);
-            T.Eq("splitstrike", lo8[Slot.Module], "L8 forced splitstrike");
-            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("shockwave"), L8, Db, save) != null, "core tile can't go in booster");
-            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("phase_piercer"), L8, Db, save) != null, "future tile locked");
-            T.True(!UnlockRules.IsPowerUpUnlocked(Db.GetPowerUp("gravity_well"), Db, save), "gravity well locked until L10 clear");
+            T.Eq("multi_shot", lo8[Slot.Module], "L8 forced multi_shot (v2: was splitstrike)");
+            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("earthquake"), L8, Db, save) != null, "core tile can't go in booster");
+            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("laser_beam"), L8, Db, save) != null, "future tile locked");
+            T.True(!UnlockRules.IsPowerUpUnlocked(Db.GetPowerUp("black_hole"), Db, save), "black hole (was gravity well) locked until L10 clear");
         });
 
         // ---------- Mastery (SG-03, SG-04, SG-21) ----------
@@ -364,7 +365,7 @@ static class Tests
         {
             var b = NewBackend("2026-10-16T10:00:00");
             foreach (var l in Db.Chapter1.levels) { Win(b, l.id); Win(b, l.id); }
-            var w = b.GetWallet().Result; T.True(w.powerUps.Contains("gravity_well"), "L10 power-up granted by server on first validated clear");
+            var w = b.GetWallet().Result; T.True(w.powerUps.Contains("black_hole"), "L10 power-up (v2 Black Hole) granted by server on first validated clear");
             int coins = w.coins; Win(b, "c1_l10"); T.Eq(coins, b.GetWallet().Result.coins, "chest once");
         });
 

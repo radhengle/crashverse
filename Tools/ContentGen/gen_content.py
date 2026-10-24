@@ -227,11 +227,11 @@ chapter = {
     LV(4, "mill", "Windmill", "c1_l04_windmill", [W, Bk], 5, "Collapse chains between pieces", M("THREE_STARS_NO_ROLE_HITS", 0, "3 stars with no wall hits", "wall")),
     LV(5, "mill", "Twin Cottages", "c1_l05_twin_cottages", [W, Bk], 5, "One shot, two targets (bridge)", M("CLEAR_IN_SHOTS", 1, "Both in 1 shot")),
     LV(6, "mill", "Steel-Braced Granary", "c1_l06_granary", [Bk, S], 5, "Steel joints take 2x damage", M("ALL_ROLE_BROKEN", 0, "Break all 3 joints", "steel_joint")),
-    LV(7, "clocktower", "Clockwork Tower", "m1_clockwork_tower", [W, Bk, S], 5, "Joint sequencing; first power-up pick (Shockwave)", M("ROLE_INTACT", 0.8, "Crown falls intact", "crown"), forced=[("Core", "shockwave")], locked=["Module", "Booster"]),
-    LV(8, "clocktower", "Market Arcade", "c1_l08_market_arcade", [W, Bk, S], 5, "Choose loadout deliberately (Splitstrike)", M("STARS", 3, "3 stars"), forced=[("Module", "splitstrike")]),
+    LV(7, "clocktower", "Clockwork Tower", "m1_clockwork_tower", [W, Bk, S], 5, "Joint sequencing; first power-up pick (Earthquake)", M("ROLE_INTACT", 0.8, "Crown falls intact", "crown"), forced=[("Core", "earthquake")], locked=["Module", "Booster"]),
+    LV(8, "clocktower", "Market Arcade", "c1_l08_market_arcade", [W, Bk, S], 5, "Choose loadout deliberately (Multi Shot)", M("STARS", 3, "3 stars"), forced=[("Module", "multi_shot")]),
     LV(9, "clocktower", "Lighthouse Gauntlet", "c1_l09_lighthouse_gauntlet", [W, Bk, S], 6, "Tests everything; tight budget", M("NO_POWERUP", 0, "No power-up used")),
     LV(10, "storm", "The Tidewarden", "c1_l10_tidewarden", [W, Bk, S], 7, "Boss phases + weak points", M("SHOTS_LEFT_AT_LEAST", 3, "Defeat with 3 shots left"), boss="tidewarden",
-       reward=[{"type": "coins", "amount": 500, "id": ""}, {"type": "powerup", "amount": 1, "id": "gravity_well"}, {"type": "gate", "amount": 1, "id": "gearstorm_city"}])]}
+       reward=[{"type": "coins", "amount": 500, "id": ""}, {"type": "powerup", "amount": 1, "id": "black_hole"}, {"type": "gate", "amount": 1, "id": "gearstorm_city"}])]}
 
 def P(id, name, slot, effect, charges, utype, ulevel, utext, **p):
     base = {"damage": 0, "linkDepth": 0, "count": 0, "damageMult": 1, "radius": 0, "duration": 0,
@@ -240,13 +240,8 @@ def P(id, name, slot, effect, charges, utype, ulevel, utext, **p):
     return {"id": id, "name": name, "slot": slot, "effect": effect, "charges": charges,
             "unlockType": utype, "unlockLevelId": ulevel, "unlockText": utext, "p": base}
 
-powerups = {"powerups": [
-    P("shockwave", "Shockwave Core", "Core", "SHOCKWAVE", 1, "level_reached", "c1_l07", "Unlocks at Sunnyville L7", damage=40, linkDepth=1),
-    P("splitstrike", "Splitstrike", "Module", "SPLIT", 1, "level_reached", "c1_l08", "Unlocks at Sunnyville L8", count=3, damageMult=.5),
-    P("gravity_well", "Gravity Well", "Module", "GRAVITY_WELL", 1, "reward", "c1_l10", "Reward for defeating the Tidewarden", radius=4, duration=1.5, burstDamage=60),
-    P("chain_reactor", "Chain Reactor", "Core", "CHAIN_REACTOR", 2, "level_reached", "c2_l03", "Unlocks at Gearstorm City L3", radius=3, burstDamage=80),
-    P("phase_piercer", "Phase Piercer", "Booster", "PHASE_PIERCE", 1, "level_reached", "c2_l07", "Unlocks at Gearstorm City L7", passCount=2),
-    P("time_fracture", "Time Fracture", "Booster", "TIME_FRACTURE", 1, "level_reached", "c3_l03", "Unlocks at Neon District L3", duration=4, slowFactor=.25)]}
+# Power-ups v2 (design/Powerups_v2_Spec.md): the designer's JSON is the source of truth, copied as-is.
+powerups = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../design/data/powerups_v2.json")))
 
 def R(type, amount=0, id=""):
     return {"type": type, "amount": amount, "id": id}

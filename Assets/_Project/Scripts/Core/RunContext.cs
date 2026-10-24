@@ -20,7 +20,11 @@ namespace Crashverse.Core
         public RankedTicket ticket;
         /// <summary>Sim seed for this attempt (AttemptToken.seed for scored runs). Same seed + same tick-ordered inputs = same run.</summary>
         public long seed;
-        public int ShotBudget => System.Math.Max(1, level.shots + (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? 0 : mod.shotDelta));
+        /// <summary>Local Daily Boss (seeded by the device's local date; no server).</summary>
+        public bool dailyBoss;
+        /// <summary>Every 10th campaign level is hard: tighter steps (HardLevelRules) and the dark theme.</summary>
+        public bool IsHard => mode == RunMode.Campaign && Crashverse.Meta.HardLevelRules.IsHard(level);
+        public int ShotBudget => System.Math.Max(1, (IsHard ? Crashverse.Meta.HardLevelRules.Shots(level) : level.shots) + (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? 0 : mod.shotDelta));
         public bool IsTitan => mode == RunMode.TitanRanked || mode == RunMode.TitanPractice;
 
         /// <summary>Daily Titan uses the normal pipeline with a synthetic level entry built from the server config.</summary>

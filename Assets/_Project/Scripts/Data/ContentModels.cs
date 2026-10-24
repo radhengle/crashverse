@@ -56,6 +56,8 @@ namespace Crashverse.Data
     {
         public float damage; public int linkDepth; public int count; public float damageMult; public float radius;
         public float duration; public float burstDamage; public int passCount; public float slowFactor;
+        // Power-ups v2 (design/Powerups_v2_Spec.md): sim-tick durations (0.02 s), Shield refund threshold, Guided Rocket steering.
+        public int durationTicks; public float threshold; public float turnRate; public int steerTicks;
     }
 
     [Serializable]
@@ -125,6 +127,23 @@ namespace Crashverse.Data
     [Serializable] public class GemSinks { public int epicSkin, trailOrVfxSkin, frameOrTitle, seasonPremiumTrack; }
     [Serializable] public class EconomyData { public GemSources gemSources = new GemSources(); public StarMilestone[] chapterStarMilestones = new StarMilestone[0]; public GemSinks gemSinks = new GemSinks(); public int[] coinCosmeticRange; }
     [Serializable] public class StoreCatalog { public StoreFlags flags = new StoreFlags(); public string[] allowedTypes; public StoreItem[] items; }
+
+    // ───────────── integration/v2: target UI + local (offline) progression. Data: Resources/Data/meta_v2.json ─────────────
+    [Serializable] public class RewardBundle { public int coins, gems, chests; public bool IsEmpty => coins == 0 && gems == 0 && chests == 0; }
+    /// <summary>Level complete rewards (local wallet). Gems stay earned-only (Economy v1).</summary>
+    [Serializable] public class LevelRewardRules { public int coinsFirstClear = 50, coinsPerStar = 25, replayCoins = 10, gemsFirst3Star = 5, chestEveryLevels = 5, hardBonusCoins = 100, hardBonusGems = 5; }
+    [Serializable] public class DailyBossData { public string[] layouts; public string[] names; public int baseShots = 6; public int shotSpread = 2; public float winThreshold = 0.85f; public RewardBundle reward = new RewardBundle(); }
+    /// <summary>One of the 4 season themes (map banner, backgrounds, level range). comingSoon = no levels in this build yet.</summary>
+    [Serializable] public class SeasonTheme { public string id, name, bg, accent, dark; public int number, firstLevel, lastLevel; public bool comingSoon; }
+    [Serializable] public class AchievementDef { public string id, name, text, type, icon; public int target; }
+    [Serializable] public class ChestRules { public int coinsMin = 50, coinsMax = 150, gemsChancePct = 25, gems = 2; }
+    [Serializable]
+    public class MetaV2Data
+    {
+        public LevelRewardRules levelRewards = new LevelRewardRules(); public DailyBossData dailyBoss = new DailyBossData();
+        public SeasonTheme[] seasons = new SeasonTheme[0]; public AchievementDef[] achievements = new AchievementDef[0]; public ChestRules chest = new ChestRules();
+        public string[] avatars = new string[0]; public string[] badges = new string[0]; public string[] badgeNames = new string[0];
+    }
 
     /// <summary>Default shot tuning (designer data, not code).</summary>
     [Serializable] public class WreckerTuning { public float defaultDamage = 60; public float launchSpeed = 28; public float projectileMass = 0.8f; public float projectileScale = 0.45f; public float splitSpreadDeg = 8;  public float aimYawDegPerDp = 0.25f; public float aimPitchDegPerDp = 0.15f; }

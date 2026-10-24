@@ -106,8 +106,8 @@ namespace Crashverse.Weapons
         }
 
         /// <summary>Direct-hit source: Cannon for plain shots; PowerUp+id when the hit itself is a power-up effect (Phase Piercer 3rd piece, Splitstrike child).</summary>
-        ImpactSourceKind ShotSource => mods.pierce || _isSplitChild ? ImpactSourceKind.PowerUp : ImpactSourceKind.Cannon;
-        int ShotSourceId => mods.pierce ? PowerUpIds.PhasePiercer : _isSplitChild ? PowerUpIds.Splitstrike : PowerUpIds.None;
+        ImpactSourceKind ShotSource => mods.pierce || _isSplitChild || mods.guided ? ImpactSourceKind.PowerUp : ImpactSourceKind.Cannon;
+        int ShotSourceId => mods.pierce ? PowerUpIds.PhasePiercer : _isSplitChild ? PowerUpIds.Splitstrike : mods.guided ? PowerUpIds.GuidedRocket : PowerUpIds.None;
         bool _isSplitChild;
 
         void Impact(DestructibleBlock hit, Vector3 at)
@@ -122,8 +122,9 @@ namespace Crashverse.Weapons
                 using (ImpactSourceScope.Push(ShotSource, ShotSourceId)) hit.ApplyDamage(damage, directHit: true); // steel joints take 2x here
                 if (mods.shockwave) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.Shockwave)) Shockwave(hit);
             }
-            if (mods.chainReactor) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.ChainReactor)) ChainReactor(at);
-            if (mods.gravityWell) GravityWellEffect.Spawn(at, mods.gwRadius, mods.gwDuration, mods.gwBurst);
+            if (mods.shockwave && mods.shockRadius > 0f) EarthquakeImpulse(at); // v2 Earthquake: radial impulse within R (4 m)
+            if (mods.megaBomb) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.MegaBomb)) MegaBomb(at);
+            if (mods.gravityWell) GravityWellEffect.Spawn(at, mods.gwRadius, mods.gwTicks, mods.gwBurst);
             Despawn(hit != null ? "hit " + hit.name : "impact");
         }
 
@@ -145,15 +146,52 @@ namespace Crashverse.Weapons
             }
         }
 
-        /// <summary>Detonates explosive pieces within radius (inclusive, centre to centre).</summary>
-        void ChainReactor(Vector3 at)
+        /// <summary>Earthquake (v2): radial impulse on loose bodies within shockRadius (inclusive), same model as explosions.</summary>
+        void EarthquakeImpulse(Vector3 at)
         {
-            foreach (var c in Physics.OverlapSphere(at, mods.chainRadius))
+            foreach (var c in Physics.OverlapSphere(at, mods.shockRadius))
             {
-                var b = c.GetComponentInParent<DestructibleBlock>();
-                if (b != null && b.explosive && !b.IsBroken && (b.transform.position - at).magnitude <= mods.chainRadius + 1e-3f) b.Break();
+                var rb = c.attachedRigidbody; if (rb == null || rb.isKinematic) continue;
+                if ((rb.position - at).magnitude > mods.shockRadius + 1e-3f) continue;
+                rb.AddExplosionForce(400f, at, mods.shockRadius, 0.5f);
             }
         }
+
+        /// <summary>
+        /// Mega Bomb (v2, replaces Chain Reactor): radial blast set off on impact, megaDamage at the centre falling off linearly to 0 at
+        /// megaRadius (3.5 m). Explosive barrels and energy cores whose centre is inside the radius detonate. Pieces are visited in a
+        /// stable order (by name) so the result is deterministic.
+        /// </summary>
+        void MegaBomb(Vector3 at)
+        {
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.ShakeRouter.PuChainPulse);
+            var seen = new HashSet<DestructibleBlock>(); var list = new List<DestructibleBlock>();
+            foreach (var c in Physics.OverlapSphere(at, mods.megaRadius))
+            {
+                var b = c.GetComponentInParent<DestructibleBlock>();
+                if (b != null && !b.IsBroken && seen.Add(b)) list.Add(b);
+            }
+            list.Sort((x, y) => string.CompareOrdinal(x.name, y.name));
+            foreach (var b in list)
+            {
+                if (b.IsBroken) continue;
+                float d = (b.transform.position - at).magnitude;
+                if (b.explosive && Crashverse.Meta.PowerUpRulesV2.MegaBombDetonates(d, mods.megaRadius)) { b.Break(); continue; }
+                float dmg = Crashverse.Meta.PowerUpRulesV2.MegaBombDamage(d, mods.megaRadius, mods.megaDamage);
+                if (dmg <= 0f) continue;
+                b.ApplyDamage(dmg, false, splash: true);
+                if (!b.IsBroken && b.Body != null && !b.Body.isKinematic) b.Body.AddExplosionForce(600f, at, mods.megaRadius * 1.5f);
+            }
+        }
+
+        /// <summary>Guided Rocket (v2): rotate the flight direction about world up by deg (already clamped per tick and recorded).</summary>
+        public void Steer(float deg)
+        {
+            if (!mods.guided || _spent || _rb == null || deg == 0f) return;
+            _rb.velocity = Quaternion.Euler(0f, -deg, 0f) * _rb.velocity; // same sign as AimController: +yaw = toward world +z
+        }
+        public int TicksSinceLaunch => AgeTicks;
+        public bool IsSpent => _spent;
 
         [System.Diagnostics.Conditional("UNITY_EDITOR"), System.Diagnostics.Conditional("DEVELOPMENT_BUILD")]
         void Trace(string msg) => Debug.Log($"CVPROJ {msg} pos={transform.position} v={(_rb != null ? _rb.velocity : Vector3.zero)} age={AgeTicks}");

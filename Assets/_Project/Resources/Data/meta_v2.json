@@ -1,0 +1,167 @@
+{
+ "levelRewards": {
+  "coinsFirstClear": 50,
+  "coinsPerStar": 25,
+  "replayCoins": 10,
+  "gemsFirst3Star": 5,
+  "chestEveryLevels": 5,
+  "hardBonusCoins": 100,
+  "hardBonusGems": 5
+ },
+ "dailyBoss": {
+  "layouts": [
+   "titan_ash_bridge",
+   "titan_caldera_rim",
+   "titan_forge_floor",
+   "titan_slag_foundry"
+  ],
+  "names": [
+   "Ironjaw Golem",
+   "Magma Brute",
+   "Storm Colossus",
+   "Cinder Warlord"
+  ],
+  "baseShots": 6,
+  "shotSpread": 2,
+  "winThreshold": 0.85,
+  "reward": {
+   "coins": 300,
+   "gems": 5,
+   "chests": 1
+  }
+ },
+ "seasons": [
+  {
+   "id": "s1_sunny_shores",
+   "number": 1,
+   "name": "Sunny Shores",
+   "bg": "bg_season_sunny_shores",
+   "accent": "22D3EE",
+   "dark": "0E3B5C",
+   "firstLevel": 1,
+   "lastLevel": 10,
+   "comingSoon": false
+  },
+  {
+   "id": "s2_frozen_peaks",
+   "number": 2,
+   "name": "Frozen Peaks",
+   "bg": "bg_season_frozen_peaks",
+   "accent": "9BE7FF",
+   "dark": "1B2F5E",
+   "firstLevel": 11,
+   "lastLevel": 20,
+   "comingSoon": true
+  },
+  {
+   "id": "s3_neon_city",
+   "number": 3,
+   "name": "Neon City",
+   "bg": "bg_season_neon_city",
+   "accent": "E879F9",
+   "dark": "2A1450",
+   "firstLevel": 21,
+   "lastLevel": 30,
+   "comingSoon": true
+  },
+  {
+   "id": "s4_primeval_peaks",
+   "number": 4,
+   "name": "Primeval Peaks",
+   "bg": "bg_season_primeval_peaks",
+   "accent": "84CC16",
+   "dark": "23361A",
+   "firstLevel": 31,
+   "lastLevel": 40,
+   "comingSoon": true
+  }
+ ],
+ "achievements": [
+  {
+   "id": "first_smash",
+   "name": "First Smash",
+   "text": "Clear Level 1",
+   "type": "levels_cleared",
+   "target": 1,
+   "icon": "star_on"
+  },
+  {
+   "id": "island_hopper",
+   "name": "Island Hopper",
+   "text": "Clear 5 levels",
+   "type": "levels_cleared",
+   "target": 5,
+   "icon": "coin"
+  },
+  {
+   "id": "star_collector",
+   "name": "Star Collector",
+   "text": "Collect 15 stars",
+   "type": "total_stars",
+   "target": 15,
+   "icon": "star_on"
+  },
+  {
+   "id": "perfectionist",
+   "name": "Perfectionist",
+   "text": "Get 3 stars on 5 levels",
+   "type": "three_star_levels",
+   "target": 5,
+   "icon": "badge_03_gold"
+  },
+  {
+   "id": "skull_crusher",
+   "name": "Skull Crusher",
+   "text": "Beat a hard level",
+   "type": "hard_cleared",
+   "target": 1,
+   "icon": "skull_hard_level"
+  },
+  {
+   "id": "boss_hunter",
+   "name": "Boss Hunter",
+   "text": "Defeat 3 Daily Bosses",
+   "type": "daily_boss_wins",
+   "target": 3,
+   "icon": "badge_daily_boss"
+  },
+  {
+   "id": "gadgeteer",
+   "name": "Gadgeteer",
+   "text": "Use 10 power-ups",
+   "type": "powerups_used",
+   "target": 10,
+   "icon": "mega_bomb"
+  },
+  {
+   "id": "treasure_hunter",
+   "name": "Treasure Hunter",
+   "text": "Open 3 chests",
+   "type": "chests_opened",
+   "target": 3,
+   "icon": "chest"
+  }
+ ],
+ "chest": {
+  "coinsMin": 50,
+  "coinsMax": 150,
+  "gemsChancePct": 25,
+  "gems": 2
+ },
+ "avatars": [
+  "avatar_01",
+  "avatar_02",
+  "avatar_03",
+  "avatar_04"
+ ],
+ "badges": [
+  "badge_01_bronze",
+  "badge_02_silver",
+  "badge_03_gold"
+ ],
+ "badgeNames": [
+  "Bronze Blaster",
+  "Silver Smasher",
+  "Gold Wrecker"
+ ]
+}
