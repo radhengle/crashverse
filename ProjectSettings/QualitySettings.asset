@@ -76,6 +76,41 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 0}
     excludedTargetPlatforms: []
+  - serializedVersion: 3
+    name: High
+    pixelLightCount: 2
+    shadows: 1
+    shadowResolution: 1
+    shadowProjection: 1
+    shadowCascades: 2
+    shadowDistance: 50
+    shadowNearPlaneOffset: 3
+    shadowCascade2Split: 0.333
+    shadowCascade4Split: {x: 0.066, y: 0.2, z: 0.466}
+    shadowmaskMode: 0
+    skinWeights: 2
+    anisotropicTextures: 1
+    antiAliasing: 4
+    softParticles: 0
+    softVegetation: 0
+    realtimeReflectionProbes: 0
+    billboardsFaceCameraPosition: 1
+    vSyncCount: 0
+    lodBias: 1
+    maximumLODLevel: 0
+    streamingMipmapsActive: 0
+    streamingMipmapsAddAllCameras: 1
+    streamingMipmapsMemoryBudget: 512
+    streamingMipmapsRenderersPerFrame: 512
+    streamingMipmapsMaxLevelReduction: 2
+    streamingMipmapsMaxFileIORequests: 1024
+    particleRaycastBudget: 64
+    asyncUploadTimeSlice: 2
+    asyncUploadBufferSize: 16
+    asyncUploadPersistentBuffer: 1
+    resolutionScalingFixedDPIFactor: 1
+    customRenderPipeline: {fileID: 0}
+    excludedTargetPlatforms: []
   m_PerPlatformDefaultQuality:
     Android: 1
     Standalone: 1
