@@ -26,7 +26,14 @@ namespace Crashverse.Core
             }
         }
 
-        public static void Apply(Renderer r) { if (r != null && !(r is LineRenderer) && !(r is ParticleSystemRenderer)) r.sharedMaterial = Lit; }
+        static bool _nullLogged;
+        public static void Apply(Renderer r)
+        {
+            if (r == null || r is LineRenderer || r is ParticleSystemRenderer) return;
+            var m = Lit;
+            if (m == null) { if (!_nullLogged) { _nullLogged = true; Debug.LogError("[RenderMaterials] BUG-23: no usable URP material (CV_SimpleLit and fallbacks all null); '" + r.name + "' and later renderers will draw magenta"); } return; }
+            r.sharedMaterial = m;
+        }
         public static void Apply(GameObject go) { if (go != null) Apply(go.GetComponent<Renderer>()); }
 
         /// <summary>Safety net after a world is built: any mesh renderer without a usable material gets the shared one.</summary>
