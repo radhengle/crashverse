@@ -11,6 +11,9 @@ adb shell wm size 1080x2340; adb shell wm density 420
 adb shell settings put secure immersive_mode_confirmations confirmed || true
 adb shell settings put global hide_error_dialogs 1 || true
 sleep 20 # let System UI settle on the software GPU
+# API 34 run 40067356429: adb-install verification finished late, re-broadcast the package and force-stopped the app mid-calibration.
+adb shell settings put global verifier_verify_adb_installs 0 >/dev/null 2>&1 || true
+adb shell settings put global package_verifier_enable 0 >/dev/null 2>&1 || true
 if ! adb install -r -g "$APK" > "$OUT/install.txt" 2>&1; then
   code=$(grep -o "INSTALL_[A-Z_]*" "$OUT/install.txt" | head -1); cat "$OUT/install.txt"
   echo "::error::adb install failed on API $(adb shell getprop ro.build.version.sdk | tr -d '\r'): ${code:-unknown}"; exit 1; fi

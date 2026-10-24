@@ -42,16 +42,19 @@ for i in $(seq 1 30); do adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|MapScreen
   [ $i = 30 ] && { shot FAIL_no_map; echo "FAIL: map not reached 30 s after guest sign-in"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done
 shot 05_map_guest
 tap $NODE1_X $NODE1_Y; tap $PLAY_X $PLAY_Y 6; check l1_load; shot 06_l1_hud
-# a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows (max 3× the shot budget)
-for s in $(seq 1 $((SHOTS_L1 * 3))); do tap "${HINT_X:?}" "${HINT_Y:?}" 1; fire "win$s"; sleep 6; check "win_shot$s"
+# a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows
+# emulator (swangle = CPU GL) runs the sim ~13x slower than real time: a miss off the island takes ~40 s wall-clock to reach the
+# kill plane (run 40067356429), so the budget is wall-clock (SHOT_WALL_S, default 420 s); the RESULT check still exits early.
+SHOT_WALL_S=${SHOT_WALL_S:-420}
+SECONDS=0; for s in $(seq 1 200); do [ $SECONDS -ge $SHOT_WALL_S ] && break; tap "${HINT_X:?}" "${HINT_Y:?}" 1; fire "win$s"; sleep 6; check "win_shot$s"
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
-result(){ local i r; for i in $(seq 1 40); do r=$(adb logcat -d -s Unity | grep -o "CVTAP|RESULT|[a-z]*" | tail -1 | cut -d'|' -f3); [ -n "$r" ] && { echo "$r"; return 0; }; sleep 1; done
+result(){ local i r; for i in $(seq 1 120); do r=$(adb logcat -d -s Unity | grep -o "CVTAP|RESULT|[a-z]*" | tail -1 | cut -d'|' -f3); [ -n "$r" ] && { echo "$r"; return 0; }; sleep 1; done
   shot "FAIL_no_result_$1"; echo "FAIL: no win/fail result detected ($1)" >&2; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
 R1=$(result win); echo "scripted win line result: $R1" | tee "$OUT/result_win.txt"; shot 07_result_win
 [ "$R1" = win ] || { shot FAIL_win_line; adb logcat -d > "$OUT/logcat.txt"; echo "FAIL: BUG-24 known winning L1 line (practice hint) gave '$R1'" >&2; exit 1; }
 adb logcat -c; tap $RETRY_X $RETRY_Y 6; check retry
-# a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows (max 3× the shot budget)
-for s in $(seq 1 $((SHOTS_L1 * 3))); do adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $MISS_TO_X $MISS_TO_Y 400; fire "fail$s"; sleep 6; check "fail_shot$s"
+# a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows
+SECONDS=0; for s in $(seq 1 200); do [ $SECONDS -ge $SHOT_WALL_S ] && break; adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $MISS_TO_X $MISS_TO_Y 400; fire "fail$s"; sleep 6; check "fail_shot$s"
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 R2=$(result fail); echo "miss line result: $R2" | tee "$OUT/result_fail.txt"; shot 08_result_fail
 [ "$R2" = fail ] || { echo "FAIL: miss line did not fail ($R2)"; exit 1; }
