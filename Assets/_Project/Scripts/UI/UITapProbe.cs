@@ -12,7 +12,7 @@ namespace Crashverse.UI
     public class UITapProbe : MonoBehaviour
     {
         UIRouter _r; object _lastTop; int _lastCount; float _t;
-        object _doneLogged; float _resultsT, _lastYaw = float.NaN;
+        object _doneLogged; float _resultsT, _lastYaw = 9999f; // not NaN: NaN never compares > 0.5, so nothing was logged
         void Awake() { _r = GetComponent<UIRouter>(); Debug.Log($"CVTAP|META|screen|{Screen.width}|{Screen.height}|dpi={Screen.dpi}"); }
         void LateUpdate()
         {

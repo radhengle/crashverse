@@ -49,7 +49,7 @@ tap $NODE1_X $NODE1_Y; tap $PLAY_X $PLAY_Y 6; check l1_load; shot 06_l1_hud
 # QA LOW + P0 (aim mirrored on dev-build-6): real touch swipes through AimController; +yaw is screen-left from the run camera,
 # so a RIGHT swipe must drive the logged target yaw negative and a LEFT swipe positive (no hook, no Drag() shortcut).
 D=$(adb shell wm density | grep -o '[0-9]*$' | tail -1); SW=$(( 100 * D / 160 ))
-aim_yaw(){ sleep 3; adb logcat -d -s Unity | grep -oE "CVTAP\|AIM\|yaw=-?[0-9.]+" | tail -1 | cut -d= -f2; }
+aim_yaw(){ sleep 3; adb logcat -d -s Unity | grep -oE "CVTAP\|AIM\|yaw=-?[0-9.]+" | tail -1 | cut -d= -f2 || true; }  # no line -> empty, reported below
 adb logcat -c; adb shell input swipe 540 1300 $(( 540 + SW )) 1300 500; YR=$(aim_yaw)
 adb logcat -c; adb shell input swipe 540 1300 $(( 540 - 2 * SW )) 1300 500; YL=$(aim_yaw)
 echo "swipe right -> yaw ${YR:-none}; swipe left -> yaw ${YL:-none}" | tee "$OUT/aim_direction.txt"
