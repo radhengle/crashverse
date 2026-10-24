@@ -23,7 +23,7 @@ namespace Crashverse.UI
             // only RESULT/Retry lines (API 36 calibration, run 40072849533). RESULTDONE rides along once the sequence is final.
             bool resultsRepeat = false;
             if (top is ResultsScreen) { if ((_resultsT += 0.5f) >= 2f) { _resultsT = 0f; resultsRepeat = true; } } else _resultsT = 0f;
-            if (top is ResultsScreen done && done.SequenceDone && (resultsRepeat || !ReferenceEquals(done, _doneLogged))) { _doneLogged = done; Debug.Log($"CVTAP|RESULTDONE|{(done.Won ? "win" : "fail")}|score={done.Score}|stars={done.Stars}|pct={Mathf.FloorToInt(done.Ratio * 100)}"); } var btns = GetComponentsInChildren<Button>(false);
+            if (top is ResultsScreen done && done.SettledOnScreen && (resultsRepeat || !ReferenceEquals(done, _doneLogged))) { _doneLogged = done; Debug.Log($"CVTAP|RESULTDONE|{(done.Won ? "win" : "fail")}|score={done.Score}|stars={done.Stars}|pct={Mathf.FloorToInt(done.Ratio * 100)}|label={done.ScoreLabel.Replace(' ', '_').Replace('|', '/')}"); } var btns = GetComponentsInChildren<Button>(false);
             int sig = btns.Length; // changes on screen switch, enable/disable and scroll
             foreach (var b in btns) { var q = b.transform.position; sig = unchecked(sig * 31 + (b.IsInteractable() ? 1 : 0) + Mathf.RoundToInt(q.x) * 7 + Mathf.RoundToInt(q.y) * 13); }
             if (ReferenceEquals(top, _lastTop) && sig == _lastCount && !resultsRepeat) return;

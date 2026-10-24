@@ -95,6 +95,8 @@ namespace UnityEngine.UI
     public class Button : Selectable { public class ButtonClickedEvent : UnityEngine.Events.UnityEvent { } public ButtonClickedEvent onClick = new ButtonClickedEvent(); }
     public class CanvasScaler : UIBehaviour { public enum ScaleMode { ConstantPixelSize, ScaleWithScreenSize, ConstantPhysicalSize } public ScaleMode uiScaleMode; public float scaleFactor = 1f; }
     public class GraphicRaycaster : UIBehaviour { }
+    public static class LayoutRebuilder { public static void ForceRebuildLayoutImmediate(RectTransform rt) { } }
+    public static class LayoutUtility { public static float GetPreferredHeight(RectTransform rt) => 0f; }
     public class LayoutElement : UIBehaviour { public float minHeight, minWidth, preferredHeight, preferredWidth, flexibleHeight, flexibleWidth; }
     public class LayoutGroup : UIBehaviour { public RectOffset padding = new RectOffset(); public TextAnchor childAlignment; }
     public class HorizontalOrVerticalLayoutGroup : LayoutGroup { public float spacing; public bool childControlHeight, childControlWidth, childForceExpandHeight, childForceExpandWidth; }

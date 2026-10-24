@@ -390,6 +390,22 @@ namespace Crashverse.UI
         public ResultsScreen(GameSession s, RunResult r) { _s = s; _r = r; }
         /// <summary>QA C-1/C-3 (smoke + probe): the win sequence (stars, mastery, score count-up) has reached its final frame.</summary>
         public bool SequenceDone => _seqMs >= Crashverse.Feel.WinSequence.Steps[5].startMs + Crashverse.Feel.UiMotionMath.ResultsScoreMs + 100f;
+        int _doneFrame = -1;
+        /// <summary>QA C-1b/C-3b: the logic finishing isn't enough on a slow GPU (the API 36 frame lagged ~1 s): final values are in
+        /// the labels (score text, earned stars at scale 1) AND 10 more frames have been rendered since.</summary>
+        public bool SettledOnScreen
+        {
+            get
+            {
+                if (!SequenceDone) return false;
+                if (_score != null && _score.text != ScoreLabelFinal) return false;
+                for (int i = 0; i < 3; i++) if (_star[i] != null && i < _r.stars && System.Math.Abs(_star[i].rectTransform.localScale.x - 1f) > 0.01f) return false;
+                if (_doneFrame < 0) _doneFrame = Time.frameCount;
+                return Time.frameCount - _doneFrame >= 10;
+            }
+        }
+        public string ScoreLabel => _score != null ? _score.text : "";
+        string ScoreLabelFinal => "Score " + _r.score + _scoreFmt;
         public int Score => _r != null ? _r.score : 0; public int Stars => _r != null ? _r.stars : 0; public float Ratio => _r != null ? _r.ratio : 0f;
         /// <summary>QA C-4 (PX-8): "So close!" only when the run was actually close; a 0% or far-off run doesn't get it.</summary>
         public static string FailTitle(float ratio, float threshold) => ratio >= threshold * 0.6f ? "So close!" : "Out of shots!";
@@ -428,6 +444,10 @@ namespace Crashverse.UI
             var next = NextLevel(lvl);
             if (_r.won && mode == RunMode.Campaign && next != null && UnlockRules.IsLevelUnlocked(next, AppServices.Save))
                 UIFactory.Button(row, "Next", Th.green, () => { GameplayDirector.ExitToMap(); AppServices.Router.Push(new BriefingScreen(next, RunMode.Campaign, null)); }, Th);
+            // QA C-4b: the panel hugs its content (the fail panel kept the win panel's 470 height, leaving a big empty area)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(v);
+            float h = LayoutUtility.GetPreferredHeight(v);
+            if (h > 0f) p.rectTransform.sizeDelta = new Vector2(320f, Mathf.Clamp(h, 240f, 470f));
         }
         public override void Tick()
         {

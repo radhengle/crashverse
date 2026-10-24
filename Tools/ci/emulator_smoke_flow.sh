@@ -60,9 +60,11 @@ done_line(){ local i l; for i in $(seq 1 60); do l=$(adb logcat -d -s Unity | gr
 kv(){ echo "$1" | tr '|' '\n' | grep "^$2=" | cut -d= -f2; }
 R1=$(result win); echo "scripted win line result: $R1" | tee "$OUT/result_win.txt"
 [ "$R1" = win ] || { shot FAIL_win_line; adb logcat -d > "$OUT/logcat.txt"; echo "FAIL: BUG-24 known winning L1 line (practice hint) gave '$R1'" >&2; exit 1; }
-D1=$(done_line win); sleep 0.5; shot 07_result_win; echo "$D1" | tee -a "$OUT/result_win.txt"
-WS=$(kv "$D1" score); WST=$(kv "$D1" stars)
+# RESULTDONE = final values in the labels + 10 frames rendered since; 2 s more covers the slow CPU-GL compositor (QA C-1b/C-3b)
+D1=$(done_line win); sleep 2; shot 07_result_win; echo "$D1" | tee -a "$OUT/result_win.txt"
+WS=$(kv "$D1" score); WST=$(kv "$D1" stars); WL=$(kv "$D1" label)
 [ "${WS:-0}" -gt 0 ] || { echo "FAIL: win screen score is ${WS:-?} (QA C-1)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
+case "$WL" in "Score_${WS}_"*) ;; *) echo "FAIL: win panel label '$WL' does not show score $WS (QA C-1b)"; adb logcat -d > "$OUT/logcat.txt"; exit 1;; esac
 [ "${WST:-0}" -ge "${WIN_STARS_MIN:-3}" ] || { echo "FAIL: hint line won with ${WST:-?} stars, expected >= ${WIN_STARS_MIN:-3} (QA C-3)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
 adb logcat -c; tap $RETRY_X $RETRY_Y 6; check retry
 # the probe re-dumps the results screen every 2 s: drop any win line logged before Retry took effect, once the HUD is back
@@ -72,6 +74,6 @@ SECONDS=0; for s in $(seq 1 200); do [ $SECONDS -ge $SHOT_WALL_S ] && break; adb
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 R2=$(result fail); echo "miss line result: $R2" | tee "$OUT/result_fail.txt"
 [ "$R2" = fail ] || { shot 08_result_fail; echo "FAIL: miss line did not fail ($R2)"; exit 1; }
-D2=$(done_line fail); sleep 0.5; shot 08_result_fail; echo "$D2" | tee -a "$OUT/result_fail.txt"   # QA C-3: settled panel
+D2=$(done_line fail); sleep 2; shot 08_result_fail; echo "$D2" | tee -a "$OUT/result_fail.txt"   # QA C-3: settled panel
 check final   # whole-run logcat gate (QA C-2)
 adb logcat -d > "$OUT/logcat.txt"; echo "SMOKE PASS (screens in $OUT for visual review)"
