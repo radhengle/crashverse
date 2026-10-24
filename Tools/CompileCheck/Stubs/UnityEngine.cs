@@ -61,7 +61,6 @@ namespace UnityEngine
         public Quaternion rotation = Quaternion.identity;
         public Quaternion localRotation = Quaternion.identity;
         public Vector3 right => localRotation * Vector3.right;
-        public Vector3 TransformPoint(Vector3 p) => p;
         public void SetAsFirstSibling() { }
         public Vector3 forward => localRotation * Vector3.forward;
         public Vector3 up => localRotation * Vector3.up;
@@ -379,9 +378,3 @@ namespace UnityEngine.Rendering
 }
 namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } public class AudioMixer : UnityEngine.Object { public AudioMixerGroup[] FindMatchingGroups(string subPath) => new AudioMixerGroup[0]; } }
 
-namespace UnityEngine.SceneManagement
-{
-    public struct Scene { }
-    public enum LoadSceneMode { Single, Additive }
-    public static class SceneManager { public static event System.Action<Scene, LoadSceneMode> sceneLoaded; static void Touch() => sceneLoaded?.Invoke(default, default); }
-}

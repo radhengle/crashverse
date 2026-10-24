@@ -18,5 +18,5 @@ namespace UnityEngine.SceneManagement
     public struct Scene { public string name, path; public int buildIndex; }
     public enum LoadSceneMode { Single, Additive }
     public struct LoadSceneParameters { public LoadSceneParameters(LoadSceneMode m) { } }
-    public static class SceneManager { public static Scene GetActiveScene() => new Scene { name = "Bootstrap", path = "" }; public static void LoadScene(int buildIndex) { } }
+    public static class SceneManager { public static Scene GetActiveScene() => new Scene { name = "Bootstrap", path = "" }; public static void LoadScene(int buildIndex) { } public static event System.Action<Scene, LoadSceneMode> sceneLoaded; static void Touch() => sceneLoaded?.Invoke(default, default); }
 }

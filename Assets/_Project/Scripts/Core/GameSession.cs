@@ -129,11 +129,12 @@ namespace Crashverse.Core
             if (State != SessionState.Aiming || ShotsLeft <= 0 || !Gate.Ready) return;
             aim.SetAim(InputRecorder.FromFixed(e.x), InputRecorder.FromFixed(e.y)); // fire from the quantized aim the server replays
             var mods = PowerUps.ConsumeForShot();
-            if (!fire.Fire(mods)) return;
+            float yaw = InputRecorder.FromFixed(e.x), elev = InputRecorder.FromFixed(e.y); // frozen at the tap (quantized)
+            // Anim Spec 01: launch is 66 ms after the tap (breech anticipation); record the tick of the REAL launch so a replay matches.
+            if (!fire.Fire(mods, () => Inputs.Record(Tick, "fire", yaw, elev))) return;
             ShotsLeft--;
             if (Boss != null) Boss.OnShotFired();
             tracker.OnShotFired();
-            Inputs.Record(tick, e.type, InputRecorder.FromFixed(e.x), InputRecorder.FromFixed(e.y));
             Gate.OnShotFired();
             Crashverse.PowerUps.TimeFractureEffect.NotifyShotFired(); // OQ-P3: slow holds until this shot impacts
             State = SessionState.Resolving;

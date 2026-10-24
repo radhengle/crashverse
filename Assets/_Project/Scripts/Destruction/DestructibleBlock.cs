@@ -170,9 +170,9 @@ namespace Crashverse.Destruction
         {
             get
             {
-                int remaining = 0;
-                foreach (var s in _supports) if (s != null && !s._broken && !s._collapsed && !s._outOfBounds) remaining++;
-                return SupportRule.ShouldCollapse(_supports.Count, remaining); // ALL supports gone; none at all = grounded
+                var gone = new List<bool>(_supports.Count);
+                foreach (var s in _supports) gone.Add(s == null || s._broken || s._collapsed || s._outOfBounds);
+                return Crashverse.Meta.StructureRules.SupportLost(gone); // ALL supports gone (grounded if none); same rule as SupportRule.ShouldCollapse
             }
         }
 

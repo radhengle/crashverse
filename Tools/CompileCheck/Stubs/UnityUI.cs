@@ -111,4 +111,4 @@ namespace UnityEngine
 
     public class RectOffset { public RectOffset() { } public RectOffset(int l, int r, int t, int b) { } }
 }
-namespace UnityEngine { public class ParticleSystemRenderer : Renderer { } public static class GameObjectExt2 { } }
+namespace UnityEngine { public static class GameObjectExt2 { } }
