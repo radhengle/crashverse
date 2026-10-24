@@ -82,6 +82,47 @@ static class Tests
             T.Eq("tidewarden", ch.levels[9].bossId, "L10 boss");
             T.Eq(2, ch.levels[8].starCapIfPowerupUsed, "L9 cap");
         });
+        T.Add("LEVEL_tidewarden_shutter_SG05", () =>
+        {
+            var r = new TideShutterRule();
+            r.OnShotFired(); T.True(!r.OnShotResolved(), "phase 1 shot: no toggle");
+            r.OnShotFired(); r.EnterPhase2(); T.True(r.Open, "phase 2 starts OPEN");
+            T.True(!r.OnShotResolved() && r.Open, "the shot that ended phase 1 does not toggle");
+            r.OnShotFired(); T.True(r.OnShotResolved() && !r.Open, "1st phase-2 shot → closed");
+            r.OnDirectHit(); T.Eq(1, r.ClosedShutterHits, "hit while closed counted");
+            r.OnShotFired(); T.True(r.OnShotResolved() && r.Open, "2nd phase-2 shot → open");
+            r.OnDirectHit(); T.Eq(1, r.ClosedShutterHits, "hit while open not counted");
+            var p1 = new TideShutterRule(); p1.OnDirectHit(); T.Eq(0, p1.ClosedShutterHits, "phase 1 (parked shutter) never counts");
+        });
+        T.Add("LEVEL_mastery_no_closed_shutter_hit", () =>
+        {
+            var g = new MasteryGoal { type = "NO_CLOSED_SHUTTER_HIT", role = "shutter" };
+            T.True(MasteryEvaluator.Evaluate(g, new RunStats { won = true, closedShutterHits = 0 }), "clean run passes");
+            T.True(!MasteryEvaluator.Evaluate(g, new RunStats { won = true, closedShutterHits = 1 }), "closed-shutter hit fails");
+            T.True(!MasteryEvaluator.Evaluate(g, new RunStats { won = false }), "loss never passes");
+            var tw = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs"); T.True(tw.Contains("_rule.OnShotResolved()") && tw.Contains("OnShutterDamaged"), "controller uses the rule");
+        });
+        T.Add("LEVEL_objective_mass_excludes_stone_bases", () =>
+        {
+            T.True(!StructureRules.CountsTowardObjectiveMass(true, true), "Indestructible+NonObjective excluded");
+            T.True(StructureRules.CountsTowardObjectiveMass(false, true), "indestructible objective (boss core) still counts");
+            T.Eq(5f, StructureRules.TotalObjectiveMass(new[] { (5f, false, false), (100f, true, true) }), "stone base mass ignored");
+            int bases = 0;
+            foreach (var l in Db.Chapter1.levels)
+                foreach (var b in Db.GetLayout(l.layout).blocks)
+                    if (b.indestructible && b.nonObj) bases++;
+            T.True(bases > 0, "stone bases tagged Indestructible+NonObjective in Ch1 data");
+            var tr = Src("Assets/_Project/Scripts/Destruction/DestructionTracker.cs"); T.True(tr.Contains("StructureRules.CountsTowardObjectiveMass"), "tracker uses the rule");
+        });
+        T.Add("LEVEL_collapse_only_when_all_supports_gone", () =>
+        {
+            T.True(!StructureRules.SupportLost(new bool[0]), "no supports = grounded");
+            T.True(!StructureRules.SupportLost(new[] { true, false }), "one support left holds the piece");
+            T.True(!StructureRules.SupportLost(new[] { false, false }), "all supports intact");
+            T.True(StructureRules.SupportLost(new[] { true, true }), "ALL supports gone → collapse");
+            T.True(StructureRules.SupportLost(new[] { true }), "single support gone → collapse");
+            T.True(Src("Assets/_Project/Scripts/Destruction/DestructibleBlock.cs").Contains("StructureRules.SupportLost"), "DestructibleBlock uses the rule");
+        });
         T.Add("layouts_valid", () =>
         {
             foreach (var l in Db.Chapter1.levels)

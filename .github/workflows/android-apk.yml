@@ -56,6 +56,9 @@ jobs:
       - name: Logic tests
         run: dotnet run --project Tools/Tests
 
+      - name: Hint angles derived from target pieces (not hand-edited)
+        run: python3 Tools/ContentGen/derive_hints.py --check
+
   build:
     name: GameCI Unity Android (${{ github.event.inputs.profile || 'dev' }})
     needs: guards

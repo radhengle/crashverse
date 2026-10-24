@@ -10,6 +10,11 @@ LAY = os.path.join(OUT, "Layouts")
 import sys as _sys
 LEVEL_RULINGS_OWNED = {"chapter1", "season_s1"}
 REGEN_LEVEL_DATA = "--regenerate-level-data" in _sys.argv
+# Level Designer owns Chapter 1 (levels/ch1, branch level-designer/ch1-levels). When that folder exists this script never
+# writes chapter1.json or any Ch1 layout; Ch1 data comes only from the Level Designer's pipeline.
+LD_CH1 = os.path.join(os.path.dirname(__file__), "../../levels/ch1")
+LD_OWNS_CH1 = os.path.isdir(LD_CH1)
+LD_LAYOUTS = set(os.path.splitext(f)[0] for f in os.listdir(os.path.join(LD_CH1, "layouts"))) if os.path.isdir(os.path.join(LD_CH1, "layouts")) else set()
 os.makedirs(LAY, exist_ok=True)
 
 def B(id, mat, p, s, sup=(), joint=False, role="", nonObj=False, color="", explosive=False,
@@ -22,6 +27,8 @@ def B(id, mat, p, s, sup=(), joint=False, role="", nonObj=False, color="", explo
     return b
 
 def save_layout(id, blocks):
+    if LD_OWNS_CH1 and (id in LD_LAYOUTS or id.startswith("c1_") or id == "m1_clockwork_tower"):
+        return  # Level Designer's file: never overwritten
     ids = {b["id"] for b in blocks}
     for b in blocks:
         for s in b["sup"]:
@@ -309,6 +316,11 @@ for name, obj in [("wrecker", wrecker), ("store_catalog", store), ("chapter1", c
                   ("daily_rewards", daily), ("season_s1", season)]:
     if name in LEVEL_RULINGS_OWNED and not REGEN_LEVEL_DATA and os.path.exists(os.path.join(OUT, name + ".json")):
         continue  # Level Rulings data: never regressed by regeneration
+    if name == "chapter1" and LD_OWNS_CH1:
+        continue  # Level Designer's file: never overwritten
     with open(os.path.join(OUT, name + ".json"), "w") as f:
         json.dump(obj, f, indent=1)
-print("content generated")
+# Hint angles are always derived from the target pieces (never the hand-typed HINTS above).
+import subprocess, sys
+subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), "derive_hints.py")] + (["--season-only"] if LD_OWNS_CH1 else []), check=True)
+print("content generated" + (" (Ch1 skipped: owned by levels/ch1)" if LD_OWNS_CH1 else ""))
