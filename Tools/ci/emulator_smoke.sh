@@ -11,6 +11,13 @@ adb shell wm size 1080x2340; adb shell wm density 420
 adb shell settings put secure immersive_mode_confirmations confirmed || true
 adb shell settings put global hide_error_dialogs 1 || true
 sleep 20 # let System UI settle on the software GPU
+# Run 40102001893 (API 34): late post-boot overlay commits (GMS/setup) changed the app's asset paths (config 0x80000000, which a
+# manifest can't declare), so Android relaunched the activity mid-calibration and Unity killed itself. No Play Store updates, and
+# wait until two quiet 15 s windows pass with no new overlay commit / configuration change (max ~3 min) before installing.
+adb shell pm disable-user --user 0 com.android.vending >/dev/null 2>&1 || true
+evc(){ adb logcat -b events -d 2>/dev/null | grep -cE "commit_sys_config_file: \[overlays|configuration_changed" || true; }
+quiet=0; last=$(evc); for i in $(seq 1 12); do sleep 15; now=$(evc); if [ "$now" = "$last" ]; then quiet=$((quiet+1)); [ $quiet -ge 2 ] && break; else quiet=0; fi; last=$now; done
+echo "settle: quiet=$quiet after $((i*15)) s"
 # API 34 run 40067356429: adb-install verification finished late, re-broadcast the package and force-stopped the app mid-calibration.
 adb shell settings put global verifier_verify_adb_installs 0 >/dev/null 2>&1 || true
 adb shell settings put global package_verifier_enable 0 >/dev/null 2>&1 || true
