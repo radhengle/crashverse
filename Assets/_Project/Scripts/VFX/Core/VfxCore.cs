@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace Crashverse.VFX
 {
-    /// <summary>Material ids, matching the projectile Animator `Material` int (animation/02, 0-5). Glass = 6 is VFX-only (no Animator int yet).</summary>
-    public enum VfxMaterial { Wood = 0, Brick = 1, Steel = 2, SteelJoint = 3, Terrain = 4, Explosive = 5, Glass = 6 }
+    /// <summary>Material ids, matching the projectile Animator `Material` int (animation/02, 0-5; Glass 6 per Animator).
+    /// Stone = 7 is VFX-proposed (no Animator int yet). Append only: never renumber, values are used as Animator ints and serialized.</summary>
+    public enum VfxMaterial { Wood = 0, Brick = 1, Steel = 2, SteelJoint = 3, Terrain = 4, Explosive = 5, Glass = 6, Stone = 7 }
 
     /// <summary>One impact/dust recipe row (VFX_Shader_Spec_v1 §5). Pure data, tier/motion scaling in VfxRules.</summary>
     public struct ImpactRecipe
@@ -29,7 +30,23 @@ namespace Crashverse.VFX
                 case VfxMaterial.SteelJoint: return new ImpactRecipe(24, 0.30f, 4, 0xFFD27A, 0xE8B04B);
                 case VfxMaterial.Terrain: return new ImpactRecipe(6, 0.40f, 0, 0xC98A4B, 0xC98A4B);
                 case VfxMaterial.Glass: return new ImpactRecipe(14, 0.50f, 2, 0xCFF3FF, 0xFFFFFF, 0x9FD8EE) /* shard body, glint, edge (Art to confirm) */;
+                case VfxMaterial.Stone: return new ImpactRecipe(16, 0.60f, 2, 0xA8A096, 0xC9C2B6, 0x8C857A) /* chips, warm grey dust, chip shade (VFX proposal, Art pending) */;
                 default: return new ImpactRecipe(20, 0.40f, 0, 0xFF5A36, 0xFFFFFF); // explosive fireball; smoke separate 1.2 s
+            }
+        }
+
+        /// <summary>Import fractureClass (ImportedPhysicsHints, hero buildings: models/HeroBuildings/Kit_&lt;B&gt;_stats.json "frac") to VfxMaterial.
+        /// Case-insensitive. Unknown or empty (e.g. "Roof" until Art/Physics pick a family) returns false and the caller keeps its material.</summary>
+        public static bool TryFromFractureClass(string fractureClass, out VfxMaterial m)
+        {
+            switch ((fractureClass ?? "").Trim().ToLowerInvariant())
+            {
+                case "wood": m = VfxMaterial.Wood; return true;
+                case "brick": m = VfxMaterial.Brick; return true;
+                case "steel": m = VfxMaterial.Steel; return true;
+                case "glass": m = VfxMaterial.Glass; return true;
+                case "stone": m = VfxMaterial.Stone; return true;
+                default: m = VfxMaterial.Wood; return false;
             }
         }
 

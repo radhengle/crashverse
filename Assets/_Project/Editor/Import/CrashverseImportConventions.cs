@@ -167,9 +167,11 @@ namespace Crashverse.EditorTools.Import
         // ---------- hero buildings (3D Modeler hero buildings v1: models/HeroBuildings/README.md) ----------
         /// <summary>Per-kit stats sidecars live outside Assets, relative to the project root: models/HeroBuildings/Kit_&lt;B&gt;_stats.json.</summary>
         public const string HeroStatsDir = "models/HeroBuildings/";
-        /// <summary>Hero building kits shipped by 3D Modeler (Kit_Keep/Tower/Gate/House + shared Kit_Props). Any other BuildingKit/Kit_&lt;B&gt;
-        /// with a stats sidecar also counts. A known hero kit without its sidecar is a validator warning.</summary>
-        public static readonly string[] KnownHeroKits = { "Keep", "Tower", "Gate", "House", "Props" };
+        /// <summary>Hero building kits (3D Modeler hero buildings v1). Only these, T_Bld_* and Bld_* folders get the 1024 Android texture cap (PM).</summary>
+        public static readonly string[] HeroBuildingKits = { "Keep", "Tower", "Gate", "House" };
+        /// <summary>Kits that ship a stats sidecar for fractureClass: the hero building kits plus the shared Kit_Props (which keeps the 512 kit
+        /// texture cap). Any other BuildingKit/Kit_&lt;B&gt; with a sidecar also reads it. A listed kit without its sidecar is a validator warning.</summary>
+        public static readonly string[] KnownStatsKits = { "Keep", "Tower", "Gate", "House", "Props" };
         /// <summary>Sidecar lookup, replaceable in tests. Default: File.Exists relative to the project root (Unity's working directory).</summary>
         public static Func<string, bool> HeroStatsExists = kit => File.Exists(HeroStatsPath(kit));
         public static string HeroStatsPath(string kit) => HeroStatsDir + "Kit_" + kit + "_stats.json";
@@ -188,10 +190,14 @@ namespace Crashverse.EditorTools.Import
             return f.StartsWith("Kit_", StringComparison.Ordinal) && f.Length > 4 ? f.Substring(4) : null;
         }
 
-        public static bool IsHeroKit(string kit) => !string.IsNullOrEmpty(kit) && (Array.IndexOf(KnownHeroKits, kit) >= 0 || HeroStatsExists(kit));
+        /// <summary>Kit whose FBX modules read fractureClass from models/HeroBuildings/Kit_&lt;B&gt;_stats.json (KnownStatsKits or a sidecar exists).</summary>
+        public static bool UsesHeroStats(string kit) => !string.IsNullOrEmpty(kit) && (Array.IndexOf(KnownStatsKits, kit) >= 0 || HeroStatsExists(kit));
+        /// <summary>Hero building kit folder for the texture cap. A stats sidecar alone does not make a kit a hero building (Kit_Props stays 512).</summary>
+        public static bool IsHeroBuildingKit(string kit) => !string.IsNullOrEmpty(kit) && Array.IndexOf(HeroBuildingKits, kit) >= 0;
 
         /// <summary>Hero building texture: asset prefix T_Bld_*, any folder under Models/ named Bld_*, or a hero kit folder
-        /// (BuildingKit/Kit_Keep/textures/T_Keep_A.png: the hero kits name their atlases T_&lt;B&gt;_*, not T_Bld_*).</summary>
+        /// (BuildingKit/Kit_Keep|Tower|Gate|House/textures/T_Keep_A.png: the hero kits name their atlases T_&lt;B&gt;_*, not T_Bld_*).
+        /// Shared props (Kit_Props) and other kits stay at the 512 kit cap even when they have a stats sidecar.</summary>
         public static bool IsHeroBuildingTexture(string texStem, string assetPath)
         {
             if (texStem != null && texStem.StartsWith("T_Bld_", StringComparison.Ordinal)) return true;
@@ -201,15 +207,15 @@ namespace Crashverse.EditorTools.Import
                 var segs = p.Substring(ModelsRoot.Length).Split('/');
                 for (int i = 0; i < segs.Length - 1; i++) if (segs[i].StartsWith("Bld_", StringComparison.Ordinal)) return true;
             }
-            return IsHeroKit(KitFolder(p));
+            return IsHeroBuildingKit(KitFolder(p));
         }
 
         /// <summary>BuildingKit/Kit_House/Kit_House_GroundDoor_Fractured[_LODn].fbx -> kit House, module GroundDoor, fractured.
-        /// False unless the folder is a hero kit and the file is Kit_&lt;B&gt;_&lt;Module&gt;.</summary>
+        /// False unless the folder is a stats kit (hero buildings or Kit_Props) and the file is Kit_&lt;B&gt;_&lt;Module&gt;.</summary>
         public static bool TryHeroModule(string assetPath, out string kit, out string module, out bool fractured)
         {
             kit = KitFolder(assetPath); module = null; fractured = false;
-            if (!IsHeroKit(kit)) { kit = null; return false; }
+            if (!UsesHeroStats(kit)) { kit = null; return false; }
             string n = StripLodSuffix(FileStem(assetPath)), pre = "Kit_" + kit + "_";
             if (!n.StartsWith(pre, StringComparison.Ordinal)) return false;
             n = n.Substring(pre.Length);

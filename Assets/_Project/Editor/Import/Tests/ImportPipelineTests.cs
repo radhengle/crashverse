@@ -405,6 +405,11 @@ namespace Crashverse.Tests
         [TestCase("T_Brick_A", "Assets/_Project/Models/BuildingKit/Kit_Brick/textures/T_Brick_A.png", 512)]
         [TestCase("T_House_A", "Assets/_Project/Models/BuildingKit/Kit_Brick/textures/T_House_A.png", 512)]   // folder, not file name
         [TestCase("T_Wrecker_A", "Assets/_Project/Models/Wrecker_v2/textures/T_Wrecker_A.png", 1024)]
+        [TestCase("T_Keep_N", "Assets/_Project/Models/BuildingKit/Kit_Keep/textures/T_Keep_N.png", 1024)]
+        [TestCase("T_Tower_ORM", "Assets/_Project/Models/BuildingKit/Kit_Tower/textures/T_Tower_ORM.png", 1024)]
+        [TestCase("T_Gate_A", "Assets/_Project/Models/BuildingKit/Kit_Gate/textures/T_Gate_A.png", 1024)]
+        [TestCase("T_Props_A", "Assets/_Project/Models/BuildingKit/Kit_Props/textures/T_Props_A.png", 512)]   // shared props: kit cap (PM)
+        [TestCase("T_Props_N", "Assets/_Project/Models/BuildingKit/Kit_Props/textures/T_Props_N.png", 512)]
         public void AndroidTextureCap(string stem, string path, int max) => Assert.AreEqual(max, C.PolicyFor(stem, path).androidMax);
 
         [Test]
@@ -425,13 +430,17 @@ namespace Crashverse.Tests
             Assert.IsTrue(C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_LOD2.fbx", out _, out m, out f));
             Assert.AreEqual("Wall", m); Assert.IsFalse(f);
             Assert.IsFalse(C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx", out _, out _, out _), "regular kit");
+            Assert.IsTrue(C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx", out k, out m, out f), "Kit_Props reads its sidecar");
+            Assert.AreEqual("Props", k); Assert.AreEqual("Barrel", m); Assert.IsTrue(f);
+            Assert.IsFalse(C.IsHeroBuildingKit("Props")); Assert.IsTrue(C.IsHeroBuildingKit("House"));
             var prev = C.HeroStatsExists;
             try
             {
-                C.HeroStatsExists = kit => kit == "Mill";   // any kit with a sidecar counts as a hero kit
+                C.HeroStatsExists = kit => kit == "Mill";   // any kit with a sidecar reads fractureClass from it...
                 Assert.IsTrue(C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_Mill/Kit_Mill_Sail.fbx", out _, out m, out _));
                 Assert.AreEqual("Sail", m);
-                Assert.AreEqual(1024, C.PolicyFor("T_Mill_A", "Assets/_Project/Models/BuildingKit/Kit_Mill/textures/T_Mill_A.png").androidMax);
+                // ...but a sidecar does not make it a hero building: kit texture cap.
+                Assert.AreEqual(512, C.PolicyFor("T_Mill_A", "Assets/_Project/Models/BuildingKit/Kit_Mill/textures/T_Mill_A.png").androidMax);
             }
             finally { C.HeroStatsExists = prev; }
         }

@@ -19,7 +19,7 @@ namespace Crashverse.EditorTools.Import
 
         public static void RegisterDependencies()
         {
-            foreach (var kit in C.KnownHeroKits) Register(kit);
+            foreach (var kit in C.KnownStatsKits) Register(kit);
             if (!Directory.Exists(C.HeroStatsDir)) return;
             foreach (var f in Directory.GetFiles(C.HeroStatsDir, "Kit_*_stats.json"))
             {
@@ -50,13 +50,13 @@ namespace Crashverse.EditorTools.Import
             }
         }
 
-        [MenuItem("Crashverse/Import/Reimport Hero Building Kits")]
+        [MenuItem("Crashverse/Import/Reimport Hero Building Kits")]   // all stats kits, incl. Kit_Props
         public static void ReimportHeroKits()
         {
             RegisterDependencies();
             AssetDatabase.Refresh();
             foreach (var d in AssetDatabase.GetSubFolders(C.KitRoot.TrimEnd('/')))
-                if (C.IsHeroKit(C.KitFolder(d + "/x"))) AssetDatabase.ImportAsset(d, ImportAssetOptions.ImportRecursive | ImportAssetOptions.ForceUpdate);
+                if (C.UsesHeroStats(C.KitFolder(d + "/x"))) AssetDatabase.ImportAsset(d, ImportAssetOptions.ImportRecursive | ImportAssetOptions.ForceUpdate);
         }
     }
 }

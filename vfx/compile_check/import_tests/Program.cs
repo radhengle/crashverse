@@ -47,6 +47,9 @@ static class Program
         Eq("T_Bld_X_N in BuildingKit", C.PolicyFor("T_Bld_X_N", "Assets/_Project/Models/BuildingKit/Kit_X/textures/T_Bld_X_N.png").androidMax, 1024);
         Eq("T_Bld_X_N ASTC unchanged", C.PolicyFor("T_Bld_X_N", "Assets/_Project/Models/BuildingKit/Kit_X/textures/T_Bld_X_N.png").astc, "5x5");
         Eq("Hero kit folder T_House_ORM", C.PolicyFor("T_House_ORM", "Assets/_Project/Models/BuildingKit/Kit_House/textures/T_House_ORM.png").androidMax, 1024);
+        Eq("Kit_Props stays 512 (shared props)", C.PolicyFor("T_Props_A", "Assets/_Project/Models/BuildingKit/Kit_Props/textures/T_Props_A.png").androidMax, 512);
+        Eq("Kit_Keep 1024", C.PolicyFor("T_Keep_N", "Assets/_Project/Models/BuildingKit/Kit_Keep/textures/T_Keep_N.png").androidMax, 1024);
+        Eq("Kit_Props still reads sidecar", C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx", out _, out var pm, out _) && pm == "Crate", true);
         Eq("Hero kit inner stays 256", C.PolicyFor("T_House_Inner_A", "Assets/_Project/Models/BuildingKit/Kit_House/textures/T_House_Inner_A.png").androidMax, 256);
         Eq("T_Bld inner stays 256", C.PolicyFor("T_Bld_X_Inner_A", "Assets/_Project/Models/Buildings/Bld_X/textures/T_Bld_X_Inner_A.png").androidMax, 256);
         Eq("Kit still 512", C.PolicyFor("T_Brick_A", "Assets/_Project/Models/BuildingKit/Kit_Brick/textures/T_Brick_A.png").androidMax, 512);

@@ -42,6 +42,43 @@ namespace Crashverse.VFX.Tests
             Assert.AreEqual(VfxIds.GlassShards, VfxRecipes.ImpactFor(VfxMaterial.Glass, true));
         }
 
+        [Test] public void StoneIsAppendedWithoutRenumbering()
+        {
+            Assert.AreEqual(0, (int)VfxMaterial.Wood); Assert.AreEqual(1, (int)VfxMaterial.Brick); Assert.AreEqual(2, (int)VfxMaterial.Steel);
+            Assert.AreEqual(3, (int)VfxMaterial.SteelJoint); Assert.AreEqual(4, (int)VfxMaterial.Terrain); Assert.AreEqual(5, (int)VfxMaterial.Explosive);
+            Assert.AreEqual(6, (int)VfxMaterial.Glass); Assert.AreEqual(7, (int)VfxMaterial.Stone);
+        }
+
+        [Test] public void StoneToonDustChipsAndCracks()
+        {
+            var dust = VfxRecipes.Get(VfxIds.DustStone).Layers[0];
+            CollectionAssert.AreEqual(new[] { 0xDDD8CEu, 0xC9C2B6u, 0xA39C90u }, dust.Steps, "3 flat toon steps around warm grey #C9C2B6");
+            var imp = VfxRecipes.Get(VfxIds.ImpactStone);
+            var chips = System.Array.Find(imp.Layers, l => l.Name == "chips");
+            CollectionAssert.AreEquivalent(new[] { 0xA8A096u, 0x8C857Au }, chips.Steps);
+            Assert.AreEqual(VfxSheet.DebrisChunks, chips.Sheet);
+            CollectionAssert.Contains(System.Array.Find(imp.Layers, l => l.Name == "dust").Steps, 0xC9C2B6u);
+            foreach (var l in imp.Layers) if (!l.IsFlash) { Assert.AreEqual(VfxBlend.Alpha, l.Blend, l.Name + ": no glow"); Assert.LessOrEqual(l.Intensity, 1f); }
+            Assert.AreEqual(VfxIds.ImpactStone, VfxRecipes.ImpactFor(VfxMaterial.Stone, false));
+            Assert.AreEqual(VfxIds.ImpactStone, VfxRecipes.ImpactFor(VfxMaterial.Stone, true));
+            Assert.AreEqual(VfxIds.DustStone, VfxRecipes.DustFor(VfxMaterial.Stone));
+            Assert.AreEqual(0xC9C2B6u, VfxRecipes.DustTint(VfxMaterial.Stone));
+            Assert.AreEqual(0x4E4A44u, DamageRules.CrackColor(VfxMaterial.Stone));
+            Assert.AreEqual(2, DamageRules.FlashFrames(VfxMaterial.Stone));
+            Assert.AreEqual(0.10f, DamageRules.DarkenPerStep(VfxMaterial.Stone), 1e-5f);
+            Assert.AreEqual(0xA8A096u, VfxRules.Impact(VfxMaterial.Stone).ColorA);
+        }
+
+        [TestCase("Stone", VfxMaterial.Stone)] [TestCase("stone", VfxMaterial.Stone)] [TestCase(" Wood ", VfxMaterial.Wood)]
+        [TestCase("Steel", VfxMaterial.Steel)] [TestCase("Brick", VfxMaterial.Brick)] [TestCase("Glass", VfxMaterial.Glass)]
+        public void FractureClassMapsToVfxMaterial(string cls, VfxMaterial want)
+        {
+            Assert.IsTrue(VfxRules.TryFromFractureClass(cls, out var m)); Assert.AreEqual(want, m);
+        }
+
+        [TestCase("Roof")] [TestCase("")] [TestCase(null)]
+        public void UnknownFractureClassIsNotMapped(string cls) => Assert.IsFalse(VfxRules.TryFromFractureClass(cls, out _));
+
         [Test] public void ExplosionHasStepPuffsRingAndDebris()
         {
             var r = VfxRecipes.Get(VfxIds.Explosion);
@@ -99,7 +136,7 @@ namespace Crashverse.VFX.Tests
 
     // Shape-compatible fake of Crashverse.Sim.ImpactEvent (PR #18) so the adapter is tested without the physics branch.
     public enum FakeKind : byte { Impact, Crack, Break, JointSnap, CollapseStart, CollapseEnd }
-    public enum FakeMat : byte { Wood, Brick, Steel, Glass, Terrain }
+    public enum FakeMat : byte { Wood, Brick, Steel, Glass, Terrain, Stone }
     public struct FakeVec { public float x, y, z; }
     public struct ImpactEvent
     {
@@ -119,6 +156,21 @@ namespace Crashverse.VFX.Tests
             var r = VfxImpactRouting.Route(e);
             Assert.AreEqual(2, r.DamageStep); Assert.IsNull(r.EffectId);
             Assert.IsFalse(ImpactEventAdapter.TryRead("nope", out _));
+        }
+
+        [Test] public void StoneImpactEventRoutesToStoneFx()
+        {
+            Assert.AreEqual(VfxMaterial.Stone, DamageRules.FromSimMaterial(5), "Sim MaterialType.Stone = 5");
+            var ev = new ImpactEvent { kind = FakeKind.Break, materialTypeA = FakeMat.Stone, materialTypeB = FakeMat.Terrain, dominantMaterial = FakeMat.Stone };
+            Assert.IsTrue(ImpactEventAdapter.TryRead(ev, out var e));
+            Assert.AreEqual(VfxMaterial.Stone, e.MaterialA);
+            Assert.AreEqual(VfxIds.ImpactStone, VfxImpactRouting.Route(e).EffectId);
+            var hit = new VfxImpact { Kind = VfxImpact.KImpact, Tier = 1, Source = VfxImpact.SrcDebris, MaterialA = VfxMaterial.Terrain, MaterialB = VfxMaterial.Stone };
+            Assert.AreEqual(VfxIds.DustStone, VfxImpactRouting.Route(hit).EffectId);
+            var end = new VfxImpact { Kind = VfxImpact.KCollapseEnd, Dominant = VfxMaterial.Stone };
+            Assert.AreEqual(0xC9C2B6u, VfxImpactRouting.Route(end).Tint);
+            var start = new VfxImpact { Kind = VfxImpact.KCollapseStart, Dominant = VfxMaterial.Stone };
+            Assert.AreEqual(VfxIds.DustStone, VfxImpactRouting.Route(start).EffectId);
         }
 
         [Test] public void RoutingRules()

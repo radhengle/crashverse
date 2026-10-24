@@ -133,7 +133,7 @@ namespace Crashverse.EditorTools.Import
                 }
             }
             // Hero buildings: every module in Kit_<B>_stats.json has an FBX and vice versa (warnings). Kits with a sidecar but no FBX yet are included.
-            foreach (var kit in C.KnownHeroKits.Concat(heroFbxModules.Keys).Distinct())
+            foreach (var kit in C.KnownStatsKits.Concat(heroFbxModules.Keys).Distinct())
             {
                 var st = StatsFor(kit, heroStats);
                 heroFbxModules.TryGetValue(kit, out var fbx);

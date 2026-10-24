@@ -50,6 +50,20 @@ namespace Crashverse.Tests.Gameplay
             Assert.AreEqual(2, PieceIds.VfxMaterialOf((int)MaterialKind.Steel, false, false));
             Assert.AreEqual(3, PieceIds.VfxMaterialOf((int)MaterialKind.Steel, true, false));
             Assert.AreEqual(5, PieceIds.VfxMaterialOf((int)MaterialKind.Wood, false, true));
+            Assert.AreEqual(6, PieceIds.VfxMaterialOf((int)MaterialKind.Glass, false, false));
+            Assert.AreEqual(7, PieceIds.VfxMaterialOf((int)MaterialKind.Stone, false, false));
+            Assert.AreEqual((int)Crashverse.VFX.VfxMaterial.Stone, PieceIds.VfxMaterialOf((int)MaterialKind.Stone, false, false));
+        }
+
+        [Test] public void DamageFeedbackMaterialFromImportedFractureClass()
+        {
+            _root = new GameObject("Kit_Keep_Wall");
+            Assert.AreEqual(Crashverse.VFX.VfxMaterial.Brick, Crashverse.VFX.DamageFeedback.MaterialFromHints(_root, Crashverse.VFX.VfxMaterial.Brick), "no hints: fallback");
+            var h = _root.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
+            h.fractureClass = "Stone";
+            Assert.AreEqual(Crashverse.VFX.VfxMaterial.Stone, Crashverse.VFX.DamageFeedback.MaterialFromHints(_root, Crashverse.VFX.VfxMaterial.Wood));
+            h.fractureClass = "Roof";
+            Assert.AreEqual(Crashverse.VFX.VfxMaterial.Wood, Crashverse.VFX.DamageFeedback.MaterialFromHints(_root, Crashverse.VFX.VfxMaterial.Wood), "unmapped class keeps fallback");
         }
 
         [Test] public void AllBuiltDestructibles_GetDamageFeedbackWhenVfxPresent()

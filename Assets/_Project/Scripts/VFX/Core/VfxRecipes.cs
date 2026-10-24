@@ -51,8 +51,13 @@ namespace Crashverse.VFX
     {
         public const string Explosion = "Explosion", DustWood = "Dust_Wood", DustBrick = "Dust_Brick", DustTerrain = "Dust_Terrain",
             DustGlass = "Dust_Glass", SparksSteel = "Sparks_Steel", SparksJoint = "Sparks_Joint", GlassShards = "Glass_Shards",
-            ImpactWood = "Impact_Wood", ImpactBrick = "Impact_Brick", MuzzleFlash = "Muzzle_Wrecker", CollapseDust = "Collapse_Dust";
-        public static readonly string[] All = { Explosion, DustWood, DustBrick, DustTerrain, DustGlass, SparksSteel, SparksJoint, GlassShards, ImpactWood, ImpactBrick, MuzzleFlash, CollapseDust };
+            ImpactWood = "Impact_Wood", ImpactBrick = "Impact_Brick", MuzzleFlash = "Muzzle_Wrecker", CollapseDust = "Collapse_Dust",
+            DustStone = "Dust_Stone", ImpactStone = "Impact_Stone";
+        public static readonly string[] All = { Explosion, DustWood, DustBrick, DustTerrain, DustGlass, SparksSteel, SparksJoint, GlassShards, ImpactWood, ImpactBrick, MuzzleFlash, CollapseDust,
+            DustStone, ImpactStone };
+
+        /// <summary>Stone palette (VFX proposal pending Art): warm grey dust #C9C2B6 (lit #DDD8CE, shade #A39C90), chips #A8A096 / #8C857A, cracks #4E4A44.</summary>
+        public const uint StoneDustLit = 0xDDD8CE, StoneDust = 0xC9C2B6, StoneDustShade = 0xA39C90, StoneChip = 0xA8A096, StoneChipShade = 0x8C857A, StoneCrack = 0x4E4A44;
     }
 
     /// <summary>
@@ -99,12 +104,17 @@ namespace Crashverse.VFX
                 case VfxIds.DustWood: return R(id, 0.8f, Puff("dust", 6, 0.8f, 0.6f, 0xE6C79A, 0xCFA779, 0xA9845C));
                 case VfxIds.DustBrick: return R(id, 0.8f, Puff("dust", 6, 0.8f, 0.6f, 0xEBC3A3, 0xD9A37E, 0xB07B5C));
                 case VfxIds.DustTerrain: return R(id, 0.6f, Puff("dust", 6, 0.4f, 0.5f, 0xE0AE75, 0xC98A4B, 0x9E6A38));
+                case VfxIds.DustStone: return R(id, 0.8f, Puff("dust", 6, 0.8f, 0.6f, VfxIds.StoneDustLit, VfxIds.StoneDust, VfxIds.StoneDustShade));
                 case VfxIds.DustGlass: return R(id, 0.5f, Puff("glint", 4, 0.4f, 0.3f, 0xFFFFFF, 0xE6F7FF, 0xBFE3F2, speed: 0.6f));
                 // 02: wood 12 particles 400 ms; brick 16 / 600 ms; steel 10 / 300 ms (BREAK_STEEL 24); joint 24 + gold ring 4 f.
                 case VfxIds.ImpactWood: return R(id, 0.5f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.5f, 0xFFF6E0, 1f),
                     Debris("splinters", VfxSheet.DebrisChunks, 6, 0.4f, 0xF5C994, 0xFFE3BC, 0.12f), Puff("dust", 6, 0.4f, 0.45f, 0xE6C79A, 0xCFA779, 0xA9845C));
                 case VfxIds.ImpactBrick: return R(id, 0.7f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.5f, 0xFFF6E0, 1f),
                     Debris("chunks", VfxSheet.DebrisChunks, 8, 0.6f, 0xD2664C, 0xE9997C), Puff("dust", 8, 0.6f, 0.5f, 0xEBC3A3, 0xD9A37E, 0xB07B5C));
+                // Stone (hero buildings, ImpactEvent MaterialType.Stone): heavier, chunkier than brick; toon chips + warm grey stepped dust. No glow.
+                case VfxIds.ImpactStone: return R(id, 0.7f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.5f, 0xFFF6E0, 1f),
+                    Debris("chips", VfxSheet.DebrisChunks, 8, 0.6f, VfxIds.StoneChipShade, VfxIds.StoneChip, 0.15f),
+                    Puff("dust", 8, 0.6f, 0.55f, VfxIds.StoneDustLit, VfxIds.StoneDust, VfxIds.StoneDustShade));
                 case VfxIds.SparksSteel: return R(id, 0.4f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.4f, 0xFFFFFF, 1.2f),
                     Sparks("sparks", 7, 0.3f, 0xFFD27A, 0xFF9A3A), Debris("bits", VfxSheet.DebrisChunks, 3, 0.3f, 0x3A3F48, 0x6A7380, 0.06f));
                 case VfxIds.SparksJoint: return R(id, 0.4f, Ring("gold_ring", 0.066f, 1.2f, 0xE8B04B, 1f),
@@ -130,14 +140,15 @@ namespace Crashverse.VFX
         /// <summary>Dust recipe tinted per material (COLLAPSE_LAND / DEBRIS_BURST).</summary>
         public static string DustFor(VfxMaterial m) => m switch
         {
-            VfxMaterial.Wood => VfxIds.DustWood, VfxMaterial.Brick => VfxIds.DustBrick, VfxMaterial.Glass => VfxIds.DustGlass, _ => VfxIds.DustTerrain
+            VfxMaterial.Wood => VfxIds.DustWood, VfxMaterial.Brick => VfxIds.DustBrick, VfxMaterial.Glass => VfxIds.DustGlass, VfxMaterial.Stone => VfxIds.DustStone,
+            _ => VfxIds.DustTerrain
         };
 
         /// <summary>Material dust tint for the grey-stepped collapse ring (Art: wood #CFA779, brick #D9A37E, steel bits #3A3F48 -> light grey dust, terrain #C98A4B).</summary>
         public static uint DustTint(VfxMaterial m) => m switch
         {
             VfxMaterial.Wood => 0xCFA779, VfxMaterial.Brick => 0xD9A37E, VfxMaterial.Steel => 0xB8BEC6, VfxMaterial.SteelJoint => 0xB8BEC6,
-            VfxMaterial.Glass => 0xE6F7FF, _ => 0xC98A4B
+            VfxMaterial.Glass => 0xE6F7FF, VfxMaterial.Stone => VfxIds.StoneDust, _ => 0xC98A4B
         };
 
         /// <summary>Impact/break effect per material.</summary>
@@ -145,6 +156,7 @@ namespace Crashverse.VFX
         {
             VfxMaterial.Wood => VfxIds.ImpactWood, VfxMaterial.Brick => VfxIds.ImpactBrick, VfxMaterial.Steel => VfxIds.SparksSteel,
             VfxMaterial.SteelJoint => VfxIds.SparksJoint, VfxMaterial.Glass => VfxIds.GlassShards, VfxMaterial.Explosive => VfxIds.Explosion,
+            VfxMaterial.Stone => VfxIds.ImpactStone,
             _ => VfxIds.DustTerrain
         };
 

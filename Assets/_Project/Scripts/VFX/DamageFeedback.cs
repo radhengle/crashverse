@@ -26,7 +26,21 @@ namespace Crashverse.VFX
 
         const string PHitFlash = "_HitFlash", PHitFlashColor = "_HitFlashColor", PStep = "_DamageStep", PDarken = "_DarkenPerStep", PCrack = "_CrackColor", PCrackMap = "_CrackMap";
 
+        /// <summary>Default material from the imported fractureClass (hero buildings) when the piece carries ImportedPhysicsHints.
+        /// Runs before AddComponent returns, so an explicit assignment by the caller (PieceFeedbackWiring) still wins.</summary>
+        void Awake() { material = MaterialFromHints(gameObject, material); }
+
+        /// <summary>VfxMaterial from the object's ImportedPhysicsHints.fractureClass, else <paramref name="fallback"/>.</summary>
+        public static VfxMaterial MaterialFromHints(GameObject go, VfxMaterial fallback)
+        {
+            var h = go != null ? go.GetComponent<Crashverse.Import.ImportedPhysicsHints>() : null;
+            return h != null && VfxRules.TryFromFractureClass(h.fractureClass, out var m) ? m : fallback;
+        }
+
         void OnEnable() { if (pieceId != -1) _byPiece[pieceId] = this; ApplyStatic(); }
+
+        /// <summary>Change material at runtime and re-apply crack colour / darkening.</summary>
+        public void SetMaterial(VfxMaterial m) { material = m; ApplyStatic(); }
         void OnDisable() { if (pieceId != -1 && _byPiece.TryGetValue(pieceId, out var d) && d == this) _byPiece.Remove(pieceId); }
 
         /// <summary>Set the piece id at spawn (pooled pieces) and register.</summary>
@@ -48,8 +62,8 @@ namespace Crashverse.VFX
             _step = s; SetFloat(PStep, _step);
         }
 
-        /// <summary>Pool reuse: back to undamaged.</summary>
-        public void ResetFeedback() { _step = 0; _flashStart = -1f; SetFloat(PStep, 0f); SetFloat(PHitFlash, 0f); _lastFlash = 0f; }
+        /// <summary>Pool reuse: back to undamaged. Re-applies the per-material crack colour/darkening (material may have been set after OnEnable).</summary>
+        public void ResetFeedback() { _step = 0; _flashStart = -1f; ApplyStatic(); SetFloat(PHitFlash, 0f); _lastFlash = 0f; }
 
         void Update()
         {

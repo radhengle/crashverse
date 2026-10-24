@@ -117,6 +117,7 @@ namespace Crashverse.VFX
                 case "IMPACT_STEEL_JOINT": case "BREAK_STEEL_JOINT": Legacy(VfxMaterial.SteelJoint, payload, name[0] == 'B'); break;
                 case "IMPACT_TERRAIN": Legacy(VfxMaterial.Terrain, payload, false); break;
                 case "IMPACT_GLASS": case "BREAK_GLASS": Legacy(VfxMaterial.Glass, payload, name[0] == 'B'); break;
+                case "IMPACT_STONE": case "BREAK_STONE": Legacy(VfxMaterial.Stone, payload, name[0] == 'B'); break; // proposed names, Animator to confirm
                 case "EXPLODE_CRATE": case "EXPLODE_BARREL": Legacy(VfxMaterial.Explosive, payload, true); break;
                 case "COLLAPSE_LAND":
                 {

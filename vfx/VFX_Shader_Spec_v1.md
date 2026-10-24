@@ -135,15 +135,17 @@ Code-built: `VfxRecipes` (data) → `VfxParticleBuilder` (ParticleSystem) at run
 | Sparks_Steel | IMPACT/BREAK_STEEL | hit 1, sparks 7 (stretched, additive), bits 3 | #FFD27A, bits #3A3F48 | 0.3 s | ×0.5 | flash ×0.4 |
 | Sparks_Joint | PHYS_JOINT_SNAP, *_STEEL_JOINT | gold ring 1 (4 f), sparks 24 | #E8B04B, #FFD27A | 0.3 s | ×0.5 | ring α≤0.5 |
 | Glass_Shards | PHYS_* Glass | hit 1, shards 10 (glossy atlas row 1, white glint), glint 4 | #9FD8EE/#E6FAFF | 0.55 s | ×0.5 | flash ×0.4 |
-| Dust_Wood/Brick/Terrain/Glass | debris impacts, DEBRIS_BURST, COLLAPSE_START | puffs 6 | #CFA779 / #D9A37E / #C98A4B / white | 0.4–0.8 s | ×0.5 | unchanged |
+| Impact_Stone | PHYS_* Stone (Sim MaterialType 5), MaterialKind.Stone, fractureClass "Stone", IMPACT/BREAK_STONE (proposed) | hit 1, chips 8 (toon chunks), dust 8 (3 steps) | chips #A8A096/#8C857A, dust #C9C2B6 (steps #DDD8CE/#C9C2B6/#A39C90) **VFX proposal, Art pending** | 0.6 s | ×0.5 | flash ×0.4 |
+| Dust_Wood/Brick/Terrain/Glass/Stone | debris impacts, DEBRIS_BURST, COLLAPSE_START | puffs 6 | #CFA779 / #D9A37E / #C98A4B / white / #C9C2B6 | 0.4–0.8 s | ×0.5 | unchanged |
 | Collapse_Dust | COLLAPSE_LAND / PHYS_COLLAPSE_END | ring puffs 18 tinted by dominant material | DustTint | 1.2 s | ×0.5 | unchanged, no shake |
 | Muzzle_Wrecker | ANIM_WRECKER_FIRE f0 at muzzle_socket | flash quad 3 f 0.6→1.3, sparks 6, smoke 3 @2 f | Core cyan #22D3EE, centre #E0FBFF, rim #E8B04B | 50 ms / 0.5 s | sparks off | ×0.4, no scale pop |
 Budget: impacts lane 150 (Low 75) + power-up lane 80 (Low 40) = global 230, oldest culled first; break/debris spawns ≤3 per 100 ms. Light debris rattles spawn no particles.
-**Damage feedback** (`DamageFeedback` on the piece; PHYS_IMPACT → hit flash, PHYS_CRACK → step): `_HitFlash` peak 0.5/0.7/0.85 by tier (cap 0.85), 2 f (joint 4 f), RM ×0.4 with ≥100 ms ease-out; `_DamageStep` 0/1/2 from physics crack step 1→1, 2–3→2, never decreases; `_CrackMap` = `T_CrackMask_Wedge` (R sparse, G dense); `_DarkenPerStep` 0.10 (20 % at step 2; glass 0.05); `_CrackColor` wood #6B4226, brick #7A3326, steel #3A3F48, glass #E6FAFF.
+**Damage feedback** (`DamageFeedback` on the piece; PHYS_IMPACT → hit flash, PHYS_CRACK → step): `_HitFlash` peak 0.5/0.7/0.85 by tier (cap 0.85), 2 f (joint 4 f), RM ×0.4 with ≥100 ms ease-out; `_DamageStep` 0/1/2 from physics crack step 1→1, 2–3→2, never decreases; `_CrackMap` = `T_CrackMask_Wedge` (R sparse, G dense); `_DarkenPerStep` 0.10 (20 % at step 2; glass 0.05); `_CrackColor` wood #6B4226, brick #7A3326, steel #3A3F48, glass #E6FAFF, stone #4E4A44 (proposal). `VfxMaterial`: Wood 0, Brick 1, Steel 2, SteelJoint 3, Terrain 4, Explosive 5, Glass 6, **Stone 7** (append only; Animator int for Stone pending). A piece whose `ImportedPhysicsHints.fractureClass` maps to a VFX material (Wood/Brick/Steel/Glass/Stone; Roof unmapped) gets it as its `DamageFeedback` default; an explicit assignment still wins.
 ### Glass (material tables)
 | Material | Albedo | Smoothness | Metallic | Debris | Crack |
 |---|---|---|---|---|---|
 | Glass | #CFF3FF, α via GlossyPBR opaque tint (no transparency on Low) | 0.9 | 0 | shards #9FD8EE + glint #FFFFFF | #E6FAFF lines |
+| Stone (VFX proposal, Art pending) | from the hero kit atlas | — | 0 | chips #A8A096/#8C857A, dust #C9C2B6 | #4E4A44 |
 
 ## 6 · Power-ups (spec only in v1)
 Values from 04_powerups.md; sync from anim_audio_map.csv. Common arm: slot part pulses in slot colour on `PU_ARM_<NAME>`; `PU_DISARM` = 150 ms fade-out (not Time Fracture).
