@@ -25,9 +25,11 @@ namespace Crashverse.Meta
             foreach (var i in c.items)
             {
                 if (i != null && !(c.flags ?? new StoreFlags()).IsOn(i.requiresFlag)) continue; // flagged off: hidden entirely (no UI, not purchasable)
+#if UNITY_2017_1_OR_NEWER || CRASHVERSE_TESTS // client only: this file is shared with the server, which gates packs with ENABLE_GEM_PACKS
 #pragma warning disable CS0162
                 if (!RealMoneyGemPacksInClient && IsGemPack(i)) continue; // V2-12: never in this client
 #pragma warning restore CS0162
+#endif
                 var e = Check(i, c, bySku, 0);
                 if (e == null) accepted.Add(i); else errors.Add($"{i?.sku}: {e}");
             }
