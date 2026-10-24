@@ -53,8 +53,8 @@ put HINT x "$(coord HudScreen Button_DevAimHint)"   # BUG-24: dev-only, aims at 
 # Aim lines from L1's data hint (yaw 4°, pitch 22° from rest 25°): yaw 0.25°/dp, pitch 0.15°/dp; drag up raises the arc.
 D=$(adb shell wm density | grep -o '[0-9]*$' | tail -1); px(){ echo $(( $1 * D / 160 )); }
 export AIM_FROM_X=540 AIM_FROM_Y=1300
-export AIM_TO_X=$(( 540 + $(px 16) )) AIM_TO_Y=$(( 1300 + $(px 20) ))   # +4° yaw, −3° pitch
-export MISS_TO_X=$(( 540 + $(px 240) )) MISS_TO_Y=$(( 1300 + $(px 20) )) # +60° yaw: misses the tower
+export AIM_TO_X=$(( 540 + $(px 16) )) AIM_TO_Y=$(( 1300 + $(px 20) ))   # 16 dp right (aim right; P0 sign fix), −3° pitch
+export MISS_TO_X=$(( 540 + $(px 240) )) MISS_TO_Y=$(( 1300 + $(px 20) )) # 240 dp right: yaw clamps at −60° (screen right), misses the tower
 echo "AIM=$AIM_FROM_X,$AIM_FROM_Y->$AIM_TO_X,$AIM_TO_Y MISS->$MISS_TO_X,$MISS_TO_Y density=$D" | tee -a "$OUT/coords.txt"
 SHOTS=$(( ${SHOTS_L1:-4} * 3 ))  # FIRE is ignored while reloading/settling: keep trying until a result
 for s in $(seq 1 $SHOTS); do ctap $HINT_X $HINT_Y 1; ctap $FIRE_X $FIRE_Y 6

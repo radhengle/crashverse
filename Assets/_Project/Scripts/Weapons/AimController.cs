@@ -151,10 +151,13 @@ namespace Crashverse.Weapons
             }
         }
 
-        void Drag(Vector2 deltaPx)
+        /// <summary>P0 (dev-build-6 phone test): +yaw turns the barrel toward world +z (Euler(0, -yaw, 0)), which is SCREEN-LEFT
+        /// from the run camera (yaw 72°, looking down +x). So a finger moving right (+x px) must DEcrease yaw; it used to add,
+        /// which mirrored aiming. PlayMode FirstRunTapTests checks the on-screen direction through the real camera.</summary>
+        internal void Drag(Vector2 deltaPx)
         {
             var dp = deltaPx * DpPerPixel;
-            float wantYaw = _yaw + dp.x * yawDegPerDp, wantEl = _elevation + dp.y * pitchDegPerDp;
+            float wantYaw = _yaw - dp.x * yawDegPerDp, wantEl = _elevation + dp.y * pitchDegPerDp;
             SetAim(wantYaw, wantEl);
             bool clamped = wantYaw != _yaw || wantEl != _elevation;
             if (clamped && !_clampedLast) Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.WreckerAimClamp); // once per contact

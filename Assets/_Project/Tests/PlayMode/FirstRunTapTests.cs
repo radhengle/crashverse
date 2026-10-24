@@ -97,7 +97,23 @@ namespace Crashverse.Tests.PlayMode
             yield return WaitFor(() => AppServices.Router.Top is HudScreen, "L1 HUD (run started)");
             yield return null;
             AssertNoBrokenRenderers("L1 arena + structure");
+            AssertSwipeAimsSameWayOnScreen();
             yield return PlayHintLineToResult();
+        }
+
+        /// <summary>P0 (dev-build-6): a left swipe must move the aim LEFT on screen, a right swipe RIGHT (was mirrored).
+        /// Measured through the run camera: screen x of a point 10 m along the launch direction.</summary>
+        static void AssertSwipeAimsSameWayOnScreen()
+        {
+            var s = GameplayDirector.Session; var cam = Camera.main; Assert.NotNull(cam, "run camera");
+            float AimScreenX() => cam.WorldToScreenPoint(s.aim.SpawnPosition + s.aim.LaunchVelocity.normalized * 10f).x;
+            s.aim.SetAim(0f, 20f); float x0 = AimScreenX(), y0 = s.aim.Yaw;
+            s.aim.Drag(new Vector2(-120f, 0f)); float xl = AimScreenX(), yl = s.aim.Yaw;
+            Assert.Less(xl, x0 - 1f, $"left swipe must aim left on screen (screen x {x0:F0} -> {xl:F0}, yaw {y0} -> {yl})");
+            s.aim.SetAim(0f, 20f);
+            s.aim.Drag(new Vector2(120f, 0f)); float xr = AimScreenX();
+            Assert.Greater(xr, x0 + 1f, $"right swipe must aim right on screen (screen x {x0:F0} -> {xr:F0})");
+            s.aim.CancelAim(); s.aim.SetAim(0f, 20f);
         }
 
         /// <summary>BUG-24 gate in the editor: the practice-hint line (same as the emulator's Button_DevAimHint) must win L1.
