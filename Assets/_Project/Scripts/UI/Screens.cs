@@ -647,25 +647,47 @@ namespace Crashverse.UI
     // SettingsModal ships in every build; QA tools do not (SEC-02). Map → Settings → Delete account = 2 taps (A1).
     public class SettingsModal : UIScreen
     {
-        public override bool IsModal => true; Text _shake, _motion, _haptics, _hide; Button _shakeBtn;
+        // #45: Audio (Music/SFX volume), Graphics quality, Motion (Reduce shake locked under Reduce motion), Haptics (#29/#37).
+        public override bool IsModal => true; Text _shake, _motion, _haptics, _hide, _music, _sfx, _quality; Button _shakeBtn;
         protected override void Build(RectTransform root)
         {
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.6f)); UIFactory.Stretch(dim.rectTransform);
-            var p = UIFactory.TrimPanel("Settings", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(330, 560), Vector2.zero);
-            var v = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(v);
-            UIFactory.Label(v, "Settings", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
-            var m = Crashverse.Feel.MotionSettings.Current;
+            // root is the SafeArea rect (UIFramework), so the stretched panel never sits under a notch / nav bar.
+            var p = UIFactory.TrimPanel("Settings", root, Th); UIFactory.Stretch(p.rectTransform, 16f);
+            var outer = UIFactory.VStack(p.transform, Th.gap, 12f); UIFactory.Stretch(outer);
+            UIFactory.Label(outer, "Settings", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            var v = UIFactory.Scroll(outer, Th.gap, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1; // small phones: scroll, rows stay 48dp
+            var g = Crashverse.Core.GameSettings.Current; var m = Crashverse.Feel.MotionSettings.Current;
+
+            UIFactory.Label(v, "Audio", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            _music = Stepper(v, () => g.SetMusicPercent(g.MusicPercent - Crashverse.Core.GameSettings.Step), () => g.SetMusicPercent(g.MusicPercent + Crashverse.Core.GameSettings.Step));
+            _sfx = Stepper(v, () => g.SetSfxPercent(g.SfxPercent - Crashverse.Core.GameSettings.Step), () => g.SetSfxPercent(g.SfxPercent + Crashverse.Core.GameSettings.Step));
+
+            UIFactory.Label(v, "Graphics", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            _quality = UIFactory.Button(v, "", Th.navy500, () => { g.SetQuality(g.NextQuality()); Crashverse.Perf.QualityController.ApplySaved(); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
+
+            UIFactory.Label(v, "Motion", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
             _shakeBtn = UIFactory.Button(v, "", Th.navy500, () => { if (!m.ReduceShakeLocked) m.SetReduceShake(!m.ReduceShake); Refresh(); }, Th, 48);
             _shake = _shakeBtn.GetComponentInChildren<Text>();
             _motion = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceMotion(!m.ReduceMotion); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
             _haptics = UIFactory.Button(v, "", Th.navy500, () => { m.SetHaptics(!m.HapticsEnabled); Refresh(); }, Th, 48).GetComponentInChildren<Text>(); // default ON; suppressed while Reduce motion is ON (haptics.md)
+
             UIFactory.Label(v, "Privacy", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
             _hide = UIFactory.Button(v, "", Th.navy500, ToggleHide, Th, 48).GetComponentInChildren<Text>();
             UIFactory.Label(v, "Account", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
             UIFactory.Button(v, "Linked accounts", Th.navy500, () => Router.Push(new LinkedAccountsModal()), Th, 48);
             UIFactory.Button(v, AccountDeletion.Pending ? "Delete account (pending until online)" : "Delete account", Th.red, () => Router.Push(new DeleteAccountScreen()), Th, 48);
-            UIFactory.Button(v, "Close", Th.navy500, () => Router.Pop(), Th, 48);
+            UIFactory.Button(outer, "Close", Th.navy500, () => Router.Pop(), Th, 48);
             Refresh();
+        }
+        /// <summary>[ − ]  label  [ + ] row; both buttons 48×48dp.</summary>
+        Text Stepper(RectTransform parent, Action down, Action up)
+        {
+            var row = UIFactory.HStack(parent, Th.gap, 48f);
+            UIFactory.Button(row, "\u2212", Th.navy500, () => { down(); Refresh(); }, Th, 48, 48);
+            var t = UIFactory.Label(row, "", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            UIFactory.Button(row, "+", Th.navy500, () => { up(); Refresh(); }, Th, 48, 48);
+            return t;
         }
         async void ToggleHide()
         {
@@ -674,7 +696,10 @@ namespace Crashverse.UI
         }
         void Refresh()
         {
-            var m = Crashverse.Feel.MotionSettings.Current;
+            var g = Crashverse.Core.GameSettings.Current; var m = Crashverse.Feel.MotionSettings.Current;
+            _music.text = $"Music: {g.MusicPercent}%";
+            _sfx.text = $"Sound effects: {g.SfxPercent}%";
+            _quality.text = "Graphics quality: " + Crashverse.Core.GameSettings.QualityName(g.Quality);
             // 07: Reduce motion implies Reduce shake → row shows ON, greyed and locked; the stored choice comes back when Reduce motion is turned off.
             _shake.text = "Reduce shake: " + (m.ReduceShakeEffective ? "ON" : "OFF") + (m.ReduceShakeLocked ? " (included in Reduce motion)" : "");
             _shakeBtn.interactable = !m.ReduceShakeLocked;
