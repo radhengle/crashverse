@@ -10,7 +10,10 @@ APK=$1; OUT=${2:-smoke_out}; PKG=com.crashverse.game; mkdir -p "$OUT"
   "${AIM_FROM_X:?}" "${AIM_FROM_Y:?}" "${AIM_TO_X:?}" "${AIM_TO_Y:?}" "${MISS_TO_X:?}" "${MISS_TO_Y:?}" "${RETRY_X:?}" "${RETRY_Y:?}"
 SHOTS_L1=${SHOTS_L1:-4}
 shot(){ adb exec-out screencap -p > "$OUT/$1.png"; }
-check(){ if adb logcat -d | grep -E "FATAL EXCEPTION|Fatal signal|ANR in $PKG|Unity +: .*Exception" >"$OUT/err_$1.txt"; then shot "FAIL_$1"; echo "FAIL at $1"; adb logcat -d > "$OUT/logcat.txt"; exit 1; fi
+# QA C-2: the #36 logcat gate (crash/ANR/exception + code stripping / missing types), one ERE per line
+FAIL_PATTERNS=${FAIL_PATTERNS:-$(dirname "$0")/../../qa/ci/logcat_fail_patterns.txt}; [ -s "$FAIL_PATTERNS" ] || { echo "FAIL: logcat pattern file $FAIL_PATTERNS missing"; exit 1; }
+PAT_RE=$(grep -vE '^\s*(#|$)' "$FAIL_PATTERNS" | paste -sd'|' -)
+check(){ if adb logcat -d | grep -E "$PAT_RE" >"$OUT/err_$1.txt"; then shot "FAIL_$1"; echo "FAIL at $1"; adb logcat -d > "$OUT/logcat.txt"; exit 1; fi
   adb shell pidof $PKG >/dev/null || { shot "FAIL_$1_dead"; echo "FAIL: app died at $1"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; }
 tap(){ adb shell input tap "$1" "$2"; sleep "${3:-2}"; }
 # Developer (PR #23): a drag only aims; FIRE is a button (OQ-A2). FIRE_X/FIRE_Y come from the dev tap probe.
@@ -51,12 +54,22 @@ SECONDS=0; for s in $(seq 1 200); do [ $SECONDS -ge $SHOT_WALL_S ] && break; tap
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 result(){ local i r; for i in $(seq 1 120); do r=$(adb logcat -d -s Unity | grep -o "CVTAP|RESULT|[a-z]*" | tail -1 | cut -d'|' -f3); [ -n "$r" ] && { echo "$r"; return 0; }; sleep 1; done
   shot "FAIL_no_result_$1"; echo "FAIL: no win/fail result detected ($1)" >&2; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
-R1=$(result win); echo "scripted win line result: $R1" | tee "$OUT/result_win.txt"; shot 07_result_win
+# QA C-1/C-3: screenshot only once the results sequence is final (stars popped, score counted up): CVTAP|RESULTDONE
+done_line(){ local i l; for i in $(seq 1 60); do l=$(adb logcat -d -s Unity | grep -o "CVTAP|RESULTDONE|$1|[^ ]*" | tail -1); [ -n "$l" ] && { echo "$l"; return 0; }; sleep 1; done
+  shot "FAIL_no_resultdone_$1"; echo "FAIL: results sequence never finished ($1)" >&2; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
+kv(){ echo "$1" | tr '|' '\n' | grep "^$2=" | cut -d= -f2; }
+R1=$(result win); echo "scripted win line result: $R1" | tee "$OUT/result_win.txt"
 [ "$R1" = win ] || { shot FAIL_win_line; adb logcat -d > "$OUT/logcat.txt"; echo "FAIL: BUG-24 known winning L1 line (practice hint) gave '$R1'" >&2; exit 1; }
+D1=$(done_line win); sleep 0.5; shot 07_result_win; echo "$D1" | tee -a "$OUT/result_win.txt"
+WS=$(kv "$D1" score); WST=$(kv "$D1" stars)
+[ "${WS:-0}" -gt 0 ] || { echo "FAIL: win screen score is ${WS:-?} (QA C-1)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
+[ "${WST:-0}" -ge "${WIN_STARS_MIN:-3}" ] || { echo "FAIL: hint line won with ${WST:-?} stars, expected >= ${WIN_STARS_MIN:-3} (QA C-3)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
 adb logcat -c; tap $RETRY_X $RETRY_Y 6; check retry
 # a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows
 SECONDS=0; for s in $(seq 1 200); do [ $SECONDS -ge $SHOT_WALL_S ] && break; adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $MISS_TO_X $MISS_TO_Y 400; fire "fail$s"; sleep 6; check "fail_shot$s"
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
-R2=$(result fail); echo "miss line result: $R2" | tee "$OUT/result_fail.txt"; shot 08_result_fail
-[ "$R2" = fail ] || { echo "FAIL: miss line did not fail ($R2)"; exit 1; }
+R2=$(result fail); echo "miss line result: $R2" | tee "$OUT/result_fail.txt"
+[ "$R2" = fail ] || { shot 08_result_fail; echo "FAIL: miss line did not fail ($R2)"; exit 1; }
+D2=$(done_line fail); sleep 0.5; shot 08_result_fail; echo "$D2" | tee -a "$OUT/result_fail.txt"   # QA C-3: settled panel
+check final   # whole-run logcat gate (QA C-2)
 adb logcat -d > "$OUT/logcat.txt"; echo "SMOKE PASS (screens in $OUT for visual review)"

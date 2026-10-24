@@ -28,7 +28,9 @@ coord(){ local i l; for i in $(seq 1 120); do
 put(){ # $(coord …) runs in a subshell, so its exit can't stop us: fail here with a clear message instead
   if [ -z "${3:-}" ] || [ "${3// /}" = "" ]; then echo "::error::calibration failed: no coordinates for $1 (see calibration/ screenshots + logcat)"; exit 1; fi
   read -r x y <<<"$3"; export "$1_X=$x" "$1_Y=$y"; echo "$1=$x,$y" | tee -a "$OUT/coords.txt"; }
-dcheck(){ if adb logcat -d | grep -E "FATAL EXCEPTION|Fatal signal|ANR in $PKG|Unity +: .*Exception" > "$OUT/calibration/err_$1.txt"; then
+FAIL_PATTERNS=${FAIL_PATTERNS:-$(dirname "$0")/../../qa/ci/logcat_fail_patterns.txt}; export FAIL_PATTERNS   # QA C-2 (#36 gate)
+PAT_RE=$(grep -vE '^\s*(#|$)' "$FAIL_PATTERNS" | paste -sd'|' -)
+dcheck(){ if adb logcat -d | grep -E "$PAT_RE" > "$OUT/calibration/err_$1.txt"; then
     adb exec-out screencap -p > "$OUT/calibration/FAIL_$1.png"; adb logcat -d > "$OUT/calibration/logcat.txt"; echo "FAIL (discovery) at $1"; exit 1; fi
   adb shell pidof $PKG >/dev/null || { adb logcat -d > "$OUT/calibration/logcat.txt"; echo "FAIL (discovery): app died at $1"; exit 1; }; }
 ctap(){ dcheck "before_tap_$1_$2"; adb logcat -c; adb shell input tap "$1" "$2"; sleep "${3:-3}"; dcheck "after_tap_$1_$2"; } # fresh log for the next coord
