@@ -52,11 +52,4 @@ namespace Crashverse.Meta
             return (int)decimal.Floor((decimal)r * 1000m) + 500 * System.Math.Max(0, shotsLeft) + 50 * System.Math.Max(0, bestCombo) + (mastery ? 1000 : 0);
         }
     }
-
-    /// <summary>Addendum §1: free hint from the 2nd consecutive fail; never in ranked Titan; needs hint data.</summary>
-    public static class HintRules
-    {
-        public static bool ShowHintButton(Crashverse.Data.LevelEntry level, int consecutiveFails, bool rankedTitan) =>
-            !rankedTitan && level != null && level.HasHint && consecutiveFails >= 2;
-    }
 }
