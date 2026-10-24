@@ -136,7 +136,7 @@ jobs:
           CRASHVERSE_KEYALIAS_PASS: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_PASS || '' }}
         with:
           targetPlatform: Android
-          unityVersion: 2022.3.50f1
+          unityVersion: 2022.3.62f3
           buildName: CRASHVERSE
           buildsPath: build
           buildMethod: Crashverse.EditorTools.BuildScript.BuildAndroid
@@ -270,7 +270,7 @@ jobs:
           CRASHVERSE_VERSION_CODE: ${{ github.run_number }}
         with:
           targetPlatform: Android
-          unityVersion: 2022.3.50f1
+          unityVersion: 2022.3.62f3
           buildName: CRASHVERSE
           buildsPath: build
           buildMethod: Crashverse.EditorTools.BuildScript.BuildAndroid

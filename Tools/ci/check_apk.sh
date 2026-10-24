@@ -28,8 +28,8 @@ if [ "$PROFILE" = "release" ]; then
 fi
 # Release blocker (v2): target Android 15 (API 35), Google Play's requirement
 grep -qE 'targetSdkVersion\(0x[0-9a-f]+\)=35$' manifest_tree.txt || err "targetSdkVersion is not 35: $(grep -oE 'targetSdkVersion\(0x[0-9a-f]+\)=[0-9]+' manifest_tree.txt)"
-# 16 KB page size: every arm64 .so needs ELF LOAD segments aligned to >= 16 KB. Unity 2022.3.50f1 ships 4 KB-aligned engine libs
-# (16 KB support starts at 2022.3.56f1), so this reports only, until the editor is upgraded; set CV_REQUIRE_16K=1 to enforce.
+# QA R-2: 16 KB page size: every arm64 .so needs ELF LOAD segments aligned to >= 16 KB (Unity 2022.3.56f1+; project is on 2022.3.62f3).
+# Enforced; CV_REQUIRE_16K=0 only reports.
 echo "== 16 KB ELF alignment (arm64-v8a)"
 rm -rf .so16 && mkdir .so16 && unzip -q -o "$APK" 'lib/arm64-v8a/*.so' -d .so16 || true
 python3 - .so16 <<'PY' | tee elf_align.txt
@@ -44,7 +44,7 @@ for root, _, files in os.walk(sys.argv[1]):
         print(('OK   ' if m >= 16384 else '4KB  ') + f + ' LOAD align=' + hex(m))
 PY
 if grep -q '^4KB' elf_align.txt; then
-  if [ "${CV_REQUIRE_16K:-0}" = 1 ]; then err "native libs not 16 KB aligned (needs Unity 2022.3.56f1+)"; else echo "::warning::native libs are 4 KB aligned: 16 KB page size needs Unity 2022.3.56f1+ (project is on 2022.3.50f1)"; fi
+  if [ "${CV_REQUIRE_16K:-1}" = 1 ]; then err "native libs not 16 KB aligned (QA R-2)"; else echo "::warning::native libs are 4 KB aligned"; fi
 fi
 rm -rf .so16
 [ $fail -eq 0 ] && echo "APK checks passed ($PROFILE)"
