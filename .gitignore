@@ -64,3 +64,4 @@ Assets/_Project/Resources/Audio/sfx_routing.json
 Assets/_Project/Resources/Audio/sfx_routing.json.meta
 *.blend
 *.blend1
+.aapt2/

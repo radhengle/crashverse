@@ -12,7 +12,9 @@
                tools:replace="android:allowBackup">
     <activity android:name="com.unity3d.player.UnityPlayerActivity"
               android:theme="@style/UnityThemeSelector"
-              android:exported="true">
+              android:exported="true"
+              android:screenOrientation="portrait"
+              tools:replace="android:screenOrientation">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

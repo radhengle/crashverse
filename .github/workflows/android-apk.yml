@@ -135,14 +135,8 @@ jobs:
           androidKeyaliasName: ${{ secrets.DEV_KEYALIAS_NAME }}
           androidKeyaliasPass: ${{ secrets.DEV_KEYALIAS_PASS }}
 
-      - name: Assert 64-bit native libs (arm64-v8a libil2cpp.so + libunity.so)
-        run: |
-          set -e
-          f=$(ls build/Android/*.apk | head -1)
-          unzip -l "$f" | grep -E 'lib/(arm64-v8a|armeabi-v7a)/' | tee native_libs.txt
-          for lib in libil2cpp.so libunity.so; do
-            grep -q "lib/arm64-v8a/$lib" native_libs.txt || { echo "::error::$f is missing lib/arm64-v8a/$lib"; exit 1; }
-          done
+      - name: Assert built APK (arm64 libs, allowBackup=false, portrait-only, release non-debuggable)
+        run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" "$CRASHVERSE_BUILD_PROFILE"
 
       - name: Get build-tools 35 (zipalign -P 16, apksigner)
         run: |
