@@ -25,6 +25,7 @@
     <Compile Include="../../Assets/_Project/Scripts/Gameplay/Core/PieceIds.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Feel/AnimMotion.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Feel/Haptics.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Feel/UiMotionMath.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/MusicCore.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/SfxCore.cs" />
   </ItemGroup>

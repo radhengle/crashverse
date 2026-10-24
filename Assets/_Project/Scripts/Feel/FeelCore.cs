@@ -728,7 +728,7 @@ namespace Crashverse.Feel
         {
             float peak = reduceMotion ? 1.1f : 1.3f;
             if (msIntoStar <= 0f) return 0f;
-            if (msIntoStar < 150f) return peak * Ease.OutBackOrQuad(msIntoStar / 150f, reduceMotion);
+            if (msIntoStar < 150f) return peak * (reduceMotion ? Ease.OutQuad(msIntoStar / 150f) : Ease.OutCubic(msIntoStar / 150f)); // monotonic rise: peak is exactly 1.3 (06), no out-back overshoot
             if (msIntoStar < 250f) return peak + (1f - peak) * Ease.InOutSine((msIntoStar - 150f) / 100f);
             return 1f;
         }
