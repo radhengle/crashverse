@@ -144,6 +144,7 @@ jobs:
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
           androidTargetSdkVersion: AndroidApiLevel35 # release blocker: target Android 15; GameCI installs platforms;android-35
+          customParameters: -crashverseProfile ${{ env.CRASHVERSE_BUILD_PROFILE }} # GameCI's docker doesn't forward CRASHVERSE_* env (QA R-3)
           androidKeystoreName: ${{ env.CV_SIGN == 'true' && 'build-secrets/dev.keystore' || '' }}
           androidKeystoreBase64: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_BASE64 || '' }}
           androidKeystorePass: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_PASS || '' }}
@@ -277,6 +278,7 @@ jobs:
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
           androidTargetSdkVersion: AndroidApiLevel35
+          customParameters: -crashverseProfile release
       - name: Assert built release APK (non-debuggable, targetSdk 35, arm64, 16 KB report)
         run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" release
       - name: Release guard on built output (no dev symbols in IL2CPP metadata)

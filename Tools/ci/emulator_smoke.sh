@@ -46,9 +46,9 @@ put YEAR_OPT x "$PICKED_X $PICKED_Y"; ctap $YEAR_OPT_X $YEAR_OPT_Y
 put CONTINUE x "$(coord AgeGateScreen Button_Continue)"; ctap $CONTINUE_X $CONTINUE_Y 5
 # v2 target UI: Login (social sign-in disabled, "Coming soon") -> Play as Guest -> Create Profile (avatar, badge) -> World Map -> Level Select
 put GUEST x "$(coord LoginScreen Button_Guest)"; ctap $GUEST_X $GUEST_Y 3
-put AVATAR x "$(coord ProfileScreen Button_Avatar2)"; ctap $AVATAR_X $AVATAR_Y 2
-put BADGE x "$(coord ProfileScreen Button_Badge2)"; ctap $BADGE_X $BADGE_Y 2
-put PCONT x "$(coord ProfileScreen Button_Continue)"; ctap $PCONT_X $PCONT_Y 4
+# all three from the one probe dump: selecting an avatar/badge only recolours, so the probe doesn't re-dump after ctap clears the log
+put AVATAR x "$(coord ProfileScreen Button_Avatar2)"; put BADGE x "$(coord ProfileScreen Button_Badge2)"; put PCONT x "$(coord ProfileScreen Button_Continue)"
+ctap $AVATAR_X $AVATAR_Y 2; ctap $BADGE_X $BADGE_Y 2; ctap $PCONT_X $PCONT_Y 4
 put NODE1 x "$(coord MapScreen Button_1)"; ctap $NODE1_X $NODE1_Y 3
 put PLAY x "$(coord LevelSelectScreen Button_Play)"; ctap $PLAY_X $PLAY_Y 8
 put FIRE x "$(coord HudScreen Button_FIRE)"

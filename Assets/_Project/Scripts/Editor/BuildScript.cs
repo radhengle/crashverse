@@ -31,7 +31,8 @@ namespace Crashverse.EditorTools
 
         public static void BuildAndroid()
         {
-            bool release = string.Equals(Environment.GetEnvironmentVariable("CRASHVERSE_BUILD_PROFILE"), "release", StringComparison.OrdinalIgnoreCase);
+            bool release = string.Equals(Profile(), "release", StringComparison.OrdinalIgnoreCase);
+            Debug.Log("[BuildScript] profile " + (release ? "release" : "dev"));
             SetDevDefine(!release);
             UrpSetup.Ensure(); LightingSetup.Ensure(); // BUG-23: URP pipeline assigned in Graphics + every Quality level before building
             SetFrameTimingStats(!release);
@@ -65,16 +66,37 @@ namespace Crashverse.EditorTools
             if (release && PlayerSettings.Android.useCustomKeystore &&
                 (PlayerSettings.Android.keyaliasName == "crashverse-dev" || (PlayerSettings.Android.keystoreName ?? "").EndsWith("dev.keystore", StringComparison.OrdinalIgnoreCase)))
             { Debug.LogError("Refusing a release build signed with the dev key"); EditorApplication.Exit(1); return; }
+            // PR #8 (folded): signed release AAB for Play, upload key from the release environment's secrets (never the dev key, see above)
+            bool aab = WantsAab();
+            if (aab && (!release || !PlayerSettings.Android.useCustomKeystore)) { Debug.LogError("AAB builds are release-only and need the upload keystore"); EditorApplication.Exit(1); return; }
+            EditorUserBuildSettings.buildAppBundle = aab;
             var opts = new BuildPlayerOptions
             {
                 scenes = ScenesFor(release),
-                locationPathName = "build/Android/CRASHVERSE" + (release ? "" : "-dev") + ".apk",
+                locationPathName = "build/Android/CRASHVERSE" + (release ? "" : "-dev") + (aab ? ".aab" : ".apk"),
                 target = BuildTarget.Android,
                 options = release ? BuildOptions.None : BuildOptions.Development,
             };
             var report = BuildPipeline.BuildPlayer(opts);
             if (report.summary.result != BuildResult.Succeeded) { EditorApplication.Exit(1); }
         }
+
+        /// <summary>
+        /// Build profile. GameCI's docker forwards only its own variables (not CRASHVERSE_BUILD_PROFILE), so CI passes it as a Unity
+        /// argument (customParameters: -crashverseProfile release); the env var still works for local builds. QA R-3: before this the
+        /// "release" profile silently built a dev (debuggable, CRASHVERSE_DEV) player.
+        /// </summary>
+        public static string Profile()
+        {
+            var args = Environment.GetCommandLineArgs();
+            for (int i = 0; i + 1 < args.Length; i++) if (args[i] == "-crashverseProfile") return args[i + 1];
+            return Environment.GetEnvironmentVariable("CRASHVERSE_BUILD_PROFILE") ?? "dev";
+        }
+
+        /// <summary>Android App Bundle when GameCI is asked for one (androidExportType: androidAppBundle → ANDROID_EXPORT_TYPE).</summary>
+        public static bool WantsAab() =>
+            string.Equals(Environment.GetEnvironmentVariable("ANDROID_EXPORT_TYPE"), "androidAppBundle", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(Environment.GetEnvironmentVariable("CRASHVERSE_ANDROID_EXPORT"), "aab", StringComparison.OrdinalIgnoreCase);
 
         public static void SetDevDefine(bool on)
         {
