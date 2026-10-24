@@ -28,9 +28,10 @@ sleep 12; check launch; shot 01_launch
 shot 02_agegate
 settle month; tap $MONTH_X $MONTH_Y; settle month_opt; tap $MONTH_OPT_X $MONTH_OPT_Y; check month    # BUG-20 regression
 settle year; tap $YEAR_X $YEAR_Y; settle year_list
-# the year list scrolls: same swipes as calibration until the wanted year is on screen
-for i in $(seq 1 ${YEAR_SWIPES:-0}); do adb shell input swipe 540 1300 540 1000 400; sleep 2; done; settle year_opt
-tap $YEAR_OPT_X $YEAR_OPT_Y; check year
+# year by name (PR #36 approach): no replayed swipe count or calibrated coordinate, the list position may differ per run
+. "$(dirname "$0")/pick_year.sh"; settle year_opt
+pick_year "${BIRTH_YEAR:?}" || { shot FAIL_year; adb logcat -d > "$OUT/logcat.txt"; echo "FAIL: year $BIRTH_YEAR not selectable by name"; exit 1; }
+tap $PICKED_X $PICKED_Y; check year
 # QA (BUG-20 proof): Continue must be enabled once Month and Year are set
 for i in $(seq 1 20); do adb logcat -d -s Unity | grep -q "CVTAP|AgeGateScreen|Button_Continue|[0-9]*|[0-9]*|1" && break; sleep 0.5
   [ $i = 20 ] && { shot FAIL_continue_disabled; echo "FAIL: Continue not enabled after Month+Year"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done

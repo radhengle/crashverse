@@ -33,13 +33,14 @@ dcheck(){ if adb logcat -d | grep -E "FATAL EXCEPTION|Fatal signal|ANR in $PKG|U
   adb shell pidof $PKG >/dev/null || { adb logcat -d > "$OUT/calibration/logcat.txt"; echo "FAIL (discovery): app died at $1"; exit 1; }; }
 ctap(){ dcheck "before_tap_$1_$2"; adb logcat -c; adb shell input tap "$1" "$2"; sleep "${3:-3}"; dcheck "after_tap_$1_$2"; } # fresh log for the next coord
 
-M=March; YR=$(( $(date -u +%Y) - 20 )) # adult band, visible when the list opens at now−18 (V-02); no scrolling needed
+. "$(dirname "$0")/pick_year.sh"
+M=March; YR=${BIRTH_YEAR:-$(( $(date -u +%Y) - 52 ))} # adult; picked by name (list opens neutral at now−50, PR #52), scrolls if needed
+export BIRTH_YEAR=$YR
 put MONTH AgeGateScreen "$(coord AgeGateScreen Button_Month)"; ctap $MONTH_X $MONTH_Y
 put MONTH_OPT AgeGateScreen "$(coord ListModal Button_$M)";   ctap $MONTH_OPT_X $MONTH_OPT_Y
 put YEAR AgeGateScreen "$(coord AgeGateScreen Button_Year)";  ctap $YEAR_X $YEAR_Y
-# the year list scrolls: swipe up until the wanted year is logged on screen
-YEAR_SWIPES=0; for i in $(seq 1 20); do adb logcat -d -s Unity | grep -q "CVTAP|ListModal|Button_$YR|" && break; adb shell input swipe 540 1300 540 1000 400; sleep 2; YEAR_SWIPES=$i; done; export YEAR_SWIPES
-put YEAR_OPT x "$(coord ListModal Button_$YR)"; ctap $YEAR_OPT_X $YEAR_OPT_Y
+pick_year "$YR" || { adb logcat -d > "$OUT/calibration/logcat.txt"; adb exec-out screencap -p > "$OUT/calibration/missing_year.png"; echo "::error::calibration: year $YR not reachable"; exit 1; }
+put YEAR_OPT x "$PICKED_X $PICKED_Y"; ctap $YEAR_OPT_X $YEAR_OPT_Y
 put CONTINUE x "$(coord AgeGateScreen Button_Continue)"; ctap $CONTINUE_X $CONTINUE_Y 5
 # First run has no login screen yet (guest sign-in is automatic in AccountLifecycle): GUEST taps the status bar, a no-op.
 export GUEST_X=30 GUEST_Y=1170; echo "GUEST=30,1170 (no login screen in first run: a no-op tap on the map pan surface; 540,20 hit the Store button)" >> "$OUT/coords.txt"
