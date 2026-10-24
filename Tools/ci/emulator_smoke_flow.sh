@@ -65,6 +65,8 @@ WS=$(kv "$D1" score); WST=$(kv "$D1" stars)
 [ "${WS:-0}" -gt 0 ] || { echo "FAIL: win screen score is ${WS:-?} (QA C-1)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
 [ "${WST:-0}" -ge "${WIN_STARS_MIN:-3}" ] || { echo "FAIL: hint line won with ${WST:-?} stars, expected >= ${WIN_STARS_MIN:-3} (QA C-3)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
 adb logcat -c; tap $RETRY_X $RETRY_Y 6; check retry
+# the probe re-dumps the results screen every 2 s: drop any win line logged before Retry took effect, once the HUD is back
+for i in $(seq 1 30); do adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|HudScreen" && break; sleep 1; done; adb logcat -c
 # a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows
 SECONDS=0; for s in $(seq 1 200); do [ $SECONDS -ge $SHOT_WALL_S ] && break; adb shell input swipe $AIM_FROM_X $AIM_FROM_Y $MISS_TO_X $MISS_TO_Y 400; fire "fail$s"; sleep 6; check "fail_shot$s"
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
