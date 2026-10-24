@@ -71,14 +71,106 @@ static class AnimTests
             var st = new ShakeStack(); var h = new RecHaptics(); var prefs = new AnimMemPrefs(); var m = new MotionSettings(prefs, false);
             var d = new ShakeDispatcher(st) { Haptics = h, Settings = m };
             T.True(d.Submit("BREAK_STEEL_JOINT", 1, 0f), "joint shake"); T.True(!d.Submit("PHYS_JOINT_SNAP", 1, 0f), "PHYS_JOINT_SNAP same frame deduped");
-            T.True(d.Submit(AnimEvents.CollapseLand, 1, 0f) && !d.Submit("PHYS_COLLAPSE_END", 1, 0f), "COLLAPSE_LAND + PHYS_COLLAPSE_END → one");
+            T.True(d.Submit(AnimEvents.CollapseLand, 1, 0f) && !d.Submit("PHYS_COLLAPSE_END", 1, 0f), "COLLAPSE_LAND + PHYS_COLLAPSE_END → one"); d.Tick(50f); // flush collapse haptic window
             T.True(d.Submit("IMPACT_WOOD", 2, 100f) && d.Submit(AnimEvents.BossTideCoreHit, 2, 100f) && !d.Submit("IMPACT_WOOD", 2, 100f), "impact family: stronger may replace, weaker dropped");
             T.True(d.Submit("BREAK_STEEL_JOINT", 3, 200f), "next frame allowed"); T.Eq(5, st.Count, "5 shakes in the pool");
             T.Eq(5, h.Calls, "haptics driven by the same accepted events"); T.Eq(HapticBuckets.For(0.4f), h.Last, "joint 0.06/0.6° → strength 0.4 bucket");
             m.SetReduceMotion(true); st.Scale = m.ShakeScale(QualityTier.Mid); d.Submit("EXPLODE_CRATE", 4, 300f);
-            T.Eq(6, h.Calls, "Reduce motion: no camera shake but haptics still fire (decision: 07 doesn't cover haptics)");
-            m.SetHaptics(false); d.Submit("EXPLODE_CRATE", 5, 400f); T.Eq(6, h.Calls, "Haptics OFF → no pulse");
+            T.Eq(5, h.Calls, "Reduce motion: no camera shake and no haptics (haptics.md)");
+            m.SetReduceMotion(false); m.SetHaptics(false); d.Submit("EXPLODE_CRATE", 5, 400f); T.Eq(5, h.Calls, "Haptics OFF → no pulse");
             T.True(new MotionSettings(new AnimMemPrefs(), true).HapticsEnabled, "Haptics default ON (even with OS reduce-animations)");
+        });
+        T.Add("HAPTICS_toggle_and_reduce_motion", () =>
+        {
+            var prefs = new AnimMemPrefs(); var m = new MotionSettings(prefs, false); var h = new RecHaptics();
+            var d = new ShakeDispatcher(new ShakeStack()) { Haptics = h, Settings = m };
+            T.True(m.HapticsEffective && d.Submit("EXPLODE_CRATE", 1, 0f), "defaults"); T.Eq(1, h.Calls, "fires normally"); T.Eq(3, h.Last, "explosion bucket 3");
+            m.SetReduceMotion(true); T.True(!m.HapticsEffective && m.HapticsEnabled && m.HapticsLockedByReduceMotion, "RM overrides, toggle preference kept");
+            d.Submit("EXPLODE_CRATE", 2, 100f); d.Submit("IMPACT_WOOD", 3, 200f); T.Eq(1, h.Calls, "suppressed while Reduce motion ON");
+            var auto = new MotionSettings(new AnimMemPrefs(), true); T.True(auto.ReduceMotionIsAuto && !auto.HapticsEffective, "Android auto Reduce motion also suppresses");
+            m.SetReduceMotion(false); m.SetHaptics(false); T.True(!m.HapticsEffective && !m.HapticsLockedByReduceMotion, "toggle OFF");
+            d.Submit("EXPLODE_CRATE", 4, 300f); T.Eq(1, h.Calls, "suppressed when Haptics toggle OFF");
+            m.SetHaptics(true); d.Submit("EXPLODE_CRATE", 5, 400f); T.Eq(2, h.Calls, "fires again when both allow");
+            var g = new GatedRec(); var d2 = new ShakeDispatcher(new ShakeStack()) { Haptics = g, Settings = new MotionSettings(new AnimMemPrefs(), false) };
+            d2.Submit("IMPACT_WOOD", 1, 0f); d2.Submit("BREAK_BRICK", 2, 10f); d2.Submit("IMPACT_BRICK", 3, 30f); T.Eq(2, g.Fired, "0 fires, 10 stronger cuts in, 30 dropped (<40 ms)");
+            d2.Submit("IMPACT_WOOD", 5, 49f); T.Eq(2, g.Fired, "still inside 40 ms of the last pulse"); d2.Submit("IMPACT_WOOD", 6, 50f); T.Eq(3, g.Fired, "40 ms rate limit still applies; fires again at +40 ms");
+        });
+        T.Add("HAPTICS_collapse_merge_material_priority", () =>
+        {
+            T.True(CollapseHapticMerge.Rank("steel") > CollapseHapticMerge.Rank("stone") && CollapseHapticMerge.Rank("stone") > CollapseHapticMerge.Rank("brick")
+                && CollapseHapticMerge.Rank("brick") > CollapseHapticMerge.Rank("glass") && CollapseHapticMerge.Rank("glass") > CollapseHapticMerge.Rank("wood"), "steel > stone > brick > glass > wood");
+            var mg = new CollapseHapticMerge(); mg.Add("wood", 0f); mg.Add("steel", 15f); mg.Add("glass", 39f);
+            T.Eq(0, mg.Flush(39.9f), "window still open"); T.Eq(CollapseHapticMerge.Rank("steel"), mg.WinnerRank, "steel wins regardless of order");
+            T.Eq(4, mg.Flush(40f), "one pulse at steel strength"); T.Eq(0, mg.Flush(100f), "only once");
+            var h = new RecHaptics(); var d = new ShakeDispatcher(new ShakeStack()) { Haptics = h, Settings = new MotionSettings(new AnimMemPrefs(), false) };
+            d.SubmitCollapse("COLLAPSE_LAND", "wood", 1, 0f); d.SubmitCollapse("COLLAPSE_LAND", "stone", 1, 5f); d.SubmitCollapse("COLLAPSE_LAND", "glass", 2, 30f);
+            d.Tick(20f); T.Eq(0, h.Calls, "no pulse inside the window");
+            d.Tick(41f); T.Eq(1, h.Calls, "3 landings in 40 ms → 1 pulse"); T.Eq(3, h.Last, "stone strength (bucket 3)");
+            d.SubmitCollapse("COLLAPSE_LAND", "wood", 3, 100f); d.Tick(140f); T.Eq(2, h.Calls, "next window"); T.Eq(2, h.Last, "wood alone = bucket 2");
+            d.SubmitCollapse("COLLAPSE_LAND", "steel", 4, 200f); d.Tick(240f); T.Eq(4, h.Last, "steel alone = bucket 4"); d.SubmitCollapse("COLLAPSE_LAND", "wood", 5, 250f); d.Tick(290f);
+            T.Eq(4, h.Calls, "landings 50 ms apart → separate pulses");
+        });
+        T.Add("HAPTICS_lead_offset_clamp", () =>
+        {
+            T.Eq(-20f, HapticTiming.LeadMs, "default lead −20 ms");
+            T.Eq(1000f, HapticTiming.FireAtMs(1000f), "synchronous event: −20 ms clamped, never before the event");
+            T.Eq(1080f, HapticTiming.FireAtMs(1000f, 100f), "known +100 ms peak → 20 ms before the peak");
+            T.Eq(1000f, HapticTiming.FireAtMs(1000f, 10f), "peak 10 ms after event: clamped to the event");
+            T.Eq(1030f, HapticTiming.FireAtMs(1000f, 0f, 30f), "positive lead (lag) honoured");
+        });
+        T.Add("HAPTICS_animator_timing", () =>
+        {
+            RecHapticsLog h; ShakeDispatcher D() { h = new RecHapticsLog(); return new ShakeDispatcher(new ShakeStack()) { Haptics = h, Settings = new MotionSettings(new AnimMemPrefs(), false) }; }
+            var d = D(); d.Submit("PU_GRAVITY_BURST", 1, 1500f); T.Eq("1@1500", h.Log, "gravity: light tick at implode start");
+            d.Tick(1560f); T.Eq("1@1500", h.Log, "peak not yet"); d.Tick(1580f); T.Eq("1@1500 3@1580", h.Log, "peak 1600 ms with −20 ms lead → 1580");
+            d.Tick(2000f); T.Eq("1@1500 3@1580", h.Log, "peak once");
+            d = D(); d.Submit("PU_CHAIN_PULSE", 1, 0f); for (int i = 1; i <= 7; i++) d.Submit("PU_CHAIN_LINK", 1 + i, i * 80f);
+            T.Eq("2@0 1@80 1@160 1@240 1@320 1@400", h.Log, "chain: medium pulse + light tick per link, max 5");
+            d.Submit("PU_CHAIN_PULSE", 20, 1000f); d.Submit("PU_CHAIN_LINK", 21, 1080f); T.True(h.Log.EndsWith("2@1000 1@1080"), "link cap resets per activation");
+            d = D(); T.True(d.Submit("BOSS_TIDE_DEFEAT", 1, 0f) && d.Submit(AnimEvents.BossTideDefeatCollapse, 2, 3500f), "defeat + new collapse event routed");
+            T.Eq("4@0 2@3500", h.Log, "boss defeat: strong then medium at +3500 ms");
+            T.True(ShakeRouter.TryGet("BREAK_STEEL", out var s, out var f) && s.pos == 0.03f && s.rot == 0.3f && s.durationMs == 150 && f == ShakeFamily.Break, "BREAK_STEEL route 0.03 m / 0.3° 150 ms");
+            d = D(); d.Submit("BREAK_STEEL", 1, 0f); T.Eq("1@0", h.Log, "BREAK_STEEL light haptic");
+            var st = new ShakeStack(); var d2 = new ShakeDispatcher(st) { Haptics = h = new RecHapticsLog(), Settings = new MotionSettings(new AnimMemPrefs(), false) };
+            T.True(d2.Submit("IMPACT_TERRAIN", 1, 0f) && st.Count == 1 && ShakeRouter.TryGet("IMPACT_TERRAIN", out s) && s.pos == 0.01f && s.durationMs == 80, "terrain still shakes 0.01 m 80 ms");
+            T.True(d2.SubmitPhys("PHYS_IMPACT", ShakeRouter.MatTerrain, 2, 2, 100f), "phys terrain shakes"); T.Eq("", h.Log, "terrain: no haptic");
+            T.True(!Src("Assets/_Project/Scripts/Feel/FeelCore.cs").Contains("flagged for Animator"), "terrain no longer provisional");
+        });
+        T.Add("TIDE_defeat_collapse_timer", () =>
+        {
+            int n = 0; Action<string, object> on = (e, _) => { if (e == AnimEvents.BossTideDefeatCollapse) n++; };
+            AnimEventBus.Raised += on;
+            try
+            {
+                var t = new TideDefeatCollapseTimer(); T.True(!t.Tick(5000f) && n == 0, "not armed → nothing");
+                t.Start(); for (int i = 0; i < 208; i++) t.Tick(1000f / 60f); T.Eq(0, n, "not before 3500 ms (3466 ms)");
+                t.Start(); T.True(!t.Tick(1000f / 60f) && n == 0, "re-Start while armed doesn't reset (frame 209)");
+                t.Tick(1000f / 60f); T.Eq(1, n, "fires at 3500 ms (frame 210)");
+                for (int i = 0; i < 300; i++) t.Tick(16f); t.Start(); t.Tick(4000f); T.Eq(1, n, "fires once per defeat");
+                var c = new TideDefeatCollapseTimer(); c.Start(); c.Tick(3000f); c.Cancel(); c.Tick(1000f); T.Eq(1, n, "cancelled on exit/reset");
+                c.Start(); c.Tick(3499f); T.Eq(1, n, "re-armed after reset, not yet"); c.Tick(1f); T.Eq(2, n, "new defeat after reset fires");
+                var src = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs");
+                T.True(src.Contains("_defeatCollapse.Start()") && src.Contains("Time.unscaledDeltaTime") && src.Contains("_defeatCollapse.Cancel();") && src.Contains("TODO(anim)"), "wired: defeat start, unscaled tick, cancel on exit, TODO");
+            }
+            finally { AnimEventBus.Raised -= on; }
+        });
+        T.Add("TIDE_defeat_raised_once", () =>
+        {
+            int n = 0; Action<string, object> on = (e, _) => { if (e == AnimEvents.BossTideDefeat) n++; };
+            AnimEventBus.Raised += on;
+            try
+            {
+                TideDefeatEvent.Reset();
+                T.True(TideDefeatEvent.RaiseOnce(), "Defeat() raises"); T.Eq(1, n, "raised");
+                var sm = new TidewardenAnimStateMachine(); sm.CoreHit(); sm.CoreHit();
+                T.Eq(1, n, "state machine CoreHit path skips: exactly once per defeat"); T.True(sm.State == TideAnimState.Defeat, "SM still enters Defeat");
+                T.True(!TideDefeatEvent.RaiseOnce(), "second Defeat() call no-op"); T.Eq(1, n, "still once");
+                TideDefeatEvent.Reset(); var sm2 = new TidewardenAnimStateMachine(); sm2.CoreHit(); sm2.CoreHit(); T.Eq(2, n, "after reset: SM-first path raises");
+                TideDefeatEvent.RaiseOnce(); T.Eq(2, n, "then Defeat() skips");
+                var src = Src("Assets/_Project/Scripts/Boss/TidewardenController.cs");
+                T.True(src.Contains("Defeated = true;\n            Crashverse.Feel.TideDefeatEvent.RaiseOnce();") && src.Contains("TideDefeatEvent.Reset()") && src.Contains("moves to the rig defeat clip"), "Defeat() wired, reset on bind/exit, TODO");
+            }
+            finally { AnimEventBus.Raised -= on; TideDefeatEvent.Reset(); }
         });
         T.Add("HAPTICS_buckets_and_gate", () =>
         {
@@ -219,4 +311,6 @@ static class AnimTests
     }
 }
 
+sealed class GatedRec : Crashverse.Feel.IHaptics { Crashverse.Feel.HapticGate _g; public int Fired; public void Pulse(int bucket, float nowMs) { if (_g.Allow(bucket, nowMs)) Fired++; } }
+sealed class RecHapticsLog : Crashverse.Feel.IHaptics { public string Log = ""; public void Pulse(int b, float t) { Log += (Log.Length > 0 ? " " : "") + b + "@" + t; } }
 sealed class RecHaptics : Crashverse.Feel.IHaptics { public int Calls, Last; public void Pulse(int bucket, float nowMs) { Calls++; Last = bucket; } }

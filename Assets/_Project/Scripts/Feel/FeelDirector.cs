@@ -92,7 +92,8 @@ namespace Crashverse.Feel
         {
             // 07 shake table, routed by event name (fire, impacts, breaks, collapse, explosions, gravity burst, boss phase/defeat).
             // PHYS_* with payloads should come via CameraShake.AddPhys (tier/material aware); name-only PHYS rows are still routed here, deduped by family per frame.
-            Dispatch.Submit(e, Time.frameCount, Time.unscaledTime * 1000f);
+            if (e == AnimEvents.CollapseLand && _ is string mat) Dispatch.SubmitCollapse(e, mat, Time.frameCount, Time.unscaledTime * 1000f); // `material` param
+            else Dispatch.Submit(e, Time.frameCount, Time.unscaledTime * 1000f);
             switch (e)
             {
                 case AnimEvents.ReloadStart: _wrecker.GateReady = false; _wrecker.Fire(); _camSm.Fire(); _time.OnShotFired(); break;
@@ -112,7 +113,7 @@ namespace Crashverse.Feel
             float rdt = Time.unscaledDeltaTime; var tier = Perf.QualityController.FeelTier; var m = MotionSettings.Current;
             _wrecker.Tier = tier;
             if (_aim != null) _wrecker.SetAiming(_aim.Dragging);
-            _wrecker.Tick(rdt); _camSm.Tick(rdt);
+            _wrecker.Tick(rdt); _camSm.Tick(rdt); Dispatch.Tick(Time.unscaledTime * 1000f); // collapse haptic merge window
             if (_titan != null && _s.TitanDamageScore != _lastTitanDmg) { _lastTitanDmg = _s.TitanDamageScore; _titan.OnDamage(_lastTitanDmg); } // only on change (was raising HIT every frame)
 
             bool ranked = _s.Ctx != null && _s.Ctx.mode == RunMode.TitanRanked;

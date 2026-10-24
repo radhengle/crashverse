@@ -36,7 +36,7 @@ namespace Crashverse.Feel
             PuTimeStart = "PU_TIME_START", PuTimeWarn = "PU_TIME_WARN", PuTimeEnd = "PU_TIME_END",
             CollapseLand = "COLLAPSE_LAND", DebrisFallOff = "DEBRIS_FALL_OFF",
             BossTitanStage = "BOSS_TITAN_STAGE", BossTitanDefeat = "BOSS_TITAN_DEFEAT", BossTitanHit = "BOSS_TITAN_HIT",
-            BossTideTell = "BOSS_TIDE_TELL", BossTideShutterClose = "BOSS_TIDE_SHUTTER_CLOSE", BossTideShutterOpen = "BOSS_TIDE_SHUTTER_OPEN", BossTidePhase2 = "BOSS_TIDE_PHASE2", BossTideCoreHit = "BOSS_TIDE_CORE_HIT", BossTideDefeat = "BOSS_TIDE_DEFEAT",
+            BossTideTell = "BOSS_TIDE_TELL", BossTideShutterClose = "BOSS_TIDE_SHUTTER_CLOSE", BossTideShutterOpen = "BOSS_TIDE_SHUTTER_OPEN", BossTidePhase2 = "BOSS_TIDE_PHASE2", BossTideCoreHit = "BOSS_TIDE_CORE_HIT", BossTideDefeat = "BOSS_TIDE_DEFEAT", BossTideDefeatCollapse = "BOSS_TIDE_DEFEAT_COLLAPSE" /* +210 f / 3500 ms into DEFEAT; code-driven via TideDefeatCollapseTimer until the rig clip lands */,
             UiBtnPress = "UI_BTN_PRESS", UiComboUp = "UI_COMBO_UP", UiComboTier = "UI_COMBO_TIER", UiStar = "UI_STAR_", UiMasteryTick = "UI_MASTERY_TICK",
             UiWin = "UI_WIN", UiShotSpend = "UI_SHOT_SPEND", UiThresholdHit = "UI_THRESHOLD_HIT", CamSlowMoStart = "CAM_SLOWMO_START";
     }
@@ -83,8 +83,12 @@ namespace Crashverse.Feel
         public bool ReduceMotionIsAuto => !(_prefs != null && _prefs.TryGet(KeyMotion, out _)) && _osRemoveAnimations;
         public static bool Resolve(bool? explicitChoice, bool osRemoveAnimations) => explicitChoice ?? osRemoveAnimations;
 
-        /// <summary>Haptics toggle, default ON. Independent of Reduce shake / Reduce motion (07 doesn't cover haptics; haptics.md has its own toggle).</summary>
+        /// <summary>Haptics toggle (user preference), default ON. Reduce motion overrides it at output time; see HapticsEffective.</summary>
         public bool HapticsEnabled => !(_prefs != null && _prefs.TryGet(KeyHaptics, out var v)) || v;
+        /// <summary>audio/haptics.md: haptics fire only when the Haptics toggle is ON and Reduce motion (explicit or Android auto) is OFF. PM-approved.</summary>
+        public bool HapticsEffective => HapticsEnabled && !ReduceMotion;
+        /// <summary>True when the Haptics toggle is ON but Reduce motion is suppressing it (Settings label).</summary>
+        public bool HapticsLockedByReduceMotion => HapticsEnabled && ReduceMotion;
         public void SetHaptics(bool on) { _prefs?.Set(KeyHaptics, on); Changed?.Invoke(); }
         public void SetReduceShake(bool on) { _prefs?.Set(KeyShake, on); Changed?.Invoke(); }
         public void SetReduceMotion(bool on) { _prefs?.Set(KeyMotion, on); Changed?.Invoke(); } // explicit: persists, beats auto-on
@@ -259,7 +263,8 @@ namespace Crashverse.Feel
             GravityBurst = new ShakeSpec(0.08f, 0.8f, 10, 250), BossPhase = new ShakeSpec(0.12f, 1.2f, 6, 600),
             BrickHit = new ShakeSpec(0.02f, 0.2f, 12, 120),   // 02 brick: ±0.02 m 120 ms
             SteelRing = new ShakeSpec(0.01f, 0.1f, 6, 200),   // 02 steel face: ring 6 Hz 200 ms, 0.01 m
-            Terrain = new ShakeSpec(0.01f, 0.1f, 14, 80);     // not in 07 (02 says no piece reaction): minimal thud, flagged for Animator/Designer
+            Terrain = new ShakeSpec(0.01f, 0.1f, 14, 80),     // final (Animator): minimal thud, no haptic
+            SteelBreak = new ShakeSpec(0.03f, 0.3f, 12, 150); // BREAK_STEEL non-joint (Animator): 0.03 m / 0.3° 150 ms, light haptic
         public const float MaxPos = 0.15f, MaxRot = 1.5f;
     }
 
@@ -320,8 +325,8 @@ namespace Crashverse.Feel
     public static class ShakeRouter
     {
         public const string ImpactWood = "IMPACT_WOOD", BreakWood = "BREAK_WOOD", ImpactBrick = "IMPACT_BRICK", BreakBrick = "BREAK_BRICK",
-            ImpactSteel = "IMPACT_STEEL", ImpactSteelJoint = "IMPACT_STEEL_JOINT", BreakSteelJoint = "BREAK_STEEL_JOINT", ImpactTerrain = "IMPACT_TERRAIN",
-            ExplodeCrate = "EXPLODE_CRATE", ExplodeBarrelAlias = "EXPLODE_BARREL", PuGravityBurst = "PU_GRAVITY_BURST", PuChainPulse = "PU_CHAIN_PULSE", PuPhaseHit = "PU_PHASE_HIT",
+            ImpactSteel = "IMPACT_STEEL", ImpactSteelJoint = "IMPACT_STEEL_JOINT", BreakSteelJoint = "BREAK_STEEL_JOINT", ImpactTerrain = "IMPACT_TERRAIN", BreakSteel = "BREAK_STEEL",
+            ExplodeCrate = "EXPLODE_CRATE", ExplodeBarrelAlias = "EXPLODE_BARREL", PuGravityBurst = "PU_GRAVITY_BURST", PuChainPulse = "PU_CHAIN_PULSE", PuChainLink = "PU_CHAIN_LINK", PuPhaseHit = "PU_PHASE_HIT",
             BossTideJointBreak = "BOSS_TIDE_JOINT_BREAK", BossTideArmsLand = "BOSS_TIDE_ARMS_LAND";
         // Physics events (physics/impact-feel #18, physics/impact-wiring #20; ImpactEvents.*). Names duplicated here so this compiles without those PRs.
         public const string PhysImpact = "PHYS_IMPACT", PhysCrack = "PHYS_CRACK", PhysBreak = "PHYS_BREAK", PhysJointSnap = "PHYS_JOINT_SNAP",
@@ -340,6 +345,7 @@ namespace Crashverse.Feel
                 case ImpactBrick: spec = ShakeTable.BrickHit; fam = ShakeFamily.Impact; return true;
                 case ImpactSteel: case ImpactSteelJoint: spec = ShakeTable.SteelRing; fam = ShakeFamily.Impact; return true;
                 case ImpactTerrain: spec = ShakeTable.Terrain; fam = ShakeFamily.Impact; return true;
+                case BreakSteel: spec = ShakeTable.SteelBreak; fam = ShakeFamily.Break; return true;
                 case BreakBrick: spec = ShakeTable.BrickBreak; fam = ShakeFamily.Break; return true;
                 case BreakSteelJoint: case BossTideJointBreak: case PhysJointSnap: spec = ShakeTable.JointBreak; fam = ShakeFamily.Joint; return true;
                 case AnimEvents.CollapseLand: case PhysCollapseEnd: case BossTideArmsLand: spec = ShakeTable.CollapseLand; fam = ShakeFamily.Collapse; return true;
@@ -389,16 +395,75 @@ namespace Crashverse.Feel
 
         public static float Strength(in ShakeSpec s) => Math.Min(1f, Math.Max(s.pos / ShakeTable.MaxPos, s.rot / ShakeTable.MaxRot));
 
-        public bool Submit(string evt, int frame, float nowMs) => ShakeRouter.TryGet(evt, out var s, out var f) && Submit(s, f, frame, nowMs);
-        public bool SubmitPhys(string evt, int material, int tier, int frame, float nowMs) => ShakeRouter.TryGetPhys(evt, material, tier, out var s, out var f) && Submit(s, f, frame, nowMs);
+        public bool Submit(string evt, int frame, float nowMs)
+        {
+            if (evt == ShakeRouter.PuChainPulse) _chainLinks = 0;
+            if (!ShakeRouter.TryGet(evt, out var s, out var f))
+            {
+                if (!HapticRouter.HapticOnly(evt, out int hb)) return false;
+                if (evt == ShakeRouter.PuChainLink && ++_chainLinks > HapticRouter.MaxChainLinks) return false;
+                if (HapticsOn) Haptics.Pulse(hb, nowMs);
+                return true;
+            }
+            if (f == ShakeFamily.Collapse) return Submit(s, f, frame, nowMs);
+            if (!SubmitShakeOnly(s, f, frame)) return false;
+            if (HapticsOn)
+            {
+                int b = HapticRouter.Override(evt, out int ob) ? ob : HapticBuckets.For(Strength(s));
+                if (b > 0) Haptics.Pulse(b, nowMs);
+                if (HapticRouter.Delayed(evt, out int db, out float peakMs)) Schedule(db, HapticTiming.FireAtMs(nowMs, peakMs));
+            }
+            return true;
+        }
+
+        int _chainLinks; readonly int[] _pendB = new int[4]; readonly float[] _pendAt = new float[4];
+        void Schedule(int bucket, float atMs)
+        {
+            for (int i = 0; i < _pendB.Length; i++) if (_pendB[i] == 0) { _pendB[i] = bucket; _pendAt[i] = atMs; return; }
+        }
+        public bool SubmitPhys(string evt, int material, int tier, int frame, float nowMs)
+        {
+            if (!ShakeRouter.TryGetPhys(evt, material, tier, out var s, out var f)) return false;
+            if (evt == ShakeRouter.PhysImpact && material == ShakeRouter.MatTerrain) return SubmitShakeOnly(s, f, frame); // terrain: shake, no haptic (Animator)
+            return Submit(s, f, frame, nowMs);
+        }
+
+        CollapseHapticMerge _collapse;
+
+        /// <summary>COLLAPSE_LAND with its `material` param (wood/glass/brick/stone/steel). Haptic merges per 40 ms window, strongest material wins (haptics.md §4).</summary>
+        public bool SubmitCollapse(string evt, string material, int frame, float nowMs)
+        {
+            if (!ShakeRouter.TryGet(evt, out var s, out var f)) return false;
+            if (f != ShakeFamily.Collapse) return Submit(s, f, frame, nowMs);
+            if (HapticsOn) _collapse.Add(material, nowMs);
+            return SubmitShakeOnly(s, f, frame);
+        }
 
         public bool Submit(in ShakeSpec s, ShakeFamily fam, int frame, float nowMs)
+        {
+            if (fam == ShakeFamily.Collapse) { if (HapticsOn) _collapse.Add(null, nowMs); return SubmitShakeOnly(s, fam, frame); }
+            if (!SubmitShakeOnly(s, fam, frame)) return false;
+            if (HapticsOn) Haptics.Pulse(HapticBuckets.For(Strength(s)), nowMs);
+            return true;
+        }
+
+        /// <summary>Call once per frame (real ms): flushes a closed collapse merge window as one pulse.</summary>
+        public void Tick(float nowMs)
+        {
+            int b = _collapse.Flush(nowMs);
+            if (b > 0 && HapticsOn) Haptics.Pulse(b, nowMs);
+            for (int i = 0; i < _pendB.Length; i++)
+                if (_pendB[i] > 0 && nowMs >= _pendAt[i]) { int pb = _pendB[i]; _pendB[i] = 0; if (HapticsOn) Haptics.Pulse(pb, nowMs); }
+        }
+
+        bool HapticsOn => Haptics != null && (Settings == null || Settings.HapticsEffective);
+
+        bool SubmitShakeOnly(in ShakeSpec s, ShakeFamily fam, int frame)
         {
             int i = (int)fam; float k = Strength(s);
             if (fam != ShakeFamily.None && _frame[i] == frame && k <= _strength[i]) return false; // same family, same frame, not stronger → drop
             if (fam != ShakeFamily.None) { _frame[i] = frame; _strength[i] = k; }
             _stack.Add(s); // ×0 under Reduce shake / Reduce motion via ShakeStack.Scale
-            if (Haptics != null && (Settings == null || Settings.HapticsEnabled)) Haptics.Pulse(HapticBuckets.For(k), nowMs);
             return true;
         }
     }
@@ -655,6 +720,41 @@ namespace Crashverse.Feel
         protected override void OnTimeout(TitanAnimState s) => Go(TitanAnimState.Idle);
     }
 
+    /// <summary>
+    /// Raises BOSS_TIDE_DEFEAT_COLLAPSE once, 3500 ms (unscaled) after defeat start; Cancel() on level exit / reset. Engine-free.
+    /// TODO(anim): when the Tidewarden rig defeat clip lands, this moves to an anim event at frame 210 (+3500 ms) on the clip and this timer is removed.
+    /// </summary>
+    /// <summary>
+    /// BOSS_TIDE_DEFEAT is raised once per defeat, by whichever path gets there first: TidewardenController.Defeat() (code-driven, live today)
+    /// or TidewardenAnimStateMachine.CoreHit(). Reset() on level bind / exit / reset.
+    /// TODO(anim): when the Tidewarden rig defeat clip lands, DEFEAT moves to the clip's start event and this guard goes with it.
+    /// </summary>
+    public static class TideDefeatEvent
+    {
+        public static bool Raised { get; private set; }
+        public static bool RaiseOnce() { if (Raised) return false; Raised = true; AnimEventBus.Raise(AnimEvents.BossTideDefeat); return true; }
+        public static void Reset() => Raised = false;
+    }
+
+    public sealed class TideDefeatCollapseTimer
+    {
+        public const float DelayMs = 3500f; // 210 f @ 60 fps
+        float _ms = -1f; bool _fired;
+        public bool Armed => _ms >= 0f;
+        public bool Fired => _fired;
+        /// <summary>Arms once per defeat; repeated Start() calls are ignored until Cancel().</summary>
+        public void Start() { if (_ms < 0f && !_fired) _ms = 0f; }
+        public void Cancel() { _ms = -1f; _fired = false; }
+        /// <summary>Advance by real (unscaled) ms. Returns true on the single tick that fires (and raises the event).</summary>
+        public bool Tick(float realDtMs)
+        {
+            if (_ms < 0f) return false;
+            _ms += realDtMs;
+            if (_ms < DelayMs) return false;
+            _ms = -1f; _fired = true; AnimEventBus.Raise(AnimEvents.BossTideDefeatCollapse); return true;
+        }
+    }
+
     public enum TideAnimState { Intro, P1Idle, JointHit, JointBreak, PhaseChange, P2Open, Tell, P2Closing, P2Closed, P2Opening, CoreHit, Defeat }
 
     /// <summary>05 Tidewarden mirrors gameplay (ShutterOpen etc.). Core shows crack steps only (OQ-B1); arms detach as non-objective debris (OQ-B2).</summary>
@@ -675,7 +775,7 @@ namespace Crashverse.Feel
         public void CoreHit()
         {
             CoreCracks = Math.Min(2, CoreCracks + 1); AnimEventBus.Raise(AnimEvents.BossTideCoreHit, CoreCracks);
-            if (CoreCracks >= 2) { AnimEventBus.Raise(AnimEvents.BossTideDefeat); Go(TideAnimState.Defeat); } else Go(TideAnimState.CoreHit);
+            if (CoreCracks >= 2) { TideDefeatEvent.RaiseOnce(); Go(TideAnimState.Defeat); } // skipped if Defeat() already raised it else Go(TideAnimState.CoreHit);
         }
         protected override float DurationMs(TideAnimState s)
         {
