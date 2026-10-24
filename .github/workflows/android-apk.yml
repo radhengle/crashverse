@@ -11,16 +11,27 @@ on:
         options: [dev, release]
         default: dev
       publish_tag:
-        description: "If set (e.g. dev-build-5), publish a prerelease after every gate passes"
+        description: "If set, publish a NEW prerelease after every gate passes: an unused tag (e.g. dev-build-7) or 'next'. main / dev/* only; an existing tag is never overwritten"
         type: string
         default: ""
   push:
-    branches: [ main, 'integration/**' ]
+    branches: [ main ]   # Security L-52-1: no integration/** trigger with signing secrets
     paths:
       - 'Assets/**'
       - 'Packages/**'
       - 'ProjectSettings/**'
       - 'Tools/**'
+      - 'qa/ci/**'
+      - '.github/workflows/android-apk.yml'
+  # PR check path: unsigned (Unity debug keystore) build + the same emulator smoke; never signing secrets, never publishes
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+      - 'Tools/**'
+      - 'qa/ci/**'
       - '.github/workflows/android-apk.yml'
 
 permissions:
@@ -65,14 +76,16 @@ jobs:
   build:
     name: GameCI Unity Android (${{ github.event.inputs.profile || 'dev' }})
     needs: guards
-    # M2: signed builds only from main, or a dispatch on main / dev/* (dispatch needs repo write).
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/integration/') || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/dev/'))
-    environment: dev-signing
+    # M2 + Security L-52-1: SIGNED builds only from a push to main or a dispatch on main / dev/*. Pull requests into main
+    # build unsigned (Unity's debug keystore) for the PR check; the dev keystore secrets are never referenced for them.
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/dev/'))
+    environment: ${{ github.event_name != 'pull_request' && 'dev-signing' || 'unity' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: read
     env:
       CRASHVERSE_BUILD_PROFILE: ${{ github.event.inputs.profile || 'dev' }}
+      CV_SIGN: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/dev/')) }}
     steps:
       - name: Free disk space (unityci editor image is large)
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
@@ -101,6 +114,7 @@ jobs:
             Library-Android-${{ env.CRASHVERSE_BUILD_PROFILE }}-
 
       - name: Decode persistent dev keystore (never committed; separate from the Play upload key)
+        if: env.CV_SIGN == 'true'
         env:
           DEV_KEYSTORE_BASE64: ${{ secrets.DEV_KEYSTORE_BASE64 }}
         run: |
@@ -116,10 +130,10 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           CRASHVERSE_BUILD_PROFILE: ${{ env.CRASHVERSE_BUILD_PROFILE }}
           CRASHVERSE_VERSION_CODE: ${{ github.run_number }}
-          CRASHVERSE_KEYSTORE_PATH: build-secrets/dev.keystore
-          CRASHVERSE_KEYSTORE_PASS: ${{ secrets.DEV_KEYSTORE_PASS }}
-          CRASHVERSE_KEYALIAS_NAME: ${{ secrets.DEV_KEYALIAS_NAME }}
-          CRASHVERSE_KEYALIAS_PASS: ${{ secrets.DEV_KEYALIAS_PASS }}
+          CRASHVERSE_KEYSTORE_PATH: ${{ env.CV_SIGN == 'true' && 'build-secrets/dev.keystore' || '' }}
+          CRASHVERSE_KEYSTORE_PASS: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_PASS || '' }}
+          CRASHVERSE_KEYALIAS_NAME: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_NAME || '' }}
+          CRASHVERSE_KEYALIAS_PASS: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_PASS || '' }}
         with:
           targetPlatform: Android
           unityVersion: 2022.3.50f1
@@ -129,11 +143,11 @@ jobs:
           versioning: Custom # no git-derived versioning (it ran `git fetch`, which fails without persisted credentials)
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
-          androidKeystoreName: build-secrets/dev.keystore
-          androidKeystoreBase64: ${{ secrets.DEV_KEYSTORE_BASE64 }}
-          androidKeystorePass: ${{ secrets.DEV_KEYSTORE_PASS }}
-          androidKeyaliasName: ${{ secrets.DEV_KEYALIAS_NAME }}
-          androidKeyaliasPass: ${{ secrets.DEV_KEYALIAS_PASS }}
+          androidKeystoreName: ${{ env.CV_SIGN == 'true' && 'build-secrets/dev.keystore' || '' }}
+          androidKeystoreBase64: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_BASE64 || '' }}
+          androidKeystorePass: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_PASS || '' }}
+          androidKeyaliasName: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_NAME || '' }}
+          androidKeyaliasPass: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_PASS || '' }}
 
       - name: Assert built APK (arm64 libs, allowBackup=false, portrait-only, release non-debuggable)
         run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" "$CRASHVERSE_BUILD_PROFILE"
@@ -146,6 +160,7 @@ jobs:
           unzip -q bt.zip -d bt && echo "BT=$PWD/$(ls -d bt/* | head -1)" >> $GITHUB_ENV
 
       - name: zipalign -P 16 + re-sign v1+v2+v3 with the persistent dev key
+        if: env.CV_SIGN == 'true'
         env:
           KS_PASS: ${{ secrets.DEV_KEYSTORE_PASS }}
           KA_NAME: ${{ secrets.DEV_KEYALIAS_NAME }}
@@ -173,6 +188,7 @@ jobs:
         run: sudo rm -rf build-secrets
 
       - name: Verify signature, cert pin, versionCode, no testOnly (publish gate)
+        if: env.CV_SIGN == 'true'
         env:
           EXPECTED_VC: ${{ github.run_number }}
         run: |
@@ -253,29 +269,51 @@ jobs:
   publish:
     name: Publish prerelease (only after signing gate + emulator smoke on every API)
     needs: [build, emulator-smoke]
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_tag != ''
+    # QA C-9b + Security L-52-1: dispatch only, from main or dev/* only, a NEW tag each time (never overwrites), tagged at the
+    # exact built commit, and only once unity-tests (incl. unity-tests-gate) and server-ci passed on that same commit.
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_tag != '' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/dev/'))
     runs-on: ubuntu-24.04
     environment: dev-builds
     permissions:
       contents: write
+      actions: read
     steps:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: crashverse-android-apk
           path: apk
-      - name: Create or update prerelease (pending QA review)
+      - name: Require unity-tests + server-ci green on this commit
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.inputs.publish_tag }}
-        # QA C-9: assets only ever reach a prerelease through this gated job. An existing prerelease (e.g. a rebuilt
-        # dev-build-6) gets its APKs replaced and its notes rewritten with the new SHA; full releases are never touched.
         run: |
-          NOTES="Built from $GITHUB_SHA (${GITHUB_REF_NAME}), run $GITHUB_RUN_ID. Signed with the persistent dev key (cert pinned in Tools/ci/dev_cert_sha256.txt), versionCode $GITHUB_RUN_NUMBER. Passed apksigner + built-APK asserts + emulator smoke (API 34/36). Pending QA review."
-          if gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json isPrerelease -q .isPrerelease > pre.txt 2>/dev/null; then
-            [ "$(cat pre.txt)" = true ] || { echo "::error::$TAG exists and is not a prerelease; refusing to overwrite"; exit 1; }
-            gh release upload "$TAG" apk/*.apk -R "$GITHUB_REPOSITORY" --clobber
-            gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --prerelease --title "$TAG (pending QA review)" --notes "$NOTES"
-          else
-            gh release create "$TAG" apk/*.apk -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
-              --title "$TAG (pending QA review)" --notes "$NOTES"
+          set -e
+          need(){ # $1 workflow file: wait (max 90 min) until a run for GITHUB_SHA has completed; require one that succeeded
+            for i in $(seq 1 90); do
+              runs=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$1/runs?head_sha=$GITHUB_SHA&per_page=50" -q '[.workflow_runs[]|{s:.status,c:.conclusion}]')
+              echo "$runs" | grep -q '"c":"success"' && { echo "$1: success on $GITHUB_SHA"; return 0; }
+              echo "$runs" | grep -qE '"s":"(queued|in_progress|waiting|pending|requested)"' || { echo "::error::$1 has no successful run on $GITHUB_SHA ($runs)"; return 1; }
+              sleep 60
+            done; echo "::error::$1 still running on $GITHUB_SHA after 90 min"; return 1; }
+          need unity-tests.yml   # its unity-tests-gate job fails the run when EditMode/PlayMode fail or run 0 tests
+          need server-ci.yml
+      - name: Create a NEW prerelease at the built commit (pending QA review)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_IN: ${{ github.event.inputs.publish_tag }}
+        run: |
+          set -e
+          TAG="$TAG_IN"
+          if [ "$TAG" = next ]; then
+            n=$(gh api "repos/$GITHUB_REPOSITORY/tags?per_page=100" --paginate -q '.[].name' | sed -n 's/^dev-build-\([0-9][0-9]*\)$/\1/p' | sort -n | tail -1)
+            TAG="dev-build-$(( ${n:-0} + 1 ))"
           fi
+          [[ "$TAG" =~ ^dev-build-[0-9]+$ ]] || { echo "::error::tag '$TAG' must be dev-build-N"; exit 1; }
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1 || gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "::error::$TAG already exists: published builds are never overwritten (QA C-9b); dispatch with the next tag or 'next'"; exit 1
+          fi
+          gh release create "$TAG" apk/*.apk -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "$TAG (pending QA review)" \
+            --notes "Built from $GITHUB_SHA (${GITHUB_REF_NAME}), run $GITHUB_RUN_ID. Signed with the persistent dev key (cert pinned in Tools/ci/dev_cert_sha256.txt), versionCode $GITHUB_RUN_NUMBER. Passed apksigner + built-APK asserts + emulator smoke (API 34/36); unity-tests + server-ci green on this commit. Pending QA review."
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" -q .object.sha)
+          [ "$sha" = "$GITHUB_SHA" ] || { echo "::error::$TAG points at $sha, not the built commit $GITHUB_SHA"; exit 1; }
+          echo "published $TAG at $GITHUB_SHA"
