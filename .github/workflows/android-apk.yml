@@ -143,6 +143,7 @@ jobs:
           versioning: Custom # no git-derived versioning (it ran `git fetch`, which fails without persisted credentials)
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
+          androidTargetSdkVersion: AndroidApiLevel35 # release blocker: target Android 15; GameCI installs platforms;android-35
           androidKeystoreName: ${{ env.CV_SIGN == 'true' && 'build-secrets/dev.keystore' || '' }}
           androidKeystoreBase64: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_BASE64 || '' }}
           androidKeystorePass: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_PASS || '' }}
@@ -220,6 +221,76 @@ jobs:
           path: build/Android/*.apk
           if-no-files-found: error
           retention-days: 14
+
+  # Release blocker (v2): the release profile is built and its guards run on every PR into main, not only on a manual dispatch.
+  # Unsigned (Unity debug keystore), never published, no signing secrets. Asserts non-debuggable, targetSdk 35, no dev symbols.
+  build-release:
+    name: GameCI Unity Android (release profile, PR guard)
+    needs: guards
+    if: github.event_name == 'pull_request'
+    environment: unity
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      CRASHVERSE_BUILD_PROFILE: release
+    steps:
+      - name: Free disk space (unityci editor image is large)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: false
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          lfs: false
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Cache Library
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: Library
+          key: Library-Android-release-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-Android-release-
+            Library-Android-dev-
+      - name: Build release APK (unsigned)
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          CRASHVERSE_BUILD_PROFILE: release
+          CRASHVERSE_VERSION_CODE: ${{ github.run_number }}
+        with:
+          targetPlatform: Android
+          unityVersion: 2022.3.50f1
+          buildName: CRASHVERSE
+          buildsPath: build
+          buildMethod: Crashverse.EditorTools.BuildScript.BuildAndroid
+          versioning: Custom
+          version: 0.1.${{ github.run_number }}
+          androidVersionCode: ${{ github.run_number }}
+          androidTargetSdkVersion: AndroidApiLevel35
+      - name: Assert built release APK (non-debuggable, targetSdk 35, arm64, 16 KB report)
+        run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" release
+      - name: Release guard on built output (no dev symbols in IL2CPP metadata)
+        run: |
+          set -e
+          sudo chown -R "$(id -u):$(id -g)" build
+          for f in build/Android/*.apk; do python3 Tools/ci/check_release_guards.py --built "$f"; done
+      - name: Upload release APK (PR check artifact, not published)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: crashverse-android-apk-release-unsigned
+          path: build/Android/*.apk
+          if-no-files-found: error
+          retention-days: 7
 
   emulator-smoke:
     name: Emulator smoke API ${{ matrix.api }} x86_64 1080x2340 (publish gate)

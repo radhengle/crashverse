@@ -921,7 +921,24 @@ static class Tests
             var lb = Src("Assets/_Project/Scripts/Backend/LocalBackendService.cs");
             T.True(lb.Contains("#if CRASHVERSE_DEV") && lb.TrimEnd().EndsWith("#endif"), "whole LocalBackendService behind CRASHVERSE_DEV");
             var boot = Src("Assets/_Project/Scripts/Core/GameBootstrap.cs");
-            T.True(boot.Contains("#else") && boot.Contains("InvalidOperationException"), "release build throws instead of local fallback");
+            int els = boot.IndexOf("#else", boot.IndexOf("new LocalBackendService")); int end = boot.IndexOf("#endif", els);
+            var rel = boot.Substring(els, end - els);
+            T.True(els > 0 && !rel.Contains("LocalBackendService") && rel.Contains("new OfflineBackendService()"), "release build: server client or OfflineBackendService, never the local stub");
+        });
+        T.Add("SEC_offline_backend_fails_every_call", () =>
+        {
+            var off = new OfflineBackendService(); int n = 0;
+            T.True(!off.IsOnline, "offline");
+            foreach (var m in typeof(IBackendService).GetMethods())
+            {
+                if (m.IsSpecialName) continue;
+                var args = m.GetParameters().Select(p => p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null).ToArray();
+                var t = (System.Threading.Tasks.Task)m.Invoke(off, args); n++;
+                T.True(t.IsFaulted && t.Exception.InnerException is BackendException be && be.IsOffline, m.Name + " fails offline");
+            }
+            T.True(n >= 30, "covers the interface");
+            var src = Src("Assets/_Project/Scripts/Backend/OfflineBackendService.cs");
+            T.True(!src.Contains("Grant") && !src.Contains("File.") && !src.Contains("PlayerPrefs"), "grants and stores nothing");
         });
         T.Add("SEC02_qa_tools_dev_only", () =>
         {

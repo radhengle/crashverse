@@ -50,9 +50,9 @@ namespace Crashverse.Core
 #if CRASHVERSE_DEV
             AppServices.Backend = BackendLocator.Current ?? new LocalBackendService(AppServices.Content);
 #else
-            // Security Review §1: release builds never fall back to the local stub.
-            if (BackendLocator.Current == null) throw new System.InvalidOperationException("Release build has no server backend (BackendLocator.Current unset); local fallback is dev-only.");
-            AppServices.Backend = BackendLocator.Current;
+            // Security Review §1: release builds never fall back to the local stub. integration/v2: the server stays offline, so without a
+            // server client the release build uses OfflineBackendService (every call fails "offline"; grants and stores nothing).
+            AppServices.Backend = BackendLocator.Current ?? new OfflineBackendService();
 #endif
             BackendLocator.Current = AppServices.Backend;
             AppServices.StoreErrors = StoreValidator.Validate(AppServices.Content.Store, out AppServices.StoreItems);

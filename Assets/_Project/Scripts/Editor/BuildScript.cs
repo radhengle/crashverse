@@ -100,7 +100,7 @@ namespace Crashverse.EditorTools
             if (PlayerSettings.enableFrameTimingStats) throw new BuildFailedException("Release build has Frame Timing Stats on (dev-only).");
             var iface = typeof(Crashverse.Backend.IBackendService);
             var real = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => { try { return a.GetTypes(); } catch { return Type.EmptyTypes; } })
-                .Where(t => iface.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract && t.Name != "LocalBackendService").ToList();
+                .Where(t => iface.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract && t.Name != "LocalBackendService").ToList(); // v2: OfflineBackendService qualifies (fails every call, grants nothing)
             if (real.Count == 0)
                 throw new BuildFailedException("Release build has no server IBackendService implementation; it would fall back to LocalBackendService (dev-only). Build a DEV profile or add the real backend.");
         }
