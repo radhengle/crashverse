@@ -18,6 +18,7 @@
     <Compile Include="../../Assets/_Project/Scripts/Perf/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Data/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Meta/**/*.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Rules/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Backend/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/PowerUps/**/*.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Boss/**/*.cs" />
