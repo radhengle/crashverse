@@ -32,6 +32,8 @@ namespace Crashverse.Tests.PlayMode
             yield return null;
             PlayerPrefs.DeleteAll();
             AgeGateScreen.PendingDob = null;
+            foreach (var f in new[] { Crashverse.Meta.PlayerProgress.DefaultPath, Crashverse.Meta.CampaignSave.DefaultPath })
+                if (System.IO.File.Exists(f)) System.IO.File.Delete(f); // v2: first run = no guest profile yet
             Time.timeScale = 1f;
             yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/Bootstrap.unity", LoadSceneMode.Single);
             // Bootstrap.unity carries a GameBootstrap, which boots on every load. Spawning another one doubles the UI
@@ -49,6 +51,7 @@ namespace Crashverse.Tests.PlayMode
         {
             foreach (var go in UnityEngine.Object.FindObjectsOfType<GameObject>().Where(g => g.transform.parent == null)) UnityEngine.Object.Destroy(go);
             AppServices.Router = null; PlayerPrefs.DeleteAll();
+            if (_swapped) { Crashverse.Backend.BackendLocator.Current = _prevBackend; _swapped = false; }
             yield return null; yield return null;
         }
 
@@ -88,17 +91,41 @@ namespace Crashverse.Tests.PlayMode
             Assert.AreEqual("", gate.Error);
 
             yield return Tap(gate.ContinueButton);
-            yield return WaitFor(() => AppServices.Router.Top is MapScreen, "map after the age gate");
+            // v2 target UI: Login (social sign-in "Coming soon", guest) → Create Profile → World Map → Level Select → HUD
+            yield return WaitFor(() => AppServices.Router.Top is LoginScreen, "login after the age gate");
+            foreach (var prov in new[] { "Google", "Facebook", "Instagram", "X", "Email" })
+            {
+                var sb = UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(x => x.name == "Button_" + prov);
+                Assert.NotNull(sb, prov + " sign-in shown"); Assert.False(sb.interactable, prov + " sign-in disabled (Coming soon)");
+            }
+            yield return TapNamed("Button_Guest");
+            yield return WaitFor(() => AppServices.Router.Top is ProfileScreen, "create profile");
+            var prof = (ProfileScreen)AppServices.Router.Top;
+            StringAssert.StartsWith("Smasher_", prof.NameText, "default guest name");
+            yield return TapNamed("Button_Avatar2");
+            yield return TapNamed("Button_Badge3");
+            prof.NameText = "Tap Tester";
+            yield return TapNamed("Button_Continue");
+            yield return WaitFor(() => AppServices.Router.Top is MapScreen, "map after creating the profile");
+            Assert.True(AppServices.Progress.Data.profile.created, "profile saved");
+            Assert.AreEqual("Tap Tester", AppServices.Progress.Data.profile.name);
+            Assert.AreEqual(1, AppServices.Progress.Data.profile.avatar); Assert.AreEqual(2, AppServices.Progress.Data.profile.badge);
             AssertNoBrokenRenderers("world map");
 
             yield return TapNamed("Button_1");
-            yield return WaitFor(() => AppServices.Router.Top is BriefingScreen, "L1 briefing");
+            yield return WaitFor(() => AppServices.Router.Top is LevelSelectScreen, "L1 level select");
             yield return TapNamed("Button_Play");
             yield return WaitFor(() => AppServices.Router.Top is HudScreen, "L1 HUD (run started)");
             yield return null;
             AssertNoBrokenRenderers("L1 arena + structure");
             AssertSwipeAimsSameWayOnScreen();
             yield return PlayHintLineToResult();
+            // v2 §6 Level Complete: rewards in the local wallet, Next Level → Level 2 select
+            yield return WaitFor(() => AppServices.Router.Top is ResultsScreen, "level complete");
+            Assert.True(((ResultsScreen)AppServices.Router.Top).Won);
+            Assert.Greater(AppServices.Progress.Data.coins, 0, "first clear coins granted");
+            yield return TapNamed("Button_NextLevel");
+            yield return WaitFor(() => AppServices.Router.Top is LevelSelectScreen ls && ls.Level.number == 2, "L2 level select after Next Level");
         }
 
         /// <summary>P0 (dev-build-6): a left swipe must move the aim LEFT on screen, a right swipe RIGHT (was mirrored).
@@ -163,6 +190,70 @@ namespace Crashverse.Tests.PlayMode
             Assert.True(AgeGateScreen.Blocked);
         }
 
+        // ---- Security #55: no server backend (release while the server stays offline) ----
+        bool _swapped; Crashverse.Backend.IBackendService _prevBackend;
+        void UseOfflineBackend() { _prevBackend = Crashverse.Backend.BackendLocator.Current; _swapped = true; Crashverse.Backend.BackendLocator.Current = new Crashverse.Backend.OfflineBackendService(); }
+
+        IEnumerator PassGate(int yearsAgo)
+        {
+            var gate = (AgeGateScreen)AppServices.Router.Top;
+            yield return Tap(gate.MonthButton); yield return TapNamed("Button_January");
+            yield return Tap(gate.YearButton); yield return TapNamed("Button_" + (DateTime.UtcNow.Year - yearsAgo));
+            yield return Tap(gate.ContinueButton);
+            yield return WaitFor(() => AppServices.Router.Top is LoginScreen, "login after the gate");
+        }
+
+        [UnityTest]
+        public IEnumerator Offline_age_band_is_final_across_relaunch()
+        {
+            UseOfflineBackend();
+            yield return PassGate(15); // 13-17
+            Assert.AreEqual(Crashverse.Meta.AgeGate.Band.Minor13to17, AgeGateScreen.Current);
+            AgeGateScreen.PendingDob = null; // a relaunch drops the in-memory DOB
+            GameBootstrap.RestartFirstRun();
+            yield return WaitFor(() => AppServices.Router != null && AppServices.Router.Top != null, "relaunched");
+            yield return null; yield return null;
+            Assert.False(AppServices.Router.Top is AgeGateScreen, "B-55-2: no age gate again after relaunch offline");
+            Assert.False(AgeGateScreen.Needed);
+            Assert.AreEqual(Crashverse.Meta.AgeGate.Band.Minor13to17, AgeGateScreen.Current, "band still 13-17");
+        }
+
+        [UnityTest]
+        public IEnumerator Offline_band_is_never_relaxed()
+        {
+            UseOfflineBackend();
+            PlayerPrefs.SetInt(AgeGateScreen.BandKey + Crashverse.Meta.AgeGate.Version, (int)Crashverse.Meta.AgeGate.Band.Minor13to17); // stored 13-17
+            yield return PassGate(30); // re-answered as adult
+            Assert.AreEqual(Crashverse.Meta.AgeGate.Band.Minor13to17, AgeGateScreen.Current, "Confirm keeps the most restrictive band");
+        }
+
+        [UnityTest]
+        public IEnumerator Offline_delete_wipes_every_file_and_pref()
+        {
+            UseOfflineBackend();
+            yield return PassGate(30);
+            yield return TapNamed("Button_Guest");
+            yield return WaitFor(() => AppServices.Router.Top is ProfileScreen, "create profile");
+            yield return TapNamed("Button_Continue");
+            yield return WaitFor(() => AppServices.Router.Top is MapScreen, "map");
+            var dir = Application.persistentDataPath;
+            foreach (var f in new[] { "campaign_save.json", "progress_v2.json.tmp", "campaign_sync_queue.json" }) System.IO.File.WriteAllText(System.IO.Path.Combine(dir, f), "{}");
+            Assert.True(System.IO.File.Exists(Crashverse.Meta.PlayerProgress.DefaultPath), "profile saved before deletion");
+            PlayerPrefs.SetInt("cv_test_marker", 1); PlayerPrefs.Save();
+            AppServices.Router.Push(new DeleteAccountScreen());
+            yield return null; yield return null;
+            Assert.NotNull(UnityEngine.Object.FindObjectsOfType<Text>().FirstOrDefault(t => t.text == DeleteAccountScreen.OfflineCopy), "offline copy shown");
+            var hold = UnityEngine.Object.FindObjectOfType<HoldToConfirm>();
+            hold.OnPointerDown(null);
+            yield return WaitFor(() => AppServices.Router != null && AppServices.Router.Top is AgeGateScreen, "first-run age gate after deletion", 6f);
+            foreach (var f in Crashverse.Core.AccountDeletion.LocalFiles) Assert.False(System.IO.File.Exists(System.IO.Path.Combine(dir, f)), f + " deleted");
+            Assert.IsEmpty(System.IO.Directory.GetFiles(dir, "*.json"), "no CRASHVERSE json left");
+            Assert.False(PlayerPrefs.HasKey("cv_test_marker"), "prefs cleared");
+            Assert.False(PlayerPrefs.HasKey(AgeGateScreen.BandKey + Crashverse.Meta.AgeGate.Version), "age band cleared");
+            Assert.False(PlayerPrefs.HasKey(Crashverse.Core.AccountDeletion.PendingKey), "no pending flag");
+            Assert.True(AgeGateScreen.Needed, "first-run state");
+        }
+
         // ---- helpers ----
         IEnumerator TapNamed(string name)
         {
@@ -202,7 +293,7 @@ namespace Crashverse.Tests.PlayMode
             Canvas.ForceUpdateCanvases();
             var content = sr.content; var vp = sr.viewport != null ? sr.viewport : (RectTransform)sr.transform;
             float overflow = content.rect.height - vp.rect.height; if (overflow <= 0) return;
-            float y = -content.InverseTransformPoint(item.TransformPoint(item.rect.center)).y - content.rect.height * (1 - content.pivot.y);
+            float y = content.rect.yMax - content.InverseTransformPoint(item.TransformPoint(item.rect.center)).y; // distance from the content top (any pivot)
             float top = Mathf.Clamp(y - vp.rect.height / 2f, 0, overflow);
             sr.verticalNormalizedPosition = 1f - top / overflow;
         }

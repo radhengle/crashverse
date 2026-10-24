@@ -42,6 +42,12 @@ namespace Crashverse.Core
 
         public event System.Action Changed;
         public event System.Action<RunResult> Ended;
+        /// <summary>Power-ups v2 Shield: raised after settle when the shielded shot was refunded ("Step protected").</summary>
+        public event System.Action StepProtected;
+        public int ShieldRefunds { get; private set; }
+        /// <summary>Daily Boss: HP shown as the share of the win threshold still standing (1 = full, 0 = defeated).</summary>
+        public float BossHpFraction => Ctx != null && Ctx.dailyBoss ? Crashverse.Meta.DailyBossRules.HpFraction(tracker.DestroyedRatio, Ctx.level.winThreshold) : 1f;
+        ShotModifiers _shotMods; float _ratioBeforeShot; int _bossHitsBefore; float _steerRefYaw;
 
         /// <summary>Content Roadmap §5: FIRE unlocks when settled AND ≥ 1.0 s since the shot; raises GAME_WRECKER_READY (reload-beat hook).</summary>
         public readonly Crashverse.Feel.ReloadGate Gate = new Crashverse.Feel.ReloadGate();
@@ -76,6 +82,7 @@ namespace Crashverse.Core
             foreach (var p in Projectile.Alive.ToArray()) if (p != null) Destroy(p.gameObject);
             Projectile.Alive.Clear();
             builder.Build(Ctx.layout, structureBase, Ctx.mod);
+            EnsureHeroSlot();
             var arr = new DestructibleBlock[builder.Blocks.Count];
             for (int i = 0; i < arr.Length; i++) arr[i] = builder.Blocks[i];
             tracker.Register(arr);
@@ -89,7 +96,7 @@ namespace Crashverse.Core
             PowerUps = new PowerUpRuntime(Ctx.loadout, AppServices.Content, Ctx.extraChargeSlot);
             PowerUps.Changed += () => Changed?.Invoke();
             ShotsLeft = Ctx.ShotBudget;
-            Gate.Reset(); Inputs.Clear(); _firePending = false;
+            Gate.Reset(); Inputs.Clear(); _firePending = false; _shotMods = null; ShieldRefunds = 0;
             _sim.BeginRun(Ctx.seed, Ctx.mode == RunMode.TitanRanked);
             Result = null;
             State = SessionState.Aiming;
@@ -133,6 +140,7 @@ namespace Crashverse.Core
             if (State != SessionState.Aiming || ShotsLeft <= 0 || !Gate.Ready) return;
             aim.SetAim(InputRecorder.FromFixed(e.x), InputRecorder.FromFixed(e.y)); // fire from the quantized aim the server replays
             var mods = PowerUps.ConsumeForShot();
+            _shotMods = mods; _ratioBeforeShot = tracker.DestroyedRatio; _bossHitsBefore = Boss != null ? Boss.CoreHits : 0; _steerRefYaw = InputRecorder.FromFixed(e.x);
             float yaw = InputRecorder.FromFixed(e.x), elev = InputRecorder.FromFixed(e.y); // frozen at the tap (quantized)
             // Anim Spec 01: launch is 66 ms after the tap (breech anticipation); record the tick of the REAL launch so a replay matches.
             if (!fire.Fire(mods, () => Inputs.Record(Tick, "fire", yaw, elev))) return;
@@ -151,6 +159,7 @@ namespace Crashverse.Core
         void OnSimTick(int tick)
         {
             if (State != SessionState.Resolving) return;
+            SteerGuided(tick);
             if (!Gate.Tick(SimRunner.Step, FireController.ActiveProjectiles == 0 && tracker.IsSettled)) return; // aim stays live; only FIRE waits
             ResolveShot();
         }
@@ -166,8 +175,40 @@ namespace Crashverse.Core
             }
         }
 
+        /// <summary>
+        /// Guided Rocket (v2): for up to steerTicks after launch the player's drag (the live aim yaw) steers the rocket at up to
+        /// turnRate deg/s. The per-tick turn is quantized and recorded as a "steer" InputEvent, so a replay applies the same values.
+        /// </summary>
+        void SteerGuided(int tick)
+        {
+            if (_shotMods == null || !_shotMods.guided) return;
+            var p = Projectile.Latest;
+            if (p == null || p.IsSpent || !p.mods.guided) return;
+            float want = aim.Yaw - _steerRefYaw;
+            float deg = Crashverse.Meta.PowerUpRulesV2.Quantize(Crashverse.Meta.PowerUpRulesV2.SteerForTick(want, p.TicksSinceLaunch, _shotMods.steerTicks, _shotMods.turnRate));
+            if (deg == 0f) return;
+            _steerRefYaw += deg;
+            Inputs.Record(tick, "steer", deg, 0f);
+            p.Steer(deg);
+        }
+
+        /// <summary>Shield (v2): after settle, refund the shot if it destroyed &lt; threshold of the objective (boss: &lt; 5% of max HP).</summary>
+        void ResolveShield()
+        {
+            if (_shotMods == null || !_shotMods.shield) return;
+            bool boss = Boss != null || Ctx.dailyBoss;
+            float objFrac = tracker.DestroyedRatio - _ratioBeforeShot;
+            float bossFrac = Boss != null ? (Boss.CoreHits - _bossHitsBefore) / (float)Crashverse.Boss.TidewardenController.CoreHitsToWin
+                           : Ctx.dailyBoss ? objFrac / Mathf.Max(0.01f, Ctx.level.winThreshold) : objFrac;
+            float thr = _shotMods.shieldThreshold; _shotMods = null;
+            if (!Crashverse.Meta.PowerUpRulesV2.ShieldRefunds(boss, objFrac, bossFrac, thr)) return;
+            ShotsLeft++; ShieldRefunds++;
+            StepProtected?.Invoke();
+        }
+
         void ResolveShot()
         {
+            ResolveShield();
             bool won = Boss != null ? Boss.Defeated : WinRule.Meets(tracker.DestroyedRatio, Ctx.level.winThreshold); // BUG-17: same rule as the server
             if (Ctx.mode == RunMode.TitanRanked) CheckpointTitan(won);
             if (won) { End(true); return; }
@@ -243,8 +284,10 @@ namespace Crashverse.Core
                 {
                     case RunMode.Campaign:
                         res.score = CampaignScore.Compute(won, res.ratio, ShotsLeft, combo, mastery);
+                        int prevBest = AppServices.Save.BestStars(lvl.id);
                         res.firstClear = AppServices.Save.RecordResult(lvl.id, won, stars, mastery, res.score);
-                        if (won)
+                        GrantLocalRewards(res, lvl, won, stars, prevBest); // v2: local wallet, before any (offline) sync
+                        if (won && !BackendLocator.IsLocalOnly(backend)) // Security #55 L-55-2: nothing to sync to with no server; no growing queue
                         {
                             // BUG-13/14: raw stats only, queued first; the server validates, scores, grants first-clear rewards and totals
                             CampaignResultQueue.Enqueue(new CampaignRunReport { levelId = lvl.id, won = true, destroyedRatio = res.ratio, shotsLeft = ShotsLeft, bestCombo = combo, mastery = mastery });
@@ -265,6 +308,12 @@ namespace Crashverse.Core
                         if (res.titanSubmit.status == SubmitStatus.Accepted) res.titanScore = res.titanSubmit.finalScore; // server is authoritative
                         TitanRunJournal.Clear(); _journal = null;
                         break;
+                    case RunMode.DailyBoss:
+                        if (PowerUps.AnyUsed && AppServices.Progress != null) AppServices.Progress.Data.powerUpsUsed++;
+                        if (won && AppServices.Progress != null)
+                            res.rewards = AppServices.Progress.RecordDailyBossWin(lvl.id.StartsWith("daily_") ? lvl.id.Substring(6) : lvl.id, AppServices.Content.Meta.dailyBoss.reward);
+                        AppServices.Progress?.Save();
+                        break;
                     case RunMode.TitanPractice:
                         AppServices.Save.RecordHintAttempt(lvl.id, won); // BUG-08
                         res.titanScore = TitanScoring.Score(TitanDamageScore, ShotsLeft, won, AppServices.Content.Titan);
@@ -280,7 +329,34 @@ namespace Crashverse.Core
             Ended?.Invoke(res);
         }
 
-        void OnApplicationPause(bool paused)
+        /// <summary>Target UI §6: level complete rewards into the local wallet (progress_v2.json). Server stays offline in v2.</summary>
+        void GrantLocalRewards(RunResult res, Crashverse.Data.LevelEntry lvl, bool won, int stars, int prevBest)
+        {
+            var p = AppServices.Progress; if (p == null) return;
+            if (PowerUps.AnyUsed) p.Data.powerUpsUsed++;
+            res.rewards = RewardRules.ForLevel(AppServices.Content.Meta.levelRewards, lvl, won, stars, prevBest, res.firstClear);
+            p.Grant(res.rewards);
+            if (won && res.firstClear && HardLevelRules.IsHard(lvl)) p.Data.hardCleared++;
+            p.Save();
+        }
+
+        /// <summary>v2 hero building slot: one "HeroSlot" anchor per level (keep|gatehouse). Empty until the Bld_* model ships;
+        /// if a prefab named after the FBX is under Resources/HeroBuildings it is placed there, with colliders stripped (presentation only).</summary>
+        void EnsureHeroSlot()
+        {
+            if (transform.Find("HeroSlot") != null) return;
+            var hs = Ctx.level.heroSlot; var p = HeroSlotRules.Position(hs);
+            var go = new GameObject("HeroSlot"); go.transform.SetParent(transform, false);
+            go.transform.position = structureBase + new Vector3(p[0], p[1], p[2]);
+            go.transform.rotation = Quaternion.Euler(0f, hs != null ? hs.rotY : 0f, 0f);
+            if (hs == null || string.IsNullOrEmpty(hs.fbx) || HeroSlotRules.Validate(hs) != null) return;
+            var prefab = Resources.Load<GameObject>("HeroBuildings/" + hs.fbx);
+            if (prefab == null) return;
+            var m = (GameObject)Instantiate(prefab, go.transform);
+            foreach (var c in m.GetComponentsInChildren<Collider>()) Destroy(c);
+        }
+
+                void OnApplicationPause(bool paused)
         {
             if (paused && Ctx != null && Ctx.mode == RunMode.TitanRanked && _journal != null) TitanRunJournal.Write(_journal); // settled shots only; mid-flight damage is never journaled
         }

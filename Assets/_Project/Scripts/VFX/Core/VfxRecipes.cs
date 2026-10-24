@@ -51,8 +51,33 @@ namespace Crashverse.VFX
     {
         public const string Explosion = "Explosion", DustWood = "Dust_Wood", DustBrick = "Dust_Brick", DustTerrain = "Dust_Terrain",
             DustGlass = "Dust_Glass", SparksSteel = "Sparks_Steel", SparksJoint = "Sparks_Joint", GlassShards = "Glass_Shards",
-            ImpactWood = "Impact_Wood", ImpactBrick = "Impact_Brick", MuzzleFlash = "Muzzle_Wrecker", CollapseDust = "Collapse_Dust";
-        public static readonly string[] All = { Explosion, DustWood, DustBrick, DustTerrain, DustGlass, SparksSteel, SparksJoint, GlassShards, ImpactWood, ImpactBrick, MuzzleFlash, CollapseDust };
+            ImpactWood = "Impact_Wood", ImpactBrick = "Impact_Brick", MuzzleFlash = "Muzzle_Wrecker", CollapseDust = "Collapse_Dust",
+            DustStone = "Dust_Stone", ImpactStone = "Impact_Stone";
+        public static readonly string[] All = { Explosion, DustWood, DustBrick, DustTerrain, DustGlass, SparksSteel, SparksJoint, GlassShards, ImpactWood, ImpactBrick, MuzzleFlash, CollapseDust,
+            DustStone, ImpactStone };
+
+        /// <summary>Stone palette, Art ruling #10 (warm sandstone, albedo #C9B48A, seams #8A7350): dust #D4C49E (steps #E8DCC0 / #D4C49E / #B09C74),
+        /// chips #C9B48A / #A08A62, cracks #5E4A30. No glow.</summary>
+        public const uint StoneDustLit = 0xE8DCC0, StoneDust = 0xD4C49E, StoneDustShade = 0xB09C74, StoneChip = 0xC9B48A, StoneChipShade = 0xA08A62, StoneCrack = 0x5E4A30;
+        /// <summary>Roof (terracotta tiles) = Stone with this dust colour (PM decision); steps from DustSteps (#EBC8B4 / #D9A28C / #B48167).</summary>
+        public const uint RoofDust = 0xD9A28C;
+        /// <summary>Name of the recipe layer a per-piece dust override recolours.</summary>
+        public const string DustLayer = "dust";
+
+        /// <summary>Three toon steps around a dust colour, derived per channel exactly like the Art stone steps
+        /// (lit = mid + k·(255 − mid), shade = mid · r, with k and r taken from #E8DCC0 / #D4C49E / #B09C74). DustSteps(StoneDust) returns the Art steps.</summary>
+        public static uint[] DustSteps(uint mid)
+        {
+            uint lit = 0, shade = 0;
+            for (int sh = 16; sh >= 0; sh -= 8)
+            {
+                double m = (mid >> sh) & 0xFF, sm = (StoneDust >> sh) & 0xFF, sl = (StoneDustLit >> sh) & 0xFF, ss = (StoneDustShade >> sh) & 0xFF;
+                double l = m + (sm >= 255 ? 0 : (sl - sm) / (255 - sm)) * (255 - m), d = sm <= 0 ? m : m * ss / sm;
+                lit |= (uint)Math.Max(0, Math.Min(255, (int)Math.Round(l))) << sh;
+                shade |= (uint)Math.Max(0, Math.Min(255, (int)Math.Round(d))) << sh;
+            }
+            return new[] { lit, mid, shade };
+        }
     }
 
     /// <summary>
@@ -99,12 +124,18 @@ namespace Crashverse.VFX
                 case VfxIds.DustWood: return R(id, 0.8f, Puff("dust", 6, 0.8f, 0.6f, 0xE6C79A, 0xCFA779, 0xA9845C));
                 case VfxIds.DustBrick: return R(id, 0.8f, Puff("dust", 6, 0.8f, 0.6f, 0xEBC3A3, 0xD9A37E, 0xB07B5C));
                 case VfxIds.DustTerrain: return R(id, 0.6f, Puff("dust", 6, 0.4f, 0.5f, 0xE0AE75, 0xC98A4B, 0x9E6A38));
+                case VfxIds.DustStone: return R(id, 0.6f, Puff(VfxIds.DustLayer, 6, 0.6f, 0.6f, VfxIds.StoneDustLit, VfxIds.StoneDust, VfxIds.StoneDustShade)); // Animator: dust 600 ms
                 case VfxIds.DustGlass: return R(id, 0.5f, Puff("glint", 4, 0.4f, 0.3f, 0xFFFFFF, 0xE6F7FF, 0xBFE3F2, speed: 0.6f));
                 // 02: wood 12 particles 400 ms; brick 16 / 600 ms; steel 10 / 300 ms (BREAK_STEEL 24); joint 24 + gold ring 4 f.
                 case VfxIds.ImpactWood: return R(id, 0.5f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.5f, 0xFFF6E0, 1f),
                     Debris("splinters", VfxSheet.DebrisChunks, 6, 0.4f, 0xF5C994, 0xFFE3BC, 0.12f), Puff("dust", 6, 0.4f, 0.45f, 0xE6C79A, 0xCFA779, 0xA9845C));
                 case VfxIds.ImpactBrick: return R(id, 0.7f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.5f, 0xFFF6E0, 1f),
                     Debris("chunks", VfxSheet.DebrisChunks, 8, 0.6f, 0xD2664C, 0xE9997C), Puff("dust", 8, 0.6f, 0.5f, 0xEBC3A3, 0xD9A37E, 0xB07B5C));
+                // Stone (hero buildings, ImpactEvent MaterialType.Stone; Roof via dust override): toon sandstone chips + stepped dust. No glow.
+                // Animator: white hit flash 2 f, dust 600 ms; Reduce motion as the others (ApplyReduceMotion).
+                case VfxIds.ImpactStone: return R(id, 0.7f, Flash("hit", VfxSheet.Puff4x4, 2f / 60f, 0.5f, 0xFFFFFF, 1f),
+                    Debris("chips", VfxSheet.DebrisChunks, 8, 0.6f, VfxIds.StoneChipShade, VfxIds.StoneChip, 0.15f),
+                    Puff(VfxIds.DustLayer, 8, 0.6f, 0.55f, VfxIds.StoneDustLit, VfxIds.StoneDust, VfxIds.StoneDustShade));
                 case VfxIds.SparksSteel: return R(id, 0.4f, Flash("hit", VfxSheet.Puff4x4, 0.033f, 0.4f, 0xFFFFFF, 1.2f),
                     Sparks("sparks", 7, 0.3f, 0xFFD27A, 0xFF9A3A), Debris("bits", VfxSheet.DebrisChunks, 3, 0.3f, 0x3A3F48, 0x6A7380, 0.06f));
                 case VfxIds.SparksJoint: return R(id, 0.4f, Ring("gold_ring", 0.066f, 1.2f, 0xE8B04B, 1f),
@@ -130,14 +161,15 @@ namespace Crashverse.VFX
         /// <summary>Dust recipe tinted per material (COLLAPSE_LAND / DEBRIS_BURST).</summary>
         public static string DustFor(VfxMaterial m) => m switch
         {
-            VfxMaterial.Wood => VfxIds.DustWood, VfxMaterial.Brick => VfxIds.DustBrick, VfxMaterial.Glass => VfxIds.DustGlass, _ => VfxIds.DustTerrain
+            VfxMaterial.Wood => VfxIds.DustWood, VfxMaterial.Brick => VfxIds.DustBrick, VfxMaterial.Glass => VfxIds.DustGlass, VfxMaterial.Stone => VfxIds.DustStone,
+            _ => VfxIds.DustTerrain
         };
 
         /// <summary>Material dust tint for the grey-stepped collapse ring (Art: wood #CFA779, brick #D9A37E, steel bits #3A3F48 -> light grey dust, terrain #C98A4B).</summary>
         public static uint DustTint(VfxMaterial m) => m switch
         {
             VfxMaterial.Wood => 0xCFA779, VfxMaterial.Brick => 0xD9A37E, VfxMaterial.Steel => 0xB8BEC6, VfxMaterial.SteelJoint => 0xB8BEC6,
-            VfxMaterial.Glass => 0xE6F7FF, _ => 0xC98A4B
+            VfxMaterial.Glass => 0xE6F7FF, VfxMaterial.Stone => VfxIds.StoneDust, _ => 0xC98A4B
         };
 
         /// <summary>Impact/break effect per material.</summary>
@@ -145,8 +177,12 @@ namespace Crashverse.VFX
         {
             VfxMaterial.Wood => VfxIds.ImpactWood, VfxMaterial.Brick => VfxIds.ImpactBrick, VfxMaterial.Steel => VfxIds.SparksSteel,
             VfxMaterial.SteelJoint => VfxIds.SparksJoint, VfxMaterial.Glass => VfxIds.GlassShards, VfxMaterial.Explosive => VfxIds.Explosion,
+            VfxMaterial.Stone => VfxIds.ImpactStone,
             _ => VfxIds.DustTerrain
         };
+
+        /// <summary>Colour steps for a recipe layer with an optional dust override (0 = the recipe's own steps). Only the "dust" layer is recoloured.</summary>
+        public static uint[] StepsFor(in VfxLayer l, uint dustOverride) => dustOverride != 0 && l.Name == VfxIds.DustLayer ? VfxIds.DustSteps(dustOverride) : l.Steps;
 
         /// <summary>Reduce motion for a flash layer (animation/07): intensity x0.4, alpha ≤0.5, lifetime ≥100 ms ramp. Counts unchanged.</summary>
         public static VfxLayer ApplyReduceMotion(VfxLayer l, bool reduceMotion)

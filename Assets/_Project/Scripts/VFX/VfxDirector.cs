@@ -24,7 +24,7 @@ namespace Crashverse.VFX
         public Transform muzzleSocket;
         [Tooltip("Instances per effect (Low: half, min 2).")] public int poolPerEffect = 4;
 
-        sealed class Fx { public GameObject Go; public ParticleSystem[] Systems; public string Id; public int BudgetId, Particles; public float Until; }
+        sealed class Fx { public GameObject Go; public ParticleSystem[] Systems; public string Id; public int BudgetId, Particles; public float Until; public uint DustOverride; }
 
         readonly Dictionary<string, RingPool<Fx>> _pools = new Dictionary<string, RingPool<Fx>>();
         readonly Dictionary<string, VfxRecipe> _recipes = new Dictionary<string, VfxRecipe>();
@@ -117,6 +117,7 @@ namespace Crashverse.VFX
                 case "IMPACT_STEEL_JOINT": case "BREAK_STEEL_JOINT": Legacy(VfxMaterial.SteelJoint, payload, name[0] == 'B'); break;
                 case "IMPACT_TERRAIN": Legacy(VfxMaterial.Terrain, payload, false); break;
                 case "IMPACT_GLASS": case "BREAK_GLASS": Legacy(VfxMaterial.Glass, payload, name[0] == 'B'); break;
+                case "IMPACT_STONE": case "BREAK_STONE": Legacy(VfxMaterial.Stone, payload, name[0] == 'B'); break; // Animator confirmed (Stone = 7)
                 case "EXPLODE_CRATE": case "EXPLODE_BARREL": Legacy(VfxMaterial.Explosive, payload, true); break;
                 case "COLLAPSE_LAND":
                 {
@@ -139,16 +140,22 @@ namespace Crashverse.VFX
         public void HandleImpact(in VfxImpact e)
         {
             var route = VfxImpactRouting.Route(e);
-            if (e.PieceId != -1 && (route.HitFlash || route.DamageStep > 0) && DamageFeedback.TryGet(e.PieceId, out var fb))
+            uint dust = 0;
+            if (e.PieceId != -1 && DamageFeedback.TryGet(e.PieceId, out var fb))
             {
                 if (route.HitFlash) fb.Hit(e.Tier);
                 if (route.DamageStep > 0) fb.SetDamageStep(route.DamageStep);
+                dust = VfxImpactRouting.DustOverrideFor(route, fb.material, fb.dustOverride);   // Roof: Stone FX with terracotta dust
             }
-            if (route.EffectId != null) Play(route.EffectId, new Vector3(e.X, e.Y, e.Z), Vector3.up, route.RateLimited, route.Tint);
+            if (route.EffectId != null) Play(route.EffectId, new Vector3(e.X, e.Y, e.Z), Vector3.up, route.RateLimited, route.Tint, dust);
         }
 
         /// <summary>Spawn one pooled effect. Returns false when rate-limited/unknown.</summary>
-        public bool Play(string id, Vector3 position, Vector3 forward, bool rateLimited, uint tint)
+        public bool Play(string id, Vector3 position, Vector3 forward, bool rateLimited, uint tint) => Play(id, position, forward, rateLimited, tint, 0u);
+
+        /// <summary>As Play, with a per-piece dust colour (0 = recipe colours): the effect's "dust" layer gets VfxIds.DustSteps(dustOverride).
+        /// Pooled effects remember their current dust colour and are set back to the recipe steps when reused without an override.</summary>
+        public bool Play(string id, Vector3 position, Vector3 forward, bool rateLimited, uint tint, uint dustOverride)
         {
             if (!_pools.TryGetValue(id, out var pool)) return false;
             if (rateLimited && !_limiter.TryAcquire(Time.unscaledTime)) return false; // 03 beat 4
@@ -166,10 +173,24 @@ namespace Crashverse.VFX
             {
                 if (s == null) continue;
                 if (tint != 0) { var main = s.main; var a = main.startColor.color.a; main.startColor = new ParticleSystem.MinMaxGradient(new Color(col.r, col.g, col.b, a)); }
+                if (fx.DustOverride != dustOverride && s.gameObject.name == VfxIds.DustLayer) ApplyDust(s, _recipes[id], dustOverride);
                 s.Play(true);
             }
+            fx.DustOverride = dustOverride;
             fx.Until = Time.unscaledTime + _recipes[id].Duration + 0.1f;
             _live.Add(fx); return true;
+        }
+
+        static void ApplyDust(ParticleSystem s, in VfxRecipe r, uint dustOverride)
+        {
+            if (r.Layers == null) return;
+            foreach (var l in r.Layers)
+            {
+                if (l.Name != VfxIds.DustLayer) continue;
+                var col = s.colorOverLifetime;
+                col.color = new ParticleSystem.MinMaxGradient(VfxParticleBuilder.SteppedGradient(VfxRecipes.StepsFor(l, dustOverride), l.Alpha));
+                return;
+            }
         }
 
         void CullById(int budgetId)

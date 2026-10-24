@@ -11,6 +11,10 @@ namespace Crashverse.Meta
     {
         static readonly string[] BannedWords = { "powerup", "power_up", "charge", "shot", "continue", "skip", "unlock", "star", "titan", "attempt", "upgrade", "level", "progress" };
         static readonly string[] AllowedGrants = { "gems" };
+        /// <summary>QA V2-12 / PM (economy v1): gems are earned only. This client never lists a real-money gem pack, whatever the
+        /// catalog flag says; the server keeps its own ENABLE_GEM_PACKS switch (default off) for when packs are ever approved.</summary>
+        public const bool RealMoneyGemPacksInClient = false;
+        public static bool IsGemPack(StoreItem i) => i != null && (i.type == "currency_pack" || i.priceType == "real" || i.requiresFlag == "enableGemPacks");
 
         public static List<string> Validate(StoreCatalog c, out List<StoreItem> accepted)
         {
@@ -21,6 +25,9 @@ namespace Crashverse.Meta
             foreach (var i in c.items)
             {
                 if (i != null && !(c.flags ?? new StoreFlags()).IsOn(i.requiresFlag)) continue; // flagged off: hidden entirely (no UI, not purchasable)
+#pragma warning disable CS0162
+                if (!RealMoneyGemPacksInClient && IsGemPack(i)) continue; // V2-12: never in this client
+#pragma warning restore CS0162
                 var e = Check(i, c, bySku, 0);
                 if (e == null) accepted.Add(i); else errors.Add($"{i?.sku}: {e}");
             }

@@ -48,6 +48,7 @@ static class Tests
     public static void Register()
     {
         DevAimHookTests.Register(); // BUG-24 dev aim hook
+        V2Tests.Register(); // target UI, power-ups v2, seasons (integration/v2)
         // ---------- SG-24 / SG-01 stars (qa/M1_Test_Cases_v0.3 + Feature_Test_Cases_v1 §A) ----------
         T.Add("gameplay_pieceid_matches_stableid20", () => { T.Eq(204219580, Crashverse.Gameplay.PieceIds.Of("b1"), "b1"); T.Eq(501293940, Crashverse.Gameplay.PieceIds.Of("L1_tower_03"), "L1_tower_03"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(null), "null"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(""), "empty"); });
         T.Add("gameplay_vfx_material_map", () => { T.Eq(0, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, false), "wood"); T.Eq(1, Crashverse.Gameplay.PieceIds.VfxMaterialOf(1, false, false), "brick"); T.Eq(2, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, false, false), "steel"); T.Eq(3, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, true, false), "joint"); T.Eq(5, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, true), "explosive"); });
@@ -157,13 +158,13 @@ static class Tests
             for (int i = 1; i <= 7; i++) save.RecordResult($"c1_l{i:00}", true, 1, false);
             var L7 = Db.GetLevel("c1_l07"); var L8 = Db.GetLevel("c1_l08");
             var lo = Loadout.Resolve(L7, null, Db, save);
-            T.Eq("shockwave", lo[Slot.Core], "L7 forced shockwave");
+            T.Eq("earthquake", lo[Slot.Core], "L7 forced earthquake (v2: was shockwave)");
             T.True(Loadout.IsSlotLocked(L7, Slot.Module), "L7 module locked");
             var lo8 = Loadout.Resolve(L8, null, Db, save);
-            T.Eq("splitstrike", lo8[Slot.Module], "L8 forced splitstrike");
-            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("shockwave"), L8, Db, save) != null, "core tile can't go in booster");
-            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("phase_piercer"), L8, Db, save) != null, "future tile locked");
-            T.True(!UnlockRules.IsPowerUpUnlocked(Db.GetPowerUp("gravity_well"), Db, save), "gravity well locked until L10 clear");
+            T.Eq("multi_shot", lo8[Slot.Module], "L8 forced multi_shot (v2: was splitstrike)");
+            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("earthquake"), L8, Db, save) != null, "core tile can't go in booster");
+            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("laser_beam"), L8, Db, save) != null, "future tile locked");
+            T.True(!UnlockRules.IsPowerUpUnlocked(Db.GetPowerUp("black_hole"), Db, save), "black hole (was gravity well) locked until L10 clear");
         });
 
         // ---------- Mastery (SG-03, SG-04, SG-21) ----------
@@ -364,7 +365,7 @@ static class Tests
         {
             var b = NewBackend("2026-10-16T10:00:00");
             foreach (var l in Db.Chapter1.levels) { Win(b, l.id); Win(b, l.id); }
-            var w = b.GetWallet().Result; T.True(w.powerUps.Contains("gravity_well"), "L10 power-up granted by server on first validated clear");
+            var w = b.GetWallet().Result; T.True(w.powerUps.Contains("black_hole"), "L10 power-up (v2 Black Hole) granted by server on first validated clear");
             int coins = w.coins; Win(b, "c1_l10"); T.Eq(coins, b.GetWallet().Result.coins, "chest once");
         });
 
@@ -403,8 +404,8 @@ static class Tests
             T.Eq(0, errs.Count, "bundled catalog clean"); T.True(ok.Count > 0, "items accepted");
             var bad = new StoreCatalog { allowedTypes = Db.Store.allowedTypes, items = new[] {
                 new StoreItem { sku = "pu", name = "Charge pack", type = "powerup_pack", cosmetic = true, priceType = "gems", price = 10 },
-                new StoreItem { sku = "nc", name = "Skin", type = Db.Store.allowedTypes[0], cosmetic = false, priceType = "gems", price = 10 },
-                new StoreItem { sku = "gr", name = "Gems?", type = Db.Store.allowedTypes[0], cosmetic = true, priceType = "iap", price = 99, grants = "extra_charges:3" } } };
+                new StoreItem { sku = "nc", name = "Skin", type = Db.Store.allowedTypes[1], cosmetic = false, priceType = "gems", price = 10 },
+                new StoreItem { sku = "gr", name = "Gems?", type = Db.Store.allowedTypes[1], cosmetic = true, priceType = "iap", price = 99, grants = "extra_charges:3" } } };
             T.Eq(3, StoreValidator.Validate(bad, out var ok2).Count, "all 3 rejected"); T.Eq(0, ok2.Count, "none accepted");
         });
         T.Add("ECON_v1_earned_gems_data", () =>
@@ -451,7 +452,8 @@ static class Tests
             T.True(!ok.Exists(i => i.sku == "gems_small" || i.sku == "gems_large" || i.type == "currency_pack"), "Pouch (99) / Chest (499) hidden: no UI, not purchasable");
             T.True(ok.Exists(i => i.sku == "s1_premium_track"), "cosmetic premium track still listed");
             var on = new StoreCatalog { flags = new StoreFlags { enableGemPacks = true }, allowedTypes = Db.Store.allowedTypes, items = Db.Store.items };
-            StoreValidator.Validate(on, out var ok3); T.True(ok3.Exists(i => i.sku == "gems_small"), "flag on → listed");
+            StoreValidator.Validate(on, out var ok3); T.True(!ok3.Exists(i => StoreValidator.IsGemPack(i)), "V2-12: even with the catalog flag on, this client lists no real-money gem pack");
+            T.True(Src("server/src/Crashverse.Server/Domain/Models.cs").Contains("public bool EnableGemPacks = false;") && Src("server/src/Crashverse.Server/Domain/Models.cs").Contains("env(\"ENABLE_GEM_PACKS\") == \"true\""), "server switch ENABLE_GEM_PACKS, default off");
             var gen = Src("Tools/ContentGen/gen_content.py"); T.True(gen.Contains("\"enableGemPacks\": False") && gen.Contains("\"requiresFlag\": \"enableGemPacks\""), "generator keeps the flag off");
         });
         // ── Art v2 Wrecker / UI QA ──
@@ -920,13 +922,39 @@ static class Tests
             var lb = Src("Assets/_Project/Scripts/Backend/LocalBackendService.cs");
             T.True(lb.Contains("#if CRASHVERSE_DEV") && lb.TrimEnd().EndsWith("#endif"), "whole LocalBackendService behind CRASHVERSE_DEV");
             var boot = Src("Assets/_Project/Scripts/Core/GameBootstrap.cs");
-            T.True(boot.Contains("#else") && boot.Contains("InvalidOperationException"), "release build throws instead of local fallback");
+            int els = boot.IndexOf("#else", boot.IndexOf("new LocalBackendService")); int end = boot.IndexOf("#endif", els);
+            var rel = boot.Substring(els, end - els);
+            T.True(els > 0 && !rel.Contains("LocalBackendService") && rel.Contains("new OfflineBackendService()"), "release build: server client or OfflineBackendService, never the local stub");
+        });
+        T.Add("SEC_offline_backend_fails_every_call", () =>
+        {
+            var off = new OfflineBackendService(); int n = 0;
+            T.True(!off.IsOnline, "offline");
+            foreach (var m in typeof(IBackendService).GetMethods())
+            {
+                if (m.IsSpecialName) continue;
+                var args = m.GetParameters().Select(p => p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null).ToArray();
+                var t = (System.Threading.Tasks.Task)m.Invoke(off, args); n++;
+                T.True(t.IsFaulted && t.Exception.InnerException is BackendException be && be.IsOffline, m.Name + " fails offline");
+            }
+            T.True(n >= 30, "covers the interface");
+            var src = Src("Assets/_Project/Scripts/Backend/OfflineBackendService.cs");
+            T.True(!src.Contains("Grant") && !src.Contains("File.") && !src.Contains("PlayerPrefs"), "grants and stores nothing");
         });
         T.Add("SEC02_qa_tools_dev_only", () =>
         {
             var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
-            int gear = sc.IndexOf("new QADebugModal()"); int guard = sc.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", gear);
-            T.True(guard > 0 && sc.IndexOf("#endif", guard) > gear, "gear button guarded");
+            int gears = 0;
+            foreach (var f in Directory.GetFiles(Path.Combine(UnityEngine.Resources.Root, "../../../Assets/_Project/Scripts/UI"), "*.cs"))
+            {
+                var src = File.ReadAllText(f);
+                for (int gear = src.IndexOf("new QADebugModal()"); gear >= 0; gear = src.IndexOf("new QADebugModal()", gear + 1))
+                {
+                    gears++; int guard = src.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", gear);
+                    T.True(guard > 0 && src.IndexOf("#endif", guard) > gear && src.LastIndexOf("#endif", gear) < guard, "gear button guarded in " + Path.GetFileName(f));
+                }
+            }
+            T.True(gears >= 1, "QA gear button exists (dev)");
             int cls = sc.IndexOf("public class QADebugModal"); int g2 = sc.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", cls);
             T.True(g2 > 0 && sc.IndexOf("#endif", g2) > cls, "QADebugModal class guarded");
         });
@@ -1028,6 +1056,36 @@ static class Tests
             T.True(b.GetType() != null && Crashverse.Core.AccountDeletion.Pending, "still queued");
             b.SimulateOffline = false; T.Eq(Crashverse.Core.AccountDeletion.Result.Scheduled, Crashverse.Core.AccountDeletion.Flush(b).Result, "sent on next connection");
             T.True(b.GetAccount().Result.pendingDeletionUnixUtc > 0, "server scheduled");
+        });
+        T.Add("SEC55_B1_offline_delete_wipes_everything", () =>
+        {
+            var dir = UnityEngine.Application.persistentDataPath;
+            var files = new[] { "campaign_save.json", "campaign_save.json.tmp", "progress_v2.json", "progress_v2.json.tmp", "campaign_sync_queue.json", "titan_ranked_journal.json", "other_cv.json" };
+            foreach (var f in files) System.IO.File.WriteAllText(System.IO.Path.Combine(dir, f), "{}");
+            UnityEngine.PlayerPrefs.SetInt("cv_age_band_v2", 2); UnityEngine.PlayerPrefs.SetInt("cv_age_local_v2", 1); UnityEngine.PlayerPrefs.SetString("cv_name", "x"); UnityEngine.PlayerPrefs.SetFloat("cv_music", 0.5f);
+            var off = new OfflineBackendService();
+            T.True(BackendLocator.IsLocalOnly(off) && BackendLocator.IsLocalOnly(null) && !BackendLocator.IsLocalOnly(NewBackend("2026-10-16T10:00:00")), "local-only detection");
+            T.Eq(Crashverse.Core.AccountDeletion.Result.WipedLocal, Crashverse.Core.AccountDeletion.Request(off, null).Result, "offline delete wipes now, not pending");
+            foreach (var f in files) T.True(!System.IO.File.Exists(System.IO.Path.Combine(dir, f)), "removed " + f);
+            T.Eq(0, UnityEngine.PlayerPrefs.CountForTests, "every pref removed (incl. age band) → first-run state");
+            T.True(!Crashverse.Core.AccountDeletion.Pending, "no cv_delete_pending left behind");
+            UnityEngine.PlayerPrefs.SetInt(Crashverse.Core.AccountDeletion.PendingKey, 1); System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "progress_v2.json"), "{}");
+            T.Eq(Crashverse.Core.AccountDeletion.Result.WipedLocal, Crashverse.Core.AccountDeletion.Flush(off).Result, "request queued by an older build is completed locally");
+            T.True(!System.IO.File.Exists(System.IO.Path.Combine(dir, "progress_v2.json")) && UnityEngine.PlayerPrefs.CountForTests == 0, "and wiped");
+            var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
+            var oc = System.Text.RegularExpressions.Regex.Match(sc, "OfflineCopy = \"([^\"]*)\"").Groups[1].Value;
+            T.True(oc.Contains("this device") && oc.Contains("can't be undone"), "offline copy");
+            foreach (var k in new[] { "purchase", "30 days", "7 days", "pseudonymised", "pending" }) T.True(!oc.ToLowerInvariant().Contains(k), "offline copy omits " + k);
+        });
+        T.Add("SEC55_B2_age_band_never_relaxes", () =>
+        {
+            T.Eq(AgeGate.Band.Minor13to17, AgeGate.MostRestrictive(AgeGate.Band.Minor13to17, AgeGate.Band.Adult), "13-17 stays 13-17 when re-answered as adult");
+            T.Eq(AgeGate.Band.Minor13to17, AgeGate.MostRestrictive(AgeGate.Band.Adult, AgeGate.Band.Minor13to17), "adult → 13-17 is allowed (stricter)");
+            T.Eq(AgeGate.Band.Adult, AgeGate.MostRestrictive(AgeGate.Band.Unknown, AgeGate.Band.Adult), "first answer kept");
+            T.Eq(AgeGate.Band.Minor13to17, AgeGate.MostRestrictive(AgeGate.Band.Minor13to17, AgeGate.Band.Unknown), "unknown server band keeps local");
+            var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
+            int g = sc.IndexOf("public class AgeGateScreen"), e = sc.IndexOf("public class BlockedScreen"); var gate = sc.Substring(g, e - g);
+            T.True(gate.Contains("AgeGate.MostRestrictive(Current, band)") && gate.Contains("LocalKey") && gate.Contains("ServerConfigured"), "Confirm keeps the strictest band; offline band is final");
         });
         T.Add("REQ_C2_guest_inactivity", () =>
         {

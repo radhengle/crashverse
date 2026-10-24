@@ -89,5 +89,15 @@ namespace Crashverse.Backend
     public static class BackendLocator
     {
         public static IBackendService Current { get; set; }
+        /// <summary>Security #55 B-55-1/B-55-2: true when there is no server behind this backend (release while the server stays
+        /// offline). Nothing can be queued for, confirmed by or deleted on a server, so local data and the local age band are final.</summary>
+        public static bool IsLocalOnly(IBackendService b) => b == null || b is OfflineBackendService;
+        /// <summary>Before boot (the age gate runs first): is a server backend going to be used? Release with no server client → no.</summary>
+        public static bool ServerConfigured =>
+#if CRASHVERSE_DEV
+            Current == null || !IsLocalOnly(Current); // dev boots LocalBackendService (server stand-in) when nothing is set
+#else
+            Current != null && !IsLocalOnly(Current);
+#endif
     }
 }

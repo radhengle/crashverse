@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace Crashverse.VFX
 {
-    /// <summary>Material ids, matching the projectile Animator `Material` int (animation/02, 0-5). Glass = 6 is VFX-only (no Animator int yet).</summary>
-    public enum VfxMaterial { Wood = 0, Brick = 1, Steel = 2, SteelJoint = 3, Terrain = 4, Explosive = 5, Glass = 6 }
+    /// <summary>Material ids, matching the projectile Animator `Material` int (animation/02, 0-5; Glass 6 per Animator).
+    /// Stone = 7 (confirmed by Animator, events IMPACT_STONE / BREAK_STONE). Append only: never renumber, values are used as Animator ints and serialized.
+    /// There is no Roof value (PM): fractureClass "Roof" uses Stone with a per-piece terracotta dust override (DamageFeedback.dustOverride).</summary>
+    public enum VfxMaterial { Wood = 0, Brick = 1, Steel = 2, SteelJoint = 3, Terrain = 4, Explosive = 5, Glass = 6, Stone = 7 }
 
     /// <summary>One impact/dust recipe row (VFX_Shader_Spec_v1 §5). Pure data, tier/motion scaling in VfxRules.</summary>
     public struct ImpactRecipe
@@ -29,9 +31,30 @@ namespace Crashverse.VFX
                 case VfxMaterial.SteelJoint: return new ImpactRecipe(24, 0.30f, 4, 0xFFD27A, 0xE8B04B);
                 case VfxMaterial.Terrain: return new ImpactRecipe(6, 0.40f, 0, 0xC98A4B, 0xC98A4B);
                 case VfxMaterial.Glass: return new ImpactRecipe(14, 0.50f, 2, 0xCFF3FF, 0xFFFFFF, 0x9FD8EE) /* shard body, glint, edge (Art to confirm) */;
+                case VfxMaterial.Stone: return new ImpactRecipe(16, 0.60f, 2, 0xC9B48A, 0xD4C49E, 0xA08A62) /* sandstone chips, dust, chip shade (Art ruling #10); white flash 2 f, dust 600 ms (Animator) */;
                 default: return new ImpactRecipe(20, 0.40f, 0, 0xFF5A36, 0xFFFFFF); // explosive fireball; smoke separate 1.2 s
             }
         }
+
+        /// <summary>Import fractureClass (ImportedPhysicsHints, hero buildings: models/HeroBuildings/Kit_&lt;B&gt;_stats.json "frac") to VfxMaterial.
+        /// Case-insensitive. "Roof" (terracotta tiles) maps to Stone (PM) and gets a terracotta dust override (DustOverrideForFractureClass).
+        /// Unknown or empty returns false and the caller keeps its material. Wooden-shingle roofs are tagged "Wood".</summary>
+        public static bool TryFromFractureClass(string fractureClass, out VfxMaterial m)
+        {
+            switch ((fractureClass ?? "").Trim().ToLowerInvariant())
+            {
+                case "wood": m = VfxMaterial.Wood; return true;
+                case "brick": m = VfxMaterial.Brick; return true;
+                case "steel": m = VfxMaterial.Steel; return true;
+                case "glass": m = VfxMaterial.Glass; return true;
+                case "stone": case "roof": m = VfxMaterial.Stone; return true;
+                default: m = VfxMaterial.Wood; return false;
+            }
+        }
+
+        /// <summary>Per-piece dust colour (0xRRGGBB mid step) for an imported fractureClass, 0 = recipe colours. "Roof" → terracotta #D9A28C (PM).</summary>
+        public static uint DustOverrideForFractureClass(string fractureClass) =>
+            (fractureClass ?? "").Trim().ToLowerInvariant() == "roof" ? VfxIds.RoofDust : 0u;
 
         /// <summary>Low tier x0.5 (02 Perf). Reduce motion leaves particle counts unchanged (07 per-file "02").</summary>
         public static int ParticleCount(int baseCount, int tier) => tier == 0 ? Math.Max(1, baseCount / 2) : baseCount;

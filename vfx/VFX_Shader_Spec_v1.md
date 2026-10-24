@@ -135,15 +135,20 @@ Code-built: `VfxRecipes` (data) → `VfxParticleBuilder` (ParticleSystem) at run
 | Sparks_Steel | IMPACT/BREAK_STEEL | hit 1, sparks 7 (stretched, additive), bits 3 | #FFD27A, bits #3A3F48 | 0.3 s | ×0.5 | flash ×0.4 |
 | Sparks_Joint | PHYS_JOINT_SNAP, *_STEEL_JOINT | gold ring 1 (4 f), sparks 24 | #E8B04B, #FFD27A | 0.3 s | ×0.5 | ring α≤0.5 |
 | Glass_Shards | PHYS_* Glass | hit 1, shards 10 (glossy atlas row 1, white glint), glint 4 | #9FD8EE/#E6FAFF | 0.55 s | ×0.5 | flash ×0.4 |
-| Dust_Wood/Brick/Terrain/Glass | debris impacts, DEBRIS_BURST, COLLAPSE_START | puffs 6 | #CFA779 / #D9A37E / #C98A4B / white | 0.4–0.8 s | ×0.5 | unchanged |
+| Impact_Stone | PHYS_* Stone (Sim MaterialType 5), MaterialKind.Stone, fractureClass "Stone" or "Roof", IMPACT/BREAK_STONE (Animator confirmed) | hit 1 (white, 2 f), chips 8 (toon chunks), dust 8 (3 steps) | chips #C9B48A/#A08A62, dust #D4C49E (steps #E8DCC0/#D4C49E/#B09C74), **Art ruling #10 sandstone** | dust 0.6 s | ×0.5 | flash ×0.4, α≤0.5, ≥100 ms |
+| Dust_Wood/Brick/Terrain/Glass/Stone | debris impacts, DEBRIS_BURST, COLLAPSE_START | puffs 6 | #CFA779 / #D9A37E / #C98A4B / white / #D4C49E | 0.4–0.8 s (stone 0.6 s) | ×0.5 | unchanged |
 | Collapse_Dust | COLLAPSE_LAND / PHYS_COLLAPSE_END | ring puffs 18 tinted by dominant material | DustTint | 1.2 s | ×0.5 | unchanged, no shake |
 | Muzzle_Wrecker | ANIM_WRECKER_FIRE f0 at muzzle_socket | flash quad 3 f 0.6→1.3, sparks 6, smoke 3 @2 f | Core cyan #22D3EE, centre #E0FBFF, rim #E8B04B | 50 ms / 0.5 s | sparks off | ×0.4, no scale pop |
 Budget: impacts lane 150 (Low 75) + power-up lane 80 (Low 40) = global 230, oldest culled first; break/debris spawns ≤3 per 100 ms. Light debris rattles spawn no particles.
-**Damage feedback** (`DamageFeedback` on the piece; PHYS_IMPACT → hit flash, PHYS_CRACK → step): `_HitFlash` peak 0.5/0.7/0.85 by tier (cap 0.85), 2 f (joint 4 f), RM ×0.4 with ≥100 ms ease-out; `_DamageStep` 0/1/2 from physics crack step 1→1, 2–3→2, never decreases; `_CrackMap` = `T_CrackMask_Wedge` (R sparse, G dense); `_DarkenPerStep` 0.10 (20 % at step 2; glass 0.05); `_CrackColor` wood #6B4226, brick #7A3326, steel #3A3F48, glass #E6FAFF.
-### Glass (material tables)
+**Damage feedback** (`DamageFeedback` on the piece; PHYS_IMPACT → hit flash, PHYS_CRACK → step): `_HitFlash` peak 0.5/0.7/0.85 by tier (cap 0.85), 2 f (joint 4 f), RM ×0.4 with ≥100 ms ease-out; `_DamageStep` 0/1/2 from physics crack step 1→1, 2–3→2, never decreases; `_CrackMap` = `T_CrackMask_Wedge` (R sparse, G dense); `_DarkenPerStep` 0.10 (20 % at step 2; glass 0.05); `_CrackColor` wood #6B4226, brick #7A3326, steel #3A3F48, glass #E6FAFF, stone #5E4A30 (Art ruling #10). `VfxMaterial`: Wood 0, Brick 1, Steel 2, SteelJoint 3, Terrain 4, Explosive 5, Glass 6, **Stone 7** (append only; Stone = 7 and IMPACT_STONE / BREAK_STONE confirmed by Animator). A piece whose `ImportedPhysicsHints.fractureClass` maps to a VFX material (Wood/Brick/Steel/Glass/Stone, and Roof → Stone) gets it as its `DamageFeedback` default; an explicit assignment in code still wins.
+
+**Roof (PM decision):** there is no Roof `VfxMaterial` (and no Roof value in the Physics/Gameplay enums, which Physics owns). Terracotta-tile roofs (`fractureClass "Roof"`) use **Stone** FX with a per-piece dust colour: `DamageFeedback.dustOverride` = #D9A28C (set from the hints), and `VfxDirector` recolours only the `dust` layer of that piece's Stone effects with `VfxIds.DustSteps(#D9A28C)` = #EBC8B4 / #D9A28C / #B48167 (lit/shade derived per channel the same way as the Art stone steps). Chips, flash and cracks stay Stone. The override applies only while the piece's material is Stone, so a non-Stone material assigned in code never gets the tint. Collapse dust (no piece id) stays sandstone. **Wooden-shingle roofs are tagged `Wood`** and use the Wood palette.
+### Glass, Stone, Roof (material tables)
 | Material | Albedo | Smoothness | Metallic | Debris | Crack |
 |---|---|---|---|---|---|
 | Glass | #CFF3FF, α via GlossyPBR opaque tint (no transparency on Low) | 0.9 | 0 | shards #9FD8EE + glint #FFFFFF | #E6FAFF lines |
+| Stone (Art ruling #10, warm sandstone) | #C9B48A, seams #8A7350 (hero kit atlas) | — | 0 | chips #C9B48A/#A08A62, dust #D4C49E | #5E4A30 |
+| Roof, terracotta tiles (PM: uses Stone) | tile #C8553D (hero kit atlas) | — | 0 | Stone FX; dust layer recoloured #D9A28C (steps #EBC8B4/#D9A28C/#B48167) | Stone #5E4A30 |
 
 ## 6 · Power-ups (spec only in v1)
 Values from 04_powerups.md; sync from anim_audio_map.csv. Common arm: slot part pulses in slot colour on `PU_ARM_<NAME>`; `PU_DISARM` = 150 ms fade-out (not Time Fracture).

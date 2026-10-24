@@ -40,6 +40,7 @@ namespace Crashverse.Core
                 if (AccountDeletion.Pending)
                 {
                     var res = await AccountDeletion.Flush(b); // A6: queued offline request goes out now
+                    if (res == AccountDeletion.Result.WipedLocal) { GameBootstrap.RestartFirstRun(); r?.Toast("Your data was deleted from this device.", 4f); return; }
                     if (res == AccountDeletion.Result.Scheduled) { GameBootstrap.RestartFirstRun(); r?.Toast("Your account deletion request was sent.", 4f); return; }
                     if (res == AccountDeletion.Result.ReauthRequired) r?.Toast("Sign in again to finish deleting your account.", 4f);
                 }

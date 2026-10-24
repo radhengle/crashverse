@@ -200,22 +200,42 @@ namespace Crashverse.Feel
 
         public void Arm(float durationSeconds = 4f, float slow = 0.25f)
         {
-            Active = true; Remaining = durationSeconds; _slow = slow; _holdForImpact = false; _warned = false;
+            Active = true; Remaining = durationSeconds; _slow = slow; _holdForImpact = false; _warned = false; _tickMode = false;
             AnimEventBus.Raise(AnimEvents.PuTimeStart);
         }
+        /// <summary>Power-ups v2 Time Freeze: a fixed number of sim ticks (200), counted by TickSim (one call per FixedUpdate),
+        /// ending early at the fired shot's impact tick. Deterministic: no wall-clock time involved.</summary>
+        public void ArmTicks(int durationTicks, float slow = 0.25f)
+        {
+            Arm(durationTicks * 0.02f, slow); TicksLeft = durationTicks > 0 ? durationTicks : 200; _tickMode = true;
+        }
+        public int TicksLeft { get; private set; }
+        bool _tickMode;
+        public bool TickMode => Active && _tickMode;
+        public void TickSim()
+        {
+            if (!Active || !_tickMode) return;
+            TicksLeft--; Remaining = TicksLeft * 0.02f;
+            if (!_warned && TicksLeft <= 25) { _warned = true; AnimEventBus.Raise(AnimEvents.PuTimeWarn); }
+            if (TicksLeft <= 0) End();
+        }
         public void OnShotFired() { if (Active) _holdForImpact = true; }
-        public void OnShotImpact() { if (!Active || !_holdForImpact) return; _holdForImpact = false; if (Remaining <= 0f) End(); }
+        public void OnShotImpact()
+        {
+            if (!Active || !_holdForImpact) return; _holdForImpact = false;
+            if (_tickMode || Remaining <= 0f) End(); // v2: ends at the impact tick if that comes before the 200 ticks
+        }
         public void Cancel() { if (Active) End(); }
 
         /// <param name="realDt">Unscaled seconds.</param>
         public void Tick(float realDt)
         {
-            if (!Active) return;
+            if (!Active || _tickMode) return;
             Remaining -= realDt;
             if (!_warned && Remaining <= 0.5f) { _warned = true; AnimEventBus.Raise(AnimEvents.PuTimeWarn); }
             if (Remaining <= 0f && !_holdForImpact) End();
         }
-        void End() { Active = false; Remaining = 0f; _holdForImpact = false; AnimEventBus.Raise(AnimEvents.PuTimeEnd); Ended?.Invoke(); }
+        void End() { Active = false; Remaining = 0f; _holdForImpact = false; _tickMode = false; TicksLeft = 0; AnimEventBus.Raise(AnimEvents.PuTimeEnd); Ended?.Invoke(); }
     }
 
     // ───────────── Tidewarden shutter (05_bosses) ─────────────

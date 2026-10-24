@@ -1,0 +1,152 @@
+# Release AAB for Play (PR #8, folded into integration/v2). Never publishes.
+# - pull_request: builds the release AAB UNSIGNED to prove the job and its gates (no signing secrets referenced).
+# - workflow_dispatch on main: builds unsigned, then signs on the runner with jarsigner (passwords from step env, never on
+#   Unity's argv: Security #55 M-1) using the upload key from the protected `release` environment, and checks the cert against
+#   Tools/ci/upload_cert_sha256.txt. Skipped cleanly when the secrets are missing.
+# Gates: release profile (non-debuggable, no CRASHVERSE_DEV), targetSdk 35, no backups, arm64 libs, 16 KB ELF alignment, and the
+# built-output release guard on the AAB itself.
+name: Build Android AAB (release)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-aab-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  secrets-check:
+    name: Upload-key secrets present?
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    environment: release
+    outputs:
+      present: ${{ steps.check.outputs.present }}
+    steps:
+      - id: check
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KP: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          AN: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          AP: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+        run: |
+          if [ -n "$KS" ] && [ -n "$KP" ] && [ -n "$AN" ] && [ -n "$AP" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Upload-key secrets not configured; skipping the signed AAB build."
+          fi
+
+  aab:
+    name: GameCI Unity Android AAB (release${{ github.event_name == 'pull_request' && ', unsigned PR check' || ', upload key' }})
+    needs: secrets-check
+    # PRs from this repo only (fork PRs get no Unity secrets); signed only on a main dispatch with the upload-key secrets present
+    if: always() && ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (needs.secrets-check.outputs.present == 'true' && github.ref == 'refs/heads/main'))
+    runs-on: ubuntu-24.04
+    environment: ${{ github.event_name == 'pull_request' && 'unity' || 'release' }}
+    env:
+      CV_SIGN: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: read
+    steps:
+      - name: Free disk space (unityci editor image is large)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: false
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          lfs: false
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Release guards (source)
+        run: python3 Tools/ci/check_release_guards.py
+      - name: Build AAB (unsigned; Unity never sees the upload key)
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Android
+          unityVersion: 2022.3.62f3
+          buildName: CRASHVERSE
+          buildsPath: build
+          buildMethod: Crashverse.EditorTools.BuildScript.BuildAndroid
+          customParameters: -crashverseProfile release -crashverseSignAfter # GameCI's docker doesn't forward CRASHVERSE_* env
+          versioning: Custom
+          version: 0.1.${{ github.run_number }}
+          androidVersionCode: ${{ github.run_number }}
+          androidExportType: androidAppBundle
+          androidTargetSdkVersion: AndroidApiLevel35
+      - name: Assert AAB (arm64 libs, non-debuggable, targetSdk 35, no backups, 16 KB)
+        run: |
+          set -e
+          sudo chown -R "$(id -u):$(id -g)" build
+          f=$(ls build/Android/*.aab | head -1)
+          unzip -l "$f" | grep -E 'lib/(arm64-v8a|armeabi-v7a)/' | tee native_libs.txt
+          for lib in libil2cpp.so libunity.so; do grep -q "base/lib/arm64-v8a/$lib" native_libs.txt || { echo "::error::$f is missing base/lib/arm64-v8a/$lib"; exit 1; }; done
+          curl -fsSLo bundletool.jar https://github.com/google/bundletool/releases/download/1.17.2/bundletool-all-1.17.2.jar
+          echo "2d4ad908faea64047c1cc9cb747e6aa667c6ab192e09607bd16b67246a8cd6ae  bundletool.jar" | sha256sum -c - # pinned (Security #55 L-55-4)
+          java -jar bundletool.jar dump manifest --bundle "$f" > aab_manifest.xml
+          grep -q 'android:debuggable="true"' aab_manifest.xml && { echo "::error::release AAB is debuggable"; exit 1; }
+          grep -qE 'android:targetSdkVersion="35"' aab_manifest.xml || { echo "::error::AAB targetSdkVersion is not 35"; grep -o 'targetSdkVersion="[0-9]*"' aab_manifest.xml; exit 1; }
+          # Security #55 L-55-3: same backup gates as check_apk.sh
+          grep -q 'android:allowBackup="false"' aab_manifest.xml || { echo "::error::AAB allowBackup is not false"; exit 1; }
+          grep -q 'android:fullBackupContent="false"' aab_manifest.xml || { echo "::error::AAB fullBackupContent is not false"; exit 1; }
+          grep -q 'android:dataExtractionRules=' aab_manifest.xml || { echo "::error::AAB has no dataExtractionRules"; exit 1; }
+          rm -rf so && mkdir so && unzip -q "$f" 'base/lib/arm64-v8a/*.so' -d so
+          python3 - so <<'PY'
+          import os, struct, sys
+          bad = []
+          for root, _, files in os.walk(sys.argv[1]):
+              for f in files:
+                  b = open(os.path.join(root, f), 'rb').read()
+                  phoff, = struct.unpack_from('<Q', b, 0x20); phentsize, phnum = struct.unpack_from('<HH', b, 0x36)
+                  al = [struct.unpack_from('<Q', b, phoff + i * phentsize + 0x30)[0] for i in range(phnum) if struct.unpack_from('<I', b, phoff + i * phentsize)[0] == 1]
+                  if al and min(al) < 16384: bad.append(f"{f} align={hex(min(al))}")
+          print("16 KB check:", "OK" if not bad else bad)
+          if bad and os.environ.get("CV_REQUIRE_16K", "1") == "1": print("::error::native libs not 16 KB aligned"); sys.exit(1)
+          PY
+      - name: Release guard on built output (the AAB)
+        run: python3 Tools/ci/check_release_guards.py --built "$(ls build/Android/*.aab | head -1)"
+      - name: Sign AAB with the upload key (jarsigner, passwords from env; Security #55 M-1)
+        if: env.CV_SIGN == 'true'
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          KA_PASS: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+          KA_NAME: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+        run: |
+          set -e
+          pin=$(tr -d ' :\n' < Tools/ci/upload_cert_sha256.txt | tr 'A-F' 'a-f')
+          [[ "$pin" =~ ^[0-9a-f]{64}$ ]] || { echo "::error::Tools/ci/upload_cert_sha256.txt has no upload cert pin yet"; exit 1; }
+          f=$(ls build/Android/*.aab | head -1); ks="$RUNNER_TEMP/upload.keystore"
+          trap 'rm -f "$ks"' EXIT
+          ( umask 077; printf '%s' "$KS" | base64 -d > "$ks" )
+          zip -q -d "$f" 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*.EC' 'META-INF/*.DSA' 'META-INF/MANIFEST.MF' || true # Unity's debug-key signature
+          jarsigner -keystore "$ks" -storepass:env KS_PASS -keypass:env KA_PASS -sigalg SHA256withRSA -digestalg SHA-256 "$f" "$KA_NAME" > /dev/null
+          rm -f "$ks"
+          jarsigner -verify -certs -strict "$f" | tail -3
+          got=$(keytool -printcert -jarfile "$f" | grep -m1 'SHA256:' | awk '{print $2}' | tr -d ':' | tr 'A-F' 'a-f')
+          [ "$(keytool -printcert -jarfile "$f" | grep -c 'SHA256:')" = 1 ] || { echo "::error::expected exactly one signer"; exit 1; }
+          [ "$got" = "$pin" ] || { echo "::error::AAB signed with cert $got, not the pinned upload cert"; exit 1; }
+          echo "OK signed with the pinned upload cert"
+      - name: Upload AAB artifact (1 day; Security #55 M-3)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ${{ env.CV_SIGN == 'true' && 'crashverse-android-aab-signed' || 'crashverse-android-aab-unsigned' }}
+          path: build/Android/*.aab
+          if-no-files-found: error
+          retention-days: 1

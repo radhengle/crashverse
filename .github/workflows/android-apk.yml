@@ -130,24 +130,19 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           CRASHVERSE_BUILD_PROFILE: ${{ env.CRASHVERSE_BUILD_PROFILE }}
           CRASHVERSE_VERSION_CODE: ${{ github.run_number }}
-          CRASHVERSE_KEYSTORE_PATH: ${{ env.CV_SIGN == 'true' && 'build-secrets/dev.keystore' || '' }}
-          CRASHVERSE_KEYSTORE_PASS: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_PASS || '' }}
-          CRASHVERSE_KEYALIAS_NAME: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_NAME || '' }}
-          CRASHVERSE_KEYALIAS_PASS: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_PASS || '' }}
         with:
           targetPlatform: Android
-          unityVersion: 2022.3.50f1
+          unityVersion: 2022.3.62f3
           buildName: CRASHVERSE
           buildsPath: build
           buildMethod: Crashverse.EditorTools.BuildScript.BuildAndroid
           versioning: Custom # no git-derived versioning (it ran `git fetch`, which fails without persisted credentials)
           version: 0.1.${{ github.run_number }}
           androidVersionCode: ${{ github.run_number }}
-          androidKeystoreName: ${{ env.CV_SIGN == 'true' && 'build-secrets/dev.keystore' || '' }}
-          androidKeystoreBase64: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_BASE64 || '' }}
-          androidKeystorePass: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYSTORE_PASS || '' }}
-          androidKeyaliasName: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_NAME || '' }}
-          androidKeyaliasPass: ${{ env.CV_SIGN == 'true' && secrets.DEV_KEYALIAS_PASS || '' }}
+          androidTargetSdkVersion: AndroidApiLevel35 # release blocker: target Android 15; GameCI installs platforms;android-35
+          # GameCI's docker doesn't forward CRASHVERSE_* env (QA R-3). Security #55 M-1: no keystore or password goes to GameCI/Unity
+          # (it would put them on Unity's argv, echoed in the public log); the step below signs on the runner with passwords from env.
+          customParameters: -crashverseProfile ${{ env.CRASHVERSE_BUILD_PROFILE }} -crashverseSignAfter
 
       - name: Assert built APK (arm64 libs, allowBackup=false, portrait-only, release non-debuggable)
         run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" "$CRASHVERSE_BUILD_PROFILE"
@@ -169,6 +164,7 @@ jobs:
           set -e
           sudo chown -R "$(id -u):$(id -g)" build build-secrets # written by the GameCI container as root
           f=$(ls build/Android/*.apk | head -1)
+          zip -q -d "$f" 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*.EC' 'META-INF/*.DSA' 'META-INF/MANIFEST.MF' || true # drop Unity's debug-key v1 signature
           "$BT/zipalign" -f -P 16 -v 4 "$f" aligned.apk > /dev/null
           "$BT/apksigner" sign --ks build-secrets/dev.keystore --ks-pass env:KS_PASS --ks-key-alias "$KA_NAME" --key-pass env:KA_PASS \
             --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --out "$f" aligned.apk
@@ -199,6 +195,7 @@ jobs:
             grep -qF "Verified using $v: true" sig.txt || { echo "::error::not signed with $v"; exit 1; }
           done
           "$BT/zipalign" -c -P 16 4 "$f" || { echo "::error::not zipaligned (-P 16)"; exit 1; }
+          [ "$(grep -c 'Signer #[0-9]* certificate SHA-256 digest' sig.txt)" = 1 ] || { echo "::error::expected exactly one signer"; exit 1; }
           sha=$(grep -m1 "Signer #1 certificate SHA-256 digest" sig.txt | awk '{print $NF}')
           [ "$sha" = "$(tr -d ' \n' < Tools/ci/dev_cert_sha256.txt)" ] || { echo "::error::signing cert $sha != pinned dev cert (Tools/ci/dev_cert_sha256.txt)"; exit 1; }
           "$BT/aapt2" dump badging "$f" | tee badging.txt | head -3
@@ -221,9 +218,81 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  # Release blocker (v2): the release profile is built and its guards run on every PR into main, not only on a manual dispatch.
+  # Unsigned (Unity debug keystore), never published, no signing secrets. Asserts non-debuggable, targetSdk 35, no dev symbols.
+  build-release:
+    name: GameCI Unity Android (release profile, PR guard)
+    needs: guards
+    if: github.event_name == 'pull_request'
+    environment: unity
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      CRASHVERSE_BUILD_PROFILE: release
+    steps:
+      - name: Free disk space (unityci editor image is large)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: false
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          lfs: false
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Cache Library
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: Library
+          key: Library-Android-release-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-Android-release-
+            Library-Android-dev-
+      - name: Build release APK (unsigned)
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          CRASHVERSE_BUILD_PROFILE: release
+          CRASHVERSE_VERSION_CODE: ${{ github.run_number }}
+        with:
+          targetPlatform: Android
+          unityVersion: 2022.3.62f3
+          buildName: CRASHVERSE
+          buildsPath: build
+          buildMethod: Crashverse.EditorTools.BuildScript.BuildAndroid
+          versioning: Custom
+          version: 0.1.${{ github.run_number }}
+          androidVersionCode: ${{ github.run_number }}
+          androidTargetSdkVersion: AndroidApiLevel35
+          customParameters: -crashverseProfile release -crashverseEmulatorAbi # + x86_64 so the release variant runs on the CI emulator (QA V2-08)
+      - name: Assert built release APK (non-debuggable, targetSdk 35, arm64, 16 KB report)
+        run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" release
+      - name: Release guard on built output (no dev symbols in IL2CPP metadata)
+        run: |
+          set -e
+          sudo chown -R "$(id -u):$(id -g)" build
+          for f in build/Android/*.apk; do python3 Tools/ci/check_release_guards.py --built "$f"; done
+      - name: Upload release APK (PR check artifact, not published)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: crashverse-android-apk-release-unsigned
+          path: build/Android/*.apk
+          if-no-files-found: error
+          retention-days: 7
+
   emulator-smoke:
-    name: Emulator smoke API ${{ matrix.api }} x86_64 1080x2340 (publish gate)
-    needs: build
+    name: Emulator smoke API ${{ matrix.api }} x86_64 1080x2340 #${{ matrix.rep }} (publish gate)
+    needs: [build, build-release]
+    if: always() && needs.build.result == 'success' # build-release runs on PRs only (skipped otherwise)
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -231,6 +300,10 @@ jobs:
       fail-fast: false
       matrix:
         api: [34, 36] # 36 = Android 16, the user's Nothing Phone 3a. arm64 images can't boot on x86 runners.
+        rep: [1]
+        include: # QA V2-01: API 34 three times per run (stability evidence for the age-gate teardown)
+          - { api: 34, rep: 2 }
+          - { api: 34, rep: 3 }
     steps:
       - name: Checkout (scripts only)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -247,6 +320,11 @@ jobs:
         with:
           name: crashverse-android-apk
           path: apk
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        if: needs.build-release.result == 'success'
+        with:
+          name: crashverse-android-apk-release-unsigned
+          path: rel
       - name: QA first-run flow (age gate → map → L1 → win → retry → fail)
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
@@ -257,11 +335,12 @@ jobs:
           cores: 4
           ram-size: 4096M
           emulator-options: -no-window -gpu swangle_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340 # ANGLE on SwiftShader-Vulkan: the GL translator caps vertex uniforms at 256 and URP Simple Lit fails to link (run 40062717341)
-          script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out
+          # then (PRs) the release variant: launch it and get past the age gate (QA V2-08)
+          script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out && if [ -d rel ]; then bash Tools/ci/release_launch.sh "$(ls rel/*.apk | head -1)" smoke_out; fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: emulator-smoke-api${{ matrix.api }}
+          name: emulator-smoke-api${{ matrix.api }}-${{ matrix.rep }}
           path: smoke_out
           if-no-files-found: error
           retention-days: 14

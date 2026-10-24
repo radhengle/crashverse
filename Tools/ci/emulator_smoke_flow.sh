@@ -7,7 +7,8 @@ set -euo pipefail
 APK=$1; OUT=${2:-smoke_out}; PKG=com.crashverse.game; mkdir -p "$OUT"
 : "${MONTH_X:?}" "${MONTH_Y:?}" "${MONTH_OPT_X:?}" "${MONTH_OPT_Y:?}" "${YEAR_X:?}" "${YEAR_Y:?}" "${YEAR_OPT_X:?}" "${YEAR_OPT_Y:?}" \
   "${CONTINUE_X:?}" "${CONTINUE_Y:?}" "${GUEST_X:?}" "${GUEST_Y:?}" "${NODE1_X:?}" "${NODE1_Y:?}" "${PLAY_X:?}" "${PLAY_Y:?}" \
-  "${AIM_FROM_X:?}" "${AIM_FROM_Y:?}" "${AIM_TO_X:?}" "${AIM_TO_Y:?}" "${MISS_TO_X:?}" "${MISS_TO_Y:?}" "${RETRY_X:?}" "${RETRY_Y:?}"
+  "${AIM_FROM_X:?}" "${AIM_FROM_Y:?}" "${AIM_TO_X:?}" "${AIM_TO_Y:?}" "${MISS_TO_X:?}" "${MISS_TO_Y:?}" "${RETRY_X:?}" "${RETRY_Y:?}" \
+  "${AVATAR_X:?}" "${AVATAR_Y:?}" "${BADGE_X:?}" "${BADGE_Y:?}" "${PCONT_X:?}" "${PCONT_Y:?}" "${MAP_X:?}" "${MAP_Y:?}" "${NODE2_X:?}" "${NODE2_Y:?}"
 SHOTS_L1=${SHOTS_L1:-4}
 shot(){ adb exec-out screencap -p > "$OUT/$1.png"; }
 # QA C-2: the #36 logcat gate (crash/ANR/exception + code stripping / missing types), one ERE per line
@@ -39,13 +40,20 @@ tap $PICKED_X $PICKED_Y; check year
 for i in $(seq 1 20); do adb logcat -d -s Unity | grep -q "CVTAP|AgeGateScreen|Button_Continue|[0-9]*|[0-9]*|1" && break; sleep 0.5
   [ $i = 20 ] && { shot FAIL_continue_disabled; echo "FAIL: Continue not enabled after Month+Year"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done
 shot 03_agegate_filled            # Continue must be enabled (visual check / pixel compare)
-settle continue; tap $CONTINUE_X $CONTINUE_Y 4; check continue; shot 04_map
-tap $GUEST_X $GUEST_Y 2; check login
-# QA: the map must appear after the automatic guest sign-in within 30 s
-for i in $(seq 1 30); do adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|MapScreen" && break; sleep 1
-  [ $i = 30 ] && { shot FAIL_no_map; echo "FAIL: map not reached 30 s after guest sign-in"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done
-shot 05_map_guest
-tap $NODE1_X $NODE1_Y; tap $PLAY_X $PLAY_Y 6; check l1_load; shot 06_l1_hud
+begin(){ local i; for i in $(seq 1 30); do adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|$1" && return 0; sleep 1; done
+  shot "FAIL_no_$1"; echo "FAIL: $1 not reached within 30 s ($2)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
+settle continue; adb logcat -c; tap $CONTINUE_X $CONTINUE_Y 4; check continue
+# v2 target UI: Login (social sign-in shown disabled, "Coming soon") -> guest -> Create Profile -> World Map
+begin LoginScreen "after the age gate"; settle login; shot 04_login
+for p in Google Facebook Instagram X Email; do adb logcat -d -s Unity | grep -q "CVTAP|LoginScreen|Button_$p|[0-9]*|[0-9]*|0" \
+  || { shot FAIL_social_$p; echo "FAIL: $p sign-in must be shown disabled (Coming soon)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done
+adb logcat -c; tap $GUEST_X $GUEST_Y 2; check login
+begin ProfileScreen "after Play as Guest"; settle profile
+tap $AVATAR_X $AVATAR_Y 1; tap $BADGE_X $BADGE_Y 1; check profile; shot 05_profile
+adb logcat -c; tap $PCONT_X $PCONT_Y 3; check profile_continue
+begin MapScreen "after creating the guest profile"; settle map; shot 05_map_guest
+adb logcat -c; tap $NODE1_X $NODE1_Y 3; begin LevelSelectScreen "after tapping level 1"; check level_select; shot 06_level_select
+tap $PLAY_X $PLAY_Y 6; check l1_load; shot 06_l1_hud
 # QA LOW + P0 (aim mirrored on dev-build-6): real touch swipes through AimController; +yaw is screen-left from the run camera,
 # so a RIGHT swipe must drive the logged target yaw negative and a LEFT swipe positive (no hook, no Drag() shortcut).
 D=$(adb shell wm density | grep -o '[0-9]*$' | tail -1); SW=$(( 100 * D / 160 ))
@@ -71,6 +79,8 @@ R1=$(result win); echo "scripted win line result: $R1" | tee "$OUT/result_win.tx
 [ "$R1" = win ] || { shot FAIL_win_line; adb logcat -d > "$OUT/logcat.txt"; echo "FAIL: BUG-24 known winning L1 line (practice hint) gave '$R1'" >&2; exit 1; }
 # RESULTDONE = final values in the labels + 10 frames rendered since; 2 s more covers the slow CPU-GL compositor (QA C-1b/C-3b)
 D1=$(done_line win); sleep 2; shot 07_result_win; echo "$D1" | tee -a "$OUT/result_win.txt"
+# v2 Level Complete: Next Level offered (enabled) after the L1 win
+adb logcat -d -s Unity | grep -q "CVTAP|ResultsScreen|Button_NextLevel|[0-9]*|[0-9]*|1" || { echo "FAIL: Level Complete has no enabled Next Level"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
 WS=$(kv "$D1" score); WST=$(kv "$D1" stars); WL=$(kv "$D1" label)
 [ "${WS:-0}" -gt 0 ] || { echo "FAIL: win screen score is ${WS:-?} (QA C-1)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
 case "$WL" in "Score_${WS}_"*) ;; *) echo "FAIL: win panel label '$WL' does not show score $WS (QA C-1b)"; adb logcat -d > "$OUT/logcat.txt"; exit 1;; esac
@@ -84,5 +94,11 @@ SECONDS=0; for s in $(seq 1 200); do [ $SECONDS -ge $SHOT_WALL_S ] && break; adb
 R2=$(result fail); echo "miss line result: $R2" | tee "$OUT/result_fail.txt"
 [ "$R2" = fail ] || { shot 08_result_fail; echo "FAIL: miss line did not fail ($R2)"; exit 1; }
 D2=$(done_line fail); sleep 2; shot 08_result_fail; echo "$D2" | tee -a "$OUT/result_fail.txt"   # QA C-3: settled panel
+# back to the map: L2 is unlocked by the win; its Level Select opens
+# the fail panel has no Next Level row, so Map sits higher than on the calibration win panel: use the live probe position
+FM=$(adb logcat -d -s Unity | grep -o "CVTAP|ResultsScreen|Button_Map|[0-9]*|[0-9]*" | tail -1 | cut -d'|' -f4,5)
+[ -n "$FM" ] && { MAP_X=${FM%|*}; MAP_Y=${FM#*|}; }; echo "fail-panel Map at $MAP_X,$MAP_Y" | tee -a "$OUT/coords.txt"
+adb logcat -c; tap $MAP_X $MAP_Y 4; begin MapScreen "after Map on the results"; settle map2; shot 09_map_after_win
+adb logcat -c; tap $NODE2_X $NODE2_Y 3; begin LevelSelectScreen "after tapping level 2"; check level2; shot 09_level2_select
 check final   # whole-run logcat gate (QA C-2)
 adb logcat -d > "$OUT/logcat.txt"; echo "SMOKE PASS (screens in $OUT for visual review)"
