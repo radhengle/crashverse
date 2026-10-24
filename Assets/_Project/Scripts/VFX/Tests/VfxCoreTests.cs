@@ -52,31 +52,78 @@ namespace Crashverse.VFX.Tests
         [Test] public void StoneToonDustChipsAndCracks()
         {
             var dust = VfxRecipes.Get(VfxIds.DustStone).Layers[0];
-            CollectionAssert.AreEqual(new[] { 0xDDD8CEu, 0xC9C2B6u, 0xA39C90u }, dust.Steps, "3 flat toon steps around warm grey #C9C2B6");
+            CollectionAssert.AreEqual(new[] { 0xE8DCC0u, 0xD4C49Eu, 0xB09C74u }, dust.Steps, "Art ruling #10: sandstone dust steps");
             var imp = VfxRecipes.Get(VfxIds.ImpactStone);
             var chips = System.Array.Find(imp.Layers, l => l.Name == "chips");
-            CollectionAssert.AreEquivalent(new[] { 0xA8A096u, 0x8C857Au }, chips.Steps);
+            CollectionAssert.AreEquivalent(new[] { 0xC9B48Au, 0xA08A62u }, chips.Steps);
             Assert.AreEqual(VfxSheet.DebrisChunks, chips.Sheet);
-            CollectionAssert.Contains(System.Array.Find(imp.Layers, l => l.Name == "dust").Steps, 0xC9C2B6u);
+            CollectionAssert.Contains(System.Array.Find(imp.Layers, l => l.Name == "dust").Steps, 0xD4C49Eu);
             foreach (var l in imp.Layers) if (!l.IsFlash) { Assert.AreEqual(VfxBlend.Alpha, l.Blend, l.Name + ": no glow"); Assert.LessOrEqual(l.Intensity, 1f); }
             Assert.AreEqual(VfxIds.ImpactStone, VfxRecipes.ImpactFor(VfxMaterial.Stone, false));
             Assert.AreEqual(VfxIds.ImpactStone, VfxRecipes.ImpactFor(VfxMaterial.Stone, true));
             Assert.AreEqual(VfxIds.DustStone, VfxRecipes.DustFor(VfxMaterial.Stone));
-            Assert.AreEqual(0xC9C2B6u, VfxRecipes.DustTint(VfxMaterial.Stone));
-            Assert.AreEqual(0x4E4A44u, DamageRules.CrackColor(VfxMaterial.Stone));
+            Assert.AreEqual(0xD4C49Eu, VfxRecipes.DustTint(VfxMaterial.Stone));
+            Assert.AreEqual(0x5E4A30u, DamageRules.CrackColor(VfxMaterial.Stone));
             Assert.AreEqual(2, DamageRules.FlashFrames(VfxMaterial.Stone));
             Assert.AreEqual(0.10f, DamageRules.DarkenPerStep(VfxMaterial.Stone), 1e-5f);
-            Assert.AreEqual(0xA8A096u, VfxRules.Impact(VfxMaterial.Stone).ColorA);
+            Assert.AreEqual(0xC9B48Au, VfxRules.Impact(VfxMaterial.Stone).ColorA);
+        }
+
+        [Test] public void StoneTimingsMatchAnimator()
+        {
+            // Animator: white hit flash 2 frames, dust 600 ms, Reduce motion caps as the others.
+            var imp = VfxRecipes.Get(VfxIds.ImpactStone);
+            var hit = System.Array.Find(imp.Layers, l => l.Name == "hit");
+            Assert.IsTrue(hit.IsFlash);
+            CollectionAssert.AreEqual(new[] { 0xFFFFFFu }, hit.Steps, "white flash");
+            Assert.AreEqual(2f / 60f, hit.LifeMax, 1e-4f, "2 frames");
+            Assert.AreEqual(0.6f, System.Array.Find(imp.Layers, l => l.Name == "dust").LifeMax, 1e-4f);
+            var dust = VfxRecipes.Get(VfxIds.DustStone);
+            Assert.AreEqual(0.6f, dust.Layers[0].LifeMax, 1e-4f);
+            Assert.LessOrEqual(dust.Duration, 0.6f + 1e-4f);
+            Assert.AreEqual(0xFFFFFFu, DamageRules.FlashColor(VfxMaterial.Stone));
+            Assert.AreEqual(2, DamageRules.FlashFrames(VfxMaterial.Stone));
+            var rm = VfxRecipes.ApplyReduceMotion(hit, true);
+            Assert.LessOrEqual(rm.Alpha, 0.5f); Assert.GreaterOrEqual(rm.LifeMin, 0.1f); Assert.AreEqual(hit.Intensity * 0.4f, rm.Intensity, 1e-4f);
+        }
+
+        [Test] public void RoofIsStoneWithTerracottaDust()
+        {
+            Assert.IsTrue(VfxRules.TryFromFractureClass("Roof", out var m)); Assert.AreEqual(VfxMaterial.Stone, m, "PM: no Roof VfxMaterial");
+            Assert.IsFalse(System.Enum.IsDefined(typeof(VfxMaterial), "Roof"));
+            Assert.AreEqual(0xD9A28Cu, VfxRules.DustOverrideForFractureClass("roof"));
+            Assert.AreEqual(0u, VfxRules.DustOverrideForFractureClass("Stone"));
+            Assert.AreEqual(0u, VfxRules.DustOverrideForFractureClass(null));
+            // Steps derived exactly like the Art stone steps; DustSteps reproduces Stone's own.
+            CollectionAssert.AreEqual(new[] { 0xE8DCC0u, 0xD4C49Eu, 0xB09C74u }, VfxIds.DustSteps(VfxIds.StoneDust));
+            CollectionAssert.AreEqual(new[] { 0xEBC8B4u, 0xD9A28Cu, 0xB48167u }, VfxIds.DustSteps(VfxIds.RoofDust));
+            // Only the dust layer is recoloured; chips and flash keep the stone recipe.
+            var imp = VfxRecipes.Get(VfxIds.ImpactStone);
+            foreach (var l in imp.Layers)
+                CollectionAssert.AreEqual(l.Name == "dust" ? VfxIds.DustSteps(0xD9A28C) : l.Steps, VfxRecipes.StepsFor(l, 0xD9A28C), l.Name);
+            foreach (var l in imp.Layers) Assert.AreSame(l.Steps, VfxRecipes.StepsFor(l, 0), "0 = recipe colours");
+        }
+
+        [Test] public void DustOverrideOnlyForStonePieceAndStoneEffect()
+        {
+            var stoneBreak = VfxImpactRouting.Route(new VfxImpact { Kind = VfxImpact.KBreak, MaterialA = VfxMaterial.Stone });
+            Assert.AreEqual(0xD9A28Cu, VfxImpactRouting.DustOverrideFor(stoneBreak, VfxMaterial.Stone, 0xD9A28C));
+            Assert.AreEqual(0u, VfxImpactRouting.DustOverrideFor(stoneBreak, VfxMaterial.Wood, 0xD9A28C), "material assigned in code (Wood) wins: no roof tint");
+            var woodBreak = VfxImpactRouting.Route(new VfxImpact { Kind = VfxImpact.KBreak, MaterialA = VfxMaterial.Wood });
+            Assert.AreEqual(0u, VfxImpactRouting.DustOverrideFor(woodBreak, VfxMaterial.Wood, 0xD9A28C));
+            Assert.AreEqual(0u, VfxImpactRouting.DustOverrideFor(stoneBreak, VfxMaterial.Stone, 0), "no override");
+            var crack = VfxImpactRouting.Route(new VfxImpact { Kind = VfxImpact.KCrack, MaterialA = VfxMaterial.Stone, DamageStep = 1 });
+            Assert.AreEqual(0u, VfxImpactRouting.DustOverrideFor(crack, VfxMaterial.Stone, 0xD9A28C), "no effect, nothing to tint");
         }
 
         [TestCase("Stone", VfxMaterial.Stone)] [TestCase("stone", VfxMaterial.Stone)] [TestCase(" Wood ", VfxMaterial.Wood)]
-        [TestCase("Steel", VfxMaterial.Steel)] [TestCase("Brick", VfxMaterial.Brick)] [TestCase("Glass", VfxMaterial.Glass)]
+        [TestCase("Steel", VfxMaterial.Steel)] [TestCase("Brick", VfxMaterial.Brick)] [TestCase("Glass", VfxMaterial.Glass)] [TestCase("Roof", VfxMaterial.Stone)]
         public void FractureClassMapsToVfxMaterial(string cls, VfxMaterial want)
         {
             Assert.IsTrue(VfxRules.TryFromFractureClass(cls, out var m)); Assert.AreEqual(want, m);
         }
 
-        [TestCase("Roof")] [TestCase("")] [TestCase(null)]
+        [TestCase("Thatch")] [TestCase("")] [TestCase(null)]
         public void UnknownFractureClassIsNotMapped(string cls) => Assert.IsFalse(VfxRules.TryFromFractureClass(cls, out _));
 
         [Test] public void ExplosionHasStepPuffsRingAndDebris()
@@ -168,7 +215,7 @@ namespace Crashverse.VFX.Tests
             var hit = new VfxImpact { Kind = VfxImpact.KImpact, Tier = 1, Source = VfxImpact.SrcDebris, MaterialA = VfxMaterial.Terrain, MaterialB = VfxMaterial.Stone };
             Assert.AreEqual(VfxIds.DustStone, VfxImpactRouting.Route(hit).EffectId);
             var end = new VfxImpact { Kind = VfxImpact.KCollapseEnd, Dominant = VfxMaterial.Stone };
-            Assert.AreEqual(0xC9C2B6u, VfxImpactRouting.Route(end).Tint);
+            Assert.AreEqual(0xD4C49Eu, VfxImpactRouting.Route(end).Tint);
             var start = new VfxImpact { Kind = VfxImpact.KCollapseStart, Dominant = VfxMaterial.Stone };
             Assert.AreEqual(VfxIds.DustStone, VfxImpactRouting.Route(start).EffectId);
         }

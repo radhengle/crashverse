@@ -15,7 +15,7 @@ namespace Crashverse.VFX
         public const float DarkenAtStep2 = 0.20f;
         public static float DarkenPerStep(VfxMaterial m) => m == VfxMaterial.Glass ? 0.05f : DarkenAtStep2 / 2f; // glass: tint, not mud
 
-        /// <summary>Crack colour (0xRRGGBB): wood #6B4226, brick mortar #7A3326, steel #3A3F48 (Art); glass white-ish fracture lines; stone #4E4A44 (proposals).</summary>
+        /// <summary>Crack colour (0xRRGGBB): wood #6B4226, brick mortar #7A3326, steel #3A3F48 (Art); glass white-ish fracture lines; stone #5E4A30 (Art ruling #10).</summary>
         public static uint CrackColor(VfxMaterial m) => m switch
         {
             VfxMaterial.Wood => 0x6B4226, VfxMaterial.Brick => 0x7A3326, VfxMaterial.Steel => 0x3A3F48, VfxMaterial.SteelJoint => 0x3A3F48,

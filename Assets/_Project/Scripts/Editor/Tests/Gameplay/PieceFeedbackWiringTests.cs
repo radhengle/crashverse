@@ -62,8 +62,15 @@ namespace Crashverse.Tests.Gameplay
             var h = _root.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
             h.fractureClass = "Stone";
             Assert.AreEqual(Crashverse.VFX.VfxMaterial.Stone, Crashverse.VFX.DamageFeedback.MaterialFromHints(_root, Crashverse.VFX.VfxMaterial.Wood));
+            Assert.AreEqual(0u, Crashverse.VFX.DamageFeedback.DustOverrideFromHints(_root), "stone: recipe dust");
             h.fractureClass = "Roof";
+            Assert.AreEqual(Crashverse.VFX.VfxMaterial.Stone, Crashverse.VFX.DamageFeedback.MaterialFromHints(_root, Crashverse.VFX.VfxMaterial.Wood), "Roof uses Stone (PM)");
+            Assert.AreEqual(0xD9A28Cu, Crashverse.VFX.DamageFeedback.DustOverrideFromHints(_root), "Roof: terracotta dust");
+            h.fractureClass = "Thatch";
             Assert.AreEqual(Crashverse.VFX.VfxMaterial.Wood, Crashverse.VFX.DamageFeedback.MaterialFromHints(_root, Crashverse.VFX.VfxMaterial.Wood), "unmapped class keeps fallback");
+            Assert.AreEqual(0u, Crashverse.VFX.DamageFeedback.DustOverrideFromHints(_root));
+            Object.DestroyImmediate(h);
+            Assert.AreEqual(0u, Crashverse.VFX.DamageFeedback.DustOverrideFromHints(_root), "no hints: no override");
         }
 
         [Test] public void AllBuiltDestructibles_GetDamageFeedbackWhenVfxPresent()

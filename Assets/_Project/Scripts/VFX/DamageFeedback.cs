@@ -13,6 +13,9 @@ namespace Crashverse.VFX
     public class DamageFeedback : MonoBehaviour
     {
         public VfxMaterial material = VfxMaterial.Wood;
+        [Tooltip("Per-piece dust colour 0xRRGGBB for this piece's Stone FX (0 = recipe colours). Roof tiles: #D9A28C terracotta (PM). " +
+                 "Only used while material is Stone, so a non-Stone material assigned in code never gets it.")]
+        public uint dustOverride;
         [Tooltip("ImpactEvent.pieceId (PR #20: StableId.Of(blockId)). -1 = only driven directly.")] public int pieceId = -1;
         public Renderer[] renderers;
         [Tooltip("T_CrackMask_Wedge (R step 1 sparse, G step 2 dense). Optional if the material already has _CrackMap.")] public Texture2D crackMask;
@@ -28,7 +31,18 @@ namespace Crashverse.VFX
 
         /// <summary>Default material from the imported fractureClass (hero buildings) when the piece carries ImportedPhysicsHints.
         /// Runs before AddComponent returns, so an explicit assignment by the caller (PieceFeedbackWiring) still wins.</summary>
-        void Awake() { material = MaterialFromHints(gameObject, material); }
+        void Awake()
+        {
+            material = MaterialFromHints(gameObject, material);
+            if (dustOverride == 0) dustOverride = DustOverrideFromHints(gameObject);
+        }
+
+        /// <summary>Dust override from the object's ImportedPhysicsHints.fractureClass ("Roof" → #D9A28C), else 0.</summary>
+        public static uint DustOverrideFromHints(GameObject go)
+        {
+            var h = go != null ? go.GetComponent<Crashverse.Import.ImportedPhysicsHints>() : null;
+            return h != null ? VfxRules.DustOverrideForFractureClass(h.fractureClass) : 0u;
+        }
 
         /// <summary>VfxMaterial from the object's ImportedPhysicsHints.fractureClass, else <paramref name="fallback"/>.</summary>
         public static VfxMaterial MaterialFromHints(GameObject go, VfxMaterial fallback)
