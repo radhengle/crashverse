@@ -30,7 +30,12 @@ namespace Crashverse.Data
         public string hintTarget; public float hintYaw; public float hintPitch; // Addendum v1.1 §1
         public bool HasHint => !string.IsNullOrEmpty(hintTarget);
         public bool IsBoss => !string.IsNullOrEmpty(bossId);
+        /// <summary>v2: at most one hero building (keep or gatehouse, Bld_* FBX from the 3D Modeler) per level; null = empty slot.</summary>
+        public HeroSlot heroSlot;
     }
+
+    /// <summary>Hero building slot. Presentation only: no collider, never an objective piece, never read by the sim.</summary>
+    [Serializable] public class HeroSlot { public string kind = "keep"; public string fbx = ""; public float[] pos; public float rotY; }
 
     [Serializable] public class IslandData { public string id; public string name; public float[] pos; public string gateAfterLevel; }
 

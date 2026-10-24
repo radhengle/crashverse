@@ -32,6 +32,8 @@ namespace Crashverse.Tests.PlayMode
             yield return null;
             PlayerPrefs.DeleteAll();
             AgeGateScreen.PendingDob = null;
+            foreach (var f in new[] { Crashverse.Meta.PlayerProgress.DefaultPath, Crashverse.Meta.CampaignSave.DefaultPath })
+                if (System.IO.File.Exists(f)) System.IO.File.Delete(f); // v2: first run = no guest profile yet
             Time.timeScale = 1f;
             yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/Bootstrap.unity", LoadSceneMode.Single);
             // Bootstrap.unity carries a GameBootstrap, which boots on every load. Spawning another one doubles the UI
@@ -88,17 +90,41 @@ namespace Crashverse.Tests.PlayMode
             Assert.AreEqual("", gate.Error);
 
             yield return Tap(gate.ContinueButton);
-            yield return WaitFor(() => AppServices.Router.Top is MapScreen, "map after the age gate");
+            // v2 target UI: Login (social sign-in "Coming soon", guest) → Create Profile → World Map → Level Select → HUD
+            yield return WaitFor(() => AppServices.Router.Top is LoginScreen, "login after the age gate");
+            foreach (var prov in new[] { "Google", "Facebook", "Instagram", "X", "Email" })
+            {
+                var sb = UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(x => x.name == "Button_" + prov);
+                Assert.NotNull(sb, prov + " sign-in shown"); Assert.False(sb.interactable, prov + " sign-in disabled (Coming soon)");
+            }
+            yield return TapNamed("Button_Guest");
+            yield return WaitFor(() => AppServices.Router.Top is ProfileScreen, "create profile");
+            var prof = (ProfileScreen)AppServices.Router.Top;
+            StringAssert.StartsWith("Smasher_", prof.NameText, "default guest name");
+            yield return TapNamed("Button_Avatar2");
+            yield return TapNamed("Button_Badge3");
+            prof.NameText = "Tap Tester";
+            yield return TapNamed("Button_Continue");
+            yield return WaitFor(() => AppServices.Router.Top is MapScreen, "map after creating the profile");
+            Assert.True(AppServices.Progress.Data.profile.created, "profile saved");
+            Assert.AreEqual("Tap Tester", AppServices.Progress.Data.profile.name);
+            Assert.AreEqual(1, AppServices.Progress.Data.profile.avatar); Assert.AreEqual(2, AppServices.Progress.Data.profile.badge);
             AssertNoBrokenRenderers("world map");
 
             yield return TapNamed("Button_1");
-            yield return WaitFor(() => AppServices.Router.Top is BriefingScreen, "L1 briefing");
+            yield return WaitFor(() => AppServices.Router.Top is LevelSelectScreen, "L1 level select");
             yield return TapNamed("Button_Play");
             yield return WaitFor(() => AppServices.Router.Top is HudScreen, "L1 HUD (run started)");
             yield return null;
             AssertNoBrokenRenderers("L1 arena + structure");
             AssertSwipeAimsSameWayOnScreen();
             yield return PlayHintLineToResult();
+            // v2 §6 Level Complete: rewards in the local wallet, Next Level → Level 2 select
+            yield return WaitFor(() => AppServices.Router.Top is ResultsScreen, "level complete");
+            Assert.True(((ResultsScreen)AppServices.Router.Top).Won);
+            Assert.Greater(AppServices.Progress.Data.coins, 0, "first clear coins granted");
+            yield return TapNamed("Button_NextLevel");
+            yield return WaitFor(() => AppServices.Router.Top is LevelSelectScreen ls && ls.Level.number == 2, "L2 level select after Next Level");
         }
 
         /// <summary>P0 (dev-build-6): a left swipe must move the aim LEFT on screen, a right swipe RIGHT (was mirrored).
@@ -202,7 +228,7 @@ namespace Crashverse.Tests.PlayMode
             Canvas.ForceUpdateCanvases();
             var content = sr.content; var vp = sr.viewport != null ? sr.viewport : (RectTransform)sr.transform;
             float overflow = content.rect.height - vp.rect.height; if (overflow <= 0) return;
-            float y = -content.InverseTransformPoint(item.TransformPoint(item.rect.center)).y - content.rect.height * (1 - content.pivot.y);
+            float y = content.rect.yMax - content.InverseTransformPoint(item.TransformPoint(item.rect.center)).y; // distance from the content top (any pivot)
             float top = Mathf.Clamp(y - vp.rect.height / 2f, 0, overflow);
             sr.verticalNormalizedPosition = 1f - top / overflow;
         }

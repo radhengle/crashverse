@@ -192,5 +192,14 @@ static class V2Tests
             }
             finally { if (File.Exists(path)) File.Delete(path); }
         });
+        T.Add("v2_hero_slot_and_power_up_grid", () =>
+        {
+            foreach (var l in Db.Chapter1.levels) T.Eq(null, HeroSlotRules.Validate(l.heroSlot), "hero slot ok " + l.id);
+            T.Eq(null, HeroSlotRules.Validate(new HeroSlot { kind = "gatehouse", fbx = "Bld_Gatehouse_A", pos = new[] { 8f, 0f, 2f } }), "gatehouse ok");
+            T.True(HeroSlotRules.Validate(new HeroSlot { kind = "tower" }) != null, "only keep or gatehouse");
+            T.True(HeroSlotRules.Validate(new HeroSlot { kind = "keep", fbx = "Castle" }) != null, "Bld_* only");
+            T.Eq(3, HeroSlotRules.Position(null).Length, "default anchor");
+            foreach (var p in Db.PowerUps.powerups) T.True(PowerUpRulesV2.Tagline(p.effect).Length > 0, "grid caption " + p.id);
+        });
     }
 }
