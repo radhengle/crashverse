@@ -46,6 +46,15 @@ for i in $(seq 1 30); do adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|MapScreen
   [ $i = 30 ] && { shot FAIL_no_map; echo "FAIL: map not reached 30 s after guest sign-in"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }; done
 shot 05_map_guest
 tap $NODE1_X $NODE1_Y; tap $PLAY_X $PLAY_Y 6; check l1_load; shot 06_l1_hud
+# QA LOW + P0 (aim mirrored on dev-build-6): real touch swipes through AimController; +yaw is screen-left from the run camera,
+# so a RIGHT swipe must drive the logged target yaw negative and a LEFT swipe positive (no hook, no Drag() shortcut).
+D=$(adb shell wm density | grep -o '[0-9]*$' | tail -1); SW=$(( 100 * D / 160 ))
+aim_yaw(){ sleep 3; adb logcat -d -s Unity | grep -oE "CVTAP\|AIM\|yaw=-?[0-9.]+" | tail -1 | cut -d= -f2; }
+adb logcat -c; adb shell input swipe 540 1300 $(( 540 + SW )) 1300 500; YR=$(aim_yaw)
+adb logcat -c; adb shell input swipe 540 1300 $(( 540 - 2 * SW )) 1300 500; YL=$(aim_yaw)
+echo "swipe right -> yaw ${YR:-none}; swipe left -> yaw ${YL:-none}" | tee "$OUT/aim_direction.txt"
+awk -v r="${YR:-x}" -v l="${YL:-x}" 'BEGIN{ exit !(r+0 < -1 && l+0 > 1 && r != "x" && l != "x") }' || { shot FAIL_aim_direction; echo "FAIL: swipe direction (right must give yaw<0, left yaw>0)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; }
+check aim_direction
 # a FIRE tap during reload/flight is ignored, so keep aiming+firing until the result screen shows
 # emulator (swangle = CPU GL) runs the sim ~13x slower than real time: a miss off the island takes ~40 s wall-clock to reach the
 # kill plane (run 40067356429), so the budget is wall-clock (SHOT_WALL_S, default 420 s); the RESULT check still exits early.

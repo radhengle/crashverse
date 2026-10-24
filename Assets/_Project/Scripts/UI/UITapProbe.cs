@@ -12,13 +12,15 @@ namespace Crashverse.UI
     public class UITapProbe : MonoBehaviour
     {
         UIRouter _r; object _lastTop; int _lastCount; float _t;
-        object _doneLogged; float _resultsT;
+        object _doneLogged; float _resultsT, _lastYaw = float.NaN;
         void Awake() { _r = GetComponent<UIRouter>(); Debug.Log($"CVTAP|META|screen|{Screen.width}|{Screen.height}|dpi={Screen.dpi}"); }
         void LateUpdate()
         {
             if ((_t += Time.unscaledDeltaTime) < 0.5f) return; _t = 0f;
             var top = _r != null ? _r.Top : null;
             // QA C-1/C-3: one line once the results sequence is final, so the smoke screenshots the settled panel and can assert score/stars
+            // QA LOW: real-touch swipe direction check in the smoke: log the TARGET yaw on the HUD whenever it moves
+            if (top is HudScreen) { var ses = Crashverse.Core.GameplayDirector.Session; if (ses != null && ses.aim != null && System.Math.Abs(ses.aim.Yaw - _lastYaw) > 0.5f) { _lastYaw = ses.aim.Yaw; Debug.Log($"CVTAP|AIM|yaw={ses.aim.Yaw:F1}"); } }
             // Results are static and the smoke clears logcat before each tap: re-dump them every 2 s so a clear can't swallow the
             // only RESULT/Retry lines (API 36 calibration, run 40072849533). RESULTDONE rides along once the sequence is final.
             bool resultsRepeat = false;
