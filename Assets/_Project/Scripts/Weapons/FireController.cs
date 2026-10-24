@@ -1,3 +1,4 @@
+using Crashverse.Core;
 using Crashverse.Destruction;
 using Crashverse.PowerUps;
 using UnityEngine;
@@ -35,7 +36,7 @@ namespace Crashverse.Weapons
 
         public static GameObject CreateProjectileObject(float scale)
         {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            var go = GameObject.CreatePrimitive(PrimitiveType.Sphere); RenderMaterials.Apply(go);
             go.name = "Projectile";
             go.tag = "Projectile";
             go.transform.localScale = Vector3.one * scale;

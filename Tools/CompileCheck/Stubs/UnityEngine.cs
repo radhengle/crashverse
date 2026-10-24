@@ -17,7 +17,7 @@ namespace UnityEngine
 
     public class GameObject : Object
     {
-        public Transform transform { get; } = new Transform();
+        public Transform transform { get; } = new Transform(); public T[] GetComponentsInChildren<T>(bool inc = false) => new T[0];
         public string tag;
         public int layer;
         public bool activeSelf = true;
@@ -42,6 +42,7 @@ namespace UnityEngine
         public T GetComponentInChildren<T>() where T : class => null;
         public T GetComponentInParent<T>() where T : class => null;
         public T[] GetComponents<T>() where T : class => Array.Empty<T>();
+        public T[] GetComponentsInChildren<T>(bool includeInactive = false) where T : class => Array.Empty<T>();
     }
 
     public class Behaviour : Component { public bool enabled = true; }
@@ -58,6 +59,8 @@ namespace UnityEngine
         public Quaternion rotation = Quaternion.identity;
         public Quaternion localRotation = Quaternion.identity;
         public Vector3 right => localRotation * Vector3.right;
+        public Vector3 TransformPoint(Vector3 p) => p;
+        public void SetAsFirstSibling() { }
         public Vector3 forward => localRotation * Vector3.forward;
         public Vector3 up => localRotation * Vector3.up;
         public int childCount => 0;
@@ -237,7 +240,7 @@ namespace UnityEngine
     public class MeshCollider : Collider { public Mesh sharedMesh; public bool convex; }
     public class Renderer : Component
     {
-        public bool enabled = true;
+        public bool enabled = true; public Material sharedMaterial; public Material material;
         public void GetPropertyBlock(MaterialPropertyBlock b) { }
         public void SetPropertyBlock(MaterialPropertyBlock b) { }
     }
@@ -324,6 +327,8 @@ namespace UnityEngine
     {
         public float x, y, width, height;
         public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; }
+        public float xMin => x; public float yMin => y; public float xMax => x + width; public float yMax => y + height;
+        public Vector2 center => new Vector2(x + width / 2, y + height / 2);
         public static bool operator ==(Rect a, Rect b) => a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height;
         public static bool operator !=(Rect a, Rect b) => !(a == b);
         public override bool Equals(object o) => o is Rect r && r == this; public override int GetHashCode() => 0;

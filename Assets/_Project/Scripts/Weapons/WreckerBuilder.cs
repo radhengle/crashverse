@@ -1,3 +1,4 @@
+using Crashverse.Core;
 using Crashverse.Destruction;
 using UnityEngine;
 using S = Crashverse.Weapons.WreckerSpec;
@@ -65,7 +66,7 @@ namespace Crashverse.Weapons
 
         static GameObject Prim(string name, PrimitiveType t, Transform parent, Vector3 lp, Vector3 scale, string hex, bool keepCollider = false)
         {
-            var go = GameObject.CreatePrimitive(t);
+            var go = GameObject.CreatePrimitive(t); RenderMaterials.Apply(go);
             go.name = name;
             go.transform.SetParent(parent, false);
             go.transform.localPosition = lp;

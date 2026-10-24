@@ -1,3 +1,4 @@
+using Crashverse.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,7 +36,7 @@ namespace Crashverse.Destruction
 
         DebrisPiece CreatePiece()
         {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube); RenderMaterials.Apply(go);
             go.name = "Debris";
             go.tag = "Debris";
             go.transform.SetParent(_root);

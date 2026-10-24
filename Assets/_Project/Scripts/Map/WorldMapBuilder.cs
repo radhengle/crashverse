@@ -40,7 +40,7 @@ namespace Crashverse.Map
                     for (int i = 0; i < 16; i++)
                     {
                         float a = i * Mathf.PI / 8f;
-                        var cloud = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        var cloud = GameObject.CreatePrimitive(PrimitiveType.Sphere); RenderMaterials.Apply(cloud);
                         Destroy(cloud.GetComponent<Collider>());
                         cloud.transform.SetParent(top.transform, false);
                         cloud.transform.localPosition = new Vector3(Mathf.Cos(a) * 10f, 3f + Mathf.Sin(a * 3f), Mathf.Sin(a) * 8f);
@@ -53,7 +53,7 @@ namespace Crashverse.Map
             for (int i = 1; i < ch.islands.Length; i++)
             {
                 Vector3 a = V(ch.islands[i - 1].pos), b = V(ch.islands[i].pos);
-                var br = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                var br = GameObject.CreatePrimitive(PrimitiveType.Cube); RenderMaterials.Apply(br);
                 Destroy(br.GetComponent<Collider>());
                 br.name = "Bridge_" + ch.islands[i].id;
                 br.transform.SetParent(transform, false);
@@ -74,7 +74,7 @@ namespace Crashverse.Map
                     float t = n == 1 ? 0.5f : i / (float)(n - 1);
                     var p = c + new Vector3(Mathf.Lerp(-5f, 5f, t), 0.6f, Mathf.Sin(t * Mathf.PI * 2f) * 2.5f);
                     NodePositions[kv.Value[i].id] = p;
-                    var m = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    var m = GameObject.CreatePrimitive(PrimitiveType.Cylinder); RenderMaterials.Apply(m);
                     Destroy(m.GetComponent<Collider>());
                     m.transform.SetParent(transform, false);
                     m.transform.position = p - new Vector3(0f, 0.45f, 0f);
@@ -107,6 +107,7 @@ namespace Crashverse.Map
         static Vector3 V(float[] a) => a != null && a.Length == 3 ? new Vector3(a[0], a[1], a[2]) : Vector3.zero;
         static void Paint(Renderer r, string hex)
         {
+            RenderMaterials.Apply(r);
             var b = new MaterialPropertyBlock(); var c = MaterialDefinition.Hex(hex);
             b.SetColor("_BaseColor", c); b.SetColor("_Color", c); r.SetPropertyBlock(b);
         }

@@ -3,7 +3,7 @@
 name: Unity EditMode tests
 
 on:
-  pull_request: # every PR, including stacked ones (PM)
+  pull_request:
   push:
     branches: [ main ]
   workflow_dispatch:
@@ -55,8 +55,12 @@ jobs:
           restore-keys: |
             Library-EditMode-
 
-      - name: EditMode tests
+      - name: Dev define for tests (PlayMode boots the game with the local backend; not committed)
+        run: printf -- '-define:CRASHVERSE_DEV\n' > Assets/csc.rsp
+
+      - name: EditMode + PlayMode tests
         id: tests
+        continue-on-error: true # run 38945007534: editor SIGSEGV (exit 139, burst_signal_handler) during domain load before any test; retried below
         uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1 (docker-based; v4.3.2 needs an unauthenticated CLI download that 403s)
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -64,7 +68,26 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 2022.3.50f1
-          testMode: editmode
+          testMode: all
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: EditMode test results
+
+      - name: Clear crashed run state
+        if: steps.tests.outcome == 'failure' && hashFiles('test-results/*.xml') == ''
+        run: sudo rm -rf test-results Library/ScriptAssemblies Library/Bee || true
+
+      - name: EditMode + PlayMode tests (retry after editor crash)
+        id: tests_retry
+        if: steps.tests.outcome == 'failure' && hashFiles('test-results/*.xml') == ''
+        uses: game-ci/unity-test-runner@0ff419b913a3630032cbe0de48a0099b5a9f0ed9 # v4.3.1 (docker-based; v4.3.2 needs an unauthenticated CLI download that 403s)
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.50f1
+          testMode: all
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: EditMode test results
@@ -74,13 +97,15 @@ jobs:
         run: |
           python3 - <<'PY'
           import glob, sys, xml.etree.ElementTree as ET
-          files = glob.glob("test-results/*.xml")
+          files = glob.glob("test-results/*.xml"); tot = {"total": 0, "passed": 0, "failed": 0, "skipped": 0, "inconclusive": 0}
           if not files: sys.exit("::error::no test result XML produced")
-          tot = {"total": 0, "failed": 0, "skipped": 0, "inconclusive": 0}
           for f in files:
               r = ET.parse(f).getroot(); print(f, {k: r.get(k) for k in tot})
               for k in tot: tot[k] += int(r.get(k) or 0)
-          if tot["total"] == 0: sys.exit("::error::0 tests discovered")
+          pm = sum(int(ET.parse(f).getroot().get("total") or 0) for f in files if "playmode" in f.lower())
+          print("TOTAL", tot, "playmode", pm)
+          if tot["total"] == 0: sys.exit("::error::0 tests ran")
+          if pm == 0: sys.exit("::error::0 PlayMode tests ran (BUG-20 tap tests missing)")
           if tot["skipped"] or tot["inconclusive"]: sys.exit("::error::tests skipped/inconclusive")
           if tot["failed"]: sys.exit("::error::tests failed")
           PY

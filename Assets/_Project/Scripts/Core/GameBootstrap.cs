@@ -98,6 +98,7 @@ namespace Crashverse.Core
                 _mapRoot = new GameObject("MapWorld");
                 Map = _mapRoot.AddComponent<WorldMapBuilder>();
                 Map.Build(AppServices.Content.Chapter1);
+                int f = RenderMaterials.FixAll(_mapRoot); if (f > 0) Debug.LogWarning($"[BUG-23] map: {f} renderers had no usable material");
             }
             _mapRoot.SetActive(true);
             Crashverse.Audio.MusicPlayer.Ensure().PlayBase("sunnyville_map_loop");
@@ -144,6 +145,7 @@ namespace Crashverse.Core
             RunCamera.enabled = true;
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
+            int fx = RenderMaterials.FixAll(_runRoot); if (fx > 0) Debug.LogWarning($"[BUG-23] run: {fx} renderers had no usable material");
             levelGo.AddComponent<Crashverse.Feel.FeelDirector>().Bind(s, RunCamera, aim);
             AppServices.Router.Push(new HudScreen(s));
         }
