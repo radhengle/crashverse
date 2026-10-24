@@ -388,13 +388,18 @@ namespace Crashverse.UI
         readonly Text[] _star = new Text[3]; Text _mastery, _score; string _scoreFmt; float _seqMs; bool _starRaised0, _starRaised1, _starRaised2, _masteryRaised;
         public override bool IsModal => true;
         public ResultsScreen(GameSession s, RunResult r) { _s = s; _r = r; }
+        /// <summary>QA C-1/C-3 (smoke + probe): the win sequence (stars, mastery, score count-up) has reached its final frame.</summary>
+        public bool SequenceDone => _seqMs >= Crashverse.Feel.WinSequence.Steps[5].startMs + Crashverse.Feel.UiMotionMath.ResultsScoreMs + 100f;
+        public int Score => _r != null ? _r.score : 0; public int Stars => _r != null ? _r.stars : 0; public float Ratio => _r != null ? _r.ratio : 0f;
+        /// <summary>QA C-4 (PX-8): "So close!" only when the run was actually close; a 0% or far-off run doesn't get it.</summary>
+        public static string FailTitle(float ratio, float threshold) => ratio >= threshold * 0.6f ? "So close!" : "Out of shots!";
         protected override void Build(RectTransform root)
         {
             var lvl = _s.Ctx.level; var mode = _s.Ctx.mode;
             var dim = UIFactory.Panel("Dim", root, new Color(0, 0, 0, 0.55f)); UIFactory.Stretch(dim.rectTransform);
             var p = UIFactory.TrimPanel("Results", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(320, 470), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 16f); UIFactory.Stretch(v);
-            UIFactory.Label(v, _r.won ? (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? "TITAN DOWN!" : "SMASHED!") : "So close!", Th.titleSp, _r.won ? Th.goldFill : Th.red, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Label(v, _r.won ? (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? "TITAN DOWN!" : "SMASHED!") : FailTitle(_r.ratio, lvl.winThreshold), Th.titleSp, _r.won ? Th.goldFill : Th.red, TextAnchor.MiddleCenter, Th, true);
             if (_r.won && !_s.Ctx.IsTitan)
             {
                 var sr = UIFactory.HStack(v, Th.gap, 48f);
@@ -417,6 +422,7 @@ namespace Crashverse.UI
             if (!_r.won && HintRules.ShowHintButton(lvl, AppServices.Save.FailsInRow(lvl.id), mode == RunMode.TitanRanked)) // BUG-08: campaign, events, Titan practice; never ranked
                 UIFactory.Button(v, "💡 Free Hint", Th.goldShade, () => { _s.Ctx.hintArmed = true; Router.Pop(); _s.Retry(); }, Th, 48);
             var row = UIFactory.HStack(v, Th.gap, Th.buttonL);
+            row.GetComponent<LayoutElement>().flexibleHeight = 0f; // QA C-4: the force-expanding HStack soaked up the panel's spare height
             UIFactory.Button(row, "Map", Th.navy500, () => GameplayDirector.ExitToMap(), Th);
             if (mode != RunMode.TitanRanked) UIFactory.Button(row, "Retry", Th.navy500, () => { Router.Pop(); _s.Retry(); }, Th);
             var next = NextLevel(lvl);
@@ -856,14 +862,21 @@ namespace Crashverse.UI
         protected override void Build(RectTransform root)
         {
             var bg = UIFactory.Panel("Bg", root, Th.navy900); UIFactory.Stretch(bg.rectTransform);
-            var v = UIFactory.VStack(root, Th.gap * 2, 24f); UIFactory.Place(v, new Vector2(0.5f, 0.5f), new Vector2(320, 380), Vector2.zero);
+            var v = UIFactory.VStack(root, Th.gap * 2, 24f); UIFactory.Place(v, new Vector2(0.5f, 0.5f), new Vector2(320, 440), Vector2.zero); // QA C-7: room for the 2-line privacy note
             UIFactory.Label(v, "Welcome to CRASHVERSE", Th.headingSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
             UIFactory.Label(v, "Please enter your date of birth.", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
             _monthBtn = UIFactory.Button(v, "Month", Th.navy500, PickMonth, Th, 56);
             _yearBtn = UIFactory.Button(v, "Year", Th.navy500, PickYear, Th, 56);
             _ok = UIFactory.Button(v, "Continue", Th.green, Confirm, Th, 56); _ok.interactable = false;
             _err = UIFactory.Label(v, "Choose your birth month and year.", Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th);
-            UIFactory.Label(v, "We only keep an age range, never your date of birth.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            var priv = UIFactory.Label(v, "We only keep an age range, never your date of birth.", Th.captionSp, Th.white, TextAnchor.MiddleCenter, Th);
+            TwoLines(_err); TwoLines(priv); // QA C-7: the wrapped second line was clipped
+        }
+        static void TwoLines(Text t)
+        {
+            t.horizontalOverflow = HorizontalWrapMode.Wrap; t.verticalOverflow = VerticalWrapMode.Overflow;
+            var le = t.gameObject.GetComponent<LayoutElement>() ?? t.gameObject.AddComponent<LayoutElement>();
+            le.minHeight = le.preferredHeight = (float)System.Math.Ceiling(t.fontSize * 2.6f);
         }
         void PickMonth()
         {

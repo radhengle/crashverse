@@ -12,11 +12,14 @@ namespace Crashverse.UI
     public class UITapProbe : MonoBehaviour
     {
         UIRouter _r; object _lastTop; int _lastCount; float _t;
+        object _doneLogged;
         void Awake() { _r = GetComponent<UIRouter>(); Debug.Log($"CVTAP|META|screen|{Screen.width}|{Screen.height}|dpi={Screen.dpi}"); }
         void LateUpdate()
         {
             if ((_t += Time.unscaledDeltaTime) < 0.5f) return; _t = 0f;
-            var top = _r != null ? _r.Top : null; var btns = GetComponentsInChildren<Button>(false);
+            var top = _r != null ? _r.Top : null;
+            // QA C-1/C-3: one line once the results sequence is final, so the smoke screenshots the settled panel and can assert score/stars
+            if (top is ResultsScreen done && done.SequenceDone) { if (!ReferenceEquals(done, _doneLogged)) { _doneLogged = done; Debug.Log($"CVTAP|RESULTDONE|{(done.Won ? "win" : "fail")}|score={done.Score}|stars={done.Stars}|pct={Mathf.FloorToInt(done.Ratio * 100)}"); } } var btns = GetComponentsInChildren<Button>(false);
             int sig = btns.Length; // changes on screen switch, enable/disable and scroll
             foreach (var b in btns) { var q = b.transform.position; sig = unchecked(sig * 31 + (b.IsInteractable() ? 1 : 0) + Mathf.RoundToInt(q.x) * 7 + Mathf.RoundToInt(q.y) * 13); }
             if (ReferenceEquals(top, _lastTop) && sig == _lastCount) return;
