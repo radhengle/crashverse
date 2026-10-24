@@ -261,11 +261,19 @@ jobs:
         with:
           name: crashverse-android-apk
           path: apk
-      - name: Create prerelease (pending QA review)
+      - name: Create or update prerelease (pending QA review)
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.inputs.publish_tag }}
+        # QA C-9: assets only ever reach a prerelease through this gated job. An existing prerelease (e.g. a rebuilt
+        # dev-build-6) gets its APKs replaced and its notes rewritten with the new SHA; full releases are never touched.
         run: |
-          gh release create "$TAG" apk/*.apk -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
-            --title "$TAG (pending QA review)" \
-            --notes "Built from $GITHUB_SHA, run $GITHUB_RUN_ID. Signed with the persistent dev key (cert pinned in Tools/ci/dev_cert_sha256.txt), versionCode $GITHUB_RUN_NUMBER. Passed apksigner + emulator smoke (API 34/36). Pending QA review."
+          NOTES="Built from $GITHUB_SHA (${GITHUB_REF_NAME}), run $GITHUB_RUN_ID. Signed with the persistent dev key (cert pinned in Tools/ci/dev_cert_sha256.txt), versionCode $GITHUB_RUN_NUMBER. Passed apksigner + built-APK asserts + emulator smoke (API 34/36). Pending QA review."
+          if gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json isPrerelease -q .isPrerelease > pre.txt 2>/dev/null; then
+            [ "$(cat pre.txt)" = true ] || { echo "::error::$TAG exists and is not a prerelease; refusing to overwrite"; exit 1; }
+            gh release upload "$TAG" apk/*.apk -R "$GITHUB_REPOSITORY" --clobber
+            gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --prerelease --title "$TAG (pending QA review)" --notes "$NOTES"
+          else
+            gh release create "$TAG" apk/*.apk -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+              --title "$TAG (pending QA review)" --notes "$NOTES"
+          fi
