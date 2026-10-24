@@ -23,6 +23,7 @@
     <Compile Include="../../Assets/_Project/Scripts/Core/AccountDeletion.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Feel/FeelCore.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Gameplay/Core/PieceIds.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/Feel/AnimMotion.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/MusicCore.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/SfxCore.cs" />
   </ItemGroup>

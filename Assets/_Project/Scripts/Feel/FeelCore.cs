@@ -32,13 +32,20 @@ namespace Crashverse.Feel
             WreckerMuzzleSmoke = "ANIM_WRECKER_MUZZLE_SMOKE", WreckerRecoilLand = "ANIM_WRECKER_RECOIL_LAND", WreckerReArm = "ANIM_WRECKER_REARM",
             WreckerSlotOut = "ANIM_WRECKER_SLOT_OUT", WreckerSlotIn = "ANIM_WRECKER_SLOT_IN", WreckerWin = "ANIM_WRECKER_WIN", WreckerFail = "ANIM_WRECKER_FAIL",
             WreckerReady = "ANIM_WRECKER_READY", ReloadStart = "GAME_WRECKER_RELOAD_START", // READY name per anim_audio_map.csv
-            ProjLaunch = "ANIM_PROJ_LAUNCH", ProjApex = "ANIM_PROJ_APEX", PuSplitApex = "PU_SPLIT_APEX", PuPhasePass = "PU_PHASE_PASS", PuPhaseHit = "PU_PHASE_HIT",
+            ProjLaunch = "ANIM_PROJ_LAUNCH", ProjSplitPoint = "ANIM_PROJ_SPLIT_POINT", PuSplit = "PU_SPLIT", PuPhasePass = "PU_PHASE_PASS", PuPhaseHit = "PU_PHASE_HIT",
             PuTimeStart = "PU_TIME_START", PuTimeWarn = "PU_TIME_WARN", PuTimeEnd = "PU_TIME_END",
             CollapseLand = "COLLAPSE_LAND", DebrisFallOff = "DEBRIS_FALL_OFF",
-            BossTitanStage = "BOSS_TITAN_STAGE", BossTitanDefeat = "BOSS_TITAN_DEFEAT", BossTitanSurvive = "BOSS_TITAN_SURVIVE", BossTitanHit = "BOSS_TITAN_HIT",
+            BossTitanStage = "BOSS_TITAN_STAGE", BossTitanDefeat = "BOSS_TITAN_DEFEAT", BossTitanHit = "BOSS_TITAN_HIT",
             BossTideTell = "BOSS_TIDE_TELL", BossTideShutterClose = "BOSS_TIDE_SHUTTER_CLOSE", BossTideShutterOpen = "BOSS_TIDE_SHUTTER_OPEN", BossTidePhase2 = "BOSS_TIDE_PHASE2", BossTideCoreHit = "BOSS_TIDE_CORE_HIT", BossTideDefeat = "BOSS_TIDE_DEFEAT",
             UiBtnPress = "UI_BTN_PRESS", UiComboUp = "UI_COMBO_UP", UiComboTier = "UI_COMBO_TIER", UiStar = "UI_STAR_", UiMasteryTick = "UI_MASTERY_TICK",
             UiWin = "UI_WIN", UiShotSpend = "UI_SHOT_SPEND", UiThresholdHit = "UI_THRESHOLD_HIT", CamSlowMoStart = "CAM_SLOWMO_START";
+    }
+
+    /// <summary>Animation Spec 02 projectile Animator `Material` int. 0–5 unchanged; Glass appended as 6. (Physics MaterialType #18 is a separate list where glass = 3.)</summary>
+    public static class AnimMaterial
+    {
+        public const int Wood = 0, Brick = 1, Steel = 2, Joint = 3, Terrain = 4, Explosive = 5, Glass = 6;
+        public const string ImpactGlass = "IMPACT_GLASS", BreakGlass = "BREAK_GLASS";
     }
 
     /// <summary>Global VFX/SFX event bus. Never drives gameplay (Animation Spec global rules).</summary>
@@ -349,7 +356,7 @@ namespace Crashverse.Feel
         public bool Aiming { get; private set; }
         public bool GateReady { get; set; } = true;
         public MotionSettings Settings; public QualityTier Tier = QualityTier.Mid;
-        float _nextFidgetMs; readonly Random _rng = new Random(7); bool _smokeSent;
+        float _nextFidgetMs; readonly Random _rng = new Random(7); bool _smokeSent, _slotInSent;
         public bool Interruptible => State != WreckerState.FireAnticipation && State != WreckerState.Recoil && State != WreckerState.Recover;
 
         public WreckerAnimStateMachine() { Reset(); }
@@ -376,7 +383,7 @@ namespace Crashverse.Feel
                 case WreckerState.FireAnticipation: AnimEventBus.Raise(AnimEvents.WreckerFireAnticipate); break;
                 case WreckerState.Recoil: _smokeSent = false; AnimEventBus.Raise(AnimEvents.WreckerFire); break;
                 case WreckerState.ReArm: AnimEventBus.Raise(AnimEvents.WreckerReArm); break;
-                case WreckerState.SlotSwap: AnimEventBus.Raise(AnimEvents.WreckerSlotOut); break;
+                case WreckerState.SlotSwap: _slotInSent = false; AnimEventBus.Raise(AnimEvents.WreckerSlotOut); break;
                 case WreckerState.Win: AnimEventBus.Raise(AnimEvents.WreckerWin); break;
                 case WreckerState.Fail: AnimEventBus.Raise(AnimEvents.WreckerFail); break;
             }
@@ -393,13 +400,14 @@ namespace Crashverse.Feel
                 case WreckerState.Recoil: AnimEventBus.Raise(AnimEvents.WreckerRecoilLand); Go(WreckerState.Recover); break;
                 case WreckerState.Recover: Go(WreckerState.Cooldown); break;
                 case WreckerState.ReArm: Go(Aiming ? WreckerState.Aim : WreckerState.Idle); break;
-                case WreckerState.SlotSwap: AnimEventBus.Raise(AnimEvents.WreckerSlotIn); Go(Aiming ? WreckerState.Aim : WreckerState.Idle); break;
+                case WreckerState.SlotSwap: if (!_slotInSent) { _slotInSent = true; AnimEventBus.Raise(AnimEvents.WreckerSlotIn); } Go(Aiming ? WreckerState.Aim : WreckerState.Idle); break;
             }
         }
 
         protected override void OnTick(float dt)
         {
             if (State == WreckerState.Recoil && !_smokeSent && ElapsedMs >= 33f) { _smokeSent = true; AnimEventBus.Raise(AnimEvents.WreckerMuzzleSmoke); }
+            if (State == WreckerState.SlotSwap && !_slotInSent && ElapsedMs >= WreckerMotion.SwapOutMs) { _slotInSent = true; AnimEventBus.Raise(AnimEvents.WreckerSlotIn); } // 9 f / 150 ms (audio_sync_table)
             if (State == WreckerState.Cooldown && GateReady && ElapsedMs >= CooldownMinMs) Go(WreckerState.ReArm);
             if (State == WreckerState.Idle)
             {
@@ -505,7 +513,7 @@ namespace Crashverse.Feel
             else { AnimEventBus.Raise(AnimEvents.BossTitanHit); if (State == TitanAnimState.Idle) Go(TitanAnimState.Hit); }
         }
         public void Kill() { AnimEventBus.Raise(AnimEvents.BossTitanDefeat); Go(TitanAnimState.Defeat); }
-        public void OutOfShots() { if (State != TitanAnimState.Defeat) { AnimEventBus.Raise(AnimEvents.BossTitanSurvive); Go(TitanAnimState.Survive); } }
+        public void OutOfShots() { if (State != TitanAnimState.Defeat) Go(TitanAnimState.Survive); } // spec 04: no survive event (retired); results flow owns the fail beat
         protected override float DurationMs(TitanAnimState s) => s == TitanAnimState.Intro ? IntroMs : s == TitanAnimState.Hit ? HitMs : s == TitanAnimState.Stage ? StageMs : s == TitanAnimState.Survive ? SurviveMs : -1f;
         protected override void OnTimeout(TitanAnimState s) => Go(TitanAnimState.Idle);
     }

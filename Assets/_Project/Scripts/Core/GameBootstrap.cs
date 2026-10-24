@@ -150,7 +150,7 @@ namespace Crashverse.Core
             // #18/#20: PHYS_* ImpactEvents (Impact/Crack/Break/JointSnap/CollapseStart/End with pieceIds) on AnimEventBus.
             // Added after Begin so it binds to the SimRunner that Begin created. Presentation only; never read by the sim.
             if (Crashverse.Sim.ImpactEventEmitter.Instance == null) levelGo.AddComponent<Crashverse.Sim.ImpactEventEmitter>();
-            levelGo.AddComponent<Crashverse.Feel.FeelDirector>().Bind(s, RunCamera, aim);
+            var feel = levelGo.AddComponent<Crashverse.Feel.FeelDirector>(); feel.Bind(s, RunCamera, aim); feel.BindWrecker(wb); // 01 cannon parts
             AppServices.Router.Push(new HudScreen(s));
         }
 

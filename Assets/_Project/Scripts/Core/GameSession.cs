@@ -68,6 +68,7 @@ namespace Crashverse.Core
         /// <summary>Instant retry: authored layout, full shots and charges, no leftover debris (Contract §4).</summary>
         public void Retry()
         {
+            if (fire != null) fire.CancelPending(); // a launch still in its 66 ms anticipation never happens
             foreach (var p in Projectile.Alive.ToArray()) if (p != null) Destroy(p.gameObject);
             Projectile.Alive.Clear();
             builder.Build(Ctx.layout, structureBase, Ctx.mod);
@@ -91,6 +92,7 @@ namespace Crashverse.Core
             fire.CanFire = true;
             aim.inputEnabled = true;
             aim.SetAim(0f, WreckerSpec.RestElevation);
+            aim.SnapVisualNow(); // deterministic reset: no barrel catch-up after Retry
             SetupHint();
             Changed?.Invoke();
         }

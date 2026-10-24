@@ -62,7 +62,8 @@ namespace Crashverse.Weapons
         void Split()
         {
             _splitDone = true;
-            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.PuSplitApex);
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.ProjSplitPoint); // spec 05: split point (apex or 70% flight), no sound
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.AnimEvents.PuSplit);
             float d = damage * mods.splitDamageMult;
             var child = mods.CloneWithoutSplit();
             int extra = Mathf.Max(0, mods.splitCount - 1);
