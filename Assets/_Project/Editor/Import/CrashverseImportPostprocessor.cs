@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using C = Crashverse.EditorTools.Import.ImportConventions;
+using RT = Crashverse.Rendering.RenderTiers;
 
 namespace Crashverse.EditorTools.Import
 {
@@ -20,7 +21,7 @@ namespace Crashverse.EditorTools.Import
     {
         // Run after any generic project postprocessors so these settings win.
         public override int GetPostprocessOrder() => 100;
-        public override uint GetVersion() => 3;   // 3: hero building fractureClass + T_Bld/hero kit 1024 Android cap
+        public override uint GetVersion() => 4;   // 3: hero building fractureClass + T_Bld/hero kit 1024 Android cap; 4: Models/Realistic/** texture branch (RenderTiers)
 
         // ---------------- FBX ----------------
         void OnPreprocessModel()
@@ -174,6 +175,7 @@ namespace Crashverse.EditorTools.Import
         void OnPreprocessTexture()
         {
             if (!C.InScope(assetPath)) return;
+            if (RT.InRealisticScope(assetPath) && PreprocessRealisticTexture()) return;   // Models/Realistic/** (not v2): RenderTiers policy
             string stem = C.FileStem(assetPath);
             if (C.MapSuffix(stem) == null) return;            // not a T_<Asset>_<Map>: leave alone (palettes, previews)
             var ti = (TextureImporter)assetImporter;
@@ -197,6 +199,51 @@ namespace Crashverse.EditorTools.Import
             android.format = Astc(p.astc);
             android.compressionQuality = 50;
             ti.SetPlatformTextureSettings(android);
+        }
+
+        /// <summary>
+        /// Realistic PBR branch (Graphics, PM: one importer) for Assets/_Project/Models/Realistic/** except v2 folders. All numbers come
+        /// from Crashverse.Rendering.RenderTiers.TexturePolicy (single source of truth, unit-tested):
+        ///   T_&lt;X&gt;_A   albedo, sRGB, ASTC 6x6; Foliage/** _A = leaf atlas 1024, alpha kept for clipping, coverage-preserving mips
+        ///   T_&lt;X&gt;_N   NormalMap type, linear, ASTC 5x5
+        ///   T_&lt;X&gt;_ORM  R=AO G=roughness B=metallic, linear, ASTC 6x6 (CrashverseGlossyPBR._ORMMap, not Unity's mask-map layout)
+        /// Size caps: sources 2048, Android 1024 (PM cap; tiling materials 1024), Realistic/Props/** 512 everywhere, leaf atlas 1024.
+        /// Unity mask-map style names (_MaskMap, _Metallic, _AO, ...) only get a warning. Returns false for maps the policy does not
+        /// cover (e.g. _E, _Crack) so they keep the standard path below. Every other Models/** path is unchanged.
+        /// </summary>
+        bool PreprocessRealisticTexture()
+        {
+            string stem = Path.GetFileNameWithoutExtension(assetPath);
+            if (RT.IsUnpackedMaskName(stem))
+            {
+                Debug.LogWarning($"[CrashverseImport] {assetPath}: pack metallic/AO/roughness into T_<X>_ORM (R=AO, G=roughness, B=metallic, linear) for CrashverseGlossyPBR._ORMMap.");
+                return true;
+            }
+            var pol = RT.TexturePolicy(assetPath);
+            if (pol == null) return false;
+            var p = pol.Value;
+            var ti = (TextureImporter)assetImporter;
+
+            ti.textureType = p.normalMap ? TextureImporterType.NormalMap : TextureImporterType.Default;
+            ti.sRGBTexture = p.sRGB;
+            ti.mipmapEnabled = true;
+            ti.streamingMipmaps = true;
+            ti.isReadable = false;
+            ti.alphaSource = p.keepAlpha ? TextureImporterAlphaSource.FromInput : TextureImporterAlphaSource.None;
+            ti.alphaIsTransparency = p.keepAlpha;
+            ti.mipMapsPreserveCoverage = p.keepAlpha;   // leaf cards stay full in distant mips
+            if (p.keepAlpha) ti.alphaTestReferenceValue = 0.5f;
+            ti.anisoLevel = p.normalMap || p.map == "_A" ? 2 : 1;
+            ti.maxTextureSize = p.maxSize;
+            ti.textureCompression = TextureImporterCompression.Compressed;
+
+            var android = ti.GetPlatformTextureSettings("Android");
+            android.overridden = true;
+            android.maxTextureSize = p.androidMax;
+            android.format = Astc(p.astc);
+            android.compressionQuality = 50;
+            ti.SetPlatformTextureSettings(android);
+            return true;
         }
 
         static TextureImporterFormat Astc(string block)

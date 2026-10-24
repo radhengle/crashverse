@@ -2,7 +2,8 @@
     "name": "Crashverse.Import.Editor",
     "rootNamespace": "Crashverse.EditorTools.Import",
     "references": [
-        "Crashverse.Import"
+        "Crashverse.Import",
+        "Crashverse.Rendering"
     ],
     "includePlatforms": [
         "Editor"

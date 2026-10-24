@@ -56,6 +56,38 @@ namespace Crashverse.Rendering.Tests
         }
 
         [Test]
+        public void Tonemapping_IsNeutralOnEveryTier_AndBloomOnlyOnEmissive()
+        {
+            foreach (var res in new[] { RenderTiers.VolumeFullResource, RenderTiers.VolumeLowResource })
+            {
+                var p = Resources.Load<VolumeProfile>(res);
+                Assert.NotNull(p, res);
+                Assert.IsTrue(p.TryGet<Tonemapping>(out var tm) && tm.active, res + ": Tonemapping");
+                Assert.AreEqual(TonemappingMode.Neutral, tm.mode.value, res + ": PM decision is Neutral on every tier, not ACES");
+                Assert.IsTrue(p.TryGet<ColorAdjustments>(out var ca));
+                Assert.AreEqual(0f, ca.postExposure.value, 1e-4f, res + " exposure");
+                Assert.AreEqual(8f, ca.contrast.value, 1e-4f, res + " contrast");
+                Assert.AreEqual(8f, ca.saturation.value, 1e-4f, res + " saturation");
+            }
+            var full = Resources.Load<VolumeProfile>(RenderTiers.VolumeFullResource);
+            Assert.IsTrue(full.TryGet<Bloom>(out var b));
+            Assert.GreaterOrEqual(b.threshold.value, 1.1f, "HDR bloom threshold >= 1.1: lit sandstone/steel/sky must not bloom");
+            Assert.LessOrEqual(b.intensity.value, 1f, "moderate bloom");
+            Assert.IsTrue(full.TryGet<Vignette>(out var v)); Assert.LessOrEqual(v.intensity.value, 0.2f, "light vignette");
+            foreach (var t in RenderTiers.All) if (t.bloom) Assert.IsTrue(t.hdr, t.name + ": HDR bloom threshold needs an HDR tier");
+        }
+
+        [Test]
+        public void SunAndSky_FollowStyleBoardV3()
+        {
+            Assert.AreEqual((Color32)RenderTiers.SunColor, new Color32(0xFF, 0xF4, 0xE0, 0xFF), "sun #FFF4E0");
+            Assert.That(RenderTiers.SunEuler.x, Is.InRange(55f, 60f), "sun elevation 55-60°");
+            var m = Resources.Load<Material>(RenderTiers.SkyboxResource);
+            Assert.AreEqual((Color32)RenderTiers.SkyTop, (Color32)m.GetColor("_SkyTint"), "sky #4FB8FF");
+            Assert.AreEqual((Color32)RenderTiers.SkyHorizon, (Color32)m.GetColor("_GroundColor"), "horizon #FFE3A3");
+        }
+
+        [Test]
         public void Skybox_ShipsInResources()
         {
             var m = Resources.Load<Material>(RenderTiers.SkyboxResource);
