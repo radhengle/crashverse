@@ -1,7 +1,7 @@
 {
  "id": "c1_sunnyville_isles",
  "name": "Sunnyville Isles",
- "nextRegion": "Gearstorm City",
+ "nextRegion": "Frozen Peaks",
  "islands": [
   {
    "id": "harbor",
@@ -395,7 +395,7 @@
     {
      "type": "gate",
      "amount": 1,
-     "id": "gearstorm_city"
+     "id": "frozen_peaks"
     }
    ],
    "star3Pct": 0.375,

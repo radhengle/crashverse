@@ -32,6 +32,8 @@ namespace Crashverse.Data
         public bool IsBoss => !string.IsNullOrEmpty(bossId);
         /// <summary>v2: at most one hero building (keep or gatehouse, Bld_* FBX from the 3D Modeler) per level; null = empty slot.</summary>
         public HeroSlot heroSlot;
+        /// <summary>GD ruling: hard-level tightening (HardLevelRules) applies only when tagged here.</summary>
+        public bool hard;
     }
 
     /// <summary>Hero building slot. Presentation only: no collider, never an objective piece, never read by the sim.</summary>
@@ -140,7 +142,9 @@ namespace Crashverse.Data
     [Serializable] public class DailyBossData { public string[] layouts; public string[] names; public int baseShots = 6; public int shotSpread = 2; public float winThreshold = 0.85f; public RewardBundle reward = new RewardBundle(); }
     /// <summary>One of the 4 season themes (map banner, backgrounds, level range). comingSoon = no levels in this build yet.</summary>
     [Serializable] public class SeasonTheme { public string id, name, bg, accent, dark; public int number, firstLevel, lastLevel; public bool comingSoon; }
-    [Serializable] public class AchievementDef { public string id, name, text, type, icon; public int target; }
+    [Serializable] public class AchievementDef { public string id, name, text, type, icon; public int target; public RewardBundle reward = new RewardBundle(); }
+    /// <summary>Offline season pass, free track only: XP from play, tier rewards are coins / earned gems / chests. No premium track.</summary>
+    [Serializable] public class SeasonPassDef { public int xpPerTier = 100, xpWin = 20, xpPerStar = 10, xpFirstClear = 30, xpDailyBoss = 40, xpDailyLogin = 15; public RewardBundle[] tiers = new RewardBundle[0]; }
     [Serializable] public class ChestRules { public int coinsMin = 50, coinsMax = 150, gemsChancePct = 25, gems = 2; }
     [Serializable]
     public class MetaV2Data
@@ -148,6 +152,7 @@ namespace Crashverse.Data
         public LevelRewardRules levelRewards = new LevelRewardRules(); public DailyBossData dailyBoss = new DailyBossData();
         public SeasonTheme[] seasons = new SeasonTheme[0]; public AchievementDef[] achievements = new AchievementDef[0]; public ChestRules chest = new ChestRules();
         public string[] avatars = new string[0]; public string[] badges = new string[0]; public string[] badgeNames = new string[0];
+        public RewardBundle[] dailyLogin = new RewardBundle[0]; public SeasonPassDef seasonPass = new SeasonPassDef(); public string[] rivalNames = new string[0];
     }
 
     /// <summary>Default shot tuning (designer data, not code).</summary>

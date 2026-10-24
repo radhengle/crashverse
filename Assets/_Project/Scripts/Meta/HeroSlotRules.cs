@@ -10,8 +10,11 @@ namespace Crashverse.Meta
     {
         public static readonly string[] Kinds = { "keep", "gatehouse" };
         public const string FbxPrefix = "Bld_";
-        /// <summary>Default anchor relative to the structure base: behind it (+x, away from the Wrecker), on the ground.</summary>
-        public static readonly float[] DefaultPos = { 9f, 0f, 0f };
+        /// <summary>GD ruling: hero buildings stay clear of the shot lanes. Shots travel along +x from the Wrecker over |z| up to the
+        /// widest island (9 m deep, so 4.5 m) plus the yaw spread; anything nearer the lane centre than this is pushed out sideways.</summary>
+        public const float LaneClearZ = 8f;
+        /// <summary>Default anchor relative to the structure base: behind it (+x, away from the Wrecker), on the ground, off to the side.</summary>
+        public static readonly float[] DefaultPos = { 9f, 0f, LaneClearZ };
 
         public static string Validate(HeroSlot s)
         {
@@ -22,6 +25,12 @@ namespace Crashverse.Meta
             return null;
         }
 
-        public static float[] Position(HeroSlot s) => s?.pos != null && s.pos.Length == 3 ? s.pos : DefaultPos;
+        public static float[] Position(HeroSlot s)
+        {
+            var p = s?.pos != null && s.pos.Length == 3 ? (float[])s.pos.Clone() : (float[])DefaultPos.Clone();
+            if (System.Math.Abs(p[2]) < LaneClearZ) p[2] = p[2] < 0f ? -LaneClearZ : LaneClearZ; // never in a shot lane
+            return p;
+        }
+        public static bool ClearOfLanes(float[] p) => p != null && p.Length == 3 && System.Math.Abs(p[2]) >= LaneClearZ;
     }
 }

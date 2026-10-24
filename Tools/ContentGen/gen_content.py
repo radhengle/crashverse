@@ -214,7 +214,7 @@ def LV(n, island, name, layout, mats, shots, teaches, mastery, forced=(), locked
 
 W, Bk, S = "wood", "brick", "steel"
 chapter = {
-  "id": "c1_sunnyville_isles", "name": "Sunnyville Isles", "nextRegion": "Gearstorm City",
+  "id": "c1_sunnyville_isles", "name": "Sunnyville Isles", "nextRegion": "Frozen Peaks",
   "islands": [
     {"id": "harbor", "name": "Harbor Isle", "pos": [0, 0, 0], "gateAfterLevel": ""},
     {"id": "mill", "name": "Mill Isle", "pos": [22, 3, 8], "gateAfterLevel": "c1_l03"},
@@ -231,7 +231,7 @@ chapter = {
     LV(8, "clocktower", "Market Arcade", "c1_l08_market_arcade", [W, Bk, S], 5, "Choose loadout deliberately (Multi Shot)", M("STARS", 3, "3 stars"), forced=[("Module", "multi_shot")]),
     LV(9, "clocktower", "Lighthouse Gauntlet", "c1_l09_lighthouse_gauntlet", [W, Bk, S], 6, "Tests everything; tight budget", M("NO_POWERUP", 0, "No power-up used")),
     LV(10, "storm", "The Tidewarden", "c1_l10_tidewarden", [W, Bk, S], 7, "Boss phases + weak points", M("SHOTS_LEFT_AT_LEAST", 3, "Defeat with 3 shots left"), boss="tidewarden",
-       reward=[{"type": "coins", "amount": 500, "id": ""}, {"type": "powerup", "amount": 1, "id": "black_hole"}, {"type": "gate", "amount": 1, "id": "gearstorm_city"}])]}
+       reward=[{"type": "coins", "amount": 500, "id": ""}, {"type": "powerup", "amount": 1, "id": "black_hole"}, {"type": "gate", "amount": 1, "id": "frozen_peaks"}])]}
 
 def P(id, name, slot, effect, charges, utype, ulevel, utext, **p):
     base = {"damage": 0, "linkDepth": 0, "count": 0, "damageMult": 1, "radius": 0, "duration": 0,
