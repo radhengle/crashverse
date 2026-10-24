@@ -5,7 +5,7 @@ name: Unity EditMode tests
 on:
   pull_request:
   push:
-    branches: [ main, 'integration/**' ]
+    branches: [ main ] # integration/** is tested through its PR (pull_request); a push run as well only doubled the minutes
   workflow_dispatch:
 
 permissions:

@@ -1,5 +1,7 @@
 # Release AAB for Play (PR #8, folded into integration/v2). Never publishes.
 # - pull_request: builds the release AAB UNSIGNED to prove the job and its gates (no signing secrets referenced).
+# - The build job never references a signing secret (public repo); the separate `sign` job (main dispatch only, never for a
+#   pull_request) holds the upload key.
 # - workflow_dispatch on main: builds unsigned, then signs on the runner with jarsigner (passwords from step env, never on
 #   Unity's argv: Security #55 M-1) using the upload key from the protected `release` environment, and checks the cert against
 #   Tools/ci/upload_cert_sha256.txt. Skipped cleanly when the secrets are missing.
@@ -48,9 +50,7 @@ jobs:
     # PRs from this repo only (fork PRs get no Unity secrets); signed only on a main dispatch with the upload-key secrets present
     if: always() && ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (needs.secrets-check.outputs.present == 'true' && github.ref == 'refs/heads/main'))
     runs-on: ubuntu-24.04
-    environment: ${{ github.event_name == 'pull_request' && 'unity' || 'release' }}
-    env:
-      CV_SIGN: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    environment: unity
     permissions:
       contents: read
     steps:
@@ -121,8 +121,35 @@ jobs:
           PY
       - name: Release guard on built output (the AAB)
         run: python3 Tools/ci/check_release_guards.py --built "$(ls build/Android/*.aab | head -1)"
+      - name: Upload AAB artifact (1 day; Security #55 M-3)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: crashverse-android-aab-unsigned
+          path: build/Android/*.aab
+          if-no-files-found: error
+          retention-days: 1
+
+  # The ONLY job that touches the upload key: main dispatch with the secrets present. Never runs for a pull_request.
+  sign:
+    name: Sign AAB with the upload key (main dispatch only)
+    needs: [secrets-check, aab]
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && needs.secrets-check.outputs.present == 'true' && needs.aab.result == 'success'
+    runs-on: ubuntu-24.04
+    environment: release
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout (cert pin only)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            Tools/ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: crashverse-android-aab-unsigned
+          path: build/Android
       - name: Sign AAB with the upload key (jarsigner, passwords from env; Security #55 M-1)
-        if: env.CV_SIGN == 'true'
         env:
           KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASS }}
@@ -143,10 +170,10 @@ jobs:
           [ "$(keytool -printcert -jarfile "$f" | grep -c 'SHA256:')" = 1 ] || { echo "::error::expected exactly one signer"; exit 1; }
           [ "$got" = "$pin" ] || { echo "::error::AAB signed with cert $got, not the pinned upload cert"; exit 1; }
           echo "OK signed with the pinned upload cert"
-      - name: Upload AAB artifact (1 day; Security #55 M-3)
+      - name: Upload signed AAB (1 day; Security #55 M-3)
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: ${{ env.CV_SIGN == 'true' && 'crashverse-android-aab-signed' || 'crashverse-android-aab-unsigned' }}
+          name: crashverse-android-aab-signed
           path: build/Android/*.aab
           if-no-files-found: error
           retention-days: 1

@@ -1,7 +1,8 @@
 name: Build Android APK
 
 # Security Review v1 §5: actions pinned to commit SHAs, least-privilege permissions, no dirty builds,
-# Unity secrets exposed only to the build job and only on main. DEV profile by default; release via workflow_dispatch.
+# Public repo: no job a pull_request can trigger references a signing secret (the dev key lives only in the `sign` job, which
+# never runs for pull_request); Unity secrets are only used for same-repo PRs (fork PRs are skipped; no privileged PR trigger is used). DEV profile by default; release via workflow_dispatch.
 on:
   workflow_dispatch:
     inputs:
@@ -37,9 +38,10 @@ on:
 permissions:
   contents: read
 
+# PR runs: a newer push to the PR supersedes (and cancels) the older run. Dispatch/main runs (signing, publish) never cancel.
 concurrency:
-  group: android-apk-${{ github.ref }}
-  cancel-in-progress: false
+  group: android-apk-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   guards:
@@ -76,16 +78,15 @@ jobs:
   build:
     name: GameCI Unity Android (${{ github.event.inputs.profile || 'dev' }})
     needs: guards
-    # M2 + Security L-52-1: SIGNED builds only from a push to main or a dispatch on main / dev/*. Pull requests into main
-    # build unsigned (Unity's debug keystore) for the PR check; the dev keystore secrets are never referenced for them.
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/dev/'))
-    environment: ${{ github.event_name != 'pull_request' && 'dev-signing' || 'unity' }}
+    # Always UNSIGNED here (Unity debug keystore) and never a signing secret in this job; the `sign` job below re-signs with the
+    # dev key on push-to-main / dispatch on main or dev/* only. Fork PRs get no Unity secrets: skipped.
+    if: (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/dev/'))
+    environment: unity
     runs-on: ubuntu-24.04
     permissions:
       contents: read
     env:
       CRASHVERSE_BUILD_PROFILE: ${{ github.event.inputs.profile || 'dev' }}
-      CV_SIGN: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/dev/')) }}
     steps:
       - name: Free disk space (unityci editor image is large)
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
@@ -113,15 +114,6 @@ jobs:
           restore-keys: |
             Library-Android-${{ env.CRASHVERSE_BUILD_PROFILE }}-
 
-      - name: Decode persistent dev keystore (never committed; separate from the Play upload key)
-        if: env.CV_SIGN == 'true'
-        env:
-          DEV_KEYSTORE_BASE64: ${{ secrets.DEV_KEYSTORE_BASE64 }}
-        run: |
-          set -e
-          [ -n "$DEV_KEYSTORE_BASE64" ] || { echo "::error::DEV_KEYSTORE_BASE64 secret missing"; exit 1; }
-          mkdir -p build-secrets && umask 077 && echo "$DEV_KEYSTORE_BASE64" | base64 -d > build-secrets/dev.keystore
-
       - name: Build APK
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
         env:
@@ -147,6 +139,49 @@ jobs:
       - name: Assert built APK (arm64 libs, allowBackup=false, portrait-only, release non-debuggable)
         run: bash Tools/ci/check_apk.sh "$(ls build/Android/*.apk | head -1)" "$CRASHVERSE_BUILD_PROFILE"
 
+      - name: Release guard on built output (no dev aim hook symbols in IL2CPP metadata)
+        if: env.CRASHVERSE_BUILD_PROFILE == 'release'
+        run: |
+          set -e
+          sudo chown -R "$(id -u):$(id -g)" build
+          for f in build/Android/*.apk; do python3 Tools/ci/check_release_guards.py --built "$f"; done
+
+      - name: Upload unsigned APK (debug keystore; the PR smoke installs this, the sign job re-signs it)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: crashverse-android-apk-unsigned
+          path: build/Android/*.apk
+          if-no-files-found: error
+          retention-days: 3
+
+  # The ONLY job that touches the dev signing key. Never runs for pull_request (so no PR, fork or not, can reach the secret).
+  sign:
+    name: Sign with the persistent dev key (main / dev/* only)
+    needs: build
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/dev/'))
+    environment: dev-signing
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout (pins + guards only)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            Tools/ci
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: crashverse-android-apk-unsigned
+          path: build/Android
+      - name: Decode persistent dev keystore (never committed; separate from the Play upload key)
+        env:
+          DEV_KEYSTORE_BASE64: ${{ secrets.DEV_KEYSTORE_BASE64 }}
+        run: |
+          set -e
+          [ -n "$DEV_KEYSTORE_BASE64" ] || { echo "::error::DEV_KEYSTORE_BASE64 secret missing"; exit 1; }
+          mkdir -p build-secrets && umask 077 && echo "$DEV_KEYSTORE_BASE64" | base64 -d > build-secrets/dev.keystore
+
       - name: Get build-tools 35 (zipalign -P 16, apksigner)
         run: |
           set -e
@@ -155,14 +190,12 @@ jobs:
           unzip -q bt.zip -d bt && echo "BT=$PWD/$(ls -d bt/* | head -1)" >> $GITHUB_ENV
 
       - name: zipalign -P 16 + re-sign v1+v2+v3 with the persistent dev key
-        if: env.CV_SIGN == 'true'
         env:
           KS_PASS: ${{ secrets.DEV_KEYSTORE_PASS }}
           KA_NAME: ${{ secrets.DEV_KEYALIAS_NAME }}
           KA_PASS: ${{ secrets.DEV_KEYALIAS_PASS }}
         run: |
           set -e
-          sudo chown -R "$(id -u):$(id -g)" build build-secrets # written by the GameCI container as root
           f=$(ls build/Android/*.apk | head -1)
           zip -q -d "$f" 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*.EC' 'META-INF/*.DSA' 'META-INF/MANIFEST.MF' || true # drop Unity's debug-key v1 signature
           "$BT/zipalign" -f -P 16 -v 4 "$f" aligned.apk > /dev/null
@@ -181,10 +214,9 @@ jobs:
 
       - name: Remove keystore from the workspace
         if: always()
-        run: sudo rm -rf build-secrets
+        run: rm -rf build-secrets
 
       - name: Verify signature, cert pin, versionCode, no testOnly (publish gate)
-        if: env.CV_SIGN == 'true'
         env:
           EXPECTED_VC: ${{ github.run_number }}
         run: |
@@ -204,12 +236,6 @@ jobs:
           echo "OK $f cert=$sha versionCode=$EXPECTED_VC"
           done
 
-      - name: Release guard on built output (no dev aim hook symbols in IL2CPP metadata)
-        if: env.CRASHVERSE_BUILD_PROFILE == 'release'
-        run: |
-          set -e
-          for f in build/Android/*.apk; do python3 Tools/ci/check_release_guards.py --built "$f"; done
-
       - name: Upload APK artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -223,7 +249,7 @@ jobs:
   build-release:
     name: GameCI Unity Android (release profile, PR guard)
     needs: guards
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     environment: unity
     runs-on: ubuntu-24.04
     permissions:
@@ -291,8 +317,10 @@ jobs:
 
   emulator-smoke:
     name: Emulator smoke API ${{ matrix.api }} x86_64 1080x2340 #${{ matrix.rep }} (publish gate)
-    needs: [build, build-release]
-    if: always() && needs.build.result == 'success' # build-release runs on PRs only (skipped otherwise)
+    needs: [build, build-release, sign]
+    # Emulator minutes only where they gate something: the PR into main (latest push only, see concurrency) and dispatches
+    # (publish needs it). Plain pushes to main build/sign but don't re-run the emulators. build-release/sign are event-specific.
+    if: always() && needs.build.result == 'success' && needs.sign.result != 'failure' && (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -318,7 +346,7 @@ jobs:
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: crashverse-android-apk
+          name: ${{ needs.sign.result == 'success' && 'crashverse-android-apk' || 'crashverse-android-apk-unsigned' }}
           path: apk
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         if: needs.build-release.result == 'success'
@@ -330,7 +358,7 @@ jobs:
         with:
           api-level: ${{ matrix.api }}
           arch: x86_64
-          target: google_apis
+          target: default # AOSP image, no Google Play services: GMS boot ANRs, late overlay commits (asset-path relaunch of our activity) and GMS CPU load starving SwiftShader (GPU-hang ANRs) were every smoke flake in runs 40099266488/40102001893/40105864952; the game is offline and needs no GMS
           disable-animations: true
           cores: 4
           ram-size: 4096M
@@ -347,7 +375,7 @@ jobs:
 
   publish:
     name: Publish prerelease (only after signing gate + emulator smoke on every API)
-    needs: [build, emulator-smoke]
+    needs: [sign, emulator-smoke]
     # QA C-9b + Security L-52-1: dispatch only, from main or dev/* only, a NEW tag each time (never overwrites), tagged at the
     # exact built commit, and only once unity-tests (incl. unity-tests-gate) and server-ci passed on that same commit.
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_tag != '' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/dev/'))
