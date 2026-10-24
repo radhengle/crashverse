@@ -172,7 +172,7 @@ namespace Crashverse.UI
         bool _tickHit; int _lastShots = -1;
         public override bool BlocksWorldInput => false;
         public HudScreen(GameSession s) { _s = s; }
-        const int StripBands = 5;
+        const int StripBands = 5; public static readonly bool ShowBuildingStrip = false;
 
         // Target UI §6/§7/§8: Steps Left box, destruction % bar, building strip (right), pause (bottom-left), power-ups, FIRE; boss HP bar on the Daily Boss.
         protected override void Build(RectTransform root)
@@ -212,7 +212,9 @@ namespace Crashverse.UI
             _status = UIFactory.Label(root, "", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th); UIFactory.Band(_status.rectTransform, true, 24f, below + 50f); UIArt.Pop(_status, V2.Ink, 1f);
             _combo = UIFactory.Label(root, "", Th.titleSp, Th.violet, TextAnchor.MiddleCenter, Th, true); // COMBO is violet (asset_list ui_label_combo)
             _combo.rectTransform.localScale = Vector3.zero; UIFactory.Place(_combo.rectTransform, new Vector2(0.5f, 0.7f), new Vector2(240, 48), Vector2.zero);
-            // building strip (right edge): the structure in 5 height bands, top band first; each tile fades as its band falls
+            // building strip (right edge): the structure in 5 height bands, top band first; each tile fades as its band falls.
+            // QA V2-06: off until it has real building-icon art: as plain orange circles it sat over the tower and hid the target.
+            if (ShowBuildingStrip) {
             _strip = UIFactory.Rect("BuildingStrip", root); UIFactory.Place(_strip, new Vector2(1f, 0.5f), new Vector2(46f, StripBands * 50f), new Vector2(-inset - 4f, 40f));
             var sv = _strip.gameObject.AddComponent<VerticalLayoutGroup>(); sv.spacing = 4f; sv.childControlHeight = sv.childControlWidth = true; sv.childForceExpandHeight = sv.childForceExpandWidth = false;
             _stripTiles = new Image[StripBands];
@@ -221,6 +223,7 @@ namespace Crashverse.UI
                 var t = V2.RoundPanel("Band" + (StripBands - i), _strip, new Color(0.95f, 0.75f, 0.35f, 0.9f)); var le = t.gameObject.AddComponent<LayoutElement>(); le.minHeight = le.preferredHeight = 46f; le.minWidth = le.preferredWidth = 46f;
                 var o = t.gameObject.AddComponent<Outline>(); o.effectColor = new Color(0.04f, 0.07f, 0.17f, 0.8f); o.effectDistance = new Vector2(2f, -2f);
                 _stripTiles[i] = t;
+            }
             }
             // pause bottom-left; power-ups bottom centre; FIRE bottom-right (thumb zone)
             var pause = V2.RoundButton(root, "II", Th.navy500, () => Router.Push(new PauseModal(_s)), Th, 52f, "Button_II");
@@ -276,6 +279,7 @@ namespace Crashverse.UI
         /// <summary>Building strip: 5 height bands of objective pieces (bottom→top); a tile's alpha follows the share of its band still standing.</summary>
         void TickStrip()
         {
+            if (_stripTiles == null) return;
             var pieces = _s.tracker.Pieces;
             if (_bands == null)
             {

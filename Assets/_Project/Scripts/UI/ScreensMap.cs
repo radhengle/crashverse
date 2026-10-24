@@ -108,8 +108,12 @@ namespace Crashverse.UI
             var pr = AppServices.Progress.Data.profile;
             var av = V2.RoundButton(row, "", Th.goldTrim, () => Router.Push(new ProfileScreen(true)), Th, 48f, "Button_Profile");
             _avatar = UIArt.Icon(av.transform, meta.avatars.Length > pr.avatar ? meta.avatars[pr.avatar] : "avatar_01", 44f); UIFactory.Stretch(_avatar.rectTransform, 2f);
-            _name = UIFactory.Label(row, pr.name, Th.captionSp, Color.white, TextAnchor.MiddleLeft, Th, true); UIArt.Pop(_name, V2.Ink, 1f);
-            _name.GetComponent<LayoutElement>().flexibleWidth = 1f;
+            // QA V2-05: the row has no room for the name on ~360-410 dp phones (it collapsed to one letter per line behind the star
+            // pill). The pills keep the bar; the name sits on its own line under the bar, right side (the season ribbon is left).
+            UIFactory.Rect("Flex", row).gameObject.AddComponent<LayoutElement>().flexibleWidth = 1f;
+            _name = UIFactory.Label(top, pr.name, Th.captionSp, Color.white, TextAnchor.MiddleRight, Th, true); UIArt.Pop(_name, V2.Ink, 1f);
+            _name.horizontalOverflow = HorizontalWrapMode.Overflow; _name.verticalOverflow = VerticalWrapMode.Overflow;
+            UIFactory.Place(_name.rectTransform, new Vector2(1f, 0f), new Vector2(170f, 22f), new Vector2(-8f, -26f));
             _stars = V2.Pill(row, UIArt.StarOn, "0", Th, 76f);
             _coins = V2.Pill(row, UIArt.Coin, "0", Th, 84f);
             _gems = V2.Pill(row, UIArt.Gem, "0", Th, 68f);
@@ -166,7 +170,7 @@ namespace Crashverse.UI
         {
             var p = AppServices.Progress.Data;
             _stars.text = UnlockRules.TotalStars(AppServices.Content.Chapter1, AppServices.Save) + "/" + AppServices.Content.Chapter1.levels.Length * 3;
-            _coins.text = p.coins.ToString(); _gems.text = p.gems.ToString(); _name.text = p.profile.name;
+            _coins.text = p.coins.ToString(); _gems.text = p.gems.ToString(); _name.text = UIFactory.Truncate(p.profile.name, 16);
             var meta = AppServices.Content.Meta; _avatar.sprite = UIArt.Get(meta.avatars.Length > p.profile.avatar ? meta.avatars[p.profile.avatar] : "avatar_01");
             Canvas.ForceUpdateCanvases(); LayoutBackground(); FocusFrontier();
         }
