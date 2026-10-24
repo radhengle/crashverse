@@ -168,14 +168,27 @@ namespace Crashverse.Core
             }
         }
 
+        static Light _key, _rim;
+
+        /// <summary>Idempotent: map and every run call this, and the lights live at scene root, so creating new ones each
+        /// time stacked suns until up-facing grass washed out to white (emulator smoke, run 40066075240). One key + one rim;
+        /// LightingRig's fallback DefaultSun is switched off once the art key light exists.</summary>
         public static void Lighting()
         {
             var vc = VisualConfig.Current; // PM: lighting is data (VisualConfig)
-            var key = new GameObject("KeyLight").AddComponent<Light>();
+            foreach (var l in Object.FindObjectsOfType<Light>())
+            {
+                if (l.type != LightType.Directional) continue;
+                if (l.name == "DefaultSun") l.enabled = false;
+                else if (l.name == "KeyLight" && l != _key) { if (_key == null) _key = l; else Object.Destroy(l.gameObject); }
+                else if (l.name == "RimLight" && l != _rim) { if (_rim == null) _rim = l; else Object.Destroy(l.gameObject); }
+            }
+            var key = _key != null ? _key : (_key = new GameObject("KeyLight").AddComponent<Light>());
+            RenderSettings.sun = key;
             key.type = LightType.Directional; key.color = VisualConfig.C(vc.keyLightHex); key.intensity = vc.keyIntensity;
             key.shadows = LightShadows.Soft; key.shadowStrength = vc.keyShadowStrength;
             key.transform.rotation = Quaternion.Euler(vc.keyEuler.x, vc.keyEuler.y, vc.keyEuler.z);
-            var rim = new GameObject("RimLight").AddComponent<Light>();
+            var rim = _rim != null ? _rim : (_rim = new GameObject("RimLight").AddComponent<Light>());
             rim.type = LightType.Directional; rim.color = VisualConfig.C(vc.rimLightHex); rim.intensity = vc.rimIntensity; rim.shadows = LightShadows.None;
             rim.transform.rotation = Quaternion.Euler(vc.rimEuler.x, vc.rimEuler.y, vc.rimEuler.z);
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;

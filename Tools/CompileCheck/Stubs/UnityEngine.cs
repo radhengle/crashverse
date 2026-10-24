@@ -218,6 +218,7 @@ namespace UnityEngine
     public static class RenderSettings
     {
         public static Rendering.AmbientMode ambientMode;
+        public static Light sun;
         public static Color ambientSkyColor, ambientEquatorColor, ambientGroundColor, ambientLight, fogColor;
         public static float ambientIntensity, fogStartDistance, fogEndDistance;
         public static bool fog;
