@@ -1,0 +1,89 @@
+name: Emulator smoke (Android)
+
+# Runs the QA emulator smoke flow (qa/ci/emulator_smoke_flow.sh) against the APK produced by "Build Android APK".
+# That workflow only builds on push to main, so this triggers on its successful completion (= after each main merge),
+# plus workflow_dispatch with an explicit build run id. Free GitHub-hosted ubuntu runners have /dev/kvm; no paid runners, no new secrets.
+# Actions pinned to commit SHAs (Security Review v1 §5).
+on:
+  workflow_run:
+    workflows: [ "Build Android APK" ]
+    types: [ completed ]
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      apk_run_id:
+        description: "Run id of a successful 'Build Android APK' run (dev profile) whose APK to test"
+        required: true
+
+permissions:
+  contents: read
+  actions: read   # download the APK artifact from the build run
+
+concurrency:
+  group: emulator-smoke-${{ github.event.workflow_run.head_sha || github.event.inputs.apk_run_id }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Smoke API ${{ matrix.api-level }}
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [ 34, 36 ]
+    steps:
+      - name: Checkout (same commit the APK was built from)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: crashverse-android-apk
+          path: apk
+          run-id: ${{ github.event.workflow_run.id || github.event.inputs.apk_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Locate APK
+        run: |
+          APK=$(ls apk/*.apk | head -1); test -n "$APK" || { echo "::error::no APK in artifact"; exit 1; }
+          echo "APK=$PWD/$APK" >> "$GITHUB_ENV"; ls -l apk
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+
+      - name: Python deps (image check)
+        run: python3 -m pip install --user pillow==11.0.0
+
+      - name: Run smoke flow on emulator
+        uses: ReactiveCircus/android-emulator-runner@1dcd0090116d15e7c562f8db72807de5e036a4ed # v2.34.0
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7_pro   # placeholder size; forced to 1080x2340 below
+          ram-size: 4096M
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash qa/ci/emulator_smoke_ci.sh "$APK" smoke_out
+
+      - name: No-magenta / missing-material check (BUG-23)
+        if: always()
+        run: |
+          ls smoke_out/*.png >/dev/null 2>&1 || { echo "::error::no screenshots captured"; exit 1; }
+          python3 qa/ci/check_magenta.py --threshold 0.002 smoke_out/*.png
+
+      - name: Upload screenshots, video, logcat
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: emulator-smoke-api${{ matrix.api-level }}
+          path: smoke_out
+          if-no-files-found: error
+          retention-days: 14
