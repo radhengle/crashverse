@@ -226,6 +226,55 @@ namespace Crashverse.Rendering.Tests
             Assert.IsEmpty(bad, string.Join("\n", bad));
         }
 
+        // ---------------- Buildings ----------------
+        /// <summary>Tris drawn at full detail: LOD0 renderers when there is a LODGroup, else every renderer (collision UCX_/_COL meshes skipped).</summary>
+        public static int BuildingTris(GameObject root)
+        {
+            var lg = root.GetComponentInChildren<LODGroup>();
+            Renderer[] rs = lg != null && lg.lodCount > 0 ? lg.GetLODs()[0].renderers : root.GetComponentsInChildren<Renderer>(true);
+            return rs.Where(r => r != null && !r.name.StartsWith("UCX_") && !r.name.EndsWith("_COL")).Sum(r => Tris(r));
+        }
+
+        [Test]
+        public void BuildingCap_ByFolder()
+        {
+            Assert.AreEqual(20000, RenderTiers.BuildingTriCap(R + "Buildings/Hero/Bld_Tower/Bld_Tower.fbx"));
+            Assert.AreEqual(8000, RenderTiers.BuildingTriCap(R + "Buildings/Bld_House/Bld_House.fbx"));
+            Assert.AreEqual(0, RenderTiers.BuildingTriCap(R + "Props/Crate/Crate.fbx"));
+            Assert.AreEqual(0, RenderTiers.BuildingTriCap("Assets/_Project/Models/BuildingKit/Kit_Base/Bld_Base.fbx"));
+        }
+
+        [Test]
+        public void RealisticBuildings_StayUnderTriCaps()
+        {
+            var paths = AssetDatabase.FindAssets("t:Model", new[] { "Assets/_Project" }).Concat(AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/_Project" })).Select(g => AssetDatabase.GUIDToAssetPath(g))
+                .Where(p => RenderTiers.BuildingTriCap(p) > 0 && !System.Text.RegularExpressions.Regex.IsMatch(System.IO.Path.GetFileNameWithoutExtension(p), @"_LOD[1-9]\d*$"))
+                .Distinct().ToList();
+            if (paths.Count == 0) { Assert.Pass("No realistic buildings yet"); return; }
+            var bad = new List<string>();
+            foreach (var p in paths)
+            {
+                var go = AssetDatabase.LoadAssetAtPath<GameObject>(p);
+                if (go == null) continue;
+                int t = BuildingTris(go), cap = RenderTiers.BuildingTriCap(p);
+                if (t > cap) bad.Add($"{p}: {t} tris > {(RenderTiers.IsHeroBuildingPath(p) ? "hero" : "standard")} cap {cap}");
+            }
+            Assert.IsEmpty(bad, string.Join("\n", bad));
+        }
+
+        [Test]
+        public void BuildingTris_SelfTest()
+        {
+            var b = new GameObject("Bld_Test");
+            try
+            {
+                var s = GameObject.CreatePrimitive(PrimitiveType.Sphere); s.transform.SetParent(b.transform, false);   // 768 tris
+                var col = GameObject.CreatePrimitive(PrimitiveType.Sphere); col.name = "UCX_Bld_Test"; col.transform.SetParent(b.transform, false);
+                Assert.AreEqual(768, BuildingTris(b), "collision meshes must not count");
+            }
+            finally { Object.DestroyImmediate(b); }
+        }
+
         [Test]
         public void FoliageValidator_SelfTest()
         {

@@ -4,7 +4,7 @@ namespace Crashverse.Rendering
 {
     /// <summary>Single source of truth for the per-tier mobile look and budgets (bright glossy + realistic PBR).
     /// UrpSetup/LightingSetup (editor) apply it to URP_{Low,Mid,High} and the Low/Mid/High QualitySettings levels;
-    /// RealisticTextureImport applies the texture rules; tests assert the generated assets match. Change values here, not in the assets.
+    /// CrashverseImportPostprocessor (VFX, Models/Realistic/** branch) applies the texture rules; tests assert the generated assets match. Change values here, not in the assets.
     /// Frame rate, vSync, fixed step and debris caps are NOT here: Perf/QualityController owns them (locked for ranked determinism).</summary>
     public struct RenderTier
     {
@@ -88,9 +88,17 @@ namespace Crashverse.Rendering
         public const int TilingMaterialMax = 1024; // Buildings/** and Materials/Textures/** tiling sets (Art & UI agreed)
         public const int PropTextureMax = 512;     // Realistic/Props/** (all maps, every platform; Art & UI agreed)
 
-        // Building triangle caps (Art & UI agreed). No test yet: hero vs standard prefabs are not tagged or foldered apart; add a
-        // validation once 3D Modeler picks a convention (e.g. Buildings/Hero/** vs Buildings/Standard/**).
+        // Building triangle caps (Art & UI + 3D Modeler). Convention: hero buildings live in Models/Realistic/Buildings/Hero/<Asset>/
+        // (20k), standard buildings anywhere else under Models/Realistic/Buildings/<Asset>/ (8k). Names stay Bld_<Name>.
         public const int HeroBuildingMaxTris = 20000, StandardBuildingMaxTris = 8000;
+        public const string RealisticBuildingsRoot = RealisticRoot + "Buildings/", HeroBuildingsRoot = RealisticBuildingsRoot + "Hero/";
+        public static bool IsHeroBuildingPath(string assetPath) => assetPath != null && assetPath.Replace('\\', '/').StartsWith(HeroBuildingsRoot, System.StringComparison.Ordinal);
+        /// <summary>Tri cap for an asset under Models/Realistic/Buildings/** (hero vs standard by folder), or 0 if not a realistic building.</summary>
+        public static int BuildingTriCap(string assetPath)
+        {
+            if (!InRealisticScope(assetPath) || !assetPath.Replace('\\', '/').StartsWith(RealisticBuildingsRoot, System.StringComparison.Ordinal)) return 0;
+            return IsHeroBuildingPath(assetPath) ? HeroBuildingMaxTris : StandardBuildingMaxTris;
+        }
 
         /// <summary>True for Models/Realistic/** but never a v2 folder (Wrecker_v2 etc. stay with the VFX import rules).</summary>
         public static bool InRealisticScope(string assetPath)
