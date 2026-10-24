@@ -129,7 +129,8 @@ namespace Crashverse.Weapons
                 else if (t.fingerId == _fingerId)
                 {
                     if (t.phase == TouchPhase.Moved) { Drag(t.position - _last); _last = t.position; }
-                    else if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled) CancelAim();
+                    else if (t.phase == TouchPhase.Ended) { var rest = t.position - _last; if (rest.x != 0f || rest.y != 0f) Drag(rest); CancelAim(); } // a flick shorter than a frame has no Moved phase: keep its delta
+                    else if (t.phase == TouchPhase.Canceled) CancelAim();
                 }
             }
             if (Input.touchCount > 1) CancelAim(); // two fingers = camera orbit
