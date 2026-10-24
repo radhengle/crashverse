@@ -35,13 +35,17 @@ namespace UnityEngine
     public struct Quaternion { public static float Angle(Quaternion a, Quaternion b) => 0; }
     public struct Bounds { public Vector3 center, size; public void Encapsulate(Bounds b) { } }
     public static class Mathf { public static float Max(float a, float b) => a > b ? a : b; }
+    public struct Hash128 { public static Hash128 Compute(string s) => default; }
     public static class Debug { public static void Log(object o) { } public static void LogWarning(object o) { } public static void LogError(object o) { } }
 }
 namespace UnityEditor
 {
     using UnityEngine;
     public class AssetImporter : Object { public static AssetImporter GetAtPath(string p) => null; }
-    public class AssetPostprocessor { public string assetPath; public AssetImporter assetImporter; public virtual int GetPostprocessOrder() => 0; public virtual uint GetVersion() => 0; }
+    public class AssetImportContext { public void DependsOnCustomDependency(string name) { } }
+    [AttributeUsage(AttributeTargets.Class)] public class InitializeOnLoadAttribute : Attribute { }
+    [Flags] public enum ImportAssetOptions { Default = 0, ForceUpdate = 1, ForceSynchronousImport = 8, ImportRecursive = 256 }
+    public class AssetPostprocessor { public string assetPath; public AssetImporter assetImporter; public AssetImportContext context; public virtual int GetPostprocessOrder() => 0; public virtual uint GetVersion() => 0; }
     public enum ModelImporterMeshCompression { Off, Low, Medium, High }
     public enum ModelImporterNormals { Import, Calculate, None }
     public enum ModelImporterTangents { Import, CalculateLegacy, CalculateLegacyWithSplitTangents, CalculateMikk, None }
@@ -63,6 +67,8 @@ namespace UnityEditor
         public int anisoLevel, maxTextureSize; public TextureImporterCompression textureCompression;
         public TextureImporterPlatformSettings GetPlatformTextureSettings(string p) => null; public void SetPlatformTextureSettings(TextureImporterPlatformSettings s) { } }
     public static class AssetDatabase { public static T LoadAssetAtPath<T>(string p) where T : Object => null; public static void CreateAsset(Object o, string p) { } public static void SaveAssets() { }
+        public static void RegisterCustomDependency(string n, Hash128 h) { } public static void Refresh() { } public static string[] GetSubFolders(string p) => null;
+        public static void ImportAsset(string p, ImportAssetOptions o) { }
         public static string[] FindAssets(string f, string[] d) => null; public static string GUIDToAssetPath(string g) => null; public static bool IsValidFolder(string p) => true; public static string CreateFolder(string a, string b) => null; }
     public static class EditorUtility { public static void SetDirty(Object o) { } }
     public static class PrefabUtility { public static GameObject SaveAsPrefabAsset(GameObject g, string p) => g; }

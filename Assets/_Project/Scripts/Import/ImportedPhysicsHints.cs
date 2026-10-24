@@ -16,5 +16,8 @@ namespace Crashverse.Import
         public float breakTorque;
         [Tooltip("anchor_to: name of the object/anchor this piece is anchored to. Empty = not authored.")]
         public string anchorTo;
+        [Tooltip("Fracture class (e.g. Stone, Wood, Steel, Roof). Hero buildings: from models/HeroBuildings/Kit_<B>_stats.json modules[<Module>].frac; " +
+                 "an FBX fracture_class property overrides it. Set on the module root and each fragment. Empty = not authored.")]
+        public string fractureClass;
     }
 }

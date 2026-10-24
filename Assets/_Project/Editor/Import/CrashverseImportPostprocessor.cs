@@ -20,7 +20,7 @@ namespace Crashverse.EditorTools.Import
     {
         // Run after any generic project postprocessors so these settings win.
         public override int GetPostprocessOrder() => 100;
-        public override uint GetVersion() => 2;
+        public override uint GetVersion() => 3;   // 3: hero building fractureClass + T_Bld/hero kit 1024 Android cap
 
         // ---------------- FBX ----------------
         void OnPreprocessModel()
@@ -28,6 +28,8 @@ namespace Crashverse.EditorTools.Import
             if (!C.InScope(assetPath)) return;
             var mi = (ModelImporter)assetImporter;
             var cls = C.Classify(assetPath);
+            // Hero building modules read models/HeroBuildings/Kit_<B>_stats.json (outside Assets): reimport when its hash changes.
+            if (C.TryHeroModule(assetPath, out var heroKit, out _, out _)) context.DependsOnCustomDependency(C.HeroStatsDependency(heroKit));
 
             // Scale: FBX exported with Apply Transform, 1 unit = 1 m (models README).
             mi.globalScale = 1f;
@@ -69,6 +71,37 @@ namespace Crashverse.EditorTools.Import
             }
         }
 
+        /// <summary>Runs after OnPostprocessGameObjectWithUserProperties, so any FBX fracture_class is already on the hints.</summary>
+        void OnPostprocessModel(GameObject root)
+        {
+            if (!C.InScope(assetPath) || !C.TryHeroModule(assetPath, out var kit, out var module, out _)) return;
+            var stats = HeroStatsCache.Load(kit, out _);
+            ApplyFractureClass(root, stats?.ClassFor(module), assetPath);
+        }
+
+        /// <summary>Testable core of the fracture-class step. Precedence per object: its own FBX fracture_class, then the module value
+        /// (the root's FBX fracture_class, else <paramref name="jsonClass"/> from the stats sidecar). Writes the module root and every
+        /// LOD0 fragment. With no value at all (missing JSON or entry) nothing is written or cleared; the validator warns instead.
+        /// Returns the number of objects written.</summary>
+        public static int ApplyFractureClass(GameObject root, string jsonClass, string assetPath)
+        {
+            var rh = root.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
+            string moduleClass = rh != null && !string.IsNullOrEmpty(rh.fractureClass) ? rh.fractureClass : jsonClass;
+            if (string.IsNullOrEmpty(moduleClass)) return 0;
+            int n = 0;
+            if (rh == null) rh = root.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
+            if (string.IsNullOrEmpty(rh.fractureClass)) { rh.fractureClass = moduleClass; n++; }
+            foreach (var t in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (t == root.transform || !C.IsFragment(t.name) || C.LodLevel(t.name, out _) > 0) continue;
+                var h = t.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
+                if (h != null && !string.IsNullOrEmpty(h.fractureClass)) continue;   // FBX fracture_class on the fragment wins
+                if (h == null) h = t.gameObject.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
+                h.fractureClass = moduleClass; n++;
+            }
+            return n;
+        }
+
         Material OnAssignMaterialModel(Material source, Renderer renderer)
         {
             if (!C.InScope(assetPath)) return null;
@@ -77,7 +110,7 @@ namespace Crashverse.EditorTools.Import
         }
 
         /// <summary>FBX user properties. attach_to=&lt;Object&gt; reparents keeping world pose (models README).
-        /// mass_kg, break_force_N, break_torque_Nm, anchor_to are stored as SI authoring defaults on ImportedPhysicsHints
+        /// mass_kg, break_force_N, break_torque_Nm, anchor_to, fracture_class are stored as SI authoring defaults on ImportedPhysicsHints
         /// (data only; Physics owns conversion and use). A property that is missing never overwrites an existing value.</summary>
         void OnPostprocessGameObjectWithUserProperties(GameObject go, string[] names, object[] values)
         {
@@ -89,8 +122,8 @@ namespace Crashverse.EditorTools.Import
         public static void ApplyUserProperties(GameObject go, string[] names, object[] values, string assetPath)
         {
             float? mass = Num(names, values, "mass_kg"), brk = Num(names, values, "break_force_N"), tq = Num(names, values, "break_torque_Nm");
-            string anchor = Str(names, values, "anchor_to");
-            if (mass.HasValue || brk.HasValue || tq.HasValue || anchor != null)
+            string anchor = Str(names, values, "anchor_to"), frac = Str(names, values, "fracture_class");
+            if (mass.HasValue || brk.HasValue || tq.HasValue || anchor != null || frac != null)
             {
                 var h = go.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
                 if (h == null) h = go.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
@@ -98,6 +131,7 @@ namespace Crashverse.EditorTools.Import
                 if (brk.HasValue) h.breakForce = brk.Value;
                 if (tq.HasValue) h.breakTorque = tq.Value;
                 if (anchor != null) h.anchorTo = anchor;
+                if (frac != null) h.fractureClass = frac;      // overrides the hero stats JSON (ApplyFractureClass keeps it)
             }
             string target = Str(names, values, "attach_to");
             if (string.IsNullOrEmpty(target)) return;

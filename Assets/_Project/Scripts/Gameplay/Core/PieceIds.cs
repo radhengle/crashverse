@@ -32,12 +32,13 @@ namespace Crashverse.Gameplay
             }
         }
 
-        /// <summary>MaterialKind (int) → VfxMaterial (int) per #31 VfxCore: Wood 0, Brick 1, Steel 2, SteelJoint 3, Explosive 5.</summary>
+        /// <summary>MaterialKind (int) → VfxMaterial (int) per VfxCore: Wood 0, Brick 1, Steel 2, SteelJoint 3, Explosive 5, Glass 6, Stone 7.
+        /// MaterialKind: Wood 0, Brick 1, Steel 2, Glass 3, Stone 4.</summary>
         public static int VfxMaterialOf(int materialKind, bool steelJoint, bool explosive)
         {
             if (explosive) return 5;
             if (steelJoint) return 3;
-            switch (materialKind) { case 1: return 1; case 2: return 2; default: return 0; }
+            switch (materialKind) { case 1: return 1; case 2: return 2; case 3: return 6; case 4: return 7; default: return 0; }
         }
     }
 }
