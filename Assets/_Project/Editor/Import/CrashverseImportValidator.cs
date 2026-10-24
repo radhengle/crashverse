@@ -29,6 +29,9 @@ namespace Crashverse.EditorTools.Import
             int e = 0, w = 0;
             void Err(string a, string c, string d) { e++; sb.Append($"| ERROR | {a} | {c} | {d} |\n"); }
             void Warn(string a, string c, string d) { w++; sb.Append($"| warn | {a} | {c} | {d} |\n"); }
+            // Hero buildings: kit -> parsed stats (null = missing/unreadable), kit -> FBX modules seen.
+            var heroStats = new Dictionary<string, C.HeroStats>();
+            var heroFbxModules = new Dictionary<string, HashSet<string>>();
 
             foreach (var g in CrashversePrefabBuilder.ModelGroups())
             {
@@ -84,6 +87,8 @@ namespace Crashverse.EditorTools.Import
                         if (!fragNames.Contains(an.name.Substring(7))) Err(baseName, "anchor", $"{an.name}: expected ANCHOR_<Frag> naming an existing fragment");
                     foreach (var h in hullsByTarget.Keys.Where(t => all.All(x => x.name != t))) Err(baseName, "collider", $"UCX_ hull targets missing '{h}'");
                 }
+                if (C.TryHeroModule(lod0, out var hKit, out var hModule, out _))
+                    CheckHeroFractureClass(go, baseName, hKit, hModule, heroStats, heroFbxModules, Warn);
                 bool anyHull = all.Any(t => C.ColliderTarget(t.name) != null);
                 if (!anyHull) Warn(baseName, "collider", cls == C.AssetClass.KitFractured ? "no UCX_ hulls: fragments fall back to convex own-mesh" : "no UCX_/_COL hull: BoxCollider fallback");
 
@@ -127,6 +132,14 @@ namespace Crashverse.EditorTools.Import
                     if (tx < lo * 0.75f || tx > hi * 1.5f) Warn(baseName, "texel", d); else sb.Append($"| info | {baseName} | texel | {d} |\n");
                 }
             }
+            // Hero buildings: every module in Kit_<B>_stats.json has an FBX and vice versa (warnings). Kits with a sidecar but no FBX yet are included.
+            foreach (var kit in C.KnownHeroKits.Concat(heroFbxModules.Keys).Distinct())
+            {
+                var st = StatsFor(kit, heroStats);
+                heroFbxModules.TryGetValue(kit, out var fbx);
+                if (st == null) continue;   // missing sidecar is already warned per module; nothing to compare
+                foreach (var msg in C.CompareHeroModules(kit, st.modules.Keys, fbx)) Warn("Kit_" + kit, "fracture class", msg);
+            }
             foreach (var t in AssetDatabase.FindAssets("t:Texture2D", new[] { C.ModelsRoot.TrimEnd('/') }).Select(AssetDatabase.GUIDToAssetPath))
             {
                 string stem = C.FileStem(t);
@@ -135,6 +148,34 @@ namespace Crashverse.EditorTools.Import
             errors = e; warnings = w;
             sb.Insert(0, $"Errors: {e}, warnings: {w}\n\n");
             return sb.ToString();
+        }
+
+        static C.HeroStats StatsFor(string kit, Dictionary<string, C.HeroStats> cache)
+        {
+            if (!cache.TryGetValue(kit, out var st)) cache[kit] = st = HeroStatsCache.Load(kit, out _);
+            return st;
+        }
+
+        /// <summary>Hero building module: sidecar present, module listed with a class, root and LOD0 fragments carry fractureClass,
+        /// and an FBX fracture_class that differs from the JSON is reported (it wins). All warnings: never blocks a build.</summary>
+        static void CheckHeroFractureClass(GameObject go, string baseName, string kit, string module, Dictionary<string, C.HeroStats> stats,
+                                           Dictionary<string, HashSet<string>> fbxModules, System.Action<string, string, string> warn)
+        {
+            if (!fbxModules.TryGetValue(kit, out var set)) fbxModules[kit] = set = new HashSet<string>();
+            set.Add(module);
+            var st = StatsFor(kit, stats);
+            string json = st?.ClassFor(module);
+            if (st == null) warn(baseName, "fracture class", $"no readable {C.HeroStatsPath(kit)}: fractureClass only from FBX fracture_class");
+            else if (!st.HasModule(module)) warn(baseName, "fracture class", $"module {module} has no entry in {C.HeroStatsPath(kit)}");
+            else if (json == null) warn(baseName, "fracture class", $"module {module} in {C.HeroStatsPath(kit)} has no \"frac\"");
+            var targets = go.GetComponentsInChildren<Transform>(true).Where(t => t == go.transform || (C.IsFragment(t.name) && C.LodLevel(t.name, out _) <= 0));
+            foreach (var t in targets)
+            {
+                var h = t.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
+                string v = h != null ? h.fractureClass : null;
+                if (string.IsNullOrEmpty(v)) warn(baseName, "fracture class", $"{t.name}: no fractureClass on ImportedPhysicsHints");
+                else if (json != null && v != json) warn(baseName, "fracture class", $"{t.name}: FBX fracture_class '{v}' overrides JSON '{json}'");
+            }
         }
 
         static int Tris(Mesh m) { long n = 0; for (int i = 0; i < m.subMeshCount; i++) n += m.GetIndexCount(i); return (int)(n / 3); }

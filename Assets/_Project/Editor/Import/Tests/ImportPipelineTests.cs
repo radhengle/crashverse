@@ -301,6 +301,20 @@ namespace Crashverse.Tests
         }
 
         [Test]
+        public void HeroBuildingTextureImportsAt1024_KitStays512()
+        {
+            WritePng($"{Dir}/textures/T_Bld_TestHero_A.png", Color.white);
+            WritePng($"{Dir}/textures/T_Bld_TestHero_N.png", new Color(0.5f, 0.5f, 1f));
+            WritePng($"{Dir}/textures/T_TestKitB_A.png", Color.white);
+            TextureImporterPlatformSettings A(string stem) => ((TextureImporter)AssetImporter.GetAtPath($"{Dir}/textures/{stem}.png")).GetPlatformTextureSettings("Android");
+            Assert.AreEqual(1024, A("T_Bld_TestHero_A").maxTextureSize, "T_Bld_* hero building maps cap at 1024 on Android");
+            Assert.AreEqual(TextureImporterFormat.ASTC_6x6, A("T_Bld_TestHero_A").format);
+            Assert.AreEqual(1024, A("T_Bld_TestHero_N").maxTextureSize);
+            Assert.AreEqual(TextureImporterFormat.ASTC_5x5, A("T_Bld_TestHero_N").format);
+            Assert.AreEqual(512, A("T_TestKitB_A").maxTextureSize, "other BuildingKit maps keep the 512 kit cap");
+        }
+
+        [Test]
         public void InnerMaterialPrefersInnerMapsAndFallsBackPerMap()
         {
             string tex = $"{Dir}/textures/T_Brick";
@@ -358,6 +372,179 @@ namespace Crashverse.Tests
             Assert.AreEqual(1f, inner.GetFloat("_InnerFace"));
             Assert.IsEmpty(m.shaderKeywords, "GlossyPBR uses no keywords");
             Assert.IsEmpty(inner.shaderKeywords);
+        }
+    }
+
+    /// <summary>Hero buildings (PM-approved via 3D Modeler): 1024 Android cap, fracture class from models/HeroBuildings/Kit_&lt;B&gt;_stats.json
+    /// with an FBX fracture_class override; missing JSON or entry never overwrites.</summary>
+    public class HeroBuildingImportTests
+    {
+        // Verbatim shape of the 3D Modeler sidecar (Kit_House_stats.json, trimmed to two modules plus test entries).
+        const string HouseJson = @"{
+ ""building"": ""House"",
+ ""texel_px_per_m"": 77.1,
+ ""atlas"": 2048,
+ ""modules"": {
+  ""GroundDoor"": {
+   ""LOD0"": 640, ""LOD1"": 319, ""LOD2"": 126, ""ucx"": 8,
+   ""aabb"": [[-2.0, -1.0499999523162842, 0.0], [2.0, 0.20000000298023224, 2.799999952316284]],
+   ""frac"": ""Stone"", ""anchor"": ""bottom"", ""anchor_to"": ""Ground"",
+   ""note"": ""ground floor front: arched blue door, window, shop sign, lantern"",
+   ""frags"": 7, ""frag_max"": 213, ""Fractured"": 1057, ""mass"": ""686.8-1774.3"", ""joints"": 10, ""anchors"": 4, ""trims_dropped"": 0
+  },
+  ""Floor"": { ""LOD0"": 92, ""frac"": ""Wood"", ""anchor_to"": ""Support"", ""frags"": 12 },
+  ""NoClass"": { ""LOD0"": 300 }
+ }
+}";
+
+        [TestCase("T_Bld_X_A", "Assets/_Project/Models/Buildings/Bld_X/textures/T_Bld_X_A.png", 1024)]
+        [TestCase("T_Bld_X_ORM", "Assets/_Project/Models/BuildingKit/Kit_X/textures/T_Bld_X_ORM.png", 1024)]
+        [TestCase("T_House_A", "Assets/_Project/Models/BuildingKit/Kit_House/textures/T_House_A.png", 1024)]
+        [TestCase("T_House_Inner_A", "Assets/_Project/Models/BuildingKit/Kit_House/textures/T_House_Inner_A.png", 256)]
+        [TestCase("T_Bld_X_Inner_N", "Assets/_Project/Models/Buildings/Bld_X/textures/T_Bld_X_Inner_N.png", 256)]
+        [TestCase("T_Brick_A", "Assets/_Project/Models/BuildingKit/Kit_Brick/textures/T_Brick_A.png", 512)]
+        [TestCase("T_House_A", "Assets/_Project/Models/BuildingKit/Kit_Brick/textures/T_House_A.png", 512)]   // folder, not file name
+        [TestCase("T_Wrecker_A", "Assets/_Project/Models/Wrecker_v2/textures/T_Wrecker_A.png", 1024)]
+        public void AndroidTextureCap(string stem, string path, int max) => Assert.AreEqual(max, C.PolicyFor(stem, path).androidMax);
+
+        [Test]
+        public void HeroCapKeepsAstcFormats()
+        {
+            const string d = "Assets/_Project/Models/Buildings/Bld_X/textures/";
+            Assert.AreEqual("6x6", C.PolicyFor("T_Bld_X_A", d + "T_Bld_X_A.png").astc);
+            Assert.AreEqual("5x5", C.PolicyFor("T_Bld_X_N", d + "T_Bld_X_N.png").astc);
+            Assert.AreEqual("6x6", C.PolicyFor("T_Bld_X_ORM", d + "T_Bld_X_ORM.png").astc);
+            Assert.AreEqual(512, C.PolicyFor("T_Bld_X_E", d + "T_Bld_X_E.png").androidMax, "_E stays <= 512");
+        }
+
+        [Test]
+        public void HeroModuleFromFolderAndFileName()
+        {
+            Assert.IsTrue(C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor_Fractured.fbx", out var k, out var m, out var f));
+            Assert.AreEqual("House", k); Assert.AreEqual("GroundDoor", m); Assert.IsTrue(f);
+            Assert.IsTrue(C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_LOD2.fbx", out _, out m, out f));
+            Assert.AreEqual("Wall", m); Assert.IsFalse(f);
+            Assert.IsFalse(C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx", out _, out _, out _), "regular kit");
+            var prev = C.HeroStatsExists;
+            try
+            {
+                C.HeroStatsExists = kit => kit == "Mill";   // any kit with a sidecar counts as a hero kit
+                Assert.IsTrue(C.TryHeroModule("Assets/_Project/Models/BuildingKit/Kit_Mill/Kit_Mill_Sail.fbx", out _, out m, out _));
+                Assert.AreEqual("Sail", m);
+                Assert.AreEqual(1024, C.PolicyFor("T_Mill_A", "Assets/_Project/Models/BuildingKit/Kit_Mill/textures/T_Mill_A.png").androidMax);
+            }
+            finally { C.HeroStatsExists = prev; }
+        }
+
+        [Test]
+        public void ParsesRealSidecarSchema()
+        {
+            var st = C.ParseHeroStats(HouseJson);
+            Assert.AreEqual("House", st.building);
+            CollectionAssert.AreEqual(new[] { "GroundDoor", "Floor", "NoClass" }, st.modules.Keys.ToArray());
+            Assert.AreEqual("Stone", st.ClassFor("GroundDoor"));
+            Assert.AreEqual("Wood", st.ClassFor("Floor"));
+            Assert.IsTrue(st.HasModule("NoClass")); Assert.IsNull(st.ClassFor("NoClass"));
+            Assert.IsFalse(st.HasModule("Chimney")); Assert.IsNull(st.ClassFor("Chimney"));
+            Assert.Throws<System.FormatException>(() => C.ParseHeroStats(@"{""building"":""House""}"));
+            Assert.Throws<System.FormatException>(() => C.ParseHeroStats(@"{""modules"":{"));
+        }
+
+        static GameObject Module(string name, params string[] frags)
+        {
+            var root = new GameObject(name);
+            foreach (var f in frags) new GameObject(f).transform.SetParent(root.transform, false);
+            return root;
+        }
+        static string Cls(GameObject root, string child = null)
+        {
+            var t = child == null ? root.transform : CrashverseImportPostprocessor.FindDeep(root.transform, child);
+            var h = t.GetComponent<ImportedPhysicsHints>();
+            return h != null ? h.fractureClass : null;
+        }
+
+        const string FracturedPath = "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor_Fractured.fbx";
+
+        [Test]
+        public void JsonClassGoesOnRootAndEveryLod0Fragment()
+        {
+            var root = Module("Kit_House_GroundDoor_Fractured", "GroundDoor_frag_01", "GroundDoor_frag_02", "GroundDoor_frag_02_LOD1", "UCX_GroundDoor_frag_01", "JNT_GroundDoor_frag_01__GroundDoor_frag_02");
+            try
+            {
+                int n = CrashverseImportPostprocessor.ApplyFractureClass(root, C.ParseHeroStats(HouseJson).ClassFor("GroundDoor"), FracturedPath);
+                Assert.AreEqual(3, n);
+                Assert.AreEqual("Stone", Cls(root));
+                Assert.AreEqual("Stone", Cls(root, "GroundDoor_frag_01"));
+                Assert.AreEqual("Stone", Cls(root, "GroundDoor_frag_02"));
+                Assert.IsNull(Cls(root, "GroundDoor_frag_02_LOD1"), "LOD objects are not fragments to write");
+                Assert.IsNull(Cls(root, "UCX_GroundDoor_frag_01"));
+                Assert.IsNull(Cls(root, "JNT_GroundDoor_frag_01__GroundDoor_frag_02"));
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
+
+        [Test]
+        public void FbxFractureClassOverridesJson()
+        {
+            var root = Module("Kit_House_GroundDoor_Fractured", "GroundDoor_frag_01", "GroundDoor_frag_02", "GroundDoor_frag_03");
+            try
+            {
+                // fracture_class on the module root (applies to its fragments) and on one fragment (applies to that fragment only).
+                CrashverseImportPostprocessor.ApplyUserProperties(root, new[] { "fracture_class" }, new object[] { "Steel" }, FracturedPath);
+                var f2 = CrashverseImportPostprocessor.FindDeep(root.transform, "GroundDoor_frag_02").gameObject;
+                CrashverseImportPostprocessor.ApplyUserProperties(f2, new[] { "fracture_class", "mass_kg" }, new object[] { "Glass", 12.0 }, FracturedPath);
+                var f3 = CrashverseImportPostprocessor.FindDeep(root.transform, "GroundDoor_frag_03").gameObject;
+                CrashverseImportPostprocessor.ApplyUserProperties(f3, new[] { "fracture_class", "mass_kg" }, new object[] { "", 5.0 }, FracturedPath); // blank = not authored
+
+                CrashverseImportPostprocessor.ApplyFractureClass(root, "Stone", FracturedPath);
+                Assert.AreEqual("Steel", Cls(root), "root FBX value wins over JSON");
+                Assert.AreEqual("Steel", Cls(root, "GroundDoor_frag_01"), "fragments inherit the module's FBX value");
+                Assert.AreEqual("Glass", Cls(root, "GroundDoor_frag_02"), "fragment FBX value wins");
+                Assert.AreEqual(12f, f2.GetComponent<ImportedPhysicsHints>().mass, 1e-4f);
+                Assert.AreEqual("Steel", Cls(root, "GroundDoor_frag_03"));
+                Assert.AreEqual(1, f3.GetComponents<ImportedPhysicsHints>().Length);
+
+                // FBX value with no JSON at all still applies.
+                var r2 = Module("Kit_House_Odd", "Odd_frag_01");
+                try
+                {
+                    CrashverseImportPostprocessor.ApplyUserProperties(r2, new[] { "fracture_class" }, new object[] { "Wood" }, FracturedPath);
+                    CrashverseImportPostprocessor.ApplyFractureClass(r2, null, FracturedPath);
+                    Assert.AreEqual("Wood", Cls(r2)); Assert.AreEqual("Wood", Cls(r2, "Odd_frag_01"));
+                }
+                finally { Object.DestroyImmediate(r2); }
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
+
+        [Test]
+        public void MissingJsonOrEntryNeverOverwrites()
+        {
+            var root = Module("Kit_House_Chimney_Fractured", "Chimney_frag_01", "Chimney_frag_02");
+            try
+            {
+                var h1 = CrashverseImportPostprocessor.FindDeep(root.transform, "Chimney_frag_01").gameObject.AddComponent<ImportedPhysicsHints>();
+                h1.mass = 40f; h1.fractureClass = "Brick";
+                var st = C.ParseHeroStats(HouseJson);
+                Assert.AreEqual(0, CrashverseImportPostprocessor.ApplyFractureClass(root, st.ClassFor("Chimney"), FracturedPath), "missing entry");
+                Assert.AreEqual(0, CrashverseImportPostprocessor.ApplyFractureClass(root, st.ClassFor("NoClass"), FracturedPath), "entry without frac");
+                Assert.AreEqual(0, CrashverseImportPostprocessor.ApplyFractureClass(root, null, FracturedPath), "missing JSON");
+                Assert.IsNull(root.GetComponent<ImportedPhysicsHints>(), "no component added when there is no value");
+                Assert.IsNull(CrashverseImportPostprocessor.FindDeep(root.transform, "Chimney_frag_02").GetComponent<ImportedPhysicsHints>());
+                Assert.AreEqual("Brick", h1.fractureClass); Assert.AreEqual(40f, h1.mass);
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
+
+        [Test]
+        public void ValidatorModuleCrossCheckWarnsBothWays()
+        {
+            var w = C.CompareHeroModules("House", new[] { "GroundDoor", "Floor", "Chimney" }, new[] { "Floor", "GroundDoor", "Cellar" });
+            Assert.AreEqual(2, w.Count);
+            StringAssert.Contains("module Chimney is in models/HeroBuildings/Kit_House_stats.json but there is no Kit_House_Chimney.fbx", w[0]);
+            StringAssert.Contains("Kit_House_Cellar has no entry in models/HeroBuildings/Kit_House_stats.json", w[1]);
+            Assert.IsEmpty(C.CompareHeroModules("House", new[] { "A" }, new[] { "A" }));
+            Assert.AreEqual(1, C.CompareHeroModules("House", new[] { "A" }, null).Count, "JSON present, no FBX yet");
         }
     }
 }
