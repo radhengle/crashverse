@@ -61,7 +61,8 @@ namespace UnityEngine
         public Quaternion rotation = Quaternion.identity;
         public Quaternion localRotation = Quaternion.identity;
         public Vector3 right => localRotation * Vector3.right;
-        public void SetAsFirstSibling() { }
+        public Transform Find(string n) => null; public void SetAsFirstSibling() { } public void SetSiblingIndex(int i) { } public int GetSiblingIndex() => 0;
+        public Vector3 InverseTransformPoint(Vector3 p) => p;
         public Vector3 forward => localRotation * Vector3.forward;
         public Vector3 up => localRotation * Vector3.up;
         public int childCount => 0;
@@ -116,6 +117,9 @@ namespace UnityEngine
         public float r, g, b, a;
         public Color(float r, float g, float b, float a = 1f) { this.r = r; this.g = g; this.b = b; this.a = a; }
         public static Color white => new Color(1, 1, 1);
+        public static Color black => new Color(0, 0, 0);
+        public static Color operator *(Color c, float k) => new Color(c.r * k, c.g * k, c.b * k, c.a * k);
+        public static Color clear => new Color(0, 0, 0, 0);
         public static Color gray => new Color(0.5f, 0.5f, 0.5f);
         public static Color cyan => new Color(0, 1, 1);
         public static Color Lerp(Color a, Color b, float t) => a;
@@ -129,6 +133,9 @@ namespace UnityEngine
     public static class Mathf
     {
         public static float PerlinNoise(float x, float y) => 0.5f;
+        public static float Abs(float v) => Math.Abs(v); public static int Abs(int v) => Math.Abs(v); public static float Sqrt(float v) => (float)Math.Sqrt(v);
+        public static float Repeat(float t, float l) => t - (float)Math.Floor(t / l) * l; public static float PingPong(float t, float l) => l - Math.Abs(Repeat(t, l * 2) - l);
+        public static float Round(float v) => (float)Math.Round(v); public static float Sign(float v) => v >= 0 ? 1f : -1f;
         public static int CeilToInt(float f) => (int)System.Math.Ceiling(f);
         public static float Clamp(float v, float min, float max) => Math.Min(max, Math.Max(min, v));
         public static int Clamp(int v, int min, int max) => Math.Min(max, Math.Max(min, v));
@@ -339,7 +346,6 @@ namespace UnityEngine
         public GUIStyle(GUIStyle s) { }
     }
     public class GUIStyleState { public Color textColor; }
-    public enum FontStyle { Normal, Bold, Italic, BoldAndItalic }
     public struct Rect
     {
         public float x, y, width, height;
@@ -380,3 +386,11 @@ namespace UnityEngine.Rendering
 }
 namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } public class AudioMixer : UnityEngine.Object { public AudioMixerGroup[] FindMatchingGroups(string subPath) => new AudioMixerGroup[0]; } }
 
+
+namespace UnityEngine
+{
+    public struct Color32 { public byte r, g, b, a; public Color32(byte r, byte g, byte b, byte a) { this.r = r; this.g = g; this.b = b; this.a = a; } }
+    public struct Vector4 { public float x, y, z, w; public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; } public static Vector4 zero => new Vector4(0, 0, 0, 0); }
+    public enum TextureFormat { RGBA32, ARGB32, RGB24 }
+    public enum FontStyle { Normal, Bold, Italic, BoldAndItalic }
+}

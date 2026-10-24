@@ -25,7 +25,12 @@ namespace UnityEngine
     }
     public class Font : Object { }
     public class Texture : Object { public int width = 1, height = 1; public FilterMode filterMode; public TextureWrapMode wrapMode; }
-    public class Texture2D : Texture { public Texture2D(int w, int h) { width = w; height = h; } }
+    public class Texture2D : Texture
+    {
+        public Texture2D(int w, int h) { width = w; height = h; }
+        public Texture2D(int w, int h, TextureFormat f, bool mip) { width = w; height = h; }
+        public void SetPixels32(Color32[] c) { } public void SetPixel(int x, int y, Color c) { } public void Apply(bool mips = true, bool noLonger = false) { }
+    }
     public enum FilterMode { Point, Bilinear, Trilinear }
     public enum TextureWrapMode { Repeat, Clamp, Mirror, MirrorOnce }
     public enum SpriteMeshType { FullRect, Tight }
@@ -33,6 +38,7 @@ namespace UnityEngine
     {
         public Texture2D texture; public Rect rect;
         public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu = 100f, uint extrude = 0, SpriteMeshType m = SpriteMeshType.Tight) => new Sprite { texture = t, rect = r };
+        public static Sprite Create(Texture2D t, Rect r, Vector2 pivot, float ppu, uint extrude, SpriteMeshType m, Vector4 border) => new Sprite { texture = t, rect = r };
     }
     public enum TextAnchor { UpperLeft, UpperCenter, UpperRight, MiddleLeft, MiddleCenter, MiddleRight, LowerLeft, LowerCenter, LowerRight }
     public enum HorizontalWrapMode { Wrap, Overflow }
@@ -115,7 +121,7 @@ namespace UnityEngine.UI
     {
         public Font font; public int fontSize; public string text; public TextAnchor alignment;
         public HorizontalWrapMode horizontalOverflow; public VerticalWrapMode verticalOverflow;
-        public bool resizeTextForBestFit; public int resizeTextMinSize, resizeTextMaxSize;
+        public bool resizeTextForBestFit; public int resizeTextMinSize, resizeTextMaxSize; public FontStyle fontStyle; public bool supportRichText = true; public float lineSpacing = 1f;
     }
     public struct ColorBlock { public Color normalColor, highlightedColor, pressedColor, selectedColor, disabledColor; }
     public class Selectable : UIBehaviour { public bool interactable = true; public ColorBlock colors; public Image image; public Graphic targetGraphic; public bool IsInteractable() => interactable; }
@@ -129,6 +135,7 @@ namespace UnityEngine.UI
     public class HorizontalOrVerticalLayoutGroup : LayoutGroup { public float spacing; public bool childControlHeight, childControlWidth, childForceExpandHeight, childForceExpandWidth; }
     public class VerticalLayoutGroup : HorizontalOrVerticalLayoutGroup { }
     public class HorizontalLayoutGroup : HorizontalOrVerticalLayoutGroup { }
+    public class GridLayoutGroup : LayoutGroup { public enum Constraint { Flexible, FixedColumnCount, FixedRowCount } public Vector2 cellSize, spacing; public Constraint constraint; public int constraintCount; }
     public class ContentSizeFitter : UIBehaviour { public enum FitMode { Unconstrained, MinSize, PreferredSize } public FitMode verticalFit, horizontalFit; }
     public class ScrollRect : UIBehaviour { public enum MovementType { Unrestricted, Elastic, Clamped } public RectTransform content; public bool horizontal, vertical; public MovementType movementType; public RectTransform viewport; public float verticalNormalizedPosition; }
     public class RectMask2D : UIBehaviour { }
