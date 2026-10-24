@@ -47,6 +47,7 @@ static class Tests
 
     public static void Register()
     {
+        DevAimHookTests.Register(); // BUG-24 dev aim hook
         // ---------- SG-24 / SG-01 stars (qa/M1_Test_Cases_v0.3 + Feature_Test_Cases_v1 §A) ----------
         T.Add("gameplay_pieceid_matches_stableid20", () => { T.Eq(204219580, Crashverse.Gameplay.PieceIds.Of("b1"), "b1"); T.Eq(501293940, Crashverse.Gameplay.PieceIds.Of("L1_tower_03"), "L1_tower_03"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(null), "null"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(""), "empty"); });
         T.Add("gameplay_vfx_material_map", () => { T.Eq(0, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, false), "wood"); T.Eq(1, Crashverse.Gameplay.PieceIds.VfxMaterialOf(1, false, false), "brick"); T.Eq(2, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, false, false), "steel"); T.Eq(3, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, true, false), "joint"); T.Eq(5, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, true), "explosive"); });

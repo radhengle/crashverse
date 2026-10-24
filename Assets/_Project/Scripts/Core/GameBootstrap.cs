@@ -152,6 +152,18 @@ namespace Crashverse.Core
             if (Crashverse.Sim.ImpactEventEmitter.Instance == null) levelGo.AddComponent<Crashverse.Sim.ImpactEventEmitter>();
             var feel = levelGo.AddComponent<Crashverse.Feel.FeelDirector>(); feel.Bind(s, RunCamera, aim); feel.BindWrecker(wb); // 01 cannon parts
             AppServices.Router.Push(new HudScreen(s));
+#if CRASHVERSE_DEV
+            // BUG-24 automation: dev-only aim hook (inert without the cv_dev_aim launch extra; never in ranked).
+            Crashverse.DevHooks.DevAimHook.Attach(levelGo, new Crashverse.DevHooks.DevAimTarget
+            {
+                maxYaw = Weapons.WreckerSpec.MaxYaw, minPitch = Weapons.WreckerSpec.MinElevation, maxPitch = Weapons.WreckerSpec.MaxElevation,
+                isRanked = () => s.Ctx != null && s.Ctx.mode == RunMode.TitanRanked,
+                readyToFire = () => s.State == SessionState.Aiming && s.Gate.Ready && s.ShotsLeft > 0,
+                setAim = (y, p) => aim.SetAim(y, p),
+                fire = () => s.TryFire(),
+                markNonRanked = () => { s.DevHookUsed = true; if (s.Ctx.mode == RunMode.TitanRanked) s.Ctx.mode = RunMode.TitanPractice; },
+            });
+#endif
         }
 
         public static void EndRun()

@@ -33,6 +33,10 @@ namespace Crashverse.Core
         public TidewardenController Boss { get; private set; }
         public RunResult Result { get; private set; }
         public bool HintVisible { get; private set; }
+#if CRASHVERSE_DEV
+        /// <summary>Set by the dev aim hook; such a session is never ranked (Security Admin #3).</summary>
+        public bool DevHookUsed { get; set; }
+#endif
         public int TitanDamageScore => Ctx != null && Ctx.titan != null && tracker.TotalObjectiveHp > 0
             ? Mathf.Min(Ctx.titan.maxDamageScore, Mathf.RoundToInt(Ctx.titan.maxDamageScore * tracker.DamageDealt / tracker.TotalObjectiveHp)) : 0;
 
@@ -211,6 +215,9 @@ namespace Crashverse.Core
         {
             State = won ? SessionState.Won : SessionState.Failed;
             if (_sim != null) _sim.EndRun(); // back to automatic physics for the result screen
+#if CRASHVERSE_DEV
+            Crashverse.DevHooks.DevAimHook.ReportDevAimResult(won); // CVTAP|RESULT|win|fail (opt-in only)
+#endif
             fire.CanFire = false;
             aim.inputEnabled = false;
             var lvl = Ctx.level;
@@ -225,6 +232,10 @@ namespace Crashverse.Core
             int combo = tracker.Combo.BestThisRun;
             var res = new RunResult { won = won, stars = stars, mastery = mastery, bestCombo = combo, ratio = tracker.DestroyedRatio, shotsLeft = ShotsLeft };
             Result = res;
+#if CRASHVERSE_DEV
+            // Security Admin #2: a run driven by the dev aim hook records and submits nothing (no save, queue, score or ranked call).
+            if (DevHookUsed) { res.note = Crashverse.DevHooks.DevAimHookCore.NoSubmitNote; Changed?.Invoke(); Ended?.Invoke(res); return; }
+#endif
             var backend = AppServices.Backend;
             try
             {

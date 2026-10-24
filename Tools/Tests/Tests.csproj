@@ -29,6 +29,7 @@
     <Compile Include="../../Assets/_Project/Scripts/Feel/UiMotionMath.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/MusicCore.cs" />
     <Compile Include="../../Assets/_Project/Scripts/Audio/SfxCore.cs" />
+    <Compile Include="../../Assets/_Project/Scripts/DevHooks/DevAimCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
