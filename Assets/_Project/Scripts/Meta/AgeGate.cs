@@ -26,6 +26,10 @@ namespace Crashverse.Meta
             return age < MinAge ? Band.Under13 : age < AdultAge ? Band.Minor13to17 : Band.Adult;
         }
 
+        /// <summary>Security #55 B-55-2: the stricter of a stored and a new band (Unknown = no answer). Never relaxes.</summary>
+        public static Band MostRestrictive(Band stored, Band entered) =>
+            stored == Band.Unknown ? entered : entered == Band.Unknown ? stored : (Band)Math.Min((int)stored, (int)entered);
+
         public static string ToServer(Band b) => b == Band.Adult ? "adult" : b == Band.Minor13to17 ? "13to17" : "";
         public static Band FromServer(string s) => s == "adult" ? Band.Adult : s == "13to17" ? Band.Minor13to17 : Band.Unknown;
 

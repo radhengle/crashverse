@@ -287,7 +287,7 @@ namespace Crashverse.Core
                         int prevBest = AppServices.Save.BestStars(lvl.id);
                         res.firstClear = AppServices.Save.RecordResult(lvl.id, won, stars, mastery, res.score);
                         GrantLocalRewards(res, lvl, won, stars, prevBest); // v2: local wallet, before any (offline) sync
-                        if (won)
+                        if (won && !BackendLocator.IsLocalOnly(backend)) // Security #55 L-55-2: nothing to sync to with no server; no growing queue
                         {
                             // BUG-13/14: raw stats only, queued first; the server validates, scores, grants first-clear rewards and totals
                             CampaignResultQueue.Enqueue(new CampaignRunReport { levelId = lvl.id, won = true, destroyedRatio = res.ratio, shotsLeft = ShotsLeft, bestCombo = combo, mastery = mastery });

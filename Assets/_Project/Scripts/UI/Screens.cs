@@ -632,16 +632,17 @@ namespace Crashverse.UI
             var bg = UIFactory.TrimPanel("Store", root, Th); UIFactory.Stretch(bg.rectTransform, 12f);
             var v = UIFactory.VStack(bg.transform, Th.gap, 12f); UIFactory.Stretch(v);
             UIFactory.Label(v, "Store", Th.titleSp, Th.violet, TextAnchor.MiddleCenter, Th, true);
-            UIFactory.Label(v, "Cosmetics & currency only. Purchases are stubbed in this build.", Th.captionSp, Th.body, TextAnchor.MiddleCenter, Th);
+            bool offline = BackendLocator.IsLocalOnly(AppServices.Backend); // Security #55 L-55-1: no purchase path offline
+            UIFactory.Label(v, offline ? "Coming soon" : "Cosmetics only.", Th.captionSp, Th.body, TextAnchor.MiddleCenter, Th);
             var list = UIFactory.Scroll(v, Th.gap, out var sr); sr.gameObject.AddComponent<LayoutElement>().flexibleHeight = 1;
             foreach (var it in AppServices.StoreItems) // validated (StoreValidator) — rejected SKUs never show
             {
                 var item = it;
                 var row = UIFactory.HStack(list, Th.gap, 56f);
                 UIFactory.Label(row, $"{UIFactory.Truncate(item.name, 22)}\n{item.type}", Th.captionSp, Th.white, TextAnchor.MiddleLeft, Th);
-                if (AgeGate.CanPurchase(AgeGateScreen.Current, AppServices.Account?.consentPurchases ?? false)) // E5/E6: buy hidden for minors without consent
+                if (!offline && AgeGate.CanPurchase(AgeGateScreen.Current, AppServices.Account?.consentPurchases ?? false)) // E5/E6: buy hidden for minors without consent
                     UIFactory.Button(row, item.priceType == "iap" ? $"${item.price / 100f:0.00}" : $"{item.price} {item.priceType}", Th.green,
-                        () => Router.Toast("Purchase stub: " + item.sku + " (IAP not wired)"), Th, 48, 110, Th.captionSp);
+                        () => Router.Toast("Not available yet."), Th, 48, 110, Th.captionSp);
             }
             UIFactory.Button(v, "Back", Th.navy500, () => Router.Pop(), Th, 48);
         }
@@ -676,11 +677,15 @@ namespace Crashverse.UI
             _motion = UIFactory.Button(v, "", Th.navy500, () => { m.SetReduceMotion(!m.ReduceMotion); Refresh(); }, Th, 48).GetComponentInChildren<Text>();
             _haptics = UIFactory.Button(v, "", Th.navy500, () => { m.SetHaptics(!m.HapticsEnabled); Refresh(); }, Th, 48).GetComponentInChildren<Text>(); // default ON; suppressed while Reduce motion is ON (haptics.md)
 
-            UIFactory.Label(v, "Privacy", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
-            _hide = UIFactory.Button(v, "", Th.navy500, ToggleHide, Th, 48).GetComponentInChildren<Text>();
+            bool online = !BackendLocator.IsLocalOnly(AppServices.Backend); // Security #55 L-55-2: no leaderboard or linking offline
+            if (online)
+            {
+                UIFactory.Label(v, "Privacy", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+                _hide = UIFactory.Button(v, "", Th.navy500, ToggleHide, Th, 48).GetComponentInChildren<Text>();
+            }
             UIFactory.Label(v, "Account", Th.bodySp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
-            UIFactory.Button(v, "Linked accounts", Th.navy500, () => Router.Push(new LinkedAccountsModal()), Th, 48);
-            UIFactory.Button(v, AccountDeletion.Pending ? "Delete account (pending until online)" : "Delete account", Th.red, () => Router.Push(new DeleteAccountScreen()), Th, 48);
+            if (online) UIFactory.Button(v, "Linked accounts", Th.navy500, () => Router.Push(new LinkedAccountsModal()), Th, 48);
+            UIFactory.Button(v, !online ? "Delete my data" : AccountDeletion.Pending ? "Delete account (pending until online)" : "Delete account", Th.red, () => Router.Push(new DeleteAccountScreen()), Th, 48);
             UIFactory.Button(outer, "Close", Th.navy500, () => Router.Pop(), Th, 48);
             Refresh();
         }
@@ -709,7 +714,7 @@ namespace Crashverse.UI
             _shakeBtn.interactable = !m.ReduceShakeLocked;
             _motion.text = "Reduce motion: " + (m.ReduceMotion ? "ON" : "OFF") + (m.ReduceMotionIsAuto ? " (system)" : "");
             _haptics.text = "Haptics: " + (m.HapticsEnabled ? "ON" : "OFF") + (m.HapticsLockedByReduceMotion ? " (off while Reduce motion is on)" : "");
-            _hide.text = "Hide my name on leaderboards: " + ((AppServices.Account?.hideName ?? false) ? "ON" : "OFF");
+            if (_hide != null) _hide.text = "Hide my name on leaderboards: " + ((AppServices.Account?.hideName ?? false) ? "ON" : "OFF");
         }
     }
 
@@ -775,6 +780,9 @@ namespace Crashverse.UI
             "We keep only pseudonymised purchase records (see the privacy notice, section 5).\n\n" +
             "Deletion is completed within 30 days. You can cancel by signing in within 7 days; after that it can't be undone.\n\n" +
             "Purchases are not refunded and are lost.";
+        /// <summary>Security #55 B-55-1: no server account exists offline; everything is on this device and is wiped at once.</summary>
+        public const string OfflineCopy = "This deletes your profile and progress from this device. It can't be undone.";
+        static bool LocalOnly => BackendLocator.IsLocalOnly(AppServices.Backend);
         public override bool IsModal => true; Text _hold; HoldToConfirm _h;
         protected override void Build(RectTransform root)
         {
@@ -782,8 +790,8 @@ namespace Crashverse.UI
             var p = UIFactory.TrimPanel("Delete", root, Th); UIFactory.Place(p.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(330, 520), Vector2.zero);
             var v = UIFactory.VStack(p.transform, Th.gap, 14f); UIFactory.Stretch(v);
             UIFactory.Label(v, "Delete account", Th.headingSp, Th.red, TextAnchor.MiddleCenter, Th, true);
-            UIFactory.Label(v, Copy, Th.captionSp, Th.white, TextAnchor.UpperLeft, Th);
-            if (AccountDeletion.Pending) UIFactory.Label(v, "Your request is pending until you're online.", Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            UIFactory.Label(v, LocalOnly ? OfflineCopy : Copy, Th.captionSp, Th.white, TextAnchor.UpperLeft, Th);
+            if (AccountDeletion.Pending && !LocalOnly) UIFactory.Label(v, "Your request is pending until you're online.", Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
             var btn = UIFactory.Button(v, "", Th.red, () => { }, Th, 56);
             _hold = btn.GetComponentInChildren<Text>();
             _h = btn.gameObject.AddComponent<HoldToConfirm>(); _h.seconds = HoldSeconds; _h.Completed = Confirm; // single tap never confirms
@@ -793,6 +801,11 @@ namespace Crashverse.UI
         async void Confirm()
         {
             var b = AppServices.Backend; string reauth = null;
+            if (LocalOnly) // B-55-1: nothing to re-auth or queue; wipe everything and start over in the first-run state
+            {
+                if (await AccountDeletion.Request(b, null) == AccountDeletion.Result.WipedLocal) { GameBootstrap.RestartFirstRun(); AppServices.Router.Toast("Your data was deleted from this device.", 4f); }
+                return;
+            }
             try
             {
                 var acc = AppServices.Account ?? await b.GetAccount();
@@ -837,15 +850,19 @@ namespace Crashverse.UI
     {
         public const string BandKey = "cv_age_band_v", BlockedKey = "cv_age_blocked";
         public static bool Blocked => PlayerPrefs.GetInt(BlockedKey, 0) == 1;
-        public const string SubmittedKey = "cv_age_submitted_v";
-        /// <summary>Asked again if the band was never confirmed by the server (the DOB is not kept across launches).</summary>
-        public static bool Needed => !Blocked && (PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0) == 0 || (PlayerPrefs.GetInt(SubmittedKey + AgeGate.Version, 0) == 0 && !PendingDob.HasValue));
+        public const string SubmittedKey = "cv_age_submitted_v", LocalKey = "cv_age_local_v";
+        /// <summary>With a server: asked again if the band was never confirmed by it (the DOB is not kept across launches).
+        /// Security #55 B-55-2: with no server backend the locally classified band is final for this install (never re-asked);
+        /// when a server ships, the N5 re-gate (AGE_GATE_REQUIRED) upgrades it.</summary>
+        public static bool Needed => !Blocked && (PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0) == 0
+            || (PlayerPrefs.GetInt(SubmittedKey + AgeGate.Version, 0) == 0 && !PendingDob.HasValue
+                && !(PlayerPrefs.GetInt(LocalKey + AgeGate.Version, 0) == 1 && !BackendLocator.ServerConfigured)));
         /// <summary>Year/month held in memory only, for one POST /agegate (13+ only). Never written to disk.</summary>
         public static (int year, int month)? PendingDob;
         public static void OnServerBand(AgeGate.Band serverBand, bool requiresConsent)
         {
             PendingDob = null;
-            var local = Current; var band = serverBand == AgeGate.Band.Unknown ? local : (local == AgeGate.Band.Unknown ? serverBand : (AgeGate.Band)Math.Min((int)local, (int)serverBand)); // most restrictive
+            var band = AgeGate.MostRestrictive(Current, serverBand);
             PlayerPrefs.SetInt(BandKey + AgeGate.Version, (int)band); PlayerPrefs.SetInt(SubmittedKey + AgeGate.Version, 1); PlayerPrefs.Save();
         }
         public static AgeGate.Band Current => (AgeGate.Band)PlayerPrefs.GetInt(BandKey + AgeGate.Version, 0);
@@ -910,7 +927,8 @@ namespace Crashverse.UI
             var band = AgeGate.Classify(_year, _month, now.Year, now.Month);
             if (band == AgeGate.Band.Unknown) return;
             if (band == AgeGate.Band.Under13) { PlayerPrefs.SetInt(BlockedKey, 1); PlayerPrefs.Save(); _done?.Invoke(false); return; } // E2: no DOB stored
-            PlayerPrefs.SetInt(BandKey + AgeGate.Version, (int)band); PlayerPrefs.Save();
+            band = AgeGate.MostRestrictive(Current, band); // B-55-2: a later answer never relaxes the stored band
+            PlayerPrefs.SetInt(BandKey + AgeGate.Version, (int)band); PlayerPrefs.SetInt(LocalKey + AgeGate.Version, 1); PlayerPrefs.Save();
             PendingDob = (_year, _month); // memory only; sent once by AccountLifecycle, then dropped
             _done?.Invoke(true);
         }

@@ -6,8 +6,9 @@ using Crashverse.Backend;
 namespace Crashverse.Core
 {
     /// <summary>
-    /// In-app deletion client (Deletion_AgeGate_Requirements §A, §C1). Offline requests are queued and shown as pending (A6),
+    /// In-app deletion client (Deletion_AgeGate_Requirements §A, §C1). With a server, offline requests are queued and shown as pending (A6),
     /// never faked. On server confirmation: sign out, wipe every CRASHVERSE file + prefs (A4), restart in first-run state.
+    /// With no server backend (OfflineBackendService) the local data is all there is: it is wiped immediately (B-55-1).
     /// </summary>
     public static class AccountDeletion
     {
@@ -15,7 +16,7 @@ namespace Crashverse.Core
         public static readonly string[] LocalFiles = { "campaign_save.json", "campaign_save.json.tmp", "titan_ranked_journal.json", "campaign_sync_queue.json", "local_server_db.json", "progress_v2.json", "progress_v2.json.tmp" };
         public static bool Pending => PlayerPrefs.GetInt(PendingKey, 0) == 1;
 
-        public enum Result { Scheduled, PendingOffline, ReauthRequired, Failed }
+        public enum Result { Scheduled, PendingOffline, ReauthRequired, Failed, WipedLocal }
 
         /// <summary>Re-auth token from POST /auth/reauth: memory only (never persisted), valid 5 minutes.</summary>
         static string _reauthToken;
@@ -23,6 +24,8 @@ namespace Crashverse.Core
         /// <summary>Send (or queue) the request. Linked accounts pass the reauthToken from /auth/reauth (A3); guests pass null.</summary>
         public static async Task<Result> Request(IBackendService backend, string reauthToken)
         {
+            // Security #55 B-55-1: no server account exists offline, so there is nothing to queue: wipe everything now (all or nothing).
+            if (BackendLocator.IsLocalOnly(backend)) { _reauthToken = null; WipeLocal(); return Result.WipedLocal; }
             _reauthToken = reauthToken;
             PlayerPrefs.SetInt(PendingKey, 1); PlayerPrefs.Save();
             return await Flush(backend);
@@ -32,6 +35,7 @@ namespace Crashverse.Core
         public static async Task<Result> Flush(IBackendService backend)
         {
             if (!Pending) return Result.Failed;
+            if (BackendLocator.IsLocalOnly(backend)) { _reauthToken = null; WipeLocal(); return Result.WipedLocal; } // request queued by an older build
             try
             {
                 var r = await backend.DeleteAccount(_reauthToken);

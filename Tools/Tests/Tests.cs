@@ -1056,6 +1056,36 @@ static class Tests
             b.SimulateOffline = false; T.Eq(Crashverse.Core.AccountDeletion.Result.Scheduled, Crashverse.Core.AccountDeletion.Flush(b).Result, "sent on next connection");
             T.True(b.GetAccount().Result.pendingDeletionUnixUtc > 0, "server scheduled");
         });
+        T.Add("SEC55_B1_offline_delete_wipes_everything", () =>
+        {
+            var dir = UnityEngine.Application.persistentDataPath;
+            var files = new[] { "campaign_save.json", "campaign_save.json.tmp", "progress_v2.json", "progress_v2.json.tmp", "campaign_sync_queue.json", "titan_ranked_journal.json", "other_cv.json" };
+            foreach (var f in files) System.IO.File.WriteAllText(System.IO.Path.Combine(dir, f), "{}");
+            UnityEngine.PlayerPrefs.SetInt("cv_age_band_v2", 2); UnityEngine.PlayerPrefs.SetInt("cv_age_local_v2", 1); UnityEngine.PlayerPrefs.SetString("cv_name", "x"); UnityEngine.PlayerPrefs.SetFloat("cv_music", 0.5f);
+            var off = new OfflineBackendService();
+            T.True(BackendLocator.IsLocalOnly(off) && BackendLocator.IsLocalOnly(null) && !BackendLocator.IsLocalOnly(NewBackend("2026-10-16T10:00:00")), "local-only detection");
+            T.Eq(Crashverse.Core.AccountDeletion.Result.WipedLocal, Crashverse.Core.AccountDeletion.Request(off, null).Result, "offline delete wipes now, not pending");
+            foreach (var f in files) T.True(!System.IO.File.Exists(System.IO.Path.Combine(dir, f)), "removed " + f);
+            T.Eq(0, UnityEngine.PlayerPrefs.CountForTests, "every pref removed (incl. age band) → first-run state");
+            T.True(!Crashverse.Core.AccountDeletion.Pending, "no cv_delete_pending left behind");
+            UnityEngine.PlayerPrefs.SetInt(Crashverse.Core.AccountDeletion.PendingKey, 1); System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "progress_v2.json"), "{}");
+            T.Eq(Crashverse.Core.AccountDeletion.Result.WipedLocal, Crashverse.Core.AccountDeletion.Flush(off).Result, "request queued by an older build is completed locally");
+            T.True(!System.IO.File.Exists(System.IO.Path.Combine(dir, "progress_v2.json")) && UnityEngine.PlayerPrefs.CountForTests == 0, "and wiped");
+            var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
+            var oc = System.Text.RegularExpressions.Regex.Match(sc, "OfflineCopy = \"([^\"]*)\"").Groups[1].Value;
+            T.True(oc.Contains("this device") && oc.Contains("can't be undone"), "offline copy");
+            foreach (var k in new[] { "purchase", "30 days", "7 days", "pseudonymised", "pending" }) T.True(!oc.ToLowerInvariant().Contains(k), "offline copy omits " + k);
+        });
+        T.Add("SEC55_B2_age_band_never_relaxes", () =>
+        {
+            T.Eq(AgeGate.Band.Minor13to17, AgeGate.MostRestrictive(AgeGate.Band.Minor13to17, AgeGate.Band.Adult), "13-17 stays 13-17 when re-answered as adult");
+            T.Eq(AgeGate.Band.Minor13to17, AgeGate.MostRestrictive(AgeGate.Band.Adult, AgeGate.Band.Minor13to17), "adult → 13-17 is allowed (stricter)");
+            T.Eq(AgeGate.Band.Adult, AgeGate.MostRestrictive(AgeGate.Band.Unknown, AgeGate.Band.Adult), "first answer kept");
+            T.Eq(AgeGate.Band.Minor13to17, AgeGate.MostRestrictive(AgeGate.Band.Minor13to17, AgeGate.Band.Unknown), "unknown server band keeps local");
+            var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
+            int g = sc.IndexOf("public class AgeGateScreen"), e = sc.IndexOf("public class BlockedScreen"); var gate = sc.Substring(g, e - g);
+            T.True(gate.Contains("AgeGate.MostRestrictive(Current, band)") && gate.Contains("LocalKey") && gate.Contains("ServerConfigured"), "Confirm keeps the strictest band; offline band is final");
+        });
         T.Add("REQ_C2_guest_inactivity", () =>
         {
             var b = NewBackend("2026-01-01T00:00:00"); b.GetAccount().Wait(); var id = b.GetAccount().Result.playerId;

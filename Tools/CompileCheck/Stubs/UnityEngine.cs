@@ -312,13 +312,19 @@ namespace UnityEngine
     }
     public static class PlayerPrefs
     {
-        public static bool HasKey(string k) => false;
-        public static void DeleteAll() { }
-        public static void DeleteKey(string k) { }
-        static Dictionary<string, int> _i = new Dictionary<string, int>();
-        public static int GetInt(string k, int d = 0) => _i.TryGetValue(k, out var v) ? v : d;
-        public static void SetInt(string k, int v) => _i[k] = v;
+        // In-memory prefs so tests can check that deletion clears every key (Security #55 B-55-1).
+        static Dictionary<string, object> _p = new Dictionary<string, object>();
+        public static bool HasKey(string k) => _p.ContainsKey(k);
+        public static void DeleteAll() => _p.Clear();
+        public static void DeleteKey(string k) => _p.Remove(k);
+        public static int GetInt(string k, int d = 0) => _p.TryGetValue(k, out var v) && v is int i ? i : d;
+        public static void SetInt(string k, int v) => _p[k] = v;
+        public static float GetFloat(string k, float d = 0f) => _p.TryGetValue(k, out var v) && v is float f ? f : d;
+        public static void SetFloat(string k, float v) => _p[k] = v;
+        public static string GetString(string k, string d = "") => _p.TryGetValue(k, out var v) && v is string s ? s : d;
+        public static void SetString(string k, string v) => _p[k] = v;
         public static void Save() { }
+        public static int CountForTests => _p.Count;
     }
     public class ScriptableObject : Object
     {
