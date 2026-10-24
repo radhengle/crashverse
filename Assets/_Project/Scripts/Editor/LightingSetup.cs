@@ -80,12 +80,13 @@ namespace Crashverse.EditorTools
         {
             var p = AssetDatabase.LoadAssetAtPath<VolumeProfile>(path);
             if (p == null) { p = ScriptableObject.CreateInstance<VolumeProfile>(); AssetDatabase.CreateAsset(p, path); }
-            var tm = Get<Tonemapping>(p); tm.mode.Override(full ? TonemappingMode.ACES : TonemappingMode.Neutral);
-            var ca = Get<ColorAdjustments>(p); ca.saturation.Override(full ? 18f : 12f); ca.contrast.Override(full ? 12f : 8f); ca.postExposure.Override(full ? 0.15f : 0.1f);
+            // PM: Neutral on every tier (style board v3 §6). Same grading on Low and full so the palette reads the same.
+            var tm = Get<Tonemapping>(p); tm.mode.Override(TonemappingMode.Neutral);
+            var ca = Get<ColorAdjustments>(p); ca.saturation.Override(RenderTiers.PostSaturation); ca.contrast.Override(RenderTiers.PostContrast); ca.postExposure.Override(RenderTiers.PostExposure);
             if (full)
-            {
-                var b = Get<Bloom>(p); b.threshold.Override(1.0f); b.intensity.Override(0.6f); b.scatter.Override(0.6f); b.highQualityFiltering.Override(false);
-                var v = Get<Vignette>(p); v.intensity.Override(0.18f); v.smoothness.Override(0.4f);
+            {   // HDR threshold 1.1: only emissive Core/FX bloom; lit sandstone, steel and sky stay below it.
+                var b = Get<Bloom>(p); b.threshold.Override(RenderTiers.BloomThreshold); b.intensity.Override(RenderTiers.BloomIntensity); b.scatter.Override(RenderTiers.BloomScatter); b.highQualityFiltering.Override(false);
+                var v = Get<Vignette>(p); v.intensity.Override(RenderTiers.VignetteIntensity); v.smoothness.Override(0.4f);
             }
             else
             {   // Low: no Bloom/Vignette at all (cheapest path)
@@ -98,8 +99,10 @@ namespace Crashverse.EditorTools
         {
             var m = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (m == null) { m = new Material(Shader.Find("Skybox/Procedural")); AssetDatabase.CreateAsset(m, path); }
-            m.SetFloat("_SunSize", 0.04f); m.SetFloat("_AtmosphereThickness", 0.8f); m.SetFloat("_Exposure", 1.35f);
-            m.SetColor("_SkyTint", new Color(0.55f, 0.75f, 1f)); m.SetColor("_GroundColor", new Color(0.62f, 0.60f, 0.56f));
+            // Style board v3 §6: sky #4FB8FF fading to a warm #FFE3A3 horizon (Procedural: tint drives the zenith, ground colour the
+            // lower hemisphere/horizon band), bright exposure.
+            m.SetFloat("_SunSize", 0.04f); m.SetFloat("_AtmosphereThickness", 0.7f); m.SetFloat("_Exposure", 1.3f);
+            m.SetColor("_SkyTint", RenderTiers.SkyTop); m.SetColor("_GroundColor", RenderTiers.SkyHorizon);
             EditorUtility.SetDirty(m);
         }
     }

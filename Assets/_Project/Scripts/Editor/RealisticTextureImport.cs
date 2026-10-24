@@ -12,7 +12,8 @@ namespace Crashverse.EditorTools
     ///   T_&lt;X&gt;_A   albedo, sRGB, ASTC 6x6 (Foliage: leaf atlas 1024, alpha kept for clipping, coverage-preserving mips)
     ///   T_&lt;X&gt;_N   NormalMap type, linear, ASTC 5x5
     ///   T_&lt;X&gt;_ORM  packed R=AO G=roughness B=metallic, linear, ASTC 6x6 (CrashverseGlossyPBR._ORMMap; not Unity's mask-map layout)
-    /// Sources are 2048; Android is capped at 1024 (PM). Per-tier size on device = 1024 >> QualitySettings.globalTextureMipmapLimit.
+    /// Sources are 2048; Android is capped at 1024 (PM; tiling materials 1024). Realistic/Props/** are 512 on every platform.
+    /// Per-tier size on device = import max >> QualitySettings.globalTextureMipmapLimit.
     /// </summary>
     public class RealisticTextureImport : AssetPostprocessor
     {

@@ -32,6 +32,7 @@ namespace Crashverse.Rendering.Tests
                 Assert.LessOrEqual(t.albedoMax, 1024, t.name + ": PM cap is 1024 on Android (2048 needs PM approval)");
             }
             Assert.AreEqual(512, RenderTiers.All[0].albedoMax); Assert.AreEqual(1024, RenderTiers.All[1].albedoMax);
+            Assert.AreEqual(100, RenderTiers.All[0].maxBatches); Assert.AreEqual(150, RenderTiers.All[1].maxBatches); Assert.AreEqual(150, RenderTiers.All[2].maxBatches);
         }
 
         [Test]
@@ -88,15 +89,27 @@ namespace Crashverse.Rendering.Tests
         [Test]
         public void Policy_AlbedoNormalOrm()
         {
-            var a = RenderTiers.TexturePolicy(R + "Props/Crate/T_Crate_A.png").Value;
+            var a = RenderTiers.TexturePolicy(R + "Buildings/Bld_Sand/textures/T_Sandstone_A.png").Value;
             Assert.IsTrue(a.sRGB); Assert.IsFalse(a.normalMap); Assert.IsFalse(a.keepAlpha); Assert.AreEqual("6x6", a.astc);
             Assert.AreEqual(2048, a.maxSize); Assert.AreEqual(1024, a.androidMax);
 
-            var n = RenderTiers.TexturePolicy(R + "Props/Crate/T_Crate_N.png").Value;
+            var n = RenderTiers.TexturePolicy(R + "Buildings/Bld_Sand/textures/T_Sandstone_N.png").Value;
             Assert.IsFalse(n.sRGB); Assert.IsTrue(n.normalMap); Assert.That(n.astc, Is.EqualTo("4x4").Or.EqualTo("5x5")); Assert.AreEqual(1024, n.androidMax);
 
-            var o = RenderTiers.TexturePolicy(R + "Props/Crate/T_Crate_ORM.png").Value;
+            var o = RenderTiers.TexturePolicy(R + "Buildings/Bld_Sand/textures/T_Sandstone_ORM.png").Value;
             Assert.IsFalse(o.sRGB, "ORM is linear"); Assert.IsFalse(o.normalMap); Assert.AreEqual(1024, o.androidMax);
+        }
+
+        [Test]
+        public void Policy_PropsCappedAt512_TilingAt1024()
+        {
+            foreach (var m in new[] { "_A", "_N", "_ORM" })
+            {
+                var p = RenderTiers.TexturePolicy(R + "Props/Crate/T_Crate" + m + ".png").Value;
+                Assert.AreEqual(512, p.maxSize, "prop " + m); Assert.AreEqual(512, p.androidMax, "prop " + m);
+                var t = RenderTiers.TexturePolicy(R + "Materials/Textures/T_Moss" + m + ".png").Value;
+                Assert.AreEqual(1024, t.androidMax, "tiling " + m);
+            }
         }
 
         [Test]
@@ -242,8 +255,8 @@ namespace Crashverse.Rendering.Tests
                 lg.SetLODs(new[] { new LOD(0.3f, new Renderer[] { lod0.GetComponent<Renderer>() }), new LOD(0.01f, new Renderer[] { sphere.GetComponent<Renderer>() }) });
                 Assert.IsNotEmpty(ValidateFoliage(tree, "Foliage/Tree_Test.prefab"), "non-impostor final LOD must fail");
 
-                Assert.AreEqual(3000, RenderTiers.BudgetFor("Foliage/Bush_Fern.prefab").lodTris[0]);
-                Assert.AreEqual(6000, RenderTiers.BudgetFor("Foliage/Tree_Oak.prefab").lodTris[0]);
+                Assert.AreEqual(2500, RenderTiers.BudgetFor("Foliage/Bush_Fern.prefab").lodTris[0]);
+                Assert.AreEqual(5000, RenderTiers.BudgetFor("Foliage/Tree_Oak.prefab").lodTris[0]);
             }
             finally { foreach (var o in created) Object.DestroyImmediate(o); }
         }

@@ -22,6 +22,7 @@ namespace Crashverse.Rendering
         // Foliage / LOD
         public float lodBias; public int maximumLODLevel;
         public bool foliageShadows;   // Low: off (Low has no main-light shadows at all, so foliage never casts there)
+        public int maxBatches;        // gameplay batch target for the Physics profiling pass (Frame Debugger / profiler "Batches"); docs only, no test
     }
 
     /// <summary>Per-map import policy for Assets/_Project/Models/Realistic/** (pure data so EditMode tests can check it).</summary>
@@ -47,13 +48,13 @@ namespace Crashverse.Rendering
         public static readonly RenderTier[] All =
         {
             new RenderTier { name = "Low",  hdr = false, msaa = 1, renderScale = 0.75f, mainShadows = false, shadowResolution = 512,  shadowDistance = 15f, cascades = 1, cascade2Split = 0.25f, softShadows = false, additionalLights = 0, srpBatcher = true, bloom = false, vignette = false,
-                             textureMipLimit = 1, albedoMax = 512,  normalMax = 512,  ormMax = 512,  anisotropic = AnisotropicFiltering.Disable, lodBias = 0.7f, maximumLODLevel = 1, foliageShadows = false },
+                             textureMipLimit = 1, albedoMax = 512,  normalMax = 512,  ormMax = 512,  anisotropic = AnisotropicFiltering.Disable, lodBias = 0.7f, maximumLODLevel = 1, foliageShadows = false, maxBatches = 100 },
             new RenderTier { name = "Mid",  hdr = true,  msaa = 2, renderScale = 0.9f,  mainShadows = true,  shadowResolution = 1024, shadowDistance = 30f, cascades = 1, cascade2Split = 0.25f, softShadows = false, additionalLights = 2, srpBatcher = true, bloom = true,  vignette = true,
-                             textureMipLimit = 0, albedoMax = 1024, normalMax = 1024, ormMax = 1024, anisotropic = AnisotropicFiltering.Enable,  lodBias = 1.0f, maximumLODLevel = 0, foliageShadows = true },
+                             textureMipLimit = 0, albedoMax = 1024, normalMax = 1024, ormMax = 1024, anisotropic = AnisotropicFiltering.Enable,  lodBias = 1.0f, maximumLODLevel = 0, foliageShadows = true,  maxBatches = 150 },
             // High albedo stays 1024: PM capped Android textures at 1024. High 2048 albedo would need PM approval (raise AndroidImportMax
             // for _A only and keep High at mip limit 0; Mid/Low would then need limit 1/2 to stay on budget).
             new RenderTier { name = "High", hdr = true,  msaa = 4, renderScale = 1.0f,  mainShadows = true,  shadowResolution = 2048, shadowDistance = 50f, cascades = 2, cascade2Split = 0.25f, softShadows = true,  additionalLights = 4, srpBatcher = true, bloom = true,  vignette = true,
-                             textureMipLimit = 0, albedoMax = 1024, normalMax = 1024, ormMax = 1024, anisotropic = AnisotropicFiltering.Enable,  lodBias = 1.5f, maximumLODLevel = 0, foliageShadows = true },
+                             textureMipLimit = 0, albedoMax = 1024, normalMax = 1024, ormMax = 1024, anisotropic = AnisotropicFiltering.Enable,  lodBias = 1.5f, maximumLODLevel = 0, foliageShadows = true,  maxBatches = 150 },
         };
 
         public static int IndexFor(string qualityName)
@@ -65,16 +66,31 @@ namespace Crashverse.Rendering
         public const string VolumeLowResource = "Lighting/VP_Global_Low";
         public const string VolumeFullResource = "Lighting/VP_Global";
         public const string SkyboxResource = "Lighting/M_Sky_Bright";
-        public static readonly Color SunColor = new Color(1f, 0.96f, 0.88f);
+        // Style board v3 §6 (PM): 11:00 midday sun, warm white #FFF4E0 at ~55-60° elevation; sky #4FB8FF -> horizon #FFE3A3; bright ambient.
+        public static readonly Color SunColor = new Color32(0xFF, 0xF4, 0xE0, 0xFF);
         public const float SunIntensity = 1.25f;
-        public static readonly Vector3 SunEuler = new Vector3(50f, -35f, 0f);
-        public static readonly Color AmbientSky = new Color(0.78f, 0.86f, 1f), AmbientEquator = new Color(0.86f, 0.84f, 0.80f), AmbientGround = new Color(0.55f, 0.52f, 0.48f);
+        public static readonly Vector3 SunEuler = new Vector3(57.5f, -35f, 0f); // x = elevation
+        public static readonly Color SkyTop = new Color32(0x4F, 0xB8, 0xFF, 0xFF), SkyHorizon = new Color32(0xFF, 0xE3, 0xA3, 0xFF);
+        // Trilight ambient: sky lifted toward white so shade stays cool and light (board: never below sRGB ~45 on lit albedo).
+        public static readonly Color AmbientSky = Color.Lerp(SkyTop, Color.white, 0.45f), AmbientEquator = SkyHorizon, AmbientGround = new Color(0.62f, 0.58f, 0.52f);
+
+        // Post (PM decision, style board v3 §6): Neutral tonemapper on EVERY tier (keeps palette hex closer than ACES).
+        // Full (Mid/High): exposure 0, contrast +8, saturation +8, HDR bloom threshold 1.1 so only emissive Core/FX bloom
+        // (lit sandstone, steel and sky must not), moderate intensity, light vignette. Low: same grading, no bloom/vignette.
+        public const float PostExposure = 0f, PostContrast = 8f, PostSaturation = 8f;
+        public const float BloomThreshold = 1.1f, BloomIntensity = 0.5f, BloomScatter = 0.6f, VignetteIntensity = 0.12f;
 
         // ---------------- Realistic PBR textures ----------------
         public const string RealisticRoot = "Assets/_Project/Models/Realistic/";
         public const int SourceSize = 2048;        // CC0 scans are authored at 2048; the importer downsizes for Android
         public const int AndroidImportMax = 1024;  // PM cap for Android (all maps)
         public const int LeafAtlasMax = 1024;      // leaf atlases are authored at 1024, alpha-clipped
+        public const int TilingMaterialMax = 1024; // Buildings/** and Materials/Textures/** tiling sets (Art & UI agreed)
+        public const int PropTextureMax = 512;     // Realistic/Props/** (all maps, every platform; Art & UI agreed)
+
+        // Building triangle caps (Art & UI agreed). No test yet: hero vs standard prefabs are not tagged or foldered apart; add a
+        // validation once 3D Modeler picks a convention (e.g. Buildings/Hero/** vs Buildings/Standard/**).
+        public const int HeroBuildingMaxTris = 20000, StandardBuildingMaxTris = 8000;
 
         /// <summary>True for Models/Realistic/** but never a v2 folder (Wrecker_v2 etc. stay with the VFX import rules).</summary>
         public static bool InRealisticScope(string assetPath)
@@ -91,6 +107,7 @@ namespace Crashverse.Rendering
         }
 
         public static bool IsFoliagePath(string assetPath) => assetPath != null && assetPath.Replace('\\', '/').Contains("/Foliage/");
+        public static bool IsPropPath(string assetPath) => assetPath != null && assetPath.Replace('\\', '/').StartsWith(RealisticRoot + "Props/", System.StringComparison.Ordinal);
 
         /// <summary>Map suffix of a texture stem (T_&lt;X&gt;_A / _N / _ORM), else null. Unity mask-map style names are not accepted.</summary>
         public static string PbrMap(string stem)
@@ -119,20 +136,21 @@ namespace Crashverse.Rendering
             var stem = System.IO.Path.GetFileNameWithoutExtension(assetPath);
             var map = PbrMap(stem);
             if (map == null) return null;
-            bool foliage = IsFoliagePath(assetPath);
+            bool foliage = IsFoliagePath(assetPath), prop = IsPropPath(assetPath);
+            int src = prop ? PropTextureMax : SourceSize, droid = prop ? PropTextureMax : Mathf.Min(AndroidImportMax, TilingMaterialMax);
             switch (map)
             {
-                case "_N":   return new PbrTexturePolicy { map = map, sRGB = false, normalMap = true,  keepAlpha = false, maxSize = SourceSize, androidMax = AndroidImportMax, astc = "5x5" };
-                case "_ORM": return new PbrTexturePolicy { map = map, sRGB = false, normalMap = false, keepAlpha = false, maxSize = SourceSize, androidMax = AndroidImportMax, astc = "6x6" };
+                case "_N":   return new PbrTexturePolicy { map = map, sRGB = false, normalMap = true,  keepAlpha = false, maxSize = src, androidMax = droid, astc = "5x5" };
+                case "_ORM": return new PbrTexturePolicy { map = map, sRGB = false, normalMap = false, keepAlpha = false, maxSize = src, androidMax = droid, astc = "6x6" };
                 default:     // _A: foliage albedo is a leaf atlas, alpha-clipped (keep alpha, preserve coverage in mips)
                     return new PbrTexturePolicy { map = map, sRGB = true, normalMap = false, keepAlpha = foliage,
-                                                  maxSize = foliage ? LeafAtlasMax : SourceSize, androidMax = foliage ? LeafAtlasMax : AndroidImportMax, astc = "6x6" };
+                                                  maxSize = foliage ? LeafAtlasMax : src, androidMax = foliage ? Mathf.Min(LeafAtlasMax, droid) : droid, astc = "6x6" };
             }
         }
 
         // ---------------- Foliage LOD ----------------
-        public static readonly FoliageBudget TreeBudget = new FoliageBudget { lodTris = new[] { 6000, 2500, 800 }, impostorMinTris = 2, impostorMaxTris = 16 };
-        public static readonly FoliageBudget BushBudget = new FoliageBudget { lodTris = new[] { 3000, 1250, 400 }, impostorMinTris = 2, impostorMaxTris = 16 };
+        public static readonly FoliageBudget TreeBudget = new FoliageBudget { lodTris = new[] { 5000, 2500, 800 }, impostorMinTris = 2, impostorMaxTris = 16 };
+        public static readonly FoliageBudget BushBudget = new FoliageBudget { lodTris = new[] { 2500, 1250, 400 }, impostorMinTris = 2, impostorMaxTris = 16 };
         public static FoliageBudget BudgetFor(string assetPath)
         {
             var p = (assetPath ?? "").ToLowerInvariant();
