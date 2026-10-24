@@ -6,7 +6,9 @@ namespace Crashverse.Destruction
     {
         Wood = 0,
         Brick = 1,
-        Steel = 2
+        Steel = 2,
+        Glass = 3, // Neon District (chapter 3) and later only — Game designer ruling (Physics_Feel_Review_v1 (d))
+        Stone = 4  // append only: values are serialized in assets
     }
 
     /// <summary>
@@ -23,6 +25,12 @@ namespace Crashverse.Destruction
         public float mass = 1f;
         [Tooltip("Multiplier applied when damage hits a steel joint (Contract: steel joints 2.0×).")]
         public float jointDamageMultiplier = 1f;
+
+        [Header("Physical (starting tunables; data only — not yet applied to colliders)")]
+        [Tooltip("Reference density kg/m³ (content/mass derivation). mass above stays the authoritative per-block mass.")]
+        public float densityKgM3 = 600f;
+        [Range(0f, 1f)] public float restitution = 0.1f;
+        [Range(0f, 1.5f)] public float friction = 0.6f;
 
         [Header("Joints")]
         public float jointBreakForce = 800f;
@@ -49,6 +57,7 @@ namespace Crashverse.Destruction
                     def.name = "Wood_Runtime";
                     def.maxHp = 30f;
                     def.mass = 1.0f;
+                    def.densityKgM3 = 600f; def.restitution = 0.1f; def.friction = 0.6f;
                     def.jointDamageMultiplier = 1f;
                     def.jointBreakForce = 450f;
                     def.jointBreakTorque = 450f;
@@ -62,6 +71,7 @@ namespace Crashverse.Destruction
                     def.name = "Brick_Runtime";
                     def.maxHp = 60f;
                     def.mass = 2.5f;
+                    def.densityKgM3 = 1900f; def.restitution = 0.05f; def.friction = 0.7f;
                     def.jointDamageMultiplier = 1f;
                     def.jointBreakForce = 900f;
                     def.jointBreakTorque = 900f;
@@ -75,6 +85,7 @@ namespace Crashverse.Destruction
                     def.name = "Steel_Runtime";
                     def.maxHp = 120f;
                     def.mass = 4.0f;
+                    def.densityKgM3 = 7850f; def.restitution = 0.15f; def.friction = 0.5f;
                     def.jointDamageMultiplier = 2.0f; // Contract §3
                     def.jointBreakForce = 2200f;
                     def.jointBreakTorque = 2200f;
@@ -84,6 +95,35 @@ namespace Crashverse.Destruction
                     def.darkColor = Hex("6B7684");
                     def.breakFxColor = Hex("FFD27A");
                     break;
+                // Glass and Stone: every value below is a STARTING TUNABLE (Game designer / Level Designer to tune).
+                case MaterialKind.Glass:
+                    def.name = "Glass_Runtime";
+                    def.maxHp = 12f;             // brittle: low HP
+                    def.mass = 1.5f;
+                    def.densityKgM3 = 2500f;
+                    def.restitution = 0.05f; def.friction = 0.4f;
+                    def.jointDamageMultiplier = 1f;
+                    def.jointBreakForce = 250f;  // snaps easily
+                    def.jointBreakTorque = 200f;
+                    def.maxDebrisChunks = 10;    // shatters into many small shards
+                    def.debrisLifetimeSeconds = 1.5f;
+                    def.debrisDamageTakenPermille = Crashverse.Sim.DebrisMaterialMult.Glass; // ×1.5
+                    def.baseColor = Hex("A8E6F0"); def.darkColor = Hex("5FA8B8"); def.breakFxColor = Hex("E6FBFF");
+                    break;
+                case MaterialKind.Stone:
+                    def.name = "Stone_Runtime";
+                    def.maxHp = 90f;             // heavy and tough
+                    def.mass = 3.3f;             // ≈ brick 2.5 × (2500 / 1900 kg/m³)
+                    def.densityKgM3 = 2500f;
+                    def.restitution = 0.05f; def.friction = 0.8f;
+                    def.jointDamageMultiplier = 1f;
+                    def.jointBreakForce = 1500f;
+                    def.jointBreakTorque = 1300f;
+                    def.maxDebrisChunks = 5;     // crumbles into a few chunks
+                    def.debrisLifetimeSeconds = 3f;
+                    def.debrisDamageTakenPermille = Crashverse.Sim.DebrisMaterialMult.Stone; // ×0.9
+                    def.baseColor = Hex("9A958C"); def.darkColor = Hex("5E5A54"); def.breakFxColor = Hex("C9C2B6");
+                    break;
             }
             return def;
         }
@@ -92,15 +132,25 @@ namespace Crashverse.Destruction
 
         public static MaterialKind? Parse(string s)
         {
-            switch (s) { case "wood": return MaterialKind.Wood; case "brick": return MaterialKind.Brick; case "steel": return MaterialKind.Steel; }
+            switch (s) { case "wood": return MaterialKind.Wood; case "brick": return MaterialKind.Brick; case "steel": return MaterialKind.Steel;
+                       case "glass": return MaterialKind.Glass; case "stone": return MaterialKind.Stone; }
             return null;
         }
+
+        /// <summary>Lower-case content key ("wood", "glass", ...) used by level JSON and DebrisBudget.</summary>
+        public static string KeyOf(MaterialKind k) => k switch
+        {
+            MaterialKind.Brick => "brick", MaterialKind.Steel => "steel", MaterialKind.Glass => "glass", MaterialKind.Stone => "stone", _ => "wood"
+        };
+
+        /// <summary>Glass is Neon District (chapter 3) and later only.</summary>
+        public static bool AllowedInChapter(MaterialKind k, int chapter) => chapter >= Crashverse.Sim.MaterialRules.MinChapter(KeyOf(k));
 
         /// <summary>Runtime material with data-driven rule modifiers (Titan/event rules). 0 = unchanged.</summary>
         public static MaterialDefinition CreateRuntime(MaterialKind kind, Crashverse.Data.RuleModifiers mod)
         {
             var d = CreateRuntime(kind);
-            d.smoothness = kind == MaterialKind.Steel ? 0.7f : 0.5f;
+            d.smoothness = kind == MaterialKind.Glass ? 0.9f : kind == MaterialKind.Steel ? 0.7f : 0.5f;
             if (mod == null) return d;
             switch (kind)
             {

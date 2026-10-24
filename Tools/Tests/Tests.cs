@@ -672,6 +672,20 @@ static class Tests
             var l = new DebrisLedger<string>(3); l.Add("a"); l.Add("b"); l.Add("c"); l.MarkSettled("b");
             T.Eq("b", l.Add("d"), "oldest SETTLED recycled first"); T.Eq("a", l.Add("e"), "else oldest"); T.Eq(3, l.Count, "never above cap");
         });
+        T.Add("FEEL_debris_chunks_glass_stone", () =>
+        {
+            T.Eq(10, DebrisBudget.Chunks("glass", QualityTier.Mid), "glass shatters into many shards"); T.Eq(5, DebrisBudget.Chunks("glass", QualityTier.Low));
+            T.Eq(5, DebrisBudget.Chunks("stone", QualityTier.Mid), "stone crumbles into chunks"); T.Eq(2, DebrisBudget.Chunks("stone", QualityTier.Low));
+            T.True(DebrisBudget.Chunks("glass", QualityTier.Mid) > DebrisBudget.Chunks("stone", QualityTier.Mid), "glass > stone fragments");
+        });
+        T.Add("CONTENT_chapter1_has_no_glass", () =>
+        {
+            var root = new DirectoryInfo(AppContext.BaseDirectory);
+            while (root != null && !Directory.Exists(Path.Combine(root.FullName, "Assets/_Project"))) root = root.Parent;
+            T.True(root != null, "repo root found");
+            foreach (var f in Directory.GetFiles(Path.Combine(root.FullName, "Assets/_Project/Resources/Data/Layouts"), "*.json"))
+                T.True(!File.ReadAllText(f).Contains("\"mat\": \"glass\"") && !File.ReadAllText(f).Contains("\"mat\":\"glass\""), "glass is Neon (ch3+) only: " + Path.GetFileName(f));
+        });
         T.Add("FEEL_debris_mass_counts_on_source", () =>
         {
             // Destroyed mass is recorded on the piece itself (BreakLedger/tracker); chunks never enter the ratio.

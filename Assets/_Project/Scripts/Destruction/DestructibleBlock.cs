@@ -116,7 +116,7 @@ namespace Crashverse.Destruction
             DestroyOwnJoints();
             if (DebrisPool.Instance != null && material != null)
                 {
-                int chunks = Crashverse.Feel.DebrisBudget.Chunks(material.kind == MaterialKind.Wood ? "wood" : material.kind == MaterialKind.Brick ? "brick" : "steel", DebrisPool.ChunkTier); // ranked: tier-independent
+                int chunks = Crashverse.Feel.DebrisBudget.Chunks(MaterialDefinition.KeyOf(material.kind), DebrisPool.ChunkTier); // ranked: tier-independent
                 if (chunks > 0) DebrisPool.Instance.SpawnBurst(transform.position, transform.localScale, material, Mathf.Min(chunks, material.maxDebrisChunks)); // visual only; mass counted on this piece
             }
             if (_renderer != null) _renderer.enabled = false;

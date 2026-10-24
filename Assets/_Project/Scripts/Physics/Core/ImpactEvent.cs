@@ -11,24 +11,24 @@ namespace Crashverse.Sim
     public enum SizeClass : byte { S = 0, M = 1, L = 2 }
     public enum ImpactSourceKind : byte { Cannon = 0, PowerUp = 1, Debris = 2, Explosion = 3 }
     /// <summary>Stable material family for audio/VFX banks. Ground and non-destructible scenery = Terrain.</summary>
-    public enum MaterialType : byte { Wood = 0, Brick = 1, Steel = 2, Glass = 3, Terrain = 4 }
+    public enum MaterialType : byte { Wood = 0, Brick = 1, Steel = 2, Glass = 3, Terrain = 4, Stone = 5 } // append only: values are serialized
 
     /// <summary>Fixed-size per-material piece counts (no allocation). Dominant: highest count, ties to the lower enum value.</summary>
     [Serializable]
     public struct MaterialCounts
     {
-        public int wood, brick, steel, glass, terrain;
-        public int Total => wood + brick + steel + glass + terrain;
-        public int Get(MaterialType t) => t switch { MaterialType.Wood => wood, MaterialType.Brick => brick, MaterialType.Steel => steel, MaterialType.Glass => glass, _ => terrain };
+        public int wood, brick, steel, glass, terrain, stone;
+        public int Total => wood + brick + steel + glass + terrain + stone;
+        public int Get(MaterialType t) => t switch { MaterialType.Wood => wood, MaterialType.Brick => brick, MaterialType.Steel => steel, MaterialType.Glass => glass, MaterialType.Stone => stone, _ => terrain };
         public void Add(MaterialType t, int n = 1)
         {
             switch (t) { case MaterialType.Wood: wood += n; break; case MaterialType.Brick: brick += n; break; case MaterialType.Steel: steel += n; break;
-                         case MaterialType.Glass: glass += n; break; default: terrain += n; break; }
+                         case MaterialType.Glass: glass += n; break; case MaterialType.Stone: stone += n; break; default: terrain += n; break; }
         }
         public MaterialType Dominant
         {
             get { var best = MaterialType.Wood; int bc = wood;
-                  for (var t = MaterialType.Brick; t <= MaterialType.Terrain; t++) { int c = Get(t); if (c > bc) { bc = c; best = t; } }
+                  for (var t = MaterialType.Brick; t <= MaterialType.Stone; t++) { int c = Get(t); if (c > bc) { bc = c; best = t; } }
                   return Total == 0 ? MaterialType.Terrain : best; }
         }
     }
