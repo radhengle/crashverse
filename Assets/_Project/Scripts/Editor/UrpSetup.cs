@@ -43,7 +43,9 @@ namespace Crashverse.EditorTools
                 var a = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(path);
                 if (a == null) { a = UniversalRenderPipelineAsset.Create(rd); AssetDatabase.CreateAsset(a, path); }
                 ResourceReloader.TryReloadAllNullIn(a, UniversalRenderPipelineAsset.packagePath);
-                a.msaaSampleCount = t.msaa; a.renderScale = t.scale; a.shadowDistance = t.shadowDist; a.shadowCascadeCount = t.cascades; a.supportsHDR = t.hdr;
+                // Values come from Crashverse.Rendering.RenderTiers (single source; LightingSetup applies the rest of the tier).
+                var rt = Crashverse.Rendering.RenderTiers.All[Crashverse.Rendering.RenderTiers.IndexFor(t.name)];
+                a.msaaSampleCount = rt.msaa; a.renderScale = rt.renderScale; a.shadowDistance = rt.shadowDistance; a.shadowCascadeCount = rt.cascades; a.supportsHDR = rt.hdr;
                 EditorUtility.SetDirty(a); assets[i] = a;
             }
 

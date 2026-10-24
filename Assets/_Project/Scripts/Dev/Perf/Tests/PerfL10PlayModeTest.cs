@@ -18,6 +18,9 @@ namespace Crashverse.DevTools.Perf.Tests
     /// logs PERFL10_DETERMINISM per variant (retry-divergence diagnosis).
     /// Reflection because PerfL10Stage lives in Assembly-CSharp (asmdefs can't reference it).
     /// </summary>
+    // integration/v1: opt-in (asmdef defineConstraint CRASHVERSE_PERF_TESTS). In the consolidated build, runs after the first
+    // scene reload/retry produce no sim events (events=0, hash=FNV basis), the open Retry/reload determinism issue owned by Physics.
+    // Re-enable here (add the define to the test job) once that fix lands.
     public class PerfL10PlayModeTest
     {
         const string ScenePath = "Assets/_Project/Scenes/Dev/L10_PerfFullBudget.unity";
