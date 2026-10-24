@@ -95,6 +95,9 @@ R2=$(result fail); echo "miss line result: $R2" | tee "$OUT/result_fail.txt"
 [ "$R2" = fail ] || { shot 08_result_fail; echo "FAIL: miss line did not fail ($R2)"; exit 1; }
 D2=$(done_line fail); sleep 2; shot 08_result_fail; echo "$D2" | tee -a "$OUT/result_fail.txt"   # QA C-3: settled panel
 # back to the map: L2 is unlocked by the win; its Level Select opens
+# the fail panel has no Next Level row, so Map sits higher than on the calibration win panel: use the live probe position
+FM=$(adb logcat -d -s Unity | grep -o "CVTAP|ResultsScreen|Button_Map|[0-9]*|[0-9]*" | tail -1 | cut -d'|' -f4,5)
+[ -n "$FM" ] && { MAP_X=${FM%|*}; MAP_Y=${FM#*|}; }; echo "fail-panel Map at $MAP_X,$MAP_Y" | tee -a "$OUT/coords.txt"
 adb logcat -c; tap $MAP_X $MAP_Y 4; begin MapScreen "after Map on the results"; settle map2; shot 09_map_after_win
 adb logcat -c; tap $NODE2_X $NODE2_Y 3; begin LevelSelectScreen "after tapping level 2"; check level2; shot 09_level2_select
 check final   # whole-run logcat gate (QA C-2)
