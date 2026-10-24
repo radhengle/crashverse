@@ -41,7 +41,9 @@ namespace Crashverse.Weapons
         {
             _launchTick = Crashverse.Sim.SimRunner.NowTick; _splitAt = splitAtSeconds; Latest = this;
             if (_rb == null) Awake();
-            transform.position = pos;
+            // Interpolated body: moving only the transform leaves the physics body at the spawn origin (it then hit the island
+            // at x≈0 on the first tick, L1HINT run 40066075213). Move the body itself, then the transform.
+            _rb.position = pos; transform.position = pos; _rb.angularVelocity = Vector3.zero;
             damage = dmg; mods = m ?? new ShotModifiers();
             _rb.velocity = vel;
             _spent = false; _splitDone = !mods.split;
