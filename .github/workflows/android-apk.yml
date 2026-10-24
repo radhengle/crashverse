@@ -244,7 +244,7 @@ jobs:
           disable-animations: true
           cores: 4
           ram-size: 4096M
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340
+          emulator-options: -no-window -gpu swangle_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340 # ANGLE on SwiftShader-Vulkan: the GL translator caps vertex uniforms at 256 and URP Simple Lit fails to link (run 40062717341)
           script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

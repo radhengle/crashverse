@@ -92,6 +92,43 @@ namespace Crashverse.Tests.PlayMode
             yield return WaitFor(() => AppServices.Router.Top is HudScreen, "L1 HUD (run started)");
             yield return null;
             AssertNoBrokenRenderers("L1 arena + structure");
+            yield return PlayHintLineToResult();
+        }
+
+        /// <summary>BUG-24 gate in the editor: the practice-hint line (same as the emulator's Button_DevAimHint) must win L1.
+        /// Logs every block and each shot's sampled path so a miss is diagnosable from the CI log alone.</summary>
+        IEnumerator PlayHintLineToResult()
+        {
+            var s = GameBootstrap.Session; Assert.NotNull(s, "session");
+            var lvl = s.Ctx.level;
+            Debug.Log($"L1HINT level={lvl.id} hint=({lvl.hintYaw},{lvl.hintPitch}) shots={s.ShotsLeft} win={lvl.winThreshold} gravity={Physics.gravity}");
+            foreach (var b in UnityEngine.Object.FindObjectsOfType<Crashverse.Destruction.DestructibleBlock>())
+            {
+                var c = b.GetComponent<Collider>();
+                Debug.Log($"L1HINT block {b.name} pos={b.transform.position} bounds={(c != null ? c.bounds.size.ToString() : "NO COLLIDER")} rb={(b.GetComponent<Rigidbody>() != null)}");
+            }
+            Debug.Log($"L1HINT spawn={s.aim.SpawnPosition}");
+            float end = Time.realtimeSinceStartup + 120f;
+            int shot = 0;
+            while (s.State != SessionState.Won && s.State != SessionState.Failed && Time.realtimeSinceStartup < end)
+            {
+                s.aim.SetAim(lvl.hintYaw, lvl.hintPitch);
+                if (!s.TryFire()) { yield return null; continue; }
+                shot++;
+                Debug.Log($"L1HINT shot {shot} aim=({s.aim.Yaw},{s.aim.Elevation}) v={s.aim.LaunchVelocity} spawn={s.aim.SpawnPosition}");
+                float t0 = Time.realtimeSinceStartup; bool seen = false;
+                while (Time.realtimeSinceStartup - t0 < 8f)
+                {
+                    var alive = Crashverse.Weapons.Projectile.Alive;
+                    if (alive.Count > 0) { seen = true; Debug.Log($"L1HINT  t={Time.realtimeSinceStartup - t0:F2} proj={alive[0].transform.position}"); }
+                    else if (seen) break;
+                    yield return new WaitForSeconds(0.1f);
+                }
+                Debug.Log($"L1HINT after shot {shot}: destroyed={s.tracker.DestroyedRatio:P1} mass={s.tracker.DestroyedMass}/{s.tracker.TotalObjectiveMass} state={s.State}");
+                yield return new WaitForSeconds(1f);
+            }
+            Debug.Log($"L1HINT result state={s.State} destroyed={s.tracker.DestroyedRatio:P1} shots={shot}");
+            Assert.AreEqual(SessionState.Won, s.State, $"L1 practice-hint line must win (destroyed {s.tracker.DestroyedRatio:P1} after {shot} shots); see L1HINT log lines");
         }
 
         [UnityTest]
