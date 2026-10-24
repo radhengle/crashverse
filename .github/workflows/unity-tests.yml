@@ -5,7 +5,7 @@ name: Unity EditMode tests
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [ main, 'integration/**' ]
   workflow_dispatch:
 
 permissions:

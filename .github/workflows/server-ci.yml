@@ -4,7 +4,7 @@ on:
   pull_request:
     paths: ["server/**", "Assets/_Project/Scripts/**", ".github/workflows/server-ci.yml"]
   push:
-    branches: [main, "backend/**"]
+    branches: [main, "backend/**", "integration/**"]
     paths: ["server/**", "Assets/_Project/Scripts/**", ".github/workflows/server-ci.yml"]
 permissions:
   contents: read

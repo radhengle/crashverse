@@ -90,17 +90,19 @@ public class C1_ServerHeldStateTests
 public class C2_PurchaseTests
 {
     [Fact]
-    public async Task PremiumTrack_RequiresVerifiedPurchase()
+    public async Task PremiumTrack_RequiresUnlock_AndIsNotAPlayProduct()
     {
+        // Economy v1: the premium track is gem-priced (450) and unlocked only via /v1/season/premium/unlock, never a Play purchase.
         await using var h = await Harness.Start();
         var s = await h.Guest();
         await h.X.Db.Put("seasonProgress", s.pid + ":s1_wrecking_frontier", new SeasonProgressDoc { seasonId = "s1_wrecking_frontier", xp = 200 });
         Assert.Equal("PREMIUM_NOT_OWNED", (await h.Post("/v1/season/tiers/1/claim", new { premium = true }, s)).Code);
-        var tok = h.PlayPurchase(s, "s1_premium_track");
-        Assert.Equal("verified", (await h.Verify(s, "s1_premium_track", tok))["status"].GetString());
+        Assert.Equal("INVALID_PURCHASE", (await h.Verify(s, "s1_premium_track", h.PlayPurchase(s, "s1_premium_track"))).Code);
+        Assert.False((await h.Get("/v1/season", s))["premium"].GetBoolean());
+        await new EconomyService(h.X).GrantGems(s.pid, 450, "test", "premium");
+        Assert.Equal(HttpStatusCode.OK, (await h.Post("/v1/season/premium/unlock", new { }, s)).status);
         Assert.True((await h.Get("/v1/season", s))["premium"].GetBoolean());
         Assert.Equal(HttpStatusCode.OK, (await h.Post("/v1/season/tiers/1/claim", new { premium = true }, s)).status);
-        Assert.Contains(tok, h.Play.Acked);
     }
 
     [Fact]
@@ -201,22 +203,24 @@ public class C2_PurchaseTests
     [Theory]
     [InlineData(RefundPolicies.GemDebt)]
     [InlineData(RefundPolicies.FloorAtZero)]
-    public async Task Refund_CashCosmeticAndPremiumTierCosmetics_AreRevoked(string policy)
+    public async Task Refund_CashCosmetic_IsRevoked_GemUnlockedPremiumKept(string policy)
     {
+        // Economy v1: only cash SKUs can be voided by Play. The premium track is bought with gems, so a cash-skin refund
+        // revokes that skin and leaves the gem-unlocked premium track and its tier cosmetics alone.
         await using var h = await Harness.Start(o => o.RefundPolicy = policy);
         h.X.Content.AcceptedStore.Add(new Crashverse.Data.StoreItem { sku = "skin_cash_test", type = "wrecker_skin", cosmetic = true, priceType = "real", price = 199 });
         var s = await h.Guest();
         var tc = h.PlayPurchase(s, "skin_cash_test"); await h.Verify(s, "skin_cash_test", tc);
-        var tp = h.PlayPurchase(s, "s1_premium_track"); await h.Verify(s, "s1_premium_track", tp);
+        await new EconomyService(h.X).GrantGems(s.pid, 450, "test", "premium");
+        Assert.Equal(HttpStatusCode.OK, (await h.Post("/v1/season/premium/unlock", new { }, s)).status);
         await h.X.Db.Put("seasonProgress", s.pid + ":s1_wrecking_frontier", new SeasonProgressDoc { seasonId = "s1_wrecking_frontier", xp = 200 });
         await h.Post("/v1/season/tiers/1/claim", new { premium = true }, s);
         var w = await h.Wallet(s); Assert.Contains("skin_cash_test", w.cosmetics); Assert.Contains("s1_cosmetic_01", w.cosmetics);
         h.Play.Voided.Add(new PlayVoidedPurchase { purchaseToken = tc, voidedTimeMillis = h.X.NowMs });
-        h.Play.Voided.Add(new PlayVoidedPurchase { purchaseToken = tp, voidedTimeMillis = h.X.NowMs });
         await h.Job("/internal/jobs/voided-poll");
         w = await h.Wallet(s);
-        Assert.DoesNotContain("skin_cash_test", w.cosmetics); Assert.DoesNotContain("s1_cosmetic_01", w.cosmetics);
-        Assert.False((await h.Get("/v1/season", s))["premium"].GetBoolean());
+        Assert.DoesNotContain("skin_cash_test", w.cosmetics); Assert.Contains("s1_cosmetic_01", w.cosmetics);
+        Assert.True((await h.Get("/v1/season", s))["premium"].GetBoolean());
         Assert.Contains((await h.X.Db.List<AuditEntry>("audit")), a => a.action == "purchase_voided");
     }
 

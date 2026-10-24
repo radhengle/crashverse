@@ -15,7 +15,7 @@ on:
         type: string
         default: ""
   push:
-    branches: [ main ]
+    branches: [ main, 'integration/**' ]
     paths:
       - 'Assets/**'
       - 'Packages/**'
@@ -66,7 +66,7 @@ jobs:
     name: GameCI Unity Android (${{ github.event.inputs.profile || 'dev' }})
     needs: guards
     # M2: signed builds only from main, or a dispatch on main / dev/* (dispatch needs repo write).
-    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/dev/'))
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/integration/') || (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/dev/'))
     environment: dev-signing
     runs-on: ubuntu-24.04
     permissions:

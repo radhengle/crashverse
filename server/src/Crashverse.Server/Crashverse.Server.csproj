@@ -18,7 +18,7 @@
     <!-- PR #5 moves this to Rules/; link whichever exists so the server builds before and after that merge. -->
     <Compile Include="$(ClientScripts)Rules/StarRules.cs" Link="Shared/StarRules.cs" Condition="Exists('$(ClientScripts)Rules/StarRules.cs')" />
     <Compile Include="$(ClientScripts)Meta/StarRules.cs" Link="Shared/StarRules.cs" Condition="!Exists('$(ClientScripts)Rules/StarRules.cs') And Exists('$(ClientScripts)Meta/StarRules.cs')" />
-    <Compile Include="$(ClientScripts)Meta/ComboTracker.cs" Link="Shared/ComboTracker.cs" />
+    <Compile Include="$(ClientScripts)Rules/ComboTracker.cs" Link="Shared/ComboTracker.cs" />
     <Compile Include="$(ClientScripts)Meta/StoreValidator.cs" Link="Shared/StoreValidator.cs" />
     <Compile Include="$(ClientScripts)Backend/BackendModels.cs" Link="Shared/BackendModels.cs" />
     <Compile Include="$(ClientScripts)Backend/ServerContracts.cs" Link="Shared/ServerContracts.cs" />
