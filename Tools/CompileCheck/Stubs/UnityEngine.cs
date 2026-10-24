@@ -200,7 +200,12 @@ namespace UnityEngine
         public static float sleepThreshold;
         public static int defaultSolverIterations;
         public static Collider[] OverlapSphere(Vector3 p, float r) => Array.Empty<Collider>();
+        public static SimulationMode simulationMode = SimulationMode.FixedUpdate;
+        public static void Simulate(float step) { }
+        public static void IgnoreLayerCollision(int a, int b, bool ignore) { }
     }
+    public enum SimulationMode { FixedUpdate, Update, Script }
+    [AttributeUsage(AttributeTargets.Class)] public sealed class DefaultExecutionOrderAttribute : Attribute { public DefaultExecutionOrderAttribute(int order) { } }
     public static class RenderSettings
     {
         public static Rendering.AmbientMode ambientMode;
