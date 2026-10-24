@@ -32,14 +32,14 @@ namespace Crashverse.Tests.Gameplay
             Assert.AreEqual(-1, piece.PieceId);
 
             int a = PieceIds.Of("blockA"), b = PieceIds.Of("blockB");
-            piece.PieceId = a; piece.Activate(null, 1f);
+            piece.PieceId = a; piece.Activate(null, 50, new Crashverse.Sim.SimRng(1));
             Assert.AreEqual(a, piece.PieceId);
             piece.Deactivate();
             Assert.AreEqual(-1, piece.PieceId, "pooled chunk must not keep a stale id");
-            piece.PieceId = b; piece.Activate(null, 1f);
+            piece.PieceId = b; piece.Activate(null, 50, new Crashverse.Sim.SimRng(1));
             Assert.AreEqual(b, piece.PieceId, "reuse takes the new source id");
             piece.Deactivate();
-            piece.PieceId = a; piece.Activate(null, 1f);
+            piece.PieceId = a; piece.Activate(null, 50, new Crashverse.Sim.SimRng(1));
             Assert.AreEqual(a, piece.PieceId, "same blockId → same id after reuse");
         }
 
