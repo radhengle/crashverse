@@ -15,6 +15,8 @@ namespace Crashverse.Core
         public static AccountState Account; // last fetched server account (age band, consent, deletion state)
         public static ContentDatabase Content;
         public static CampaignSave Save;
+        /// <summary>integration/v2 local progression: guest profile, wallet, chests, Daily Boss, achievement counters (offline).</summary>
+        public static PlayerProgress Progress;
         public static IBackendService Backend;
 #if CRASHVERSE_DEV
         public static LocalBackendService LocalBackend => Backend as LocalBackendService; // QA panel only

@@ -26,7 +26,7 @@ namespace Crashverse.Data.Dev
         public const float AimYawDeg = 0f, AimElevationDeg = 8f;
         /// <summary>"Power" = launch speed (m/s), pinned so a wrecker.json retune can't change the perf shot.</summary>
         public const float LaunchSpeed = 28f;
-        public const string PowerUpId = "chain_reactor";
+        public const string PowerUpId = "mega_bomb";
         public const int PowerUpSlot = 0; // Core slot
         public const string ArmInput = "arm", FireInput = "fire";
 

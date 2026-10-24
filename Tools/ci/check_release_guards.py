@@ -23,6 +23,8 @@ DEV_SYMBOLS = {
 # Dev aim hook (BUG-24 automation, Security Admin): only a bare `#if CRASHVERSE_DEV` counts (no OR'd symbols).
 HOOK_TOKENS = ["DevAimHookCore", "DevAimHook", "DevAimCommandParser", "DevAimCommand", "DevAimTarget", "DevHookUsed",
                "ReportDevAimResult", "markNonRanked", "dev_aim_cmd.json", "CRASHVERSE_DEV_AIM", "cv_dev_aim", "Crashverse.DevHooks"]
+# Built-output only (QA R-3): the dev HINT button, the tap probe and the QA panel must not exist in a release player.
+BUILT_ONLY_TOKENS = ["Button_DevAimHint", "UITapProbe", "QADebugModal"]
 HOOK_SYM = re.compile("|".join(re.escape(t) for t in HOOK_TOKENS))
 HOOK_DIR = ("Assets", "_Project", "Scripts", "DevHooks")
 HOOK_ASMDEF = "Assets/_Project/Scripts/DevHooks/Crashverse.DevHooks.asmdef"
@@ -88,8 +90,8 @@ def scan_built(path):
     if not blobs: return [f"{path}: no global-metadata.dat found (not an IL2CPP build?)"]
     bad = []
     for name, data in blobs:
-        for t in HOOK_TOKENS:
-            if t.encode() in data: bad.append(f"{name}: release metadata contains dev aim hook token '{t}'")
+        for t in HOOK_TOKENS + BUILT_ONLY_TOKENS:
+            if t.encode() in data: bad.append(f"{name}: release metadata contains dev-only token '{t}'")
     return bad
 
 def android_manifests(root=None):
@@ -106,8 +108,13 @@ def check_debuggable(root=None):
     return [f"{p.relative_to(root)} must not force android:debuggable=\"true\" (release must not be debuggable)"
             for p in android_manifests(root) if re.search(r'android:debuggable\s*=\s*"true"', p.read_text(errors="replace"))]
 
+MIN_TARGET_SDK = 35  # PR #7 (folded): Google Play requirement
+
 def check_config():
     bad = []
+    m = re.search(r"^\s*AndroidTargetSdkVersion:\s*(\d+)", ps_text(), re.M)
+    if not m or int(m.group(1)) < MIN_TARGET_SDK:
+        bad.append(f"AndroidTargetSdkVersion must be >= {MIN_TARGET_SDK} (Play requirement)")
     uc = (ROOT / "ProjectSettings/UnityConnectSettings.asset")
     if not uc.exists(): bad.append("ProjectSettings/UnityConnectSettings.asset missing (analytics/crash reporting must be explicitly disabled)")
     else:

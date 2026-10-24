@@ -14,6 +14,8 @@ namespace Crashverse.Data
         public StoreCatalog Store { get; private set; }
         public EconomyData Economy { get; private set; }
         public WreckerTuning Wrecker { get; private set; }
+        /// <summary>integration/v2 local meta: rewards, Daily Boss pool, the 4 seasons, achievements, avatars/badges.</summary>
+        public MetaV2Data Meta { get; private set; }
         readonly Dictionary<string, LayoutData> _layouts = new Dictionary<string, LayoutData>();
 
         public static string LoadText(string resourcePath)
@@ -41,6 +43,7 @@ namespace Crashverse.Data
                 Store = LoadJson<StoreCatalog>("Data/store_catalog"),
                 Economy = LoadJson<EconomyData>("Data/economy") ?? new EconomyData(),
                 Wrecker = LoadJson<WreckerTuning>("Data/wrecker") ?? new WreckerTuning(),
+                Meta = LoadJson<MetaV2Data>("Data/meta_v2") ?? new MetaV2Data(),
             };
         }
 

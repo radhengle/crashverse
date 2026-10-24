@@ -48,6 +48,7 @@ static class Tests
     public static void Register()
     {
         DevAimHookTests.Register(); // BUG-24 dev aim hook
+        V2Tests.Register(); // target UI, power-ups v2, seasons (integration/v2)
         // ---------- SG-24 / SG-01 stars (qa/M1_Test_Cases_v0.3 + Feature_Test_Cases_v1 §A) ----------
         T.Add("gameplay_pieceid_matches_stableid20", () => { T.Eq(204219580, Crashverse.Gameplay.PieceIds.Of("b1"), "b1"); T.Eq(501293940, Crashverse.Gameplay.PieceIds.Of("L1_tower_03"), "L1_tower_03"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(null), "null"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(""), "empty"); });
         T.Add("gameplay_vfx_material_map", () => { T.Eq(0, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, false), "wood"); T.Eq(1, Crashverse.Gameplay.PieceIds.VfxMaterialOf(1, false, false), "brick"); T.Eq(2, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, false, false), "steel"); T.Eq(3, Crashverse.Gameplay.PieceIds.VfxMaterialOf(2, true, false), "joint"); T.Eq(5, Crashverse.Gameplay.PieceIds.VfxMaterialOf(0, false, true), "explosive"); });
@@ -157,13 +158,13 @@ static class Tests
             for (int i = 1; i <= 7; i++) save.RecordResult($"c1_l{i:00}", true, 1, false);
             var L7 = Db.GetLevel("c1_l07"); var L8 = Db.GetLevel("c1_l08");
             var lo = Loadout.Resolve(L7, null, Db, save);
-            T.Eq("shockwave", lo[Slot.Core], "L7 forced shockwave");
+            T.Eq("earthquake", lo[Slot.Core], "L7 forced earthquake (v2: was shockwave)");
             T.True(Loadout.IsSlotLocked(L7, Slot.Module), "L7 module locked");
             var lo8 = Loadout.Resolve(L8, null, Db, save);
-            T.Eq("splitstrike", lo8[Slot.Module], "L8 forced splitstrike");
-            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("shockwave"), L8, Db, save) != null, "core tile can't go in booster");
-            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("phase_piercer"), L8, Db, save) != null, "future tile locked");
-            T.True(!UnlockRules.IsPowerUpUnlocked(Db.GetPowerUp("gravity_well"), Db, save), "gravity well locked until L10 clear");
+            T.Eq("multi_shot", lo8[Slot.Module], "L8 forced multi_shot (v2: was splitstrike)");
+            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("earthquake"), L8, Db, save) != null, "core tile can't go in booster");
+            T.True(lo8.TryEquip(Slot.Booster, Db.GetPowerUp("laser_beam"), L8, Db, save) != null, "future tile locked");
+            T.True(!UnlockRules.IsPowerUpUnlocked(Db.GetPowerUp("black_hole"), Db, save), "black hole (was gravity well) locked until L10 clear");
         });
 
         // ---------- Mastery (SG-03, SG-04, SG-21) ----------
@@ -364,7 +365,7 @@ static class Tests
         {
             var b = NewBackend("2026-10-16T10:00:00");
             foreach (var l in Db.Chapter1.levels) { Win(b, l.id); Win(b, l.id); }
-            var w = b.GetWallet().Result; T.True(w.powerUps.Contains("gravity_well"), "L10 power-up granted by server on first validated clear");
+            var w = b.GetWallet().Result; T.True(w.powerUps.Contains("black_hole"), "L10 power-up (v2 Black Hole) granted by server on first validated clear");
             int coins = w.coins; Win(b, "c1_l10"); T.Eq(coins, b.GetWallet().Result.coins, "chest once");
         });
 
@@ -920,13 +921,39 @@ static class Tests
             var lb = Src("Assets/_Project/Scripts/Backend/LocalBackendService.cs");
             T.True(lb.Contains("#if CRASHVERSE_DEV") && lb.TrimEnd().EndsWith("#endif"), "whole LocalBackendService behind CRASHVERSE_DEV");
             var boot = Src("Assets/_Project/Scripts/Core/GameBootstrap.cs");
-            T.True(boot.Contains("#else") && boot.Contains("InvalidOperationException"), "release build throws instead of local fallback");
+            int els = boot.IndexOf("#else", boot.IndexOf("new LocalBackendService")); int end = boot.IndexOf("#endif", els);
+            var rel = boot.Substring(els, end - els);
+            T.True(els > 0 && !rel.Contains("LocalBackendService") && rel.Contains("new OfflineBackendService()"), "release build: server client or OfflineBackendService, never the local stub");
+        });
+        T.Add("SEC_offline_backend_fails_every_call", () =>
+        {
+            var off = new OfflineBackendService(); int n = 0;
+            T.True(!off.IsOnline, "offline");
+            foreach (var m in typeof(IBackendService).GetMethods())
+            {
+                if (m.IsSpecialName) continue;
+                var args = m.GetParameters().Select(p => p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null).ToArray();
+                var t = (System.Threading.Tasks.Task)m.Invoke(off, args); n++;
+                T.True(t.IsFaulted && t.Exception.InnerException is BackendException be && be.IsOffline, m.Name + " fails offline");
+            }
+            T.True(n >= 30, "covers the interface");
+            var src = Src("Assets/_Project/Scripts/Backend/OfflineBackendService.cs");
+            T.True(!src.Contains("Grant") && !src.Contains("File.") && !src.Contains("PlayerPrefs"), "grants and stores nothing");
         });
         T.Add("SEC02_qa_tools_dev_only", () =>
         {
             var sc = Src("Assets/_Project/Scripts/UI/Screens.cs");
-            int gear = sc.IndexOf("new QADebugModal()"); int guard = sc.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", gear);
-            T.True(guard > 0 && sc.IndexOf("#endif", guard) > gear, "gear button guarded");
+            int gears = 0;
+            foreach (var f in Directory.GetFiles(Path.Combine(UnityEngine.Resources.Root, "../../../Assets/_Project/Scripts/UI"), "*.cs"))
+            {
+                var src = File.ReadAllText(f);
+                for (int gear = src.IndexOf("new QADebugModal()"); gear >= 0; gear = src.IndexOf("new QADebugModal()", gear + 1))
+                {
+                    gears++; int guard = src.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", gear);
+                    T.True(guard > 0 && src.IndexOf("#endif", guard) > gear && src.LastIndexOf("#endif", gear) < guard, "gear button guarded in " + Path.GetFileName(f));
+                }
+            }
+            T.True(gears >= 1, "QA gear button exists (dev)");
             int cls = sc.IndexOf("public class QADebugModal"); int g2 = sc.LastIndexOf("#if CRASHVERSE_DEV || DEVELOPMENT_BUILD", cls);
             T.True(g2 > 0 && sc.IndexOf("#endif", g2) > cls, "QADebugModal class guarded");
         });

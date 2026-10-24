@@ -15,11 +15,11 @@ namespace Crashverse.VFX
         public const float DarkenAtStep2 = 0.20f;
         public static float DarkenPerStep(VfxMaterial m) => m == VfxMaterial.Glass ? 0.05f : DarkenAtStep2 / 2f; // glass: tint, not mud
 
-        /// <summary>Crack colour (0xRRGGBB): wood #6B4226, brick mortar #7A3326, steel #3A3F48 (Art); glass white-ish fracture lines (proposal).</summary>
+        /// <summary>Crack colour (0xRRGGBB): wood #6B4226, brick mortar #7A3326, steel #3A3F48 (Art); glass white-ish fracture lines; stone #5E4A30 (Art ruling #10).</summary>
         public static uint CrackColor(VfxMaterial m) => m switch
         {
             VfxMaterial.Wood => 0x6B4226, VfxMaterial.Brick => 0x7A3326, VfxMaterial.Steel => 0x3A3F48, VfxMaterial.SteelJoint => 0x3A3F48,
-            VfxMaterial.Glass => 0xE6FAFF, _ => 0x6B4226
+            VfxMaterial.Glass => 0xE6FAFF, VfxMaterial.Stone => VfxIds.StoneCrack, _ => 0x6B4226
         };
 
         /// <summary>Hit-flash colour: warm white wood, white steel/glass, gold joint ring (02).</summary>
@@ -55,10 +55,10 @@ namespace Crashverse.VFX
         /// <summary>Damage step only ever increases for a live piece (pool reset sets it back to 0).</summary>
         public static int Advance(int current, int incoming) => Math.Max(current, Math.Min(2, Math.Max(0, incoming)));
 
-        /// <summary>ImpactEvent MaterialType (Crashverse.Sim: Wood0 Brick1 Steel2 Glass3 Terrain4) to VfxMaterial.</summary>
+        /// <summary>ImpactEvent MaterialType (Crashverse.Sim: Wood0 Brick1 Steel2 Glass3 Terrain4 Stone5) to VfxMaterial.</summary>
         public static VfxMaterial FromSimMaterial(int simMaterialType) => simMaterialType switch
         {
-            0 => VfxMaterial.Wood, 1 => VfxMaterial.Brick, 2 => VfxMaterial.Steel, 3 => VfxMaterial.Glass, _ => VfxMaterial.Terrain
+            0 => VfxMaterial.Wood, 1 => VfxMaterial.Brick, 2 => VfxMaterial.Steel, 3 => VfxMaterial.Glass, 5 => VfxMaterial.Stone, _ => VfxMaterial.Terrain
         };
     }
 }

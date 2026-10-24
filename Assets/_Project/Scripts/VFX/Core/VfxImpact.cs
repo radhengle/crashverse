@@ -24,6 +24,11 @@ namespace Crashverse.VFX
     /// <summary>Pure routing ImpactEvent → effect + damage feedback. Unit-tested in Crashverse.VFX.Tests.</summary>
     public static class VfxImpactRouting
     {
+        /// <summary>Per-piece dust override for a routed effect: only when the effect is for the piece's own material and that material is Stone
+        /// (Roof = Stone + terracotta dust, PM). A material assigned in code that isn't Stone therefore never picks up a roof tint. 0 = none.</summary>
+        public static uint DustOverrideFor(in VfxRoute r, VfxMaterial pieceMaterial, uint pieceDustOverride) =>
+            r.EffectId != null && pieceDustOverride != 0 && pieceMaterial == VfxMaterial.Stone && r.Material == VfxMaterial.Stone ? pieceDustOverride : 0u;
+
         /// <summary>Struck material: A unless A is ground/terrain (then B).</summary>
         public static VfxMaterial Struck(in VfxImpact e) => e.MaterialA == VfxMaterial.Terrain ? e.MaterialB : e.MaterialA;
 
