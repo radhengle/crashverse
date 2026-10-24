@@ -55,17 +55,22 @@ def check_config():
         bad.append("ProjectSettings: AndroidTargetArchitectures must be 3 (ARMv7 | ARM64)")
     if not re.search(r"scriptingBackend:\s*\n\s*Android:\s*1", ps_text()):
         bad.append("ProjectSettings: Android scripting backend must be IL2CPP (1)")
-    # BUG-20: UI input module must match Active Input Handling, and the legacy module needs its axes.
+    # BUG-20: UI input module must match Active Input Handling (0 legacy, 1 new, 2 both); the legacy module needs its axes.
     pkgs = (ROOT / "Packages/manifest.json").read_text()
-    uses_new = "com.unity.inputsystem" in pkgs or re.search(r"activeInputHandler:\s*[12]", ps_text())
+    mh = re.search(r"activeInputHandler:\s*(\d)", ps_text()); handler = int(mh.group(1)) if mh else 0
     ui = (ROOT / "Assets/_Project/Scripts/UI/UIFramework.cs").read_text()
-    if uses_new and "InputSystemUIInputModule" not in ui: bad.append("Input System active but UI does not use InputSystemUIInputModule")
-    if not uses_new:
-        if "StandaloneInputModule" not in ui: bad.append("Legacy Input Manager active but UI has no StandaloneInputModule")
+    if handler == 1 and "InputSystemUIInputModule" not in ui: bad.append("Input System only, but UI does not use InputSystemUIInputModule")
+    if handler != 1 and "com.unity.inputsystem" not in pkgs and "StandaloneInputModule" not in ui:
+        bad.append("Legacy Input Manager active but UI has no StandaloneInputModule")
+    if handler != 1 and "StandaloneInputModule" in ui:
         im = ROOT / "ProjectSettings/InputManager.asset"
         names = input_axes(im) if im.exists() else set()
         for a in ("Horizontal", "Vertical", "Submit", "Cancel"):
             if a not in names: bad.append(f"ProjectSettings/InputManager.asset missing axis '{a}' (StandaloneInputModule throws, all taps dead: BUG-20)")
+    # BUG-24: IL2CPP engine stripping removed BoxCollider/SphereCollider (only added via CreatePrimitive).
+    lx = ROOT / "Assets/link.xml"
+    if not lx.exists() or not re.search(r'<assembly\s+fullname="UnityEngine\.PhysicsModule"\s+preserve="all"', lx.read_text()):
+        bad.append("Assets/link.xml must preserve UnityEngine.PhysicsModule (BUG-24: colliders stripped from the player)")
     return bad
 
 def input_axes(path):
