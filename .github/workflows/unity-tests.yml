@@ -3,7 +3,8 @@
 name: Unity EditMode tests
 
 on:
-  pull_request:
+  pull_request: # every PR, including stacked ones (PM)
+  push:
     branches: [ main ]
   workflow_dispatch:
 
@@ -68,11 +69,27 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: EditMode test results
 
+      - name: Fail on 0 tests, skips or failures (QA retro #9 false green)
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import glob, sys, xml.etree.ElementTree as ET
+          files = glob.glob("test-results/*.xml")
+          if not files: sys.exit("::error::no test result XML produced")
+          tot = {"total": 0, "failed": 0, "skipped": 0, "inconclusive": 0}
+          for f in files:
+              r = ET.parse(f).getroot(); print(f, {k: r.get(k) for k in tot})
+              for k in tot: tot[k] += int(r.get(k) or 0)
+          if tot["total"] == 0: sys.exit("::error::0 tests discovered")
+          if tot["skipped"] or tot["inconclusive"]: sys.exit("::error::tests skipped/inconclusive")
+          if tot["failed"]: sys.exit("::error::tests failed")
+          PY
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: editmode-test-results
           path: test-results
-          if-no-files-found: ignore
+          if-no-files-found: error
           retention-days: 14
