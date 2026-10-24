@@ -311,7 +311,11 @@ namespace Crashverse.Core
                     case RunMode.DailyBoss:
                         if (PowerUps.AnyUsed && AppServices.Progress != null) AppServices.Progress.Data.powerUpsUsed++;
                         if (won && AppServices.Progress != null)
+                        {
                             res.rewards = AppServices.Progress.RecordDailyBossWin(lvl.id.StartsWith("daily_") ? lvl.id.Substring(6) : lvl.id, AppServices.Content.Meta.dailyBoss.reward);
+                            var m = AppServices.Content.Meta; // offline season pass XP goes to the current season
+                            if (!res.rewards.IsEmpty) SeasonPassRules.AddXp(AppServices.Progress, SeasonRules.Current(m, AppServices.Content.Chapter1, AppServices.Save)?.id, m.seasonPass?.xpDailyBoss ?? 0, false);
+                        }
                         AppServices.Progress?.Save();
                         break;
                     case RunMode.TitanPractice:
@@ -337,6 +341,8 @@ namespace Crashverse.Core
             res.rewards = RewardRules.ForLevel(AppServices.Content.Meta.levelRewards, lvl, won, stars, prevBest, res.firstClear);
             p.Grant(res.rewards);
             if (won && res.firstClear && HardLevelRules.IsHard(lvl)) p.Data.hardCleared++;
+            var meta = AppServices.Content.Meta; // offline free-track season pass: XP to the season this level belongs to
+            SeasonPassRules.AddXp(p, SeasonRules.ForLevel(meta, lvl.number)?.id, SeasonPassRules.XpForRun(meta.seasonPass, won, stars, res.firstClear), false);
             p.Save();
         }
 

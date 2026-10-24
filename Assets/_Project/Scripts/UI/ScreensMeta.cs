@@ -89,7 +89,7 @@ namespace Crashverse.UI
     }
 
     // ───────────────────────────── Target UI §12: Progression & Rewards ─────────────────────────────
-    /// <summary>Local progression hub: wallet, chests (open), star collection, achievements (stubs), and the online features as "Coming soon".</summary>
+    /// <summary>Local progression hub: wallet, chests, star collection, offline season pass / leaderboard / daily login, achievements with rewards.</summary>
     public class ProgressionScreen : UIScreen
     {
         Text _wallet, _chests; RectTransform _list;
@@ -100,10 +100,10 @@ namespace Crashverse.UI
             var g = V2Screens.Grid(v, new Vector2(104f, 112f), 3, 6f, 2 * 112f + 6f);
             Tile(g.transform, UIArt.Chest, "Level Rewards", "Coins, Gems, Chests", OpenChest, "Button_OpenChest");
             Tile(g.transform, UIArt.StarOn, "Star Collection", "Stars from every level", () => Router.Toast(StarsLine()), "Button_StarCollection");
-            Tile(g.transform, "badge_03_gold", "Season Pass", "Coming soon", () => Router.Toast("Season Pass is coming soon"), "Button_SeasonPass");
-            Tile(g.transform, "badge_02_silver", "Leaderboards", "Coming soon", () => Router.Toast("Leaderboards are coming soon"), "Button_Leaderboards");
-            Tile(g.transform, UIArt.Gem, "Daily Login", "Coming soon", () => Router.Toast("Daily login rewards are coming soon"), "Button_DailyLogin");
-            Tile(g.transform, "badge_01_bronze", "Achievements", "Special badges", null, "Button_Achievements");
+            Tile(g.transform, "badge_03_gold", "Season Pass", "Free track", () => Router.Push(new LocalSeasonPassScreen()), "Button_SeasonPass");
+            Tile(g.transform, "badge_02_silver", "Leaderboard", "Local", () => Router.Push(new LocalLeaderboardScreen()), "Button_Leaderboards");
+            Tile(g.transform, UIArt.Gem, "Daily Login", "7-day rewards", () => Router.Push(new LocalDailyLoginScreen()), "Button_DailyLogin");
+            Tile(g.transform, "badge_01_bronze", "Achievements", "Claim rewards", null, "Button_Achievements");
             _chests = UIFactory.Label(v, "", Th.bodySp, Color.white, TextAnchor.MiddleCenter, Th);
             V2.Title(v, "Achievements", Th.headingSp, Color.white, Th);
             _list = UIFactory.VStack(v, 4f, 0f);
@@ -129,6 +129,13 @@ namespace Crashverse.UI
             OnShow();
         }
 
+        void ClaimAchievement(AchievementDef a)
+        {
+            var r = AchievementRules.Claim(a, AppServices.Content.Chapter1, AppServices.Save, AppServices.Progress);
+            if (!r.IsEmpty) Router.Toast(a.name + ": +" + OfflineUI.Bundle(r));
+            OnShow();
+        }
+
         public override void OnShow()
         {
             var p = AppServices.Progress.Data; var ch = AppServices.Content.Chapter1; var save = AppServices.Save;
@@ -138,14 +145,11 @@ namespace Crashverse.UI
             foreach (var a in AppServices.Content.Meta.achievements ?? new AchievementDef[0])
             {
                 int prog = Math.Min(a.target, AchievementRules.Progress(a, ch, save, AppServices.Progress));
-                bool done = AchievementRules.Done(a, ch, save, AppServices.Progress);
-                var row = V2.RoundPanel("Ach_" + a.id, _list, done ? new Color(0.1f, 0.4f, 0.2f, 0.9f) : new Color(0.08f, 0.12f, 0.28f, 0.9f));
-                var le = row.gameObject.AddComponent<LayoutElement>(); le.minHeight = le.preferredHeight = 56f;
-                var hr = UIFactory.HStack(row.transform, 8f, 52f); UIFactory.Stretch(hr, 4f);
-                UIArt.Icon(hr, string.IsNullOrEmpty(a.icon) ? "badge_01_bronze" : a.icon, 44f);
-                var t = UIFactory.Label(hr, $"{a.name}\n<size=11>{a.text}</size>", Th.captionSp, Color.white, TextAnchor.MiddleLeft, Th, true);
-                t.GetComponent<LayoutElement>().flexibleWidth = 1f;
-                UIFactory.Label(hr, done ? "✓" : $"{prog}/{a.target}", Th.bodySp, done ? Th.green : Th.goldFill, TextAnchor.MiddleRight, Th, true).GetComponent<LayoutElement>().minWidth = 56f;
+                bool done = AchievementRules.Done(a, ch, save, AppServices.Progress), claimed = AchievementRules.Claimed(a, AppServices.Progress);
+                var ach = a; string rw = OfflineUI.Bundle(a.reward);
+                OfflineUI.Row(_list, Th, "Ach_" + a.id, string.IsNullOrEmpty(a.icon) ? "badge_01_bronze" : a.icon, a.name, a.text + (rw.Length > 0 ? " · " + rw : ""),
+                    done ? new Color(0.1f, 0.4f, 0.2f, 0.9f) : new Color(0.08f, 0.12f, 0.28f, 0.9f), claimed ? "✓" : $"{prog}/{a.target}", claimed ? Th.green : Th.goldFill,
+                    done && !claimed ? "Claim" : null, done && !claimed ? (Action)(() => ClaimAchievement(ach)) : null);
             }
         }
     }

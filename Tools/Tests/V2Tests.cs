@@ -105,7 +105,8 @@ static class V2Tests
             var a = RewardRules.ForLevel(r, l1, true, 3, 0, true);
             T.Eq(r.coinsFirstClear + 3 * r.coinsPerStar, a.coins, "first clear coins"); T.Eq(r.gemsFirst3Star, a.gems, "first 3-star gems"); T.Eq(0, a.chests, "no chest on L1");
             T.Eq(1, RewardRules.ForLevel(r, l5, true, 1, 0, true).chests, "chest every 5 levels");
-            var h = RewardRules.ForLevel(r, l10, true, 3, 0, true);
+            var tagged = new LevelEntry { id = "t_hard", number = 20, shots = 6, hard = true };
+            var h = RewardRules.ForLevel(r, tagged, true, 3, 0, true);
             T.Eq(r.coinsFirstClear + 3 * r.coinsPerStar + r.hardBonusCoins, h.coins, "hard bonus coins"); T.Eq(r.gemsFirst3Star + r.hardBonusGems, h.gems, "hard bonus gems");
             T.Eq(r.replayCoins, RewardRules.ForLevel(r, l1, true, 3, 3, false).coins, "replay coins");
             T.Eq(r.coinsPerStar, RewardRules.ForLevel(r, l1, true, 3, 2, false).coins, "new star only");
@@ -114,19 +115,30 @@ static class V2Tests
             try
             {
                 var p = new PlayerProgress(path); p.Grant(h); p.Save();
-                var q = new PlayerProgress(path); T.Eq(h.coins, q.Data.coins, "coins saved"); T.Eq(1, h.chests, "L10 first clear has a chest"); T.Eq(1, q.Data.chests, "chest saved");
+                var q = new PlayerProgress(path); T.Eq(h.coins, q.Data.coins, "coins saved"); T.Eq(1, h.chests, "hard L20 first clear has a chest"); T.Eq(1, q.Data.chests, "chest saved");
                 var c1 = q.OpenChest(Db.Meta.chest); T.True(c1 != null && c1.coins > 0, "chest opens"); T.Eq(1, q.Data.chestsOpened, "counted");
                 T.True(q.OpenChest(Db.Meta.chest).IsEmpty, "no chest left");
             }
             finally { if (File.Exists(path)) File.Delete(path); }
         });
-        T.Add("v2_hard_every_10th", () =>
+        T.Add("v2_hard_only_when_tagged_gd_ruling", () =>
         {
-            var ch = Db.Chapter1;
-            T.Eq("10", string.Join(",", ch.levels.Where(HardLevelRules.IsHard).Select(l => l.number)), "L10 hard in ch1");
+            var ch = Db.Chapter1Authored;
+            T.Eq("", string.Join(",", ch.levels.Where(HardLevelRules.IsHard).Select(l => l.number)), "no ch1 level tagged hard");
             var l10 = ch.levels.First(l => l.number == 10);
-            T.True(HardLevelRules.Shots(l10) < l10.shots, "tighter steps"); T.Eq(ch.levels[0].shots, HardLevelRules.Shots(ch.levels[0]), "normal unchanged"); T.True(HardLevelRules.ThemeDarken(l10) < 1f, "darker theme");
-            T.Eq(MapNodeKind.Hard, WorldMapRules.KindFor(l10), "skull node"); T.Eq(MapNodeKind.Normal, WorldMapRules.KindFor(ch.levels[0]), "normal");
+            // GD: Tidewarden keeps its authored 8 shots and 0.375 / 0.25 bands (no automatic every-10th tightening)
+            T.Eq(8, l10.shots, "c1_l10 authored shots"); T.Eq(0.375f, l10.star3Pct, "c1_l10 3-star band"); T.Eq(0.25f, l10.star2Pct, "c1_l10 2-star band");
+            T.Eq(8, HardLevelRules.Shots(l10), "c1_l10 not reduced"); T.Eq(MapNodeKind.Boss, WorldMapRules.KindFor(l10), "boss node, not skull");
+            var t = new LevelEntry { id = "t", number = 20, shots = 7, hard = true };
+            T.True(HardLevelRules.Shots(t) < t.shots, "tagged: tighter steps"); T.True(HardLevelRules.ThemeDarken(t) < 1f, "tagged: darker theme");
+            T.Eq(MapNodeKind.Hard, WorldMapRules.KindFor(t), "tagged: skull node"); T.Eq(MapNodeKind.Normal, WorldMapRules.KindFor(ch.levels[0]), "normal");
+            T.True(!HardLevelRules.IsHard(new LevelEntry { number = 30, shots = 7 }), "untagged every-10th is not hard");
+        });
+        T.Add("v2_ch1_gate_points_to_frozen_peaks", () =>
+        {
+            var l10 = Db.Chapter1Authored.levels.First(l => l.number == 10);
+            T.Eq("frozen_peaks", l10.reward.First(r => r.type == "gate").id, "L10 gate"); T.Eq("Frozen Peaks", Db.Chapter1Authored.nextRegion, "next region");
+            T.Eq("Frozen Peaks", Db.Meta.seasons.First(s => s.number == 2).name, "season 2 matches");
         });
         T.Add("v2_world_map_path_and_states", () =>
         {
@@ -204,6 +216,12 @@ static class V2Tests
             T.True(HeroSlotRules.Validate(new HeroSlot { kind = "tower" }) != null, "only keep or gatehouse");
             T.True(HeroSlotRules.Validate(new HeroSlot { kind = "keep", fbx = "Castle" }) != null, "Bld_* only");
             T.Eq(3, HeroSlotRules.Position(null).Length, "default anchor");
+            // GD ruling: hero slots never sit in a shot lane, whatever the data says
+            foreach (var pos in new[] { null, new[] { 9f, 0f, 0f }, new[] { 9f, 0f, -2f }, new[] { 6f, 0f, 3f }, new[] { 9f, 0f, 12f } })
+                T.True(HeroSlotRules.ClearOfLanes(HeroSlotRules.Position(pos == null ? null : new HeroSlot { pos = pos })), "clear of lanes " + (pos == null ? "default" : string.Join(",", pos)));
+            T.Eq(-HeroSlotRules.LaneClearZ, HeroSlotRules.Position(new HeroSlot { pos = new[] { 9f, 0f, -2f } })[2], "keeps its side");
+            T.Eq(12f, HeroSlotRules.Position(new HeroSlot { pos = new[] { 9f, 0f, 12f } })[2], "already clear: unchanged");
+            foreach (var l in Db.Chapter1.levels) T.True(HeroSlotRules.ClearOfLanes(HeroSlotRules.Position(l.heroSlot)), "lane clear " + l.id);
             foreach (var p in Db.PowerUps.powerups) T.True(PowerUpRulesV2.Tagline(p.effect).Length > 0, "grid caption " + p.id);
         });
     }

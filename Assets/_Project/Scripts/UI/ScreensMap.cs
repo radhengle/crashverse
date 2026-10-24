@@ -47,6 +47,18 @@ namespace Crashverse.UI
                     Pin(dot.rectTransform, Mathf.Lerp(WorldMapRules.X(i), WorldMapRules.X(i + 1), t), Mathf.Lerp(WorldMapRules.Y(i), WorldMapRules.Y(i + 1), t), new Vector2(10f, 10f));
                 }
 
+            // season banners where each season's levels begin (Seasons 2–4 themed by their bg_season_* art)
+            if (meta.seasons != null)
+                foreach (var s in meta.seasons)
+                {
+                    int at = Array.FindIndex(ch.levels, l => l.number == s.firstLevel); if (at <= 0) continue;
+                    var ban = V2.RoundPanel("SeasonStart_" + s.number, _content, UITheme.H(string.IsNullOrEmpty(s.accent) ? "FFD34D" : s.accent.TrimStart('#')));
+                    var bm = UIFactory.Rect("Mask", ban.transform); UIFactory.Stretch(bm, 3f); bm.gameObject.AddComponent<RectMask2D>();
+                    UIArt.Background(bm, s.bg, Color.white);
+                    var bl = V2.Title(bm, $"SEASON {s.number} · {s.name.ToUpperInvariant()}", Th.captionSp, Color.white, Th); UIFactory.Stretch(bl.rectTransform, 2f);
+                    Pin(ban.rectTransform, 0.5f, (WorldMapRules.Y(at - 1) + WorldMapRules.Y(at)) * 0.5f, new Vector2(240f, 40f));
+                }
+
             int frontier = WorldMapRules.Frontier(ch, save);
             for (int i = 0; i < n; i++) BuildNode(ch.levels[i], i, i == frontier, save);
 
@@ -60,11 +72,13 @@ namespace Crashverse.UI
             UIFactory.Place(dbl.rectTransform, new Vector2(0.5f, 0f), new Vector2(120f, 22f), new Vector2(0f, -14f));
 
             // next season locked island at the top
-            var next = meta.seasons != null && meta.seasons.Length > 1 ? meta.seasons[1] : null;
+            SeasonTheme next = null; // the first season not open yet (all open: none)
+            if (meta.seasons != null) foreach (var s in meta.seasons) if (!SeasonRules.IsOpen(s, ch, save)) { next = s; break; }
             var ns = V2.RoundButton(_content, "", new Color(0.1f, 0.1f, 0.2f, 0.75f), () => Router.Push(new SeasonsScreen()), Th, 96f, "Button_NextSeason");
             var lk = UIArt.Icon(ns.transform, UIArt.Lock, 64f); UIFactory.Place(lk.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(64f, 64f), Vector2.zero);
             Pin((RectTransform)ns.transform, 0.5f, h - 190f, new Vector2(96f, 96f));
-            var nsl = V2.Title(ns.transform, "NEXT SEASON" + (next != null ? "\n" + next.name + " · Coming soon" : ""), Th.captionSp, Color.white, Th);
+            string nsTxt = next == null ? "MORE SEASONS\nComing soon" : "NEXT SEASON\n" + next.name + (next.comingSoon ? " · Coming soon" : $" · Clear Level {next.firstLevel - 1}");
+            var nsl = V2.Title(ns.transform, nsTxt, Th.captionSp, Color.white, Th);
             UIFactory.Place(nsl.rectTransform, new Vector2(0.5f, 0f), new Vector2(220f, 40f), new Vector2(0f, -24f));
 
             BuildTopBar(root, meta);
@@ -146,9 +160,9 @@ namespace Crashverse.UI
             Router.Push(new ListModal("More", new List<(string, Action)>
             {
                 ("Daily Titan (online)", gate(() => new TitanScreen())),
-                ("Daily Rewards (online)", gate(() => new DailyRewardsScreen())),
-                ("Season Pass (online)", gate(() => new SeasonScreen())),
-                ("Leaderboards (online)", gate(() => new LeaderboardScreen())),
+                ("Daily Login", () => Router.Push(new LocalDailyLoginScreen())),        // offline: local date, rollback-safe
+                ("Season Pass (free)", () => Router.Push(new LocalSeasonPassScreen())),  // offline: free track only
+                ("Leaderboard (local)", () => Router.Push(new LocalLeaderboardScreen())), // offline: your best vs practice rivals
                 ("Store", () => Router.Push(new StoreScreen())),
                 ("Settings", () => Router.Push(new SettingsModal())),
             }));

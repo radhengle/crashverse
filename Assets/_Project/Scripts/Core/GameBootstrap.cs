@@ -33,6 +33,7 @@ namespace Crashverse.Core
             AppServices.Content = ContentDatabase.LoadBundled();
             AppServices.Save = new CampaignSave();
             AppServices.Progress = new PlayerProgress();
+            Crashverse.Meta.DailyLoginRules.Observe(AppServices.Progress.Data, Crashverse.Meta.DailyLoginRules.Key(System.DateTime.Now)); // rollback guard
             AppServices.Theme = UITheme.Load();
             AppServices.Router = UIRouter.Create(AppServices.Theme);
             if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); }

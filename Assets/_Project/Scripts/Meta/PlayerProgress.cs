@@ -18,8 +18,13 @@ namespace Crashverse.Meta
         public ProfileData profile = new ProfileData();
         public int coins, gems, chests, chestsOpened, powerUpsUsed, hardCleared;
         public List<string> dailyBossWins = new List<string>();
-        public List<string> achievements = new List<string>();
+        public List<string> achievements = new List<string>(); // claimed achievement ids
+        // offline daily login (local date keys yyyyMMdd); loginMaxSeen guards against clock rollback
+        public string loginLast = "", loginMaxSeen = ""; public int loginDay = -1, loginClaims;
+        public List<PassProgress> pass = new List<PassProgress>(); // free-track season pass per season id
     }
+    [Serializable] public class PassProgress { public string season; public int xp; public List<int> claimed = new List<int>(); }
+
 
     public class PlayerProgress
     {
@@ -35,6 +40,9 @@ namespace Crashverse.Meta
             if (Data.profile == null) Data.profile = new ProfileData();
             if (Data.dailyBossWins == null) Data.dailyBossWins = new List<string>();
             if (Data.achievements == null) Data.achievements = new List<string>();
+            if (Data.pass == null) Data.pass = new List<PassProgress>();
+            foreach (var s in Data.pass) if (s.claimed == null) s.claimed = new List<int>();
+            if (Data.loginLast == null) Data.loginLast = ""; if (Data.loginMaxSeen == null) Data.loginMaxSeen = "";
         }
 
         public void Save()
@@ -165,7 +173,7 @@ namespace Crashverse.Meta
         }
     }
 
-    /// <summary>Target UI §11 achievements (stubs): progress is computed from local data, nothing is granted yet.</summary>
+    /// <summary>Target UI §11 achievements: progress is computed from local data; a finished achievement's reward is claimed once.</summary>
     public static class AchievementRules
     {
         public static int Progress(AchievementDef a, ChapterData ch, CampaignSave save, PlayerProgress p)
@@ -180,9 +188,22 @@ namespace Crashverse.Meta
                 case "daily_boss_wins": return p?.Data.dailyBossWins.Count ?? 0;
                 case "powerups_used": return p?.Data.powerUpsUsed ?? 0;
                 case "chests_opened": return p?.Data.chestsOpened ?? 0;
+                case "login_days": return p?.Data.loginClaims ?? 0;
+                case "pass_tiers": { int n = 0; if (p != null) foreach (var s in p.Data.pass) n += s.claimed.Count; return n; }
                 default: return 0;
             }
         }
         public static bool Done(AchievementDef a, ChapterData ch, CampaignSave save, PlayerProgress p) => a != null && a.target > 0 && Progress(a, ch, save, p) >= a.target;
+        public static bool Claimed(AchievementDef a, PlayerProgress p) => a != null && p != null && p.Data.achievements.Contains(a.id);
+        public static bool CanClaim(AchievementDef a, ChapterData ch, CampaignSave save, PlayerProgress p) => p != null && Done(a, ch, save, p) && !Claimed(a, p);
+        /// <summary>Grants the achievement's reward once (coins / earned gems / chests). Empty bundle when not claimable.</summary>
+        public static RewardBundle Claim(AchievementDef a, ChapterData ch, CampaignSave save, PlayerProgress p)
+        {
+            if (!CanClaim(a, ch, save, p)) return new RewardBundle();
+            var r = a.reward != null ? new RewardBundle { coins = a.reward.coins, gems = a.reward.gems, chests = a.reward.chests } : new RewardBundle();
+            p.Data.achievements.Add(a.id); p.Grant(r); p.Save(); return r;
+        }
+        public static int Claimable(MetaV2Data m, ChapterData ch, CampaignSave save, PlayerProgress p)
+        { int n = 0; foreach (var a in m?.achievements ?? new AchievementDef[0]) if (CanClaim(a, ch, save, p)) n++; return n; }
     }
 }

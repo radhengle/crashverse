@@ -48,6 +48,7 @@ static class Tests
     public static void Register()
     {
         DevAimHookTests.Register(); // BUG-24 dev aim hook
+        OfflineMetaTests.Register(); // offline leaderboard, login, achievements, pass, seasons 2–4
         V2Tests.Register(); // target UI, power-ups v2, seasons (integration/v2)
         // ---------- SG-24 / SG-01 stars (qa/M1_Test_Cases_v0.3 + Feature_Test_Cases_v1 §A) ----------
         T.Add("gameplay_pieceid_matches_stableid20", () => { T.Eq(204219580, Crashverse.Gameplay.PieceIds.Of("b1"), "b1"); T.Eq(501293940, Crashverse.Gameplay.PieceIds.Of("L1_tower_03"), "L1_tower_03"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(null), "null"); T.Eq(1, Crashverse.Gameplay.PieceIds.Of(""), "empty"); });
@@ -67,7 +68,7 @@ static class Tests
         T.Add("chapter_data", () =>
         {
             var ch = Db.Chapter1;
-            T.Eq(10, ch.levels.Length, "10 levels");
+            T.Eq(10, Db.Chapter1Authored.levels.Length, "10 levels");
             // Star bands are per-level data (SG-01): range + monotonic, not a fixed 0.6.
             foreach (var l in ch.levels)
             {

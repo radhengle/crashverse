@@ -31,7 +31,7 @@ namespace Crashverse.Backend.Tests
             var better = RewardRules.ForLevel(r, L(1), true, 3, 1, false);
             Assert.AreEqual(2 * r.coinsPerStar, better.coins); Assert.AreEqual(r.gemsFirst3Star, better.gems);
             Assert.True(RewardRules.ForLevel(r, L(1), false, 0, 0, false).IsEmpty, "a loss grants nothing");
-            var hard = RewardRules.ForLevel(r, L(10), true, 3, 0, true);
+            var hard = RewardRules.ForLevel(r, Db.Chapter1.levels.First(HardLevelRules.IsHard), true, 3, 0, true);
             Assert.AreEqual(r.coinsFirstClear + 3 * r.coinsPerStar + r.hardBonusCoins, hard.coins); Assert.AreEqual(r.gemsFirst3Star + r.hardBonusGems, hard.gems);
         }
 
@@ -57,6 +57,8 @@ namespace Crashverse.Backend.Tests
                 Assert.False(SeasonRules.IsOpen(cs, Db.Chapter1, s), cs.name + " is coming soon: never open");
             }
             Assert.AreSame(m.seasons[0], SeasonRules.ForLevel(m, 1));
+            var s2 = m.seasons.First(x => x.number == 2);
+            if (!s2.comingSoon) { s.RecordResult(L(s2.firstLevel - 1).id, true, 1, false); Assert.True(SeasonRules.IsOpen(s2, Db.Chapter1, s), "season 2 opens after Level 10"); }
         }
 
         [Test]
@@ -77,13 +79,16 @@ namespace Crashverse.Backend.Tests
         }
 
         [Test]
-        public void Every_10th_level_is_hard_with_a_shot_penalty()
+        public void Only_levels_tagged_hard_get_the_shot_penalty()
         {
-            foreach (var n in new[] { 10, 20, 30 }) Assert.True(HardLevelRules.IsHard(n), n.ToString());
-            foreach (var n in new[] { 0, 1, 9, 11, 15, 19 }) Assert.False(HardLevelRules.IsHard(n), n.ToString());
+            // GD ruling: c1_l10 (Tidewarden) keeps its authored 8 shots and 0.375 / 0.25 bands
+            var l10 = Db.Chapter1Authored.levels.First(l => l.number == 10);
+            Assert.False(HardLevelRules.IsHard(l10)); Assert.AreEqual(8, HardLevelRules.Shots(l10)); Assert.AreEqual(0.375f, l10.star3Pct); Assert.AreEqual(0.25f, l10.star2Pct);
+            Assert.AreEqual(MapNodeKind.Boss, WorldMapRules.KindFor(l10));
+            Assert.False(HardLevelRules.IsHard(new LevelEntry { number = 30, shots = 7 }), "untagged 10th level is not hard");
             foreach (var l in Db.Chapter1.levels)
             {
-                Assert.AreEqual(l.number % 10 == 0, HardLevelRules.IsHard(l), l.id);
+                Assert.AreEqual(l.hard, HardLevelRules.IsHard(l), l.id);
                 if (HardLevelRules.IsHard(l)) { Assert.AreEqual(Math.Max(Math.Min(HardLevelRules.MinShots, l.shots), l.shots - HardLevelRules.ShotPenalty), HardLevelRules.Shots(l)); Assert.AreEqual(MapNodeKind.Hard, WorldMapRules.KindFor(l)); }
                 else Assert.AreEqual(l.shots, HardLevelRules.Shots(l));
             }

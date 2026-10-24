@@ -6,7 +6,10 @@ namespace Crashverse.Data
     /// <summary>Loads bundled JSON from Resources/Data. No per-level code: everything comes from data.</summary>
     public class ContentDatabase
     {
+        /// <summary>The campaign: chapter1.json plus Seasons 2–4 (delivered chapter2..4.json when present, else placeholder levels).</summary>
         public ChapterData Chapter1 { get; private set; }
+        /// <summary>chapter1.json exactly as authored (Season 1 only).</summary>
+        public ChapterData Chapter1Authored { get; private set; }
         public PowerUpCatalog PowerUps { get; private set; }
         public TitanTemplates Titan { get; private set; }
         public DailyRewardsData DailyRewards { get; private set; }
@@ -31,7 +34,26 @@ namespace Crashverse.Data
             return t == null ? null : JsonUtility.FromJson<T>(t);
         }
 
+        /// <summary>Like LoadText but silent when the resource doesn't exist (optional content).</summary>
+        public static string TryLoadText(string resourcePath) { var ta = Resources.Load<TextAsset>(resourcePath); return ta == null ? null : ta.text; }
+
         public static ContentDatabase LoadBundled()
+        {
+            var db = LoadCore();
+            db.Chapter1Authored = db.Chapter1;
+            var delivered = new List<ChapterData>();
+            for (int n = 2; n <= 4; n++)
+            {
+                var t = TryLoadText("Data/chapter" + n);
+                if (t == null) continue;
+                try { var c = JsonUtility.FromJson<ChapterData>(t); if (c != null) delivered.Add(c); }
+                catch (System.Exception e) { Debug.LogWarning("[Content] chapter" + n + " ignored: " + e.Message); }
+            }
+            db.Chapter1 = Crashverse.Meta.SeasonContent.Merge(db.Chapter1, db.Meta, delivered, id => db.TryGetLayout(id) != null, l => db._layouts[l.id] = l);
+            return db;
+        }
+
+        static ContentDatabase LoadCore()
         {
             return new ContentDatabase
             {
@@ -53,6 +75,15 @@ namespace Crashverse.Data
             if (_layouts.TryGetValue(id, out var l)) return l;
             l = LoadJson<LayoutData>("Data/Layouts/" + id);
             if (l != null) _layouts[id] = l;
+            return l;
+        }
+
+        LayoutData TryGetLayout(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            if (_layouts.TryGetValue(id, out var l)) return l;
+            var t = TryLoadText("Data/Layouts/" + id); if (t == null) return null;
+            l = JsonUtility.FromJson<LayoutData>(t); if (l != null) _layouts[id] = l;
             return l;
         }
 

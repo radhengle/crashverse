@@ -64,7 +64,7 @@ namespace Crashverse.Map
             }
             // nodes: spread along each island in level order
             var perIsland = new Dictionary<string, List<LevelEntry>>();
-            foreach (var l in ch.levels) { if (!perIsland.ContainsKey(l.island)) perIsland[l.island] = new List<LevelEntry>(); perIsland[l.island].Add(l); }
+            foreach (var l in ch.levels) { if (l.island == null || !islands.ContainsKey(l.island)) continue; if (!perIsland.ContainsKey(l.island)) perIsland[l.island] = new List<LevelEntry>(); perIsland[l.island].Add(l); }
             foreach (var kv in perIsland)
             {
                 var c = V(islands[kv.Key].pos);
