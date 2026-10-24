@@ -72,11 +72,16 @@ namespace Crashverse.Tests.PlayMode
             StringAssert.Contains("year", gate.Error);
 
             yield return Tap(gate.YearButton);
-            // V-02: the list opens around current year − 18 (full 100-year range still scrolls)
-            Button y18 = null; yield return WaitFor(() => (y18 = UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(x => x.name == "Button_" + (DateTime.UtcNow.Year - 18))) != null, "year −18 item");
-            Canvas.ForceUpdateCanvases();
-            var vsr = y18.GetComponentInParent<ScrollRect>(); var vp = vsr.viewport != null ? vsr.viewport : (RectTransform)vsr.transform; var yrt = (RectTransform)y18.transform;
-            Assert.True(RectTransformUtility.RectangleContainsScreenPoint(vp, RectTransformUtility.WorldToScreenPoint(null, yrt.TransformPoint(yrt.rect.center)), null), "year list opens at current year − 18");
+            // Security (PR #52): neutral start: the list opens mid-range (current year − 50), not at an eligibility threshold
+            int mid = DateTime.UtcNow.Year - AgeGateScreen.YearListMiddle;
+            Button ymid = null; yield return WaitFor(() => (ymid = UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(x => x.name == "Button_" + mid)) != null, "mid-range year item");
+            yield return null; Canvas.ForceUpdateCanvases();
+            var vsr = ymid.GetComponentInParent<ScrollRect>(); var vp = vsr.viewport != null ? vsr.viewport : (RectTransform)vsr.transform;
+            bool Visible(Button b) { var rt = (RectTransform)b.transform; return RectTransformUtility.RectangleContainsScreenPoint(vp, RectTransformUtility.WorldToScreenPoint(null, rt.TransformPoint(rt.rect.center)), null); }
+            Assert.True(Visible(ymid), "year list opens mid-range (current year − 50)");
+            var y18 = UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(x => x.name == "Button_" + (DateTime.UtcNow.Year - 18));
+            Assert.NotNull(y18, "current year − 18 still in the list");
+            Assert.False(Visible(y18), "no anchor at the 18-year threshold");
             Assert.NotNull(UnityEngine.Object.FindObjectsOfType<Button>().FirstOrDefault(x => x.name == "Button_" + (DateTime.UtcNow.Year - 100)), "100-year range kept");
             yield return TapNamed("Button_" + (DateTime.UtcNow.Year - 25));
             Assert.True(gate.ContinueButton.interactable, "Continue enabled once both are set");

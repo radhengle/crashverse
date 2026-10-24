@@ -871,11 +871,15 @@ namespace Crashverse.UI
             for (int i = 0; i < 12; i++) { int m = i + 1; items.Add((Months[i], () => { _month = m; _monthBtn.GetComponentInChildren<Text>().text = Months[m - 1]; Validate(); })); }
             Router.Push(new ListModal("Month of birth", items));
         }
+        /// <summary>Index the year list opens at: middle of now..now−100 (neutral, not tied to any age threshold).</summary>
+        public const int YearListMiddle = 50;
         void PickYear()
         {
             var items = new List<(string, Action)>(); int now = DateTime.UtcNow.Year;
             for (int y = now; y >= now - 100; y--) { int yy = y; items.Add((yy.ToString(), () => { _year = yy; _yearBtn.GetComponentInChildren<Text>().text = yy.ToString(); Validate(); })); } // newest first: no eligible-age default
-            Router.Push(new ListModal("Year of birth", items, 18)); // V-02: opens at current year − 18; all 100 years still scroll
+            // Security (PR #52): neutral start, no eligible-age anchor: opens at the middle of the 100-year range (or the year
+            // already picked, on reopen); every year still scrolls. Smoke + tap tests select the year by name.
+            Router.Push(new ListModal("Year of birth", items, _year > 0 ? now - _year : YearListMiddle));
         }
         /// <summary>Continue stays disabled until both are picked and the date isn't in the future; the caption says what's missing.</summary>
         void Validate()
