@@ -44,10 +44,13 @@ put YEAR AgeGateScreen "$(coord AgeGateScreen Button_Year)";  ctap $YEAR_X $YEAR
 pick_year "$YR" || { adb logcat -d > "$OUT/calibration/logcat.txt"; adb exec-out screencap -p > "$OUT/calibration/missing_year.png"; echo "::error::calibration: year $YR not reachable"; exit 1; }
 put YEAR_OPT x "$PICKED_X $PICKED_Y"; ctap $YEAR_OPT_X $YEAR_OPT_Y
 put CONTINUE x "$(coord AgeGateScreen Button_Continue)"; ctap $CONTINUE_X $CONTINUE_Y 5
-# First run has no login screen yet (guest sign-in is automatic in AccountLifecycle): GUEST taps the status bar, a no-op.
-export GUEST_X=30 GUEST_Y=1170; echo "GUEST=30,1170 (no login screen in first run: a no-op tap on the map pan surface; 540,20 hit the Store button)" >> "$OUT/coords.txt"
+# v2 target UI: Login (social sign-in disabled, "Coming soon") -> Play as Guest -> Create Profile (avatar, badge) -> World Map -> Level Select
+put GUEST x "$(coord LoginScreen Button_Guest)"; ctap $GUEST_X $GUEST_Y 3
+put AVATAR x "$(coord ProfileScreen Button_Avatar2)"; ctap $AVATAR_X $AVATAR_Y 2
+put BADGE x "$(coord ProfileScreen Button_Badge2)"; ctap $BADGE_X $BADGE_Y 2
+put PCONT x "$(coord ProfileScreen Button_Continue)"; ctap $PCONT_X $PCONT_Y 4
 put NODE1 x "$(coord MapScreen Button_1)"; ctap $NODE1_X $NODE1_Y 3
-put PLAY x "$(coord BriefingScreen Button_Play)"; ctap $PLAY_X $PLAY_Y 8
+put PLAY x "$(coord LevelSelectScreen Button_Play)"; ctap $PLAY_X $PLAY_Y 8
 put FIRE x "$(coord HudScreen Button_FIRE)"
 put HINT x "$(coord HudScreen Button_DevAimHint)"   # BUG-24: dev-only, aims at the level's practice hint (known winning line)
 # Aim lines from L1's data hint (yaw 4°, pitch 22° from rest 25°): yaw 0.25°/dp, pitch 0.15°/dp; drag up raises the arc.
@@ -61,6 +64,9 @@ for s in $(seq 1 $SHOTS); do ctap $HINT_X $HINT_Y 1; ctap $FIRE_X $FIRE_Y 6
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 adb exec-out screencap -p > "$OUT/calibration/result.png"
 put RETRY x "$(coord ResultsScreen Button_Retry)"
+put NEXT x "$(coord ResultsScreen Button_NextLevel)"   # Level Complete: Next Level
+put MAP x "$(coord ResultsScreen Button_Map)"; ctap $MAP_X $MAP_Y 4
+put NODE2 x "$(coord MapScreen Button_2)"               # unlocked by the L1 win; the flow opens its Level Select at the end
 adb logcat -d > "$OUT/calibration/logcat.txt"
 
 # Pass 2: QA's flow from a clean install.
@@ -68,4 +74,4 @@ adb shell am force-stop $PKG
 bash "$(dirname "$0")/emulator_smoke_flow.sh" "$APK" "$OUT"
 
 # BUG-23 gate: no magenta (missing shader/material) on map, L1 HUD or results.
-python3 "$(dirname "$0")/no_magenta.py" 0.03 "$OUT"/0[4-8]_*.png
+python3 "$(dirname "$0")/no_magenta.py" 0.03 "$OUT"/0[4-9]_*.png
