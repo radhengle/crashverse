@@ -41,17 +41,17 @@ namespace Crashverse.Visuals
             var sun = RenderSettings.sun;
             if (sun != null)
             {
-                sun.color = new Color(1f, 0.92f, 0.80f); sun.intensity = 1.55f;
-                sun.transform.rotation = Quaternion.Euler(40f, 65f, 0f); sun.shadows = LightShadows.Soft; sun.shadowStrength = 0.75f;
+                sun.color = new Color(1f, 0.90f, 0.74f); sun.intensity = 1.8f;
+                sun.transform.rotation = Quaternion.Euler(40f, 65f, 0f); sun.shadows = LightShadows.Soft; sun.shadowStrength = 0.85f; sun.shadowBias = 0.04f; sun.shadowNormalBias = 0.3f;
             }
             foreach (var l in Object.FindObjectsOfType<Light>()) if (l.name == "RimLight") { l.intensity = 0.25f; l.color = new Color(0.75f, 0.85f, 1f); }
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = new Color(0.42f, 0.55f, 0.75f);
-            RenderSettings.ambientEquatorColor = new Color(0.42f, 0.46f, 0.50f);
-            RenderSettings.ambientGroundColor = new Color(0.25f, 0.23f, 0.18f);
+            RenderSettings.ambientSkyColor = new Color(0.46f, 0.62f, 0.88f);
+            RenderSettings.ambientEquatorColor = new Color(0.62f, 0.60f, 0.54f);
+            RenderSettings.ambientGroundColor = new Color(0.30f, 0.25f, 0.18f);
             RenderSettings.ambientIntensity = 1f;
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.Linear;
-            RenderSettings.fogColor = KingdomMaterials.HorizonColor; RenderSettings.fogStartDistance = 70f; RenderSettings.fogEndDistance = 420f;
+            RenderSettings.fogColor = KingdomMaterials.HorizonColor; RenderSettings.fogStartDistance = 55f; RenderSettings.fogEndDistance = 380f; // atmospheric haze over the far islands
             var sky = KingdomMaterials.Sky;
             if (sky != null && Camera.main != null) { RenderSettings.skybox = sky; Camera.main.clearFlags = CameraClearFlags.Skybox; }
             Mood(false);

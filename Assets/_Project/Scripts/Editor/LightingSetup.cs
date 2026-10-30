@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEditor.Rendering;
 
 namespace Crashverse.EditorTools
 {
@@ -30,6 +31,7 @@ namespace Crashverse.EditorTools
             Profile($"{Dir}/VP_Global_Low.asset", full: false);
             Profile($"{Dir}/VP_Global.asset", full: true);
             Skybox($"{Dir}/M_Sky_Bright.mat");
+            Ssao();
             AssetDatabase.SaveAssets();
         }
 
@@ -80,9 +82,12 @@ namespace Crashverse.EditorTools
         {
             var p = AssetDatabase.LoadAssetAtPath<VolumeProfile>(path);
             if (p == null) { p = ScriptableObject.CreateInstance<VolumeProfile>(); AssetDatabase.CreateAsset(p, path); }
-            // PM: Neutral on every tier (style board v3 §6). Same grading on Low and full so the palette reads the same.
-            var tm = Get<Tonemapping>(p); tm.mode.Override(TonemappingMode.Neutral);
+            // ACES + warm dramatic grade on every tier (RenderTiers). Same grading on Low and full so the palette reads the same.
+            var tm = Get<Tonemapping>(p); tm.mode.Override(RenderTiers.Tonemapper);
             var ca = Get<ColorAdjustments>(p); ca.saturation.Override(RenderTiers.PostSaturation); ca.contrast.Override(RenderTiers.PostContrast); ca.postExposure.Override(RenderTiers.PostExposure);
+            ca.colorFilter.Override(RenderTiers.PostColorFilter);
+            var wb = Get<WhiteBalance>(p); wb.temperature.Override(RenderTiers.WhiteBalanceTemperature); wb.tint.Override(RenderTiers.WhiteBalanceTint);
+            var st = Get<SplitToning>(p); st.shadows.Override(RenderTiers.SplitShadows); st.highlights.Override(RenderTiers.SplitHighlights); st.balance.Override(RenderTiers.SplitBalance);
             if (full)
             {   // HDR threshold 1.1: only emissive Core/FX bloom; lit sandstone, steel and sky stay below it.
                 var b = Get<Bloom>(p); b.threshold.Override(RenderTiers.BloomThreshold); b.intensity.Override(RenderTiers.BloomIntensity); b.scatter.Override(RenderTiers.BloomScatter); b.highQualityFiltering.Override(false);
@@ -93,6 +98,36 @@ namespace Crashverse.EditorTools
                 foreach (var c in p.components.ToArray()) if (c is Bloom || c is Vignette) { p.Remove(c.GetType()); Object.DestroyImmediate(c, true); }
             }
             EditorUtility.SetDirty(p);
+        }
+
+        /// <summary>Mobile-safe SSAO renderer feature on the shared URP renderer: half resolution, depth source, low samples, after
+        /// opaque. LightingRig switches it off on Low. The feature type is looked up by name so a URP update can't break the build.</summary>
+        static void Ssao()
+        {
+            var rd = AssetDatabase.LoadAssetAtPath<UniversalRendererData>("Assets/_Project/Settings/URP/URP_Renderer.asset");
+            var type = System.Type.GetType("UnityEngine.Rendering.Universal.ScreenSpaceAmbientOcclusion, Unity.RenderPipelines.Universal.Runtime");
+            if (rd == null || type == null) { Debug.LogWarning("[LightingSetup] SSAO skipped (renderer or feature type missing)"); return; }
+            var f = rd.rendererFeatures.FirstOrDefault(x => x != null && x.GetType() == type);
+            if (f == null)
+            {
+                f = (ScriptableRendererFeature)ScriptableObject.CreateInstance(type); f.name = "SSAO";
+                AssetDatabase.AddObjectToAsset(f, rd);
+                rd.rendererFeatures.Add(f);
+                if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(f, out string _, out long id))
+                {
+                    var rso = new SerializedObject(rd); var map = rso.FindProperty("m_RendererFeatureMap");
+                    if (map != null) { map.arraySize++; map.GetArrayElementAtIndex(map.arraySize - 1).longValue = id; rso.ApplyModifiedPropertiesWithoutUndo(); }
+                }
+            }
+            ResourceReloader.TryReloadAllNullIn(f, UniversalRenderPipelineAsset.packagePath);
+            var so = new SerializedObject(f);
+            void Set(string n, System.Action<SerializedProperty> a) { var x = so.FindProperty("m_Settings." + n); if (x != null) a(x); else Debug.LogWarning("[LightingSetup] no SSAO field " + n); }
+            Set("Downsample", x => x.boolValue = true); Set("AfterOpaque", x => x.boolValue = true);
+            Set("Source", x => x.enumValueIndex = 0); Set("NormalSamples", x => x.enumValueIndex = 0);
+            Set("Intensity", x => x.floatValue = RenderTiers.SsaoIntensity); Set("Radius", x => x.floatValue = RenderTiers.SsaoRadius);
+            Set("DirectLightingStrength", x => x.floatValue = RenderTiers.SsaoDirectLighting);
+            so.ApplyModifiedPropertiesWithoutUndo(); f.SetActive(true);
+            EditorUtility.SetDirty(f); EditorUtility.SetDirty(rd);
         }
 
         static void Skybox(string path)
