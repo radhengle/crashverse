@@ -37,6 +37,42 @@
    "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
    "frac": "Brick",
    "source": "Tools/Blender/build_kit2.py Block (kit v3.1 recipe)"
+  },
+  "Wall": {
+   "LOD0": 948,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    3.0,
+    3.0,
+    0.27
+   ],
+   "aabb": [
+    [
+     -1.5,
+     -0.135,
+     -0.0
+    ],
+    [
+     1.5,
+     0.135,
+     3.0
+    ]
+   ],
+   "frags": 18,
+   "frag_max": 76,
+   "Fractured": 1060,
+   "mass": "143.7-408.9",
+   "min_axis_m": 0.25,
+   "joints": 37,
+   "anchors": 5,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Brick",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx"
   }
  },
  "tile_m": 1.75,
