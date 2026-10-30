@@ -28,5 +28,5 @@ Updated: 2026-10-30 23:50 IST.
 - #10 dev/gem-pack-flag: already folded (03d6001).
 - #21 release/apk-hardening: already folded (b7702a7 backup/dataExtractionRules, 9444737 check_apk asserts + portrait); root txt dumps not taken.
 - #24 art/age-gate-v2 and #38 ui-dev/age-gate-final: not folded. Age gate restyle is outside the L1-10/boss scope for dev-build-8. PrivacyUrlBuildGuard would fail every release build until Security supplies the privacy URL. #38's year picker anchor (current-18) conflicts with Security's neutral anchor (#52).
-- [ ] close comments on #3 #10 #21 #24 #38 (branches kept)
-- [ ] CI green on the final head
+- [x] #3 #10 #21 #24 #38 closed with comments (branches kept)
+- [ ] CI green on this head: see the latest PR #55 run (Build Android APK incl. 11 emulator jobs, AAB, EditMode, server-ci)
