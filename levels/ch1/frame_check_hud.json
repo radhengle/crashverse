@@ -21,59 +21,59 @@
    "1536x2048 (4:3)": 16.5
   }
  },
- "top_margin": 0.06,
+ "top_margin": null,
  "rows": [
   {
    "id": "c1_l01",
    "layout": "c1_l01_lookout_hut",
    "screens": {
     "1080x2340": {
-     "fov": 24.44,
+     "fov": 27.68,
      "clamped": null,
-     "pitch_down": 6.67,
+     "pitch_down": 5.14,
      "hud_line_px": 390,
-     "building_top_px": 144,
-     "clear_px": -246,
-     "side_slack_px": 148,
+     "building_top_px": 399,
+     "clear_px": 9,
+     "side_slack_px": 197,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 265
+     "hint_arc_clear_px": 455
     },
     "1080x1920": {
-     "fov": 24.44,
+     "fov": 29.0,
      "clamped": null,
-     "pitch_down": 6.67,
+     "pitch_down": 4.52,
      "hud_line_px": 390,
-     "building_top_px": 118,
-     "clear_px": -272,
-     "side_slack_px": 219,
+     "building_top_px": 398,
+     "clear_px": 8,
+     "side_slack_px": 273,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 148
+     "hint_arc_clear_px": 355
     },
     "1440x2560": {
-     "fov": 24.44,
+     "fov": 28.62,
      "clamped": null,
-     "pitch_down": 6.67,
+     "pitch_down": 4.7,
      "hud_line_px": 494,
-     "building_top_px": 158,
-     "clear_px": -336,
-     "side_slack_px": 291,
+     "building_top_px": 504,
+     "clear_px": 10,
+     "side_slack_px": 358,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 223
+     "hint_arc_clear_px": 481
     },
     "1536x2048 (4:3)": {
-     "fov": 24.44,
+     "fov": 27.63,
      "clamped": null,
-     "pitch_down": 6.67,
+     "pitch_down": 5.17,
      "hud_line_px": 338,
-     "building_top_px": 126,
-     "clear_px": -212,
-     "side_slack_px": 425,
+     "building_top_px": 345,
+     "clear_px": 7,
+     "side_slack_px": 467,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 235
+     "hint_arc_clear_px": 399
     }
    }
   },
@@ -94,40 +94,40 @@
      "hint_arc_clear_px": 724
     },
     "1080x1920": {
-     "fov": 26.91,
+     "fov": 30.06,
      "clamped": null,
-     "pitch_down": 5.51,
+     "pitch_down": 4.02,
      "hud_line_px": 390,
-     "building_top_px": 223,
-     "clear_px": -167,
-     "side_slack_px": 37,
+     "building_top_px": 399,
+     "clear_px": 9,
+     "side_slack_px": 94,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 328
+     "hint_arc_clear_px": 447
     },
     "1440x2560": {
-     "fov": 26.91,
+     "fov": 29.67,
      "clamped": null,
-     "pitch_down": 5.51,
+     "pitch_down": 4.21,
      "hud_line_px": 494,
-     "building_top_px": 298,
-     "clear_px": -196,
-     "side_slack_px": 49,
+     "building_top_px": 505,
+     "clear_px": 11,
+     "side_slack_px": 116,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 463
+     "hint_arc_clear_px": 604
     },
     "1536x2048 (4:3)": {
-     "fov": 25.33,
+     "fov": 28.64,
      "clamped": null,
-     "pitch_down": 6.25,
+     "pitch_down": 4.69,
      "hud_line_px": 338,
-     "building_top_px": 126,
-     "clear_px": -212,
-     "side_slack_px": 195,
+     "building_top_px": 346,
+     "clear_px": 8,
+     "side_slack_px": 266,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 352
+     "hint_arc_clear_px": 502
     }
    }
   },
@@ -136,52 +136,52 @@
    "layout": "c1_l03_bakery",
    "screens": {
     "1080x2340": {
-     "fov": 32.52,
+     "fov": 36.84,
      "clamped": null,
-     "pitch_down": 2.87,
+     "pitch_down": 0.84,
      "hud_line_px": 390,
-     "building_top_px": 147,
-     "clear_px": -243,
-     "side_slack_px": 79,
+     "building_top_px": 405,
+     "clear_px": 15,
+     "side_slack_px": 140,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 801
+     "hint_arc_clear_px": 923
     },
     "1080x1920": {
-     "fov": 32.52,
+     "fov": 38.59,
      "clamped": null,
-     "pitch_down": 2.87,
+     "pitch_down": 0.01,
      "hud_line_px": 390,
-     "building_top_px": 120,
-     "clear_px": -270,
-     "side_slack_px": 162,
+     "building_top_px": 404,
+     "clear_px": 14,
+     "side_slack_px": 229,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 587
+     "hint_arc_clear_px": 720
     },
     "1440x2560": {
-     "fov": 32.52,
+     "fov": 38.09,
      "clamped": null,
-     "pitch_down": 2.87,
+     "pitch_down": 0.25,
      "hud_line_px": 494,
-     "building_top_px": 161,
-     "clear_px": -333,
-     "side_slack_px": 216,
+     "building_top_px": 512,
+     "clear_px": 18,
+     "side_slack_px": 298,
+     "fails": [],
+     "hint_on": true,
+     "hint_arc_clear_px": 973
+    },
+    "1536x2048 (4:3)": {
+     "fov": 36.77,
+     "clamped": null,
+     "pitch_down": 0.87,
+     "hud_line_px": 338,
+     "building_top_px": 351,
+     "clear_px": 13,
+     "side_slack_px": 417,
      "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 809
-    },
-    "1536x2048 (4:3)": {
-     "fov": 32.52,
-     "clamped": null,
-     "pitch_down": 2.87,
-     "hud_line_px": 338,
-     "building_top_px": 129,
-     "clear_px": -209,
-     "side_slack_px": 365,
-     "fails": [],
-     "hint_on": true,
-     "hint_arc_clear_px": 704
     }
    }
   },
@@ -190,52 +190,52 @@
    "layout": "c1_l04_windmill",
    "screens": {
     "1080x2340": {
-     "fov": 28.09,
+     "fov": 31.83,
      "clamped": null,
-     "pitch_down": 4.95,
+     "pitch_down": 3.19,
      "hud_line_px": 390,
-     "building_top_px": 145,
-     "clear_px": -245,
-     "side_slack_px": 128,
+     "building_top_px": 401,
+     "clear_px": 11,
+     "side_slack_px": 181,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 380
+     "hint_arc_clear_px": 555
     },
     "1080x1920": {
-     "fov": 28.09,
+     "fov": 33.34,
      "clamped": null,
-     "pitch_down": 4.95,
+     "pitch_down": 2.48,
      "hud_line_px": 390,
-     "building_top_px": 119,
-     "clear_px": -271,
-     "side_slack_px": 202,
+     "building_top_px": 401,
+     "clear_px": 11,
+     "side_slack_px": 260,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 242
+     "hint_arc_clear_px": 436
     },
     "1440x2560": {
-     "fov": 28.09,
+     "fov": 32.9,
      "clamped": null,
-     "pitch_down": 4.95,
+     "pitch_down": 2.69,
      "hud_line_px": 494,
-     "building_top_px": 159,
-     "clear_px": -335,
-     "side_slack_px": 269,
+     "building_top_px": 508,
+     "clear_px": 14,
+     "side_slack_px": 341,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 348
+     "hint_arc_clear_px": 586
     },
     "1536x2048 (4:3)": {
-     "fov": 28.09,
+     "fov": 31.76,
      "clamped": null,
-     "pitch_down": 4.95,
+     "pitch_down": 3.23,
      "hud_line_px": 338,
-     "building_top_px": 127,
-     "clear_px": -211,
-     "side_slack_px": 408,
+     "building_top_px": 348,
+     "clear_px": 10,
+     "side_slack_px": 453,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 336
+     "hint_arc_clear_px": 487
     }
    }
   },
@@ -280,16 +280,16 @@
      "hint_arc_clear_px": 315
     },
     "1536x2048 (4:3)": {
-     "fov": 24.0,
-     "clamped": "min",
-     "pitch_down": 6.87,
+     "fov": 24.89,
+     "clamped": null,
+     "pitch_down": 6.45,
      "hud_line_px": 338,
-     "building_top_px": 282,
-     "clear_px": -56,
-     "side_slack_px": 160,
+     "building_top_px": 344,
+     "clear_px": 6,
+     "side_slack_px": 184,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 135
+     "hint_arc_clear_px": 190
     }
    }
   },
@@ -298,52 +298,52 @@
    "layout": "c1_l06_granary",
    "screens": {
     "1080x2340": {
-     "fov": 29.91,
+     "fov": 33.88,
      "clamped": null,
-     "pitch_down": 4.1,
+     "pitch_down": 2.23,
      "hud_line_px": 390,
-     "building_top_px": 146,
-     "clear_px": -244,
-     "side_slack_px": 170,
+     "building_top_px": 403,
+     "clear_px": 13,
+     "side_slack_px": 218,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 427
+     "hint_arc_clear_px": 595
     },
     "1080x1920": {
-     "fov": 29.91,
+     "fov": 35.49,
      "clamped": null,
-     "pitch_down": 4.1,
+     "pitch_down": 1.47,
      "hud_line_px": 390,
-     "building_top_px": 120,
-     "clear_px": -270,
-     "side_slack_px": 236,
+     "building_top_px": 402,
+     "clear_px": 12,
+     "side_slack_px": 289,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 280
+     "hint_arc_clear_px": 466
     },
     "1440x2560": {
-     "fov": 29.91,
+     "fov": 35.03,
      "clamped": null,
-     "pitch_down": 4.1,
+     "pitch_down": 1.69,
      "hud_line_px": 494,
-     "building_top_px": 160,
-     "clear_px": -334,
-     "side_slack_px": 315,
+     "building_top_px": 510,
+     "clear_px": 16,
+     "side_slack_px": 380,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 399
+     "hint_arc_clear_px": 630
     },
     "1536x2048 (4:3)": {
-     "fov": 29.91,
+     "fov": 33.81,
      "clamped": null,
-     "pitch_down": 4.1,
+     "pitch_down": 2.26,
      "hud_line_px": 338,
-     "building_top_px": 128,
-     "clear_px": -210,
-     "side_slack_px": 444,
+     "building_top_px": 349,
+     "clear_px": 11,
+     "side_slack_px": 485,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 377
+     "hint_arc_clear_px": 522
     }
    }
   },
@@ -352,52 +352,52 @@
    "layout": "m1_clockwork_tower",
    "screens": {
     "1080x2340": {
-     "fov": 31.03,
+     "fov": 35.15,
      "clamped": null,
-     "pitch_down": 3.57,
+     "pitch_down": 1.63,
      "hud_line_px": 390,
-     "building_top_px": 146,
-     "clear_px": -244,
-     "side_slack_px": 88,
+     "building_top_px": 404,
+     "clear_px": 14,
+     "side_slack_px": 147,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 670
+     "hint_arc_clear_px": 808
     },
     "1080x1920": {
-     "fov": 31.03,
+     "fov": 36.82,
      "clamped": null,
-     "pitch_down": 3.57,
+     "pitch_down": 0.85,
      "hud_line_px": 390,
-     "building_top_px": 120,
-     "clear_px": -270,
-     "side_slack_px": 169,
+     "building_top_px": 403,
+     "clear_px": 13,
+     "side_slack_px": 234,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 480
+     "hint_arc_clear_px": 631
     },
     "1440x2560": {
-     "fov": 31.03,
+     "fov": 36.34,
      "clamped": null,
-     "pitch_down": 3.57,
+     "pitch_down": 1.07,
      "hud_line_px": 494,
-     "building_top_px": 160,
-     "clear_px": -334,
-     "side_slack_px": 226,
+     "building_top_px": 511,
+     "clear_px": 17,
+     "side_slack_px": 306,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 666
+     "hint_arc_clear_px": 853
     },
     "1536x2048 (4:3)": {
-     "fov": 31.03,
+     "fov": 35.08,
      "clamped": null,
-     "pitch_down": 3.57,
+     "pitch_down": 1.66,
      "hud_line_px": 338,
-     "building_top_px": 128,
-     "clear_px": -210,
-     "side_slack_px": 373,
+     "building_top_px": 350,
+     "clear_px": 12,
+     "side_slack_px": 423,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 590
+     "hint_arc_clear_px": 709
     }
    }
   },
@@ -442,16 +442,16 @@
      "hint_arc_clear_px": 456
     },
     "1536x2048 (4:3)": {
-     "fov": 24.0,
-     "clamped": "min",
-     "pitch_down": 6.87,
+     "fov": 25.94,
+     "clamped": null,
+     "pitch_down": 5.96,
      "hud_line_px": 338,
-     "building_top_px": 209,
-     "clear_px": -129,
-     "side_slack_px": 123,
+     "building_top_px": 345,
+     "clear_px": 7,
+     "side_slack_px": 174,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 184
+     "hint_arc_clear_px": 295
     }
    }
   },
@@ -472,40 +472,40 @@
      "hint_arc_clear_px": 637
     },
     "1080x1920": {
-     "fov": 29.25,
+     "fov": 34.71,
      "clamped": null,
-     "pitch_down": 4.41,
+     "pitch_down": 1.84,
      "hud_line_px": 390,
-     "building_top_px": 119,
-     "clear_px": -271,
-     "side_slack_px": 39,
+     "building_top_px": 402,
+     "clear_px": 12,
+     "side_slack_px": 126,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 253
+     "hint_arc_clear_px": 443
     },
     "1440x2560": {
-     "fov": 29.25,
+     "fov": 34.25,
      "clamped": null,
-     "pitch_down": 4.41,
+     "pitch_down": 2.05,
      "hud_line_px": 494,
-     "building_top_px": 159,
-     "clear_px": -335,
-     "side_slack_px": 52,
+     "building_top_px": 509,
+     "clear_px": 15,
+     "side_slack_px": 159,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 364
+     "hint_arc_clear_px": 599
     },
     "1536x2048 (4:3)": {
-     "fov": 29.25,
+     "fov": 33.06,
      "clamped": null,
-     "pitch_down": 4.41,
+     "pitch_down": 2.61,
      "hud_line_px": 338,
-     "building_top_px": 127,
-     "clear_px": -211,
-     "side_slack_px": 234,
+     "building_top_px": 349,
+     "clear_px": 11,
+     "side_slack_px": 302,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 348
+     "hint_arc_clear_px": 498
     }
    }
   },
@@ -514,52 +514,52 @@
    "layout": "c1_l10_tidewarden",
    "screens": {
     "1080x2340": {
-     "fov": 27.11,
+     "fov": 30.71,
      "clamped": null,
-     "pitch_down": 5.41,
+     "pitch_down": 3.72,
      "hud_line_px": 390,
-     "building_top_px": 145,
-     "clear_px": -245,
-     "side_slack_px": 212,
+     "building_top_px": 401,
+     "clear_px": 11,
+     "side_slack_px": 253,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": -13
+     "hint_arc_clear_px": 214
     },
     "1080x1920": {
-     "fov": 27.11,
+     "fov": 32.17,
      "clamped": null,
-     "pitch_down": 5.41,
+     "pitch_down": 3.03,
      "hud_line_px": 390,
-     "building_top_px": 119,
-     "clear_px": -271,
-     "side_slack_px": 270,
+     "building_top_px": 400,
+     "clear_px": 10,
+     "side_slack_px": 316,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": -81
+     "hint_arc_clear_px": 167
     },
     "1440x2560": {
-     "fov": 27.11,
+     "fov": 31.75,
      "clamped": null,
-     "pitch_down": 5.41,
+     "pitch_down": 3.23,
      "hud_line_px": 494,
-     "building_top_px": 158,
-     "clear_px": -336,
-     "side_slack_px": 361,
+     "building_top_px": 507,
+     "clear_px": 13,
+     "side_slack_px": 418,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": -82
+     "hint_arc_clear_px": 225
     },
     "1536x2048 (4:3)": {
-     "fov": 27.11,
+     "fov": 30.65,
      "clamped": null,
-     "pitch_down": 5.41,
+     "pitch_down": 3.75,
      "hud_line_px": 338,
-     "building_top_px": 127,
-     "clear_px": -211,
-     "side_slack_px": 480,
+     "building_top_px": 347,
+     "clear_px": 9,
+     "side_slack_px": 516,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": -8
+     "hint_arc_clear_px": 186
     }
    }
   },
@@ -568,52 +568,52 @@
    "layout": "titan_ash_bridge",
    "screens": {
     "1080x2340": {
-     "fov": 29.46,
+     "fov": 33.37,
      "clamped": null,
-     "pitch_down": 4.31,
+     "pitch_down": 2.47,
      "hud_line_px": 390,
-     "building_top_px": 146,
-     "clear_px": -244,
-     "side_slack_px": 116,
+     "building_top_px": 403,
+     "clear_px": 13,
+     "side_slack_px": 171,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 562
+     "hint_arc_clear_px": 714
     },
     "1080x1920": {
-     "fov": 29.46,
+     "fov": 34.96,
      "clamped": null,
-     "pitch_down": 4.31,
+     "pitch_down": 1.72,
      "hud_line_px": 390,
-     "building_top_px": 120,
-     "clear_px": -270,
-     "side_slack_px": 192,
+     "building_top_px": 402,
+     "clear_px": 12,
+     "side_slack_px": 252,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 391
+     "hint_arc_clear_px": 558
     },
     "1440x2560": {
-     "fov": 29.46,
+     "fov": 34.5,
      "clamped": null,
-     "pitch_down": 4.31,
+     "pitch_down": 1.94,
      "hud_line_px": 494,
-     "building_top_px": 159,
-     "clear_px": -335,
-     "side_slack_px": 256,
+     "building_top_px": 509,
+     "clear_px": 15,
+     "side_slack_px": 331,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 548
+     "hint_arc_clear_px": 755
     },
     "1536x2048 (4:3)": {
-     "fov": 29.46,
+     "fov": 33.3,
      "clamped": null,
-     "pitch_down": 4.31,
+     "pitch_down": 2.5,
      "hud_line_px": 338,
-     "building_top_px": 127,
-     "clear_px": -211,
-     "side_slack_px": 397,
+     "building_top_px": 349,
+     "clear_px": 11,
+     "side_slack_px": 444,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 496
+     "hint_arc_clear_px": 627
     }
    }
   },
@@ -622,52 +622,52 @@
    "layout": "titan_caldera_rim",
    "screens": {
     "1080x2340": {
-     "fov": 29.46,
+     "fov": 33.37,
      "clamped": null,
-     "pitch_down": 4.31,
+     "pitch_down": 2.47,
      "hud_line_px": 390,
-     "building_top_px": 146,
-     "clear_px": -244,
-     "side_slack_px": 116,
+     "building_top_px": 403,
+     "clear_px": 13,
+     "side_slack_px": 171,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 562
+     "hint_arc_clear_px": 714
     },
     "1080x1920": {
-     "fov": 29.46,
+     "fov": 34.96,
      "clamped": null,
-     "pitch_down": 4.31,
+     "pitch_down": 1.72,
      "hud_line_px": 390,
-     "building_top_px": 120,
-     "clear_px": -270,
-     "side_slack_px": 192,
+     "building_top_px": 402,
+     "clear_px": 12,
+     "side_slack_px": 252,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 391
+     "hint_arc_clear_px": 558
     },
     "1440x2560": {
-     "fov": 29.46,
+     "fov": 34.5,
      "clamped": null,
-     "pitch_down": 4.31,
+     "pitch_down": 1.94,
      "hud_line_px": 494,
-     "building_top_px": 159,
-     "clear_px": -335,
-     "side_slack_px": 256,
+     "building_top_px": 509,
+     "clear_px": 15,
+     "side_slack_px": 331,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 548
+     "hint_arc_clear_px": 755
     },
     "1536x2048 (4:3)": {
-     "fov": 29.46,
+     "fov": 33.3,
      "clamped": null,
-     "pitch_down": 4.31,
+     "pitch_down": 2.5,
      "hud_line_px": 338,
-     "building_top_px": 127,
-     "clear_px": -211,
-     "side_slack_px": 397,
+     "building_top_px": 349,
+     "clear_px": 11,
+     "side_slack_px": 444,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 496
+     "hint_arc_clear_px": 627
     }
    }
   },
@@ -676,52 +676,52 @@
    "layout": "titan_forge_floor",
    "screens": {
     "1080x2340": {
-     "fov": 29.25,
+     "fov": 33.13,
      "clamped": null,
-     "pitch_down": 4.4,
+     "pitch_down": 2.58,
      "hud_line_px": 390,
-     "building_top_px": 146,
-     "clear_px": -244,
-     "side_slack_px": 244,
+     "building_top_px": 402,
+     "clear_px": 12,
+     "side_slack_px": 282,
+     "fails": [],
+     "hint_on": true,
+     "hint_arc_clear_px": 705
+    },
+    "1080x1920": {
+     "fov": 34.71,
+     "clamped": null,
+     "pitch_down": 1.84,
+     "hud_line_px": 390,
+     "building_top_px": 402,
+     "clear_px": 12,
+     "side_slack_px": 339,
      "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 553
     },
-    "1080x1920": {
-     "fov": 29.25,
-     "clamped": null,
-     "pitch_down": 4.4,
-     "hud_line_px": 390,
-     "building_top_px": 119,
-     "clear_px": -271,
-     "side_slack_px": 297,
-     "fails": [],
-     "hint_on": true,
-     "hint_arc_clear_px": 384
-    },
     "1440x2560": {
-     "fov": 29.25,
+     "fov": 34.26,
      "clamped": null,
-     "pitch_down": 4.4,
+     "pitch_down": 2.05,
      "hud_line_px": 494,
-     "building_top_px": 159,
-     "clear_px": -335,
-     "side_slack_px": 396,
+     "building_top_px": 509,
+     "clear_px": 15,
+     "side_slack_px": 448,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 538
+     "hint_arc_clear_px": 745
     },
     "1536x2048 (4:3)": {
-     "fov": 29.25,
+     "fov": 33.07,
      "clamped": null,
-     "pitch_down": 4.4,
+     "pitch_down": 2.61,
      "hud_line_px": 338,
-     "building_top_px": 127,
-     "clear_px": -211,
-     "side_slack_px": 509,
+     "building_top_px": 349,
+     "clear_px": 11,
+     "side_slack_px": 542,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 487
+     "hint_arc_clear_px": 618
     }
    }
   },
@@ -730,250 +730,57 @@
    "layout": "titan_slag_foundry",
    "screens": {
     "1080x2340": {
-     "fov": 29.25,
+     "fov": 33.13,
      "clamped": null,
-     "pitch_down": 4.4,
+     "pitch_down": 2.58,
      "hud_line_px": 390,
-     "building_top_px": 146,
-     "clear_px": -244,
-     "side_slack_px": 269,
+     "building_top_px": 402,
+     "clear_px": 12,
+     "side_slack_px": 304,
+     "fails": [],
+     "hint_on": true,
+     "hint_arc_clear_px": 705
+    },
+    "1080x1920": {
+     "fov": 34.71,
+     "clamped": null,
+     "pitch_down": 1.84,
+     "hud_line_px": 390,
+     "building_top_px": 402,
+     "clear_px": 12,
+     "side_slack_px": 356,
      "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 553
     },
-    "1080x1920": {
-     "fov": 29.25,
-     "clamped": null,
-     "pitch_down": 4.4,
-     "hud_line_px": 390,
-     "building_top_px": 119,
-     "clear_px": -271,
-     "side_slack_px": 318,
-     "fails": [],
-     "hint_on": true,
-     "hint_arc_clear_px": 384
-    },
     "1440x2560": {
-     "fov": 29.25,
+     "fov": 34.26,
      "clamped": null,
-     "pitch_down": 4.4,
+     "pitch_down": 2.05,
      "hud_line_px": 494,
-     "building_top_px": 159,
-     "clear_px": -335,
-     "side_slack_px": 424,
+     "building_top_px": 509,
+     "clear_px": 15,
+     "side_slack_px": 471,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 538
+     "hint_arc_clear_px": 745
     },
     "1536x2048 (4:3)": {
-     "fov": 29.25,
+     "fov": 33.07,
      "clamped": null,
-     "pitch_down": 4.4,
+     "pitch_down": 2.61,
      "hud_line_px": 338,
-     "building_top_px": 127,
-     "clear_px": -211,
-     "side_slack_px": 531,
+     "building_top_px": 349,
+     "clear_px": 11,
+     "side_slack_px": 561,
      "fails": [],
      "hint_on": true,
-     "hint_arc_clear_px": 487
+     "hint_arc_clear_px": 618
     }
    }
   }
  ],
- "under_hud": [
-  [
-   "c1_l01_lookout_hut",
-   "1080x2340"
-  ],
-  [
-   "c1_l01_lookout_hut",
-   "1080x1920"
-  ],
-  [
-   "c1_l01_lookout_hut",
-   "1440x2560"
-  ],
-  [
-   "c1_l01_lookout_hut",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "c1_l02_stilt_tower",
-   "1080x1920"
-  ],
-  [
-   "c1_l02_stilt_tower",
-   "1440x2560"
-  ],
-  [
-   "c1_l02_stilt_tower",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "c1_l03_bakery",
-   "1080x2340"
-  ],
-  [
-   "c1_l03_bakery",
-   "1080x1920"
-  ],
-  [
-   "c1_l03_bakery",
-   "1440x2560"
-  ],
-  [
-   "c1_l03_bakery",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "c1_l04_windmill",
-   "1080x2340"
-  ],
-  [
-   "c1_l04_windmill",
-   "1080x1920"
-  ],
-  [
-   "c1_l04_windmill",
-   "1440x2560"
-  ],
-  [
-   "c1_l04_windmill",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "c1_l05_twin_cottages",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "c1_l06_granary",
-   "1080x2340"
-  ],
-  [
-   "c1_l06_granary",
-   "1080x1920"
-  ],
-  [
-   "c1_l06_granary",
-   "1440x2560"
-  ],
-  [
-   "c1_l06_granary",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "m1_clockwork_tower",
-   "1080x2340"
-  ],
-  [
-   "m1_clockwork_tower",
-   "1080x1920"
-  ],
-  [
-   "m1_clockwork_tower",
-   "1440x2560"
-  ],
-  [
-   "m1_clockwork_tower",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "c1_l08_market_arcade",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "c1_l09_lighthouse_gauntlet",
-   "1080x1920"
-  ],
-  [
-   "c1_l09_lighthouse_gauntlet",
-   "1440x2560"
-  ],
-  [
-   "c1_l09_lighthouse_gauntlet",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "c1_l10_tidewarden",
-   "1080x2340"
-  ],
-  [
-   "c1_l10_tidewarden",
-   "1080x1920"
-  ],
-  [
-   "c1_l10_tidewarden",
-   "1440x2560"
-  ],
-  [
-   "c1_l10_tidewarden",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "titan_ash_bridge",
-   "1080x2340"
-  ],
-  [
-   "titan_ash_bridge",
-   "1080x1920"
-  ],
-  [
-   "titan_ash_bridge",
-   "1440x2560"
-  ],
-  [
-   "titan_ash_bridge",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "titan_caldera_rim",
-   "1080x2340"
-  ],
-  [
-   "titan_caldera_rim",
-   "1080x1920"
-  ],
-  [
-   "titan_caldera_rim",
-   "1440x2560"
-  ],
-  [
-   "titan_caldera_rim",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "titan_forge_floor",
-   "1080x2340"
-  ],
-  [
-   "titan_forge_floor",
-   "1080x1920"
-  ],
-  [
-   "titan_forge_floor",
-   "1440x2560"
-  ],
-  [
-   "titan_forge_floor",
-   "1536x2048 (4:3)"
-  ],
-  [
-   "titan_slag_foundry",
-   "1080x2340"
-  ],
-  [
-   "titan_slag_foundry",
-   "1080x1920"
-  ],
-  [
-   "titan_slag_foundry",
-   "1440x2560"
-  ],
-  [
-   "titan_slag_foundry",
-   "1536x2048 (4:3)"
-  ]
- ],
+ "under_hud": [],
  "smallest_clear_top_margin": 0.2,
  "at_smallest": [
   {
@@ -1132,9 +939,7 @@
      "building_top_px": 425,
      "clear_px": 87,
      "side_slack_px": 434,
-     "fails": [
-      "cannon small"
-     ],
+     "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 844
     }
@@ -1296,9 +1101,7 @@
      "building_top_px": 422,
      "clear_px": 84,
      "side_slack_px": 499,
-     "fails": [
-      "cannon small"
-     ],
+     "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 571
     }
@@ -1352,9 +1155,7 @@
      "building_top_px": 423,
      "clear_px": 85,
      "side_slack_px": 440,
-     "fails": [
-      "cannon small"
-     ],
+     "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 747
     }
@@ -1462,9 +1263,7 @@
      "building_top_px": 422,
      "clear_px": 84,
      "side_slack_px": 324,
-     "fails": [
-      "cannon small"
-     ],
+     "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 547
     }
@@ -1572,9 +1371,7 @@
      "building_top_px": 422,
      "clear_px": 84,
      "side_slack_px": 460,
-     "fails": [
-      "cannon small"
-     ],
+     "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 670
     }
@@ -1628,9 +1425,7 @@
      "building_top_px": 422,
      "clear_px": 84,
      "side_slack_px": 460,
-     "fails": [
-      "cannon small"
-     ],
+     "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 670
     }
@@ -1684,9 +1479,7 @@
      "building_top_px": 422,
      "clear_px": 84,
      "side_slack_px": 553,
-     "fails": [
-      "cannon small"
-     ],
+     "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 663
     }
@@ -1740,9 +1533,7 @@
      "building_top_px": 422,
      "clear_px": 84,
      "side_slack_px": 571,
-     "fails": [
-      "cannon small"
-     ],
+     "fails": [],
      "hint_on": true,
      "hint_arc_clear_px": 663
     }

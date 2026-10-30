@@ -318,10 +318,27 @@ the MarketArch sign (2.66 × 0.30 × 0.82, bolted to the beam cap). L8 uses that
     L9 and the four titans (0.30–0.34). Phones pass every assertion.
   - **A per-device margin** (HUD line ÷ screen height, i.e. inset + 104 dp × dpi/160) clears the HUD everywhere. On 4:3 it fails the
     cannon-width assertion only on L3 (0.327) and L7 (0.343).
-- **Proposed, not applied (needed only if Developer keeps the 4:3 cannon-width assertion with the per-device margin):**
+- **~~Proposed~~ Not needed (rev 9.3: Developer applies the cannon-width check only when w/h < 0.7; L3 and L7 are not trimmed):**
   - **L3:** drop the Chimney stub block. The top falls from 11.96 to 10.46 m and the cannon width is 0.353.
     - Line is still propL, propR (2 shots, 3★); final 92.3%; mastery props + crate 96.2% ≥ 95%.
     - Random 3★ 6.0% and win 56.7% (Medium band kept). 5 shots and bands unchanged.
     - The real chimney comes back only with a visual offset field, and would be just as tall.
   - **L7:** shorten crownRoof (the spire) by 0.5 m, from 1.6 to 1.1 m tall. A 0.4 m cut already passes, at exactly 0.350.
     - Line ring0, annex; final 87.8%; random 3★ 2.7%, win 30.2%, all unchanged.
+
+## Rev 9.3: Developer's per-device top margin (2026-10-30)
+- **Developer's decision:** CannonCameraRules uses topMargin = max(0.06, (safeArea top inset + 104 dp × dpi/160) / Screen.height). The
+  cannon ≥35%-of-width check applies only when w/h < 0.7. L3 and L7 are not trimmed, so the rev 9.2 trim proposal is dropped as not needed.
+- **frame_check:** both the default mode and `--hud` now use that margin, with the same assumptions as before:
+  - inset 130 px;
+  - dpi 400 / 400 / 560 / 320 for the four screens, and 400 at width 1080 for the six EditMode-test aspects.
+  - The cannon-size assertion is skipped when w/h ≥ 0.7.
+  - `--top-margin X` still forces a constant.
+- **Re-run (14 layouts × 4 resolutions, plus the hint arcs and the six test aspects):**
+  - **Zero layout/screen pairs under the HUD.** Building tops clear the line by 6–18 px, because the margin is the HUD line itself. Hint arcs
+    clear it by at least 167 px (L10).
+  - **No 68° clamp:** max FOV 38.6° (L3, 1080×1920).
+  - **Side slack kept:** minimum 39 px, the same width-bound levels (L5/L8 at 1080×1920) as before; everywhere else it grew.
+  - **Every EditMode-test assertion passes on all six aspects**, including the phone cannon-width check (the phone aspects are all < 0.7).
+  - **Every hint arc and target is on screen.**
+  - The default-mode table is in `frame_check.json`; Ch1_Levels_v1.md was not regenerated in this rev.

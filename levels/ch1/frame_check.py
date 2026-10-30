@@ -12,6 +12,9 @@ Per level and aspect it reports FOV, pitch (deg down), whether the building / ca
 (px to the nearest left/right/top screen edge) and the CannonCameraEditModeTests assertions (centred / bottom / big cannon,
 building above and filling the view). It also traces each stored hint aim (hintYaw/hintPitch, derive_hints geometry, g x1.0)
 from the muzzle to its hintTarget and checks the whole arc and the target are on screen.
+rev 9.3 (Developer's decision): topMargin is per device = max(0.06, (safe inset + 104 dp x dpi/160) / screen height), used by
+both modes (inset 130 px; dpi per screen in HUD_DPI, 400 for the test aspects at width 1080); the cannon >= 35%-width assertion only
+applies when w/h < 0.7.
 HUD mode (rev 9.2): --hud [--top-margin X] flags any building or hint-arc pixel above the run-HUD line
 (safeInsetTop + 104 dp x dpi/160, worst-case inset 130 px; dpi per screen in HUD_DPI) and searches the smallest topMargin
 (0.005 steps) that clears it on every layout and screen.
@@ -87,7 +90,7 @@ def test_asserts(pose,aspect,bmin,bmax):
     if not fully_visible(pose,aspect,*CANNON_BOX): fails.append('cannon clipped')
     if abs(ccx-0.5)>0.02: fails.append('cannon not centred')
     if not c[1]<0.08: fails.append('cannon not at bottom')
-    if not c[2]-c[0]>0.35: fails.append('cannon small')
+    if aspect<0.7 and not c[2]-c[0]>0.35: fails.append('cannon small')   # rev 9.3: Developer applies it only when w/h < 0.7
     if not c[3]<0.6: fails.append('cannon too high')
     if not scy>ccy+0.15: fails.append('building not above cannon')
     if not (s[2]-s[0]>=0.65 or s[3]>=0.7): fails.append('building does not fill')
@@ -111,13 +114,16 @@ def hint_arc(pose,aspect,yaw,el,target,g=9.81,v0=28.0):
 # safeInsetTop + 104 dp * dpi/160. Calculated, not measured on a device. Per screen: (dpi, inset px), worst-case inset 130 px.
 HUD_DP=104.0; HUD_INSET=130.0
 HUD_DPI={'1080x2340':400,'1080x1920':400,'1440x2560':560,'1536x2048 (4:3)':320}
-def hud_line_px(name,W,H,inset=HUD_INSET,dpi=None): return inset+HUD_DP*(dpi or HUD_DPI[name])/160.0
+def hud_line_px(name,W,H,inset=HUD_INSET,dpi=None): return inset+HUD_DP*(dpi or HUD_DPI.get(name,400))/160.0
+def device_settings(name,W,H):
+    """rev 9.3, Developer's decision: per-device topMargin = max(0.06, (safeArea top inset + 104 dp x dpi/160) / Screen.height)."""
+    return dict(SETTINGS,topMargin=max(SETTINGS['topMargin'],hud_line_px(name,W,H)/H))
 def hud_check(bl,tb,hint,settings,v0=28.0):
     """Per screen: px of the building top / hint arc top below the HUD line (negative = under the HUD)."""
     bmin,bmax=bounds(bl); out={}
     tgt=tuple(BASE[i]+tb['p'][i] for i in range(3)) if tb else None
     for nm,W,H in SCREENS:
-        a=W/H; pose=solve(CANNON_ROOT,bmin,bmax,a,settings); fails,c,s=test_asserts(pose,a,bmin,bmax)
+        a=W/H; pose=solve(CANNON_ROOT,bmin,bmax,a,settings or device_settings(nm,W,H)); fails,c,s=test_asserts(pose,a,bmin,bmax)
         line=hud_line_px(nm,W,H); btop=(1-s[3])*H
         e=dict(fov=round(pose['fov'],2),clamped=pose['clamped'],pitch_down=round(pose['pitch'],2),hud_line_px=round(line),
                building_top_px=round(btop),clear_px=round(btop-line),side_slack_px=round(min(s[0],1-s[2])*W),fails=fails)
@@ -127,7 +133,7 @@ def hud_check(bl,tb,hint,settings,v0=28.0):
         out[nm]=e
     return out
 def hud_report(tm,v0):
-    st=dict(SETTINGS,topMargin=tm); rows=[]
+    st=dict(SETTINGS,topMargin=tm) if tm is not None else None; rows=[]
     for lid,name,ht,hy,hp in layouts():
         bl=json.load(open(os.path.join(DATA,'Layouts',name+'.json')))['blocks']
         rows.append(dict(id=lid,layout=name,screens=hud_check(bl,next((b for b in bl if b['id']==ht),None),(hy,hp),st,v0)))
@@ -135,7 +141,7 @@ def hud_report(tm,v0):
     return rows,under
 def hud_main():
     v0=json.load(open(os.path.join(DATA,'wrecker.json'))).get('launchSpeed',28.0)
-    tm=float(sys.argv[sys.argv.index('--top-margin')+1]) if '--top-margin' in sys.argv else SETTINGS['topMargin']
+    tm=float(sys.argv[sys.argv.index('--top-margin')+1]) if '--top-margin' in sys.argv else None   # None = per-device (rev 9.3)
     rows,under=hud_report(tm,v0)
     # smallest topMargin (0.005 steps) that clears the HUD on every layout and screen
     best=None
@@ -148,11 +154,11 @@ def hud_main():
              at_smallest=best[1] if best else None)
     if '--json' in sys.argv: print(json.dumps(res,indent=1)); return res
     print('HUD line px (inset %d + %d dp x dpi/160):'%(HUD_INSET,HUD_DP),res['hud']['line_px'],res['hud']['line_pct'],'%')
-    for title,rr,t in ((f'topMargin {tm}',rows,tm),)+(((f'smallest clear topMargin {best[0]}',best[1],best[0]),) if best else ()):
+    for title,rr,t in ((f"topMargin {tm if tm is not None else 'per device = max(0.06, HUD line / H)'}",rows,tm),)+(((f'smallest clear topMargin {best[0]}',best[1],best[0]),) if best else ()):
         print(f'\n== {title}: layout | per screen: building-top clear px / hint-arc clear px / FOV / side slack')
         for r in rr:
             print(f"{r['layout']:27} "+' | '.join(f"{e['clear_px']:5d} {e.get('hint_arc_clear_px','-'):>5} {e['fov']:5.1f}{'*' if e['clamped']=='max' else ' '} {e['side_slack_px']:4d}{' !' if e['fails'] or not e.get('hint_on',True) else ''}" for e in r['screens'].values()))
-    print('\nunder the HUD at topMargin',tm,':',len(under),'layout/screen pairs;',sorted(set(x[0] for x in under if x[1]=='1080x2340')))
+    print('\nunder the HUD at topMargin',tm if tm is not None else 'per device',':',len(under),'layout/screen pairs;',sorted(set(x[0] for x in under if x[1]=='1080x2340')))
     print('smallest clear topMargin:',best[0] if best else 'none <= 0.30')
     return res
 
@@ -172,15 +178,15 @@ def main():
         tb=next((b for b in bl if b['id']==ht),None)
         tgt=tuple(BASE[i]+tb['p'][i] for i in range(3)) if tb else None
         for nm,W,H in SCREENS:
-            a=W/H; pose=solve(CANNON_ROOT,bmin,bmax,a); fails,c,s=test_asserts(pose,a,bmin,bmax)
-            e=dict(fov=round(pose['fov'],2),fov_by=pose['fov_by'],clamped=pose['clamped'],pitch_down=round(pose['pitch'],2),
+            a=W/H; pose=solve(CANNON_ROOT,bmin,bmax,a,device_settings(nm,W,H)); fails,c,s=test_asserts(pose,a,bmin,bmax)
+            e=dict(top_margin=round(device_settings(nm,W,H)['topMargin'],4),fov=round(pose['fov'],2),fov_by=pose['fov_by'],clamped=pose['clamped'],pitch_down=round(pose['pitch'],2),
                    tilted_up=round(pose['tilted_up'],2),building_vp=[round(x,3) for x in s],cannon_vp=[round(x,3) for x in c],
                    slack_px=dict(left=round(s[0]*W),right=round((1-s[2])*W),top=round((1-s[3])*H)),fails=fails)
             e['slack_min_px']=min(e['slack_px'].values())
             if tgt and hy is not None: e['hint']=hint_arc(pose,a,hy,hp,tgt,v0=v0)
             r['screens'][nm]=e
         for a in TEST_ASPECTS:
-            pose=solve(CANNON_ROOT,bmin,bmax,a); r['test_aspects'][f'{a:.3f}']=dict(fov=round(pose['fov'],2),fails=test_asserts(pose,a,bmin,bmax)[0])
+            pose=solve(CANNON_ROOT,bmin,bmax,a,device_settings('',1080,1080/a)); r['test_aspects'][f'{a:.3f}']=dict(fov=round(pose['fov'],2),fails=test_asserts(pose,a,bmin,bmax)[0])
         r['hint']=dict(target=ht,yaw=hy,pitch=hp)
         rows.append(r)
     flags=[f"{r['id']} {r['layout']} @ {k}: "+', '.join((['FOV clamped at '+str(e['fov'])] if e['clamped']=='max' else [])+e['fails']
