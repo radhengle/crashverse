@@ -83,6 +83,17 @@ namespace Crashverse.EditorTools.Import
                     foreach (var j in all.Where(t => C.IsJoint(t.name)))
                         if (!C.TryParseJoint(j.name, out var ja, out var jb)) Err(baseName, "joint", $"{j.name}: expected JNT_<FragA>__<FragB>[_##]");
                         else if (!fragNames.Contains(ja) || !fragNames.Contains(jb)) Err(baseName, "joint", $"{j.name}: fragment {(fragNames.Contains(ja) ? jb : ja)} not found");
+                    // JointBreakPolicy (physics/Joint_Break_Policy.md): kit joints never break by force. A finite Unity joint is an error;
+                    // an explicit break_force_N / break_torque_Nm is ignored (kept as data) and only warned about.
+                    foreach (var j in all.Where(t => C.IsJoint(t.name)))
+                    {
+                        foreach (var uj in j.GetComponents<Joint>())
+                            if (!float.IsPositiveInfinity(uj.breakForce) || !float.IsPositiveInfinity(uj.breakTorque))
+                                Err(baseName, "joint", $"{j.name}: {uj.GetType().Name} breakForce/breakTorque {uj.breakForce}/{uj.breakTorque} must be Infinity (JointBreakPolicy)");
+                        var jh = j.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
+                        if (jh != null && ((jh.breakForce > 0f && !float.IsPositiveInfinity(jh.breakForce)) || (jh.breakTorque > 0f && !float.IsPositiveInfinity(jh.breakTorque))))
+                            Warn(baseName, "joint", $"{j.name}: break_force_N/break_torque_Nm {jh.breakForce}/{jh.breakTorque} ignored; joints break only from damage (JointBreakPolicy)");
+                    }
                     foreach (var an in all.Where(t => C.IsAnchor(t.name)))
                         if (!fragNames.Contains(an.name.Substring(7))) Err(baseName, "anchor", $"{an.name}: expected ANCHOR_<Frag> naming an existing fragment");
                     foreach (var h in hullsByTarget.Keys.Where(t => all.All(x => x.name != t))) Err(baseName, "collider", $"UCX_ hull targets missing '{h}'");
