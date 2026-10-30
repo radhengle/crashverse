@@ -191,6 +191,8 @@ namespace Crashverse.Visuals
             }
             if (_flash != null) { _flash.transform.position = at + Vector3.left * 1.2f; _flash.enabled = true; _flashT = 0f; }
             Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.ShakeRouter.ExplodeCrate, new VfxHit(at, VfxMaterial.Explosive));
+            KingdomFx.Instance?.Core(at); // fireball + shockwave ring + sparks + plank storm + smoke column
+            Crashverse.Feel.AnimEventBus.Raise(Crashverse.Feel.ShakeRouter.ExplodeBarrelAlias, new VfxHit(at, VfxMaterial.Explosive)); // second, stacked shake
         }
     }
 }

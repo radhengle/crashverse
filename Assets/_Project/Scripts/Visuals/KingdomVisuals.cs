@@ -74,6 +74,23 @@ namespace Crashverse.Visuals
             if (dark) { RenderSettings.fogColor = hz; RenderSettings.fogStartDistance = 45f; RenderSettings.fogEndDistance = 300f; }
         }
 
+        /// <summary>Crack decals + hit flash on every structure piece, including the dressed architecture meshes (DamageFeedback is
+        /// otherwise only attached when CRASHVERSE_VFX_DAMAGE is defined). The crack mask is the shipped T_CrackMask_Wedge.</summary>
+        static void WireDamage(System.Collections.Generic.IReadOnlyList<Crashverse.Destruction.DestructibleBlock> blocks)
+        {
+            var set = VfxAssetSet.Load(); var mask = set != null ? set.crackMask : null;
+            foreach (var b in blocks)
+            {
+                if (b == null || b.indestructible || b.role == "island") continue;
+                var fb = b.GetComponent<DamageFeedback>(); if (fb == null) fb = b.gameObject.AddComponent<DamageFeedback>();
+                fb.renderers = b.GetComponentsInChildren<Renderer>(false); fb.crackMask = mask;
+                int mk = b.material != null ? (int)b.material.kind : 0;
+                fb.material = (VfxMaterial)Crashverse.Gameplay.PieceIds.VfxMaterialOf(mk, b.isSteelJoint, b.explosive);
+                fb.Register(Crashverse.Gameplay.PieceIds.Of(b.blockId));
+                fb.ResetFeedback();
+            }
+        }
+
         static void OnRun(GameObject root, GameSession s, Crashverse.Weapons.WreckerBuilder wb, RunContext ctx)
         {
             if (root == null || s == null) return;
@@ -93,6 +110,10 @@ namespace Crashverse.Visuals
                 _vfx.tier = SystemInfo.systemMemorySize > 0 && SystemInfo.systemMemorySize < 3000 ? Crashverse.Feel.QualityTier.Low : Crashverse.Feel.QualityTier.Mid;
                 _vfx.muzzleSocket = wb != null ? wb.projectileSpawn : null;
                 go.SetActive(true);
+
+                var fx = KingdomFx.Create(root.transform, _vfx.tier == Crashverse.Feel.QualityTier.Low);
+                if (fx != null && s.builder != null) fx.Watch(s.builder.Blocks);
+                if (s.builder != null) WireDamage(s.builder.Blocks);
 
                 if (ctx != null && ctx.mode == RunMode.Campaign && s.builder != null)
                     HiddenCore.Attach(s.builder.Blocks, (int)(ctx.seed ^ (ctx.seed >> 32)), levelId, root.transform);
