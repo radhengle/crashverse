@@ -8,9 +8,23 @@ Rules mirrored from Contract v0.2 §3-5, SG-01/05/08, and Developer code (Destru
 - Shockwave: +40 splash (no joint bonus) to pieces 1 link deep (supports+dependents) of the hit piece.
 - Splitstrike: 3 sub-hits of 30 (x2 on joints) on up to 3 hittable blocks within 3.5m of each other.
 - Hittable: not indestructible, not broken/collapsed, and not hidden behind an intact block that is in front
-  (-x = Wrecker side; it fires along +x) and overlaps it in y and z. Falling-debris impact damage is IGNORED (conservative).
+  (-x = Wrecker side; it fires along +x) and overlaps it in y and z.
+- Debris (ruling 7a): a collapsing piece that lands on the highest intact piece under it deals
+  min(60, 0.5*m*(v-2)) x the struck material factor, through HP (can break it and chain). Not counted as a joint break.
 - Win: destroyed objective mass / total >= winThreshold after the shot. Boss (L10): SG-05 model.
 Stars: ratio = shotsLeft/shots >= star3Pct / star2Pct (exact).
+JointBreakPolicy (physics/joint-break-policy @ 3806245, physics/Joint_Break_Policy.md), mirrored exactly:
+- Structural joints never break from force/torque (breakForce = breakTorque = Infinity): no force snap, no 50%-HP
+  OnJointBreak splash. A joint goes away only by (1) HP damage (steel joint x2 on direct hits) or (2) its support
+  stopping to support: broken, collapsed, or out of bounds. The sim treats all three alike (State.gone): a collapsed
+  (falling) support is gone exactly like a destroyed one; out of bounds only happens to pieces already falling.
+- SupportRule: a piece collapses only when ALL its supports are gone; a falling support never drags a dependent that
+  still has another support, and a dependent never holds a falling support up (support state ignores dependents).
+- Indestructible + non-objective pieces (bases, islands) never collapse (DestructibleBlock.ForceCollapse early return).
+- Not modelled (game is at least as generous): StructuralIntegrity collapse delay (timing only) and CollapseRules
+  land-break (a collapsed non-steel piece landing at >= 4 m/s breaks). The sim only counts a collapsed piece when its
+  bottom started >= 1 m up, so it never credits more than the game does.
+Self-test of these rules: python3 sim.py --policy-selftest
 """
 import json, sys, itertools, random, os
 HP={'wood':30,'brick':60,'steel':120}; MASS={'wood':1.0,'brick':2.5,'steel':4.0}
@@ -231,4 +245,31 @@ def main():
         r['pass']=ok
     json.dump(rows,open(os.path.join(HERE,'sim_results.json'),'w'),indent=1)
     for r in rows: print(r)
-if __name__=='__main__': main()
+def policy_selftest():
+    """JointBreakPolicy rules on tiny layouts (asserts; prints OK)."""
+    def blk(i,mat,p,s,sup=(),**k): return dict(id=i,mat=mat,p=list(p),s=list(s),sup=list(sup),**k)
+    base=blk('base','brick',(0,.5,0),(6,1,4),nonObj=True,indestructible=True)
+    # 1 no drag-along: 'deck' on postA + postB; postA breaks -> deck stays, no damage to it (no force snap)
+    lay=[base,blk('postA','wood',(-2,2,0),(.4,2,.4),['base']),blk('postB','wood',(2,2,0),(.4,2,.4),['base']),
+         blk('deck','brick',(0,3.2,0),(5,.4,2),['postA','postB'],joint=True),blk('roof','wood',(0,4,0),(2,1,2),['deck'])]
+    st=apply(State(lay),(None,'postA'))
+    assert 'postA' in st.broken and not st.gone('deck') and st.hp['deck']==HP['brick'], 'drag-along / force snap'
+    st=apply(st,(None,'postB'))
+    assert st.gone('deck') and 'deck' in st.coll and 'roof' in st.coll, 'all supports gone -> collapse (chain)'
+    # 2 a COLLAPSED support counts as gone exactly like a broken one: 'hang' on deck (falls) + wall (stays)
+    lay2=lay[:4]+[blk('wall','brick',(2.6,3.2,0),(.4,2.4,.4),['base']),blk('hang','wood',(2.3,4.2,0),(1,.4,1),['deck','wall'])]
+    st=apply(apply(State(lay2),(None,'postA')),(None,'postB'))
+    assert 'deck' in st.coll and not st.gone('hang'), 'falling support must not drag a still-supported piece'
+    st=apply(st,(None,'wall'))
+    assert 'hang' in st.coll, 'collapsed + broken supports -> collapse'
+    # 3 joints only lose HP through damage: steel joint x2 direct, splash/debris x1
+    st=State([base,blk('j','steel',(0,2,0),(1,1,1),['base'],joint=True)]); st.damage('j',60,True); assert st.hp['j']==0
+    st=State([base,blk('j','steel',(0,2,0),(1,1,1),['base'],joint=True)]); st.damage('j',60,False); assert st.hp['j']==60
+    # 4 held base never collapses, even on a broken support
+    st=State([blk('p','wood',(0,1,0),(.4,2,.4)),dict(base,p=[0,2.5,0],sup=['p'])]); st=apply(st,(None,'p'))
+    assert not st.gone('base'), 'indestructible non-objective piece must stay'
+    print('JointBreakPolicy self-test OK')
+
+if __name__=='__main__':
+    if '--policy-selftest' in sys.argv: policy_selftest()
+    else: main()

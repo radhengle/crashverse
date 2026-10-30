@@ -155,3 +155,29 @@ Input: 3D Modeler's `Models/Realistic/Buildings/Bld_Townhouse/` @ e725121 (11 LD
   > a held, non-objective plinth. A timber cellar on two props keeps L3's two-prop beat. Kept: 5 shots, 2-shot 3★, ≥95% mastery.
   > Random win is 55.3% and random 3★ is 6.5%. Frame slack is 148/194 px. Results are identical at gravity ×1.0 and ×1.2. L8 waits for the
   > Stall + arch (Oct 31 – Nov 1). New code gaps: a held Base can never fall, and the loader would have to spawn every piece of a module.
+
+## Rev 8.1: sim vs JointBreakPolicy (physics/joint-break-policy @ 3806245) (2026-10-30)
+- **The policy (Joint_Break_Policy.md, JointBreakPolicy.cs):**
+  - Structural joints are breakForce = breakTorque = Infinity.
+  - A joint goes away only through HP damage (steel joint ×2) or when its support breaks, collapses or falls out of bounds (`DetachJointsTo`).
+  - SupportRule collapses a piece only when ALL its supports are gone.
+  - The old 50%-HP OnJointBreak snap can no longer fire. Debris damage still goes through HP.
+- **Diff against sim.py: no behavioural difference.**
+  - **Force snap:** the sim never modelled one. There is no joint-force or 50%-HP path; `joint` only drives the ×2 direct-hit rule.
+  - **Drag-along:** never modelled. `State.prop` collapses a dependent only when every `sup` is gone (OR semantics), and support state never looks at dependents.
+  - **Support falls off vs destroyed:** both count as "gone" (`State.gone` = broken or collapsed), which matches DetachJointsTo on Break / ForceCollapse / out of bounds. A supported piece is kinematic, so only a falling piece can leave the bounds; the sim needs no separate out-of-bounds state.
+  - **Held bases:** indestructible + non-objective never collapse in the game (ForceCollapse early return) or in the sim.
+  - **Debris:** goes through HP in both (ruling 7a), and can chain-break.
+- **Not modelled, and the game is never stricter:**
+  - StructuralIntegrity collapse delays: timing only.
+  - CollapseRules land-break: a collapsed non-steel piece landing at ≥ 4 m/s breaks. This came in from integration/v2 chunked destruction, not from the policy. It can only add destroyed mass on low pieces that the sim does not credit.
+- **Changes:**
+  - The sim.py docstring now states the policy. I removed a stale line saying debris was ignored; DEBRIS has been on since rev 5.
+  - Added `python3 sim.py --policy-selftest`, which asserts no drag-along, no force snap, collapsed = broken for supports, joint HP only through damage, and held bases.
+  - No level data changed.
+- **Re-check (g×1.0 and g×1.2):** every L1–L10 result is identical to rev 8; the only difference at g×1.0 is L7's debris-collision count, 28,769 vs 28,770. The Daily Boss, ci_win_shots and frame_check outputs are byte-identical. Every level passes.
+- **Local merge of 3806245 onto this branch (not pushed):**
+  - It merged clean.
+  - Physics EditMode suite (Physics/Tests, engine-free, run through NUnit on .NET 8): 123/123, including JointBreakPolicyTests and ChunkedDestructionTests' L1–10 + boss layout chunk budget on our layouts.
+  - CompileCheck builds. Tools/Tests: 5140 passed, 0 failed. Server: 201 passed. Tools/ci/check_joint_break_policy.py: OK. derive_hints --check: clean.
+  - Not run: Editor/Tests/Gameplay/JointBreakPolicyPhysicsTests (needs the Unity editor and PhysX; no Unity on the box).
