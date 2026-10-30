@@ -9,7 +9,7 @@ using Crashverse.Meta;
 static class V2Tests
 {
     static ContentDatabase _db;
-    static ContentDatabase Db => _db ??= ContentDatabase.LoadBundled();
+    static ContentDatabase Db => _db ??= ContentDatabase.LoadBundled(true); // all seasons: content integrity incl. flagged-off S2-4
     static string Tmp() => Path.Combine(Path.GetTempPath(), "cv_v2_" + Guid.NewGuid().ToString("N") + ".json");
 
     public static void Register()

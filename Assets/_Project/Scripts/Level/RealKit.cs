@@ -99,7 +99,7 @@ namespace Crashverse.Level
             return _mats[kit] = new[]
             {
                 Make("M_Real" + kit, k.albedo, k.normal, k.orm, false),
-                Make("M_Real" + kit + "_Inner", k.innerAlbedo ? k.innerAlbedo : k.albedo, k.innerNormal ? k.innerNormal : k.normal, k.innerOrm ? k.innerOrm : k.orm, true),
+                Make("M_Real" + kit + "_Inner", k.innerAlbedo != null ? k.innerAlbedo : k.albedo, k.innerNormal != null ? k.innerNormal : k.normal, k.innerOrm != null ? k.innerOrm : k.orm, true),
             };
         }
 
