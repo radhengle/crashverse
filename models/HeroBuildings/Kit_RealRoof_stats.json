@@ -1,0 +1,52 @@
+{
+ "building": "RealRoof",
+ "source": "BuildingKit v3.1 geometry + fracture, re-surfaced with graded CC0 (realistic v1)",
+ "modules": {
+  "Roof": {
+   "LOD0": 1112,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    3.6,
+    0.18,
+    2.3
+   ],
+   "aabb": [
+    [
+     -1.8,
+     -1.15,
+     -0.01
+    ],
+    [
+     1.8,
+     1.15,
+     0.17
+    ]
+   ],
+   "frags": 12,
+   "frag_max": 80,
+   "Fractured": 664,
+   "mass": "158.8-234.3",
+   "min_axis_m": 0.16,
+   "joints": 23,
+   "anchors": 4,
+   "anchor_to": [
+    "Support"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Roof",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx"
+  }
+ },
+ "tile_m": 2.0,
+ "uv": "UV0 metric box projection, uv = pos_m / tile_m (rebuild from scaled positions after per-block scaling)",
+ "materials": [
+  "M_RealRoof",
+  "M_RealRoof_Inner"
+ ],
+ "textures": [
+  "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Textures/T_RealRoof_A/_N/_ORM",
+  "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Textures/T_RealRoof_Inner_A/_N/_ORM"
+ ]
+}
