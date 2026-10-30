@@ -1,5 +1,5 @@
 {
- "inventory_ref": "9e3f4e3",
+ "inventory_ref": "e725121",
  "levels": {
   "c1_l01": {
    "layout": "c1_l01_lookout_hut",
@@ -634,30 +634,57 @@
   },
   "c1_l03": {
    "layout": "c1_l03_bakery",
-   "building": "Bld_Townhouse",
+   "building": "Bld_Townhouse (realistic, modular, e725121) - INTERIM until the bakery",
    "waiting_on": [
-    "realistic Bld_Townhouse split into breakable modules (today one intact mesh)",
-    "dedicated bakery/shop prefab (not on the branch; the townhouse ground floor is the shop)"
+    "8x6 m bakery prefab (3D Modeler, due Oct 31): L3 moves to it; the realistic townhouse is the interim skin"
    ],
    "pieces": [
     {
-     "id": "rock",
+     "id": "Base",
      "mat": "brick",
      "role": "island",
      "size": [
-      7,
-      1.2,
-      4
+      7.04,
+      0.35,
+      6.04
      ],
-     "module": "Kit_Base_Indestructible",
-     "stands_for": "held base / island",
+     "module": "Bld_Townhouse(realistic) module Base",
+     "stands_for": "Granite plinth (indestructible)",
      "yaw_deg": 0,
-     "scale": null,
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
-     "fractured_fbx": null,
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "module_pivot_house_local": [
+      -0.0,
+      0.0,
+      0.15
+     ],
+     "place_module_at": [
+      -0.0,
+      1.8,
+      0.15
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      7.04,
+      6.04
+     ],
+     "module_height": 0.35,
+     "anchor_to": [
+      "Ground"
+     ],
+     "pieces": [
+      "Base"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Base.fbx"
+     ],
+     "fractured_fbx": [],
      "frags": null,
      "joints": null,
-     "fracture_class": "Stone",
+     "fracture_class": "Indestructible",
      "material_match": true,
      "breakable": false
     },
@@ -666,17 +693,17 @@
      "mat": "wood",
      "role": "prop",
      "size": [
-      0.4,
+      0.45,
       1.4,
-      0.4
+      0.45
      ],
      "module": "Kit_RealWood_Joint",
-     "stands_for": "cellar prop",
+     "stands_for": "cellar prop (level scaffolding, not in the model)",
      "yaw_deg": 0,
      "scale": [
-      1.25,
+      1.41,
       0.47,
-      1.33
+      1.5
      ],
      "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
      "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
@@ -691,17 +718,17 @@
      "mat": "wood",
      "role": "prop",
      "size": [
-      0.4,
+      0.45,
       1.4,
-      0.4
+      0.45
      ],
      "module": "Kit_RealWood_Joint",
-     "stands_for": "cellar prop",
+     "stands_for": "cellar prop (level scaffolding, not in the model)",
      "yaw_deg": 0,
      "scale": [
-      1.25,
+      1.41,
       0.47,
-      1.33
+      1.5
      ],
      "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
      "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
@@ -716,17 +743,17 @@
      "mat": "brick",
      "role": "",
      "size": [
-      2,
+      3.21,
       0.4,
-      3.4
+      5.46
      ],
      "module": "Kit_RealBrick_Floor",
-     "stands_for": "cellar deck",
+     "stands_for": "cellar deck (level scaffolding, not in the model)",
      "yaw_deg": 0,
      "scale": [
-      0.67,
+      1.07,
       1.48,
-      1.13
+      1.82
      ],
      "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
      "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
@@ -741,17 +768,17 @@
      "mat": "brick",
      "role": "",
      "size": [
-      2,
+      3.21,
       0.4,
-      3.4
+      5.46
      ],
      "module": "Kit_RealBrick_Floor",
-     "stands_for": "cellar deck",
+     "stands_for": "cellar deck (level scaffolding, not in the model)",
      "yaw_deg": 0,
      "scale": [
-      0.67,
+      1.07,
       1.48,
-      1.13
+      1.82
      ],
      "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
      "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
@@ -762,301 +789,445 @@
      "breakable": true
     },
     {
-     "id": "G_F",
+     "id": "ShopFront",
      "mat": "brick",
      "role": "wall",
      "size": [
-      3.6,
-      2.24,
-      0.3
+      6.62,
+      2.37,
+      0.6
      ],
-     "module": "Kit_House_GroundDoor",
-     "stands_for": "G_F (shop front, sign, lantern)",
+     "module": "Bld_Townhouse(realistic) module ShopFront",
+     "stands_for": "Shop front: ground-floor street wall with shop door, window, flower box, lantern, hanging sign",
      "yaw_deg": 0,
      "scale": [
-      0.9,
-      0.8,
-      0.24
+      1,
+      1,
+      1
      ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor_Fractured.fbx",
-     "frags": 7,
+     "module_pivot_house_local": [
+      0.0013,
+      0.3443,
+      2.782
+     ],
+     "place_module_at": [
+      0.0013,
+      2.1443,
+      2.782
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      6.405,
+      1.276
+     ],
+     "module_height": 2.859,
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "ShopW",
+      "ShopD"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopW.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopD.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopW_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopD_Fractured.fbx"
+     ],
+     "frags": 14,
+     "joints": 33,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Wall_Left",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      0.565,
+      2.37,
+      4.3
+     ],
+     "module": "Bld_Townhouse(realistic) module Wall_Left",
+     "stands_for": "Ground-floor stone side wall, left (window)",
+     "yaw_deg": 0,
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "module_pivot_house_local": [
+      3.0277,
+      0.3458,
+      0.0017
+     ],
+     "place_module_at": [
+      3.0277,
+      2.1458,
+      0.0017
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      0.565,
+      4.305
+     ],
+     "module_height": 2.857,
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "WallL"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallL.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallL_Fractured.fbx"
+     ],
+     "frags": 6,
+     "joints": 9,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Wall_Right",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      0.565,
+      2.37,
+      4.3
+     ],
+     "module": "Bld_Townhouse(realistic) module Wall_Right",
+     "stands_for": "Ground-floor stone side wall, right (window)",
+     "yaw_deg": 0,
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "module_pivot_house_local": [
+      -3.0282,
+      0.3458,
+      0.0002
+     ],
+     "place_module_at": [
+      -3.0282,
+      2.1458,
+      0.0002
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      0.566,
+      4.309
+     ],
+     "module_height": 2.859,
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "WallR"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallR.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallR_Fractured.fbx"
+     ],
+     "frags": 6,
+     "joints": 9,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Wall_Back",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      6.42,
+      2.37,
+      0.54
+     ],
+     "module": "Bld_Townhouse(realistic) module Wall_Back",
+     "stands_for": "Ground-floor stone back wall (back door + window)",
+     "yaw_deg": 0,
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "module_pivot_house_local": [
+      -0.0008,
+      0.3458,
+      -2.4278
+     ],
+     "place_module_at": [
+      -0.0008,
+      2.1458,
+      -2.4278
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      6.407,
+      0.566
+     ],
+     "module_height": 2.857,
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "BackD",
+      "BackW"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackD.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackW.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackD_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackW_Fractured.fbx"
+     ],
+     "frags": 8,
      "joints": 10,
      "fracture_class": "Stone",
      "material_match": true,
      "breakable": true
     },
     {
-     "id": "G_B",
-     "mat": "brick",
-     "role": "wall",
-     "size": [
-      3.6,
-      2.24,
-      0.3
-     ],
-     "module": "Kit_House_GroundWin",
-     "stands_for": "same id",
-     "yaw_deg": 0,
-     "scale": [
-      0.9,
-      0.8,
-      0.41
-     ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx",
-     "frags": 7,
-     "joints": 9,
-     "fracture_class": "Stone",
-     "material_match": true,
-     "breakable": true
-    },
-    {
-     "id": "G_L",
-     "mat": "brick",
-     "role": "wall",
-     "size": [
-      0.3,
-      2.24,
-      2.9
-     ],
-     "module": "Kit_House_GroundWin",
-     "stands_for": "same id",
-     "yaw_deg": 90,
-     "scale": [
-      0.41,
-      0.8,
-      0.72
-     ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx",
-     "frags": 7,
-     "joints": 9,
-     "fracture_class": "Stone",
-     "material_match": true,
-     "breakable": true
-    },
-    {
-     "id": "G_R",
-     "mat": "brick",
-     "role": "wall",
-     "size": [
-      0.3,
-      2.24,
-      2.9
-     ],
-     "module": "Kit_House_GroundWin",
-     "stands_for": "same id",
-     "yaw_deg": 90,
-     "scale": [
-      0.41,
-      0.8,
-      0.72
-     ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx",
-     "frags": 7,
-     "joints": 9,
-     "fracture_class": "Stone",
-     "material_match": true,
-     "breakable": true
-    },
-    {
-     "id": "oven",
-     "mat": "brick",
+     "id": "Floor",
+     "mat": "wood",
      "role": "",
      "size": [
-      1.2,
-      1.2,
-      1.2
+      6.42,
+      0.5,
+      5.08
      ],
-     "module": "Kit_RealBrick_Block",
-     "stands_for": "bakery oven (interior)",
+     "module": "Bld_Townhouse(realistic) module Floor",
+     "stands_for": "First floor / beam: slab, jetty boards, joists, brackets",
      "yaw_deg": 0,
      "scale": [
-      1.18,
-      1.2,
-      1.2
+      1,
+      1,
+      1
      ],
-     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
-     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "module_pivot_house_local": [
+      -0.0,
+      2.2351,
+      0.368
+     ],
+     "place_module_at": [
+      -0.0,
+      4.0351,
+      0.368
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      6.42,
+      5.076
+     ],
+     "module_height": 1.005,
+     "anchor_to": [
+      "ShopFront",
+      "Wall_Back",
+      "Wall_Left",
+      "Wall_Right"
+     ],
+     "pieces": [
+      "Floor"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Floor.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Floor_Fractured.fbx"
+     ],
      "frags": 16,
-     "joints": 54,
-     "fracture_class": "Brick",
+     "joints": 37,
+     "fracture_class": "Wood",
      "material_match": true,
      "breakable": true
     },
     {
-     "id": "Floor1",
+     "id": "UpperStorey",
      "mat": "wood",
-     "role": "",
+     "role": "wall",
      "size": [
-      3.6,
-      0.3,
-      3.5
+      6.56,
+      2.22,
+      5.7
      ],
-     "module": "Kit_House_Floor",
-     "stands_for": "Floor1",
+     "module": "Bld_Townhouse(realistic) module UpperStorey",
+     "stands_for": "Timber-frame upper storey: 4 plaster/timber walls, 2 gables, balcony, flower box",
      "yaw_deg": 0,
      "scale": [
-      0.72,
-      0.88,
-      0.68
+      1,
+      1,
+      1
      ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor_Fractured.fbx",
-     "frags": 12,
-     "joints": 23,
+     "module_pivot_house_local": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "place_module_at": [
+      0.0002,
+      4.9961,
+      0.5005
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      6.661,
+      6.443
+     ],
+     "module_height": 4.98,
+     "anchor_to": [
+      "Floor"
+     ],
+     "pieces": [
+      "UpFL",
+      "UpFR",
+      "Balc",
+      "UpB",
+      "UpL",
+      "UpR",
+      "GabL",
+      "GabR"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFR.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Balc.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpB.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpR.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabR.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFL_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFR_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Balc_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpB_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpL_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpR_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabL_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabR_Fractured.fbx"
+     ],
+     "frags": 107,
+     "joints": 249,
      "fracture_class": "Wood",
      "material_match": true,
      "breakable": true
     },
     {
-     "id": "U_F",
-     "mat": "wood",
-     "role": "wall",
-     "size": [
-      3.6,
-      2.2,
-      0.3
-     ],
-     "module": "Kit_House_Upper2",
-     "stands_for": "same id (balcony storey)",
-     "yaw_deg": 0,
-     "scale": [
-      0.78,
-      0.79,
-      0.32
-     ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2_Fractured.fbx",
-     "frags": 12,
-     "joints": 22,
-     "fracture_class": "Wood",
-     "material_match": true,
-     "breakable": true
-    },
-    {
-     "id": "U_B",
-     "mat": "wood",
-     "role": "wall",
-     "size": [
-      3.6,
-      2.2,
-      0.3
-     ],
-     "module": "Kit_House_Upper2",
-     "stands_for": "same id (balcony storey)",
-     "yaw_deg": 0,
-     "scale": [
-      0.78,
-      0.79,
-      0.32
-     ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2_Fractured.fbx",
-     "frags": 12,
-     "joints": 22,
-     "fracture_class": "Wood",
-     "material_match": true,
-     "breakable": true
-    },
-    {
-     "id": "U_L",
-     "mat": "wood",
-     "role": "wall",
-     "size": [
-      0.3,
-      2.2,
-      2.9
-     ],
-     "module": "Kit_House_Upper1",
-     "stands_for": "same id",
-     "yaw_deg": 90,
-     "scale": [
-      0.47,
-      0.79,
-      0.63
-     ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1_Fractured.fbx",
-     "frags": 12,
-     "joints": 24,
-     "fracture_class": "Wood",
-     "material_match": true,
-     "breakable": true
-    },
-    {
-     "id": "U_R",
-     "mat": "wood",
-     "role": "wall",
-     "size": [
-      0.3,
-      2.2,
-      2.9
-     ],
-     "module": "Kit_House_Upper1",
-     "stands_for": "same id",
-     "yaw_deg": 90,
-     "scale": [
-      0.47,
-      0.79,
-      0.63
-     ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1_Fractured.fbx",
-     "frags": 12,
-     "joints": 24,
-     "fracture_class": "Wood",
-     "material_match": true,
-     "breakable": true
-    },
-    {
-     "id": "Roof_W",
+     "id": "Roof_Left",
      "mat": "brick",
      "role": "roof",
      "size": [
-      2.0,
-      0.8,
-      3.9
+      3.33,
+      1.46,
+      5.7
      ],
-     "module": "Kit_House_Roof",
-     "stands_for": "same id + Gable_F/B ends",
+     "module": "Bld_Townhouse(realistic) module Roof_Left",
+     "stands_for": "Clay-tile roof, left half (both slopes), seen from the street",
      "yaw_deg": 0,
      "scale": [
-      0.64,
-      0.24,
-      0.69
+      1,
+      1,
+      1
      ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof_Fractured.fbx",
-     "frags": 8,
-     "joints": 16,
+     "module_pivot_house_local": [
+      1.7511,
+      5.1309,
+      0.1504
+     ],
+     "place_module_at": [
+      1.7511,
+      6.9309,
+      0.1504
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      3.798,
+      6.538
+     ],
+     "module_height": 3.329,
+     "anchor_to": [
+      "UpperStorey"
+     ],
+     "pieces": [
+      "RoofLF",
+      "RoofLB"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLF.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLB.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLF_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLB_Fractured.fbx"
+     ],
+     "frags": 25,
+     "joints": 62,
      "fracture_class": "Roof",
      "material_match": true,
      "breakable": true
     },
     {
-     "id": "Roof_E",
+     "id": "Roof_Right",
      "mat": "brick",
      "role": "roof",
      "size": [
-      2.0,
-      0.8,
-      3.9
+      3.23,
+      1.46,
+      5.7
      ],
-     "module": "Kit_House_Roof",
-     "stands_for": "same id + Gable_F/B ends",
+     "module": "Bld_Townhouse(realistic) module Roof_Right",
+     "stands_for": "Clay-tile roof, right half",
      "yaw_deg": 0,
      "scale": [
-      0.64,
-      0.24,
-      0.69
+      1,
+      1,
+      1
      ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof_Fractured.fbx",
-     "frags": 8,
-     "joints": 16,
+     "module_pivot_house_local": [
+      -1.8675,
+      5.1308,
+      0.1501
+     ],
+     "place_module_at": [
+      -1.8675,
+      6.9308,
+      0.1501
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      3.865,
+      6.538
+     ],
+     "module_height": 3.327,
+     "anchor_to": [
+      "UpperStorey"
+     ],
+     "pieces": [
+      "RoofRF",
+      "RoofRB"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRF.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRB.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRF_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRB_Fractured.fbx"
+     ],
+     "frags": 26,
+     "joints": 62,
      "fracture_class": "Roof",
      "material_match": true,
      "breakable": true
@@ -1066,22 +1237,49 @@
      "mat": "brick",
      "role": "",
      "size": [
-      0.5,
-      1.0,
-      0.5
+      0.87,
+      2.65,
+      0.72
      ],
-     "module": "Kit_House_Chimney",
-     "stands_for": "Chimney (shortened, sits on Roof_E)",
+     "module": "Bld_Townhouse(realistic) module Chimney",
+     "stands_for": "Stone chimney with two clay pots",
      "yaw_deg": 0,
      "scale": [
-      0.52,
-      0.19,
-      0.58
+      1,
+      1,
+      1
      ],
-     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney.fbx",
-     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney_Fractured.fbx",
-     "frags": 7,
-     "joints": 8,
+     "module_pivot_house_local": [
+      -2.2005,
+      5.5468,
+      -0.6003
+     ],
+     "place_module_at": [
+      -2.2005,
+      7.3468,
+      -0.6003
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; y + 1.8 m cellar lift (Base stays at y 0)",
+     "module_footprint_xz": [
+      0.871,
+      0.721
+     ],
+     "module_height": 3.999,
+     "anchor_to": [
+      "Roof_Right",
+      "UpperStorey"
+     ],
+     "pieces": [
+      "Chim"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Chim.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Chim_Fractured.fbx"
+     ],
+     "frags": 5,
+     "joints": 4,
      "fracture_class": "Stone",
      "material_match": true,
      "breakable": true
@@ -1096,7 +1294,7 @@
       0.3
      ],
      "module": "Kit_RealWood_Joint",
-     "stands_for": "shop awning post",
+     "stands_for": "shop awning post (level decoy)",
      "yaw_deg": 0,
      "scale": [
       0.94,
@@ -1116,17 +1314,17 @@
      "mat": "wood",
      "role": "",
      "size": [
-      1.4,
+      1.0,
       0.3,
-      1.0
+      0.6
      ],
      "module": "Kit_RealWood_Floor",
-     "stands_for": "shop awning",
+     "stands_for": "shop awning (level decoy)",
      "yaw_deg": 0,
      "scale": [
-      0.47,
+      0.33,
       1.36,
-      0.33
+      0.2
      ],
      "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
      "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
@@ -2882,7 +3080,7 @@
    "layout": "c1_l08_market_arcade",
    "building": "generic Kit_Real* modules",
    "waiting_on": [
-    "bakery/shop prefab for the 4 market stalls (no asset or footprint yet: block layout kept as is)"
+    "Stall module + arch with steel sign (3D Modeler, due Oct 31 - Nov 1): block layout kept until then"
    ],
    "pieces": [
     {

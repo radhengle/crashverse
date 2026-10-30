@@ -37,34 +37,40 @@ def L2():  # EASY "Leaning Water Tower": stilts stand on TWO sills (rev 6: L1 al
         B("shedRoof","wood",(4.3,5.0,-1.2),(1.8,.4,1.6),["shed"])]
     return b
 
-def L3():  # MEDIUM "Two-Storey Bakery" (rev 7): 3D Modeler's Bld_Townhouse at 0.8 scale (ground-floor shop = the
-    # bakery: door + shop sign; timber upper storey with balcony; gables, two roof halves, chimney) on a timber cellar
-    # deck with two wood props. Same support graph as rev 6: props -> slabs -> shop walls -> floor -> upper storey -> roof.
-    # Piece ids follow the townhouse layout (G_*, Floor1, U_*, Roof_*, Chimney); the gables are folded into the two roof
-    # halves and the balcony into U_F (both are part of those modules' meshes). Side walls sit behind the front walls.
-    # Cubes never overlap (LevelBuilder spawns physics boxes). Annex shed / barrels / crates are left out: they are
-    # ground-level objective mass that would not fall with the house.
-    b=[ROCK("rock",(0,.6,0),(7,1.2,4))]
-    b+=[B("propL","wood",(-1.6,1.9,1.4),(.4,1.4,.4),["rock"],role="prop"),
-        B("propR","wood",(1.6,1.9,1.4),(.4,1.4,.4),["rock"],role="prop"),
-        B("slabL","brick",(-1,2.8,0),(2,.4,3.4),["propL"]),
-        B("slabR","brick",(1,2.8,0),(2,.4,3.4),["propR"])]
-    S=["slabL","slabR"]; gy,gh=4.12,2.24; uy,uh=6.64,2.2
-    b+=[B("G_F","brick",(0,gy,1.6),(3.6,gh,.3),S,role="wall"),          # GroundDoor: shop front, sign, lantern
-        B("G_B","brick",(0,gy,-1.6),(3.6,gh,.3),S,role="wall"),
-        B("G_L","brick",(-1.65,gy,0),(.3,gh,2.9),S,role="wall"),
-        B("G_R","brick",(1.65,gy,0),(.3,gh,2.9),S,role="wall"),
-        B("oven","brick",(0,3.6,0),(1.2,1.2,1.2),S),                       # bakery oven (inside, hidden by G_F)
-        B("Floor1","wood",(0,5.39,0),(3.6,.3,3.5),["G_F","G_B","G_L","G_R"]),
-        B("U_F","wood",(0,uy,1.6),(3.6,uh,.3),["Floor1"],role="wall"),
-        B("U_B","wood",(0,uy,-1.6),(3.6,uh,.3),["Floor1"],role="wall"),
-        B("U_L","wood",(-1.65,uy,0),(.3,uh,2.9),["Floor1"],role="wall"),
-        B("U_R","wood",(1.65,uy,0),(.3,uh,2.9),["Floor1"],role="wall"),
-        B("Roof_W","brick",(-1.0,8.14,0),(2.0,.8,3.9),["U_F","U_B","U_L"],role="roof",color="B5523B"),  # + Gable_F/B ends
-        B("Roof_E","brick",(1.0,8.14,0),(2.0,.8,3.9),["U_F","U_B","U_R"],role="roof",color="B5523B"),
-        B("Chimney","brick",(1.3,9.04,-1.0),(.5,1.0,.5),["Roof_E"]),
-        B("awningPost","wood",(3.0,2.2,1.6),(.3,2.0,.3),["rock"],role="prop"),   # decoy: holds only the shop awning
-        B("awning","wood",(2.6,3.4,1.6),(1.4,.3,1.0),["awningPost"])]
+def L3():  # MEDIUM "Two-Storey Bakery", rev 8 INTERIM: 3D Modeler's modular realistic Bld_Townhouse (realistic-v1
+    # @ e725121, Kit_RealHouse) at 1:1 from its module transforms, until the 8x6 m bakery lands (due Oct 31).
+    # One layout block per Level Designer MODULE (the README splits modules into pieces only for the 1,500-tri FBX budget
+    # and 63-char joint names; all pieces of a module drop in at the module pivot). Block ids = module ids.
+    # House frame = layout space: +z = street (ShopFront), +x = the house's left (Wall_Left, Roof_Left). face_wrecker turns
+    # +z to -x, so the street faces the cannon and the house's left is screen-left. Supports = module anchor_to (which
+    # match the 69 piece contacts); materials per fracture class (Stone -> brick, Wood -> wood, Roof clay tile -> brick).
+    # Base = indestructible, non-objective, held. L3's beat (brick needs support loss: two wood props) is kept by standing
+    # the house on a timber cellar: Base -> props -> cellar slabs -> the four ground-wall modules. The cellar is the only
+    # layer that is not in the model (the contacts have Base -> ground walls); it lifts the house by C = 1.8 m.
+    # Boxes are cut at the contact heights so no two cubes overlap (LevelBuilder spawns physics boxes): ground walls
+    # 0.35-2.72, Floor 2.72-3.22 (front jetty to z 2.91), UpperStorey shell 3.22-5.44 (gables + balcony are in its mesh),
+    # roof halves 5.44-6.9 (ridge contact 6.73-6.96), Chimney from the roof to its real top 9.55.
+    # The optional Annex is left out (ground mass that would not fall with the house). rev 7's shop-awning decoy stays.
+    C=1.8
+    def H(id,mat,x0,x1,y0,y1,z0,z1,sup,**k):   # box from house-local extents (y lifted by the cellar)
+        return B(id,mat,(round((x0+x1)/2,3),round((y0+y1)/2+C,3),round((z0+z1)/2,3)),(round(x1-x0,3),round(y1-y0,3),round(z1-z0,3)),sup,**k)
+    b=[B("Base","brick",(0,.175,.15),(7.04,.35,6.04),nonObj=True,indestructible=True,color="8A8A8A",role="island"),
+       B("propL","wood",(1.6,1.05,1.8),(.45,1.4,.45),["Base"],role="prop"),      # house-left = screen-left
+       B("propR","wood",(-1.6,1.05,1.8),(.45,1.4,.45),["Base"],role="prop"),
+       B("slabL","brick",(1.605,1.95,.03),(3.21,.4,5.46),["propL"]),
+       B("slabR","brick",(-1.605,1.95,.03),(3.21,.4,5.46),["propR"])]
+    S=["slabL","slabR"]; g0,g1=.35,2.72
+    b+=[H("ShopFront","brick",-3.31,3.31,g0,g1,2.16,2.76,S,role="wall"),       # door, window, lantern, hanging sign
+        H("Wall_Left","brick",2.745,3.31,g0,g1,-2.15,2.15,S,role="wall"),
+        H("Wall_Right","brick",-3.31,-2.745,g0,g1,-2.15,2.15,S,role="wall"),
+        H("Wall_Back","brick",-3.21,3.21,g0,g1,-2.7,-2.16,S,role="wall"),
+        H("Floor","wood",-3.21,3.21,2.72,3.22,-2.17,2.91,["ShopFront","Wall_Back","Wall_Left","Wall_Right"]),
+        H("UpperStorey","wood",-3.28,3.28,3.22,5.44,-2.7,3.0,["Floor"],role="wall"),
+        H("Roof_Left","brick",-.05,3.28,5.44,6.9,-2.7,3.0,["UpperStorey"],role="roof",color="B5523B"),
+        H("Roof_Right","brick",-3.28,-.05,5.44,6.9,-2.7,3.0,["UpperStorey"],role="roof",color="B5523B"),
+        H("Chimney","brick",-2.635,-1.765,6.9,9.55,-.96,-.24,["Roof_Right","UpperStorey"]),
+        B("awningPost","wood",(3.45,1.35,3.0),(.3,2.0,.3),["Base"],role="prop"),      # decoy: holds only the shop awning
+        B("awning","wood",(3.1,2.5,3.1),(1.0,.3,.6),["awningPost"])]
     return b
 
 def L4():  # windmill: brick drums on wooden ring-beams; hitting low beams chains everything above

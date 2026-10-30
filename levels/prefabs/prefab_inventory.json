@@ -1,6 +1,6 @@
 {
  "ref": "origin/3d-modeler/realistic-v1",
- "commit": "9e3f4e3",
+ "commit": "e725121",
  "unity_prefabs": [],
  "buildings": {
   "Bld_BrickHouse": {
@@ -3799,6 +3799,633 @@
    "size_unity": null,
    "sized_from": "no stats JSON for its kit (v3 kit): size unknown",
    "realistic_variant": null
+  },
+  "Bld_Townhouse (realistic)": {
+   "layout": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Bld_Townhouse.layout.json",
+   "style": "realistic v1",
+   "space": "Unity (Y up, left-handed); building front (street, shop door) faces +Z; positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+   "footprint_m": [
+    9.494,
+    6.841
+   ],
+   "modules": [
+    {
+     "id": "ShopFront",
+     "label": "Shop front: ground-floor street wall with shop door, window, flower box, lantern, hanging sign",
+     "pivot": [
+      0.0013,
+      0.3443,
+      2.782
+     ],
+     "footprint_m": [
+      6.405,
+      1.276
+     ],
+     "height_m": 2.859,
+     "pieces": [
+      "ShopW",
+      "ShopD"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Wall_Left",
+     "label": "Ground-floor stone side wall, left (window)",
+     "pivot": [
+      3.0277,
+      0.3458,
+      0.0017
+     ],
+     "footprint_m": [
+      0.565,
+      4.305
+     ],
+     "height_m": 2.857,
+     "pieces": [
+      "WallL"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Wall_Right",
+     "label": "Ground-floor stone side wall, right (window)",
+     "pivot": [
+      -3.0282,
+      0.3458,
+      0.0002
+     ],
+     "footprint_m": [
+      0.566,
+      4.309
+     ],
+     "height_m": 2.859,
+     "pieces": [
+      "WallR"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Wall_Back",
+     "label": "Ground-floor stone back wall (back door + window)",
+     "pivot": [
+      -0.0008,
+      0.3458,
+      -2.4278
+     ],
+     "footprint_m": [
+      6.407,
+      0.566
+     ],
+     "height_m": 2.857,
+     "pieces": [
+      "BackD",
+      "BackW"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Floor",
+     "label": "First floor / beam: slab, jetty boards, joists, brackets",
+     "pivot": [
+      -0.0,
+      2.2351,
+      0.368
+     ],
+     "footprint_m": [
+      6.42,
+      5.076
+     ],
+     "height_m": 1.005,
+     "pieces": [
+      "Floor"
+     ],
+     "anchor_to": [
+      "ShopFront",
+      "Wall_Back",
+      "Wall_Left",
+      "Wall_Right"
+     ]
+    },
+    {
+     "id": "UpperStorey",
+     "label": "Timber-frame upper storey: 4 plaster/timber walls, 2 gables, balcony, flower box",
+     "pivot": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "footprint_m": [
+      6.661,
+      6.443
+     ],
+     "height_m": 4.98,
+     "pieces": [
+      "UpFL",
+      "UpFR",
+      "Balc",
+      "UpB",
+      "UpL",
+      "UpR",
+      "GabL",
+      "GabR"
+     ],
+     "anchor_to": [
+      "Floor"
+     ]
+    },
+    {
+     "id": "Roof_Left",
+     "label": "Clay-tile roof, left half (both slopes), seen from the street",
+     "pivot": [
+      1.7511,
+      5.1309,
+      0.1504
+     ],
+     "footprint_m": [
+      3.798,
+      6.538
+     ],
+     "height_m": 3.329,
+     "pieces": [
+      "RoofLF",
+      "RoofLB"
+     ],
+     "anchor_to": [
+      "UpperStorey"
+     ]
+    },
+    {
+     "id": "Roof_Right",
+     "label": "Clay-tile roof, right half",
+     "pivot": [
+      -1.8675,
+      5.1308,
+      0.1501
+     ],
+     "footprint_m": [
+      3.865,
+      6.538
+     ],
+     "height_m": 3.327,
+     "pieces": [
+      "RoofRF",
+      "RoofRB"
+     ],
+     "anchor_to": [
+      "UpperStorey"
+     ]
+    },
+    {
+     "id": "Chimney",
+     "label": "Stone chimney with two clay pots",
+     "pivot": [
+      -2.2005,
+      5.5468,
+      -0.6003
+     ],
+     "footprint_m": [
+      0.871,
+      0.721
+     ],
+     "height_m": 3.999,
+     "pieces": [
+      "Chim"
+     ],
+     "anchor_to": [
+      "Roof_Right",
+      "UpperStorey"
+     ]
+    },
+    {
+     "id": "Base",
+     "label": "Granite plinth (indestructible)",
+     "pivot": [
+      -0.0,
+      0.0,
+      0.15
+     ],
+     "footprint_m": [
+      7.04,
+      6.04
+     ],
+     "height_m": 0.35,
+     "pieces": [
+      "Base"
+     ],
+     "anchor_to": [
+      "Ground"
+     ]
+    },
+    {
+     "id": "Annex",
+     "label": "Lean-to plank annex (optional extra)",
+     "pivot": [
+      4.5692,
+      0.0,
+      0.1031
+     ],
+     "footprint_m": [
+      2.25,
+      3.806
+     ],
+     "height_m": 3.136,
+     "pieces": [
+      "AnnexF",
+      "AnnexB"
+     ],
+     "anchor_to": [
+      "Ground"
+     ]
+    }
+   ],
+   "pieces": [
+    {
+     "id": "Base",
+     "module": "Base",
+     "kit": "Kit_RealHouse_Base",
+     "pos": [
+      -0.0,
+      0.0,
+      0.15
+     ],
+     "anchor_to": "Ground",
+     "fracture_class": "Indestructible",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Base.fbx",
+     "fractured": null
+    },
+    {
+     "id": "ShopW",
+     "module": "ShopFront",
+     "kit": "Kit_RealHouse_ShopW",
+     "pos": [
+      0.0013,
+      0.3443,
+      2.782
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopW.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopW_Fractured.fbx"
+    },
+    {
+     "id": "ShopD",
+     "module": "ShopFront",
+     "kit": "Kit_RealHouse_ShopD",
+     "pos": [
+      0.0013,
+      0.3443,
+      2.782
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopD.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopD_Fractured.fbx"
+    },
+    {
+     "id": "BackD",
+     "module": "Wall_Back",
+     "kit": "Kit_RealHouse_BackD",
+     "pos": [
+      -0.0008,
+      0.3458,
+      -2.4278
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackD.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackD_Fractured.fbx"
+    },
+    {
+     "id": "BackW",
+     "module": "Wall_Back",
+     "kit": "Kit_RealHouse_BackW",
+     "pos": [
+      -0.0008,
+      0.3458,
+      -2.4278
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackW.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackW_Fractured.fbx"
+    },
+    {
+     "id": "WallL",
+     "module": "Wall_Left",
+     "kit": "Kit_RealHouse_WallL",
+     "pos": [
+      3.0277,
+      0.3458,
+      0.0017
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallL_Fractured.fbx"
+    },
+    {
+     "id": "WallR",
+     "module": "Wall_Right",
+     "kit": "Kit_RealHouse_WallR",
+     "pos": [
+      -3.0282,
+      0.3458,
+      0.0002
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallR_Fractured.fbx"
+    },
+    {
+     "id": "Floor",
+     "module": "Floor",
+     "kit": "Kit_RealHouse_Floor",
+     "pos": [
+      -0.0,
+      2.2351,
+      0.368
+     ],
+     "anchor_to": [
+      "ShopW",
+      "ShopD",
+      "BackD",
+      "BackW",
+      "WallL",
+      "WallR"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Floor.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Floor_Fractured.fbx"
+    },
+    {
+     "id": "UpFL",
+     "module": "UpperStorey",
+     "kit": "Kit_RealHouse_UpFL",
+     "pos": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFL_Fractured.fbx"
+    },
+    {
+     "id": "UpFR",
+     "module": "UpperStorey",
+     "kit": "Kit_RealHouse_UpFR",
+     "pos": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFR_Fractured.fbx"
+    },
+    {
+     "id": "Balc",
+     "module": "UpperStorey",
+     "kit": "Kit_RealHouse_Balc",
+     "pos": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "anchor_to": [
+      "UpFR",
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Balc.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Balc_Fractured.fbx"
+    },
+    {
+     "id": "UpB",
+     "module": "UpperStorey",
+     "kit": "Kit_RealHouse_UpB",
+     "pos": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpB.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpB_Fractured.fbx"
+    },
+    {
+     "id": "UpL",
+     "module": "UpperStorey",
+     "kit": "Kit_RealHouse_UpL",
+     "pos": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpL_Fractured.fbx"
+    },
+    {
+     "id": "UpR",
+     "module": "UpperStorey",
+     "kit": "Kit_RealHouse_UpR",
+     "pos": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpR_Fractured.fbx"
+    },
+    {
+     "id": "GabL",
+     "module": "UpperStorey",
+     "kit": "Kit_RealHouse_GabL",
+     "pos": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "anchor_to": [
+      "UpL"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabL_Fractured.fbx"
+    },
+    {
+     "id": "GabR",
+     "module": "UpperStorey",
+     "kit": "Kit_RealHouse_GabR",
+     "pos": [
+      0.0002,
+      3.1961,
+      0.5005
+     ],
+     "anchor_to": [
+      "UpR"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabR_Fractured.fbx"
+    },
+    {
+     "id": "RoofLF",
+     "module": "Roof_Left",
+     "kit": "Kit_RealHouse_RoofLF",
+     "pos": [
+      1.7511,
+      5.1309,
+      0.1504
+     ],
+     "anchor_to": [
+      "UpFL",
+      "GabL"
+     ],
+     "fracture_class": "Roof",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLF.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLF_Fractured.fbx"
+    },
+    {
+     "id": "RoofLB",
+     "module": "Roof_Left",
+     "kit": "Kit_RealHouse_RoofLB",
+     "pos": [
+      1.7511,
+      5.1309,
+      0.1504
+     ],
+     "anchor_to": [
+      "UpB",
+      "GabL"
+     ],
+     "fracture_class": "Roof",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLB.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLB_Fractured.fbx"
+    },
+    {
+     "id": "RoofRF",
+     "module": "Roof_Right",
+     "kit": "Kit_RealHouse_RoofRF",
+     "pos": [
+      -1.8675,
+      5.1308,
+      0.1501
+     ],
+     "anchor_to": [
+      "UpFR",
+      "GabR"
+     ],
+     "fracture_class": "Roof",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRF.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRF_Fractured.fbx"
+    },
+    {
+     "id": "RoofRB",
+     "module": "Roof_Right",
+     "kit": "Kit_RealHouse_RoofRB",
+     "pos": [
+      -1.8675,
+      5.1308,
+      0.1501
+     ],
+     "anchor_to": [
+      "UpB",
+      "GabR"
+     ],
+     "fracture_class": "Roof",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRB.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRB_Fractured.fbx"
+    },
+    {
+     "id": "Chim",
+     "module": "Chimney",
+     "kit": "Kit_RealHouse_Chim",
+     "pos": [
+      -2.2005,
+      5.5468,
+      -0.6003
+     ],
+     "anchor_to": [
+      "RoofRB",
+      "UpR"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Chim.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Chim_Fractured.fbx"
+    },
+    {
+     "id": "AnnexF",
+     "module": "Annex",
+     "kit": "Kit_RealHouse_AnnexF",
+     "pos": [
+      4.5692,
+      0.0,
+      0.1031
+     ],
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexF.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexF_Fractured.fbx"
+    },
+    {
+     "id": "AnnexB",
+     "module": "Annex",
+     "kit": "Kit_RealHouse_AnnexB",
+     "pos": [
+      4.5692,
+      0.0,
+      0.1031
+     ],
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexB.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexB_Fractured.fbx"
+    }
+   ],
+   "piece_count": 23,
+   "module_count": 11,
+   "connections": 69,
+   "joint_break_values_set": false,
+   "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Base is indestructible (no fractured set)."
   }
  },
  "modules": {
@@ -4500,6 +5127,466 @@
    "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
    "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
    "note": ""
+  },
+  "Kit_RealHouse_Base": {
+   "kit": "Kit_RealHouse",
+   "module": "Base",
+   "size_unity": [
+    7.04,
+    0.35,
+    6.04
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": null,
+   "joints": null,
+   "anchors": null,
+   "fracture_class": "Indestructible",
+   "mass_kg": null,
+   "density_kg_m3": null,
+   "lod0_tris": 336,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Base.fbx",
+   "fractured_fbx": null
+  },
+  "Kit_RealHouse_ShopW": {
+   "kit": "Kit_RealHouse",
+   "module": "ShopW",
+   "size_unity": [
+    2.769,
+    2.855,
+    0.721
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 7,
+   "joints": 20,
+   "anchors": 2,
+   "fracture_class": "Stone",
+   "mass_kg": 7445.3,
+   "density_kg_m3": 2300,
+   "lod0_tris": 1310,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopW.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopW_Fractured.fbx"
+  },
+  "Kit_RealHouse_ShopD": {
+   "kit": "Kit_RealHouse",
+   "module": "ShopD",
+   "size_unity": [
+    3.804,
+    2.859,
+    1.276
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 7,
+   "joints": 13,
+   "anchors": 3,
+   "fracture_class": "Stone",
+   "mass_kg": 10402.6,
+   "density_kg_m3": 2300,
+   "lod0_tris": 1360,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopD.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopD_Fractured.fbx"
+  },
+  "Kit_RealHouse_BackD": {
+   "kit": "Kit_RealHouse",
+   "module": "BackD",
+   "size_unity": [
+    3.207,
+    2.856,
+    0.516
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 4,
+   "joints": 5,
+   "anchors": 2,
+   "fracture_class": "Stone",
+   "mass_kg": 8681.3,
+   "density_kg_m3": 2300,
+   "lod0_tris": 524,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackD.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackD_Fractured.fbx"
+  },
+  "Kit_RealHouse_BackW": {
+   "kit": "Kit_RealHouse",
+   "module": "BackW",
+   "size_unity": [
+    3.208,
+    2.854,
+    0.566
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 4,
+   "joints": 5,
+   "anchors": 2,
+   "fracture_class": "Stone",
+   "mass_kg": 9035.0,
+   "density_kg_m3": 2300,
+   "lod0_tris": 482,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackW.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackW_Fractured.fbx"
+  },
+  "Kit_RealHouse_WallL": {
+   "kit": "Kit_RealHouse",
+   "module": "WallL",
+   "size_unity": [
+    0.565,
+    2.857,
+    4.305
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 6,
+   "joints": 9,
+   "anchors": 3,
+   "fracture_class": "Stone",
+   "mass_kg": 12274.0,
+   "density_kg_m3": 2300,
+   "lod0_tris": 506,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallL_Fractured.fbx"
+  },
+  "Kit_RealHouse_WallR": {
+   "kit": "Kit_RealHouse",
+   "module": "WallR",
+   "size_unity": [
+    0.566,
+    2.859,
+    4.309
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 6,
+   "joints": 9,
+   "anchors": 3,
+   "fracture_class": "Stone",
+   "mass_kg": 12273.8,
+   "density_kg_m3": 2300,
+   "lod0_tris": 566,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallR_Fractured.fbx"
+  },
+  "Kit_RealHouse_Floor": {
+   "kit": "Kit_RealHouse",
+   "module": "Floor",
+   "size_unity": [
+    6.42,
+    1.005,
+    5.076
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 37,
+   "anchors": 9,
+   "fracture_class": "Wood",
+   "mass_kg": 3068.3,
+   "density_kg_m3": 600,
+   "lod0_tris": 1164,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Floor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Floor_Fractured.fbx"
+  },
+  "Kit_RealHouse_UpFL": {
+   "kit": "Kit_RealHouse",
+   "module": "UpFL",
+   "size_unity": [
+    3.075,
+    2.557,
+    0.436
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 14,
+   "joints": 43,
+   "anchors": 3,
+   "fracture_class": "Wood",
+   "mass_kg": 881.4,
+   "density_kg_m3": 600,
+   "lod0_tris": 1076,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFL_Fractured.fbx"
+  },
+  "Kit_RealHouse_UpFR": {
+   "kit": "Kit_RealHouse",
+   "module": "UpFR",
+   "size_unity": [
+    3.373,
+    2.557,
+    0.284
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 12,
+   "joints": 29,
+   "anchors": 4,
+   "fracture_class": "Wood",
+   "mass_kg": 936.2,
+   "density_kg_m3": 600,
+   "lod0_tris": 960,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFR_Fractured.fbx"
+  },
+  "Kit_RealHouse_Balc": {
+   "kit": "Kit_RealHouse",
+   "module": "Balc",
+   "size_unity": [
+    1.57,
+    1.838,
+    0.812
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 9,
+   "joints": 18,
+   "anchors": 2,
+   "fracture_class": "Wood",
+   "mass_kg": 103.2,
+   "density_kg_m3": 600,
+   "lod0_tris": 1044,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Balc.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Balc_Fractured.fbx"
+  },
+  "Kit_RealHouse_UpB": {
+   "kit": "Kit_RealHouse",
+   "module": "UpB",
+   "size_unity": [
+    6.44,
+    2.558,
+    0.284
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 34,
+   "anchors": 7,
+   "fracture_class": "Wood",
+   "mass_kg": 1804.9,
+   "density_kg_m3": 600,
+   "lod0_tris": 892,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpB.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpB_Fractured.fbx"
+  },
+  "Kit_RealHouse_UpL": {
+   "kit": "Kit_RealHouse",
+   "module": "UpL",
+   "size_unity": [
+    0.284,
+    2.557,
+    5.546
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 41,
+   "anchors": 6,
+   "fracture_class": "Wood",
+   "mass_kg": 1455.7,
+   "density_kg_m3": 600,
+   "lod0_tris": 752,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpL_Fractured.fbx"
+  },
+  "Kit_RealHouse_UpR": {
+   "kit": "Kit_RealHouse",
+   "module": "UpR",
+   "size_unity": [
+    0.283,
+    2.555,
+    5.545
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 35,
+   "anchors": 6,
+   "fracture_class": "Wood",
+   "mass_kg": 1457.4,
+   "density_kg_m3": 600,
+   "lod0_tris": 864,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpR_Fractured.fbx"
+  },
+  "Kit_RealHouse_GabL": {
+   "kit": "Kit_RealHouse",
+   "module": "GabL",
+   "size_unity": [
+    0.273,
+    2.426,
+    5.5
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 12,
+   "joints": 25,
+   "anchors": 6,
+   "fracture_class": "Wood",
+   "mass_kg": 862.1,
+   "density_kg_m3": 600,
+   "lod0_tris": 340,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabL_Fractured.fbx"
+  },
+  "Kit_RealHouse_GabR": {
+   "kit": "Kit_RealHouse",
+   "module": "GabR",
+   "size_unity": [
+    0.268,
+    2.428,
+    5.5
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 12,
+   "joints": 24,
+   "anchors": 6,
+   "fracture_class": "Wood",
+   "mass_kg": 862.1,
+   "density_kg_m3": 600,
+   "lod0_tris": 364,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabR_Fractured.fbx"
+  },
+  "Kit_RealHouse_RoofLF": {
+   "kit": "Kit_RealHouse",
+   "module": "RoofLF",
+   "size_unity": [
+    3.794,
+    3.197,
+    3.393
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 9,
+   "joints": 21,
+   "anchors": 2,
+   "fracture_class": "Roof",
+   "mass_kg": 3680.2,
+   "density_kg_m3": 1500,
+   "lod0_tris": 1380,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLF.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLF_Fractured.fbx"
+  },
+  "Kit_RealHouse_RoofLB": {
+   "kit": "Kit_RealHouse",
+   "module": "RoofLB",
+   "size_unity": [
+    3.798,
+    3.329,
+    3.418
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 41,
+   "anchors": 2,
+   "fracture_class": "Roof",
+   "mass_kg": 3087.1,
+   "density_kg_m3": 1500,
+   "lod0_tris": 1408,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLB.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLB_Fractured.fbx"
+  },
+  "Kit_RealHouse_RoofRF": {
+   "kit": "Kit_RealHouse",
+   "module": "RoofRF",
+   "size_unity": [
+    3.717,
+    3.202,
+    3.391
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 14,
+   "joints": 35,
+   "anchors": 2,
+   "fracture_class": "Roof",
+   "mass_kg": 3610.6,
+   "density_kg_m3": 1500,
+   "lod0_tris": 1308,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRF.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRF_Fractured.fbx"
+  },
+  "Kit_RealHouse_RoofRB": {
+   "kit": "Kit_RealHouse",
+   "module": "RoofRB",
+   "size_unity": [
+    3.8,
+    3.327,
+    3.418
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 12,
+   "joints": 27,
+   "anchors": 4,
+   "fracture_class": "Roof",
+   "mass_kg": 3482.6,
+   "density_kg_m3": 1500,
+   "lod0_tris": 1032,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRB.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRB_Fractured.fbx"
+  },
+  "Kit_RealHouse_Chim": {
+   "kit": "Kit_RealHouse",
+   "module": "Chim",
+   "size_unity": [
+    0.871,
+    3.999,
+    0.721
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 5,
+   "joints": 4,
+   "anchors": 1,
+   "fracture_class": "Stone",
+   "mass_kg": 3865.4,
+   "density_kg_m3": 2300,
+   "lod0_tris": 284,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Chim.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Chim_Fractured.fbx"
+  },
+  "Kit_RealHouse_AnnexF": {
+   "kit": "Kit_RealHouse",
+   "module": "AnnexF",
+   "size_unity": [
+    2.249,
+    3.136,
+    2.052
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 43,
+   "anchors": 5,
+   "fracture_class": "Wood",
+   "mass_kg": 1268.3,
+   "density_kg_m3": 600,
+   "lod0_tris": 1032,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexF.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexF_Fractured.fbx"
+  },
+  "Kit_RealHouse_AnnexB": {
+   "kit": "Kit_RealHouse",
+   "module": "AnnexB",
+   "size_unity": [
+    2.247,
+    3.128,
+    1.9
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 39,
+   "anchors": 5,
+   "fracture_class": "Wood",
+   "mass_kg": 1193.4,
+   "density_kg_m3": 600,
+   "lod0_tris": 708,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexB.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexB_Fractured.fbx"
   },
   "Kit_RealProps_Crate": {
    "kit": "Kit_RealProps",

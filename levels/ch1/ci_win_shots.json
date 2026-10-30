@@ -201,43 +201,43 @@
      "powerup": null,
      "split_targets": null,
      "world": [
-      8.6,
-      1.9,
-      -1.6
+      8.2,
+      1.05,
+      1.6
      ],
      "aim": {
       "1.0": {
-       "yaw": -3.2,
-       "elevation": 9.91,
-       "hintYaw": -3.0,
-       "hintPitch": 10.0,
+       "yaw": 3.25,
+       "elevation": 8.0,
+       "hintYaw": 3.0,
+       "hintPitch": 8.0,
        "drag_dp": [
-        -12.8,
-        -100.6
+        13.0,
+        -113.4
        ],
        "swipe": [
         540,
         1300,
-        506,
-        1564
+        574,
+        1598
        ],
        "first_hit": "propL",
        "clear": true
       },
       "1.2": {
-       "yaw": -3.2,
-       "elevation": 11.83,
-       "hintYaw": -3.0,
-       "hintPitch": 12.0,
+       "yaw": 3.25,
+       "elevation": 9.86,
+       "hintYaw": 3.0,
+       "hintPitch": 10.0,
        "drag_dp": [
-        -12.8,
-        -87.8
+        13.0,
+        -100.9
        ],
        "swipe": [
         540,
         1300,
-        506,
-        1530
+        574,
+        1565
        ],
        "first_hit": "propL",
        "clear": true
@@ -251,43 +251,43 @@
      "powerup": null,
      "split_targets": null,
      "world": [
-      8.6,
-      1.9,
-      1.6
+      8.2,
+      1.05,
+      -1.6
      ],
      "aim": {
       "1.0": {
-       "yaw": 3.2,
-       "elevation": 9.91,
-       "hintYaw": 3.0,
-       "hintPitch": 10.0,
+       "yaw": -3.25,
+       "elevation": 8.0,
+       "hintYaw": -3.0,
+       "hintPitch": 8.0,
        "drag_dp": [
-        12.8,
-        -100.6
+        -13.0,
+        -113.4
        ],
        "swipe": [
         540,
         1300,
-        574,
-        1564
+        506,
+        1598
        ],
        "first_hit": "propR",
        "clear": true
       },
       "1.2": {
-       "yaw": 3.2,
-       "elevation": 11.83,
-       "hintYaw": 3.0,
-       "hintPitch": 12.0,
+       "yaw": -3.25,
+       "elevation": 9.86,
+       "hintYaw": -3.0,
+       "hintPitch": 10.0,
        "drag_dp": [
-        12.8,
-        -87.8
+        -13.0,
+        -100.9
        ],
        "swipe": [
         540,
         1300,
-        574,
-        1530
+        506,
+        1565
        ],
        "first_hit": "propR",
        "clear": true

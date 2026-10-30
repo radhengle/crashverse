@@ -91,29 +91,29 @@
    "layout": "c1_l03_bakery",
    "primary": {
     "x": [
-     297,
-     783
+     279,
+     791
     ],
     "y": [
-     513,
-     1166
+     382,
+     1177
     ],
     "fits": true,
-    "worst_piece": "rock",
-    "slack_px": 232
+    "worst_piece": "Chimney",
+    "slack_px": 148
    },
    "tight": {
     "x": [
-     283,
-     797
+     263,
+     807
     ],
     "y": [
-     564,
-     1245
+     428,
+     1255
     ],
     "fits": true,
-    "worst_piece": "rock",
-    "slack_px": 218
+    "worst_piece": "Chimney",
+    "slack_px": 194
    }
   },
   {

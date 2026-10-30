@@ -139,8 +139,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
    "hintTarget": "propL",
-   "hintYaw": -3.0,
-   "hintPitch": 10.0
+   "hintYaw": 3.0,
+   "hintPitch": 8.0
   },
   {
    "id": "c1_l04",

@@ -129,3 +129,29 @@ Scope (PM): no new content; tune Ch1 L1–10 and the Daily Boss for fair difficu
   barrels/poles stay standing (8.5/49 mass), so ring0 alone = 82.7% and ring0 + annex/crate stack = 2-shot 3★. Random win 6.8% → 30.2%,
   random 3★ 0.5% → 2.7%. 5 shots, bands, 3 steel_joint rings (Tests.cs) and crown-intact mastery kept; season finale_e1 hint follows.
 - Every level passes at g×1.0 and g×1.2 with identical results; ci_win_shots all clear; frame check all OK.
+
+## Rev 8: realistic modular townhouse on L3 (interim) (2026-10-30)
+Input: 3D Modeler's `Models/Realistic/Buildings/Bld_Townhouse/` @ e725121 (11 LD modules, 23 pieces, 69 contacts, 9.49 × 6.84 m with annex).
+- **Level chosen: L3 (interim until the 8×6 m bakery lands on Oct 31).** Why:
+  - It is the only Ch1 level whose subject is one two-storey shop building. The townhouse's ShopFront (door, window, sign, lantern) reads as
+    the bakery, and L3 already carried a townhouse skin in rev 7.
+  - It fits the frame at 1:1 (slack 148 px primary / 194 tight; worst piece is the chimney top). L5 would need two of them on one bridge,
+    about 14 m wide (or about 0.45 scale), and the cottages hang from the bridge. L1 and L2 are a lookout on one post and a tank on four stilts.
+    None of those beats has a ground-floor house in it.
+  - With the Base held (indestructible + non-objective never collapses, DestructibleBlock.cs:135), the house on its own can only fall by
+    breaking all four ground-wall modules (six pieces at piece level). That is 4 shots, and dropping the Floor alone gives only 49%. So no
+    1- or 2-shot beat survives with the house straight on the ground. L3's beat can keep it: a 1.8 m timber cellar (two wood props, two
+    brick slabs) sits between the Base and the ground walls. That is the only layer not in the model.
+- **Mapping:** one block per LD module. The README says modules are split into pieces only for the 1,500-tri / 63-char limits. Supports come
+  from the module anchor_to, which matches the contacts. Materials follow the fracture class (Stone → brick, Wood → wood, Roof → brick).
+  +Z street → authored front → face_wrecker → faces the cannon (−x). Wall_Left/Roof_Left are screen-left. Boxes are cut at the contact
+  heights so no cubes overlap. The optional Annex is left out (ground mass that would not fall). The rev 7 shop-awning decoy is kept.
+- **Numbers (g×1.0 = g×1.2):** 5 shots, default bands. Best line propL, propR (2 shots, 3★), final 93.0%. Mastery ≥95% via props + awning
+  post. Random 3★ 6.5%, random win 55.3% (rev 6: 6.5% / 57.5%; rev 7: 6.2% / 48.9%). CI first hits are clear at both gravities.
+  Hint propL yaw +3.0 / pitch 8.0 (the props are now 1.6 m house-left = screen-left). Season event e2 hints follow.
+- **Rev 8 PR text (for the user to paste into PR #57; the body was not edited):**
+  > **Rev 8:** L3 now uses 3D Modeler's realistic modular townhouse (realistic-v1 @ e725121) at 1:1. That is an interim skin until the 8×6 m
+  > bakery lands on Oct 31. It has one block per LD module, with supports from the module anchors and the street facing the cannon. The Base is
+  > a held, non-objective plinth. A timber cellar on two props keeps L3's two-prop beat. Kept: 5 shots, 2-shot 3★, ≥95% mastery.
+  > Random win is 55.3% and random 3★ is 6.5%. Frame slack is 148/194 px. Results are identical at gravity ×1.0 and ×1.2. L8 waits for the
+  > Stall + arch (Oct 31 – Nov 1). New code gaps: a held Base can never fall, and the loader would have to spawn every piece of a module.

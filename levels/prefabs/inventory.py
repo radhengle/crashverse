@@ -18,7 +18,16 @@ modules={}
 for f in sorted(x for x in files if x.startswith('models/HeroBuildings/Kit_') and x.endswith('_stats.json')):
     kit=os.path.basename(f)[:-len('_stats.json')]; d=show(f)
     for m,v in d['modules'].items():
-        (x0,y0,z0),(x1,y1,z1)=v['aabb']; name=f'{kit}_{m}'
+        name=f'{kit}_{m}'
+        if 'aabb' not in v:   # Kit_RealHouse (realistic townhouse) stats: bounds_m = Blender x/y/z extents, pivot = module pivot
+            bx,by,bz=v['bounds_m']; intact=[p for p in fbx if p.endswith('/'+name+'.fbx')]; frac=[p for p in fbx if p.endswith('/'+name+'_Fractured.fbx')]
+            modules[name]=dict(kit=kit,module=m,size_unity=[bx,bz,by],pivot='module pivot (centre of the module base footprint, +Z street)',
+                frag_pivot='fragment volume centre of mass',frags=v.get('fragments'),joints=v.get('joints'),anchors=v.get('anchors'),
+                fracture_class=v.get('frac') or 'Indestructible',mass_kg=v.get('mass_kg_total'),density_kg_m3=v.get('density_kg_m3'),
+                lod0_tris=(v.get('tris') or {}).get('LOD0') if isinstance(v.get('tris'),dict) else v.get('tris'),
+                intact_fbx=intact[0] if intact else None,fractured_fbx=frac[0] if frac else None)
+            continue
+        (x0,y0,z0),(x1,y1,z1)=v['aabb']
         intact=[p for p in fbx if p.endswith('/'+name+'.fbx')]; frac=[p for p in fbx if p.endswith('/'+name+'_Fractured.fbx')]
         modules[name]=dict(kit=kit,module=m,size_unity=[round(x1-x0,3),round(z1-z0,3),round(y1-y0,3)],
             pivot='bottom-centre' if abs(z0)<0.02 else 'top-centre (slab hangs below its pivot)' if abs(z1)<0.02
@@ -46,7 +55,16 @@ for f in sorted(x for x in files if x.startswith('Assets/_Project/Models/Buildin
         sized_from='Kit_*_stats.json module AABBs' if lo[0]<1e8 else 'no stats JSON for its kit (v3 kit): size unknown',
         realistic_variant=next((x for x in fbx if f'/Hero/{name}/' in x),None))
 prefabs=[x for x in files if x.endswith('.prefab')]
+for f in sorted(x for x in files if x.startswith('Assets/_Project/Models/Realistic/Buildings/') and x.endswith('.layout.json')):
+    d=show(f); name=d['building']+' (realistic)'; fp=d.get('footprint_m',{})
+    buildings[name]=dict(layout=f,style=d.get('style'),space=d.get('space'),footprint_m=[fp.get('x'),fp.get('z')],
+        modules=[dict(id=m['id'],label=m['label'],pivot=[m['pivot'][k] for k in 'xyz'],footprint_m=[m['footprint_m']['x'],m['footprint_m']['z']],
+                      height_m=m['height_m'],pieces=m['pieces'],anchor_to=m['anchor_to']) for m in d['modules']],
+        pieces=[dict(id=p['id'],module=p['module'],kit=p['kit'],pos=[p['position'][k] for k in 'xyz'],anchor_to=p['anchor_to'],
+                     fracture_class=p['fracture_class'],intact=p.get('intact'),fractured=p.get('fractured')) for p in d['pieces']],
+        piece_count=d['piece_count'],module_count=d['module_count'],connections=len(d['connections']),
+        joint_break_values_set=any(c.get('break_force_N') not in ('',None) for c in d['connections']),anchor_note=d.get('anchor_note'))
 out=dict(ref=REF,commit=git('rev-parse','--short',REF).strip(),unity_prefabs=prefabs,buildings=buildings,modules=modules)
 json.dump(out,open(os.path.join(HERE,'prefab_inventory.json'),'w'),indent=1)
 print('ref',out['commit'],'unity .prefab files:',len(prefabs))
-for n,b in buildings.items(): print(f"{n:20} pieces {b['piece_count']:3} size(x,y,z) {b['size_unity']} realistic={bool(b['realistic_variant'])}")
+for n,b in buildings.items(): print(f"{n:28} pieces {b['piece_count']:3} size {b.get('size_unity') or b.get('footprint_m')}")

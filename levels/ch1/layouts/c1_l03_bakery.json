@@ -2,17 +2,17 @@
  "id": "c1_l03_bakery",
  "blocks": [
   {
-   "id": "rock",
+   "id": "Base",
    "mat": "brick",
    "p": [
-    0,
-    0.6,
+    -0.15,
+    0.175,
     0
    ],
    "s": [
-    4,
-    1.2,
-    7
+    6.04,
+    0.35,
+    7.04
    ],
    "sup": [],
    "joint": false,
@@ -29,17 +29,17 @@
    "id": "propL",
    "mat": "wood",
    "p": [
-    -1.4,
-    1.9,
-    -1.6
+    -1.8,
+    1.05,
+    1.6
    ],
    "s": [
-    0.4,
+    0.45,
     1.4,
-    0.4
+    0.45
    ],
    "sup": [
-    "rock"
+    "Base"
    ],
    "joint": false,
    "role": "prop",
@@ -55,17 +55,17 @@
    "id": "propR",
    "mat": "wood",
    "p": [
-    -1.4,
-    1.9,
-    1.6
+    -1.8,
+    1.05,
+    -1.6
    ],
    "s": [
-    0.4,
+    0.45,
     1.4,
-    0.4
+    0.45
    ],
    "sup": [
-    "rock"
+    "Base"
    ],
    "joint": false,
    "role": "prop",
@@ -81,14 +81,14 @@
    "id": "slabL",
    "mat": "brick",
    "p": [
-    0,
-    2.8,
-    -1
+    -0.03,
+    1.95,
+    1.605
    ],
    "s": [
-    3.4,
+    5.46,
     0.4,
-    2
+    3.21
    ],
    "sup": [
     "propL"
@@ -107,14 +107,14 @@
    "id": "slabR",
    "mat": "brick",
    "p": [
-    0,
-    2.8,
-    1
+    -0.03,
+    1.95,
+    -1.605
    ],
    "s": [
-    3.4,
+    5.46,
     0.4,
-    2
+    3.21
    ],
    "sup": [
     "propR"
@@ -130,17 +130,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "G_F",
+   "id": "ShopFront",
    "mat": "brick",
    "p": [
-    -1.6,
-    4.12,
-    0
+    -2.46,
+    3.335,
+    0.0
    ],
    "s": [
-    0.3,
-    2.24,
-    3.6
+    0.6,
+    2.37,
+    6.62
    ],
    "sup": [
     "slabL",
@@ -157,17 +157,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "G_B",
+   "id": "Wall_Left",
    "mat": "brick",
    "p": [
-    1.6,
-    4.12,
-    0
+    -0.0,
+    3.335,
+    3.027
    ],
    "s": [
-    0.3,
-    2.24,
-    3.6
+    4.3,
+    2.37,
+    0.565
    ],
    "sup": [
     "slabL",
@@ -184,17 +184,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "G_L",
+   "id": "Wall_Right",
    "mat": "brick",
    "p": [
-    0,
-    4.12,
-    -1.65
+    -0.0,
+    3.335,
+    -3.027
    ],
    "s": [
-    2.9,
-    2.24,
-    0.3
+    4.3,
+    2.37,
+    0.565
    ],
    "sup": [
     "slabL",
@@ -211,17 +211,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "G_R",
+   "id": "Wall_Back",
    "mat": "brick",
    "p": [
-    0,
-    4.12,
-    1.65
+    2.43,
+    3.335,
+    0.0
    ],
    "s": [
-    2.9,
-    2.24,
-    0.3
+    0.54,
+    2.37,
+    6.42
    ],
    "sup": [
     "slabL",
@@ -238,21 +238,23 @@
    "spinDps": 0.0
   },
   {
-   "id": "oven",
-   "mat": "brick",
+   "id": "Floor",
+   "mat": "wood",
    "p": [
-    0,
-    3.6,
-    0
+    -0.37,
+    4.77,
+    0.0
    ],
    "s": [
-    1.2,
-    1.2,
-    1.2
+    5.08,
+    0.5,
+    6.42
    ],
    "sup": [
-    "slabL",
-    "slabR"
+    "ShopFront",
+    "Wall_Back",
+    "Wall_Left",
+    "Wall_Right"
    ],
    "joint": false,
    "role": "",
@@ -265,49 +267,20 @@
    "spinDps": 0.0
   },
   {
-   "id": "Floor1",
+   "id": "UpperStorey",
    "mat": "wood",
    "p": [
-    0,
-    5.39,
-    0
+    -0.15,
+    6.13,
+    0.0
    ],
    "s": [
-    3.5,
-    0.3,
-    3.6
+    5.7,
+    2.22,
+    6.56
    ],
    "sup": [
-    "G_F",
-    "G_B",
-    "G_L",
-    "G_R"
-   ],
-   "joint": false,
-   "role": "",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "U_F",
-   "mat": "wood",
-   "p": [
-    -1.6,
-    6.64,
-    0
-   ],
-   "s": [
-    0.3,
-    2.2,
-    3.6
-   ],
-   "sup": [
-    "Floor1"
+    "Floor"
    ],
    "joint": false,
    "role": "wall",
@@ -320,100 +293,20 @@
    "spinDps": 0.0
   },
   {
-   "id": "U_B",
-   "mat": "wood",
-   "p": [
-    1.6,
-    6.64,
-    0
-   ],
-   "s": [
-    0.3,
-    2.2,
-    3.6
-   ],
-   "sup": [
-    "Floor1"
-   ],
-   "joint": false,
-   "role": "wall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "U_L",
-   "mat": "wood",
-   "p": [
-    0,
-    6.64,
-    -1.65
-   ],
-   "s": [
-    2.9,
-    2.2,
-    0.3
-   ],
-   "sup": [
-    "Floor1"
-   ],
-   "joint": false,
-   "role": "wall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "U_R",
-   "mat": "wood",
-   "p": [
-    0,
-    6.64,
-    1.65
-   ],
-   "s": [
-    2.9,
-    2.2,
-    0.3
-   ],
-   "sup": [
-    "Floor1"
-   ],
-   "joint": false,
-   "role": "wall",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "Roof_W",
+   "id": "Roof_Left",
    "mat": "brick",
    "p": [
-    0,
-    8.14,
-    -1.0
+    -0.15,
+    7.97,
+    1.615
    ],
    "s": [
-    3.9,
-    0.8,
-    2.0
+    5.7,
+    1.46,
+    3.33
    ],
    "sup": [
-    "U_F",
-    "U_B",
-    "U_L"
+    "UpperStorey"
    ],
    "joint": false,
    "role": "roof",
@@ -426,22 +319,20 @@
    "spinDps": 0.0
   },
   {
-   "id": "Roof_E",
+   "id": "Roof_Right",
    "mat": "brick",
    "p": [
-    0,
-    8.14,
-    1.0
+    -0.15,
+    7.97,
+    -1.665
    ],
    "s": [
-    3.9,
-    0.8,
-    2.0
+    5.7,
+    1.46,
+    3.23
    ],
    "sup": [
-    "U_F",
-    "U_B",
-    "U_R"
+    "UpperStorey"
    ],
    "joint": false,
    "role": "roof",
@@ -457,17 +348,18 @@
    "id": "Chimney",
    "mat": "brick",
    "p": [
-    1.0,
-    9.04,
-    1.3
+    0.6,
+    10.025,
+    -2.2
    ],
    "s": [
-    0.5,
-    1.0,
-    0.5
+    0.72,
+    2.65,
+    0.87
    ],
    "sup": [
-    "Roof_E"
+    "Roof_Right",
+    "UpperStorey"
    ],
    "joint": false,
    "role": "",
@@ -483,9 +375,9 @@
    "id": "awningPost",
    "mat": "wood",
    "p": [
-    -1.6,
-    2.2,
-    3.0
+    -3.0,
+    1.35,
+    3.45
    ],
    "s": [
     0.3,
@@ -493,7 +385,7 @@
     0.3
    ],
    "sup": [
-    "rock"
+    "Base"
    ],
    "joint": false,
    "role": "prop",
@@ -509,14 +401,14 @@
    "id": "awning",
    "mat": "wood",
    "p": [
-    -1.6,
-    3.4,
-    2.6
+    -3.1,
+    2.5,
+    3.1
    ],
    "s": [
-    1.0,
+    0.6,
     0.3,
-    1.4
+    1.0
    ],
    "sup": [
     "awningPost"
