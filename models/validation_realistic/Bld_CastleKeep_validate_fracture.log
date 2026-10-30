@@ -1,0 +1,27 @@
+Kit_RealKeep_CBL_Fractured.fbx: frags=16 (Roof 8-16) tris max=62 total=334 mass 15.8-928.7 kg UCX=16 JNT=55 ANCHOR=12 -> PASS
+Kit_RealKeep_CBR_Fractured.fbx: frags=16 (Roof 8-16) tris max=70 total=342 mass 15.8-928.7 kg UCX=16 JNT=55 ANCHOR=12 -> PASS
+Kit_RealKeep_CFL_Fractured.fbx: frags=16 (Roof 8-16) tris max=70 total=342 mass 15.8-928.7 kg UCX=16 JNT=55 ANCHOR=12 -> PASS
+Kit_RealKeep_CFR_Fractured.fbx: frags=16 (Roof 8-16) tris max=62 total=334 mass 15.8-928.7 kg UCX=16 JNT=55 ANCHOR=12 -> PASS
+Kit_RealKeep_CrownL_Fractured.fbx: frags=10 (Stone 4-10) tris max=278 total=1226 mass 55.2-10467.5 kg UCX=10 JNT=10 ANCHOR=1 -> PASS
+Kit_RealKeep_CrownR_Fractured.fbx: frags=10 (Stone 4-10) tris max=288 total=1290 mass 27.6-10438.6 kg UCX=10 JNT=16 ANCHOR=1 -> PASS
+Kit_RealKeep_Floor_Fractured.fbx: frags=16 (Wood 8-16) tris max=204 total=1420 mass 30.6-314.9 kg UCX=16 JNT=36 ANCHOR=16 -> PASS
+Kit_RealKeep_PB_Fractured.fbx: frags=6 (Stone 4-10) tris max=80 total=380 mass 621.0-787.1 kg UCX=6 JNT=5 ANCHOR=6 -> PASS
+Kit_RealKeep_PF_Fractured.fbx: frags=6 (Stone 4-10) tris max=60 total=320 mass 621.0-787.1 kg UCX=6 JNT=5 ANCHOR=6 -> PASS
+Kit_RealKeep_PL_Fractured.fbx: frags=5 (Stone 4-10) tris max=64 total=296 mass 703.2-869.3 kg UCX=5 JNT=4 ANCHOR=5 -> PASS
+Kit_RealKeep_PR_Fractured.fbx: frags=5 (Stone 4-10) tris max=64 total=296 mass 703.2-869.3 kg UCX=5 JNT=4 ANCHOR=5 -> PASS
+Kit_RealKeep_RoofA_Fractured.fbx: frags=16 (Roof 8-16) tris max=160 total=1203 mass 853.5-3453.3 kg UCX=16 JNT=40 ANCHOR=6 -> PASS
+Kit_RealKeep_RoofB_Fractured.fbx: frags=16 (Roof 8-16) tris max=237 total=1085 mass 393.9-4506.9 kg UCX=16 JNT=45 ANCHOR=7 -> PASS
+Kit_RealKeep_TBL_Fractured.fbx: frags=6 (Stone 4-10) tris max=198 total=800 mass 506.1-1238.4 kg UCX=6 JNT=8 ANCHOR=1 -> PASS
+Kit_RealKeep_TBR_Fractured.fbx: frags=6 (Stone 4-10) tris max=164 total=808 mass 506.1-1278.6 kg UCX=6 JNT=8 ANCHOR=1 -> PASS
+Kit_RealKeep_TFL_Fractured.fbx: frags=6 (Stone 4-10) tris max=164 total=776 mass 506.1-1238.4 kg UCX=6 JNT=8 ANCHOR=1 -> PASS
+Kit_RealKeep_TFR_Fractured.fbx: frags=6 (Stone 4-10) tris max=152 total=754 mass 506.1-1278.6 kg UCX=6 JNT=8 ANCHOR=1 -> PASS
+Kit_RealKeep_W1B_Fractured.fbx: frags=10 (Stone 4-10) tris max=272 total=1212 mass 246.3-14303.4 kg UCX=10 JNT=19 ANCHOR=4 -> PASS
+Kit_RealKeep_W1FL_Fractured.fbx: frags=10 (Stone 4-10) tris max=180 total=874 mass 152.1-3091.1 kg UCX=10 JNT=15 ANCHOR=4 -> PASS
+Kit_RealKeep_W1FR_Fractured.fbx: frags=10 (Stone 4-10) tris max=170 total=894 mass 152.1-3091.1 kg UCX=10 JNT=15 ANCHOR=4 -> PASS
+Kit_RealKeep_W1L_Fractured.fbx: frags=8 (Stone 4-10) tris max=152 total=784 mass 2216.8-4033.7 kg UCX=8 JNT=13 ANCHOR=4 -> PASS
+Kit_RealKeep_W1R_Fractured.fbx: frags=8 (Stone 4-10) tris max=152 total=840 mass 2216.8-4033.7 kg UCX=8 JNT=13 ANCHOR=4 -> PASS
+Kit_RealKeep_W2B_Fractured.fbx: frags=10 (Stone 4-10) tris max=252 total=1484 mass 1710.4-3296.3 kg UCX=10 JNT=17 ANCHOR=5 -> PASS
+Kit_RealKeep_W2F_Fractured.fbx: frags=10 (Stone 4-10) tris max=284 total=1300 mass 1667.3-3110.3 kg UCX=10 JNT=18 ANCHOR=5 -> PASS
+Kit_RealKeep_W2L_Fractured.fbx: frags=8 (Stone 4-10) tris max=138 total=630 mass 1709.0-3632.6 kg UCX=8 JNT=13 ANCHOR=4 -> PASS
+Kit_RealKeep_W2R_Fractured.fbx: frags=8 (Stone 4-10) tris max=138 total=634 mass 1709.0-3632.6 kg UCX=8 JNT=13 ANCHOR=4 -> PASS
+RESULT: ALL PASS

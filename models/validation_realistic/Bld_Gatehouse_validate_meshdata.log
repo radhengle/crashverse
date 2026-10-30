@@ -1,0 +1,7 @@
+Kit_RealGate_ArchL.fbx: meshes=3 materials=['M_RealGate'] -> PASS
+Kit_RealGate_ArchL_Fractured.fbx: meshes=9 materials=['M_RealGate', 'M_RealGate_Inner'] -> PASS
+Kit_RealGate_ArchR.fbx: meshes=3 materials=['M_RealGate'] -> PASS
+Kit_RealGate_ArchR_Fractured.fbx: meshes=9 materials=['M_RealGate', 'M_RealGate_Inner'] -> PASS
+Kit_RealGate_Portc.fbx: meshes=3 materials=['M_RealGate'] -> PASS
+Kit_RealGate_Portc_Fractured.fbx: meshes=10 materials=['M_RealGate', 'M_RealGate_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS

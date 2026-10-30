@@ -26,6 +26,7 @@ def export_set(c):
         if A in abox: L_,H_=abox[A]; abox[A]=(Vector([min(L_[k],lo[k]) for k in range(3)]),Vector([max(H_[k],hi[k]) for k in range(3)]))
         else: abox[A]=(lo,hi)
     apiv={A:Vector(((l.x+h.x)/2,(l.y+h.y)/2,l.z)) for A,(l,h) in abox.items()}; origins={}
+    if c.get("pivot_of"): apiv={A:Vector(c["pivot_of"](A,l,h)) for A,(l,h) in abox.items()}   # e.g. boss blocks: pivot = runtime block centre
     def mats():
         bpy.ops.wm.read_factory_settings(use_empty=True)
         return R.lit_material(c["mat"],c["tex"]),R.lit_material(c["mat"]+"_Inner",c["inner_tex"],vcol=False)
@@ -81,7 +82,7 @@ def export_set(c):
     for A,lab in c["ASM"]:
         l,h=abox[A]; mem=[m for m in mods if ASMOF[m]==A]; att=sorted({x for m in mem for x in (ATTACH[m] if isinstance(ATTACH[m],list) else [ATTACH[m]]) if x=="Ground" or ASMOF.get(x)!=A})
         att=["Ground"] if att==["Ground"] else sorted({ASMOF.get(x,x) for x in att})
-        modules.append({"id":A,"label":lab,"pivot":U(apiv[A]),"pivot_rule":"centre of the base footprint, +Z = front","rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},
+        modules.append({"id":A,"label":lab,"pivot":U(apiv[A]),"pivot_rule":c.get("pivot_rule","centre of the base footprint, +Z = front"),"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},
             "footprint_m":{"x":round(h.x-l.x,3),"z":round(h.y-l.y,3)},"height_m":round(h.z-l.z,3),"top_y_m":round(h.z,3),"pieces":mem,"anchor_to":att,
             "tris":{k:sum(stats["modules"][m]["tris"][k] for m in mem) for k in ("LOD0","LOD1","LOD2")}})
     conns=[]

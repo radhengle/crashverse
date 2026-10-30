@@ -1,0 +1,70 @@
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_Base.fbx [Kit] LOD0 tris=236 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 236 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CBL.fbx [Kit] LOD0 tris=498 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 498 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CBL_Fractured.fbx [KitFractured] LOD0 tris=334 LODs=[0] hulls=16 frags=16 -> PASS
+    warn  LOD0 334 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CBR.fbx [Kit] LOD0 tris=506 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CBR_Fractured.fbx [KitFractured] LOD0 tris=342 LODs=[0] hulls=16 frags=16 -> PASS
+    warn  LOD0 342 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CFL.fbx [Kit] LOD0 tris=506 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CFL_Fractured.fbx [KitFractured] LOD0 tris=342 LODs=[0] hulls=16 frags=16 -> PASS
+    warn  LOD0 342 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CFR.fbx [Kit] LOD0 tris=498 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 498 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CFR_Fractured.fbx [KitFractured] LOD0 tris=334 LODs=[0] hulls=16 frags=16 -> PASS
+    warn  LOD0 334 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CrownL.fbx [Kit] LOD0 tris=1222 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CrownL_Fractured.fbx [KitFractured] LOD0 tris=1226 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CrownR.fbx [Kit] LOD0 tris=1370 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_CrownR_Fractured.fbx [KitFractured] LOD0 tris=1290 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_Floor.fbx [Kit] LOD0 tris=508 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_Floor_Fractured.fbx [KitFractured] LOD0 tris=1420 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_PB.fbx [Kit] LOD0 tris=324 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 324 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_PB_Fractured.fbx [KitFractured] LOD0 tris=380 LODs=[0] hulls=6 frags=6 -> PASS
+    warn  LOD0 380 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_PF.fbx [Kit] LOD0 tris=440 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 440 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_PF_Fractured.fbx [KitFractured] LOD0 tris=320 LODs=[0] hulls=6 frags=6 -> PASS
+    warn  LOD0 320 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_PL.fbx [Kit] LOD0 tris=368 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 368 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_PL_Fractured.fbx [KitFractured] LOD0 tris=296 LODs=[0] hulls=5 frags=5 -> PASS
+    warn  LOD0 296 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_PR.fbx [Kit] LOD0 tris=344 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 344 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_PR_Fractured.fbx [KitFractured] LOD0 tris=296 LODs=[0] hulls=5 frags=5 -> PASS
+    warn  LOD0 296 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_RoofA.fbx [Kit] LOD0 tris=1458 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_RoofA_Fractured.fbx [KitFractured] LOD0 tris=1203 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_RoofB.fbx [Kit] LOD0 tris=1365 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_RoofB_Fractured.fbx [KitFractured] LOD0 tris=1085 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_TBL.fbx [Kit] LOD0 tris=554 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_TBL_Fractured.fbx [KitFractured] LOD0 tris=800 LODs=[0] hulls=6 frags=6 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_TBR.fbx [Kit] LOD0 tris=540 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_TBR_Fractured.fbx [KitFractured] LOD0 tris=808 LODs=[0] hulls=6 frags=6 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_TFL.fbx [Kit] LOD0 tris=560 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_TFL_Fractured.fbx [KitFractured] LOD0 tris=776 LODs=[0] hulls=6 frags=6 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_TFR.fbx [Kit] LOD0 tris=524 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_TFR_Fractured.fbx [KitFractured] LOD0 tris=754 LODs=[0] hulls=6 frags=6 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1B.fbx [Kit] LOD0 tris=1244 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1B_Fractured.fbx [KitFractured] LOD0 tris=1212 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1FL.fbx [Kit] LOD0 tris=952 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1FL_Fractured.fbx [KitFractured] LOD0 tris=874 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1FR.fbx [Kit] LOD0 tris=918 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1FR_Fractured.fbx [KitFractured] LOD0 tris=894 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1L.fbx [Kit] LOD0 tris=716 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1L_Fractured.fbx [KitFractured] LOD0 tris=784 LODs=[0] hulls=8 frags=8 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1R.fbx [Kit] LOD0 tris=664 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W1R_Fractured.fbx [KitFractured] LOD0 tris=840 LODs=[0] hulls=8 frags=8 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W2B.fbx [Kit] LOD0 tris=1392 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W2B_Fractured.fbx [KitFractured] LOD0 tris=1484 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W2F.fbx [Kit] LOD0 tris=1236 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W2F_Fractured.fbx [KitFractured] LOD0 tris=1300 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W2L.fbx [Kit] LOD0 tris=492 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 492 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W2L_Fractured.fbx [KitFractured] LOD0 tris=630 LODs=[0] hulls=8 frags=8 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W2R.fbx [Kit] LOD0 tris=554 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_CastleKeep/Kit_RealKeep_W2R_Fractured.fbx [KitFractured] LOD0 tris=634 LODs=[0] hulls=8 frags=8 -> PASS
+RESULT: ALL PASS (53 groups, 53 files)

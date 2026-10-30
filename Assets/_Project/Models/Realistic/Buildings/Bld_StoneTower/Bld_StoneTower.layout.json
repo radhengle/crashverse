@@ -1,0 +1,1610 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Bld_StoneTower",
+ "style": "realistic v1",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); door (wallF1) faces Unity -X like m1_clockwork_tower; module ids = level block ids; positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  }
+ },
+ "tris_total": {
+  "LOD0": 15476,
+  "LOD1": 9808,
+  "LOD2": 3576,
+  "Fractured": 12912
+ },
+ "footprint_m": {
+  "x": 3.31,
+  "z": 3.2
+ },
+ "height_m": 10.65,
+ "module_count": 16,
+ "modules": [
+  {
+   "id": "doorSteps",
+   "label": "granite steps up to the door sill (indestructible, not a level block)",
+   "pivot": {
+    "x": -1.495,
+    "y": 0.0,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 0.43,
+    "z": 1.2
+   },
+   "height_m": 0.5,
+   "top_y_m": 0.5,
+   "pieces": [
+    "Steps"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 88,
+    "LOD1": 24,
+    "LOD2": 24
+   }
+  },
+  {
+   "id": "ring0",
+   "label": "iron-bound oak ring beam on the plinth",
+   "pivot": {
+    "x": -0.0,
+    "y": 0.003,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 2.63,
+    "z": 2.63
+   },
+   "height_m": 0.497,
+   "top_y_m": 0.5,
+   "pieces": [
+    "R0"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 1068,
+    "LOD1": 684,
+    "LOD2": 316
+   }
+  },
+  {
+   "id": "wallF1",
+   "label": "storey 1 stone wall, front (door side): round-arched oak door, dressed voussoirs, iron straps, quoins",
+   "pivot": {
+    "x": -1.1575,
+    "y": 0.46,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 0.445,
+    "z": 2.624
+   },
+   "height_m": 2.296,
+   "top_y_m": 2.756,
+   "pieces": [
+    "W1F"
+   ],
+   "anchor_to": [
+    "ring0"
+   ],
+   "tris": {
+    "LOD0": 1114,
+    "LOD1": 756,
+    "LOD2": 132
+   }
+  },
+  {
+   "id": "wallB1",
+   "label": "storey 1 stone wall, back: cross arrow slit, quoins",
+   "pivot": {
+    "x": 1.1275,
+    "y": 0.4964,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 0.385,
+    "z": 2.624
+   },
+   "height_m": 2.259,
+   "top_y_m": 2.755,
+   "pieces": [
+    "W1B"
+   ],
+   "anchor_to": [
+    "ring0"
+   ],
+   "tris": {
+    "LOD0": 784,
+    "LOD1": 580,
+    "LOD2": 60
+   }
+  },
+  {
+   "id": "wallL1",
+   "label": "storey 1 stone wall, left: cross arrow slit",
+   "pivot": {
+    "x": -0.0007,
+    "y": 0.4978,
+    "z": -1.1322
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.905,
+    "z": 0.376
+   },
+   "height_m": 2.257,
+   "top_y_m": 2.755,
+   "pieces": [
+    "W1L"
+   ],
+   "anchor_to": [
+    "ring0"
+   ],
+   "tris": {
+    "LOD0": 344,
+    "LOD1": 180,
+    "LOD2": 48
+   }
+  },
+  {
+   "id": "wallR1",
+   "label": "storey 1 stone wall, right: cross arrow slit",
+   "pivot": {
+    "x": -0.0017,
+    "y": 0.4981,
+    "z": 1.1307
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.907,
+    "z": 0.379
+   },
+   "height_m": 2.256,
+   "top_y_m": 2.754,
+   "pieces": [
+    "W1R"
+   ],
+   "anchor_to": [
+    "ring0"
+   ],
+   "tris": {
+    "LOD0": 388,
+    "LOD1": 216,
+    "LOD2": 44
+   }
+  },
+  {
+   "id": "ring1",
+   "label": "iron-bound oak ring beam + floor",
+   "pivot": {
+    "x": -0.0,
+    "y": 2.7537,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 2.63,
+    "z": 2.63
+   },
+   "height_m": 0.496,
+   "top_y_m": 3.25,
+   "pieces": [
+    "R1"
+   ],
+   "anchor_to": [
+    "wallB1",
+    "wallF1",
+    "wallL1",
+    "wallR1"
+   ],
+   "tris": {
+    "LOD0": 1088,
+    "LOD1": 696,
+    "LOD2": 264
+   }
+  },
+  {
+   "id": "wallF2",
+   "label": "storey 2 stone wall, front (door side): cross arrow slit, 2 red/gold banners on iron hooks, quoins",
+   "pivot": {
+    "x": -1.1775,
+    "y": 3.2464,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 0.485,
+    "z": 2.624
+   },
+   "height_m": 2.255,
+   "top_y_m": 5.502,
+   "pieces": [
+    "W2F"
+   ],
+   "anchor_to": [
+    "ring1"
+   ],
+   "tris": {
+    "LOD0": 872,
+    "LOD1": 632,
+    "LOD2": 56
+   }
+  },
+  {
+   "id": "wallB2",
+   "label": "storey 2 stone wall, back: cross arrow slit, quoins",
+   "pivot": {
+    "x": 1.1275,
+    "y": 3.2463,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 0.385,
+    "z": 2.624
+   },
+   "height_m": 2.255,
+   "top_y_m": 5.502,
+   "pieces": [
+    "W2B"
+   ],
+   "anchor_to": [
+    "ring1"
+   ],
+   "tris": {
+    "LOD0": 634,
+    "LOD1": 480,
+    "LOD2": 84
+   }
+  },
+  {
+   "id": "wallL2",
+   "label": "storey 2 stone wall, left: cross arrow slit",
+   "pivot": {
+    "x": 0.0007,
+    "y": 3.2458,
+    "z": -1.1326
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.907,
+    "z": 0.375
+   },
+   "height_m": 2.261,
+   "top_y_m": 5.507,
+   "pieces": [
+    "W2L"
+   ],
+   "anchor_to": [
+    "ring1"
+   ],
+   "tris": {
+    "LOD0": 406,
+    "LOD1": 276,
+    "LOD2": 44
+   }
+  },
+  {
+   "id": "wallR2",
+   "label": "storey 2 stone wall, right: cross arrow slit",
+   "pivot": {
+    "x": -0.001,
+    "y": 3.2435,
+    "z": 1.1316
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.9,
+    "z": 0.377
+   },
+   "height_m": 2.261,
+   "top_y_m": 5.505,
+   "pieces": [
+    "W2R"
+   ],
+   "anchor_to": [
+    "ring1"
+   ],
+   "tris": {
+    "LOD0": 414,
+    "LOD1": 244,
+    "LOD2": 64
+   }
+  },
+  {
+   "id": "ring2",
+   "label": "iron-bound oak ring beam + floor",
+   "pivot": {
+    "x": -0.0,
+    "y": 5.503,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 2.63,
+    "z": 2.63
+   },
+   "height_m": 0.497,
+   "top_y_m": 6.0,
+   "pieces": [
+    "R2"
+   ],
+   "anchor_to": [
+    "wallB2",
+    "wallF2",
+    "wallL2",
+    "wallR2"
+   ],
+   "tris": {
+    "LOD0": 988,
+    "LOD1": 636,
+    "LOD2": 312
+   }
+  },
+  {
+   "id": "crownFloor",
+   "label": "corbelled stone course + coping",
+   "pivot": {
+    "x": -0.0,
+    "y": 5.9974,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 3.2,
+    "z": 3.2
+   },
+   "height_m": 0.403,
+   "top_y_m": 6.4,
+   "pieces": [
+    "CrFl"
+   ],
+   "anchor_to": [
+    "ring2"
+   ],
+   "tris": {
+    "LOD0": 1164,
+    "LOD1": 964,
+    "LOD2": 624
+   }
+  },
+  {
+   "id": "crownWood",
+   "label": "timber hoarding with loopholes (2 halves)",
+   "pivot": {
+    "x": -0.0,
+    "y": 6.4,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 2.835,
+    "z": 2.835
+   },
+   "height_m": 1.4,
+   "top_y_m": 7.8,
+   "pieces": [
+    "CrWdA",
+    "CrWdB"
+   ],
+   "anchor_to": [
+    "crownFloor"
+   ],
+   "tris": {
+    "LOD0": 2364,
+    "LOD1": 1588,
+    "LOD2": 1048
+   }
+  },
+  {
+   "id": "crownBrick",
+   "label": "crenellated stone parapet",
+   "pivot": {
+    "x": -0.0005,
+    "y": 7.795,
+    "z": 0.0011
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 2.411,
+    "z": 2.411
+   },
+   "height_m": 0.81,
+   "top_y_m": 8.605,
+   "pieces": [
+    "CrBk"
+   ],
+   "anchor_to": [
+    "crownWood"
+   ],
+   "tris": {
+    "LOD0": 912,
+    "LOD1": 516,
+    "LOD2": 300
+   }
+  },
+  {
+   "id": "crownRoof",
+   "label": "terracotta pyramid roof (2 halves)",
+   "pivot": {
+    "x": -0.0,
+    "y": 8.47,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 2.709,
+    "z": 2.709
+   },
+   "height_m": 2.18,
+   "top_y_m": 10.65,
+   "pieces": [
+    "CrRfA",
+    "CrRfB"
+   ],
+   "anchor_to": [
+    "crownBrick"
+   ],
+   "tris": {
+    "LOD0": 2848,
+    "LOD1": 1336,
+    "LOD2": 156
+   }
+  }
+ ],
+ "piece_count": 18,
+ "pieces": [
+  {
+   "id": "Steps",
+   "label": "doorSteps: granite steps up to the door sill (indestructible, not a level block)",
+   "module": "doorSteps",
+   "kit": "Kit_RealTower_Steps",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_Steps.fbx",
+   "fractured": null,
+   "position": {
+    "x": -1.495,
+    "y": 0.0,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Indestructible",
+   "tris": {
+    "LOD0": 88,
+    "LOD1": 24,
+    "LOD2": 24
+   }
+  },
+  {
+   "id": "R0",
+   "label": "ring0: iron-bound oak ring beam on the plinth",
+   "module": "ring0",
+   "kit": "Kit_RealTower_R0",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R0.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R0_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 0.003,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1068,
+    "LOD1": 684,
+    "LOD2": 316,
+    "Fractured": 1064
+   }
+  },
+  {
+   "id": "W1F",
+   "label": "wallF1: storey 1 stone wall, front (door side): round-arched oak door, dressed voussoirs, iron straps, quoins",
+   "module": "wallF1",
+   "kit": "Kit_RealTower_W1F",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1F.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1F_Fractured.fbx",
+   "position": {
+    "x": -1.1575,
+    "y": 0.46,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R0"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 1114,
+    "LOD1": 756,
+    "LOD2": 132,
+    "Fractured": 836
+   }
+  },
+  {
+   "id": "W1B",
+   "label": "wallB1: storey 1 stone wall, back: cross arrow slit, quoins",
+   "module": "wallB1",
+   "kit": "Kit_RealTower_W1B",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1B.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1B_Fractured.fbx",
+   "position": {
+    "x": 1.1275,
+    "y": 0.4964,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R0"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 784,
+    "LOD1": 580,
+    "LOD2": 60,
+    "Fractured": 708
+   }
+  },
+  {
+   "id": "W1L",
+   "label": "wallL1: storey 1 stone wall, left: cross arrow slit",
+   "module": "wallL1",
+   "kit": "Kit_RealTower_W1L",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1L.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1L_Fractured.fbx",
+   "position": {
+    "x": -0.0007,
+    "y": 0.4978,
+    "z": -1.1322
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R0"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 344,
+    "LOD1": 180,
+    "LOD2": 48,
+    "Fractured": 308
+   }
+  },
+  {
+   "id": "W1R",
+   "label": "wallR1: storey 1 stone wall, right: cross arrow slit",
+   "module": "wallR1",
+   "kit": "Kit_RealTower_W1R",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1R.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1R_Fractured.fbx",
+   "position": {
+    "x": -0.0017,
+    "y": 0.4981,
+    "z": 1.1307
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R0"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 388,
+    "LOD1": 216,
+    "LOD2": 44,
+    "Fractured": 352
+   }
+  },
+  {
+   "id": "R1",
+   "label": "ring1: iron-bound oak ring beam + floor",
+   "module": "ring1",
+   "kit": "Kit_RealTower_R1",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R1.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R1_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 2.7537,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "W1F",
+    "W1B",
+    "W1L",
+    "W1R"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1088,
+    "LOD1": 696,
+    "LOD2": 264,
+    "Fractured": 1068
+   }
+  },
+  {
+   "id": "W2F",
+   "label": "wallF2: storey 2 stone wall, front (door side): cross arrow slit, 2 red/gold banners on iron hooks, quoins",
+   "module": "wallF2",
+   "kit": "Kit_RealTower_W2F",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2F.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2F_Fractured.fbx",
+   "position": {
+    "x": -1.1775,
+    "y": 3.2464,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R1"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 872,
+    "LOD1": 632,
+    "LOD2": 56,
+    "Fractured": 776
+   }
+  },
+  {
+   "id": "W2B",
+   "label": "wallB2: storey 2 stone wall, back: cross arrow slit, quoins",
+   "module": "wallB2",
+   "kit": "Kit_RealTower_W2B",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2B.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2B_Fractured.fbx",
+   "position": {
+    "x": 1.1275,
+    "y": 3.2463,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R1"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 634,
+    "LOD1": 480,
+    "LOD2": 84,
+    "Fractured": 616
+   }
+  },
+  {
+   "id": "W2L",
+   "label": "wallL2: storey 2 stone wall, left: cross arrow slit",
+   "module": "wallL2",
+   "kit": "Kit_RealTower_W2L",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2L.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2L_Fractured.fbx",
+   "position": {
+    "x": 0.0007,
+    "y": 3.2458,
+    "z": -1.1326
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R1"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 406,
+    "LOD1": 276,
+    "LOD2": 44,
+    "Fractured": 428
+   }
+  },
+  {
+   "id": "W2R",
+   "label": "wallR2: storey 2 stone wall, right: cross arrow slit",
+   "module": "wallR2",
+   "kit": "Kit_RealTower_W2R",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2R.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2R_Fractured.fbx",
+   "position": {
+    "x": -0.001,
+    "y": 3.2435,
+    "z": 1.1316
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R1"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 414,
+    "LOD1": 244,
+    "LOD2": 64,
+    "Fractured": 432
+   }
+  },
+  {
+   "id": "R2",
+   "label": "ring2: iron-bound oak ring beam + floor",
+   "module": "ring2",
+   "kit": "Kit_RealTower_R2",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R2.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R2_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 5.503,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "W2F",
+    "W2B",
+    "W2L",
+    "W2R"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 988,
+    "LOD1": 636,
+    "LOD2": 312,
+    "Fractured": 984
+   }
+  },
+  {
+   "id": "CrFl",
+   "label": "crownFloor: corbelled stone course + coping",
+   "module": "crownFloor",
+   "kit": "Kit_RealTower_CrFl",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrFl.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrFl_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 5.9974,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "R2"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 1164,
+    "LOD1": 964,
+    "LOD2": 624,
+    "Fractured": 1140
+   }
+  },
+  {
+   "id": "CrWdA",
+   "label": "crownWood: timber hoarding with loopholes, front half",
+   "module": "crownWood",
+   "kit": "Kit_RealTower_CrWdA",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdA.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdA_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 6.4,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "CrFl"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1148,
+    "LOD1": 848,
+    "LOD2": 520,
+    "Fractured": 1088
+   }
+  },
+  {
+   "id": "CrWdB",
+   "label": "crownWood: timber hoarding with loopholes, back half",
+   "module": "crownWood",
+   "kit": "Kit_RealTower_CrWdB",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdB.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdB_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 6.4,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "CrFl"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1216,
+    "LOD1": 740,
+    "LOD2": 528,
+    "Fractured": 996
+   }
+  },
+  {
+   "id": "CrBk",
+   "label": "crownBrick: crenellated stone parapet",
+   "module": "crownBrick",
+   "kit": "Kit_RealTower_CrBk",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrBk.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrBk_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 7.795,
+    "z": 0.0011
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "CrWdA",
+    "CrWdB"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 912,
+    "LOD1": 516,
+    "LOD2": 300,
+    "Fractured": 572
+   }
+  },
+  {
+   "id": "CrRfA",
+   "label": "crownRoof: terracotta pyramid roof, front half (+finial)",
+   "module": "crownRoof",
+   "kit": "Kit_RealTower_CrRfA",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfA.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfA_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 8.47,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "CrBk"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 1418,
+    "LOD1": 662,
+    "LOD2": 90,
+    "Fractured": 758
+   }
+  },
+  {
+   "id": "CrRfB",
+   "label": "crownRoof: terracotta pyramid roof, back half",
+   "module": "crownRoof",
+   "kit": "Kit_RealTower_CrRfB",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfB.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfB_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 8.47,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "CrBk"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 1430,
+    "LOD1": 674,
+    "LOD2": 66,
+    "Fractured": 786
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "Steps",
+   "b": "R0",
+   "point": {
+    "x": -1.2975,
+    "y": 0.2515,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Steps",
+   "b": "W1F",
+   "point": {
+    "x": -1.33,
+    "y": 0.48,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R0",
+   "b": "W1F",
+   "point": {
+    "x": -1.125,
+    "y": 0.48,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R0",
+   "b": "W1B",
+   "point": {
+    "x": 1.125,
+    "y": 0.4982,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R0",
+   "b": "W1L",
+   "point": {
+    "x": -0.0007,
+    "y": 0.4989,
+    "z": -1.1297
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R0",
+   "b": "W1R",
+   "point": {
+    "x": -0.0017,
+    "y": 0.4991,
+    "z": 1.1282
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W1F",
+   "b": "W1L",
+   "point": {
+    "x": -0.9442,
+    "y": 1.6262,
+    "z": -1.1282
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W1F",
+   "b": "W1R",
+   "point": {
+    "x": -0.9451,
+    "y": 1.6261,
+    "z": 1.1267
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W1F",
+   "b": "R1",
+   "point": {
+    "x": -1.125,
+    "y": 2.7547,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W1B",
+   "b": "W1L",
+   "point": {
+    "x": 0.9435,
+    "y": 1.6262,
+    "z": -1.1282
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W1B",
+   "b": "W1R",
+   "point": {
+    "x": 0.9435,
+    "y": 1.6261,
+    "z": 1.1267
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W1B",
+   "b": "R1",
+   "point": {
+    "x": 1.125,
+    "y": 2.7544,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W1L",
+   "b": "R1",
+   "point": {
+    "x": -0.0007,
+    "y": 2.7541,
+    "z": -1.1297
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W1R",
+   "b": "R1",
+   "point": {
+    "x": -0.0017,
+    "y": 2.7538,
+    "z": 1.1282
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R1",
+   "b": "W2F",
+   "point": {
+    "x": -1.125,
+    "y": 3.2482,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R1",
+   "b": "W2B",
+   "point": {
+    "x": 1.125,
+    "y": 3.2481,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R1",
+   "b": "W2L",
+   "point": {
+    "x": 0.0007,
+    "y": 3.2479,
+    "z": -1.1301
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R1",
+   "b": "W2R",
+   "point": {
+    "x": -0.001,
+    "y": 3.2467,
+    "z": 1.1291
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W2F",
+   "b": "W2L",
+   "point": {
+    "x": -0.9439,
+    "y": 4.3741,
+    "z": -1.1286
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W2F",
+   "b": "W2R",
+   "point": {
+    "x": -0.9431,
+    "y": 4.3741,
+    "z": 1.1276
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W2F",
+   "b": "R2",
+   "point": {
+    "x": -1.125,
+    "y": 5.5025,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W2B",
+   "b": "W2L",
+   "point": {
+    "x": 0.9446,
+    "y": 4.374,
+    "z": -1.1286
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W2B",
+   "b": "W2R",
+   "point": {
+    "x": 0.942,
+    "y": 4.374,
+    "z": 1.1276
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W2B",
+   "b": "R2",
+   "point": {
+    "x": 1.125,
+    "y": 5.5023,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W2L",
+   "b": "R2",
+   "point": {
+    "x": 0.0007,
+    "y": 5.5051,
+    "z": -1.1301
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "W2R",
+   "b": "R2",
+   "point": {
+    "x": -0.001,
+    "y": 5.5038,
+    "z": 1.1291
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "R2",
+   "b": "CrFl",
+   "point": {
+    "x": -0.0,
+    "y": 5.9987,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "CrFl",
+   "b": "CrWdA",
+   "point": {
+    "x": -0.6788,
+    "y": 6.4,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "CrFl",
+   "b": "CrWdB",
+   "point": {
+    "x": 0.6788,
+    "y": 6.4,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "CrWdA",
+   "b": "CrWdB",
+   "point": {
+    "x": -0.0,
+    "y": 7.1,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "CrWdA",
+   "b": "CrBk",
+   "point": {
+    "x": -0.5729,
+    "y": 7.7975,
+    "z": 0.0011
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "CrWdB",
+   "b": "CrBk",
+   "point": {
+    "x": 0.5724,
+    "y": 7.7975,
+    "z": 0.0011
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "CrBk",
+   "b": "CrRfA",
+   "point": {
+    "x": -0.5716,
+    "y": 8.5377,
+    "z": 0.0011
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "CrBk",
+   "b": "CrRfB",
+   "point": {
+    "x": 0.5711,
+    "y": 8.5377,
+    "z": 0.0011
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "CrRfA",
+   "b": "CrRfB",
+   "point": {
+    "x": -0.0,
+    "y": 9.56,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+ "texture_set": "Assets/_Project/Models/Realistic/Buildings/RealCastle/Textures/T_RealCastle (shared castle atlas; cells.json beside it)",
+ "level_fit": {
+  "m1_clockwork_tower": {
+   "root_position": {
+    "x": 0.0,
+    "y": 1.2,
+    "z": 0.0
+   },
+   "scale": 1.0,
+   "note": "each module id = block id; module footprint/height = block size (crownFloor 3.2, crownWood 2.8, crownBrick 2.4, crownRoof 2.6 x 1.6, walls F/B 0.35x2.25x2.6, L/R 1.85x2.25x0.35, rings 2.6x0.5)"
+  },
+  "c1_l09_lighthouse_gauntlet": {
+   "root_position": {
+    "x": 1.0,
+    "y": 3.2,
+    "z": -3.0
+   },
+   "scale": {
+    "x": 0.85,
+    "y": 0.89,
+    "z": 0.85
+   },
+   "map": {
+    "lhRing": "ring0",
+    "lhShaft0": "storey 1 walls",
+    "lhShaft1": "storey 2 walls (scale 0.77 x/z)",
+    "lhGallery": "crownFloor",
+    "lhLantern": "crownWood",
+    "lhCap": "crownRoof"
+   },
+   "note": "lighthouse shafts are 2.2/2.0 m with 2 m storeys; non-uniform scale on the same modules (no separate set)"
+  }
+ }
+}

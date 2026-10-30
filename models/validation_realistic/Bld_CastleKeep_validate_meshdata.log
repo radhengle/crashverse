@@ -1,0 +1,54 @@
+Kit_RealKeep_Base.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_CBL.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_CBL_Fractured.fbx: meshes=16 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_CBR.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_CBR_Fractured.fbx: meshes=16 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_CFL.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_CFL_Fractured.fbx: meshes=16 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_CFR.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_CFR_Fractured.fbx: meshes=16 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_CrownL.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_CrownL_Fractured.fbx: meshes=10 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_CrownR.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_CrownR_Fractured.fbx: meshes=10 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_Floor.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_Floor_Fractured.fbx: meshes=16 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_PB.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_PB_Fractured.fbx: meshes=6 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_PF.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_PF_Fractured.fbx: meshes=6 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_PL.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_PL_Fractured.fbx: meshes=5 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_PR.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_PR_Fractured.fbx: meshes=5 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_RoofA.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_RoofA_Fractured.fbx: meshes=16 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_RoofB.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_RoofB_Fractured.fbx: meshes=16 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_TBL.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_TBL_Fractured.fbx: meshes=6 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_TBR.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_TBR_Fractured.fbx: meshes=6 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_TFL.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_TFL_Fractured.fbx: meshes=6 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_TFR.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_TFR_Fractured.fbx: meshes=6 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W1B.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W1B_Fractured.fbx: meshes=10 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W1FL.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W1FL_Fractured.fbx: meshes=10 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W1FR.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W1FR_Fractured.fbx: meshes=10 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W1L.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W1L_Fractured.fbx: meshes=8 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W1R.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W1R_Fractured.fbx: meshes=8 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W2B.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W2B_Fractured.fbx: meshes=10 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W2F.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W2F_Fractured.fbx: meshes=10 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W2L.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W2L_Fractured.fbx: meshes=8 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+Kit_RealKeep_W2R.fbx: meshes=3 materials=['M_RealKeep'] -> PASS
+Kit_RealKeep_W2R_Fractured.fbx: meshes=8 materials=['M_RealKeep', 'M_RealKeep_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS

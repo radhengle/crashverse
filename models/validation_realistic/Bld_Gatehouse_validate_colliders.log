@@ -1,0 +1,7 @@
+Assets/_Project/Models/Realistic/Buildings/Bld_Gatehouse/Kit_RealGate_ArchL.fbx [Kit] LOD0 tris=610 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_Gatehouse/Kit_RealGate_ArchL_Fractured.fbx [KitFractured] LOD0 tris=670 LODs=[0] hulls=9 frags=9 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_Gatehouse/Kit_RealGate_ArchR.fbx [Kit] LOD0 tris=624 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_Gatehouse/Kit_RealGate_ArchR_Fractured.fbx [KitFractured] LOD0 tris=656 LODs=[0] hulls=9 frags=9 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_Gatehouse/Kit_RealGate_Portc.fbx [Kit] LOD0 tris=1296 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_Gatehouse/Kit_RealGate_Portc_Fractured.fbx [KitFractured] LOD0 tris=1344 LODs=[0] hulls=10 frags=10 -> PASS
+RESULT: ALL PASS (6 groups, 6 files)

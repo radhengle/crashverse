@@ -1,0 +1,756 @@
+{
+ "set": "Kit_RealKeep",
+ "building": "Bld_CastleKeep",
+ "modules": {
+  "Base": {
+   "frac": null,
+   "module": "Base",
+   "label": "Granite footing (indestructible)",
+   "tris": {
+    "LOD0": 236,
+    "LOD1": 140,
+    "LOD2": 140
+   },
+   "bounds_m": [
+    7.5,
+    7.5,
+    0.3
+   ]
+  },
+  "W1FL": {
+   "frac": "Stone",
+   "module": "Wall_F1",
+   "label": "Storey 1 wall, front left half: round-arched oak door (left half) + cross slit, string course",
+   "tris": {
+    "LOD0": 952,
+    "LOD1": 658,
+    "LOD2": 112
+   },
+   "bounds_m": [
+    3.512,
+    0.695,
+    3.043
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 180,
+   "frag_tris_total": 874,
+   "mass_kg_total": 14366.6,
+   "mass_kg_range": [
+    152.14,
+    3091.11
+   ],
+   "density_kg_m3": 2300,
+   "joints": 15,
+   "anchors": 4,
+   "min_axis_m": 0.25
+  },
+  "W1FR": {
+   "frac": "Stone",
+   "module": "Wall_F1",
+   "label": "Storey 1 wall, front right half: door (right half) + cross slit, string course",
+   "tris": {
+    "LOD0": 918,
+    "LOD1": 678,
+    "LOD2": 120
+   },
+   "bounds_m": [
+    3.512,
+    0.695,
+    3.049
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 170,
+   "frag_tris_total": 894,
+   "mass_kg_total": 14366.7,
+   "mass_kg_range": [
+    152.14,
+    3091.11
+   ],
+   "density_kg_m3": 2300,
+   "joints": 15,
+   "anchors": 4,
+   "min_axis_m": 0.25
+  },
+  "W1B": {
+   "frac": "Stone",
+   "module": "Wall_B1",
+   "label": "Storey 1 wall, back",
+   "tris": {
+    "LOD0": 1244,
+    "LOD1": 1140,
+    "LOD2": 108
+   },
+   "bounds_m": [
+    7.024,
+    0.695,
+    3.011
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 272,
+   "frag_tris_total": 1212,
+   "mass_kg_total": 32557.1,
+   "mass_kg_range": [
+    246.33,
+    14303.4
+   ],
+   "density_kg_m3": 2300,
+   "joints": 19,
+   "anchors": 4,
+   "min_axis_m": 0.42
+  },
+  "W1L": {
+   "frac": "Stone",
+   "module": "Wall_L1",
+   "label": "Storey 1 wall, left",
+   "tris": {
+    "LOD0": 716,
+    "LOD1": 440,
+    "LOD2": 92
+   },
+   "bounds_m": [
+    0.689,
+    5.81,
+    3.013
+   ],
+   "fragments": 8,
+   "frag_source_lod": 1,
+   "frag_tris_max": 152,
+   "frag_tris_total": 784,
+   "mass_kg_total": 24868.1,
+   "mass_kg_range": [
+    2216.84,
+    4033.74
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 4,
+   "min_axis_m": 0.6
+  },
+  "W1R": {
+   "frac": "Stone",
+   "module": "Wall_R1",
+   "label": "Storey 1 wall, right",
+   "tris": {
+    "LOD0": 664,
+    "LOD1": 488,
+    "LOD2": 92
+   },
+   "bounds_m": [
+    0.686,
+    5.808,
+    3.013
+   ],
+   "fragments": 8,
+   "frag_source_lod": 1,
+   "frag_tris_max": 152,
+   "frag_tris_total": 840,
+   "mass_kg_total": 24868.1,
+   "mass_kg_range": [
+    2216.84,
+    4033.74
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 4,
+   "min_axis_m": 0.6
+  },
+  "Floor": {
+   "frac": "Wood",
+   "module": "Floor_1",
+   "label": "Interior oak floor (3 beams + boards)",
+   "tris": {
+    "LOD0": 508,
+    "LOD1": 340,
+    "LOD2": 368
+   },
+   "bounds_m": [
+    5.8,
+    5.8,
+    0.35
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 204,
+   "frag_tris_total": 1420,
+   "mass_kg_total": 2165.9,
+   "mass_kg_range": [
+    30.62,
+    314.85
+   ],
+   "density_kg_m3": 600,
+   "joints": 36,
+   "anchors": 16,
+   "min_axis_m": 0.22
+  },
+  "W2F": {
+   "frac": "Stone",
+   "module": "Wall_F2",
+   "label": "Storey 2 wall, front (door, banners)",
+   "tris": {
+    "LOD0": 1236,
+    "LOD1": 1000,
+    "LOD2": 172
+   },
+   "bounds_m": [
+    7.024,
+    0.64,
+    2.708
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 284,
+   "frag_tris_total": 1300,
+   "mass_kg_total": 26566.5,
+   "mass_kg_range": [
+    1667.32,
+    3110.29
+   ],
+   "density_kg_m3": 2300,
+   "joints": 18,
+   "anchors": 5,
+   "min_axis_m": 0.6
+  },
+  "W2B": {
+   "frac": "Stone",
+   "module": "Wall_B2",
+   "label": "Storey 2 wall, back",
+   "tris": {
+    "LOD0": 1392,
+    "LOD1": 1104,
+    "LOD2": 236
+   },
+   "bounds_m": [
+    7.024,
+    0.64,
+    2.715
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 252,
+   "frag_tris_total": 1484,
+   "mass_kg_total": 26566.5,
+   "mass_kg_range": [
+    1710.38,
+    3296.29
+   ],
+   "density_kg_m3": 2300,
+   "joints": 17,
+   "anchors": 5,
+   "min_axis_m": 0.6
+  },
+  "W2L": {
+   "frac": "Stone",
+   "module": "Wall_L2",
+   "label": "Storey 2 wall, left",
+   "tris": {
+    "LOD0": 492,
+    "LOD1": 370,
+    "LOD2": 218
+   },
+   "bounds_m": [
+    0.632,
+    5.809,
+    2.71
+   ],
+   "fragments": 8,
+   "frag_source_lod": 1,
+   "frag_tris_max": 138,
+   "frag_tris_total": 630,
+   "mass_kg_total": 20699.4,
+   "mass_kg_range": [
+    1709.05,
+    3632.59
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 4,
+   "min_axis_m": 0.6
+  },
+  "W2R": {
+   "frac": "Stone",
+   "module": "Wall_R2",
+   "label": "Storey 2 wall, right",
+   "tris": {
+    "LOD0": 554,
+    "LOD1": 374,
+    "LOD2": 226
+   },
+   "bounds_m": [
+    0.631,
+    5.807,
+    2.713
+   ],
+   "fragments": 8,
+   "frag_source_lod": 1,
+   "frag_tris_max": 138,
+   "frag_tris_total": 634,
+   "mass_kg_total": 20699.4,
+   "mass_kg_range": [
+    1709.05,
+    3632.59
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 4,
+   "min_axis_m": 0.6
+  },
+  "CrownL": {
+   "frac": "Stone",
+   "module": "Crown",
+   "label": "Corbelled crown course + coping, left half (banner)",
+   "tris": {
+    "LOD0": 1222,
+    "LOD1": 1090,
+    "LOD2": 568
+   },
+   "bounds_m": [
+    3.8,
+    7.6,
+    2.36
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 278,
+   "frag_tris_total": 1226,
+   "mass_kg_total": 24477.1,
+   "mass_kg_range": [
+    55.2,
+    10467.51
+   ],
+   "density_kg_m3": 2300,
+   "joints": 10,
+   "anchors": 1,
+   "min_axis_m": 0.24
+  },
+  "CrownR": {
+   "frac": "Stone",
+   "module": "Crown",
+   "label": "Corbelled crown course + coping, right half (banner)",
+   "tris": {
+    "LOD0": 1370,
+    "LOD1": 1162,
+    "LOD2": 572
+   },
+   "bounds_m": [
+    3.8,
+    7.6,
+    2.36
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 288,
+   "frag_tris_total": 1290,
+   "mass_kg_total": 24477.1,
+   "mass_kg_range": [
+    27.6,
+    10438.64
+   ],
+   "density_kg_m3": 2300,
+   "joints": 16,
+   "anchors": 1,
+   "min_axis_m": 0.2
+  },
+  "PF": {
+   "frac": "Stone",
+   "module": "Parapet_F",
+   "label": "Crenellated parapet, front (door, banners)",
+   "tris": {
+    "LOD0": 440,
+    "LOD1": 196,
+    "LOD2": 100
+   },
+   "bounds_m": [
+    7.606,
+    0.31,
+    0.91
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 60,
+   "frag_tris_total": 320,
+   "mass_kg_total": 4202.4,
+   "mass_kg_range": [
+    620.97,
+    787.06
+   ],
+   "density_kg_m3": 2300,
+   "joints": 5,
+   "anchors": 6,
+   "min_axis_m": 0.3
+  },
+  "PB": {
+   "frac": "Stone",
+   "module": "Parapet_B",
+   "label": "Crenellated parapet, back",
+   "tris": {
+    "LOD0": 324,
+    "LOD1": 232,
+    "LOD2": 100
+   },
+   "bounds_m": [
+    7.604,
+    0.31,
+    0.913
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 80,
+   "frag_tris_total": 380,
+   "mass_kg_total": 4202.4,
+   "mass_kg_range": [
+    620.97,
+    787.06
+   ],
+   "density_kg_m3": 2300,
+   "joints": 5,
+   "anchors": 6,
+   "min_axis_m": 0.3
+  },
+  "PL": {
+   "frac": "Stone",
+   "module": "Parapet_L",
+   "label": "Crenellated parapet, left",
+   "tris": {
+    "LOD0": 368,
+    "LOD1": 184,
+    "LOD2": 100
+   },
+   "bounds_m": [
+    0.311,
+    7.009,
+    0.906
+   ],
+   "fragments": 5,
+   "frag_source_lod": 1,
+   "frag_tris_max": 64,
+   "frag_tris_total": 296,
+   "mass_kg_total": 3832.2,
+   "mass_kg_range": [
+    703.22,
+    869.3
+   ],
+   "density_kg_m3": 2300,
+   "joints": 4,
+   "anchors": 5,
+   "min_axis_m": 0.3
+  },
+  "PR": {
+   "frac": "Stone",
+   "module": "Parapet_R",
+   "label": "Crenellated parapet, right",
+   "tris": {
+    "LOD0": 344,
+    "LOD1": 184,
+    "LOD2": 208
+   },
+   "bounds_m": [
+    0.311,
+    7.005,
+    0.909
+   ],
+   "fragments": 5,
+   "frag_source_lod": 1,
+   "frag_tris_max": 64,
+   "frag_tris_total": 296,
+   "mass_kg_total": 3832.2,
+   "mass_kg_range": [
+    703.22,
+    869.3
+   ],
+   "density_kg_m3": 2300,
+   "joints": 4,
+   "anchors": 5,
+   "min_axis_m": 0.3
+  },
+  "RoofA": {
+   "frac": "Roof",
+   "module": "Roof",
+   "label": "Terracotta pyramid roof, left half",
+   "tris": {
+    "LOD0": 1458,
+    "LOD1": 690,
+    "LOD2": 142
+   },
+   "bounds_m": [
+    3.177,
+    6.228,
+    3.58
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 160,
+   "frag_tris_total": 1204,
+   "mass_kg_total": 28000.5,
+   "mass_kg_range": [
+    853.46,
+    3453.28
+   ],
+   "density_kg_m3": 1500,
+   "joints": 40,
+   "anchors": 6,
+   "min_axis_m": 0.635
+  },
+  "RoofB": {
+   "frac": "Roof",
+   "module": "Roof",
+   "label": "Terracotta pyramid roof, right half",
+   "tris": {
+    "LOD0": 1366,
+    "LOD1": 614,
+    "LOD2": 114
+   },
+   "bounds_m": [
+    3.177,
+    6.228,
+    3.5
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 238,
+   "frag_tris_total": 1086,
+   "mass_kg_total": 27999.6,
+   "mass_kg_range": [
+    393.87,
+    4506.93
+   ],
+   "density_kg_m3": 1500,
+   "joints": 45,
+   "anchors": 7,
+   "min_axis_m": 0.834
+  },
+  "TFL": {
+   "frac": "Stone",
+   "module": "Turret_FL",
+   "label": "Corner turret FL: corbelled bartizan drum + slit",
+   "tris": {
+    "LOD0": 560,
+    "LOD1": 540,
+    "LOD2": 360
+   },
+   "bounds_m": [
+    1.607,
+    1.567,
+    2.513
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 164,
+   "frag_tris_total": 776,
+   "mass_kg_total": 5348.0,
+   "mass_kg_range": [
+    506.15,
+    1238.39
+   ],
+   "density_kg_m3": 2300,
+   "joints": 8,
+   "anchors": 1,
+   "min_axis_m": 0.3
+  },
+  "CFL": {
+   "frac": "Roof",
+   "module": "Turret_FL",
+   "label": "Corner turret FL: terracotta cone roof",
+   "tris": {
+    "LOD0": 506,
+    "LOD1": 278,
+    "LOD2": 14
+   },
+   "bounds_m": [
+    2.021,
+    1.982,
+    2.2
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 70,
+   "frag_tris_total": 342,
+   "mass_kg_total": 2548.7,
+   "mass_kg_range": [
+    15.82,
+    928.67
+   ],
+   "density_kg_m3": 1500,
+   "joints": 55,
+   "anchors": 12,
+   "min_axis_m": 0.308
+  },
+  "TFR": {
+   "frac": "Stone",
+   "module": "Turret_FR",
+   "label": "Corner turret FR: corbelled bartizan drum + slit",
+   "tris": {
+    "LOD0": 524,
+    "LOD1": 526,
+    "LOD2": 396
+   },
+   "bounds_m": [
+    1.605,
+    1.571,
+    2.507
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 152,
+   "frag_tris_total": 754,
+   "mass_kg_total": 5348.0,
+   "mass_kg_range": [
+    506.15,
+    1278.64
+   ],
+   "density_kg_m3": 2300,
+   "joints": 8,
+   "anchors": 1,
+   "min_axis_m": 0.3
+  },
+  "CFR": {
+   "frac": "Roof",
+   "module": "Turret_FR",
+   "label": "Corner turret FR: terracotta cone roof",
+   "tris": {
+    "LOD0": 498,
+    "LOD1": 270,
+    "LOD2": 14
+   },
+   "bounds_m": [
+    2.021,
+    1.982,
+    2.2
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 62,
+   "frag_tris_total": 334,
+   "mass_kg_total": 2548.7,
+   "mass_kg_range": [
+    15.82,
+    928.67
+   ],
+   "density_kg_m3": 1500,
+   "joints": 55,
+   "anchors": 12,
+   "min_axis_m": 0.308
+  },
+  "TBL": {
+   "frac": "Stone",
+   "module": "Turret_BL",
+   "label": "Corner turret BL: corbelled bartizan drum + slit",
+   "tris": {
+    "LOD0": 554,
+    "LOD1": 564,
+    "LOD2": 384
+   },
+   "bounds_m": [
+    1.61,
+    1.566,
+    2.508
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 198,
+   "frag_tris_total": 800,
+   "mass_kg_total": 5348.0,
+   "mass_kg_range": [
+    506.15,
+    1238.39
+   ],
+   "density_kg_m3": 2300,
+   "joints": 8,
+   "anchors": 1,
+   "min_axis_m": 0.3
+  },
+  "CBL": {
+   "frac": "Roof",
+   "module": "Turret_BL",
+   "label": "Corner turret BL: terracotta cone roof",
+   "tris": {
+    "LOD0": 498,
+    "LOD1": 270,
+    "LOD2": 14
+   },
+   "bounds_m": [
+    2.021,
+    1.982,
+    2.2
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 62,
+   "frag_tris_total": 334,
+   "mass_kg_total": 2548.7,
+   "mass_kg_range": [
+    15.82,
+    928.67
+   ],
+   "density_kg_m3": 1500,
+   "joints": 55,
+   "anchors": 12,
+   "min_axis_m": 0.308
+  },
+  "TBR": {
+   "frac": "Stone",
+   "module": "Turret_BR",
+   "label": "Corner turret BR: corbelled bartizan drum + slit",
+   "tris": {
+    "LOD0": 540,
+    "LOD1": 572,
+    "LOD2": 372
+   },
+   "bounds_m": [
+    1.612,
+    1.564,
+    2.506
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 164,
+   "frag_tris_total": 808,
+   "mass_kg_total": 5348.0,
+   "mass_kg_range": [
+    506.15,
+    1278.64
+   ],
+   "density_kg_m3": 2300,
+   "joints": 8,
+   "anchors": 1,
+   "min_axis_m": 0.3
+  },
+  "CBR": {
+   "frac": "Roof",
+   "module": "Turret_BR",
+   "label": "Corner turret BR: terracotta cone roof",
+   "tris": {
+    "LOD0": 506,
+    "LOD1": 278,
+    "LOD2": 14
+   },
+   "bounds_m": [
+    2.021,
+    1.982,
+    2.2
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 70,
+   "frag_tris_total": 342,
+   "mass_kg_total": 2548.7,
+   "mass_kg_range": [
+    15.82,
+    928.67
+   ],
+   "density_kg_m3": 1500,
+   "joints": 55,
+   "anchors": 12,
+   "min_axis_m": 0.308
+  }
+ },
+ "tris_total": {
+  "LOD0": 19990,
+  "LOD1": 14382,
+  "LOD2": 5356,
+  "Fractured": 20660
+ },
+ "texture_set": "RealCastle"
+}
