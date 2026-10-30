@@ -10,7 +10,10 @@ APK=$1; OUT=${2:-smoke_out}; PKG=com.crashverse.game; mkdir -p "$OUT"
   "${AIM_FROM_X:?}" "${AIM_FROM_Y:?}" "${AIM_TO_X:?}" "${AIM_TO_Y:?}" "${MISS_TO_X:?}" "${MISS_TO_Y:?}" "${RETRY_X:?}" "${RETRY_Y:?}" \
   "${AVATAR_X:?}" "${AVATAR_Y:?}" "${BADGE_X:?}" "${BADGE_Y:?}" "${PCONT_X:?}" "${PCONT_Y:?}" "${MAP_X:?}" "${MAP_Y:?}" "${NODE2_X:?}" "${NODE2_Y:?}"
 SHOTS_L1=${SHOTS_L1:-4}
-shot(){ adb exec-out screencap -p > "$OUT/$1.png"; }
+
+# [CAM] framing lines survive the per-screen `logcat -c`: collected after every shot (CR stripped; [^\r] in grep means "not \\ or r")
+cam_log(){ adb logcat -d -s Unity | tr -d '\r' | grep -o "\[CAM\] .*" >> "$OUT/cam_all.txt" || true; }
+shot(){ cam_log; adb exec-out screencap -p > "$OUT/$1.png"; }
 # QA C-2: the #36 logcat gate (crash/ANR/exception + code stripping / missing types), one ERE per line
 FAIL_PATTERNS=${FAIL_PATTERNS:-$(dirname "$0")/../../qa/ci/logcat_fail_patterns.txt}; [ -s "$FAIL_PATTERNS" ] || { echo "FAIL: logcat pattern file $FAIL_PATTERNS missing"; exit 1; }
 PAT_RE=$(grep -vE '^\s*(#|$)' "$FAIL_PATTERNS" | paste -sd'|' -)
@@ -139,7 +142,7 @@ for LV in $LVS; do
   else echo "$LV: cv_dev_level not honoured (release build?)" | tee -a "$OUT/realkit.txt"; fi
 done
 # camera HUD gate: every framed level/boss logs [CAM] ... hudLine H buildingTop T arcTop A; T and A must be <= H (+0.01)
-adb logcat -d -s Unity | grep -o "\[CAM\] [^\r]*" | tee "$OUT/cam.txt"
+cam_log; touch "$OUT/cam_all.txt"; sort -u "$OUT/cam_all.txt" | tee "$OUT/cam.txt"; [ -s "$OUT/cam.txt" ] || { echo "FAIL: no [CAM] framing line logged"; exit 1; }
 if awk '{for(i=1;i<=NF;i++){if($i=="hudLine")h=$(i+1);if($i=="buildingTop")t=$(i+1);if($i=="arcTop")a=$(i+1)} if(t+0>h+0.01||a+0>h+0.01){print "HUD covers: "$0; bad=1}} END{exit !bad}' "$OUT/cam.txt"; then
   echo "FAIL: building top or hint arc under the HUD (see cam.txt)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; fi
 check final   # whole-run logcat gate (QA C-2)
