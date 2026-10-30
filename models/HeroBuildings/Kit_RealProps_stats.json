@@ -37,6 +37,42 @@
    "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
    "frac": "Wood",
    "source": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx"
+  },
+  "Barrel": {
+   "LOD0": 354,
+   "LOD1": 177,
+   "LOD2": 70,
+   "ucx": 8,
+   "size_m": [
+    0.704,
+    1.007,
+    0.704
+   ],
+   "aabb": [
+    [
+     -0.352,
+     -0.352,
+     -0.0559
+    ],
+    [
+     0.352,
+     0.352,
+     0.9506
+    ]
+   ],
+   "frags": 12,
+   "frag_max": 147,
+   "Fractured": 1434,
+   "mass": "9.5-28.2",
+   "min_axis_m": 0.259,
+   "joints": 35,
+   "anchors": 4,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Wood",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx"
   }
  },
  "tile_m": 1.0,
