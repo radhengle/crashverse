@@ -231,12 +231,11 @@ the MarketArch sign (2.66 × 0.30 × 0.82, bolted to the beam cap). L8 uses that
   - Policy self-test: OK.
   - ci_win_shots: all 14 clear at both gravities. L8's Multi Shot at key1 first-hits [key0, key1, key2] at ×1.0 (yaw −1.5, pitch 11.5) and
     ×1.2 (pitch 13.5).
-  - frame_check: all OK; the worst level is still L9 at 88/65.
+  - frame_check (old assumed fixed camera): all OK; the worst level is still L9 at 88/65. Superseded by the CannonCameraRules port in rev 9.1 below.
   - Daily Boss: 3★ possible every day for the next 60 days.
   - derive_hints: L3 hint propL moves to yaw 4.0 / pitch 7.5 and L8 hint key1 to pitch 11.5. The season_s1 e2/e4 event hints follow, and
     `--check` is clean.
-  - Note: frame_check is still the LD fixed-camera approximation. integration/v2 now has the real `CannonCameraRules`, which fits the pose to the
-    structure bounds, so the taller bakery (chimney stub top 11.97 m) is framed by the game, not by a fixed pose.
+  - Note (rev 9.1): frame_check now ports the real `CannonCameraRules`; see the rev 9.1 section.
 - **Tests on the merged tree:**
   - Tools/Tests: 5135 passed, 0 failed.
   - Server: 201 passed, 10 skipped.
@@ -260,3 +259,45 @@ the MarketArch sign (2.66 × 0.30 × 0.82, bolted to the beam cap). L8 uses that
   > at a 1.6 m pitch instead of the 2.2 m stall_slots (3D Modeler to re-slot). Kept: budgets, star bands, best lines, mastery.
   > L3 random win is 51.4% and 3★ is 6.5%; L8 is 67.6% and 2.2%. Frame slack is 117 px on L3 and 103 px on L8. Tools/Tests 5135/0,
   > server 201, physics 123/123. Visuals need realistic-v1 merged into integration/v2.
+
+## Rev 9.1: frame_check ports the real camera (CannonCameraRules) (2026-10-30)
+- **Change:** the game has no fixed camera. `OrbitCamera.FrameBehindCannon` solves a locked pose per level and per aspect with
+  `CannonCameraRules.Solve` (integration/v2 @ fb37202, Settings defaults). `frame_check.py` now ports Solve, ToViewport, FullyVisible and
+  ViewportRect line by line, replacing the assumed fixed camera (FOV 50, eye (−28, 5, 0), pitch 8°). The inputs are the same as the game's:
+  cannon root (−20, 0, 0), firing direction +x, structure = the union of block boxes (`GameBootstrap.StructureBounds`).
+- **Also checked:**
+  - Every `CannonCameraEditModeTests` assertion, on the test's six aspects (19.5:9, 20:9, 21:9, 16:9, 18:9, 4:3), using the test's cannon envelope.
+  - The two other tests: the camera is on the firing line, behind and above the barrel, with +z on screen-left; and a wider aspect never needs a
+    wider FOV (43.0° → 28.9°).
+  - Each stored hint aim (derive_hints, g×1.0), traced from the muzzle to its hintTarget: the arc and the target are on screen.
+- **Results (FOV / pitch down / min slack to the left, right or top edge; 1440×2560 equals 1080×1920 in angles, slack ×1.33):**
+
+  | layout | 1080×2340 | 1080×1920 | 1536×2048 (4:3) |
+  |---|---|---|---|
+  | c1_l01 | 24.4° / 6.7° / 144 px | 24.4° / 6.7° / 118 px | 24.4° / 6.7° / 126 px |
+  | c1_l02 | 32.5° / 2.9° / 40 px | 26.9° / 5.5° / 37 px | 25.3° / 6.2° / 126 px |
+  | c1_l03 | 32.5° / 2.9° / 79 px | 32.5° / 2.9° / 120 px | 32.5° / 2.9° / 129 px |
+  | c1_l04 | 28.1° / 5.0° / 128 px | 28.1° / 5.0° / 119 px | 28.1° / 5.0° / 127 px |
+  | c1_l05 | 32.7° / 2.8° / 42 px | 27.1° / 5.4° / 39 px | 24.0° (min clamp) / 6.9° / 160 px |
+  | c1_l06 | 29.9° / 4.1° / 146 px | 29.9° / 4.1° / 120 px | 29.9° / 4.1° / 128 px |
+  | c1_l07 | 31.0° / 3.6° / 88 px | 31.0° / 3.6° / 120 px | 31.0° / 3.6° / 128 px |
+  | c1_l08 | 34.6° / 1.9° / 42 px | 28.6° / 4.7° / 40 px | 24.0° (min clamp) / 6.9° / 123 px |
+  | c1_l09 | 35.1° / 1.7° / 41 px | 29.2° / 4.4° / 39 px | 29.2° / 4.4° / 127 px |
+  | c1_l10 | 27.1° / 5.4° / 145 px | 27.1° / 5.4° / 119 px | 27.1° / 5.4° / 127 px |
+  | titan_ash_bridge | 29.5° / 4.3° / 116 px | 29.5° / 4.3° / 120 px | 29.5° / 4.3° / 127 px |
+  | titan_caldera_rim | 29.5° / 4.3° / 116 px | 29.5° / 4.3° / 120 px | 29.5° / 4.3° / 127 px |
+  | titan_forge_floor | 29.2° / 4.4° / 146 px | 29.2° / 4.4° / 119 px | 29.2° / 4.4° / 127 px |
+  | titan_slag_foundry | 29.2° / 4.4° / 146 px | 29.2° / 4.4° / 119 px | 29.2° / 4.4° / 127 px |
+- **Flags:** none.
+  - No level reaches the 68° clamp. The widest FOV is 35.1° (L9 at 1080×2340).
+  - Nothing clips, and every EditMode-test assertion holds on all six aspects.
+  - Every hint arc and target is on screen at all four resolutions.
+  - L5 and L8 hit the 24° *minimum* on 4:3, which only adds slack.
+- **Notes:**
+  - Width-bound levels (L2, L5, L8, L9 on 19.5:9) leave about 40 px at the sides. That is the 92% sideFill by design.
+  - Height-bound levels (L1, L3, L4, L6, L7, L10, titans) put the top about 145 px below the screen top (the 6% topMargin). That is less than the
+    234 px HUD band the old check assumed. If the run HUD's top bar is taller than about 140 px, building tops sit under it. This is a
+    Developer/UI question, not a Level Designer clip.
+  - L3 at 1080×2340 is height-bound at FOV 32.5° with 79 px side slack (chimney stub top 11.97 m).
+- **Pending, no action yet:** 3D Modeler is re-pitching stall_slots to ±0.8/±2.4 (our 1.6 m spacing) and making the crates fractured and
+  destructible. L8 and L3 already match. Re-check when that commit lands.

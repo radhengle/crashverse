@@ -46,20 +46,21 @@ for i,(k,shape,mats,aha,risk,fun) in enumerate(info):
         f"- Goal: destroy {int(l['winThreshold']*100)}%" + (" (boss: defeat the Tidewarden)" if l.get('bossId') else "") + f" · Mastery: **{l['mastery']['text']}** · Hint: `{l['hintTarget']}` (yaw {l['hintYaw']}, pitch {l['hintPitch']} at g×1.0)",
         f"- Chain collapse: {aha}",f"- Risk/reward: {risk}",f"- Why it's fun: {fun}",
         f"- Proof: min {r['min'] if r.get('min_pw') is None else min(r['min'],r['min_pw'])} via {r['seq']}; 3★ needs ≤{r['need3']}; margin {r['margin']}.",
-        f"- Frame (assumed fixed camera): x {fr['primary']['x']} px, y {fr['primary']['y']} px; slack {fr['primary']['slack_px']} px (tight cam {fr['tight']['slack_px']} px)."]
+        "- Frame (CannonCameraRules port): " + "; ".join(f"{n}: FOV {e['fov']}°{' (clamped)' if e['clamped'] else ''}, pitch {e['pitch_down']}° down, slack {e['slack_min_px']} px" for n,e in fr['screens'].items()) + "; hint arc on screen at all four: " + ("yes" if all(e.get('hint',{}).get('arc_on',True) and e.get('hint',{}).get('target_on',True) for e in fr['screens'].values()) else "**NO**") + "."]
 o+=["","## Daily Boss (meta_v2.json `dailyBoss` + titan layouts)",
 f"Config now: baseShots {DB['config']['baseShots']}, shotSpread {DB['config']['shotSpread']} (rolls {DB['config']['baseShots']}–{DB['config']['baseShots']+DB['config']['shotSpread']}), winThreshold {DB['config']['winThreshold']}. Stars use the LevelEntry defaults 0.6/0.3.","",
 "| Arena | Min | Best line (= arena hint) | Pelvis shot alone | " + " | ".join(f"{S} shots: rand win / rand 3★ / 3★ possible" for S in DB['arenas'][0]['by_shots']) + " | Frame slack |",
 "|---|---|---|---|" + "---|"*len(DB['arenas'][0]['by_shots']) + "---|"]
 for a in DB['arenas']:
     fr=FR[('daily_boss',a['layout'])]
-    o.append(f"| {a['layout']} | {a['min']} | {a['seq']} | {a['pelvis_only']*100:.1f}% | " + " | ".join(f"{v['randwin']*100:.0f}% / {v['rand3']*100:.0f}% / {'yes' if v['three_star_possible'] else 'NO'}" for v in a['by_shots'].values()) + f" | {fr['primary']['slack_px']} px |")
+    o.append(f"| {a['layout']} | {a['min']} | {a['seq']} | {a['pelvis_only']*100:.1f}% | " + " | ".join(f"{v['randwin']*100:.0f}% / {v['rand3']*100:.0f}% / {'yes' if v['three_star_possible'] else 'NO'}" for v in a['by_shots'].values()) + f" | {fr['screens']['1080x2340']['slack_min_px']} px (FOV {fr['screens']['1080x2340']['fov']}°) |")
 o+=["",f"Next 60 days (DailyBossRules.ForDate replayed): 3★ possible every day = **{DB['next60']['all_three_star_possible']}**; shots {DB['next60']['shots_hist']}; arenas {DB['next60']['layout_hist']}.",
-"","## Fixed-camera frame check (`frame_check.py`)",
-"No fixed behind-the-cannon camera exists yet on integration/v2 or any branch/PR (CameraConfig is still the orbit rig: FOV 50, distance 22, yaw 72, pitch 15). **Assumed** until Developer's values land (edit `CAMERAS`):",
-"- primary: vertical FOV 50°, eye at (−28, 5, 0) = 8 m behind / 5 m above the Wrecker, looking +x, pitch 8° down → cannon bottom-centre (~68–98% of screen height).",
-"- tight (stress): FOV 50°, eye (−26, 4, 0), pitch 5°.",
-"- Viewport 1080×2340 portrait; safe area 6% sides (65 px), top 10% (234 px HUD), bottom 80% (1872 px, cannon/FIRE rail). All 8 corners of every piece are checked.",
-"Before rev 6: L8 failed (rock off both edges, −10 px / −40 px), L5 had 4 px slack on the tight camera, and all 4 titan arenas stood side-on to the cannon (arms and legs hidden behind each other)."]
+"","## Camera frame check (`frame_check.py`, port of CannonCameraRules)",
+"The game has no fixed camera. `OrbitCamera.FrameBehindCannon` solves a locked pose per level and per screen aspect with Developer's `CannonCameraRules.Solve` (integration/v2 @ fb37202, Settings defaults: 14 m behind and 4 m above the cannon root (−20, 0, 0), on the firing line; vertical FOV fits the cannon and the whole layout inside a 6% top / 3% bottom margin, and the layout width at 92% of the screen width, clamped to 24–68°; pitch anchors the cannon's lowest point 3% above the bottom edge and tilts up if the top would clip). `frame_check.py` is a line-by-line Python port (Solve, ToViewport, FullyVisible, ViewportRect) over the union of block boxes (as `GameBootstrap.StructureBounds`).",
+"- Screens: 1080×2340, 1080×1920, 1440×2560 and 1536×2048 (4:3 tablet). Slack = px from the layout to the nearest left/right/top screen edge.",
+"- Every `CannonCameraEditModeTests` assertion (whole building and cannon visible, cannon centred / at the bottom / ≥35% wide / below 60%, building above it and filling the view) is re-checked on the test's six aspects.",
+"- Each stored hint aim (hintYaw/hintPitch, derive_hints geometry, g×1.0) is traced from the muzzle to its hintTarget; the arc and the target must stay on screen.",
+"Flags: " + ("none" if not F['flags'] else "; ".join(F['flags'])) + ".",
+"Before rev 9.1 this section used an assumed fixed camera (FOV 50, eye (−28, 5, 0), pitch 8°)."]
 open(os.path.join(HERE,'Ch1_Levels_v1.md'),'w').write("\n".join(o)+"\n")
 print('written')

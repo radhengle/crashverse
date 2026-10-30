@@ -1,450 +1,2990 @@
 {
- "cameras": {
-  "primary": {
-   "fov": 50.0,
-   "eye": [
-    -28.0,
-    5.0,
-    0.0
-   ],
-   "pitch": 8.0
-  },
-  "tight": {
-   "fov": 50.0,
-   "eye": [
-    -26.0,
-    4.0,
-    0.0
-   ],
-   "pitch": 5.0
-  }
+ "source": "CannonCameraRules.cs @ fb37202 (port)",
+ "settings": {
+  "back": 14.0,
+  "height": 4.0,
+  "cannonRear": 1.8,
+  "cannonTop": 2.6,
+  "topMargin": 0.06,
+  "bottomMargin": 0.03,
+  "sideFill": 0.92,
+  "minFov": 24.0,
+  "maxFov": 68.0
  },
- "safe": {
-  "left": 64.8,
-  "right": 1015.1999999999999,
-  "top": 234.0,
-  "bottom": 1872.0
- },
+ "cannon_root": [
+  -20.0,
+  0.0,
+  0.0
+ ],
+ "cannon_box": [
+  [
+   -21.75,
+   0.0,
+   -1.0
+  ],
+  [
+   -18.0,
+   2.6,
+   1.0
+  ]
+ ],
+ "screens": [
+  [
+   "1080x2340",
+   1080,
+   2340
+  ],
+  [
+   "1080x1920",
+   1080,
+   1920
+  ],
+  [
+   "1440x2560",
+   1440,
+   2560
+  ],
+  [
+   "1536x2048 (4:3)",
+   1536,
+   2048
+  ]
+ ],
+ "test_aspects": [
+  0.46153846153846156,
+  0.45,
+  0.42857142857142855,
+  0.5625,
+  0.5,
+  0.75
+ ],
  "rows": [
   {
    "id": "c1_l01",
    "layout": "c1_l01_lookout_hut",
-   "primary": {
-    "x": [
-     335,
-     745
+   "bounds": [
+    [
+     8.0,
+     0.0,
+     -3.0
     ],
-    "y": [
-     681,
-     1166
-    ],
-    "fits": true,
-    "worst_piece": "deck",
-    "slack_px": 270
+    [
+     12.0,
+     7.0,
+     3.0
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 24.44,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 6.67,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.137,
+      0.549,
+      0.863,
+      0.938
+     ],
+     "cannon_vp": [
+      0.094,
+      0.034,
+      0.906,
+      0.567
+     ],
+     "slack_px": {
+      "left": 148,
+      "right": 148,
+      "top": 144
+     },
+     "fails": [],
+     "slack_min_px": 144,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.673
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.72,
+      "arc_end": [
+       -0.33,
+       2.26,
+       0.0
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 24.44,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 6.67,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.202,
+      0.549,
+      0.798,
+      0.938
+     ],
+     "cannon_vp": [
+      0.167,
+      0.034,
+      0.833,
+      0.567
+     ],
+     "slack_px": {
+      "left": 219,
+      "right": 219,
+      "top": 118
+     },
+     "fails": [],
+     "slack_min_px": 118,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.673
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.72,
+      "arc_end": [
+       -0.33,
+       2.26,
+       0.0
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 24.44,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 6.67,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.202,
+      0.549,
+      0.798,
+      0.938
+     ],
+     "cannon_vp": [
+      0.167,
+      0.034,
+      0.833,
+      0.567
+     ],
+     "slack_px": {
+      "left": 291,
+      "right": 291,
+      "top": 158
+     },
+     "fails": [],
+     "slack_min_px": 158,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.673
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.72,
+      "arc_end": [
+       -0.33,
+       2.26,
+       0.0
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 24.44,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 6.67,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.277,
+      0.549,
+      0.723,
+      0.938
+     ],
+     "cannon_vp": [
+      0.25,
+      0.034,
+      0.75,
+      0.567
+     ],
+     "slack_px": {
+      "left": 425,
+      "right": 425,
+      "top": 126
+     },
+     "fails": [],
+     "slack_min_px": 126,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.673
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.72,
+      "arc_end": [
+       -0.33,
+       2.26,
+       0.0
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     323,
-     757
-    ],
-    "y": [
-     737,
-     1245
-    ],
-    "fits": true,
-    "worst_piece": "deck",
-    "slack_px": 258
+   "test_aspects": {
+    "0.462": {
+     "fov": 24.44,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 24.44,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 24.44,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 24.44,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 24.44,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 24.44,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "post",
+    "yaw": 0.0,
+    "pitch": 11.0
    }
   },
   {
    "id": "c1_l02",
    "layout": "c1_l02_stilt_tower",
-   "primary": {
-    "x": [
-     197,
-     852
+   "bounds": [
+    [
+     8.0,
+     0.0,
+     -4.5
     ],
-    "y": [
-     634,
-     1166
-    ],
-    "fits": true,
-    "worst_piece": "shedRoof",
-    "slack_px": 132
+    [
+     12.0,
+     7.6,
+     5.2
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 32.51,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 2.87,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.037,
+      0.423,
+      0.9,
+      0.734
+     ],
+     "cannon_vp": [
+      0.198,
+      0.034,
+      0.802,
+      0.436
+     ],
+     "slack_px": {
+      "left": 40,
+      "right": 108,
+      "top": 622
+     },
+     "fails": [],
+     "slack_min_px": 40,
+     "hint": {
+      "target_vp": [
+       0.602,
+       0.484
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.524,
+      "arc_end": [
+       0.06,
+       1.43,
+       -1.31
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 26.91,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 5.51,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.034,
+      0.502,
+      0.903,
+      0.884
+     ],
+     "cannon_vp": [
+      0.199,
+      0.034,
+      0.801,
+      0.518
+     ],
+     "slack_px": {
+      "left": 37,
+      "right": 104,
+      "top": 223
+     },
+     "fails": [],
+     "slack_min_px": 37,
+     "hint": {
+      "target_vp": [
+       0.602,
+       0.577
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.626,
+      "arc_end": [
+       0.06,
+       1.43,
+       -1.31
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 26.91,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 5.51,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.034,
+      0.502,
+      0.903,
+      0.884
+     ],
+     "cannon_vp": [
+      0.199,
+      0.034,
+      0.801,
+      0.518
+     ],
+     "slack_px": {
+      "left": 49,
+      "right": 139,
+      "top": 298
+     },
+     "fails": [],
+     "slack_min_px": 49,
+     "hint": {
+      "target_vp": [
+       0.602,
+       0.577
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.626,
+      "arc_end": [
+       0.06,
+       1.43,
+       -1.31
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 25.33,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 6.25,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.127,
+      0.531,
+      0.823,
+      0.938
+     ],
+     "cannon_vp": [
+      0.259,
+      0.034,
+      0.741,
+      0.548
+     ],
+     "slack_px": {
+      "left": 195,
+      "right": 272,
+      "top": 126
+     },
+     "fails": [],
+     "slack_min_px": 126,
+     "hint": {
+      "target_vp": [
+       0.581,
+       0.611
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.663,
+      "arc_end": [
+       0.06,
+       1.43,
+       -1.31
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     179,
-     871
-    ],
-    "y": [
-     686,
-     1245
-    ],
-    "fits": true,
-    "worst_piece": "shedRoof",
-    "slack_px": 114
+   "test_aspects": {
+    "0.462": {
+     "fov": 32.51,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 33.3,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 34.87,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 26.91,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 30.13,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 25.33,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "sillL",
+    "yaw": -2.5,
+    "pitch": 9.5
    }
   },
   {
    "id": "c1_l03",
    "layout": "c1_l03_bakery",
-   "primary": {
-    "x": [
-     206,
-     879
+   "bounds": [
+    [
+     5.35,
+     0.0,
+     -4.47
     ],
-    "y": [
-     351,
-     1193
-    ],
-    "fits": true,
-    "worst_piece": "Chimney",
-    "slack_px": 117
+    [
+     13.51,
+     11.96,
+     4.41
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 32.52,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 2.87,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.079,
+      0.412,
+      0.927,
+      0.937
+     ],
+     "cannon_vp": [
+      0.198,
+      0.034,
+      0.802,
+      0.436
+     ],
+     "slack_px": {
+      "left": 85,
+      "right": 79,
+      "top": 147
+     },
+     "fails": [],
+     "slack_min_px": 79,
+     "hint": {
+      "target_vp": [
+       0.321,
+       0.464
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.491,
+      "arc_end": [
+       -2.59,
+       0.97,
+       1.92
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 32.52,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 2.87,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.155,
+      0.412,
+      0.85,
+      0.937
+     ],
+     "cannon_vp": [
+      0.252,
+      0.034,
+      0.748,
+      0.436
+     ],
+     "slack_px": {
+      "left": 167,
+      "right": 162,
+      "top": 120
+     },
+     "fails": [],
+     "slack_min_px": 120,
+     "hint": {
+      "target_vp": [
+       0.353,
+       0.464
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.491,
+      "arc_end": [
+       -2.59,
+       0.97,
+       1.92
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 32.52,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 2.87,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.155,
+      0.412,
+      0.85,
+      0.937
+     ],
+     "cannon_vp": [
+      0.252,
+      0.034,
+      0.748,
+      0.436
+     ],
+     "slack_px": {
+      "left": 223,
+      "right": 216,
+      "top": 161
+     },
+     "fails": [],
+     "slack_min_px": 161,
+     "hint": {
+      "target_vp": [
+       0.353,
+       0.464
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.491,
+      "arc_end": [
+       -2.59,
+       0.97,
+       1.92
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 32.52,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 2.87,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.241,
+      0.412,
+      0.763,
+      0.937
+     ],
+     "cannon_vp": [
+      0.314,
+      0.034,
+      0.686,
+      0.436
+     ],
+     "slack_px": {
+      "left": 370,
+      "right": 365,
+      "top": 129
+     },
+     "fails": [],
+     "slack_min_px": 129,
+     "hint": {
+      "target_vp": [
+       0.39,
+       0.464
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.491,
+      "arc_end": [
+       -2.59,
+       0.97,
+       1.92
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     189,
-     896
-    ],
-    "y": [
-     398,
-     1270
-    ],
-    "fits": true,
-    "worst_piece": "Roof_Right",
-    "slack_px": 119
+   "test_aspects": {
+    "0.462": {
+     "fov": 32.52,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 32.52,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 32.52,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 32.52,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 32.52,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 32.52,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "propL",
+    "yaw": 4.0,
+    "pitch": 7.5
    }
   },
   {
    "id": "c1_l04",
    "layout": "c1_l04_windmill",
-   "primary": {
-    "x": [
-     292,
-     716
+   "bounds": [
+    [
+     7.5,
+     0.0,
+     -2.5
     ],
-    "y": [
-     501,
-     1171
-    ],
-    "fits": true,
-    "worst_piece": "annexRoof",
-    "slack_px": 228
+    [
+     12.5,
+     9.4,
+     3.6
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 28.09,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.95,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.119,
+      0.481,
+      0.765,
+      0.938
+     ],
+     "cannon_vp": [
+      0.149,
+      0.034,
+      0.851,
+      0.498
+     ],
+     "slack_px": {
+      "left": 128,
+      "right": 254,
+      "top": 145
+     },
+     "fails": [],
+     "slack_min_px": 128,
+     "hint": {
+      "target_vp": [
+       0.622,
+       0.645
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.671,
+      "arc_end": [
+       -1.12,
+       3.37,
+       -1.26
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 28.09,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.95,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.187,
+      0.481,
+      0.717,
+      0.938
+     ],
+     "cannon_vp": [
+      0.212,
+      0.034,
+      0.788,
+      0.498
+     ],
+     "slack_px": {
+      "left": 202,
+      "right": 305,
+      "top": 119
+     },
+     "fails": [],
+     "slack_min_px": 119,
+     "hint": {
+      "target_vp": [
+       0.6,
+       0.645
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.671,
+      "arc_end": [
+       -1.12,
+       3.37,
+       -1.26
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 28.09,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.95,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.187,
+      0.481,
+      0.717,
+      0.938
+     ],
+     "cannon_vp": [
+      0.212,
+      0.034,
+      0.788,
+      0.498
+     ],
+     "slack_px": {
+      "left": 269,
+      "right": 407,
+      "top": 159
+     },
+     "fails": [],
+     "slack_min_px": 159,
+     "hint": {
+      "target_vp": [
+       0.6,
+       0.645
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.671,
+      "arc_end": [
+       -1.12,
+       3.37,
+       -1.26
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 28.09,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.95,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.265,
+      0.481,
+      0.663,
+      0.938
+     ],
+     "cannon_vp": [
+      0.284,
+      0.034,
+      0.716,
+      0.498
+     ],
+     "slack_px": {
+      "left": 408,
+      "right": 518,
+      "top": 127
+     },
+     "fails": [],
+     "slack_min_px": 127,
+     "hint": {
+      "target_vp": [
+       0.575,
+       0.645
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.671,
+      "arc_end": [
+       -1.12,
+       3.37,
+       -1.26
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     280,
-     727
-    ],
-    "y": [
-     545,
-     1249
-    ],
-    "fits": true,
-    "worst_piece": "annexRoof",
-    "slack_px": 215
+   "test_aspects": {
+    "0.462": {
+     "fov": 28.09,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 28.09,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 28.09,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 28.09,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 28.09,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 28.09,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "beamL",
+    "yaw": -2.5,
+    "pitch": 13.0
    }
   },
   {
    "id": "c1_l05",
    "layout": "c1_l05_twin_cottages",
-   "primary": {
-    "x": [
-     177,
-     903
+   "bounds": [
+    [
+     8.5,
+     0.0,
+     -5.3
     ],
-    "y": [
-     790,
-     1161
-    ],
-    "fits": true,
-    "worst_piece": "rockL",
-    "slack_px": 113
+    [
+     11.5,
+     5.4,
+     5.3
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 32.73,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 2.77,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.039,
+      0.422,
+      0.961,
+      0.639
+     ],
+     "cannon_vp": [
+      0.2,
+      0.034,
+      0.8,
+      0.434
+     ],
+     "slack_px": {
+      "left": 42,
+      "right": 42,
+      "top": 846
+     },
+     "fails": [],
+     "slack_min_px": 42,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.544
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.572,
+      "arc_end": [
+       0.06,
+       2.96,
+       0.0
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 27.1,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 5.42,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.036,
+      0.501,
+      0.964,
+      0.766
+     ],
+     "cannon_vp": [
+      0.201,
+      0.034,
+      0.799,
+      0.515
+     ],
+     "slack_px": {
+      "left": 39,
+      "right": 39,
+      "top": 449
+     },
+     "fails": [],
+     "slack_min_px": 39,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.649
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.684,
+      "arc_end": [
+       0.06,
+       2.96,
+       0.0
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 27.1,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 5.42,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.036,
+      0.501,
+      0.964,
+      0.766
+     ],
+     "cannon_vp": [
+      0.201,
+      0.034,
+      0.799,
+      0.515
+     ],
+     "slack_px": {
+      "left": 53,
+      "right": 53,
+      "top": 599
+     },
+     "fails": [],
+     "slack_min_px": 53,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.649
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.684,
+      "arc_end": [
+       0.06,
+       2.96,
+       0.0
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 24.0,
+     "fov_by": "height",
+     "clamped": "min",
+     "pitch_down": 6.87,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.104,
+      0.561,
+      0.896,
+      0.862
+     ],
+     "cannon_vp": [
+      0.246,
+      0.034,
+      0.754,
+      0.577
+     ],
+     "slack_px": {
+      "left": 160,
+      "right": 160,
+      "top": 282
+     },
+     "fails": [],
+     "slack_min_px": 160,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.729
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.769,
+      "arc_end": [
+       0.06,
+       2.96,
+       0.0
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     156,
-     924
-    ],
-    "y": [
-     849,
-     1241
-    ],
-    "fits": true,
-    "worst_piece": "rockL",
-    "slack_px": 91
+   "test_aspects": {
+    "0.462": {
+     "fov": 32.73,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 33.53,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 35.1,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 27.1,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 30.34,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 24.0,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "bridge",
+    "yaw": 0.0,
+    "pitch": 12.5
    }
   },
   {
    "id": "c1_l06",
    "layout": "c1_l06_granary",
-   "primary": {
-    "x": [
-     297,
-     783
+   "bounds": [
+    [
+     8.0,
+     0.0,
+     -3.5
     ],
-    "y": [
-     416,
-     1166
-    ],
-    "fits": true,
-    "worst_piece": "dome",
-    "slack_px": 182
+    [
+     12.0,
+     10.7,
+     3.5
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 29.91,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.1,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.157,
+      0.456,
+      0.843,
+      0.938
+     ],
+     "cannon_vp": [
+      0.171,
+      0.034,
+      0.829,
+      0.47
+     ],
+     "slack_px": {
+      "left": 170,
+      "right": 170,
+      "top": 146
+     },
+     "fails": [],
+     "slack_min_px": 146,
+     "hint": {
+      "target_vp": [
+       0.632,
+       0.628
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.651,
+      "arc_end": [
+       -0.71,
+       3.81,
+       -1.54
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 29.91,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.1,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.219,
+      0.456,
+      0.781,
+      0.938
+     ],
+     "cannon_vp": [
+      0.23,
+      0.034,
+      0.77,
+      0.47
+     ],
+     "slack_px": {
+      "left": 236,
+      "right": 236,
+      "top": 120
+     },
+     "fails": [],
+     "slack_min_px": 120,
+     "hint": {
+      "target_vp": [
+       0.608,
+       0.628
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.651,
+      "arc_end": [
+       -0.71,
+       3.81,
+       -1.54
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 29.91,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.1,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.219,
+      0.456,
+      0.781,
+      0.938
+     ],
+     "cannon_vp": [
+      0.23,
+      0.034,
+      0.77,
+      0.47
+     ],
+     "slack_px": {
+      "left": 315,
+      "right": 315,
+      "top": 160
+     },
+     "fails": [],
+     "slack_min_px": 160,
+     "hint": {
+      "target_vp": [
+       0.608,
+       0.628
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.651,
+      "arc_end": [
+       -0.71,
+       3.81,
+       -1.54
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 29.91,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.1,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.289,
+      0.456,
+      0.711,
+      0.938
+     ],
+     "cannon_vp": [
+      0.297,
+      0.034,
+      0.703,
+      0.47
+     ],
+     "slack_px": {
+      "left": 444,
+      "right": 444,
+      "top": 128
+     },
+     "fails": [],
+     "slack_min_px": 128,
+     "hint": {
+      "target_vp": [
+       0.581,
+       0.628
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.651,
+      "arc_end": [
+       -0.71,
+       3.81,
+       -1.54
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     283,
-     797
-    ],
-    "y": [
-     460,
-     1245
-    ],
-    "fits": true,
-    "worst_piece": "rock",
-    "slack_px": 218
+   "test_aspects": {
+    "0.462": {
+     "fov": 29.91,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 29.91,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 29.91,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 29.91,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 29.91,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 29.91,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "braceL",
+    "yaw": -3.0,
+    "pitch": 14.0
    }
   },
   {
    "id": "c1_l07",
    "layout": "m1_clockwork_tower",
-   "primary": {
-    "x": [
-     231,
-     777
+   "bounds": [
+    [
+     7.6,
+     0.0,
+     -3.4
     ],
-    "y": [
-     360,
-     1170
-    ],
-    "fits": true,
-    "worst_piece": "crownRoof",
-    "slack_px": 126
+    [
+     12.25,
+     11.4,
+     4.4
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 31.03,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 3.57,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.082,
+      0.439,
+      0.823,
+      0.938
+     ],
+     "cannon_vp": [
+      0.183,
+      0.034,
+      0.817,
+      0.455
+     ],
+     "slack_px": {
+      "left": 88,
+      "right": 191,
+      "top": 146
+     },
+     "fails": [],
+     "slack_min_px": 88,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.508
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.547,
+      "arc_end": [
+       0.09,
+       1.43,
+       0.0
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 31.03,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 3.57,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.157,
+      0.439,
+      0.765,
+      0.938
+     ],
+     "cannon_vp": [
+      0.24,
+      0.034,
+      0.76,
+      0.455
+     ],
+     "slack_px": {
+      "left": 169,
+      "right": 254,
+      "top": 120
+     },
+     "fails": [],
+     "slack_min_px": 120,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.508
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.547,
+      "arc_end": [
+       0.09,
+       1.43,
+       0.0
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 31.03,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 3.57,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.157,
+      0.439,
+      0.765,
+      0.938
+     ],
+     "cannon_vp": [
+      0.24,
+      0.034,
+      0.76,
+      0.455
+     ],
+     "slack_px": {
+      "left": 226,
+      "right": 338,
+      "top": 160
+     },
+     "fails": [],
+     "slack_min_px": 160,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.508
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.547,
+      "arc_end": [
+       0.09,
+       1.43,
+       0.0
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 31.03,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 3.57,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.243,
+      0.439,
+      0.699,
+      0.938
+     ],
+     "cannon_vp": [
+      0.305,
+      0.034,
+      0.695,
+      0.455
+     ],
+     "slack_px": {
+      "left": 373,
+      "right": 463,
+      "top": 128
+     },
+     "fails": [],
+     "slack_min_px": 128,
+     "hint": {
+      "target_vp": [
+       0.5,
+       0.508
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.547,
+      "arc_end": [
+       0.09,
+       1.43,
+       0.0
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     213,
-     792
-    ],
-    "y": [
-     401,
-     1248
-    ],
-    "fits": true,
-    "worst_piece": "barrelDecor",
-    "slack_px": 148
+   "test_aspects": {
+    "0.462": {
+     "fov": 31.03,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 31.03,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 31.03,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 31.03,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 31.03,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 31.03,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "ring0",
+    "yaw": 0.0,
+    "pitch": 9.5
    }
   },
   {
    "id": "c1_l08",
    "layout": "c1_l08_market_arcade",
-   "primary": {
-    "x": [
-     168,
-     912
+   "bounds": [
+    [
+     8.0,
+     0.0,
+     -5.55
     ],
-    "y": [
-     750,
-     1166
-    ],
-    "fits": true,
-    "worst_piece": "beam",
-    "slack_px": 103
+    [
+     12.0,
+     6.0,
+     5.55
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 34.57,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 1.9,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.039,
+      0.401,
+      0.961,
+      0.63
+     ],
+     "cannon_vp": [
+      0.217,
+      0.034,
+      0.783,
+      0.413
+     ],
+     "slack_px": {
+      "left": 42,
+      "right": 42,
+      "top": 866
+     },
+     "fails": [],
+     "slack_min_px": 42,
+     "hint": {
+      "target_vp": [
+       0.563,
+       0.493
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.527,
+      "arc_end": [
+       0.16,
+       2.43,
+       -0.79
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 28.65,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 4.69,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.037,
+      0.474,
+      0.963,
+      0.755
+     ],
+     "cannon_vp": [
+      0.218,
+      0.034,
+      0.782,
+      0.489
+     ],
+     "slack_px": {
+      "left": 40,
+      "right": 40,
+      "top": 471
+     },
+     "fails": [],
+     "slack_min_px": 40,
+     "hint": {
+      "target_vp": [
+       0.563,
+       0.587
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.629,
+      "arc_end": [
+       0.16,
+       2.43,
+       -0.79
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 28.65,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 4.69,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.037,
+      0.474,
+      0.963,
+      0.755
+     ],
+     "cannon_vp": [
+      0.218,
+      0.034,
+      0.782,
+      0.489
+     ],
+     "slack_px": {
+      "left": 53,
+      "right": 53,
+      "top": 628
+     },
+     "fails": [],
+     "slack_min_px": 53,
+     "hint": {
+      "target_vp": [
+       0.563,
+       0.587
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.629,
+      "arc_end": [
+       0.16,
+       2.43,
+       -0.79
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 24.0,
+     "fov_by": "height",
+     "clamped": "min",
+     "pitch_down": 6.87,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.08,
+      0.559,
+      0.92,
+      0.898
+     ],
+     "cannon_vp": [
+      0.246,
+      0.034,
+      0.754,
+      0.577
+     ],
+     "slack_px": {
+      "left": 123,
+      "right": 123,
+      "top": 209
+     },
+     "fails": [],
+     "slack_min_px": 123,
+     "hint": {
+      "target_vp": [
+       0.557,
+       0.694
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.745,
+      "arc_end": [
+       0.16,
+       2.43,
+       -0.79
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     148,
-     932
-    ],
-    "y": [
-     809,
-     1245
-    ],
-    "fits": true,
-    "worst_piece": "beam",
-    "slack_px": 83
+   "test_aspects": {
+    "0.462": {
+     "fov": 34.57,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 35.4,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 37.06,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 28.65,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 32.06,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 24.0,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "key1",
+    "yaw": -1.5,
+    "pitch": 11.5
    }
   },
   {
    "id": "c1_l09",
    "layout": "c1_l09_lighthouse_gauntlet",
-   "primary": {
-    "x": [
-     153,
-     918
+   "bounds": [
+    [
+     7.0,
+     0.0,
+     -5.3
     ],
-    "y": [
-     468,
-     1176
-    ],
-    "fits": true,
-    "worst_piece": "breakwater",
-    "slack_px": 88
+    [
+     13.0,
+     10.1,
+     5.5
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 35.07,
+     "fov_by": "width",
+     "clamped": null,
+     "pitch_down": 1.67,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.038,
+      0.392,
+      0.945,
+      0.783
+     ],
+     "cannon_vp": [
+      0.221,
+      0.034,
+      0.779,
+      0.408
+     ],
+     "slack_px": {
+      "left": 41,
+      "right": 59,
+      "top": 508
+     },
+     "fails": [],
+     "slack_min_px": 41,
+     "hint": {
+      "target_vp": [
+       0.729,
+       0.527
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.561,
+      "arc_end": [
+       1.09,
+       3.57,
+       -2.99
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.41,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.036,
+      0.461,
+      0.947,
+      0.938
+     ],
+     "cannon_vp": [
+      0.224,
+      0.034,
+      0.776,
+      0.48
+     ],
+     "slack_px": {
+      "left": 39,
+      "right": 57,
+      "top": 119
+     },
+     "fails": [],
+     "slack_min_px": 39,
+     "hint": {
+      "target_vp": [
+       0.728,
+       0.624
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.665,
+      "arc_end": [
+       1.09,
+       3.57,
+       -2.99
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.41,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.036,
+      0.461,
+      0.947,
+      0.938
+     ],
+     "cannon_vp": [
+      0.224,
+      0.034,
+      0.776,
+      0.48
+     ],
+     "slack_px": {
+      "left": 52,
+      "right": 77,
+      "top": 159
+     },
+     "fails": [],
+     "slack_min_px": 52,
+     "hint": {
+      "target_vp": [
+       0.728,
+       0.624
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.665,
+      "arc_end": [
+       1.09,
+       3.57,
+       -2.99
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.41,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.152,
+      0.461,
+      0.835,
+      0.938
+     ],
+     "cannon_vp": [
+      0.293,
+      0.034,
+      0.707,
+      0.48
+     ],
+     "slack_px": {
+      "left": 234,
+      "right": 253,
+      "top": 127
+     },
+     "fails": [],
+     "slack_min_px": 127,
+     "hint": {
+      "target_vp": [
+       0.671,
+       0.624
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.665,
+      "arc_end": [
+       1.09,
+       3.57,
+       -2.99
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     130,
-     942
-    ],
-    "y": [
-     516,
-     1254
-    ],
-    "fits": true,
-    "worst_piece": "breakwater",
-    "slack_px": 65
+   "test_aspects": {
+    "0.462": {
+     "fov": 35.07,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 35.91,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 37.58,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 32.52,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 29.25,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "lhRing",
+    "yaw": -5.5,
+    "pitch": 14.0
    }
   },
   {
    "id": "c1_l10",
    "layout": "c1_l10_tidewarden",
-   "primary": {
-    "x": [
-     351,
-     729
+   "bounds": [
+    [
+     8.0,
+     0.0,
+     -2.8
     ],
-    "y": [
-     554,
-     1166
-    ],
-    "fits": true,
-    "worst_piece": "armL",
-    "slack_px": 286
+    [
+     12.0,
+     8.8,
+     2.8
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 27.11,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 5.41,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.196,
+      0.499,
+      0.804,
+      0.938
+     ],
+     "cannon_vp": [
+      0.136,
+      0.034,
+      0.864,
+      0.515
+     ],
+     "slack_px": {
+      "left": 212,
+      "right": 212,
+      "top": 145
+     },
+     "fails": [],
+     "slack_min_px": 145,
+     "hint": {
+      "target_vp": [
+       0.727,
+       0.821
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.839,
+      "arc_end": [
+       0.01,
+       6.54,
+       -2.1
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 27.11,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 5.41,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.25,
+      0.499,
+      0.75,
+      0.938
+     ],
+     "cannon_vp": [
+      0.201,
+      0.034,
+      0.799,
+      0.515
+     ],
+     "slack_px": {
+      "left": 270,
+      "right": 270,
+      "top": 119
+     },
+     "fails": [],
+     "slack_min_px": 119,
+     "hint": {
+      "target_vp": [
+       0.686,
+       0.821
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.839,
+      "arc_end": [
+       0.01,
+       6.54,
+       -2.1
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 27.11,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 5.41,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.25,
+      0.499,
+      0.75,
+      0.938
+     ],
+     "cannon_vp": [
+      0.201,
+      0.034,
+      0.799,
+      0.515
+     ],
+     "slack_px": {
+      "left": 361,
+      "right": 361,
+      "top": 158
+     },
+     "fails": [],
+     "slack_min_px": 158,
+     "hint": {
+      "target_vp": [
+       0.686,
+       0.821
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.839,
+      "arc_end": [
+       0.01,
+       6.54,
+       -2.1
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 27.11,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 5.41,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.313,
+      0.499,
+      0.687,
+      0.938
+     ],
+     "cannon_vp": [
+      0.276,
+      0.034,
+      0.724,
+      0.515
+     ],
+     "slack_px": {
+      "left": 480,
+      "right": 480,
+      "top": 127
+     },
+     "fails": [],
+     "slack_min_px": 127,
+     "hint": {
+      "target_vp": [
+       0.64,
+       0.821
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.839,
+      "arc_end": [
+       0.01,
+       6.54,
+       -2.1
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     341,
-     739
-    ],
-    "y": [
-     605,
-     1245
-    ],
-    "fits": true,
-    "worst_piece": "armL",
-    "slack_px": 276
+   "test_aspects": {
+    "0.462": {
+     "fov": 27.11,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 27.11,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 27.11,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 27.11,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 27.11,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 27.11,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "shoulderL",
+    "yaw": -4.0,
+    "pitch": 19.5
    }
   },
   {
    "id": "daily_boss",
    "layout": "titan_ash_bridge",
-   "primary": {
-    "x": [
-     267,
-     772
+   "bounds": [
+    [
+     8.05,
+     0.0,
+     -3.4
     ],
-    "y": [
-     438,
-     1162
-    ],
-    "fits": true,
-    "worst_piece": "crate",
-    "slack_px": 202
+    [
+     11.0,
+     10.4,
+     3.95
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 29.46,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.31,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.107,
+      0.463,
+      0.838,
+      0.938
+     ],
+     "cannon_vp": [
+      0.166,
+      0.034,
+      0.834,
+      0.477
+     ],
+     "slack_px": {
+      "left": 116,
+      "right": 175,
+      "top": 146
+     },
+     "fails": [],
+     "slack_min_px": 116,
+     "hint": {
+      "target_vp": [
+       0.64,
+       0.557
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.593,
+      "arc_end": [
+       0.23,
+       1.91,
+       -1.58
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 29.46,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.31,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.178,
+      0.463,
+      0.777,
+      0.938
+     ],
+     "cannon_vp": [
+      0.226,
+      0.034,
+      0.774,
+      0.477
+     ],
+     "slack_px": {
+      "left": 192,
+      "right": 240,
+      "top": 120
+     },
+     "fails": [],
+     "slack_min_px": 120,
+     "hint": {
+      "target_vp": [
+       0.615,
+       0.557
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.593,
+      "arc_end": [
+       0.23,
+       1.91,
+       -1.58
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 29.46,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.31,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.178,
+      0.463,
+      0.777,
+      0.938
+     ],
+     "cannon_vp": [
+      0.226,
+      0.034,
+      0.774,
+      0.477
+     ],
+     "slack_px": {
+      "left": 256,
+      "right": 321,
+      "top": 159
+     },
+     "fails": [],
+     "slack_min_px": 159,
+     "hint": {
+      "target_vp": [
+       0.615,
+       0.557
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.593,
+      "arc_end": [
+       0.23,
+       1.91,
+       -1.58
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 29.46,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.31,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.258,
+      0.463,
+      0.708,
+      0.938
+     ],
+     "cannon_vp": [
+      0.294,
+      0.034,
+      0.706,
+      0.477
+     ],
+     "slack_px": {
+      "left": 397,
+      "right": 448,
+      "top": 127
+     },
+     "fails": [],
+     "slack_min_px": 127,
+     "hint": {
+      "target_vp": [
+       0.586,
+       0.557
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.593,
+      "arc_end": [
+       0.23,
+       1.91,
+       -1.58
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     250,
-     783
-    ],
-    "y": [
-     483,
-     1241
-    ],
-    "fits": true,
-    "worst_piece": "crate",
-    "slack_px": 185
+   "test_aspects": {
+    "0.462": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 29.46,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "legL",
+    "yaw": -3.0,
+    "pitch": 10.5
    }
   },
   {
    "id": "daily_boss",
    "layout": "titan_caldera_rim",
-   "primary": {
-    "x": [
-     267,
-     755
+   "bounds": [
+    [
+     8.05,
+     0.0,
+     -3.16
     ],
-    "y": [
-     438,
-     1162
-    ],
-    "fits": true,
-    "worst_piece": "crate",
-    "slack_px": 202
+    [
+     11.0,
+     10.4,
+     3.95
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 29.46,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.31,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.107,
+      0.463,
+      0.814,
+      0.938
+     ],
+     "cannon_vp": [
+      0.166,
+      0.034,
+      0.834,
+      0.477
+     ],
+     "slack_px": {
+      "left": 116,
+      "right": 201,
+      "top": 146
+     },
+     "fails": [],
+     "slack_min_px": 116,
+     "hint": {
+      "target_vp": [
+       0.629,
+       0.557
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.593,
+      "arc_end": [
+       0.25,
+       1.91,
+       -1.32
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 29.46,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.31,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.178,
+      0.463,
+      0.758,
+      0.938
+     ],
+     "cannon_vp": [
+      0.226,
+      0.034,
+      0.774,
+      0.477
+     ],
+     "slack_px": {
+      "left": 192,
+      "right": 262,
+      "top": 120
+     },
+     "fails": [],
+     "slack_min_px": 120,
+     "hint": {
+      "target_vp": [
+       0.606,
+       0.557
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.593,
+      "arc_end": [
+       0.25,
+       1.91,
+       -1.32
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 29.46,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.31,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.178,
+      0.463,
+      0.758,
+      0.938
+     ],
+     "cannon_vp": [
+      0.226,
+      0.034,
+      0.774,
+      0.477
+     ],
+     "slack_px": {
+      "left": 256,
+      "right": 349,
+      "top": 159
+     },
+     "fails": [],
+     "slack_min_px": 159,
+     "hint": {
+      "target_vp": [
+       0.606,
+       0.557
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.593,
+      "arc_end": [
+       0.25,
+       1.91,
+       -1.32
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 29.46,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.31,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.258,
+      0.463,
+      0.693,
+      0.938
+     ],
+     "cannon_vp": [
+      0.294,
+      0.034,
+      0.706,
+      0.477
+     ],
+     "slack_px": {
+      "left": 397,
+      "right": 471,
+      "top": 127
+     },
+     "fails": [],
+     "slack_min_px": 127,
+     "hint": {
+      "target_vp": [
+       0.579,
+       0.557
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.593,
+      "arc_end": [
+       0.25,
+       1.91,
+       -1.32
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     250,
-     766
-    ],
-    "y": [
-     483,
-     1241
-    ],
-    "fits": true,
-    "worst_piece": "crate",
-    "slack_px": 185
+   "test_aspects": {
+    "0.462": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 29.46,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 29.46,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "legL",
+    "yaw": -2.5,
+    "pitch": 10.5
    }
   },
   {
    "id": "daily_boss",
    "layout": "titan_forge_floor",
-   "primary": {
-    "x": [
-     349,
-     731
+   "bounds": [
+    [
+     9.0,
+     0.0,
+     -2.8
     ],
-    "y": [
-     438,
-     1152
-    ],
-    "fits": true,
-    "worst_piece": "head",
-    "slack_px": 204
+    [
+     11.0,
+     10.4,
+     2.8
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.4,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.226,
+      0.47,
+      0.774,
+      0.938
+     ],
+     "cannon_vp": [
+      0.163,
+      0.034,
+      0.837,
+      0.48
+     ],
+     "slack_px": {
+      "left": 244,
+      "right": 244,
+      "top": 146
+     },
+     "fails": [],
+     "slack_min_px": 146,
+     "hint": {
+      "target_vp": [
+       0.613,
+       0.56
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.597,
+      "arc_end": [
+       0.25,
+       1.91,
+       -1.32
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.4,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.275,
+      0.47,
+      0.725,
+      0.938
+     ],
+     "cannon_vp": [
+      0.224,
+      0.034,
+      0.776,
+      0.48
+     ],
+     "slack_px": {
+      "left": 297,
+      "right": 297,
+      "top": 119
+     },
+     "fails": [],
+     "slack_min_px": 119,
+     "hint": {
+      "target_vp": [
+       0.593,
+       0.56
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.597,
+      "arc_end": [
+       0.25,
+       1.91,
+       -1.32
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.4,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.275,
+      0.47,
+      0.725,
+      0.938
+     ],
+     "cannon_vp": [
+      0.224,
+      0.034,
+      0.776,
+      0.48
+     ],
+     "slack_px": {
+      "left": 396,
+      "right": 396,
+      "top": 159
+     },
+     "fails": [],
+     "slack_min_px": 159,
+     "hint": {
+      "target_vp": [
+       0.593,
+       0.56
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.597,
+      "arc_end": [
+       0.25,
+       1.91,
+       -1.32
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.4,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.331,
+      0.47,
+      0.669,
+      0.938
+     ],
+     "cannon_vp": [
+      0.293,
+      0.034,
+      0.707,
+      0.48
+     ],
+     "slack_px": {
+      "left": 509,
+      "right": 509,
+      "top": 127
+     },
+     "fails": [],
+     "slack_min_px": 127,
+     "hint": {
+      "target_vp": [
+       0.57,
+       0.56
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.597,
+      "arc_end": [
+       0.25,
+       1.91,
+       -1.32
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     340,
-     740
-    ],
-    "y": [
-     483,
-     1233
-    ],
-    "fits": true,
-    "worst_piece": "head",
-    "slack_px": 249
+   "test_aspects": {
+    "0.462": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 29.25,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "legL",
+    "yaw": -2.5,
+    "pitch": 10.5
    }
   },
   {
    "id": "daily_boss",
    "layout": "titan_slag_foundry",
-   "primary": {
-    "x": [
-     366,
-     714
+   "bounds": [
+    [
+     9.0,
+     0.0,
+     -2.56
     ],
-    "y": [
-     438,
-     1152
-    ],
-    "fits": true,
-    "worst_piece": "head",
-    "slack_px": 204
+    [
+     11.0,
+     10.4,
+     2.56
+    ]
+   ],
+   "screens": {
+    "1080x2340": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.4,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.249,
+      0.47,
+      0.751,
+      0.938
+     ],
+     "cannon_vp": [
+      0.163,
+      0.034,
+      0.837,
+      0.48
+     ],
+     "slack_px": {
+      "left": 269,
+      "right": 269,
+      "top": 146
+     },
+     "fails": [],
+     "slack_min_px": 146,
+     "hint": {
+      "target_vp": [
+       0.602,
+       0.56
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.597,
+      "arc_end": [
+       0.26,
+       1.91,
+       -1.06
+      ]
+     }
+    },
+    "1080x1920": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.4,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.294,
+      0.47,
+      0.706,
+      0.938
+     ],
+     "cannon_vp": [
+      0.224,
+      0.034,
+      0.776,
+      0.48
+     ],
+     "slack_px": {
+      "left": 318,
+      "right": 318,
+      "top": 119
+     },
+     "fails": [],
+     "slack_min_px": 119,
+     "hint": {
+      "target_vp": [
+       0.584,
+       0.56
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.597,
+      "arc_end": [
+       0.26,
+       1.91,
+       -1.06
+      ]
+     }
+    },
+    "1440x2560": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.4,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.294,
+      0.47,
+      0.706,
+      0.938
+     ],
+     "cannon_vp": [
+      0.224,
+      0.034,
+      0.776,
+      0.48
+     ],
+     "slack_px": {
+      "left": 424,
+      "right": 424,
+      "top": 159
+     },
+     "fails": [],
+     "slack_min_px": 159,
+     "hint": {
+      "target_vp": [
+       0.584,
+       0.56
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.597,
+      "arc_end": [
+       0.26,
+       1.91,
+       -1.06
+      ]
+     }
+    },
+    "1536x2048 (4:3)": {
+     "fov": 29.25,
+     "fov_by": "height",
+     "clamped": null,
+     "pitch_down": 4.4,
+     "tilted_up": 0.0,
+     "building_vp": [
+      0.346,
+      0.47,
+      0.654,
+      0.938
+     ],
+     "cannon_vp": [
+      0.293,
+      0.034,
+      0.707,
+      0.48
+     ],
+     "slack_px": {
+      "left": 531,
+      "right": 531,
+      "top": 127
+     },
+     "fails": [],
+     "slack_min_px": 127,
+     "hint": {
+      "target_vp": [
+       0.563,
+       0.56
+      ],
+      "target_on": true,
+      "arc_on": true,
+      "arc_top_vp": 0.597,
+      "arc_end": [
+       0.26,
+       1.91,
+       -1.06
+      ]
+     }
+    }
    },
-   "tight": {
-    "x": [
-     357,
-     723
-    ],
-    "y": [
-     483,
-     1233
-    ],
-    "fits": true,
-    "worst_piece": "head",
-    "slack_px": 249
+   "test_aspects": {
+    "0.462": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.450": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.429": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.562": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.500": {
+     "fov": 29.25,
+     "fails": []
+    },
+    "0.750": {
+     "fov": 29.25,
+     "fails": []
+    }
+   },
+   "hint": {
+    "target": "legL",
+    "yaw": -2.0,
+    "pitch": 10.5
    }
   }
- ]
+ ],
+ "flags": []
 }
