@@ -62,6 +62,12 @@ namespace Crashverse.Visuals
             }
             var t = string.IsNullOrEmpty(tex) ? null : Tex(tex);
             if (t != null) { m.SetTexture("_BaseMap", t); m.SetTextureScale("_BaseMap", tiling); }
+            if (t != null && Pbr != null && m.shader == Pbr)
+            {   // real CC0 PBR set (Poly Haven nor_gl + arm = AO/rough/metal, same packing as _ORMMap): relief and grime on every surface
+                var n = Tex(tex + "_N"); var orm = Tex(tex + "_ORM");
+                if (n != null) { m.SetTexture("_BumpMap", n); m.SetFloat("_BumpScale", 1.1f); }
+                if (orm != null) { m.SetTexture("_ORMMap", orm); m.SetFloat("_OcclusionStrength", 0.85f); m.SetFloat("_Roughness", Mathf.Clamp01(roughness + 0.1f)); }
+            }
             m.SetColor("_BaseColor", tint); if (m.HasProperty("_Color")) m.SetColor("_Color", tint);
             m.enableInstancing = false;
             return _m[key] = m;

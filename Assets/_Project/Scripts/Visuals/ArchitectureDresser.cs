@@ -41,7 +41,7 @@ namespace Crashverse.Visuals
                 {
                     var mesh = new Mesh { name = name + "_" + kv.Key.name, indexFormat = IndexFormat.UInt32 };
                     mesh.CombineMeshes(kv.Value.ToArray(), true, true);
-                    mesh.RecalculateBounds();
+                    mesh.RecalculateBounds(); if (mesh.uv != null && mesh.uv.Length == mesh.vertexCount) mesh.RecalculateTangents(); // normal maps
                     var go = new GameObject(name + "_" + kv.Key.name); go.transform.SetParent(parent, false);
                     go.AddComponent<MeshFilter>().sharedMesh = mesh;
                     var r = go.AddComponent<MeshRenderer>(); r.sharedMaterial = kv.Key;
