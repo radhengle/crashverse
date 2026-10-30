@@ -12,6 +12,10 @@ namespace Crashverse.Core
         public const float IslandLength = 60f, IslandWidth = 25f, KillY = -6f;
         public static float GrassY => 0f;
 
+        /// <summary>Season 1 kingdom look (Crashverse.Visuals.KingdomVisuals): skip the greybox island details; PostBuild dresses the arena.</summary>
+        public static bool KingdomLook;
+        public static event System.Action<ArenaBuilder> PostBuild;
+
         public void Build()
         {
             var island = new GameObject("FloatingIsland");
@@ -39,8 +43,9 @@ namespace Crashverse.Core
             kp.transform.SetParent(transform, false);
             kp.killY = KillY;
 
-            AddIslandDetails(transform, vc);
+            if (!KingdomLook) AddIslandDetails(transform, vc);
             Lighting();
+            PostBuild?.Invoke(this);
         }
 
         /// <summary>First visual art pass: layered waterfall, satellite islets, stylized palms and soft cloud clusters.</summary>

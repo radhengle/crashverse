@@ -305,6 +305,14 @@ namespace Crashverse.Destruction
 
         public void ClearHighlight() => ApplyColor(_baseColor);
 
+        /// <summary>Visual re-theme hook (Crashverse.Visuals.KingdomTheme): a textured piece takes a near-white tint so its texture reads
+        /// true; steel joints keep their gold weak-point tint. Damage darkening and highlights still lerp from this base.</summary>
+        public void SetBaseTint(Color c)
+        {
+            _baseColor = isSteelJoint ? Color.Lerp(c, MaterialDefinition.Hex("E8B04B"), 0.45f) : c;
+            ApplyColor(_baseColor);
+        }
+
         void ApplyColor(Color c)
         {
             if (_renderer == null) _renderer = GetComponentInChildren<Renderer>();

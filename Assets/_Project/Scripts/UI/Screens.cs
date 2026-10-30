@@ -271,7 +271,7 @@ namespace Crashverse.UI
                 _pu[i].interactable = _s.State == SessionState.Aiming && (st.charges > 0 || st.armed);
             }
             _fire.interactable = _s.State == SessionState.Aiming && _s.ShotsLeft > 0;
-            _status.text = _s.State == SessionState.Resolving ? "Settling…" : _s.State == SessionState.BossTell ? "The Tidewarden shifts!" :
+            _status.text = _s.State == SessionState.Resolving ? "Settling…" : _s.State == SessionState.BossTell ? "The King's guard shifts!" :
                 _s.Boss != null ? $"Core hits {_s.Boss.CoreHits}/{Crashverse.Boss.TidewardenController.CoreHitsToWin} · Shutter {(_s.Boss.ShutterOpen ? "OPEN" : "closed")}" :
                 _s.HintVisible ? "💡 Follow the ghost arc" : _s.Ctx.titan != null ? _s.Ctx.titan.ruleText : _s.Ctx.IsHard ? "HARD LEVEL" : "";
         }

@@ -158,6 +158,9 @@ namespace Crashverse.Core
             { r.Push(new LevelSelectScreen(lvl)); r.Toast("Back to Level " + lvl.number); Debug.Log("[V2-01] resumed " + resume + " after restart"); }
         }
 
+        /// <summary>Presentation hook after a run is fully built (Crashverse.Visuals.KingdomVisuals). Never read by the sim.</summary>
+        public static event System.Action<GameObject, GameSession, Weapons.WreckerBuilder, RunContext> RunBuilt;
+
         public static void StartRun(RunContext ctx)
         {
             EndRun();
@@ -206,6 +209,8 @@ namespace Crashverse.Core
             // Added after Begin so it binds to the SimRunner that Begin created. Presentation only; never read by the sim.
             if (Crashverse.Sim.ImpactEventEmitter.Instance == null) levelGo.AddComponent<Crashverse.Sim.ImpactEventEmitter>();
             var feel = levelGo.AddComponent<Crashverse.Feel.FeelDirector>(); feel.Bind(s, RunCamera, aim); feel.BindWrecker(wb); // 01 cannon parts
+            RunBuilt?.Invoke(_runRoot, s, wb, ctx);
+            RenderMaterials.FixAll(_runRoot);
             AppServices.Router.Push(new HudScreen(s));
 #if CRASHVERSE_DEV
             // BUG-24 automation: dev-only aim hook (inert without the cv_dev_aim launch extra; never in ranked).
