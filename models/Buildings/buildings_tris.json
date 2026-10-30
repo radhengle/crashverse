@@ -1,0 +1,47 @@
+{
+ "Bld_WoodCottage": {
+  "pieces": 24,
+  "connections": 81,
+  "missing_support_contacts": 0,
+  "LOD0": 22636,
+  "LOD1": 2016,
+  "LOD2": 544,
+  "Fractured": 13752
+ },
+ "Bld_BrickHouse": {
+  "pieces": 28,
+  "connections": 73,
+  "missing_support_contacts": 0,
+  "LOD0": 24412,
+  "LOD1": 2720,
+  "LOD2": 736,
+  "Fractured": 20320
+ },
+ "Bld_SteelWarehouse": {
+  "pieces": 14,
+  "connections": 37,
+  "missing_support_contacts": 0,
+  "LOD0": 11616,
+  "LOD1": 968,
+  "LOD2": 264,
+  "Fractured": 4796
+ },
+ "Bld_StoneTower": {
+  "pieces": 25,
+  "connections": 63,
+  "missing_support_contacts": 0,
+  "LOD0": 19732,
+  "LOD1": 2640,
+  "LOD2": 720,
+  "Fractured": 9204
+ },
+ "Bld_GlassKiosk": {
+  "pieces": 10,
+  "connections": 21,
+  "missing_support_contacts": 0,
+  "LOD0": 9568,
+  "LOD1": 1144,
+  "LOD2": 312,
+  "Fractured": 4320
+ }
+}

@@ -1,0 +1,247 @@
+{
+ "building": "House",
+ "texel_px_per_m": 75.6,
+ "atlas": 2048,
+ "modules": {
+  "GroundDoor": {
+   "LOD0": 640,
+   "LOD1": 319,
+   "LOD2": 126,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.0,
+     -1.0499999523162842,
+     0.0
+    ],
+    [
+     2.0,
+     0.20000000298023224,
+     2.799999952316284
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "ground floor front: arched blue door, window, shop sign, lantern",
+   "frags": 7,
+   "frag_max": 249,
+   "Fractured": 1351,
+   "mass": "686.8-1774.3",
+   "joints": 10,
+   "anchors": 4,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "6/7"
+  },
+  "GroundWin": {
+   "LOD0": 503,
+   "LOD1": 250,
+   "LOD2": 100,
+   "ucx": 5,
+   "aabb": [
+    [
+     -2.0,
+     -0.5400000214576721,
+     0.0
+    ],
+    [
+     2.0,
+     0.20000000298023224,
+     2.799999952316284
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "ground floor side/back: shuttered window + flower box",
+   "frags": 7,
+   "frag_max": 244,
+   "Fractured": 996,
+   "mass": "737.0-2549.3",
+   "joints": 9,
+   "anchors": 3,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "7/7"
+  },
+  "Floor": {
+   "LOD0": 92,
+   "LOD1": 46,
+   "LOD2": 11,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.5,
+     -2.5899999141693115,
+     0.0
+    ],
+    [
+     2.5,
+     2.5899999141693115,
+     0.3400000035762787
+    ]
+   ],
+   "frac": "Wood",
+   "anchor": "perimeter",
+   "anchor_to": "Support",
+   "note": "jettied first floor deck, joist ends",
+   "frags": 12,
+   "frag_max": 140,
+   "Fractured": 1171,
+   "mass": "37.1-432.3",
+   "joints": 23,
+   "anchors": 11,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "12/12"
+  },
+  "Upper2": {
+   "LOD0": 532,
+   "LOD1": 266,
+   "LOD2": 106,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.299999952316284,
+     -0.7900000214576721,
+     0.0
+    ],
+    [
+     2.299999952316284,
+     0.15000000596046448,
+     2.7799999713897705
+    ]
+   ],
+   "frac": "Wood",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "timber frame + plaster, 2 windows, timber balcony",
+   "frags": 12,
+   "frag_max": 204,
+   "Fractured": 1485,
+   "mass": "143.7-807.3",
+   "joints": 22,
+   "anchors": 5,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "5/12"
+  },
+  "Upper1": {
+   "LOD0": 286,
+   "LOD1": 143,
+   "LOD2": 57,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.299999952316284,
+     -0.49000000953674316,
+     0.0
+    ],
+    [
+     2.299999952316284,
+     0.15000000596046448,
+     2.7799999713897705
+    ]
+   ],
+   "frac": "Wood",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "timber frame + plaster, 1 window, braces",
+   "frags": 12,
+   "frag_max": 216,
+   "Fractured": 1428,
+   "mass": "104.4-1642.1",
+   "joints": 24,
+   "anchors": 6,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "12/12"
+  },
+  "Gable": {
+   "LOD0": 126,
+   "LOD1": 61,
+   "LOD2": 23,
+   "ucx": 6,
+   "aabb": [
+    [
+     -2.457034111022949,
+     -0.20999999344348907,
+     0.0
+    ],
+    [
+     2.457034111022949,
+     0.15000000596046448,
+     2.5999999046325684
+    ]
+   ],
+   "frac": "Wood",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "timber-framed gable, oculus",
+   "frags": 12,
+   "frag_max": 116,
+   "Fractured": 1095,
+   "mass": "160.0-362.5",
+   "joints": 23,
+   "anchors": 6,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "12/12"
+  },
+  "Roof": {
+   "LOD0": 252,
+   "LOD1": 124,
+   "LOD2": 46,
+   "ucx": 8,
+   "aabb": [
+    [
+     -0.1018904447555542,
+     -2.8399999141693115,
+     -0.47356319427490234
+    ],
+    [
+     3.0018906593322754,
+     2.8399999141693115,
+     2.9000000953674316
+    ]
+   ],
+   "frac": "Roof",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "one roof slope with dormer (mirror = rotate 180)",
+   "frags": 8,
+   "frag_max": 296,
+   "Fractured": 1484,
+   "mass": "228.5-1329.1",
+   "joints": 16,
+   "anchors": 2,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "0/8"
+  },
+  "Chimney": {
+   "LOD0": 218,
+   "LOD1": 109,
+   "LOD2": 42,
+   "ucx": 3,
+   "aabb": [
+    [
+     -0.47999998927116394,
+     -0.4300000071525574,
+     0.0
+    ],
+    [
+     0.47999998927116394,
+     0.4300000071525574,
+     5.340000152587891
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "stone chimney stack, clay pots",
+   "frags": 7,
+   "frag_max": 242,
+   "Fractured": 740,
+   "mass": "449.7-1656.5",
+   "joints": 8,
+   "anchors": 1,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "7/7"
+  }
+ }
+}
