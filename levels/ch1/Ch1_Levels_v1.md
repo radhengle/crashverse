@@ -1,4 +1,4 @@
-# CRASHVERSE — Chapter 1 Sunnyville Isles, Levels v1 (rev 6: fairness / clarity / frame tuning)
+# CRASHVERSE — Chapter 1 Sunnyville Isles, Levels v1 (rev 7: building prefabs + L7 spike fix)
 Owner: Level Designer · Branch `level-designer/ch1-tuning` (draft PR into `integration/v2`; supersedes #13, already merged to main) · Rules: Level_Rulings_v1 (#1–10, 7a), gravity ×1.2 (PR #15), powerups v2 ids (earthquake = SHOCKWAVE, multi_shot = SPLIT).
 
 **Pipeline:** `python3 sync_to_assets.py` (gen_levels → Resources layouts + chapter1.json → derive_hints at g×1.0) → `SIM_GSCALE=1.2 python3 sim.py` → `python3 ../daily_boss/daily_boss_sim.py` → `python3 ci_win_shots.py` → `python3 frame_check.py --json > frame_check.json` → `python3 mkdoc.py`.
@@ -9,11 +9,11 @@ Owner: Level Designer · Branch `level-designer/ch1-tuning` (draft PR into `inte
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 1 | Easy | 4 | 0.6/0.3 | 1 | 1 | 3 | post | 100.0 | 22.2% | 84.7% | 0/19750 | ✅ | ✅ |
 | 2 | Easy | 5 | 0.4/0.2 | 2 | 3 | 3 | sillL, sillR | 100.0 | 14.0% | 53.9% | 0/22912 | ✅ | ✅ |
-| 3 | Medium | 5 | 0.6/0.3 | 2 | 2 | 3 | propL, propR | 92.7 | 6.5% | 57.5% | 0/23268 | ✅ | ✅ |
+| 3 | Medium | 5 | 0.6/0.3 | 2 | 2 | 3 | propL, propR | 94.1 | 6.2% | 48.9% | 0/31962 | ✅ | ✅ |
 | 4 | Hard | 5 | 0.6/0.3 | 2 | 2 | 3 | beamL, beamR | 100.0 | 1.7% | 36.6% | 0/26512 | ✅ | ✅ |
 | 5 | Breather | 5 | 0.6/0.3 | 1 | 2 | 4 | bridge | 94.4 | 20.3% | 72.4% | 0/11571 | ✅ | ✅ |
 | 6 | Medium | 5 | 0.6/0.3 | 2 | 2 | 3 | braceL, braceR | 100.0 | 15.3% | 76.7% | 0/19123 | ✅ | ✅ |
-| 7 | Hard | 5 | 0.6/0.3 | 2 | 2 | 3 | scaffold, ring0 | 95.4 | 0.5% | 6.8% | 0/18115 | ✅ | ✅ |
+| 7 | Hard | 5 | 0.6/0.3 | 2 | 2 | 3 | ring0, annex | 87.8 | 2.7% | 30.2% | 0/28770 | ✅ | ✅ |
 | 8 | Breather | 6 | 0.6/0.3 | 4 (2) | 2 | 4 | multi_shot:key0+key1+key2, key3 | 100.0 | 0.8% | 43.5% | 0/37534 | ✅ | ✅ |
 | 9 | Hard | 5 | 0.6/0.3 | 2 | 2 | 3 | lhRing, seaDeck | 93.3 | 2.3% | 42.2% | 0/21800 | ✅ | ✅ |
 | 10 | Boss | 8 | 0.375/0.25 | 5 | 5 | 3 | shoulderL, shoulderR, core(open), any(closed), core(open) | defeat | n/a | n/a | n/a | ✅ | ✅ |
@@ -40,15 +40,15 @@ Debris: no collision reaches the 60 cap in any level (ruling 10 check holds).
 - Why it's fun: L1 taught "hit the support"; L2 teaches "find every support". 3★ allows one miss.
 - Proof: min 2 via sillL, sillR; 3★ needs ≤3; margin 3.
 - Frame (assumed fixed camera): x [197, 852] px, y [634, 1166] px; slack 132 px (tight cam 114 px).
-### L3. Brick Bakery — Two-storey bakery on two wood props [Medium]
-- Layout unchanged; mastery text reworded.
+### L3. Brick Bakery — Two-storey bakery (3D Modeler Bld_Townhouse, 0.8 scale) on two wood props [Medium]
+- **Changed (rev 7):** re-laid as the Bld_Townhouse modules (G_F shop front/G_B/G_L/G_R, Floor1 wood, U_F/U_B/U_L/U_R timber, Roof_W/Roof_E, Chimney) on the same props → slabs support graph. Same 5 shots, line, 2-shot 3★ and ≥95% mastery (props + awning post = 100%).
 - Materials: wood + brick · Shots 5 · Bands 0.6/0.3 · Teaches: Brick needs support loss
 - Goal: destroy 85% · Mastery: **Destroy at least 95% of the bakery** · Hint: `propL` (yaw -3.0, pitch 10.0 at g×1.0)
-- Chain collapse: Two props → shop walls → upper flat, balcony, roof and chimney fold
+- Chain collapse: Two props → cellar deck → shop walls → Floor1 → timber upper storey → both roof halves and the chimney fold
 - Risk/reward: The awning post holds only the awning
 - Why it's fun: Brick feels useless until the props go and two storeys slump.
 - Proof: min 2 via propL, propR; 3★ needs ≤2; margin 3.
-- Frame (assumed fixed camera): x [297, 783] px, y [629, 1166] px; slack 232 px (tight cam 218 px).
+- Frame (assumed fixed camera): x [297, 783] px, y [513, 1166] px; slack 232 px (tight cam 218 px).
 ### L4. Windmill — Windmill with a brick annex [Hard]
 - Layout unchanged; mastery text reworded.
 - Materials: wood + brick · Shots 5 · Bands 0.6/0.3 · Teaches: Collapse chains between pieces
@@ -76,15 +76,15 @@ Debris: no collision reaches the 60 cap in any level (ruling 10 check holds).
 - Why it's fun: Two gold joints drop a 10 m silo; mastery asks for all 3 joints, which costs the 3rd star.
 - Proof: min 2 via braceL, braceR; 3★ needs ≤2; margin 3.
 - Frame (assumed fixed camera): x [297, 783] px, y [416, 1166] px; slack 182 px (tight cam 218 px).
-### L7. Clockwork Tower — Clockwork Tower (M1, Earthquake forced) [Hard]
-- **Changed:** only the non-objective barrel decor moved inward (frame). Layout, 5 shots and bands kept (M1 contract §7, ruling 4).
+### L7. Clockwork Tower — Clockwork Watchtower (Bld_Watchtower, ~0.55 scale; Earthquake forced) [Hard]
+- **Changed (rev 7, PM overrode the M1 layout lock):** spike fixed. Scaffold removed so ring0 is visible (hint scaffold → ring0); front storey walls widened to hide the side walls (fewer, clearer targets); ground annex, crate stack, barrels and hoist poles (8.5 of 49 mass) stay standing, so ring0 + annex/crate stack = 2-shot 3★. Random win 6.8% → 30.2%, random 3★ 0.5% → 2.7%. 5 shots, bands, 3 steel rings and the crown-intact mastery kept. Season finale_e1 shares this layout and hint.
 - Materials: wood + brick + steel · Shots 5 · Bands 0.6/0.3 · Teaches: Joint sequencing; first power-up pick (Earthquake)
-- Goal: destroy 85% · Mastery: **Topple the tower without breaking the crown** · Hint: `scaffold` (yaw 0.0, pitch 10.0 at g×1.0)
-- Chain collapse: Scaffold reveals ring0 → shaft and crown drop as one stack
-- Risk/reward: Exposed ring1 drops only part of the tower
-- Why it's fun: Find the hidden ring and the crown lands intact.
-- Proof: min 2 via scaffold, ring0; 3★ needs ≤2; margin 3.
-- Frame (assumed fixed camera): x [260, 734] px, y [423, 1170] px; slack 189 px (tight cam 178 px).
+- Goal: destroy 85% · Mastery: **Topple the tower without breaking the crown** · Hint: `ring0` (yaw 0.0, pitch 9.5 at g×1.0)
+- Chain collapse: Gold ring0 (in plain sight) → both storeys and the crown drop as one stack; then the annex or the crate stack
+- Risk/reward: ring1 drops only the top half; ring0 alone stops at 82.7%; a pole or barrel is too light for 3★
+- Why it's fun: Read the gold ring, then pick the heavy ground piece: the crown lands intact.
+- Proof: min 2 via ring0, annex; 3★ needs ≤2; margin 3.
+- Frame (assumed fixed camera): x [231, 777] px, y [360, 1170] px; slack 126 px (tight cam 148 px).
 ### L8. Market Arcade — Market arcade with a clock arch (Multi Shot forced) [Breather]
 - **Changed:** 5 → 6 shots (breather after L7; 3★ still needs Multi Shot); recomposed 14 → 10.4 m wide; keystones 1.6 m apart under their own bays (Multi Shot geometry verified: the split at key1 hits key0+key1+key2 at g×1.0 and ×1.2); hint key1 = the Multi Shot aim.
 - Materials: all 3 · Shots 6 · Bands 0.6/0.3 · Teaches: Choose loadout deliberately (Multi Shot)

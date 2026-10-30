@@ -1,0 +1,4884 @@
+{
+ "ref": "origin/3d-modeler/realistic-v1",
+ "commit": "9e3f4e3",
+ "unity_prefabs": [],
+ "buildings": {
+  "Bld_BrickHouse": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_BrickHouse.layout.json",
+   "pieces": [
+    {
+     "id": "G_F1_WallDoor",
+     "kit": "Kit_Brick_WallDoor",
+     "pos": [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallDoor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallDoor_Fractured.fbx"
+    },
+    {
+     "id": "G_F1_WallDoor_Frame",
+     "kit": "Kit_Wood_DoorFrame",
+     "pos": [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_B1_WallWindow",
+     "kit": "Kit_Brick_WallWindow",
+     "pos": [
+      0.0,
+      0.0,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "G_B1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      0.0,
+      0.85,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "G_B1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_L1_Wall",
+     "kit": "Kit_Brick_Wall",
+     "pos": [
+      1.5,
+      0.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_R1_WallWindow",
+     "kit": "Kit_Brick_WallWindow",
+     "pos": [
+      -1.5,
+      0.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "G_R1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      -1.5,
+      0.85,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "G_R1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-2_-2",
+     "kit": "Kit_Brick_Joint",
+     "pos": [
+      1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-2_+2",
+     "kit": "Kit_Brick_Joint",
+     "pos": [
+      1.5,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+2_-2",
+     "kit": "Kit_Brick_Joint",
+     "pos": [
+      -1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+2_+2",
+     "kit": "Kit_Brick_Joint",
+     "pos": [
+      -1.5,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx"
+    },
+    {
+     "id": "F1_00",
+     "kit": "Kit_Brick_Floor",
+     "pos": [
+      0.0,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F1_WallDoor",
+      "G_B1_WallWindow",
+      "G_L1_Wall",
+      "G_R1_WallWindow",
+      "G_J_-2_-2",
+      "G_J_-2_+2",
+      "G_J_+2_-2",
+      "G_J_+2_+2"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Floor_Fractured.fbx"
+    },
+    {
+     "id": "U_F1_WallWindow",
+     "kit": "Kit_Brick_WallWindow",
+     "pos": [
+      0.0,
+      3.25,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "U_F1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      0.0,
+      4.1,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "U_F1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "U_B1_WallWindow",
+     "kit": "Kit_Brick_WallWindow",
+     "pos": [
+      0.0,
+      3.25,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "U_B1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      0.0,
+      4.1,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "U_B1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "U_L1_WallWindow",
+     "kit": "Kit_Brick_WallWindow",
+     "pos": [
+      1.5,
+      3.25,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "U_L1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      1.5,
+      4.1,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "U_L1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "U_R1_Wall",
+     "kit": "Kit_Brick_Wall",
+     "pos": [
+      -1.5,
+      3.25,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall_Fractured.fbx"
+    },
+    {
+     "id": "U_J_-2_-2",
+     "kit": "Kit_Brick_Joint",
+     "pos": [
+      1.5,
+      3.25,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx"
+    },
+    {
+     "id": "U_J_-2_+2",
+     "kit": "Kit_Brick_Joint",
+     "pos": [
+      1.5,
+      3.25,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx"
+    },
+    {
+     "id": "U_J_+2_-2",
+     "kit": "Kit_Brick_Joint",
+     "pos": [
+      -1.5,
+      3.25,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx"
+    },
+    {
+     "id": "U_J_+2_+2",
+     "kit": "Kit_Brick_Joint",
+     "pos": [
+      -1.5,
+      3.25,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Joint_Fractured.fbx"
+    },
+    {
+     "id": "F2_00",
+     "kit": "Kit_Brick_Floor",
+     "pos": [
+      0.0,
+      6.25,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "U_F1_WallWindow",
+      "U_B1_WallWindow",
+      "U_L1_WallWindow",
+      "U_R1_Wall",
+      "U_J_-2_-2",
+      "U_J_-2_+2",
+      "U_J_+2_-2",
+      "U_J_+2_+2"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Top_Gable_-1",
+     "kit": "Kit_Brick_Gable",
+     "pos": [
+      1.5,
+      6.5,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "F2_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Gable.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Gable_Fractured.fbx"
+    },
+    {
+     "id": "Top_Gable_1",
+     "kit": "Kit_Brick_Gable",
+     "pos": [
+      -1.5,
+      6.5,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "F2_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Gable.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Gable_Fractured.fbx"
+    },
+    {
+     "id": "Top_Roof_S1",
+     "kit": "Kit_Roof_Roof",
+     "pos": [
+      0.0,
+      6.8905,
+      0.9421
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Top_Gable_-1",
+      "Top_Gable_1",
+      "F2_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx"
+    },
+    {
+     "id": "Top_Roof_N1",
+     "kit": "Kit_Roof_Roof",
+     "pos": [
+      0.0,
+      6.8905,
+      -0.9421
+     ],
+     "rotY": 180.0,
+     "anchor_to": [
+      "Top_Gable_-1",
+      "Top_Gable_1",
+      "F2_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx"
+    }
+   ],
+   "piece_count": 28,
+   "connections": 73,
+   "joint_break_values_set": false,
+   "aabb_unity": null,
+   "size_unity": null,
+   "sized_from": "no stats JSON for its kit (v3 kit): size unknown",
+   "realistic_variant": null
+  },
+  "Bld_CastleKeep": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_CastleKeep.layout.json",
+   "pieces": [
+    {
+     "id": "S0_F_WallDoor",
+     "kit": "Kit_Keep_WallDoor",
+     "pos": [
+      0.0,
+      0.0,
+      3.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallDoor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallDoor_Fractured.fbx"
+    },
+    {
+     "id": "S0_B_WallSlit",
+     "kit": "Kit_Keep_WallSlit",
+     "pos": [
+      0.0,
+      0.0,
+      -3.0
+     ],
+     "rotY": -180.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx"
+    },
+    {
+     "id": "S0_L_WallSlit",
+     "kit": "Kit_Keep_WallSlit",
+     "pos": [
+      3.0,
+      0.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx"
+    },
+    {
+     "id": "S0_R_WallSlit",
+     "kit": "Kit_Keep_WallSlit",
+     "pos": [
+      -3.0,
+      0.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx"
+    },
+    {
+     "id": "S1_F_WallBanner",
+     "kit": "Kit_Keep_WallBanner",
+     "pos": [
+      0.0,
+      3.0,
+      3.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S0_F_WallDoor"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner_Fractured.fbx"
+    },
+    {
+     "id": "S1_B_Wall",
+     "kit": "Kit_Keep_Wall",
+     "pos": [
+      0.0,
+      3.0,
+      -3.0
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "S0_B_WallSlit"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx"
+    },
+    {
+     "id": "S1_L_Wall",
+     "kit": "Kit_Keep_Wall",
+     "pos": [
+      3.0,
+      3.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "S0_L_WallSlit"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx"
+    },
+    {
+     "id": "S1_R_WallBalcony",
+     "kit": "Kit_Keep_WallBalcony",
+     "pos": [
+      -3.0,
+      3.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "S0_R_WallSlit"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony_Fractured.fbx"
+    },
+    {
+     "id": "S2_F_Wall",
+     "kit": "Kit_Keep_Wall",
+     "pos": [
+      0.0,
+      6.0,
+      3.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S1_F_WallBanner"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx"
+    },
+    {
+     "id": "S2_B_WallBalcony",
+     "kit": "Kit_Keep_WallBalcony",
+     "pos": [
+      0.0,
+      6.0,
+      -3.0
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "S1_B_Wall"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony_Fractured.fbx"
+    },
+    {
+     "id": "S2_L_Wall",
+     "kit": "Kit_Keep_Wall",
+     "pos": [
+      3.0,
+      6.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "S1_L_Wall"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx"
+    },
+    {
+     "id": "S2_R_Wall",
+     "kit": "Kit_Keep_Wall",
+     "pos": [
+      -3.0,
+      6.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "S1_R_WallBalcony"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx"
+    },
+    {
+     "id": "T0_S0_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      0.0,
+      3.0
+     ],
+     "rotY": 45.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T0_S1_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      3.0,
+      3.0
+     ],
+     "rotY": 15.0,
+     "anchor_to": [
+      "T0_S0_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T0_S2_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      6.0,
+      3.0
+     ],
+     "rotY": 45.0,
+     "anchor_to": [
+      "T0_S1_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T0_S3_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      9.0,
+      3.0
+     ],
+     "rotY": 15.0,
+     "anchor_to": [
+      "T0_S2_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T0_Crown",
+     "kit": "Kit_Keep_TurretCrown",
+     "pos": [
+      3.0,
+      12.0,
+      3.0
+     ],
+     "rotY": 45.0,
+     "anchor_to": [
+      "T0_S3_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx"
+    },
+    {
+     "id": "T0_Roof",
+     "kit": "Kit_Keep_TurretRoof",
+     "pos": [
+      3.0,
+      13.3,
+      3.0
+     ],
+     "rotY": 45.0,
+     "anchor_to": [
+      "T0_Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx"
+    },
+    {
+     "id": "T1_S0_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      0.0,
+      3.0
+     ],
+     "rotY": -45.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T1_S1_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      3.0,
+      3.0
+     ],
+     "rotY": -75.0,
+     "anchor_to": [
+      "T1_S0_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T1_S2_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      6.0,
+      3.0
+     ],
+     "rotY": -45.0,
+     "anchor_to": [
+      "T1_S1_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T1_S3_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      9.0,
+      3.0
+     ],
+     "rotY": -75.0,
+     "anchor_to": [
+      "T1_S2_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T1_Crown",
+     "kit": "Kit_Keep_TurretCrown",
+     "pos": [
+      -3.0,
+      12.0,
+      3.0
+     ],
+     "rotY": -45.0,
+     "anchor_to": [
+      "T1_S3_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx"
+    },
+    {
+     "id": "T1_Roof",
+     "kit": "Kit_Keep_TurretRoof",
+     "pos": [
+      -3.0,
+      13.3,
+      3.0
+     ],
+     "rotY": -45.0,
+     "anchor_to": [
+      "T1_Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx"
+    },
+    {
+     "id": "T2_S0_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      0.0,
+      -3.0
+     ],
+     "rotY": -135.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T2_S1_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      3.0,
+      -3.0
+     ],
+     "rotY": -165.0,
+     "anchor_to": [
+      "T2_S0_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T2_S2_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      6.0,
+      -3.0
+     ],
+     "rotY": -135.0,
+     "anchor_to": [
+      "T2_S1_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T2_S3_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      9.0,
+      -3.0
+     ],
+     "rotY": -165.0,
+     "anchor_to": [
+      "T2_S2_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T2_S4_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -3.0,
+      12.0,
+      -3.0
+     ],
+     "rotY": -135.0,
+     "anchor_to": [
+      "T2_S3_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T2_Crown",
+     "kit": "Kit_Keep_TurretCrown",
+     "pos": [
+      -3.0,
+      15.0,
+      -3.0
+     ],
+     "rotY": -135.0,
+     "anchor_to": [
+      "T2_S4_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx"
+    },
+    {
+     "id": "T2_Roof",
+     "kit": "Kit_Keep_TurretRoof",
+     "pos": [
+      -3.0,
+      16.3,
+      -3.0
+     ],
+     "rotY": -135.0,
+     "anchor_to": [
+      "T2_Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx"
+    },
+    {
+     "id": "T3_S0_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      0.0,
+      -3.0
+     ],
+     "rotY": 135.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T3_S1_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      3.0,
+      -3.0
+     ],
+     "rotY": 105.0,
+     "anchor_to": [
+      "T3_S0_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T3_S2_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      6.0,
+      -3.0
+     ],
+     "rotY": 135.0,
+     "anchor_to": [
+      "T3_S1_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T3_S3_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      9.0,
+      -3.0
+     ],
+     "rotY": 105.0,
+     "anchor_to": [
+      "T3_S2_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T3_S4_Turret",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      3.0,
+      12.0,
+      -3.0
+     ],
+     "rotY": 135.0,
+     "anchor_to": [
+      "T3_S3_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "T3_Crown",
+     "kit": "Kit_Keep_TurretCrown",
+     "pos": [
+      3.0,
+      15.0,
+      -3.0
+     ],
+     "rotY": 135.0,
+     "anchor_to": [
+      "T3_S4_Turret"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx"
+    },
+    {
+     "id": "T3_Roof",
+     "kit": "Kit_Keep_TurretRoof",
+     "pos": [
+      3.0,
+      16.3,
+      -3.0
+     ],
+     "rotY": 135.0,
+     "anchor_to": [
+      "T3_Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx"
+    },
+    {
+     "id": "Top_F_Crown",
+     "kit": "Kit_Keep_Crown",
+     "pos": [
+      0.0,
+      9.0,
+      3.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S2_F_Wall"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx"
+    },
+    {
+     "id": "Top_B_Crown",
+     "kit": "Kit_Keep_Crown",
+     "pos": [
+      0.0,
+      9.0,
+      -3.0
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "S2_B_WallBalcony"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx"
+    },
+    {
+     "id": "Top_L_Crown",
+     "kit": "Kit_Keep_Crown",
+     "pos": [
+      3.0,
+      9.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "S2_L_Wall"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx"
+    },
+    {
+     "id": "Top_R_Crown",
+     "kit": "Kit_Keep_Crown",
+     "pos": [
+      -3.0,
+      9.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "S2_R_Wall"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx"
+    },
+    {
+     "id": "Floor_1",
+     "kit": "Kit_Keep_Floor",
+     "pos": [
+      0.0,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S0_F_WallDoor",
+      "S0_B_WallSlit",
+      "S0_L_WallSlit",
+      "S0_R_WallSlit"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Floor_2",
+     "kit": "Kit_Keep_Floor",
+     "pos": [
+      0.0,
+      6.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S1_F_WallBanner",
+      "S1_B_Wall",
+      "S1_L_Wall",
+      "S1_R_WallBalcony"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Floor_3",
+     "kit": "Kit_Keep_Floor",
+     "pos": [
+      0.0,
+      9.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S2_F_Wall",
+      "S2_B_WallBalcony",
+      "S2_L_Wall",
+      "S2_R_Wall"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Annex_L",
+     "kit": "Kit_Props_Shed",
+     "pos": [
+      4.2,
+      0.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_0",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      2.0,
+      0.0,
+      4.0
+     ],
+     "rotY": -10.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_1",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      2.55,
+      0.0,
+      3.75
+     ],
+     "rotY": -40.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_2",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      2.2,
+      0.0,
+      4.55
+     ],
+     "rotY": -75.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Crate_0",
+     "kit": "Kit_Props_Crate",
+     "pos": [
+      -2.2,
+      0.0,
+      4.1
+     ],
+     "rotY": -15.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx"
+    },
+    {
+     "id": "Crate_1",
+     "kit": "Kit_Props_Crate",
+     "pos": [
+      -2.75,
+      0.0,
+      3.8
+     ],
+     "rotY": 20.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx"
+    },
+    {
+     "id": "Crate_2",
+     "kit": "Kit_Props_CrateSmall",
+     "pos": [
+      -2.35,
+      0.8,
+      4.15
+     ],
+     "rotY": -30.0,
+     "anchor_to": [
+      "Crate_0"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx"
+    }
+   ],
+   "piece_count": 52,
+   "connections": 184,
+   "joint_break_values_set": false,
+   "aabb_unity": [
+    [
+     -5.49,
+     0.0,
+     -5.49
+    ],
+    [
+     5.49,
+     21.3,
+     5.49
+    ]
+   ],
+   "size_unity": [
+    10.97,
+    21.3,
+    10.97
+   ],
+   "sized_from": "Kit_*_stats.json module AABBs",
+   "realistic_variant": null
+  },
+  "Bld_Gatehouse": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_Gatehouse.layout.json",
+   "pieces": [
+    {
+     "id": "Arch",
+     "kit": "Kit_Gate_Arch",
+     "pos": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Arch.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Arch_Fractured.fbx"
+    },
+    {
+     "id": "Portcullis",
+     "kit": "Kit_Gate_Portcullis",
+     "pos": [
+      0.0,
+      1.2,
+      1.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Arch"
+     ],
+     "fracture_class": "Steel",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Portcullis.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Portcullis_Fractured.fbx"
+    },
+    {
+     "id": "Crown_F",
+     "kit": "Kit_Gate_Crown",
+     "pos": [
+      0.0,
+      6.0,
+      1.3
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Arch"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown_Fractured.fbx"
+    },
+    {
+     "id": "Crown_B",
+     "kit": "Kit_Gate_Crown",
+     "pos": [
+      0.0,
+      6.0,
+      -1.3
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "Arch"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown_Fractured.fbx"
+    },
+    {
+     "id": "TowerL_S0",
+     "kit": "Kit_Gate_Tower",
+     "pos": [
+      4.0,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower_Fractured.fbx"
+    },
+    {
+     "id": "TowerL_S1",
+     "kit": "Kit_Gate_Tower",
+     "pos": [
+      4.0,
+      3.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "TowerL_S0"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower_Fractured.fbx"
+    },
+    {
+     "id": "TowerL_S2",
+     "kit": "Kit_Gate_Tower",
+     "pos": [
+      4.0,
+      6.0,
+      0.0
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "TowerL_S1"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower_Fractured.fbx"
+    },
+    {
+     "id": "TowerL_S3",
+     "kit": "Kit_Gate_TowerWindow",
+     "pos": [
+      4.0,
+      9.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "TowerL_S2"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerWindow_Fractured.fbx"
+    },
+    {
+     "id": "TowerL_Crown",
+     "kit": "Kit_Gate_TowerCrown",
+     "pos": [
+      4.0,
+      12.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "TowerL_S3"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerCrown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerCrown_Fractured.fbx"
+    },
+    {
+     "id": "TowerL_Roof",
+     "kit": "Kit_Gate_TowerRoof",
+     "pos": [
+      4.0,
+      12.45,
+      0.0
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "TowerL_Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerRoof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerRoof_Fractured.fbx"
+    },
+    {
+     "id": "WallL0",
+     "kit": "Kit_Gate_Wall",
+     "pos": [
+      7.5,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx"
+    },
+    {
+     "id": "WallL1",
+     "kit": "Kit_Gate_Wall",
+     "pos": [
+      11.5,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx"
+    },
+    {
+     "id": "EndL_S0",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      14.4,
+      0.0,
+      0.0
+     ],
+     "rotY": 89.9943,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "EndL_S1",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      14.4,
+      3.0,
+      0.0
+     ],
+     "rotY": 45.0,
+     "anchor_to": [
+      "EndL_S0"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "EndL_Crown",
+     "kit": "Kit_Keep_TurretCrown",
+     "pos": [
+      14.4,
+      6.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "EndL_S1"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx"
+    },
+    {
+     "id": "EndL_Roof",
+     "kit": "Kit_Keep_TurretRoof",
+     "pos": [
+      14.4,
+      7.3,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "EndL_Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx"
+    },
+    {
+     "id": "TowerR_S0",
+     "kit": "Kit_Gate_Tower",
+     "pos": [
+      -4.0,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower_Fractured.fbx"
+    },
+    {
+     "id": "TowerR_S1",
+     "kit": "Kit_Gate_Tower",
+     "pos": [
+      -4.0,
+      3.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "TowerR_S0"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower_Fractured.fbx"
+    },
+    {
+     "id": "TowerR_S2",
+     "kit": "Kit_Gate_TowerWindow",
+     "pos": [
+      -4.0,
+      6.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "TowerR_S1"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerWindow_Fractured.fbx"
+    },
+    {
+     "id": "TowerR_Crown",
+     "kit": "Kit_Gate_TowerCrown",
+     "pos": [
+      -4.0,
+      9.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "TowerR_S2"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerCrown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerCrown_Fractured.fbx"
+    },
+    {
+     "id": "TowerR_Roof",
+     "kit": "Kit_Gate_TowerRoof",
+     "pos": [
+      -4.0,
+      9.45,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "TowerR_Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerRoof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerRoof_Fractured.fbx"
+    },
+    {
+     "id": "WallR0",
+     "kit": "Kit_Gate_Wall",
+     "pos": [
+      -7.5,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx"
+    },
+    {
+     "id": "WallR1",
+     "kit": "Kit_Gate_Wall",
+     "pos": [
+      -11.5,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx"
+    },
+    {
+     "id": "EndR_S0",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -14.4,
+      0.0,
+      0.0
+     ],
+     "rotY": -89.9943,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "EndR_S1",
+     "kit": "Kit_Keep_Turret",
+     "pos": [
+      -14.4,
+      3.0,
+      0.0
+     ],
+     "rotY": -45.0,
+     "anchor_to": [
+      "EndR_S0"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx"
+    },
+    {
+     "id": "EndR_Crown",
+     "kit": "Kit_Keep_TurretCrown",
+     "pos": [
+      -14.4,
+      6.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "EndR_S1"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx"
+    },
+    {
+     "id": "EndR_Roof",
+     "kit": "Kit_Keep_TurretRoof",
+     "pos": [
+      -14.4,
+      7.3,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "EndR_Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_0",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      2.0,
+      0.0,
+      2.4
+     ],
+     "rotY": -10.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_1",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      2.55,
+      0.0,
+      2.15
+     ],
+     "rotY": -50.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Crate_0",
+     "kit": "Kit_Props_Crate",
+     "pos": [
+      -2.3,
+      0.0,
+      2.5
+     ],
+     "rotY": 12.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx"
+    },
+    {
+     "id": "Annex_R",
+     "kit": "Kit_Props_Shed",
+     "pos": [
+      -9.5,
+      0.0,
+      1.6
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx"
+    }
+   ],
+   "piece_count": 31,
+   "connections": 52,
+   "joint_break_values_set": false,
+   "aabb_unity": [
+    [
+     -16.21,
+     0.0,
+     -1.86
+    ],
+    [
+     16.21,
+     18.25,
+     3.0
+    ]
+   ],
+   "size_unity": [
+    32.42,
+    18.25,
+    4.86
+   ],
+   "sized_from": "Kit_*_stats.json module AABBs",
+   "realistic_variant": null
+  },
+  "Bld_GlassKiosk": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_GlassKiosk.layout.json",
+   "pieces": [
+    {
+     "id": "G_F1_WallDoor",
+     "kit": "Kit_Wood_WallDoor",
+     "pos": [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallDoor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallDoor_Fractured.fbx"
+    },
+    {
+     "id": "G_F1_WallDoor_Frame",
+     "kit": "Kit_Wood_DoorFrame",
+     "pos": [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_B1_Glass",
+     "kit": "Kit_Glass_Wall",
+     "pos": [
+      0.0,
+      0.0,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_L1_Glass",
+     "kit": "Kit_Glass_Wall",
+     "pos": [
+      1.5,
+      0.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_R1_Glass",
+     "kit": "Kit_Glass_Wall",
+     "pos": [
+      -1.5,
+      0.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-2_-2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-2_+2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      1.5,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+2_-2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      -1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+2_+2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      -1.5,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "Deck_00",
+     "kit": "Kit_Steel_Floor",
+     "pos": [
+      0.0,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F1_WallDoor",
+      "G_B1_Glass",
+      "G_L1_Glass",
+      "G_R1_Glass",
+      "G_J_-2_-2",
+      "G_J_-2_+2",
+      "G_J_+2_-2",
+      "G_J_+2_+2"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor_Fractured.fbx"
+    }
+   ],
+   "piece_count": 10,
+   "connections": 21,
+   "joint_break_values_set": false,
+   "aabb_unity": null,
+   "size_unity": null,
+   "sized_from": "no stats JSON for its kit (v3 kit): size unknown",
+   "realistic_variant": null
+  },
+  "Bld_SteelWarehouse": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_SteelWarehouse.layout.json",
+   "pieces": [
+    {
+     "id": "G_F1_WallDoor",
+     "kit": "Kit_Steel_WallDoor",
+     "pos": [
+      1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_WallDoor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_WallDoor_Fractured.fbx"
+    },
+    {
+     "id": "G_F2_WallWindow",
+     "kit": "Kit_Steel_WallWindow",
+     "pos": [
+      -1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "G_B1_Wall",
+     "kit": "Kit_Steel_Wall",
+     "pos": [
+      1.5,
+      0.0,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_B2_Wall",
+     "kit": "Kit_Steel_Wall",
+     "pos": [
+      -1.5,
+      0.0,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_L1_WallWindow",
+     "kit": "Kit_Steel_WallWindow",
+     "pos": [
+      3.0,
+      0.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "G_R1_Wall",
+     "kit": "Kit_Steel_Wall",
+     "pos": [
+      -3.0,
+      0.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-3_-2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      3.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-3_+2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      3.0,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+0_-2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+0_+2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      0.0,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+3_-2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      -3.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+3_+2",
+     "kit": "Kit_Steel_Joint",
+     "pos": [
+      -3.0,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx"
+    },
+    {
+     "id": "Deck_00",
+     "kit": "Kit_Steel_Floor",
+     "pos": [
+      1.5,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F1_WallDoor",
+      "G_F2_WallWindow",
+      "G_B1_Wall",
+      "G_B2_Wall",
+      "G_L1_WallWindow",
+      "G_J_-3_-2",
+      "G_J_-3_+2",
+      "G_J_+0_-2",
+      "G_J_+0_+2"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Deck_10",
+     "kit": "Kit_Steel_Floor",
+     "pos": [
+      -1.5,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F1_WallDoor",
+      "G_F2_WallWindow",
+      "G_B1_Wall",
+      "G_B2_Wall",
+      "G_R1_Wall",
+      "G_J_+0_-2",
+      "G_J_+0_+2",
+      "G_J_+3_-2",
+      "G_J_+3_+2"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor_Fractured.fbx"
+    }
+   ],
+   "piece_count": 14,
+   "connections": 37,
+   "joint_break_values_set": false,
+   "aabb_unity": null,
+   "size_unity": null,
+   "sized_from": "no stats JSON for its kit (v3 kit): size unknown",
+   "realistic_variant": null
+  },
+  "Bld_StoneTower": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_StoneTower.layout.json",
+   "pieces": [
+    {
+     "id": "Plinth",
+     "kit": "Kit_Base_Indestructible",
+     "pos": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": true,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured": null
+    },
+    {
+     "id": "G_F1_WallDoor",
+     "kit": "Kit_Stone_WallDoor",
+     "pos": [
+      0.0,
+      1.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Plinth"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallDoor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallDoor_Fractured.fbx"
+    },
+    {
+     "id": "G_F1_WallDoor_Frame",
+     "kit": "Kit_Wood_DoorFrame",
+     "pos": [
+      0.0,
+      1.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F1_WallDoor"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_B1_Wall",
+     "kit": "Kit_Stone_Wall",
+     "pos": [
+      0.0,
+      1.0,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "Plinth"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_L1_WallWindow",
+     "kit": "Kit_Stone_WallWindow",
+     "pos": [
+      1.5,
+      1.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "Plinth"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "G_L1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      1.5,
+      1.85,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "G_L1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_R1_Wall",
+     "kit": "Kit_Stone_Wall",
+     "pos": [
+      -1.5,
+      1.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "Plinth"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-2_-2",
+     "kit": "Kit_Stone_Joint",
+     "pos": [
+      1.5,
+      1.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Plinth"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-2_+2",
+     "kit": "Kit_Stone_Joint",
+     "pos": [
+      1.5,
+      1.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Plinth"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+2_-2",
+     "kit": "Kit_Stone_Joint",
+     "pos": [
+      -1.5,
+      1.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Plinth"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+2_+2",
+     "kit": "Kit_Stone_Joint",
+     "pos": [
+      -1.5,
+      1.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Plinth"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint_Fractured.fbx"
+    },
+    {
+     "id": "F1_00",
+     "kit": "Kit_Stone_Floor",
+     "pos": [
+      0.0,
+      4.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F1_WallDoor",
+      "G_B1_Wall",
+      "G_L1_WallWindow",
+      "G_R1_Wall",
+      "G_J_-2_-2",
+      "G_J_-2_+2",
+      "G_J_+2_-2",
+      "G_J_+2_+2"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Floor_Fractured.fbx"
+    },
+    {
+     "id": "U_F1_WallWindow",
+     "kit": "Kit_Stone_WallWindow",
+     "pos": [
+      0.0,
+      4.3,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "U_F1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      0.0,
+      5.15,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "U_F1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "U_B1_WallWindow",
+     "kit": "Kit_Stone_WallWindow",
+     "pos": [
+      0.0,
+      4.3,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "U_B1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      0.0,
+      5.15,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "U_B1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "U_L1_WallWindow",
+     "kit": "Kit_Stone_WallWindow",
+     "pos": [
+      1.5,
+      4.3,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "U_L1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      1.5,
+      5.15,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "U_L1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "U_R1_WallWindow",
+     "kit": "Kit_Stone_WallWindow",
+     "pos": [
+      -1.5,
+      4.3,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "U_R1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      -1.5,
+      5.15,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "U_R1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "U_J_-2_-2",
+     "kit": "Kit_Stone_Joint",
+     "pos": [
+      1.5,
+      4.3,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint_Fractured.fbx"
+    },
+    {
+     "id": "U_J_-2_+2",
+     "kit": "Kit_Stone_Joint",
+     "pos": [
+      1.5,
+      4.3,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint_Fractured.fbx"
+    },
+    {
+     "id": "U_J_+2_-2",
+     "kit": "Kit_Stone_Joint",
+     "pos": [
+      -1.5,
+      4.3,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint_Fractured.fbx"
+    },
+    {
+     "id": "U_J_+2_+2",
+     "kit": "Kit_Stone_Joint",
+     "pos": [
+      -1.5,
+      4.3,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "F1_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Joint_Fractured.fbx"
+    },
+    {
+     "id": "Top_00",
+     "kit": "Kit_Stone_Floor",
+     "pos": [
+      0.0,
+      7.3,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "U_F1_WallWindow",
+      "U_B1_WallWindow",
+      "U_L1_WallWindow",
+      "U_R1_WallWindow",
+      "U_J_-2_-2",
+      "U_J_-2_+2",
+      "U_J_+2_-2",
+      "U_J_+2_+2"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Stone/Kit_Stone_Floor_Fractured.fbx"
+    }
+   ],
+   "piece_count": 25,
+   "connections": 63,
+   "joint_break_values_set": false,
+   "aabb_unity": null,
+   "size_unity": null,
+   "sized_from": "no stats JSON for its kit (v3 kit): size unknown",
+   "realistic_variant": null
+  },
+  "Bld_Townhouse": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_Townhouse.layout.json",
+   "pieces": [
+    {
+     "id": "G_F",
+     "kit": "Kit_House_GroundDoor",
+     "pos": [
+      0.2,
+      0.0,
+      2.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor_Fractured.fbx"
+    },
+    {
+     "id": "G_R",
+     "kit": "Kit_House_GroundWin",
+     "pos": [
+      -2.0,
+      0.0,
+      0.2
+     ],
+     "rotY": -90.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx"
+    },
+    {
+     "id": "G_B",
+     "kit": "Kit_House_GroundWin",
+     "pos": [
+      -0.2,
+      0.0,
+      -2.0
+     ],
+     "rotY": -180.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx"
+    },
+    {
+     "id": "G_L",
+     "kit": "Kit_House_GroundWin",
+     "pos": [
+      2.0,
+      0.0,
+      -0.2
+     ],
+     "rotY": 90.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx"
+    },
+    {
+     "id": "Floor1",
+     "kit": "Kit_House_Floor",
+     "pos": [
+      0.0,
+      2.8,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F",
+      "G_R",
+      "G_B",
+      "G_L"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor_Fractured.fbx"
+    },
+    {
+     "id": "U_F",
+     "kit": "Kit_House_Upper2",
+     "pos": [
+      0.15,
+      3.12,
+      2.3
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Floor1"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2_Fractured.fbx"
+    },
+    {
+     "id": "U_R",
+     "kit": "Kit_House_Upper1",
+     "pos": [
+      -2.3,
+      3.12,
+      0.15
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "Floor1"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1_Fractured.fbx"
+    },
+    {
+     "id": "U_B",
+     "kit": "Kit_House_Upper2",
+     "pos": [
+      -0.15,
+      3.12,
+      -2.3
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "Floor1"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2_Fractured.fbx"
+    },
+    {
+     "id": "U_L",
+     "kit": "Kit_House_Upper1",
+     "pos": [
+      2.3,
+      3.12,
+      -0.15
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "Floor1"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1_Fractured.fbx"
+    },
+    {
+     "id": "Gable_F",
+     "kit": "Kit_House_Gable",
+     "pos": [
+      0.0,
+      5.9,
+      2.3
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "U_F",
+      "U_L",
+      "U_R"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable_Fractured.fbx"
+    },
+    {
+     "id": "Gable_B",
+     "kit": "Kit_House_Gable",
+     "pos": [
+      0.0,
+      5.9,
+      -2.3
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "U_B",
+      "U_L",
+      "U_R"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable_Fractured.fbx"
+    },
+    {
+     "id": "Roof_E",
+     "kit": "Kit_House_Roof",
+     "pos": [
+      0.0,
+      5.9,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Gable_F",
+      "Gable_B",
+      "U_R"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof_Fractured.fbx"
+    },
+    {
+     "id": "Roof_W",
+     "kit": "Kit_House_Roof",
+     "pos": [
+      0.0,
+      5.9,
+      0.0
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "Gable_F",
+      "Gable_B",
+      "U_L"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof_Fractured.fbx"
+    },
+    {
+     "id": "Chimney",
+     "kit": "Kit_House_Chimney",
+     "pos": [
+      1.25,
+      3.12,
+      -1.45
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Floor1"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney_Fractured.fbx"
+    },
+    {
+     "id": "Annex_R",
+     "kit": "Kit_Props_Shed",
+     "pos": [
+      -3.1,
+      0.0,
+      -0.6
+     ],
+     "rotY": -90.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_0",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      -1.55,
+      0.0,
+      2.75
+     ],
+     "rotY": -15.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_1",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      -2.05,
+      0.0,
+      2.5
+     ],
+     "rotY": -60.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Crate_0",
+     "kit": "Kit_Props_Crate",
+     "pos": [
+      2.5,
+      0.0,
+      2.75
+     ],
+     "rotY": -8.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx"
+    },
+    {
+     "id": "Crate_1",
+     "kit": "Kit_Props_CrateSmall",
+     "pos": [
+      2.45,
+      0.8,
+      2.7
+     ],
+     "rotY": 25.0,
+     "anchor_to": [
+      "Crate_0"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx"
+    }
+   ],
+   "piece_count": 19,
+   "connections": 46,
+   "joint_break_values_set": false,
+   "aabb_unity": [
+    [
+     -4.26,
+     0.0,
+     -2.84
+    ],
+    [
+     2.98,
+     9.27,
+     3.23
+    ]
+   ],
+   "size_unity": [
+    7.23,
+    9.27,
+    6.07
+   ],
+   "sized_from": "Kit_*_stats.json module AABBs",
+   "realistic_variant": "Assets/_Project/Models/Realistic/Buildings/Hero/Bld_Townhouse/Bld_Townhouse.fbx"
+  },
+  "Bld_Watchtower": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_Watchtower.layout.json",
+   "pieces": [
+    {
+     "id": "S0_RingDoor",
+     "kit": "Kit_Tower_RingDoor",
+     "pos": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor_Fractured.fbx"
+    },
+    {
+     "id": "S1_RingSlit",
+     "kit": "Kit_Tower_RingSlit",
+     "pos": [
+      0.0,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S0_RingDoor"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx"
+    },
+    {
+     "id": "S2_RingSlit",
+     "kit": "Kit_Tower_RingSlit",
+     "pos": [
+      0.0,
+      6.0,
+      0.0
+     ],
+     "rotY": -135.0,
+     "anchor_to": [
+      "S1_RingSlit"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx"
+    },
+    {
+     "id": "S3_RingWindow",
+     "kit": "Kit_Tower_RingWindow",
+     "pos": [
+      0.0,
+      9.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "S2_RingSlit"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow_Fractured.fbx"
+    },
+    {
+     "id": "Crown",
+     "kit": "Kit_Tower_Crown",
+     "pos": [
+      0.0,
+      12.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S3_RingWindow"
+     ],
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown_Fractured.fbx"
+    },
+    {
+     "id": "Roof",
+     "kit": "Kit_Tower_Roof",
+     "pos": [
+      0.0,
+      13.42,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "Crown"
+     ],
+     "fracture_class": "Roof",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof_Fractured.fbx"
+    },
+    {
+     "id": "Floor_1",
+     "kit": "Kit_Tower_Floor",
+     "pos": [
+      0.0,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S0_RingDoor"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Floor_2",
+     "kit": "Kit_Tower_Floor",
+     "pos": [
+      0.0,
+      6.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S1_RingSlit"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Floor_3",
+     "kit": "Kit_Tower_Floor",
+     "pos": [
+      0.0,
+      9.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S2_RingSlit"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Floor_4",
+     "kit": "Kit_Tower_Floor",
+     "pos": [
+      0.0,
+      12.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "S3_RingWindow"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Annex",
+     "kit": "Kit_Props_Shed",
+     "pos": [
+      2.65,
+      0.0,
+      -0.35
+     ],
+     "rotY": 90.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Stone",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_0",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      -1.6,
+      0.0,
+      2.35
+     ],
+     "rotY": -20.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Barrel_1",
+     "kit": "Kit_Props_Barrel",
+     "pos": [
+      -2.15,
+      0.0,
+      1.85
+     ],
+     "rotY": -65.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx"
+    },
+    {
+     "id": "Crate_0",
+     "kit": "Kit_Props_Crate",
+     "pos": [
+      1.75,
+      0.0,
+      2.35
+     ],
+     "rotY": 15.0,
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx"
+    },
+    {
+     "id": "Crate_1",
+     "kit": "Kit_Props_CrateSmall",
+     "pos": [
+      1.7,
+      0.8,
+      2.3
+     ],
+     "rotY": -20.0,
+     "anchor_to": [
+      "Crate_0"
+     ],
+     "fracture_class": "Wood",
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx"
+    }
+   ],
+   "piece_count": 15,
+   "connections": 21,
+   "joint_break_values_set": false,
+   "aabb_unity": [
+    [
+     -2.97,
+     0.0,
+     -2.97
+    ],
+    [
+     3.81,
+     20.22,
+     2.97
+    ]
+   ],
+   "size_unity": [
+    6.78,
+    20.22,
+    5.95
+   ],
+   "sized_from": "Kit_*_stats.json module AABBs",
+   "realistic_variant": null
+  },
+  "Bld_WoodCottage": {
+   "layout": "Assets/_Project/Models/Buildings/Bld_WoodCottage.layout.json",
+   "pieces": [
+    {
+     "id": "G_F1_WallDoor",
+     "kit": "Kit_Wood_WallDoor",
+     "pos": [
+      1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallDoor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallDoor_Fractured.fbx"
+    },
+    {
+     "id": "G_F1_WallDoor_Frame",
+     "kit": "Kit_Wood_DoorFrame",
+     "pos": [
+      1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_F2_WallWindow",
+     "kit": "Kit_Wood_WallWindow",
+     "pos": [
+      -1.5,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "G_F2_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      -1.5,
+      0.85,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F2_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_B1_WallWindow",
+     "kit": "Kit_Wood_WallWindow",
+     "pos": [
+      1.5,
+      0.0,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "G_B1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      1.5,
+      0.85,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": [
+      "G_B1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_B2_Wall",
+     "kit": "Kit_Wood_Wall",
+     "pos": [
+      -1.5,
+      0.0,
+      -1.5
+     ],
+     "rotY": -180.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_L1_Wall",
+     "kit": "Kit_Wood_Wall",
+     "pos": [
+      3.0,
+      0.0,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall_Fractured.fbx"
+    },
+    {
+     "id": "G_R1_WallWindow",
+     "kit": "Kit_Wood_WallWindow",
+     "pos": [
+      -3.0,
+      0.0,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow_Fractured.fbx"
+    },
+    {
+     "id": "G_R1_WallWindow_Frame",
+     "kit": "Kit_Wood_WindowFrame",
+     "pos": [
+      -3.0,
+      0.85,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "G_R1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-3_-2",
+     "kit": "Kit_Wood_Joint",
+     "pos": [
+      3.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_-3_+2",
+     "kit": "Kit_Wood_Joint",
+     "pos": [
+      3.0,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+0_-2",
+     "kit": "Kit_Wood_Joint",
+     "pos": [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+0_+2",
+     "kit": "Kit_Wood_Joint",
+     "pos": [
+      0.0,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+3_-2",
+     "kit": "Kit_Wood_Joint",
+     "pos": [
+      -3.0,
+      0.0,
+      1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx"
+    },
+    {
+     "id": "G_J_+3_+2",
+     "kit": "Kit_Wood_Joint",
+     "pos": [
+      -3.0,
+      0.0,
+      -1.5
+     ],
+     "rotY": 0.0,
+     "anchor_to": "Ground",
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx"
+    },
+    {
+     "id": "Attic_00",
+     "kit": "Kit_Wood_Floor",
+     "pos": [
+      1.5,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F1_WallDoor",
+      "G_F2_WallWindow",
+      "G_B1_WallWindow",
+      "G_B2_Wall",
+      "G_L1_Wall"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Attic_10",
+     "kit": "Kit_Wood_Floor",
+     "pos": [
+      -1.5,
+      3.0,
+      0.0
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "G_F1_WallDoor",
+      "G_F2_WallWindow",
+      "G_B1_WallWindow",
+      "G_B2_Wall",
+      "G_R1_WallWindow"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor_Fractured.fbx"
+    },
+    {
+     "id": "Top_Gable_-1",
+     "kit": "Kit_Wood_Gable",
+     "pos": [
+      3.0,
+      3.2,
+      0.0
+     ],
+     "rotY": 90.0,
+     "anchor_to": [
+      "Attic_00"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Gable.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Gable_Fractured.fbx"
+    },
+    {
+     "id": "Top_Gable_1",
+     "kit": "Kit_Wood_Gable",
+     "pos": [
+      -3.0,
+      3.2,
+      0.0
+     ],
+     "rotY": -90.0,
+     "anchor_to": [
+      "Attic_10"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Gable.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Gable_Fractured.fbx"
+    },
+    {
+     "id": "Top_Roof_S1",
+     "kit": "Kit_Roof_Roof",
+     "pos": [
+      1.5,
+      3.5905,
+      0.9421
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Top_Gable_-1",
+      "Attic_00",
+      "Attic_10"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx"
+    },
+    {
+     "id": "Top_Roof_S2",
+     "kit": "Kit_Roof_Roof",
+     "pos": [
+      -1.5,
+      3.6003,
+      0.949
+     ],
+     "rotY": 0.0,
+     "anchor_to": [
+      "Top_Gable_1",
+      "Attic_00",
+      "Attic_10"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx"
+    },
+    {
+     "id": "Top_Roof_N1",
+     "kit": "Kit_Roof_Roof",
+     "pos": [
+      1.5,
+      3.5905,
+      -0.9421
+     ],
+     "rotY": 180.0,
+     "anchor_to": [
+      "Top_Gable_-1",
+      "Attic_00",
+      "Attic_10"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx"
+    },
+    {
+     "id": "Top_Roof_N2",
+     "kit": "Kit_Roof_Roof",
+     "pos": [
+      -1.5,
+      3.6003,
+      -0.949
+     ],
+     "rotY": 180.0,
+     "anchor_to": [
+      "Top_Gable_1",
+      "Attic_00",
+      "Attic_10"
+     ],
+     "fracture_class": null,
+     "indestructible": false,
+     "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+     "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx"
+    }
+   ],
+   "piece_count": 24,
+   "connections": 81,
+   "joint_break_values_set": false,
+   "aabb_unity": null,
+   "size_unity": null,
+   "sized_from": "no stats JSON for its kit (v3 kit): size unknown",
+   "realistic_variant": null
+  }
+ },
+ "modules": {
+  "Kit_Gate_Arch": {
+   "kit": "Kit_Gate",
+   "module": "Arch",
+   "size_unity": [
+    5.0,
+    6.0,
+    3.72
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 16,
+   "anchors": 3,
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "mass_kg": "14580.6-34967.0",
+   "lod0_tris": 1085,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Arch.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Arch_Fractured.fbx",
+   "note": "gate passage, coat of arms, banners, lanterns, portcullis grooves"
+  },
+  "Kit_Gate_Portcullis": {
+   "kit": "Kit_Gate",
+   "module": "Portcullis",
+   "size_unity": [
+    2.4,
+    3.7,
+    0.24
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 11,
+   "anchors": 2,
+   "anchor_to": "Support",
+   "fracture_class": "Steel",
+   "mass_kg": "33.8-150.2",
+   "lod0_tris": 468,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Portcullis.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Portcullis_Fractured.fbx",
+   "note": "iron-shod oak portcullis, hangs from the arch"
+  },
+  "Kit_Gate_Crown": {
+   "kit": "Kit_Gate",
+   "module": "Crown",
+   "size_unity": [
+    5.08,
+    1.64,
+    1.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 10,
+   "anchors": 7,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "508.5-2307.5",
+   "lod0_tris": 540,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown_Fractured.fbx",
+   "note": "machicolated battlement, 5 m"
+  },
+  "Kit_Gate_Tower": {
+   "kit": "Kit_Gate",
+   "module": "Tower",
+   "size_unity": [
+    3.12,
+    3.0,
+    3.1
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 14,
+   "anchors": 5,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "1784.9-11411.5",
+   "lod0_tris": 528,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower_Fractured.fbx",
+   "note": "square flanking tower storey, quoins, slit"
+  },
+  "Kit_Gate_TowerWindow": {
+   "kit": "Kit_Gate",
+   "module": "TowerWindow",
+   "size_unity": [
+    3.12,
+    3.0,
+    3.205
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 16,
+   "anchors": 4,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "3221.4-8719.5",
+   "lod0_tris": 764,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerWindow.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerWindow_Fractured.fbx",
+   "note": "square tower storey, arched window + shutters"
+  },
+  "Kit_Gate_TowerCrown": {
+   "kit": "Kit_Gate",
+   "module": "TowerCrown",
+   "size_unity": [
+    3.6,
+    1.75,
+    3.6
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 13,
+   "anchors": 6,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "1823.8-5214.8",
+   "lod0_tris": 578,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerCrown.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerCrown_Fractured.fbx",
+   "note": "corbelled square crown, merlons"
+  },
+  "Kit_Gate_TowerRoof": {
+   "kit": "Kit_Gate",
+   "module": "TowerRoof",
+   "size_unity": [
+    3.0,
+    5.8,
+    3.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 35,
+   "anchors": 6,
+   "anchor_to": "Support",
+   "fracture_class": "Roof",
+   "mass_kg": "1109.5-3730.2",
+   "lod0_tris": 290,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerRoof.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerRoof_Fractured.fbx",
+   "note": "stepped red pyramid roof, finial, flag"
+  },
+  "Kit_Gate_Wall": {
+   "kit": "Kit_Gate",
+   "module": "Wall",
+   "size_unity": [
+    4.0,
+    5.98,
+    1.83
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 12,
+   "anchors": 2,
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "mass_kg": "3075.8-16723.7",
+   "lod0_tris": 966,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx",
+   "note": "curtain wall 4 m, battered plinth, battlements, lantern"
+  },
+  "Kit_House_GroundDoor": {
+   "kit": "Kit_House",
+   "module": "GroundDoor",
+   "size_unity": [
+    4.0,
+    2.8,
+    1.25
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 10,
+   "anchors": 4,
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "mass_kg": "686.8-1774.3",
+   "lod0_tris": 640,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor_Fractured.fbx",
+   "note": "ground floor front: arched blue door, window, shop sign, lantern"
+  },
+  "Kit_House_GroundWin": {
+   "kit": "Kit_House",
+   "module": "GroundWin",
+   "size_unity": [
+    4.0,
+    2.8,
+    0.74
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 9,
+   "anchors": 3,
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "mass_kg": "737.0-2549.3",
+   "lod0_tris": 503,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx",
+   "note": "ground floor side/back: shuttered window + flower box"
+  },
+  "Kit_House_Floor": {
+   "kit": "Kit_House",
+   "module": "Floor",
+   "size_unity": [
+    5.0,
+    0.34,
+    5.18
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 23,
+   "anchors": 11,
+   "anchor_to": "Support",
+   "fracture_class": "Wood",
+   "mass_kg": "37.1-432.3",
+   "lod0_tris": 92,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor_Fractured.fbx",
+   "note": "jettied first floor deck, joist ends"
+  },
+  "Kit_House_Upper2": {
+   "kit": "Kit_House",
+   "module": "Upper2",
+   "size_unity": [
+    4.6,
+    2.78,
+    0.94
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 22,
+   "anchors": 5,
+   "anchor_to": "Support",
+   "fracture_class": "Wood",
+   "mass_kg": "143.7-807.3",
+   "lod0_tris": 532,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2_Fractured.fbx",
+   "note": "timber frame + plaster, 2 windows, timber balcony"
+  },
+  "Kit_House_Upper1": {
+   "kit": "Kit_House",
+   "module": "Upper1",
+   "size_unity": [
+    4.6,
+    2.78,
+    0.64
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 24,
+   "anchors": 6,
+   "anchor_to": "Support",
+   "fracture_class": "Wood",
+   "mass_kg": "104.4-1642.1",
+   "lod0_tris": 286,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1_Fractured.fbx",
+   "note": "timber frame + plaster, 1 window, braces"
+  },
+  "Kit_House_Gable": {
+   "kit": "Kit_House",
+   "module": "Gable",
+   "size_unity": [
+    4.914,
+    2.6,
+    0.36
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 23,
+   "anchors": 6,
+   "anchor_to": "Support",
+   "fracture_class": "Wood",
+   "mass_kg": "160.0-362.5",
+   "lod0_tris": 126,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable_Fractured.fbx",
+   "note": "timber-framed gable, oculus"
+  },
+  "Kit_House_Roof": {
+   "kit": "Kit_House",
+   "module": "Roof",
+   "size_unity": [
+    3.104,
+    3.374,
+    5.68
+   ],
+   "pivot": "bottom-centre (mesh dips 0.47 m below the pivot)",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 8,
+   "joints": 16,
+   "anchors": 2,
+   "anchor_to": "Support",
+   "fracture_class": "Roof",
+   "mass_kg": "228.5-1329.1",
+   "lod0_tris": 252,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof_Fractured.fbx",
+   "note": "one roof slope with dormer (mirror = rotate 180)"
+  },
+  "Kit_House_Chimney": {
+   "kit": "Kit_House",
+   "module": "Chimney",
+   "size_unity": [
+    0.96,
+    5.34,
+    0.86
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 8,
+   "anchors": 1,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "449.7-1656.5",
+   "lod0_tris": 218,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney_Fractured.fbx",
+   "note": "stone chimney stack, clay pots"
+  },
+  "Kit_Keep_WallDoor": {
+   "kit": "Kit_Keep",
+   "module": "WallDoor",
+   "size_unity": [
+    4.2,
+    3.01,
+    1.05
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 9,
+   "anchors": 3,
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "mass_kg": "1431.2-3936.4",
+   "lod0_tris": 702,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallDoor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallDoor_Fractured.fbx",
+   "note": "ground storey front, studded double gate + lanterns"
+  },
+  "Kit_Keep_WallSlit": {
+   "kit": "Kit_Keep",
+   "module": "WallSlit",
+   "size_unity": [
+    4.2,
+    3.0,
+    1.03
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 12,
+   "anchors": 3,
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "mass_kg": "2215.4-3900.5",
+   "lod0_tris": 617,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx",
+   "note": "ground storey side, arrow slit, battered plinth, lanterns"
+  },
+  "Kit_Keep_Wall": {
+   "kit": "Kit_Keep",
+   "module": "Wall",
+   "size_unity": [
+    4.2,
+    3.0,
+    0.96
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 11,
+   "anchors": 3,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "1975.9-4672.0",
+   "lod0_tris": 422,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx",
+   "note": "upper storey, arched window + shutters"
+  },
+  "Kit_Keep_WallBanner": {
+   "kit": "Kit_Keep",
+   "module": "WallBanner",
+   "size_unity": [
+    4.2,
+    3.0,
+    0.79
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 13,
+   "anchors": 3,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "1440.6-4778.0",
+   "lod0_tris": 888,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner_Fractured.fbx",
+   "note": "upper storey front, window + two banners"
+  },
+  "Kit_Keep_WallBalcony": {
+   "kit": "Kit_Keep",
+   "module": "WallBalcony",
+   "size_unity": [
+    4.2,
+    3.071,
+    1.3
+   ],
+   "pivot": "bottom-centre (mesh dips 0.07 m below the pivot)",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 13,
+   "anchors": 1,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "871.1-4164.1",
+   "lod0_tris": 790,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony_Fractured.fbx",
+   "note": "upper storey, window onto a timber balcony, beam ends, ivy"
+  },
+  "Kit_Keep_Turret": {
+   "kit": "Kit_Keep",
+   "module": "Turret",
+   "size_unity": [
+    2.56,
+    3.0,
+    2.56
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 16,
+   "anchors": 3,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "1416.3-5906.6",
+   "lod0_tris": 282,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "note": "corner turret ring (stack x4), slit faces outwards"
+  },
+  "Kit_Keep_TurretCrown": {
+   "kit": "Kit_Keep",
+   "module": "TurretCrown",
+   "size_unity": [
+    3.16,
+    1.3,
+    3.16
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 11,
+   "anchors": 5,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "547.3-2342.7",
+   "lod0_tris": 372,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx",
+   "note": "corbelled turret crown"
+  },
+  "Kit_Keep_TurretRoof": {
+   "kit": "Kit_Keep",
+   "module": "TurretRoof",
+   "size_unity": [
+    3.516,
+    5.0,
+    3.516
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 31,
+   "anchors": 9,
+   "anchor_to": "Support",
+   "fracture_class": "Roof",
+   "mass_kg": "293.9-3168.0",
+   "lod0_tris": 571,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx",
+   "note": "red conical roof, finial, flag"
+  },
+  "Kit_Keep_Crown": {
+   "kit": "Kit_Keep",
+   "module": "Crown",
+   "size_unity": [
+    4.2,
+    1.64,
+    1.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 12,
+   "anchors": 6,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "479.2-2255.8",
+   "lod0_tris": 448,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx",
+   "note": "machicolated battlement on a wall top"
+  },
+  "Kit_Keep_Floor": {
+   "kit": "Kit_Keep",
+   "module": "Floor",
+   "size_unity": [
+    5.6,
+    0.41,
+    5.6
+   ],
+   "pivot": "bottom-centre (mesh dips 0.38 m below the pivot)",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 23,
+   "anchors": 10,
+   "anchor_to": "Support",
+   "fracture_class": "Wood",
+   "mass_kg": "128.7-512.5",
+   "lod0_tris": 62,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor_Fractured.fbx",
+   "note": "storey floor, anchors on the walls"
+  },
+  "Kit_Props_Barrel": {
+   "kit": "Kit_Props",
+   "module": "Barrel",
+   "size_unity": [
+    0.704,
+    0.932,
+    0.704
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 35,
+   "anchors": 4,
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "mass_kg": "9.5-28.2",
+   "lod0_tris": 354,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+   "note": "oak barrel, iron hoops"
+  },
+  "Kit_Props_Crate": {
+   "kit": "Kit_Props",
+   "module": "Crate",
+   "size_unity": [
+    0.845,
+    0.8,
+    0.845
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 36,
+   "anchors": 9,
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "mass_kg": "15.9-42.8",
+   "lod0_tris": 172,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx",
+   "note": "0.8 m crate"
+  },
+  "Kit_Props_CrateSmall": {
+   "kit": "Kit_Props",
+   "module": "CrateSmall",
+   "size_unity": [
+    0.595,
+    0.55,
+    0.595
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 10,
+   "joints": 23,
+   "anchors": 8,
+   "anchor_to": "Support",
+   "fracture_class": "Wood",
+   "mass_kg": "4.0-14.6",
+   "lod0_tris": 172,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx",
+   "note": "0.55 m crate (stacks)"
+  },
+  "Kit_Props_Shed": {
+   "kit": "Kit_Props",
+   "module": "Shed",
+   "size_unity": [
+    2.9,
+    3.88,
+    2.314
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 13,
+   "anchors": 5,
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "mass_kg": "959.6-2582.6",
+   "lod0_tris": 1058,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx",
+   "note": "lean-to stone annex with tile roof, chimney, door, window, ivy (back +Y on a host wall)"
+  },
+  "Kit_RealBrick_Block": {
+   "kit": "Kit_RealBrick",
+   "module": "Block",
+   "size_unity": [
+    1.02,
+    1.0,
+    1.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 16,
+   "joints": 54,
+   "anchors": 8,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Brick",
+   "mass_kg": "76.3-179.1",
+   "lod0_tris": 452,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealBrick_Wall": {
+   "kit": "Kit_RealBrick",
+   "module": "Wall",
+   "size_unity": [
+    3.0,
+    3.0,
+    0.27
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 18,
+   "joints": 37,
+   "anchors": 5,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Brick",
+   "mass_kg": "143.7-408.9",
+   "lod0_tris": 948,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealBrick_Floor": {
+   "kit": "Kit_RealBrick",
+   "module": "Floor",
+   "size_unity": [
+    3.0,
+    0.27,
+    3.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 18,
+   "joints": 38,
+   "anchors": 13,
+   "anchor_to": [
+    "Support"
+   ],
+   "fracture_class": "Brick",
+   "mass_kg": "162.7-309.4",
+   "lod0_tris": 876,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealProps_Crate": {
+   "kit": "Kit_RealProps",
+   "module": "Crate",
+   "size_unity": [
+    0.845,
+    0.8,
+    0.845
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 12,
+   "joints": 36,
+   "anchors": 9,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Wood",
+   "mass_kg": "15.9-42.8",
+   "lod0_tris": 172,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealProps_Barrel": {
+   "kit": "Kit_RealProps",
+   "module": "Barrel",
+   "size_unity": [
+    0.704,
+    1.006,
+    0.704
+   ],
+   "pivot": "bottom-centre (mesh dips 0.06 m below the pivot)",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 12,
+   "joints": 35,
+   "anchors": 4,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Wood",
+   "mass_kg": "9.5-28.2",
+   "lod0_tris": 354,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Barrel.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Barrel_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealRoof_Roof": {
+   "kit": "Kit_RealRoof",
+   "module": "Roof",
+   "size_unity": [
+    3.6,
+    0.18,
+    2.3
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 12,
+   "joints": 23,
+   "anchors": 4,
+   "anchor_to": [
+    "Support"
+   ],
+   "fracture_class": "Roof",
+   "mass_kg": "158.8-234.3",
+   "lod0_tris": 1112,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealSteel_Block": {
+   "kit": "Kit_RealSteel",
+   "module": "Block",
+   "size_unity": [
+    1.02,
+    1.0,
+    1.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 7,
+   "joints": 15,
+   "anchors": 4,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Steel",
+   "mass_kg": "78.0-154.8",
+   "lod0_tris": 716,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealSteel_Floor": {
+   "kit": "Kit_RealSteel",
+   "module": "Floor",
+   "size_unity": [
+    3.0,
+    0.18,
+    3.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 7,
+   "joints": 12,
+   "anchors": 6,
+   "anchor_to": [
+    "Support"
+   ],
+   "fracture_class": "Steel",
+   "mass_kg": "90.5-280.6",
+   "lod0_tris": 804,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealSteel_Joint": {
+   "kit": "Kit_RealSteel",
+   "module": "Joint",
+   "size_unity": [
+    0.32,
+    3.0,
+    0.3
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 7,
+   "joints": 6,
+   "anchors": 1,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Steel",
+   "mass_kg": "28.0-32.7",
+   "lod0_tris": 892,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Joint.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Joint_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealSteel_Wall": {
+   "kit": "Kit_RealSteel",
+   "module": "Wall",
+   "size_unity": [
+    3.0,
+    3.0,
+    0.18
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 7,
+   "joints": 12,
+   "anchors": 3,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Steel",
+   "mass_kg": "122.2-201.7",
+   "lod0_tris": 804,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Wall.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Wall_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealWood_Block": {
+   "kit": "Kit_RealWood",
+   "module": "Block",
+   "size_unity": [
+    1.02,
+    1.0,
+    1.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 12,
+   "joints": 34,
+   "anchors": 8,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Wood",
+   "mass_kg": "38.0-102.5",
+   "lod0_tris": 716,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealWood_Joint": {
+   "kit": "Kit_RealWood",
+   "module": "Joint",
+   "size_unity": [
+    0.32,
+    3.0,
+    0.3
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 12,
+   "joints": 11,
+   "anchors": 1,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Wood",
+   "mass_kg": "9.8-15.9",
+   "lod0_tris": 892,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealWood_Floor": {
+   "kit": "Kit_RealWood",
+   "module": "Floor",
+   "size_unity": [
+    3.0,
+    0.22,
+    3.0
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 12,
+   "joints": 22,
+   "anchors": 10,
+   "anchor_to": [
+    "Support"
+   ],
+   "fracture_class": "Wood",
+   "mass_kg": "61.6-107.0",
+   "lod0_tris": 1068,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_RealWood_Wall": {
+   "kit": "Kit_RealWood",
+   "module": "Wall",
+   "size_unity": [
+    3.0,
+    3.0,
+    0.22
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frags": 12,
+   "joints": 23,
+   "anchors": 4,
+   "anchor_to": [
+    "Ground"
+   ],
+   "fracture_class": "Wood",
+   "mass_kg": "76.4-108.7",
+   "lod0_tris": 1068,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall_Fractured.fbx",
+   "note": ""
+  },
+  "Kit_Tower_RingDoor": {
+   "kit": "Kit_Tower",
+   "module": "RingDoor",
+   "size_unity": [
+    4.16,
+    3.0,
+    4.7
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 13,
+   "anchors": 5,
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "mass_kg": "3266.1-11724.6",
+   "lod0_tris": 829,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor_Fractured.fbx",
+   "note": "ground ring, projecting door portal, lanterns"
+  },
+  "Kit_Tower_RingSlit": {
+   "kit": "Kit_Tower",
+   "module": "RingSlit",
+   "size_unity": [
+    4.16,
+    3.113,
+    4.252
+   ],
+   "pivot": "bottom-centre (mesh dips 0.11 m below the pivot)",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 14,
+   "anchors": 1,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "4290.9-10100.3",
+   "lod0_tris": 928,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+   "note": "middle ring, 3 arrow slits, banner"
+  },
+  "Kit_Tower_RingWindow": {
+   "kit": "Kit_Tower",
+   "module": "RingWindow",
+   "size_unity": [
+    4.0,
+    3.0,
+    4.757
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 14,
+   "anchors": 4,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "3579.2-11591.8",
+   "lod0_tris": 982,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow_Fractured.fbx",
+   "note": "top ring, 2 arched windows, shutters, flower boxes"
+  },
+  "Kit_Tower_Crown": {
+   "kit": "Kit_Tower",
+   "module": "Crown",
+   "size_unity": [
+    4.84,
+    1.42,
+    4.84
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 7,
+   "joints": 7,
+   "anchors": 7,
+   "anchor_to": "Support",
+   "fracture_class": "Stone",
+   "mass_kg": "1274.5-5790.5",
+   "lod0_tris": 496,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown_Fractured.fbx",
+   "note": "corbelled crown"
+  },
+  "Kit_Tower_Roof": {
+   "kit": "Kit_Tower",
+   "module": "Roof",
+   "size_unity": [
+    5.453,
+    6.8,
+    5.453
+   ],
+   "pivot": "bottom-centre",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 9,
+   "joints": 17,
+   "anchors": 6,
+   "anchor_to": "Support",
+   "fracture_class": "Roof",
+   "mass_kg": "573.2-14843.9",
+   "lod0_tris": 782,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof_Fractured.fbx",
+   "note": "tall conical roof, 2 dormers, finial, pennant"
+  },
+  "Kit_Tower_Floor": {
+   "kit": "Kit_Tower",
+   "module": "Floor",
+   "size_unity": [
+    2.982,
+    0.36,
+    2.982
+   ],
+   "pivot": "top-centre (slab hangs below its pivot)",
+   "frag_pivot": "fragment origin per #28 kit",
+   "frags": 12,
+   "joints": 25,
+   "anchors": 9,
+   "anchor_to": "Support",
+   "fracture_class": "Wood",
+   "mass_kg": "22.8-148.3",
+   "lod0_tris": 80,
+   "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx",
+   "note": "round floor on the ring below"
+  }
+ }
+}

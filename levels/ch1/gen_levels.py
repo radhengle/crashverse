@@ -37,21 +37,33 @@ def L2():  # EASY "Leaning Water Tower": stilts stand on TWO sills (rev 6: L1 al
         B("shedRoof","wood",(4.3,5.0,-1.2),(1.8,.4,1.6),["shed"])]
     return b
 
-def L3():  # MEDIUM "Two-Storey Bakery": brick shop + upper flat on two wood props; awning post is a decoy
+def L3():  # MEDIUM "Two-Storey Bakery" (rev 7): 3D Modeler's Bld_Townhouse at 0.8 scale (ground-floor shop = the
+    # bakery: door + shop sign; timber upper storey with balcony; gables, two roof halves, chimney) on a timber cellar
+    # deck with two wood props. Same support graph as rev 6: props -> slabs -> shop walls -> floor -> upper storey -> roof.
+    # Piece ids follow the townhouse layout (G_*, Floor1, U_*, Roof_*, Chimney); the gables are folded into the two roof
+    # halves and the balcony into U_F (both are part of those modules' meshes). Side walls sit behind the front walls.
+    # Cubes never overlap (LevelBuilder spawns physics boxes). Annex shed / barrels / crates are left out: they are
+    # ground-level objective mass that would not fall with the house.
     b=[ROCK("rock",(0,.6,0),(7,1.2,4))]
     b+=[B("propL","wood",(-1.6,1.9,1.4),(.4,1.4,.4),["rock"],role="prop"),
         B("propR","wood",(1.6,1.9,1.4),(.4,1.4,.4),["rock"],role="prop"),
         B("slabL","brick",(-1,2.8,0),(2,.4,3.4),["propL"]),
-        B("slabR","brick",(1,2.8,0),(2,.4,3.4),["propR"]),
-        B("wallF","brick",(0,3.8,1.5),(3.6,1.6,.3),["slabL","slabR"],role="wall"),
-        B("wallB","brick",(0,3.8,-1.5),(3.6,1.6,.3),["slabL","slabR"],role="wall"),
-        B("oven","brick",(0,3.6,0),(1.2,1.2,1.2),["slabL","slabR"]),
-        B("floor2","brick",(0,4.8,0),(4,.4,3.4),["wallF","wallB"]),
-        B("flat","brick",(-.6,5.6,0),(2.6,1.2,2.6),["floor2"],role="wall"),
-        B("balcony","wood",(1.6,5.2,0),(1.0,.3,2.0),["floor2"]),
-        B("roof","brick",(-.6,6.5,0),(3.0,.6,3.0),["flat"],role="roof"),
-        B("chimney","brick",(-1.4,7.3,-.8),(.6,1.0,.6),["roof"]),
-        B("awningPost","wood",(3.0,2.2,1.6),(.3,2.0,.3),["rock"],role="prop"),   # decoy: holds only the awning
+        B("slabR","brick",(1,2.8,0),(2,.4,3.4),["propR"])]
+    S=["slabL","slabR"]; gy,gh=4.12,2.24; uy,uh=6.64,2.2
+    b+=[B("G_F","brick",(0,gy,1.6),(3.6,gh,.3),S,role="wall"),          # GroundDoor: shop front, sign, lantern
+        B("G_B","brick",(0,gy,-1.6),(3.6,gh,.3),S,role="wall"),
+        B("G_L","brick",(-1.65,gy,0),(.3,gh,2.9),S,role="wall"),
+        B("G_R","brick",(1.65,gy,0),(.3,gh,2.9),S,role="wall"),
+        B("oven","brick",(0,3.6,0),(1.2,1.2,1.2),S),                       # bakery oven (inside, hidden by G_F)
+        B("Floor1","wood",(0,5.39,0),(3.6,.3,3.5),["G_F","G_B","G_L","G_R"]),
+        B("U_F","wood",(0,uy,1.6),(3.6,uh,.3),["Floor1"],role="wall"),
+        B("U_B","wood",(0,uy,-1.6),(3.6,uh,.3),["Floor1"],role="wall"),
+        B("U_L","wood",(-1.65,uy,0),(.3,uh,2.9),["Floor1"],role="wall"),
+        B("U_R","wood",(1.65,uy,0),(.3,uh,2.9),["Floor1"],role="wall"),
+        B("Roof_W","brick",(-1.0,8.14,0),(2.0,.8,3.9),["U_F","U_B","U_L"],role="roof",color="B5523B"),  # + Gable_F/B ends
+        B("Roof_E","brick",(1.0,8.14,0),(2.0,.8,3.9),["U_F","U_B","U_R"],role="roof",color="B5523B"),
+        B("Chimney","brick",(1.3,9.04,-1.0),(.5,1.0,.5),["Roof_E"]),
+        B("awningPost","wood",(3.0,2.2,1.6),(.3,2.0,.3),["rock"],role="prop"),   # decoy: holds only the shop awning
         B("awning","wood",(2.6,3.4,1.6),(1.4,.3,1.0),["awningPost"])]
     return b
 
@@ -106,25 +118,35 @@ def L6():  # MEDIUM "Grain Silo": tall 3-drum brick silo on two gold steel brace
         B("hopper","brick",(2.3,6.3,0),(1.4,.8,1.4),["chute"])]
     return b
 
-def L7():  # M1 Clockwork Tower (contract §7). Plinth indestructible, ring0 seated on plinth behind wood scaffold (REPORT A3/A4)
-    b=[B("plinth","brick",(0,.6,0),(4.5,1.2,4.5),nonObj=True,indestructible=True,color="8A8A8A",role="island"),
-       B("scaffold","wood",(0,1.9,1.7),(3.0,1.4,.3),["plinth"],role="wing"),
-       B("wingL","wood",(-2.6,2.6,0),(.6,2.8,.5),["plinth"],role="wing"),
-       B("wingR","wood",(2.6,2.6,0),(.6,2.8,.5),["plinth"],role="wing"),
+def L7():  # HARD "Clockwork Watchtower" (rev 7, PM overrode the M1 layout lock to fix the spike).
+    # Re-skinned to 3D Modeler's Bld_Watchtower proportions (ring storeys, crown, spire roof, annex shed, barrels and
+    # crates) at ~0.55 scale so it fits the fixed portrait frame. The wood scaffold that hid ring0 is gone: the gold
+    # base ring is now in plain sight and is the hint. Ground-level annex/crates/barrel/poles do NOT fall with the tower
+    # (8.5 of 49 objective mass), so ring0 alone leaves 82.7% (short). ring0 + the annex or the crate stack (the two
+    # heavy ground pieces) wins for 3 stars; ring0 + a single pole/barrel does not, two of them do (3 shots = 2 stars).
+    # Front storey walls are 2.6 m wide and cover the side walls, so the shootable set is smaller and readable.
+    b=[B("plinth","brick",(0,.6,0),(6.8,1.2,4.5),nonObj=True,indestructible=True,color="8A8A8A",role="island"),
        B("ring0","steel",(0,1.45,0),(2.6,.5,2.6),["plinth"],joint=True,role="steel_joint")]
     jy=[1.45,4.2,6.95]
     for i in (1,2):
         y0=jy[i-1]+.25; y1=jy[i]-.25; m=(y0+y1)/2; h=y1-y0; below=f"ring{i-1}"
-        w=[B(f"wallF{i}","brick",(0,m,1.1),(2.2,h,.35),[below],role="wall"),
-           B(f"wallB{i}","brick",(0,m,-1.1),(2.2,h,.35),[below],role="wall"),
-           B(f"wallL{i}","brick",(-1.1,m,0),(.35,h,2.2),[below],role="wall"),
-           B(f"wallR{i}","brick",(1.1,m,0),(.35,h,2.2),[below],role="wall")]
+        w=[B(f"wallF{i}","brick",(0,m,1.1),(2.6,h,.35),[below],role="wall"),
+           B(f"wallB{i}","brick",(0,m,-1.1),(2.6,h,.35),[below],role="wall"),
+           B(f"wallL{i}","brick",(-1.1,m,0),(.35,h,1.85),[below],role="wall"),
+           B(f"wallR{i}","brick",(1.1,m,0),(.35,h,1.85),[below],role="wall")]
         b+=w; b.append(B(f"ring{i}","steel",(0,jy[i],0),(2.6,.5,2.6),[x["id"] for x in w],joint=True,role="steel_joint"))
     b+=[B("crownFloor","brick",(0,7.4,0),(3.2,.4,3.2),["ring2"],role="crown"),
         B("crownWood","wood",(0,8.3,0),(2.8,1.4,2.8),["crownFloor"],role="crown"),
         B("crownBrick","brick",(0,9.4,0),(2.4,.8,2.4),["crownWood"],role="crown"),
-        B("crownRoof","brick",(0,10.15,0),(3,.7,3),["crownBrick"],role="crown",color="4D7BC4"),
-        B("barrelDecor","wood",(3.6,.6,2),(.8,1.2,.8),[],nonObj=True,color="E5484D")]
+        B("crownRoof","brick",(0,10.6,0),(2.6,1.6,2.6),["crownBrick"],role="crown",color="4D7BC4"),   # spire roof
+        B("annex","brick",(2.5,2.0,-.4),(1.6,1.6,1.8),["plinth"],role="annex"),        # Watchtower Annex shed
+        B("wingL","wood",(-1.9,2.6,1.4),(.3,2.8,.3),["plinth"],role="wing"),           # timber hoist poles
+        B("wingR","wood",(1.9,2.6,1.4),(.3,2.8,.3),["plinth"],role="wing"),
+        B("crate","wood",(-2.7,1.6,.6),(.8,.8,.8),["plinth"],role="prop"),
+        B("crateTop","wood",(-2.7,2.3,.6),(.6,.6,.6),["crate"],role="prop"),
+        B("barrel","wood",(-2.7,1.8,-.8),(.7,1.2,.7),["plinth"],role="prop"),
+        B("barrel2","wood",(3.15,1.8,1.3),(.7,1.2,.7),["plinth"],role="prop"),
+        B("barrelDecor","wood",(4.0,.6,2),(.8,1.2,.8),[],nonObj=True,color="E5484D")]
     return b
 
 def L8():  # market arcade: 4 wood keystones 1.5m apart hold 4 bays on stone piers -> Splitstrike takes 3 at once
@@ -193,7 +215,7 @@ OVR={1:dict(hintTarget="post",mastery=M("DESTROYED_AT_LEAST","Destroy at least 9
  4:dict(hintTarget="beamL",mastery=M("THREE_STARS_NO_ROLE_HITS","3 stars without hitting a brick wall",0,"wall")),
  5:dict(hintTarget="bridge",mastery=M("CLEAR_IN_SHOTS","Drop both cottages with 1 shot",1)),
  6:dict(hintTarget="braceL",mastery=M("ALL_ROLE_BROKEN","Break all 3 gold steel joints",0,"steel_joint")),
- 7:dict(hintTarget="scaffold",mastery=M("ROLE_INTACT","Topple the tower without breaking the crown",0.8,"crown")),
+ 7:dict(hintTarget="ring0",mastery=M("ROLE_INTACT","Topple the tower without breaking the crown",0.8,"crown")),
  8:dict(shots=6,hintTarget="key1",mastery=M("STARS","Earn 3 stars",3)),
  9:dict(shots=5,hintTarget="lhRing",mastery=M("NO_POWERUP","Win without using a power-up")),
  10:dict(shots=8,star3Pct=0.375,star2Pct=0.25,hintTarget="shoulderL",mastery=M("NO_CLOSED_SHUTTER_HIT","Defeat the Tidewarden without hitting the closed shutter",0,"shutter"))}

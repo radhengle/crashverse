@@ -119,3 +119,13 @@ Scope (PM): no new content; tune Ch1 L1–10 and the Daily Boss for fair difficu
   L7 (decor only), L8 (6 shots, narrower, keystones 1.6 m), L9 (5 shots, rock trimmed); readable mastery texts.
 - Daily Boss: titan arenas turned to face the cannon (BUG-24 transform, in gen_content.py too), steel legs are joints,
   arena hint pelvis → legL (derived by derive_hints.py, now also covering titan_templates), dailyBoss 6–8 → 5–6 shots.
+
+## Rev 7: building prefabs + L7 spike fix (2026-10-30, PR #57)
+- Inventory and mapping in `../prefabs/` (README.md, prefab_inventory.json, prefab_map.json, PREFAB_MAP.md). No Unity prefabs exist;
+  3D Modeler ships building assembly JSON + kit FBX (intact + fractured). LevelBuilder spawns cubes only, so no loader code was
+  invented: layouts are re-shaped to the buildings and each piece is mapped to its module in the sidecar (code gaps in the README).
+- L3 → Bld_Townhouse (0.8 scale) on the same prop/slab graph: random win 57.5% → 48.9%, random 3★ 6.5% → 6.2%; line, 3★ and mastery kept.
+- L7 → Bld_Watchtower (~0.55) + spike fix (PM overrode the M1 lock): scaffold gone, ring0 visible and hinted; ground annex/crate stack/
+  barrels/poles stay standing (8.5/49 mass), so ring0 alone = 82.7% and ring0 + annex/crate stack = 2-shot 3★. Random win 6.8% → 30.2%,
+  random 3★ 0.5% → 2.7%. 5 shots, bands, 3 steel_joint rings (Tests.cs) and crown-intact mastery kept; season finale_e1 hint follows.
+- Every level passes at g×1.0 and g×1.2 with identical results; ci_win_shots all clear; frame check all OK.

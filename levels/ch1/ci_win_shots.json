@@ -578,61 +578,11 @@
   {
    "id": "c1_l07",
    "layout": "m1_clockwork_tower",
-   "line": "scaffold, ring0",
+   "line": "ring0, annex",
    "shots_budget": 5,
    "shots": [
     {
      "shot": 1,
-     "target": "scaffold",
-     "powerup": null,
-     "split_targets": null,
-     "world": [
-      8.3,
-      1.9,
-      0.0
-     ],
-     "aim": {
-      "1.0": {
-       "yaw": 0.0,
-       "elevation": 9.79,
-       "hintYaw": 0.0,
-       "hintPitch": 10.0,
-       "drag_dp": [
-        0.0,
-        -101.4
-       ],
-       "swipe": [
-        540,
-        1300,
-        540,
-        1566
-       ],
-       "first_hit": "scaffold",
-       "clear": true
-      },
-      "1.2": {
-       "yaw": 0.0,
-       "elevation": 11.68,
-       "hintYaw": 0.0,
-       "hintPitch": 11.5,
-       "drag_dp": [
-        0.0,
-        -88.8
-       ],
-       "swipe": [
-        540,
-        1300,
-        540,
-        1533
-       ],
-       "first_hit": "scaffold",
-       "clear": true
-      }
-     },
-     "clear": true
-    },
-    {
-     "shot": 2,
      "target": "ring0",
      "powerup": null,
      "split_targets": null,
@@ -676,6 +626,56 @@
         1536
        ],
        "first_hit": "ring0",
+       "clear": true
+      }
+     },
+     "clear": true
+    },
+    {
+     "shot": 2,
+     "target": "annex",
+     "powerup": null,
+     "split_targets": null,
+     "world": [
+      10.4,
+      2.0,
+      2.5
+     ],
+     "aim": {
+      "1.0": {
+       "yaw": 4.7,
+       "elevation": 10.76,
+       "hintYaw": 4.5,
+       "hintPitch": 11.0,
+       "drag_dp": [
+        18.8,
+        -94.9
+       ],
+       "swipe": [
+        540,
+        1300,
+        589,
+        1549
+       ],
+       "first_hit": "annex",
+       "clear": true
+      },
+      "1.2": {
+       "yaw": 4.7,
+       "elevation": 12.86,
+       "hintYaw": 4.5,
+       "hintPitch": 13.0,
+       "drag_dp": [
+        18.8,
+        -81.0
+       ],
+       "swipe": [
+        540,
+        1300,
+        589,
+        1513
+       ],
+       "first_hit": "annex",
        "clear": true
       }
      },

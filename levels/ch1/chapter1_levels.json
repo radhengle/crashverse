@@ -234,9 +234,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2.0,
-   "hintTarget": "scaffold",
+   "hintTarget": "ring0",
    "hintYaw": 0.0,
-   "hintPitch": 10.0
+   "hintPitch": 9.5
   },
   {
    "id": "c1_l08",

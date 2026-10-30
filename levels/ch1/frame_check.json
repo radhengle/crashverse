@@ -95,7 +95,7 @@
      783
     ],
     "y": [
-     629,
+     513,
      1166
     ],
     "fits": true,
@@ -108,7 +108,7 @@
      797
     ],
     "y": [
-     685,
+     564,
      1245
     ],
     "fits": true,
@@ -211,29 +211,29 @@
    "layout": "m1_clockwork_tower",
    "primary": {
     "x": [
-     260,
-     734
+     231,
+     777
     ],
     "y": [
-     423,
+     360,
      1170
     ],
     "fits": true,
     "worst_piece": "crownRoof",
-    "slack_px": 189
+    "slack_px": 126
    },
    "tight": {
     "x": [
-     242,
-     744
+     213,
+     792
     ],
     "y": [
-     466,
+     401,
      1248
     ],
     "fits": true,
     "worst_piece": "barrelDecor",
-    "slack_px": 178
+    "slack_px": 148
    }
   },
   {
