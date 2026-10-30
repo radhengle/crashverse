@@ -109,6 +109,42 @@
    "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
    "frac": "Wood",
    "source": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor.fbx"
+  },
+  "Wall": {
+   "LOD0": 1068,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    3.0,
+    3.0,
+    0.22
+   ],
+   "aabb": [
+    [
+     -1.5,
+     -0.11,
+     -0.0
+    ],
+    [
+     1.5,
+     0.11,
+     3.0
+    ]
+   ],
+   "frags": 12,
+   "frag_max": 80,
+   "Fractured": 668,
+   "mass": "76.4-108.7",
+   "min_axis_m": 0.2,
+   "joints": 23,
+   "anchors": 4,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Wood",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx"
   }
  },
  "tile_m": 1.4,
