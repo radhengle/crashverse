@@ -11,7 +11,7 @@ namespace Crashverse.Visuals
     /// </summary>
     public static class CannonDresser
     {
-        public const float VisualScale = 1.12f;
+        public const float VisualScale = 1.0f; // the locked camera frames WreckerSpec's envelope (PlayMode AssertCannonFramedFromBehind)
 
         public static bool Dress(Crashverse.Weapons.WreckerBuilder wb)
         {
