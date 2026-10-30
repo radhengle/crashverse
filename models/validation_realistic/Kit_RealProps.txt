@@ -1,0 +1,16 @@
+Kit_RealProps_Crate_Fractured.fbx: frags=12 (Wood 8-16) tris max=70 total=670 mass 15.9-42.8 kg UCX=12 JNT=36 ANCHOR=9 -> PASS
+RESULT: ALL PASS
+Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate.fbx [Kit] LOD0 tris=172 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 172 < 500
+Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate_Fractured.fbx [KitFractured] LOD0 tris=670 LODs=[0] hulls=12 frags=12 -> PASS
+RESULT: ALL PASS (2 groups, 2 files)
+Kit_RealProps_Crate.fbx: meshes=3 materials=['M_RealProps'] -> PASS
+Kit_RealProps_Crate_Fractured.fbx: meshes=12 materials=['M_RealProps', 'M_RealProps_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Props/Kit_RealProps/Kit_RealProps_Crate.fbx: LOD0=172t/1m LOD1=83t/1m LOD2=12t/1m hulls=1 materials=['M_RealProps'] -> PASS
+FBX version: 7400
+Props/Props_Village/Prop_Barrel.fbx: LOD0=732t/1m LOD1=216t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+--
+REALISM RESULT: ALL PASS
+Blender 4.2.3 LTS (hash 0e22e4fcea03 built 2024-10-14 23:31:34)
+
