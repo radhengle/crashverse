@@ -1,0 +1,58 @@
+--------- beginning of main
+10-24 12:41:09.913  1168  1168 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=170062, downTime=170062, deviceId=-1, source=0x1002, displayId=0, eventId=-923275676 }
+10-24 12:41:09.914  1168  1168 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=170062, downTime=170062, deviceId=-1, source=0x1002, displayId=0, eventId=-89131722 }
+10-24 12:41:09.990  4778  4816 I Unity   : CVTAP|BEGIN|ResultsScreen
+10-24 12:41:09.993  4778  4816 I Unity   : CVTAP|RESULT|win
+10-24 12:41:09.993  4778  4816 I Unity   : CVTAP|ResultsScreen|Button_II|110|2209|1
+10-24 12:41:09.993  4778  4816 I Unity   : CVTAP|ResultsScreen|Button_FIRE|922|2162|0
+10-24 12:41:09.993  4778  4816 I Unity   : CVTAP|ResultsScreen|Button_DevAimHint|681|2193|1
+10-24 12:41:09.993  4778  4816 I Unity   : CVTAP|ResultsScreen|Button_Map|346|1532|1
+10-24 12:41:09.993  4778  4816 I Unity   : CVTAP|ResultsScreen|Button_Retry|734|1532|1
+10-24 12:41:09.993  4778  4816 I Unity   : CVTAP|ResultsScreen|Button_NextLevel|540|1690|1
+10-24 12:41:10.081  4778  4874 D EGL_emulation: app_time_stats: avg=99.00ms min=99.00ms max=99.00ms count=1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 12:41:10.996  4778  4816 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+10-24 12:41:11.057   420   516 D AudioFlinger: mixer(0x70bc1831a930) throttle end: throttle time(23)
+10-24 12:41:11.751  4778  4874 D EGL_emulation: app_time_stats: avg=429.32ms min=103.57ms max=755.07ms count=2
+10-24 12:41:12.891  4778  4874 D EGL_emulation: app_time_stats: avg=175.80ms min=49.70ms max=243.42ms count=3
+10-24 12:41:13.481  2637  4293 I DialerTaskExecutor: com.android.voicemail.impl.scheduling.TaskExecutor$WorkerThreadHandler.handleMessage:221 executing task com.android.voicemail.impl.ActivationTask@7728281 [CONTEXT enable_persistent_logger=true ]
+10-24 12:41:13.482  2637  2637 I DialerLogcatLoggingBindings: com.android.dialer.logging.logcat.LogcatLoggingBindings.logImpression:41 Impression: VVM_ACTIVATION_STARTED
+10-24 12:41:13.493  2637  4293 I DialerPreOMigrationHandler: com.android.voicemail.impl.PreOMigrationHandler.migrate:76 ComponentInfo{com.android.phone/com.android.services.telephony.TelephonyConnectionService}, 1, UserHandle{0} already migrated [CONTEXT enable_persistent_logger=true ]
+10-24 12:41:13.504  2637  4293 I DialerOmtpVvmCarrierConfigHelper: com.android.voicemail.impl.OmtpVvmCarrierConfigHelper.isCarrierAppInstalled:637 carrier app not installed in this device [CONTEXT ratelimit_period="1 MINUTES [skipped: 4]" ]
+10-24 12:41:13.504  2637  4293 I DialerVoicemailStatus: com.android.voicemail.impl.VoicemailStatus$Editor.apply:112 enter
+10-24 12:41:13.507  2637  4293 I DialerVoicemailStatusDataServiceImpl: com.android.dialer.voicemailstatus.dataservice.impl.VoicemailStatusDataServiceImpl.insertOrUpdateVoicemailStatus:196 enter
+10-24 12:41:13.510  2637  3134 I DialerRestVoicemailEnabledFn: com.android.dialer.voicemail.service.impl.vvmclients.rest.RestVoicemailEnabledFn.isEnabled:51 disabled by flag [CONTEXT ratelimit_period="1 MINUTES [skipped: 23]" ]
+10-24 12:41:13.514  2637  3134 I DialerCvvmEnabledFn: com.android.dialer.voicemail.service.impl.vvmclients.omtp.protocol.cvvm.CvvmEnabledFn.isEnabled:37 disabled by flag [CONTEXT ratelimit_period="1 MINUTES [skipped: 11]" ]
+10-24 12:41:13.535  2637  3134 W Settings: Setting airplane_mode_on has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+10-24 12:41:13.536  2637  3134 I DialerVoicemailStatusDataServiceImpl: com.android.dialer.voicemailstatus.dataservice.impl.VoicemailStatusDataServiceImpl.lambda$insertOrUpdateVoicemailStatus$5:213 merged status: # kee@6600c263
+10-24 12:41:13.536  2637  4293 I DialerActivationTask: com.android.voicemail.impl.ActivationTask.onExecuteInBackgroundThread:292 VVM content provider configured - vvm_type_cvvm PhoneAccountHandle: [ComponentName: com.android.phone/com.android.services.telephony.TelephonyConnectionService subId: 1] [CONTEXT enable_persistent_logger=true ]
+10-24 12:41:13.539  2637  4293 I DialerActivationTask: com.android.voicemail.impl.ActivationTask.updateVoicemailsWithIccId:477 conversion disabled [CONTEXT enable_persistent_logger=true ]
+10-24 12:41:13.540  2637  4293 I DialerOmtpVvmCarrierConfigHelper: com.android.voicemail.impl.OmtpVvmCarrierConfigHelper.handleEvent:527 OmtpEvent:CONFIG_ACTIVATING PhoneAccountHandle: [ComponentName: com.android.phone/com.android.services.telephony.TelephonyConnectionService subId: 1] [CONTEXT enable_persistent_logger=true ]
+10-24 12:41:13.540  2637  4293 I DialerVoicemailStatus: com.android.voicemail.impl.VoicemailStatus$Editor.apply:112 enter
+10-24 12:41:13.542  2637  4293 I DialerVoicemailStatusDataServiceImpl: com.android.dialer.voicemailstatus.dataservice.impl.VoicemailStatusDataServiceImpl.insertOrUpdateVoicemailStatus:196 enter
+--------- beginning of system
+10-24 12:41:13.556   542  1876 D OomAdjuster: Not killing cached processes
+10-24 12:41:13.578  2637  3134 W Settings: Setting airplane_mode_on has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+10-24 12:41:13.578  2637  3134 I DialerVoicemailStatusDataServiceImpl: com.android.dialer.voicemailstatus.dataservice.impl.VoicemailStatusDataServiceImpl.lambda$insertOrUpdateVoicemailStatus$5:213 merged status: # kee@6600c263
+10-24 12:41:13.583  2637  4293 I DialerActivationTask: com.android.voicemail.impl.ActivationTask.onExecuteInBackgroundThread:339 sending an activation request [CONTEXT enable_persistent_logger=true ]
+10-24 12:41:13.586  1128  1358 D SmsNumberUtils: enter filterDestAddr. destAddr="[BajqU4K5_YhSYbs-7QUn0dOwcmI]"
+10-24 12:41:13.586  1128  1358 D SmsNumberUtils: destAddr is not formatted.
+10-24 12:41:13.588  1128  1358 D SmsNumberUtils: leave filterDestAddr, new destAddr="[BajqU4K5_YhSYbs-7QUn0dOwcmI]"
+10-24 12:41:13.599  2637  4293 I DialerLogcatLoggingBindings: com.android.dialer.logging.logcat.LogcatLoggingBindings.logImpression:46 Impression: CVVM_SEND_VVM_SMS
+--------- beginning of kernel
+10-24 12:41:14.137     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6814 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 12:41:14.045  4778  4874 D EGL_emulation: app_time_stats: avg=43.87ms min=39.43ms max=47.31ms count=3
+10-24 12:41:14.222     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6819 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

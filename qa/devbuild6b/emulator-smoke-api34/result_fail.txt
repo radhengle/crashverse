@@ -1,0 +1,2 @@
+miss line result: fail
+CVTAP|RESULTDONE|fail|score=0|stars=0|pct=0

@@ -1,0 +1,25 @@
+# Backend server v0: build + test only. Nothing here deploys, provisions or uses cloud credentials.
+name: server-ci
+on:
+  pull_request:
+    paths: ["server/**", "Assets/_Project/Scripts/**", ".github/workflows/server-ci.yml"]
+  push:
+    branches: [main, "backend/**"]
+    paths: ["server/**", "Assets/_Project/Scripts/**", ".github/workflows/server-ci.yml"]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build
+        run: dotnet build server/Crashverse.Server.sln -c Release
+      - name: Test (Firestore emulator tests skip without FIRESTORE_EMULATOR_HOST)
+        run: dotnet test server/Crashverse.Server.sln -c Release --no-build

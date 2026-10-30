@@ -1,0 +1,260 @@
+--------- beginning of main
+10-24 17:01:57.606   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:57.606   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+--------- beginning of system
+10-24 17:01:57.646   686   790 D OomAdjuster: Not killing cached processes
+10-24 17:01:57.702   686   790 D ActivityManager: sync unfroze 5381 com.google.android.googlequicksearchbox:search for 6
+10-24 17:01:57.718   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:57.718   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:57.740  5381  5611 I acky    : dispose()
+10-24 17:01:57.778   686   709 W ProcessStats: Tracking association SourceState{71f07c0 system/1000 ImpBg #6506} whose proc state 6 is better than process ProcessState{41475bb com.google.android.googlequicksearchbox:search/10147 pkg=com.google.android.googlequicksearchbox} proc state 14 (1 skipped)
+10-24 17:01:57.807  5381  5507 I aetz    : (REDACTED) Assistant special experience changed to %s.
+10-24 17:01:57.816  5381  5381 I avrd    : (REDACTED) Starting %s background task %s.
+10-24 17:01:57.825   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:57.825   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:57.838  5381  5387 W earchbox:search: Missing inline cache for void fsvi.m(java.lang.Object, fsva)
+10-24 17:01:57.854  5381  5611 I agyw    : getLocaleToModelSpecsMap
+10-24 17:01:57.855  5381  5611 I agyw    : Fetching latest config from MDD...
+10-24 17:01:57.855  5381  5611 I agyw    : (REDACTED) Found map of size: %d
+10-24 17:01:57.863  5381  5611 I acrf    : Returning false in #takeChangeMicroDetectorMode without doing anything.
+10-24 17:01:57.864  5381  5614 W acte    : Account id is not cached
+10-24 17:01:57.870   686   709 D CompatChangeReporter: Compat change id reported: 297989574; UID 10147; state: ENABLED
+10-24 17:01:57.880  5381  5505 I aukg    : Using pair HTTP connection
+10-24 17:01:57.889   686  1210 I WifiService: getWifiEnabledState uid=10147 state=3
+10-24 17:01:57.898  5381  5948 I abhp    : [Upload] Connected
+10-24 17:01:57.916  5381  5948 I aukg    : Using pair HTTP connection
+10-24 17:01:57.918  5381  5550 W dnfi    : (REDACTED) Failed to get connectivityLock in %d ms
+10-24 17:01:57.929   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:57.929   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:57.932  5381  5381 E rdv     : onError
+10-24 17:01:57.932  5381  5381 E rdv     : afvv: errorCode: 65561, engine: 2
+10-24 17:01:57.932  5381  5381 E rdv     : 	at auki.a(PG:23)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at abhl.hv(PG:13)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at fyqd.e(PG:9)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at ahbi.d(PG:154)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at ahbi.iW(PG:26)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at abhm.c(PG:102)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at abhn.run(PG:1)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:524)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at java.util.concurrent.FutureTask.run(FutureTask.java:317)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at aggv.run(PG:20)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at aght.run(PG:3)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at aght.run(PG:3)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at java.lang.Thread.run(Thread.java:1119)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at aggj.run(PG:42)
+10-24 17:01:57.932  5381  5381 E rdv     : Caused by: afvx: errorCode: 65586, engine: 2
+10-24 17:01:57.932  5381  5381 E rdv     : 	at abhl.hv(PG:6)
+10-24 17:01:57.932  5381  5381 E rdv     : 	... 14 more
+10-24 17:01:57.932  5381  5381 E rdv     : Caused by: afvt: errorCode: 401, engine: 2
+10-24 17:01:57.932  5381  5381 E rdv     : 	at rds.b(PG:30)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at abii.hJ(PG:11)
+10-24 17:01:57.932  5381  5381 E rdv     : 	at ahbi.d(PG:129)
+10-24 17:01:57.932  5381  5381 E rdv     : 	... 12 more
+10-24 17:01:57.942  5381  5950 I abhp    : [Upload] Connected
+10-24 17:01:57.953  5381  5381 W qrh     : Failed to sync device settings.
+10-24 17:01:57.953  5381  5381 I qrh     : Retrying to sync device settings.
+10-24 17:01:57.960  5381  5381 W JobInfo : Job 'com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService#-353' has a deadline with functional constraints and an extremely short time window of 0 ms (delay=120000, deadline=120000). The functional constraints are not likely to be satisfied when the job runs.
+10-24 17:01:57.961   686  1968 D CompatChangeReporter: Compat change id reported: 311402873; UID 10147; state: ENABLED
+10-24 17:01:57.961   686  1968 D CompatChangeReporter: Compat change id reported: 323349338; UID 10147; state: ENABLED
+10-24 17:01:57.961   686  1968 W JobInfo : Job 'com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService#-353' has a deadline with functional constraints and an extremely short time window of 0 ms (delay=120000, deadline=120000). The functional constraints are not likely to be satisfied when the job runs.
+10-24 17:01:57.961   686  1968 W JobInfo : Job 'com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService#-353' has a deadline with functional constraints and an extremely short time window of 0 ms (delay=120000, deadline=120000). The functional constraints are not likely to be satisfied when the job runs.
+10-24 17:01:57.970   686  1968 W JobScheduler: Job didn't exist in JobStore: 21ce064 #u0a147/-353 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
+10-24 17:01:57.979   686  1968 I WifiService: getWifiEnabledState uid=10147 state=3
+10-24 17:01:57.980   686  1968 D ConnectivityService: requestNetwork for uid/pid:10147/5381 activeRequest: null callbackRequest: 193 [NetworkRequest [ REQUEST id=194, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST|NC|LP
+10-24 17:01:57.980   686  1968 D CompatChangeReporter: Compat change id reported: 319212206; UID 10147; state: ENABLED
+10-24 17:01:57.984   686  1015 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=194, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]
+10-24 17:01:57.985   686  1021 D ConnectivityService: NetReassign [194 : null → 100] [c 0] [a 1] [i 1]
+10-24 17:01:57.989   686  1015 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=194, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]
+10-24 17:01:57.989   686  1015 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=194, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]
+10-24 17:01:57.989   686  1015 V WifiNetworkFactory: Accepted network request NetworkRequest [ REQUEST id=194, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]
+10-24 17:01:57.989   686  1015 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=194, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]
+10-24 17:01:57.990   686  1021 D ConnectivityService: NetReassign [no changes] [c 0] [a 5] [i 0]
+10-24 17:01:57.991  5381  5520 D nativeloader: Load /product/priv-app/Velvet/Velvet.apk!/lib/x86_64/libcronet.135.0.7012.3.so using class loader ns product-clns-10 (caller=/product/priv-app/Velvet/Velvet.apk!classes3.dex): ok
+10-24 17:01:57.993  1434  2909 I .gms.persistent: AssetManager2(0x72714bc2dbf8) locale list changing from [] to [en-US]
+10-24 17:01:57.995  5381  5520 I cn_CronetLibraryLoader: Cronet version: 135.0.7012.3, arch: x86_64
+10-24 17:01:58.007   686   703 W system_server: Missing inline cache for void android.net.LinkProperties.writeToParcel(android.os.Parcel, int)
+10-24 17:01:58.010  5381  5954 W chromium: [1024/170158.009772:WARNING:url_request_context_config.cc(715)] Unrecognized Cronet experimental option "enable_telemetry" with params "true
+10-24 17:01:58.010  5381  5954 W chromium: 
+10-24 17:01:58.030   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.030   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.133   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.134   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.243   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.243   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.345   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.346   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.450   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.450   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.556   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.556   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.659   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.659   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.765   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.766   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.870   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.870   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:58.973   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:58.974   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.081   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.081   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.188   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.188   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.293   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.294   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.383  4428  4460 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 17:01:59.383  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.383  4428  4460 I Unity   : 
+10-24 17:01:59.384  4428  4460 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 17:01:59.384  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.384  4428  4460 I Unity   : 
+10-24 17:01:59.384  4428  4460 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 17:01:59.384  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.384  4428  4460 I Unity   : 
+10-24 17:01:59.384  4428  4460 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 17:01:59.384  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.384  4428  4460 I Unity   : 
+10-24 17:01:59.384  4428  4460 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 17:01:59.384  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.384  4428  4460 I Unity   : 
+10-24 17:01:59.385  4428  4460 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 17:01:59.385  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.385  4428  4460 I Unity   : 
+10-24 17:01:59.385  4428  4460 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 17:01:59.385  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.385  4428  4460 I Unity   : 
+10-24 17:01:59.385  4428  4460 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 17:01:59.385  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.385  4428  4460 I Unity   : 
+10-24 17:01:59.386  4428  4460 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 17:01:59.386  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.386  4428  4460 I Unity   : 
+10-24 17:01:59.387  4428  4460 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 17:01:59.387  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.387  4428  4460 I Unity   : 
+10-24 17:01:59.387  4428  4460 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 17:01:59.387  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.387  4428  4460 I Unity   : 
+10-24 17:01:59.387  4428  4460 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 17:01:59.387  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.387  4428  4460 I Unity   : 
+10-24 17:01:59.387  4428  4460 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 17:01:59.387  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.387  4428  4460 I Unity   : 
+10-24 17:01:59.388  4428  4460 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 17:01:59.388  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.388  4428  4460 I Unity   : 
+10-24 17:01:59.388  4428  4460 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+10-24 17:01:59.388  4428  4460 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:01:59.388  4428  4460 I Unity   : 
+10-24 17:01:59.397   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.398   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.505   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.506   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.610   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.610   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.713   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.714   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.817   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.818   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:01:59.926   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:01:59.927   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.004   686  1968 I WifiService: getWifiEnabledState uid=10147 state=3
+10-24 17:02:00.033   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.033   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.092   686  1986 D ConnectivityService: requestNetwork for uid/pid:10147/5381 activeRequest: null callbackRequest: 196 [NetworkRequest [ REQUEST id=196, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOSING|LOST|NC|LP
+10-24 17:02:00.102   471   521 I netd    : networkSetPermissionForNetwork(101, 0) <1.55ms>
+10-24 17:02:00.109   686  1021 W IPCThreadState: Sending oneway calls to frozen process.
+10-24 17:02:00.109   686  1021 W IPCThreadState: Sending oneway calls to frozen process.
+10-24 17:02:00.109   686  1021 W IPCThreadState: Sending oneway calls to frozen process.
+10-24 17:02:00.109   686  1021 W IPCThreadState: Sending oneway calls to frozen process.
+10-24 17:02:00.113   686  1021 D ConnectivityService: NetReassign [196 : null → 101] [c 0] [a 15] [i 0]
+10-24 17:02:00.113   686  1021 D ConnectivityService: reportNetworkConnectivity(100, false) by 10147
+10-24 17:02:00.119  1217  2143 D NetworkMonitor/100: Forcing reevaluation for UID 10147. Dns signal count: 0
+10-24 17:02:00.122   471  5963 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+10-24 17:02:00.122   471  5963 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79d9c3d4e390
+10-24 17:02:00.125   471  5964 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+10-24 17:02:00.125   471  5964 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79da43d44890
+10-24 17:02:00.126   471  5965 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+10-24 17:02:00.126   471  5965 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79da43d44190
+10-24 17:02:00.126   471  5966 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+10-24 17:02:00.128   471  5966 I resolv  : res_nsend: used send_dg 160 terrno: 0
+10-24 17:02:00.134  1217  5962 D NetworkMonitor/100: PROBE_DNS connectivitycheck.gstatic.com 12ms OK 142.251.150.120,2001:4860:4826:7800::
+10-24 17:02:00.139   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.139   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.140   471  5967 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
+10-24 17:02:00.142   471  5968 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 17:02:00.142   471  5968 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79da43d44890
+10-24 17:02:00.142   471  5968 I resolv  : doQuery: rcode=0, ancount=1, return value=75
+10-24 17:02:00.142   471  5969 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 17:02:00.142   471  5969 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79da43d44190
+10-24 17:02:00.142   471  5969 I resolv  : doQuery: rcode=0, ancount=1, return value=63
+10-24 17:02:00.151  1217  5961 D NetworkMonitor/100: PROBE_DNS www.google.com 30ms OK 142.251.150.119,142.251.151.119,142.251.152.119,142.251.157.119,142.251.155.119,142.251.156.119,142.251.153.119,142.251.154.119,2001:4860:4827:7700::,2001:4860:4828:7700::,2001:4860:4829:7700::,2001:4860:482c:7700::,2001:4860:482d:7700::,2001:4860:482a:7700::,2001:4860:4826:7700::,2001:4860:482b:7700::
+10-24 17:02:00.155   471  5970 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
+10-24 17:02:00.155   471  5971 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 17:02:00.155   471  5971 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79d9c3d4e390
+10-24 17:02:00.155   471  5971 I resolv  : doQuery: rcode=0, ancount=8, return value=256
+10-24 17:02:00.156   471  5972 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 17:02:00.156   471  5972 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79d953d4c7f0
+10-24 17:02:00.156   471  5972 I resolv  : doQuery: rcode=0, ancount=8, return value=160
+10-24 17:02:00.167  1217  5962 D NetworkMonitor/100: PROBE_HTTP http://connectivitycheck.gstatic.com/generate_204 time=31ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Sat, 24 Oct 2026 17:02:01 GMT], X-Android-Received-Millis=[1792861320164], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1792861320148]}
+10-24 17:02:00.233  1217  5961 D NetworkMonitor/100: PROBE_HTTPS https://www.google.com/generate_204 time=79ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Alt-Svc=[h3=":443"; ma=2592000,h3-29=":443"; ma=2592000], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Sat, 24 Oct 2026 17:02:01 GMT], X-Android-Received-Millis=[1792861320231], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1792861320217]}
+10-24 17:02:00.239  1217  5960 D NetworkMonitor/100: isCaptivePortal: isSuccessful()=true isPortal()=false RedirectUrl=null isPartialConnectivity()=false Time=120ms
+10-24 17:02:00.240   686  1021 D ConnectivityService: [100 WIFI] validation passed
+10-24 17:02:00.241   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.241   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.242   686  1986 I WifiService: getVerboseLoggingLevel uid=1000
+10-24 17:02:00.350   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.350   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.458   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.458   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.534   686  1015 D WifiClientModeImpl[31112:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=24 freq=2437 RxLinkSpeed=2
+10-24 17:02:00.534   686  1015 D WifiDataStall: tx tput in kbps: 37000
+10-24 17:02:00.534   686  1015 D WifiDataStall: rx tput in kbps: 37000
+10-24 17:02:00.534   686  1015 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-24 17:02:00.534   686  1015 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 17:02:00.534   686  1015 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 17:02:00.534   686  1015 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 17:02:00.534   686  1015 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 17:02:00.535   686  1015 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 17:02:00.535   686  1015 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 17:02:00.535   686  1015 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 17:02:00.535   686  1015 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 17:02:00.535   686  1015 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 526725673 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 24Mbps, Tx Link speed: 24Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-24 17:02:00.535   686  1015 D WifiScoreCard: txRate: 14 txSpeed: 24
+10-24 17:02:00.535   686  1015 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 256244501 RSSI -50 txSpeed 24
+10-24 17:02:00.535   686  1015 D WifiClientModeImpl[31112:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=24 tx=13.4, 0.0, 0.0 rx=11.1 bcn=0 [on:0 tx:0 rx:0 period:3004] from screen [on:0 period:1859958103] score=60
+10-24 17:02:00.547  1266  1554 D SatelliteController: iisInCarrierRoamingNbIotNtn: satellite is disabled
+10-24 17:02:00.571   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.571   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.674   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.674   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.780   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.780   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.884   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.884   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:00.985   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:00.986   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:01.094   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.094   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:01.204   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.204   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:01.305   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.306   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:01.410   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.410   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:01.514   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.514   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:01.610  5381  5949 W abht    : (REDACTED) [%s] response code: %d
+10-24 17:02:01.618   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.618   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:01.726   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.726   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+--------- beginning of kernel
+10-24 17:02:01.976     0     0 I logd    : logdr: UID=2000 GID=2000 PID=5974 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:02:01.834   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.834   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:01.941   485  4546 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 17:02:01.942   485  4546 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 17:02:02.124     0     0 I logd    : logdr: UID=2000 GID=2000 PID=5979 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

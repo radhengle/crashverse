@@ -1,0 +1,8 @@
+ACTIVITY MANAGER PROCESS EXIT INFO (dumpsys activity exit-info)
+Last Timestamp of Persistence Into Persistent Storage: 1970-01-01 00:00:00.000
+  package: com.crashverse.game
+    Historical Process Exit for uid=10141
+        ApplicationExitInfo #0:
+          timestamp=2026-10-24 17:06:40.982 pid=2579 realUid=10141 packageUid=10141 definingUid=10141 user=0
+          process=com.crashverse.game reason=10 (USER REQUESTED) subreason=21 (FORCE STOP) status=0
+          importance=100 pss=242MB rss=351MB description=stop com.crashverse.game due to from pid 3250 state=empty trace=null

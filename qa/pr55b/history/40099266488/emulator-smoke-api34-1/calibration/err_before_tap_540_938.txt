@@ -1,0 +1,1 @@
+10-24 14:03:21.288   547  4690 E ActivityManager: ANR in com.google.android.gms.persistent

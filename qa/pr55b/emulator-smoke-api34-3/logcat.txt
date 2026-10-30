@@ -1,0 +1,32 @@
+--------- beginning of main
+10-24 17:12:12.597  3338  3403 D EGL_emulation: app_time_stats: avg=367.58ms min=59.54ms max=608.54ms count=3
+10-24 17:12:13.471  3338  3362 I Unity   : CVTAP|BEGIN|LevelSelectScreen
+10-24 17:12:13.471  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_◀|203|136|1
+10-24 17:12:13.471  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_▶|877|136|0
+10-24 17:12:13.471  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_PUPrev|86|1270|1
+10-24 17:12:13.472  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_PU_earthquake|249|1270|1
+10-24 17:12:13.472  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_PU_multi_shot|443|1270|1
+10-24 17:12:13.472  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_PU_black_hole|637|1270|1
+10-24 17:12:13.472  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_PU_mega_bomb|831|1270|1
+10-24 17:12:13.472  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_PUNext|994|1270|1
+10-24 17:12:13.472  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_Play|540|2067|1
+10-24 17:12:13.472  3338  3362 I Unity   : CVTAP|LevelSelectScreen|Button_Back|540|2224|1
+10-24 17:12:13.652  3338  3403 D EGL_emulation: app_time_stats: avg=94.35ms min=40.40ms max=187.86ms count=3
+10-24 17:12:14.162   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(16)
+10-24 17:12:14.405   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(11)
+10-24 17:12:14.466   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(4)
+10-24 17:12:14.872  3338  3403 D EGL_emulation: app_time_stats: avg=404.58ms min=333.89ms max=475.27ms count=2
+10-24 17:12:15.033   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(5)
+--------- beginning of kernel
+10-24 17:12:15.475     0     0 I logd    : logdr: UID=2000 GID=2000 PID=4380 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:12:15.512     0     0 I logd    : logdr: UID=2000 GID=2000 PID=4383 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:12:15.502  4390  4390 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+10-24 17:12:15.508  4390  4390 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+10-24 17:12:16.160     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+10-24 17:12:15.987   154   154 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+10-24 17:12:15.987  4390  4391 I Gralloc4: mapper 4.x is not supported
+10-24 17:12:15.995   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(30)
+10-24 17:12:16.288  3338  3403 D EGL_emulation: app_time_stats: avg=472.09ms min=435.63ms max=526.39ms count=3
+10-24 17:12:16.380   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(48)
+10-24 17:12:17.291  3338  3403 D EGL_emulation: app_time_stats: avg=284.01ms min=22.78ms max=545.24ms count=2
+10-24 17:12:17.533     0     0 I logd    : logdr: UID=2000 GID=2000 PID=4392 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

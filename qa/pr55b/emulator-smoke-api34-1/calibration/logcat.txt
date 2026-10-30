@@ -1,0 +1,57 @@
+--------- beginning of main
+10-24 17:06:17.664  2573  2637 D EGL_emulation: app_time_stats: avg=359.28ms min=103.92ms max=559.29ms count=3
+10-24 17:06:17.675  2573  2596 I Unity   : CVTAP|RESULTDONE|win|score=3550|stars=3|pct=100|label=Score_3550__(best_3550)
+10-24 17:06:17.675  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:17.675  2573  2596 I Unity   : 
+10-24 17:06:18.316  2573  2596 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 17:06:18.316  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.316  2573  2596 I Unity   : 
+10-24 17:06:18.316  2573  2596 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 17:06:18.316  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.316  2573  2596 I Unity   : 
+10-24 17:06:18.319  2573  2596 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 17:06:18.319  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.319  2573  2596 I Unity   : 
+10-24 17:06:18.319  2573  2596 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 17:06:18.319  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.319  2573  2596 I Unity   : 
+10-24 17:06:18.319  2573  2596 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 17:06:18.319  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.319  2573  2596 I Unity   : 
+10-24 17:06:18.319  2573  2596 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 17:06:18.319  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.319  2573  2596 I Unity   : 
+10-24 17:06:18.319  2573  2596 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 17:06:18.319  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.319  2573  2596 I Unity   : 
+10-24 17:06:18.320  2573  2596 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 17:06:18.320  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.320  2573  2596 I Unity   : 
+10-24 17:06:18.320  2573  2596 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 17:06:18.320  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.320  2573  2596 I Unity   : 
+10-24 17:06:18.320  2573  2596 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 17:06:18.320  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.320  2573  2596 I Unity   : 
+10-24 17:06:18.320  2573  2596 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 17:06:18.320  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.320  2573  2596 I Unity   : 
+10-24 17:06:18.320  2573  2596 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 17:06:18.320  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.320  2573  2596 I Unity   : 
+10-24 17:06:18.322  2573  2596 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 17:06:18.322  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.322  2573  2596 I Unity   : 
+10-24 17:06:18.322  2573  2596 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 17:06:18.322  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.322  2573  2596 I Unity   : 
+10-24 17:06:18.322  2573  2596 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+10-24 17:06:18.322  2573  2596 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:18.322  2573  2596 I Unity   : 
+10-24 17:06:18.769  2573  2637 D EGL_emulation: app_time_stats: avg=552.42ms min=533.98ms max=570.86ms count=2
+10-24 17:06:19.839  2573  2637 D EGL_emulation: app_time_stats: avg=207.73ms min=69.72ms max=401.10ms count=4
+10-24 17:06:20.900  2573  2637 D EGL_emulation: app_time_stats: avg=83.89ms min=28.69ms max=136.20ms count=4
+10-24 17:06:20.956   401   499 D AudioFlinger: mixer(0x7b9f51ebd930) throttle end: throttle time(29)
+--------- beginning of kernel
+10-24 17:06:21.374     0     0 I logd    : logdr: UID=2000 GID=2000 PID=3122 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:06:21.452     0     0 I logd    : logdr: UID=2000 GID=2000 PID=3127 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
