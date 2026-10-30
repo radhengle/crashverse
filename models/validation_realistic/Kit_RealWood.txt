@@ -1,17 +1,24 @@
 Kit_RealWood_Block_Fractured.fbx: frags=12 (Wood 8-16) tris max=116 total=902 mass 38.0-102.5 kg UCX=12 JNT=34 ANCHOR=8 -> PASS
+Kit_RealWood_Floor_Fractured.fbx: frags=12 (Wood 8-16) tris max=68 total=684 mass 61.6-107.0 kg UCX=12 JNT=22 ANCHOR=10 -> PASS
 Kit_RealWood_Joint_Fractured.fbx: frags=12 (Wood 8-16) tris max=44 total=528 mass 9.8-15.9 kg UCX=12 JNT=11 ANCHOR=1 -> PASS
 RESULT: ALL PASS
 Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx [Kit] LOD0 tris=716 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
 Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx [KitFractured] LOD0 tris=902 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx [Kit] LOD0 tris=1068 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx [KitFractured] LOD0 tris=684 LODs=[0] hulls=12 frags=12 -> PASS
 Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx [Kit] LOD0 tris=892 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
 Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx [KitFractured] LOD0 tris=528 LODs=[0] hulls=12 frags=12 -> PASS
-RESULT: ALL PASS (4 groups, 4 files)
+RESULT: ALL PASS (6 groups, 6 files)
 Kit_RealWood_Block.fbx: meshes=3 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
 Kit_RealWood_Block_Fractured.fbx: meshes=12 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
+Kit_RealWood_Floor.fbx: meshes=3 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
+Kit_RealWood_Floor_Fractured.fbx: meshes=12 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
 Kit_RealWood_Joint.fbx: meshes=3 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
 Kit_RealWood_Joint_Fractured.fbx: meshes=12 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
 MESHDATA RESULT: ALL PASS
 Buildings/Kit_RealWood/Kit_RealWood_Block.fbx: LOD0=716t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
+FBX version: 7400
+Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx: LOD0=1068t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
 FBX version: 7400
 Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx: LOD0=892t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
 FBX version: 7400
