@@ -62,7 +62,7 @@ namespace Crashverse.Visuals
         {
             var sky = KingdomMaterials.Sky; var w = KingdomMaterials.Water;
             var hz = dark ? new Color(0.30f, 0.33f, 0.42f) : KingdomMaterials.HorizonColor;
-            if (sky != null) { sky.SetFloat("_Exposure", dark ? 0.42f : 1.05f); sky.SetColor("_HorizonColor", hz); }
+            if (sky != null) { sky.SetFloat("_Exposure", dark ? 0.6f : 1.05f); sky.SetColor("_HorizonColor", hz); }
             if (w != null)
             {
                 w.SetColor("_HorizonColor", hz);
@@ -80,7 +80,8 @@ namespace Crashverse.Visuals
             string levelId = ctx?.level != null ? ctx.level.id : (ctx != null && ctx.mode == RunMode.DailyBoss ? "dailyboss" : "");
             bool dark = ctx != null && (ctx.IsHard || ctx.mode == RunMode.DailyBoss);
             bool palace = levelId.EndsWith("l10");
-            Mood(dark);
+            Mood(dark || palace);
+            if (palace && !dark && RenderSettings.sun != null) { RenderSettings.sun.intensity = 1.2f; RenderSettings.sun.color = new Color(0.85f, 0.88f, 1f); }
             try
             {
                 KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark);

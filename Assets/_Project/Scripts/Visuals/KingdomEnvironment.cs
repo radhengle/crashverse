@@ -203,7 +203,7 @@ namespace Crashverse.Visuals
                 var p = new Vector3(Mathf.Cos(a) * Rx * 1.03f, WaterY + 0.05f, Mathf.Sin(a) * Rz * 1.06f);
                 if (p.x < cannon.x + 6f && Mathf.Abs(p.z) < 5f) continue; // keep the harbour deck clear
                 if (!rocks.TryGetValue(rockNames[i % 3], out var rm)) continue;
-                float s = 0.9f + (float)rng.NextDouble() * 1.6f;
+                float s = 0.6f + (float)rng.NextDouble() * 0.9f;
                 var r = Obj("ShoreRock", shore, rm, KingdomMaterials.Rock, true);
                 r.GetComponent<MeshFilter>().sharedMesh = BoxUvCached(rm, 2.5f * s);
                 r.transform.localPosition = p; r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
@@ -215,6 +215,7 @@ namespace Crashverse.Visuals
             {
                 float a = ang[i]; var p = new Vector3(Mathf.Cos(a) * Rx * 0.93f, 0f, Mathf.Sin(a) * Rz * 0.9f);
                 if (Mathf.Abs(p.z) < 6.5f && p.x > cannon.x - 2f && p.x < structure.x + 12f) continue;
+                if (p.x < cannon.x + 6f) continue; // next to / behind the camera: fronds would fill the screen corners
                 Palm(shore, palms, p, i);
             }
         }
@@ -260,8 +261,8 @@ namespace Crashverse.Visuals
             Isle("IsleB", isles, new Vector3(260f, WaterY, 25f), 0.9f, 260f);
             // King Grimhold's palace on Crown Rock: always on the horizon (screen right), close and huge on L10
             var pal = new GameObject("CrownRockPalace").transform; pal.SetParent(h, false);
-            pal.localPosition = palaceLevel ? new Vector3(95f, WaterY, -30f) : new Vector3(230f, WaterY, -45f);
-            pal.localRotation = Quaternion.Euler(0f, 110f, 0f); pal.localScale = Vector3.one * (palaceLevel ? 1.25f : 1.6f);
+            pal.localPosition = palaceLevel ? new Vector3(120f, WaterY, -12f) : new Vector3(230f, WaterY, -45f);
+            pal.localRotation = Quaternion.Euler(0f, 110f, 0f); pal.localScale = Vector3.one * (palaceLevel ? 1.9f : 1.6f);
             foreach (var kv in palace)
             {
                 float tile = KingdomMaterials.TileFor(kv.Key);

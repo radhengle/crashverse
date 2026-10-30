@@ -80,8 +80,8 @@ namespace Crashverse.Visuals
         public static Material Leaf => Make("Leaf", null, new Color(0.22f, 0.62f, 0.16f), 0f, 0.6f, Vector2.one);
         public static Material Banner => Make("Banner", "T_K_Banner", Color.white, 0f, 0.75f, Vector2.one);
         public static Material Tnt => Make("Tnt", "T_K_TNT", Color.white, 0f, 0.7f, Vector2.one, new Color(1.6f, 0.45f, 0.05f) * 0f);
-        public static Material Navy => Make("Navy", null, new Color(0.08f, 0.15f, 0.36f), 0.65f, 0.28f, Vector2.one);
-        public static Material Gold => Make("Gold", null, new Color(1f, 0.72f, 0.26f), 1f, 0.25f, Vector2.one);
+        public static Material Navy => Make("Navy", null, new Color(0.07f, 0.12f, 0.30f), 0.55f, 0.3f, Vector2.one);
+        public static Material Gold => Make("Gold", null, new Color(0.86f, 0.62f, 0.26f), 0.7f, 0.32f, Vector2.one);
         public static Material Iron => Make("Iron", null, new Color(0.16f, 0.16f, 0.18f), 0.8f, 0.45f, Vector2.one);
         public static Material Bore => Make("Bore", null, new Color(0.02f, 0.02f, 0.025f), 0f, 1f, Vector2.one);
         public static Material FlagRed => Make("FlagRed", null, new Color(0.72f, 0.06f, 0.08f), 0f, 0.7f, Vector2.one);

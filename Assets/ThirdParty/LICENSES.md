@@ -24,3 +24,19 @@ The graded results ship in `Assets/_Project/Resources/Kingdom/Textures/`.
 - The shaders `VFX/Shaders/CrashverseSkyPano.shader` and `CrashverseWater.shader`.
 
 No paid assets are used. No logos or trademarks are used.
+
+## Repainted building atlases
+
+The cells of `Models/Realistic/Buildings/{Bld_Bakery,Bld_Townhouse,Kit_RealStall,RealCastle}/Textures/T_*_A.png` were repainted by `Tools/Blender/kingdom/repaint_atlases.py`.
+The new fills are graded Poly Haven CC0 diffuse textures:
+
+- `red_brick_03`
+- `castle_wall_varriation`
+- `castle_wall_slates`
+- `medieval_blocks_02`
+- `brown_planks_03`
+- `weathered_planks`
+- `clay_roof_tiles_02`
+- `rock_face_03`
+
+The UV layouts did not change.
