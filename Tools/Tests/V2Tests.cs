@@ -126,9 +126,9 @@ static class V2Tests
             var ch = Db.Chapter1Authored;
             T.Eq("", string.Join(",", ch.levels.Where(HardLevelRules.IsHard).Select(l => l.number)), "no ch1 level tagged hard");
             var l10 = ch.levels.First(l => l.number == 10);
-            // GD: Tidewarden keeps its authored 8 shots and 0.375 / 0.25 bands (no automatic every-10th tightening)
-            T.Eq(8, l10.shots, "c1_l10 authored shots"); T.Eq(0.375f, l10.star3Pct, "c1_l10 3-star band"); T.Eq(0.25f, l10.star2Pct, "c1_l10 2-star band");
-            T.Eq(8, HardLevelRules.Shots(l10), "c1_l10 not reduced"); T.Eq(MapNodeKind.Boss, WorldMapRules.KindFor(l10), "boss node, not skull");
+            // Season 1: the King's Palace keeps its authored 7 shots and 0.42 / 0.28 bands (no automatic every-10th tightening)
+            T.Eq(7, l10.shots, "c1_l10 authored shots"); T.Eq(0.42f, l10.star3Pct, "c1_l10 3-star band"); T.Eq(0.28f, l10.star2Pct, "c1_l10 2-star band");
+            T.Eq(7, HardLevelRules.Shots(l10), "c1_l10 not reduced"); T.Eq(MapNodeKind.Normal, WorldMapRules.KindFor(l10), "normal node (not a boss, not a skull)");
             var t = new LevelEntry { id = "t", number = 20, shots = 7, hard = true };
             T.True(HardLevelRules.Shots(t) < t.shots, "tagged: tighter steps"); T.True(HardLevelRules.ThemeDarken(t) < 1f, "tagged: darker theme");
             T.Eq(MapNodeKind.Hard, WorldMapRules.KindFor(t), "tagged: skull node"); T.Eq(MapNodeKind.Normal, WorldMapRules.KindFor(ch.levels[0]), "normal");

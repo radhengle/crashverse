@@ -330,7 +330,7 @@ namespace Crashverse.Sim.Tests
         // ───────────── levels 1-10 (incl. the Tidewarden boss) ─────────────
 
         static readonly string[] Chapter1 = { "c1_l01_lookout_hut", "c1_l02_stilt_tower", "c1_l03_bakery", "c1_l04_windmill", "c1_l05_twin_cottages",
-                                              "c1_l06_granary", "m1_clockwork_tower", "c1_l08_market_arcade", "c1_l09_lighthouse_gauntlet", "c1_l10_tidewarden" };
+                                              "c1_l06_granary", "m1_clockwork_tower", "c1_l08_market_arcade", "c1_l09_lighthouse_gauntlet", "c1_l10_kings_palace", "c1_l10_tidewarden" };
 
         static string LayoutsDir()
         {

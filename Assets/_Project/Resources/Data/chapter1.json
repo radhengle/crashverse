@@ -361,26 +361,26 @@
    "number": 10,
    "island": "storm",
    "name": "The King's Palace",
-   "layout": "c1_l10_tidewarden",
-   "objective": "BOSS",
-   "shots": 8,
+   "layout": "c1_l10_kings_palace",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 7,
    "winThreshold": 0.85,
    "materials": [
     "wood",
     "brick",
     "steel"
    ],
-   "teaches": "Boss phases + weak points",
+   "teaches": "Castle masonry: gatehouse, keep and towers; find the hidden core",
    "mastery": {
-    "type": "NO_CLOSED_SHUTTER_HIT",
-    "value": 0,
-    "role": "shutter",
-    "text": "Storm the King's Palace without hitting the closed shutter"
+    "type": "SHOTS_LEFT_AT_LEAST",
+    "value": 2,
+    "role": "",
+    "text": "Take the King's Palace with 2 shots to spare"
    },
    "forced": [],
    "lockedSlots": [],
    "requires": "c1_l09",
-   "bossId": "tidewarden",
+   "bossId": "",
    "reward": [
     {
      "type": "coins",
@@ -398,13 +398,13 @@
      "id": "frozen_peaks"
     }
    ],
-   "star3Pct": 0.375,
-   "star2Pct": 0.25,
-   "starCapIfPowerupUsed": 3,
+   "star3Pct": 0.42,
+   "star2Pct": 0.28,
+   "starCapIfPowerupUsed": 2,
    "islandKillY": -2.0,
-   "hintTarget": "shoulderL",
-   "hintYaw": -4.0,
-   "hintPitch": 19.5
+   "hintTarget": "gateLintel",
+   "hintYaw": 0.0,
+   "hintPitch": 15.0
   }
  ]
 }
