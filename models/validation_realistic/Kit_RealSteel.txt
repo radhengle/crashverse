@@ -1,0 +1,16 @@
+Kit_RealSteel_Block_Fractured.fbx: frags=7 (Steel 4-10) tris max=88 total=430 mass 78.0-154.8 kg UCX=7 JNT=15 ANCHOR=4 -> PASS
+RESULT: ALL PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx [Kit] LOD0 tris=716 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx [KitFractured] LOD0 tris=430 LODs=[0] hulls=7 frags=7 -> PASS
+    warn  LOD0 430 < 500
+RESULT: ALL PASS (2 groups, 2 files)
+Kit_RealSteel_Block.fbx: meshes=3 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+Kit_RealSteel_Block_Fractured.fbx: meshes=7 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx: LOD0=716t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+FBX version: 7400
+Foliage/Bush/Bush.fbx: LOD0=1150t/1m LOD1=288t/1m LOD2=92t/1m LOD3=4t/1m hulls=0 materials=['M_Bush', 'M_Bush_Billboard'] -> PASS
+--
+REALISM RESULT: ALL PASS
+Blender 4.2.3 LTS (hash 0e22e4fcea03 built 2024-10-14 23:31:34)
+
