@@ -1870,7 +1870,7 @@
  "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
  "props": [
   {
-   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Kit_RealBread_Crate.fbx",
    "position": {
     "x": 2.9,
     "y": 0.0,
@@ -1882,10 +1882,15 @@
     "z": 0.0,
     "w": 0.9992
    },
-   "note": "street side, indestructible prop (shared Props_Village atlas)"
+   "id": "BreadCrate1",
+   "destructible": true,
+   "fractured": "Assets/_Project/Models/Realistic/Props/Props_Village/Kit_RealBread_Crate_Fractured.fbx",
+   "fracture_class": "Wood",
+   "anchor_to": "Ground",
+   "note": "L3 destructible decoy (8 wood fragments); stacked crate rests on crates 1+2"
   },
   {
-   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Kit_RealBread_Crate.fbx",
    "position": {
     "x": 2.05,
     "y": 0.0,
@@ -1897,10 +1902,15 @@
     "z": 0.0,
     "w": 0.9982
    },
-   "note": "street side, indestructible prop (shared Props_Village atlas)"
+   "id": "BreadCrate2",
+   "destructible": true,
+   "fractured": "Assets/_Project/Models/Realistic/Props/Props_Village/Kit_RealBread_Crate_Fractured.fbx",
+   "fracture_class": "Wood",
+   "anchor_to": "Ground",
+   "note": "L3 destructible decoy (8 wood fragments); stacked crate rests on crates 1+2"
   },
   {
-   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Kit_RealBread_Crate.fbx",
    "position": {
     "x": 2.5,
     "y": 0.42,
@@ -1912,7 +1922,15 @@
     "z": 0.0,
     "w": 0.9888
    },
-   "note": "street side, indestructible prop (shared Props_Village atlas)"
+   "id": "BreadCrate3",
+   "destructible": true,
+   "fractured": "Assets/_Project/Models/Realistic/Props/Props_Village/Kit_RealBread_Crate_Fractured.fbx",
+   "fracture_class": "Wood",
+   "anchor_to": [
+    "BreadCrate1",
+    "BreadCrate2"
+   ],
+   "note": "L3 destructible decoy (8 wood fragments); stacked crate rests on crates 1+2"
   },
   {
    "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_Bench.fbx",
@@ -1927,6 +1945,8 @@
     "z": 0.0,
     "w": 1.0
    },
+   "id": "Bench",
+   "destructible": false,
    "note": "street side, indestructible prop (shared Props_Village atlas)"
   }
  ],
@@ -1934,6 +1954,7 @@
   "walls_x": 8.0,
   "walls_z": 6.0,
   "eaves": 6.3,
-  "ridge": 8.52
+  "ridge": 8.66,
+  "chimney_top": 10.17
  }
 }

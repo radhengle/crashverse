@@ -1,5 +1,5 @@
 """L8 market kit, realistic v1: Kit_RealStall (market stall + separate wooden keystone skid it rests on; awning colour variants A/B = same mesh,
-UV offset between the two stripe cells of T_RealStall, one material) and Bld_MarketArch (10.4 m timber arch framing 4 stalls on a 2.2 m pitch,
+UV offset between the two stripe cells of T_RealStall, one material) and Bld_MarketArch (10.4 m timber arch framing 4 stalls on a 1.6 m pitch,
 3.5 m clear, steel sign box without text). Same pipeline/conventions as Bld_Townhouse (house_modular + modkit). usage: blender -b -P market.py"""
 import bpy,bmesh,math,os,sys,json
 from mathutils import Vector,Matrix
@@ -8,7 +8,7 @@ import townhouse as TH, house_modular as HM, modkit as MK
 from house_modular import R
 Mt=TH.Mt; KDIR=R.REAL+"/Buildings/Kit_RealStall"; ADIR=R.REAL+"/Buildings/Bld_MarketArch"; TH.TEX=KDIR
 STATS=HM.ROOT+"/models/HeroBuildings/Kit_RealStall_stats.json"; INNER=R.REAL+"/Buildings/Bld_Townhouse/Textures/T_RealHouse_Inner"
-SW,SD,KH=1.6,1.8,.22     # stall width (X), depth (Y), keystone height; stall top ~2.4 m above ground
+SW,SD,KH=1.5,1.8,.22     # stall frame width (X), depth (Y), keystone height; awning adds 0.05 a side -> 1.6 m overall (L8 slot pitch 1.6)
 class Market(HM.House):
     def cloth(s,pts,cell="Stripe",th=.025):
         """awning cloth panel (closed thin slab) with stripes across X (explicit UVs in the stripe cell)"""
@@ -52,10 +52,10 @@ class Market(HM.House):
         s.mark("Stall")
     def keystone(s):
         """wooden skid the stall rests on: 3 bearers + deck planks (Physics keystone: removing it drops the stall)"""
-        for xx in (-SW/2+.12,0,SW/2-.12): s.beam((xx,-SD/2,.07),(xx,SD/2,.07),.14,.16,(0,0,1),cell="WoodBeam")
+        for xx in (-SW/2+.12,0,SW/2-.12): s.beam((xx,-SD/2,.08),(xx,SD/2,.08),.14,.16,(0,0,1),cell="WoodBeam",warp=0)   # bottom face exactly at z=0 (pivot)
         n=6 if s.lod<2 else 3
         for k in range(n):
-            y=-SD/2+SD*(k+.5)/n; s.B.part((SW,SD/n-.02,.05),Mt((0,y,KH-.03)),"WoodPlank",1,.006*s.bev,1,seed=10+k)
+            y=-SD/2+SD*(k+.5)/n; s.B.part((SW,SD/n-.02,.05),Mt((0,y,KH-.025)),"WoodPlank",1,.006*s.bev,1,seed=10+k)   # deck top = KH: the stall rests on it
         s.mark("Keystone")
     # ---------------- arch
     def arch(s):
@@ -73,7 +73,7 @@ class Market(HM.House):
         s.beam((-X-.25,0,CL+BH/2),(X+.25,0,CL+BH/2),BH,.32,(0,-1,0),warp=.008)
         s.beam((-X-.35,0,CL+BH+.06),(X+.35,0,CL+BH+.06),.12,.42,(0,-1,0),cell="WoodPlank")
         if s.lod<2:
-            for xx in (-3.3,-1.1,1.1,3.3): s.B.part((.06,.34,.14),Mt((xx,0,CL+.03)),"Steel",0,0,1,seed=4)   # lantern hooks over the stall slots
+            for xx in (-2.4,-.8,.8,2.4): s.B.part((.06,.34,.14),Mt((xx,0,CL+.03)),"Steel",0,0,1,seed=4)   # lantern hooks over the stall slots
         s.mark("Beam")
         # steel sign box bolted to the beam cap on two bracket frames (base plate + upright into the box + diagonal stay)
         zb=CL+BH+.12; w,h,d=2.6,.7,.16; G=.12
@@ -120,7 +120,7 @@ if __name__=="__main__":
     lay["variant_note"]="StallA/StallB: identical geometry and tris, one material M_RealStall; the awning UVs sit in the Stripe (red) or StripeB (blue) atlas cell. Place exactly one of them on the Keystone."
     json.dump(lay,open(KDIR+"/Kit_RealStall.layout.json","w"),indent=1)
     P={l:build(lambda m:m.arch(),l) for l in (0,1,2)}
-    U=MK.U; slots=[{"slot":i+1,"position":U(Vector((x,0,0))),"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"piece":"Kit_RealStall (Keystn + StallA/StallB)"} for i,x in enumerate((-3.3,-1.1,1.1,3.3))]
+    U=MK.U; slots=[{"slot":i+1,"position":U(Vector((x,0,0))),"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"piece":"Kit_RealStall (Keystn + StallA/StallB)"} for i,x in enumerate((-2.4,-.8,.8,2.4))]
     MK.export_set(dict(kit="Kit_RealStall",out=ADIR,rel="Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch",building="Bld_MarketArch",mat="M_RealStall",
         tex=KDIR+"/Textures/T_RealStall",inner_tex=INNER,stats=STATS,parts=P,merge_stats=True,
         MODS=[("Pads","Granite post pads (indestructible)","Pads",None,"Base"),("PostL","Arch post left + knee brace + steel shoe","PostL",None,"Post_Left"),
@@ -128,4 +128,4 @@ if __name__=="__main__":
               ("Sign","Steel sign box (no text) bolted to the beam cap on two steel bracket frames","Sign",None,"Sign")],
         ASM=[("Base","Granite post pads (indestructible)"),("Post_Left","Timber post, left"),("Post_Right","Timber post, right"),("Beam","Timber beam spanning 10.4 m, 3.5 m clear"),("Sign","Steel sign, no text")],
         ATTACH={"Pads":"Ground","PostL":["Pads"],"PostR":["Pads"],"Beam":["PostL","PostR"],"Sign":["Beam"]},cls_of=lambda t:CLS[t],ground=("PostL","PostR"),
-        front="arch plane is X/Y; +Z = market front",extra={"stall_slots":slots,"clear_span_m":9.6,"clear_height_m":3.5,"pitch_m":2.2,"overall_span_m":10.4}))
+        front="arch plane is X/Y; +Z = market front",extra={"stall_slots":slots,"clear_span_m":9.6,"clear_height_m":3.5,"pitch_m":1.6,"stall_overall_width_m":1.6,"overall_span_m":10.4}))

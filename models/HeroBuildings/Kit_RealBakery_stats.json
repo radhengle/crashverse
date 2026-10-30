@@ -583,5 +583,12 @@
   "LOD1": 9964,
   "LOD2": 4990,
   "Fractured": 18538
+ },
+ "dimensions_m": {
+  "walls_x": 8.0,
+  "walls_z": 6.0,
+  "eaves": 6.3,
+  "ridge": 8.66,
+  "chimney_top": 10.17
  }
 }

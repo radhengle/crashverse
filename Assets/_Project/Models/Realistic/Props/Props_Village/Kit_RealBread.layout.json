@@ -1,0 +1,107 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Kit_RealBread",
+ "style": "realistic v1",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); long side faces +Z (same as Prop_BreadCrate); positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  }
+ },
+ "tris_total": {
+  "LOD0": 356,
+  "LOD1": 276,
+  "LOD2": 276,
+  "Fractured": 740
+ },
+ "footprint_m": {
+  "x": 0.631,
+  "z": 0.433
+ },
+ "height_m": 0.405,
+ "module_count": 1,
+ "modules": [
+  {
+   "id": "Crate",
+   "label": "Bread crate, destructible",
+   "pivot": {
+    "x": 0.0044,
+    "y": 0.0,
+    "z": 0.0065
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 0.631,
+    "z": 0.433
+   },
+   "height_m": 0.405,
+   "top_y_m": 0.405,
+   "pieces": [
+    "Crate"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 356,
+    "LOD1": 276,
+    "LOD2": 276
+   }
+  }
+ ],
+ "piece_count": 1,
+ "pieces": [
+  {
+   "id": "Crate",
+   "label": "Bread crate (destructible decoy): plank crate heaped with loaves",
+   "module": "Crate",
+   "kit": "Kit_RealBread_Crate",
+   "intact": "Assets/_Project/Models/Realistic/Props/Props_Village/Kit_RealBread_Crate.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Props/Props_Village/Kit_RealBread_Crate_Fractured.fbx",
+   "position": {
+    "x": 0.0044,
+    "y": 0.0,
+    "z": 0.0065
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 356,
+    "LOD1": 276,
+    "LOD2": 276,
+    "Fractured": 740
+   }
+  }
+ ],
+ "connections": [],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+ "intact_twin": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+}

@@ -1,0 +1,41 @@
+{
+ "set": "Kit_RealBread",
+ "building": "Kit_RealBread",
+ "modules": {
+  "Crate": {
+   "frac": "Wood",
+   "module": "Crate",
+   "label": "Bread crate (destructible decoy): plank crate heaped with loaves",
+   "tris": {
+    "LOD0": 356,
+    "LOD1": 276,
+    "LOD2": 276
+   },
+   "bounds_m": [
+    0.631,
+    0.433,
+    0.405
+   ],
+   "fragments": 8,
+   "frag_source_lod": 1,
+   "frag_tris_max": 144,
+   "frag_tris_total": 740,
+   "mass_kg_total": 13.3,
+   "mass_kg_range": [
+    0.86,
+    2.53
+   ],
+   "density_kg_m3": 600,
+   "joints": 16,
+   "anchors": 8,
+   "min_axis_m": 0.151
+  }
+ },
+ "tris_total": {
+  "LOD0": 356,
+  "LOD1": 276,
+  "LOD2": 276,
+  "Fractured": 740
+ },
+ "texture_set": "Props_Village"
+}

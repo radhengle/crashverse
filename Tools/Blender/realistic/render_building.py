@@ -16,8 +16,17 @@ CFG={
         "UpperStorey":(0,0,3.4),"Roof_Left":(-1.5,0,5.6),"Roof_Right":(1.5,0,5.6),"Chimney":(-1.2,2.6,8.2)},
    spread={"UpFL":(-.4,-1.3,0),"UpFC":(0,-1.3,0),"UpFR":(.4,-1.3,0),"UpB":(0,1.3,0),"UpL":(-1.3,0,0),"UpR":(1.3,0,0),"GabL":(-1.5,0,.9),"GabR":(1.5,0,.9)},
    BREAK=["ShopW","ShopD","UpFL","UpFC","UpFR"], blast=((0,-1.0,2.8),30.0), dest=((10.5,-16.5,4.4),(-.3,-2.2,2.4),34)),
+ "stonetower":dict(layouts=[(f"{B}/Bld_StoneTower/Bld_StoneTower.layout.json",(0,0,0),())],
+   mats={"M_RealTower":f"{B}/RealCastle/Textures/T_RealCastle"},
+   hero=((12.0,-9.0,4.6),(0,0,5.0),30), game=((25.0,-3.5,5.2),(0,0,4.6),34), exp=((21,-15.5,9.5),(0,0,8.0),26),
+   EXP={"ring0":(0,0,0),"wallF1":(1.2,0,.8),"wallB1":(-1.2,0,.8),"wallL1":(0,1.2,.8),"wallR1":(0,-1.2,.8),"ring1":(0,0,1.6),
+        "wallF2":(1.2,0,2.4),"wallB2":(-1.2,0,2.4),"wallL2":(0,1.2,2.4),"wallR2":(0,-1.2,2.4),"ring2":(0,0,3.2),"crownFloor":(0,0,4.0),
+        "crownWood":(0,0,4.8),"crownBrick":(0,0,5.6),"crownRoof":(0,0,6.4)},
+   spread={"CrWdA":(0,0,0),"CrRfA":(.25,0,0),"CrRfB":(-.25,0,0)},
+   BREAK=["W1F","W1R","R1"], TOPPLE=["W2F","W2B","W2L","W2R","R2","CrFl","CrWdA","CrWdB","CrBk","CrRfA","CrRfB"],
+   blast=((1.0,-1.0,1.6),26.0), dest=((13.5,-11.0,4.2),(0,-.5,3.0),30)),
  "stallarch":dict(layouts=[(f"{B}/Bld_MarketArch/Bld_MarketArch.layout.json",(0,0,0),())]+
-     [(f"{B}/Kit_RealStall/Kit_RealStall.layout.json",(x,0,0),(skip,)) for x,skip in ((3.3,"StallB"),(1.1,"StallA"),(-1.1,"StallB"),(-3.3,"StallA"))],
+     [(f"{B}/Kit_RealStall/Kit_RealStall.layout.json",(x,0,0),(skip,)) for x,skip in ((2.4,"StallB"),(.8,"StallA"),(-.8,"StallB"),(-2.4,"StallA"))],
    mats={"M_RealStall":f"{B}/Kit_RealStall/Textures/T_RealStall"},
    hero=((10.5,-13.5,4.2),(0,0,2.2),32), game=((-1.0,-24.0,5.4),(0,0,2.2),30), exp=((13,-17,7.5),(0,0,3.2),34),
    EXP={"Base":(0,0,0),"Post_Left":(-1.4,0,0),"Post_Right":(1.4,0,0),"Beam":(0,0,1.4),"Sign":(0,0,2.6),"Keystone":(0,0,0),"Stall":(0,-.4,1.0)},
@@ -53,7 +62,7 @@ for li,(lp,off,skip) in enumerate(C["layouts"]):
     L=json.load(open(lp))
     for p in L["pieces"]:
         if p["id"] in skip: continue
-        r,n=imp(os.path.join(ROOTP,p["intact"])); r.location=u2b(p["position"])+Vector(off); mods[p["id"] if li==0 else f'{p["id"]}#{li}']=(r,n,p)
+        r,n=imp(os.path.join(ROOTP,p["intact"])); r.location=u2b(p["position"])+Vector(off); r.rotation_euler.z=-math.radians(p.get("euler_zxy_deg",{}).get("y",0.0)); mods[p["id"] if li==0 else f'{p["id"]}#{li}']=(r,n,p)
     for q in L.get("props",[]):
         r,n=imp(os.path.join(ROOTP,q["asset"])); r.location=u2b(q["position"])+Vector(off); r.rotation_euler.z+= -2*math.atan2(q["rotation"]["y"],q["rotation"]["w"]); props.append((r,n))
 ground,gn=imp(f"{REAL}/Props/Ground_Patch/Ground_Patch.fbx")
@@ -103,7 +112,7 @@ BRK=[k for k in mods if k.split("#")[0] in C["BREAK"] and (NAME!="stallarch" or 
 for k in BRK:
     r,n,p=mods[k]
     for o in n: o.hide_render=True
-    fr,fn=imp(os.path.join(ROOTP,p["fractured"])); fr.location=r.location; bpy.context.view_layer.update()
+    fr,fn=imp(os.path.join(ROOTP,p["fractured"])); fr.location=r.location; fr.rotation_euler=r.rotation_euler.copy(); bpy.context.view_layer.update()
     for o in fn:
         if o.type!='MESH' or o.name.startswith("UCX_"): o.hide_render=True; continue
         mw=o.matrix_world.copy(); o.parent=None; o.matrix_world=mw; frs.append(o)
@@ -112,7 +121,9 @@ for k,(r,n,p) in mods.items():
     if k in BRK: continue
     for o in n:
         if o.type=='MESH' and o.name.endswith("_LOD0"):
-            mw=o.matrix_world.copy(); o.parent=None; o.matrix_world=mw; rb(o,'PASSIVE','MESH')
+            mw=o.matrix_world.copy(); o.parent=None; o.matrix_world=mw
+            if k.split("#")[0] in C.get("TOPPLE",()): rb(o,'ACTIVE','CONVEX_HULL').rigid_body.mass=60   # upper storeys rest on the broken one and topple
+            else: rb(o,'PASSIVE','MESH')
 for r,n in props:
     for o in n:
         if o.type=='MESH' and o.name.endswith("_LOD0"): mw=o.matrix_world.copy(); o.parent=None; o.matrix_world=mw; rb(o,'ACTIVE','CONVEX_HULL').rigid_body.mass=15
