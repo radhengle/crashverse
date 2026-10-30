@@ -261,7 +261,7 @@ namespace Crashverse.Visuals
             Isle("IsleB", isles, new Vector3(260f, WaterY, 25f), 0.9f, 260f);
             // King Grimhold's palace on Crown Rock: always on the horizon (screen right), close and huge on L10
             var pal = new GameObject("CrownRockPalace").transform; pal.SetParent(h, false);
-            pal.localPosition = palaceLevel ? new Vector3(120f, WaterY, -12f) : new Vector3(230f, WaterY, -45f);
+            pal.localPosition = palaceLevel ? new Vector3(185f, WaterY, -16f) : new Vector3(230f, WaterY, -45f);
             pal.localRotation = Quaternion.Euler(0f, 110f, 0f); pal.localScale = Vector3.one * (palaceLevel ? 1.9f : 1.6f);
             foreach (var kv in palace)
             {
