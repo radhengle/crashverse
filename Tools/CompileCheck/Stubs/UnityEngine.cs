@@ -253,6 +253,7 @@ namespace UnityEngine
         public RigidbodyInterpolation interpolation;
         public float sleepThreshold;
         public void WakeUp() { }
+        public bool IsSleeping() => false;
         public Vector3 position;
         public void AddForce(Vector3 f, ForceMode m = ForceMode.Force) { }
         public void AddExplosionForce(float f, Vector3 p, float r, float up = 0f, ForceMode m = ForceMode.Force) { }
