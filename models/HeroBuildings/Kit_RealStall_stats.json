@@ -188,28 +188,28 @@
   "Sign": {
    "frac": "Steel",
    "module": "Sign",
-   "label": "Steel sign box (no text) on two steel posts",
+   "label": "Steel sign box (no text) bolted to the beam cap on two steel bracket frames",
    "tris": {
-    "LOD0": 364,
-    "LOD1": 332,
-    "LOD2": 52
+    "LOD0": 604,
+    "LOD1": 572,
+    "LOD2": 296
    },
    "bounds_m": [
-    2.6,
-    0.18,
-    0.95
+    2.655,
+    0.3,
+    0.824
    ],
-   "fragments": 4,
+   "fragments": 5,
    "frag_source_lod": 1,
-   "frag_tris_max": 184,
-   "frag_tris_total": 512,
-   "mass_kg_total": 2364.6,
+   "frag_tris_max": 228,
+   "frag_tris_total": 692,
+   "mass_kg_total": 2446.2,
    "mass_kg_range": [
-    581.13,
-    612.8
+    49.08,
+    798.22
    ],
    "density_kg_m3": 7850,
-   "joints": 3,
+   "joints": 4,
    "anchors": 2,
    "min_axis_m": 0.18
   }
@@ -222,10 +222,10 @@
  },
  "buildings": {
   "Bld_MarketArch": {
-   "LOD0": 1324,
-   "LOD1": 820,
-   "LOD2": 404,
-   "Fractured": 1644
+   "LOD0": 1564,
+   "LOD1": 1060,
+   "LOD2": 648,
+   "Fractured": 1824
   }
  }
 }

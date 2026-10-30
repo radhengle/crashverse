@@ -75,14 +75,20 @@ class Market(HM.House):
         if s.lod<2:
             for xx in (-3.3,-1.1,1.1,3.3): s.B.part((.06,.34,.14),Mt((xx,0,CL+.03)),"Steel",0,0,1,seed=4)   # lantern hooks over the stall slots
         s.mark("Beam")
-        # steel sign box on two posts standing on the beam (no text: plain painted steel panel with a gold border)
-        zb=CL+BH+.12; w,h,d=2.6,.7,.16
-        bm=R.bm_box(w,d,h,(0,0,zb+.25+h/2)); R.bevel(bm,.01*s.bev,1); R.uv_cells(bm,s.A,"Steel",None,cut=False); R.tint(bm,(.55,.62,.58)); s.B.add(bm)
+        # steel sign box bolted to the beam cap on two bracket frames (base plate + upright into the box + diagonal stay)
+        zb=CL+BH+.12; w,h,d=2.6,.7,.16; G=.12
+        bm=R.bm_box(w,d,h,(0,0,zb+G+h/2)); R.bevel(bm,.01*s.bev,1); R.uv_cells(bm,s.A,"Steel",None,cut=False); R.tint(bm,(.55,.62,.58)); s.B.add(bm)
         if s.lod<2:
             for sy in (-1,1):
-                for (cx,cz,ww,hh) in ((0,zb+.25+h-.04,w-.04,.04),(0,zb+.25+.04,w-.04,.04),(-w/2+.04,zb+.25+h/2,.04,h-.04),(w/2-.04,zb+.25+h/2,.04,h-.04)):
+                for (cx,cz,ww,hh) in ((0,zb+G+h-.04,w-.04,.04),(0,zb+G+.04,w-.04,.04),(-w/2+.04,zb+G+h/2,.04,h-.04),(w/2-.04,zb+G+h/2,.04,h-.04)):
                     s.B.part((ww,.012,hh),Mt((cx,sy*(d/2+.004),cz)),"Gold",0,0,1,seed=5)
-        for xx in (-.9,.9): s.beam((xx,0,zb),(xx,0,zb+.3),.08,.08,(0,-1,0),cell="Steel",bev=0,warp=0,ends=False)
+        for xx in (-.9,.9):
+            s.B.part((.3,.3,.025),Mt((xx,0,zb+.012)),"Steel",0,0,1,seed=6)                                  # bolted base plate on the cap
+            s.beam((xx,0,zb),(xx,0,zb+G+h*.55),.1,.06,(0,-1,0),cell="Steel",bev=0,warp=0,ends=False)       # flat-bar upright into the box
+            for sy in (-1,1):   # strap plates over both box faces at each upright (bolted look)
+                s.B.part((.12,.012,.3),Mt((xx,sy*(d/2+.006),zb+G+.13)),"Steel",0,0,1,seed=7)
+            sx=1 if xx>0 else -1
+            s.beam((xx+sx*.42,0,zb+.02),(xx+sx*.05,0,zb+G+.02),.05,.05,(0,-1,0),cell="Steel",bev=0,warp=0,ends=False)   # diagonal stay
         s.mark("Sign")
 def build(fn,l):
     m=Market(l); fn(m); assert len(m.tags)==len(m.B.parts); return (m.B.parts,m.tags)
@@ -119,7 +125,7 @@ if __name__=="__main__":
         tex=KDIR+"/Textures/T_RealStall",inner_tex=INNER,stats=STATS,parts=P,merge_stats=True,
         MODS=[("Pads","Granite post pads (indestructible)","Pads",None,"Base"),("PostL","Arch post left + knee brace + steel shoe","PostL",None,"Post_Left"),
               ("PostR","Arch post right + knee brace + steel shoe","PostR",None,"Post_Right"),("Beam","Arch beam (10.4 m) + cap board + lantern hooks","Beam",None,"Beam"),
-              ("Sign","Steel sign box (no text) on two steel posts","Sign",None,"Sign")],
+              ("Sign","Steel sign box (no text) bolted to the beam cap on two steel bracket frames","Sign",None,"Sign")],
         ASM=[("Base","Granite post pads (indestructible)"),("Post_Left","Timber post, left"),("Post_Right","Timber post, right"),("Beam","Timber beam spanning 10.4 m, 3.5 m clear"),("Sign","Steel sign, no text")],
         ATTACH={"Pads":"Ground","PostL":["Pads"],"PostR":["Pads"],"Beam":["PostL","PostR"],"Sign":["Beam"]},cls_of=lambda t:CLS[t],ground=("PostL","PostR"),
         front="arch plane is X/Y; +Z = market front",extra={"stall_slots":slots,"clear_span_m":9.6,"clear_height_m":3.5,"pitch_m":2.2,"overall_span_m":10.4}))

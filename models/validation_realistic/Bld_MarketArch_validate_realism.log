@@ -2,5 +2,5 @@ Kit_RealStall_Beam.fbx: LOD0=448t/1m LOD1=240t/1m LOD2=236t/1m hulls=1 materials
 Kit_RealStall_Pads.fbx: LOD0=88t/1m LOD1=24t/1m LOD2=24t/1m hulls=1 materials=['M_RealStall'] -> PASS
 Kit_RealStall_PostL.fbx: LOD0=204t/1m LOD1=108t/1m LOD2=64t/1m hulls=1 materials=['M_RealStall'] -> PASS
 Kit_RealStall_PostR.fbx: LOD0=220t/1m LOD1=116t/1m LOD2=28t/1m hulls=1 materials=['M_RealStall'] -> PASS
-Kit_RealStall_Sign.fbx: LOD0=364t/1m LOD1=332t/1m LOD2=52t/1m hulls=1 materials=['M_RealStall'] -> PASS
+Kit_RealStall_Sign.fbx: LOD0=604t/1m LOD1=572t/1m LOD2=296t/1m hulls=1 materials=['M_RealStall'] -> PASS
 REALISM RESULT: ALL PASS

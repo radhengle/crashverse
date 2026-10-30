@@ -1,17 +1,16 @@
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam.fbx [Kit] LOD0 tris=448 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam.fbx [Kit] LOD0 tris=448 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
     warn  LOD0 448 < 500
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam_Fractured.fbx [KitFractured] LOD0 tris=592 LODs=[0] hulls=12 frags=12 -> PASS
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Pads.fbx [Kit] LOD0 tris=88 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam_Fractured.fbx [KitFractured] LOD0 tris=592 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Pads.fbx [Kit] LOD0 tris=88 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
     warn  LOD0 88 < 500
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL.fbx [Kit] LOD0 tris=204 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL.fbx [Kit] LOD0 tris=204 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
     warn  LOD0 204 < 500
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL_Fractured.fbx [KitFractured] LOD0 tris=272 LODs=[0] hulls=9 frags=9 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL_Fractured.fbx [KitFractured] LOD0 tris=272 LODs=[0] hulls=9 frags=9 -> PASS
     warn  LOD0 272 < 500
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR.fbx [Kit] LOD0 tris=220 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR.fbx [Kit] LOD0 tris=220 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
     warn  LOD0 220 < 500
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR_Fractured.fbx [KitFractured] LOD0 tris=268 LODs=[0] hulls=8 frags=8 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR_Fractured.fbx [KitFractured] LOD0 tris=268 LODs=[0] hulls=8 frags=8 -> PASS
     warn  LOD0 268 < 500
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign.fbx [Kit] LOD0 tris=364 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
-    warn  LOD0 364 < 500
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign_Fractured.fbx [KitFractured] LOD0 tris=512 LODs=[0] hulls=4 frags=4 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign.fbx [Kit] LOD0 tris=604 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign_Fractured.fbx [KitFractured] LOD0 tris=692 LODs=[0] hulls=5 frags=5 -> PASS
 RESULT: ALL PASS (9 groups, 9 files)

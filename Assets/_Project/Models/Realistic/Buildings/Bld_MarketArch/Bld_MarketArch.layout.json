@@ -19,16 +19,16 @@
   }
  },
  "tris_total": {
-  "LOD0": 1324,
-  "LOD1": 820,
-  "LOD2": 404,
-  "Fractured": 1644
+  "LOD0": 1564,
+  "LOD1": 1060,
+  "LOD2": 648,
+  "Fractured": 1824
  },
  "footprint_m": {
   "x": 11.1,
   "z": 0.7
  },
- "height_m": 4.93,
+ "height_m": 4.8,
  "module_count": 5,
  "modules": [
   {
@@ -169,7 +169,7 @@
    "label": "Steel sign, no text",
    "pivot": {
     "x": -0.0,
-    "y": 3.98,
+    "y": 3.9762,
     "z": -0.0
    },
    "pivot_rule": "centre of the base footprint, +Z = front",
@@ -180,11 +180,11 @@
     "w": 1.0
    },
    "footprint_m": {
-    "x": 2.6,
-    "z": 0.18
+    "x": 2.655,
+    "z": 0.3
    },
-   "height_m": 0.95,
-   "top_y_m": 4.93,
+   "height_m": 0.824,
+   "top_y_m": 4.8,
    "pieces": [
     "Sign"
    ],
@@ -192,9 +192,9 @@
     "Beam"
    ],
    "tris": {
-    "LOD0": 364,
-    "LOD1": 332,
-    "LOD2": 52
+    "LOD0": 604,
+    "LOD1": 572,
+    "LOD2": 296
    }
   }
  ],
@@ -336,14 +336,14 @@
   },
   {
    "id": "Sign",
-   "label": "Steel sign box (no text) on two steel posts",
+   "label": "Steel sign box (no text) bolted to the beam cap on two steel bracket frames",
    "module": "Sign",
    "kit": "Kit_RealStall_Sign",
    "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign.fbx",
    "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign_Fractured.fbx",
    "position": {
     "x": -0.0,
-    "y": 3.98,
+    "y": 3.9762,
     "z": -0.0
    },
    "rotation": {
@@ -362,10 +362,10 @@
    ],
    "fracture_class": "Steel",
    "tris": {
-    "LOD0": 364,
-    "LOD1": 332,
-    "LOD2": 52,
-    "Fractured": 512
+    "LOD0": 604,
+    "LOD1": 572,
+    "LOD2": 296,
+    "Fractured": 692
    }
   }
  ],
@@ -419,7 +419,7 @@
    "b": "Sign",
    "point": {
     "x": -0.0,
-    "y": 3.9819,
+    "y": 3.9801,
     "z": -0.0
    },
    "break_force_N": "",
