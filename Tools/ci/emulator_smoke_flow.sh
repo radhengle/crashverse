@@ -127,5 +127,14 @@ if adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|MapScreen" || { sleep 3; adb lo
     [ -n "$BF" ] && { tap ${BF%|*} ${BF#*|} 8; check boss_load; shot 11_boss_hud; }
   else echo "boss: no Button_DailyBoss probe" | tee -a "$OUT/coords.txt"; fi
 else echo "boss: back did not return to the map (screens skipped)" | tee -a "$OUT/coords.txt"; fi
+# L3 / L8 realistic modules (dev build only: --es cv_dev_level opens that Level Select; screens only, crash-gated)
+for LV in c1_l03 c1_l08; do
+  adb shell am force-stop $PKG; sleep 2; adb logcat -c
+  adb shell am start -n $PKG/com.unity3d.player.UnityPlayerActivity --es cv_dev_level $LV >/dev/null 2>&1; sleep 14
+  if adb logcat -d -s Unity | grep -q "cv_dev_level opened $LV"; then
+    for i in $(seq 1 20); do BP=$(adb logcat -d -s Unity | grep -o "CVTAP|LevelSelectScreen|Button_Play|[0-9]*|[0-9]*" | tail -1 | cut -d'|' -f4,5); [ -n "$BP" ] && break; sleep 1; done
+    [ -n "$BP" ] && { tap ${BP%|*} ${BP#*|} 10; check "dev_$LV"; shot "12_${LV}_hud"; adb logcat -d -s Unity | grep -o "\[RealKit\] [^ ]*: [0-9]*/[0-9]* blocks dressed[^\r]*" | tail -1 | tee -a "$OUT/realkit.txt"; }
+  else echo "$LV: cv_dev_level not honoured (release build?)" | tee -a "$OUT/realkit.txt"; fi
+done
 check final   # whole-run logcat gate (QA C-2)
 adb logcat -d > "$OUT/logcat.txt"; echo "SMOKE PASS (screens in $OUT for visual review)"

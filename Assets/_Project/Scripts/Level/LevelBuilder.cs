@@ -56,6 +56,8 @@ namespace Crashverse.Level
                 _blocks.Add(block);
                 _byId[bd.id] = block;
             }
+            int dressed = 0; foreach (var b in _blocks) if (b != null && b.visual != null) dressed++;
+            Debug.Log($"[RealKit] {layout.id}: {dressed}/{_blocks.Count} blocks dressed with realistic modules");
             foreach (var bd in layout.blocks)
             {
                 var b = _byId[bd.id];

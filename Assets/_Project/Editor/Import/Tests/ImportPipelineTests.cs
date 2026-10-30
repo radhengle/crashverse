@@ -53,7 +53,8 @@ namespace Crashverse.Tests
 
         [Test] public void KitPath() { Assert.IsTrue(C.KitPathOk("Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx")); Assert.IsFalse(C.KitPathOk("Assets/_Project/Models/Kit_Wood/Kit_Wood_Wall.fbx"));
             Assert.IsTrue(C.KitPathOk("Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall.fbx"), "realistic v1 pieces");
-            Assert.IsFalse(C.KitPathOk("Assets/_Project/Models/Realistic/Foliage/Oak/Oak.fbx"), "only Kit_Real* under Realistic"); }
+            Assert.IsTrue(C.KitPathOk("Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Bld_Bakery_Front.fbx"), "realistic building modules");
+            Assert.IsFalse(C.KitPathOk("Assets/_Project/Models/Kit_Wood/Kit_Wood_Wall.fbx")); }
     }
 
     public class ImportedPhysicsHintsTests

@@ -112,13 +112,13 @@ namespace Crashverse.EditorTools.Import
         }
         /// <summary>Kit files must live under Assets/_Project/Models/BuildingKit/.</summary>
         public const string KitRoot = ModelsRoot + "BuildingKit/";
-        /// <summary>Realistic v1 (3D Modeler): Kit_Real* pieces live under Models/Realistic/** (validate_colliders.py agrees).</summary>
+        /// <summary>Realistic v1 (3D Modeler): kit modules live anywhere under Models/Realistic/** (validate_colliders.py agrees).</summary>
         public const string RealisticRoot = ModelsRoot + "Realistic/";
         public static bool KitPathOk(string assetPath)
         {
             var p = assetPath.Replace('\\', '/');
             return p.StartsWith(KitRoot, StringComparison.Ordinal)
-                || (p.StartsWith(RealisticRoot, StringComparison.Ordinal) && System.IO.Path.GetFileName(p).StartsWith("Kit_Real", StringComparison.Ordinal));
+                || p.StartsWith(RealisticRoot, StringComparison.Ordinal);   // Kit_Real*, Bld_* (Bakery, MarketArch, Townhouse) and village props
         }
         public static bool IsJoint(string name) => name != null && name.StartsWith("JNT_", StringComparison.Ordinal);
         /// <summary>Non-render helper empties that must survive prefab building untouched.</summary>

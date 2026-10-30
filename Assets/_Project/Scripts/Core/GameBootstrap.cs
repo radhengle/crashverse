@@ -118,7 +118,35 @@ namespace Crashverse.Core
             if (r.Top is MapScreen) return;
             r.PopAllAndPush(new MapScreen());
             if (!_resumeChecked) { _resumeChecked = true; TryResume(resume); }
+#if CRASHVERSE_DEV
+            DevOpenLevel();
+#endif
         }
+
+#if CRASHVERSE_DEV
+        static bool _devLevelDone;
+        /// <summary>Dev builds only (emulator smoke screenshots of L3/L8 models): launched with --es cv_dev_level c1_l03, the first map
+        /// opens that level's Level Select regardless of unlocks. Release builds don't compile this.</summary>
+        static void DevOpenLevel()
+        {
+            if (_devLevelDone) return; _devLevelDone = true;
+            string id = null;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            try
+            {
+                using (var up = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using (var act = up.GetStatic<AndroidJavaObject>("currentActivity"))
+                using (var intent = act.Call<AndroidJavaObject>("getIntent"))
+                    id = intent.Call<string>("getStringExtra", "cv_dev_level");
+            }
+            catch (System.Exception) { }
+#endif
+            var lvl = string.IsNullOrEmpty(id) ? null : AppServices.Content?.GetLevel(id);
+            if (lvl == null) return;
+            AppServices.Router.Push(new LevelSelectScreen(lvl));
+            Debug.Log("[DEV] cv_dev_level opened " + id);
+        }
+#endif
 
         static void TryResume(string resume)
         {

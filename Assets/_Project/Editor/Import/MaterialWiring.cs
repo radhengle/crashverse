@@ -32,6 +32,8 @@ namespace Crashverse.EditorTools.Import
         {
             string asset = C.TextureAssetForMaterial(mat.name, out bool inner, out bool emissive);
             string tex = $"{modelDir}/textures/T_{asset}";
+            // realistic v1 folders use "Textures" (case matters on Linux CI)
+            if (!File.Exists(tex + "_A.png") && File.Exists($"{modelDir}/Textures/T_{asset}_A.png")) tex = $"{modelDir}/Textures/T_{asset}";
             // M_<Mat>_Inner prefers T_<Mat>_Inner_A/_N/_ORM and falls back per map to the main T_<Mat>_* set.
             string innerTex = tex + "_Inner";
             SetPref(mat, "_BaseMap", inner, innerTex + "_A", tex + "_A");

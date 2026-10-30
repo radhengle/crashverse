@@ -21,7 +21,7 @@ namespace Crashverse.EditorTools.Import
     {
         // Run after any generic project postprocessors so these settings win.
         public override int GetPostprocessOrder() => 100;
-        public override uint GetVersion() => 5;   // 3: hero building fractureClass + T_Bld/hero kit 1024 Android cap; 4: Models/Realistic/** texture branch (RenderTiers); 5: intact kit modules readable (RealKit fit + UV rebuild)
+        public override uint GetVersion() => 6;   // 3: hero building fractureClass + T_Bld/hero kit 1024 Android cap; 4: Models/Realistic/** texture branch (RenderTiers); 5: intact kit modules readable (RealKit fit + UV rebuild); 6: foliage materials GPU instancing
 
         // ---------------- FBX ----------------
         void OnPreprocessModel()

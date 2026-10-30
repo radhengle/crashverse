@@ -54,7 +54,7 @@ namespace Crashverse.Level
             if ((entry == null || entry.model == null) && authored) entry = RealKitManifest.ResolveEditor(bd.model);
 #endif
             if (entry == null || entry.model == null) { if (authored) Debug.LogWarning("[RealKit] module not in manifest: " + bd.model); return null; }
-            bool real = piece.StartsWith("Kit_Real");
+            bool real = System.Array.IndexOf(RealPieceRules.Pieces, piece) >= 0; // the 14 generic pieces; Kit_RealBakery_*/Stall/Bld_* keep their own materials
             var mats = real ? MaterialsFor(man, RealPieceRules.KitOf(piece)) : null; if (real && mats == null) return null;
             var size = new Vector3(bd.s[0], bd.s[1], bd.s[2]);
             var meshes = MeshesFor(entry, piece, size, bd.rotY, real); if (meshes == null || meshes.Length == 0) return null;
@@ -101,7 +101,7 @@ namespace Crashverse.Level
 #endif
                 if (e == null || e.model == null) { Debug.LogWarning($"[RealKit] {bd.id}: part not in manifest: {part}"); continue; }
                 var src = Source(e, name);
-                bool real = name.StartsWith("Kit_Real"); var kit = real ? RealPieceRules.KitOf(name) : null;
+                bool real = System.Array.IndexOf(RealPieceRules.Pieces, name) >= 0; var kit = real ? RealPieceRules.KitOf(name) : null;
                 var kmats = real ? MaterialsFor(man, kit) : null;
                 for (int i = 0; i < src.Length && i < 3; i++)
                 {
