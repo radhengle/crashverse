@@ -60,6 +60,65 @@ namespace Crashverse.Visuals
                 else Retexture(b, castle);
             }
             Decorate(blocks, castle);
+            if (levelId != null && levelId.EndsWith("l01")) LookoutHut(blocks);
+        }
+
+        /// <summary>L1 "Royal Watch Post": a pitched shingle roof over the top piece, a ladder up the cannon-facing side and rope
+        /// railings, so the timber pieces read as a lookout hut (concept L01). Visual children of real pieces: hidden when they break.</summary>
+        static void LookoutHut(IReadOnlyList<DestructibleBlock> blocks)
+        {
+            DestructibleBlock top = null; float topY = float.MinValue; Bounds all = default; bool any = false;
+            foreach (var b in blocks)
+            {
+                if (b == null || b.role == "island") continue;
+                var bb = new Bounds(b.transform.position, b.transform.localScale);
+                if (!any) { all = bb; any = true; } else all.Encapsulate(bb);
+                float y = bb.max.y; if (y > topY && b.transform.localScale.z >= 1f) { topY = y; top = b; }
+            }
+            if (top == null) return;
+            var ts = top.transform.localScale;
+            // roof: gable ridge across the screen (along z), eaves overhanging 0.35 m
+            var roof = MetricChild(top, "Kingdom_HutRoof");
+            float w = ts.z + 0.7f, d = ts.x + 0.9f, h = Mathf.Clamp(d * 0.45f, 0.8f, 1.8f);
+            var m = Prism(w, d, h);
+            var r = R("Roof", roof, CvMesh.WithBoxUv(m, 1.2f, Vector3.one), KingdomMaterials.Roof, true);
+            r.transform.localPosition = new Vector3(0f, ts.y * 0.5f, 0f);
+            // ladder on the front face of the structure, leaning from the ground to the top piece
+            var lowest = all.min.y; var frontX = all.min.x;
+            var ladderHost = MetricChild(top, "Kingdom_Ladder");
+            float lh = topY - lowest; if (lh < 1.5f) return;
+            var lad = new GameObject("Ladder").transform; lad.SetParent(ladderHost, false);
+            lad.position = new Vector3(frontX - 0.35f, lowest, all.center.z + all.extents.z * 0.45f);
+            lad.rotation = Quaternion.Euler(0f, 0f, -8f);
+            foreach (float z in new[] { -0.28f, 0.28f })
+            {
+                var rail = R("LadderRail", lad, Cyl(), KingdomMaterials.Wood, true);
+                rail.transform.localPosition = new Vector3(0f, lh * 0.5f, z); rail.transform.localScale = new Vector3(0.08f, lh * 0.5f, 0.08f);
+            }
+            for (float y = 0.35f; y < lh - 0.1f; y += 0.4f)
+            {
+                var rung = R("LadderRung", lad, Cyl(), KingdomMaterials.Wood);
+                rung.transform.localPosition = new Vector3(0f, y, 0f); rung.transform.localRotation = Quaternion.Euler(90f, 0f, 0f); rung.transform.localScale = new Vector3(0.05f, 0.3f, 0.05f);
+            }
+        }
+
+        static Mesh Prism(float w, float d, float h)
+        {
+            float x = d * 0.5f, z = w * 0.5f;
+            var v = new List<Vector3>(); var t = new List<int>();
+            void Quad(Vector3 a, Vector3 b, Vector3 c, Vector3 e) { int i = v.Count; v.Add(a); v.Add(b); v.Add(c); v.Add(e); t.AddRange(new[] { i, i + 1, i + 2, i, i + 2, i + 3 }); }
+            void Tri(Vector3 a, Vector3 b, Vector3 c) { int i = v.Count; v.Add(a); v.Add(b); v.Add(c); t.AddRange(new[] { i, i + 1, i + 2 }); }
+            Vector3 fl = new Vector3(-x, 0, z), fr = new Vector3(-x, 0, -z), bl = new Vector3(x, 0, z), br = new Vector3(x, 0, -z), rl = new Vector3(0, h, z), rr = new Vector3(0, h, -z);
+            Quad(fl, rl, rr, fr);   // front slope (faces -x / up)
+            Quad(br, rr, rl, bl);   // back slope
+            Tri(fl, bl, rl);        // gable +z
+            Tri(br, fr, rr);        // gable -z
+            var m = new Mesh { name = "KHutRoof" }; m.SetVertices(v); m.SetTriangles(t, 0); m.RecalculateNormals(); m.RecalculateBounds();
+            // make every face visible from outside regardless of winding (double-sided copy)
+            var v2 = new List<Vector3>(v); var t2 = new List<int>(t); int n = v.Count;
+            for (int i = 0; i < t.Count; i += 3) { t2.Add(t[i] + n); t2.Add(t[i + 2] + n); t2.Add(t[i + 1] + n); }
+            v2.AddRange(v); m.SetVertices(v2); m.SetTriangles(t2, 0); m.RecalculateNormals(); m.RecalculateBounds();
+            return m;
         }
 
         /// <summary>A block the kit didn't dress: tiled kingdom surface on a box-UV cube, white base tint (damage still darkens).</summary>
