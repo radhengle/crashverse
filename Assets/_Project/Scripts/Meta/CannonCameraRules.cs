@@ -34,14 +34,15 @@ namespace Crashverse.Meta
 
         public static readonly Settings Default = new Settings();
 
-        /// <summary>HUD band at the top of the screen (UI Developer: HUD bottom ≈ safe-area top inset + 104 dp; ~390 px on 1080x2340),
-        /// as a share of the screen height: max(0.06, (safeTopInsetPx + 104 dp · dpi/160) / screenHeightPx). dpi 0 → 160.</summary>
-        public const float HudBottomDp = 104f;
+        /// <summary>HUD band at the top of the screen (UI Developer: HUD bottom ≈ safe-area top inset + 104 dp; ~390 px on 1080x2340)
+        /// plus an 8 dp breathing buffer (PM 2026-10-30), as a share of the screen height:
+        /// max(0.06, (safeTopInsetPx + (104 + 8) dp · dpi/160) / screenHeightPx). dpi 0 → 160.</summary>
+        public const float HudBottomDp = 104f, HudBufferDp = 8f;
         public static float HudTopMargin(float screenHeightPx, float safeTopInsetPx, float dpi)
         {
             if (screenHeightPx <= 0f) return Default.topMargin;
             float d = dpi > 0f ? dpi : 160f;
-            return Mathf.Max(Default.topMargin, (Mathf.Max(0f, safeTopInsetPx) + HudBottomDp * d / 160f) / screenHeightPx);
+            return Mathf.Max(Default.topMargin, (Mathf.Max(0f, safeTopInsetPx) + (HudBottomDp + HudBufferDp) * d / 160f) / screenHeightPx);
         }
 
         /// <summary>Solve the locked pose. aspect = width / height (portrait phones ~0.42–0.56).</summary>

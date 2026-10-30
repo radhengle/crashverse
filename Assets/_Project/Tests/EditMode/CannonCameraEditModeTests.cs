@@ -20,7 +20,7 @@ namespace Crashverse.Backend.Tests
         // 1080x2340 (19.5:9, the CI emulator + Nothing Phone 3a), 20:9, 21:9, 16:9, 18:9 and a 4:3 tablet in portrait
         static readonly float[] Aspects = { 1080f / 2340f, 1080f / 2400f, 1080f / 2520f, 9f / 16f, 0.5f, 0.75f };
 
-        // device profiles (height px, safe-area top inset px, dpi): the HUD band = inset + 104 dp (UI Developer), ~0.14–0.18 of the height
+        // device profiles (height px, safe-area top inset px, dpi): the HUD band = inset + 104 dp (UI Developer) + 8 dp buffer, ~0.14–0.18 of the height
         static readonly (float w, float h, float inset, float dpi)[] Devices =
         {
             (1080f, 2340f, 63f, 420f), (1080f, 2340f, 120f, 420f), (1080f, 2400f, 80f, 400f), (1080f, 2520f, 90f, 440f),
@@ -70,8 +70,8 @@ namespace Crashverse.Backend.Tests
             }
             Assert.Greater(n, 10 * Devices.Length - 1);
             Assert.AreEqual(0.06f, CannonCameraRules.HudTopMargin(10000f, 0f, 160f), 1e-4f, "floor 0.06");
-            Assert.AreEqual((63f + 104f * 420f / 160f) / 2340f, CannonCameraRules.HudTopMargin(2340f, 63f, 420f), 1e-5f);
-            Assert.AreEqual((60f + 104f) / 1600f, CannonCameraRules.HudTopMargin(1600f, 60f, 0f), 1e-5f, "dpi 0 -> 160");
+            Assert.AreEqual((63f + 112f * 420f / 160f) / 2340f, CannonCameraRules.HudTopMargin(2340f, 63f, 420f), 1e-5f);
+            Assert.AreEqual((60f + 112f) / 1600f, CannonCameraRules.HudTopMargin(1600f, 60f, 0f), 1e-5f, "dpi 0 -> 160");
         }
 
         static Bounds LayoutBounds(LayoutData lay)
