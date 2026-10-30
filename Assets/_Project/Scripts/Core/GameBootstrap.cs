@@ -200,7 +200,7 @@ namespace Crashverse.Core
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
             // User 2026-10-30 / Target UI §5: locked camera behind the cannon, framing the cannon (bottom centre) + the whole building
-            RunCamera.FrameBehindCannon(wreckerGo.transform.position, StructureBounds(s, s.structureBase));
+            RunCamera.FrameBehindCannon(wreckerGo.transform.position, StructureBounds(s, s.structureBase), HintArcPoints(s));
             int fx = RenderMaterials.FixAll(_runRoot); if (fx > 0) Debug.LogWarning($"[BUG-23] run: {fx} renderers had no usable material");
             // #18/#20: PHYS_* ImpactEvents (Impact/Crack/Break/JointSnap/CollapseStart/End with pieceIds) on AnimEventBus.
             // Added after Begin so it binds to the SimRunner that Begin created. Presentation only; never read by the sim.
@@ -222,6 +222,24 @@ namespace Crashverse.Core
         }
 
         /// <summary>World bounds of the level's pieces as built (before any shot), or a 6 m box at the base if there are none.</summary>
+        /// <summary>Samples of the level's hint arc (ghost) from the muzzle to the structure, so the locked camera keeps it below the HUD
+        /// (L10's arc used to run under it). Same launch model as AimController (yaw +z = left, elevation about the barrel).</summary>
+        public static Vector3[] HintArcPoints(GameSession s)
+        {
+            var lvl = s?.Ctx?.level; if (lvl == null || !lvl.HasHint || s.aim == null) return null;
+            var start = s.aim.projectileSpawn != null ? s.aim.projectileSpawn.position : s.aim.transform.position + Vector3.up * 2f;
+            float yaw = lvl.hintYaw * Mathf.Deg2Rad, el = lvl.hintPitch * Mathf.Deg2Rad, v = s.aim.launchSpeed;
+            var vel = new Vector3(Mathf.Cos(el) * Mathf.Cos(yaw), Mathf.Sin(el), Mathf.Cos(el) * Mathf.Sin(yaw)) * v;
+            var g = Physics.gravity; float endX = s.structureBase.x + 2f;
+            var pts = new System.Collections.Generic.List<Vector3>();
+            for (int i = 1; i <= 60; i++)
+            {
+                float t = i * 0.05f; var p = start + vel * t + g * (0.5f * t * t);
+                pts.Add(p); if (p.x > endX || p.y < 0f) break;
+            }
+            return pts.ToArray();
+        }
+
         public static Bounds StructureBounds(GameSession s, Vector3 fallbackBase)
         {
             bool any = false; var b = new Bounds(fallbackBase + Vector3.up * 3f, new Vector3(6f, 6f, 6f));

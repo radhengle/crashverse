@@ -35,18 +35,24 @@ namespace Crashverse.Core
 
         /// <summary>Locks the camera behind the cannon, framing the cannon (bottom centre) and the whole structure. Re-solves when the
         /// screen aspect changes (rotation is locked to portrait, but split-screen / foldables can still resize).</summary>
-        public void FrameBehindCannon(Vector3 cannonRoot, Bounds structure)
+        public void FrameBehindCannon(Vector3 cannonRoot, Bounds structure, Vector3[] extraAbove = null)
         {
-            locked = true; _cannonRoot = cannonRoot; _structure = structure; _aspect = -1f; _cam = GetComponent<Camera>();
+            locked = true; _cannonRoot = cannonRoot; _structure = structure; _extra = extraAbove; _aspect = -1f; _cam = GetComponent<Camera>();
             lookAt = structure.center; Solve();
         }
+
+        Vector3[] _extra;
+        public float TopMargin { get; private set; }
 
         void Solve()
         {
             if (_cam == null) _cam = GetComponent<Camera>();
             float aspect = _cam != null ? _cam.aspect : (float)Screen.width / Mathf.Max(1, Screen.height);
             _aspect = aspect;
-            Pose = Crashverse.Meta.CannonCameraRules.Solve(_cannonRoot, _structure, aspect);
+            // HUD band per device: safe-area top inset + 104 dp (UI Developer), so building tops and the hint arc stay below the HUD
+            float safeTop = Screen.height - Screen.safeArea.yMax;
+            TopMargin = Crashverse.Meta.CannonCameraRules.HudTopMargin(Screen.height, safeTop, Screen.dpi);
+            Pose = Crashverse.Meta.CannonCameraRules.Solve(_cannonRoot, _structure, aspect, TopMargin, _extra);
             if (_cam != null) _cam.fieldOfView = Pose.fov;
             Apply();
         }

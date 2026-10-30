@@ -26,7 +26,7 @@ namespace Crashverse.Meta
             public float height = 4.0f;      // camera height above the cannon's ground
             public float cannonRear = 1.8f;  // the cannon envelope reaches this far behind its root (rear roller / carriage)
             public float cannonTop = 2.6f;   // barrel tip / booster top at rest elevation
-            public float topMargin = 0.06f;  // share of the screen height left above the structure's top
+            public float topMargin = 0.06f;  // minimum share of the screen height above the structure's top (the HUD band, see HudTopMargin)
             public float bottomMargin = 0.03f; // share left under the cannon's wheels
             public float sideFill = 0.92f;   // the structure's width may use up to this share of the screen width
             public float minFov = 24f, maxFov = 68f;
@@ -34,13 +34,33 @@ namespace Crashverse.Meta
 
         public static readonly Settings Default = new Settings();
 
+        /// <summary>HUD band at the top of the screen (UI Developer: HUD bottom ≈ safe-area top inset + 104 dp; ~390 px on 1080x2340),
+        /// as a share of the screen height: max(0.06, (safeTopInsetPx + 104 dp · dpi/160) / screenHeightPx). dpi 0 → 160.</summary>
+        public const float HudBottomDp = 104f;
+        public static float HudTopMargin(float screenHeightPx, float safeTopInsetPx, float dpi)
+        {
+            if (screenHeightPx <= 0f) return Default.topMargin;
+            float d = dpi > 0f ? dpi : 160f;
+            return Mathf.Max(Default.topMargin, (Mathf.Max(0f, safeTopInsetPx) + HudBottomDp * d / 160f) / screenHeightPx);
+        }
+
         /// <summary>Solve the locked pose. aspect = width / height (portrait phones ~0.42–0.56).</summary>
         public static CannonCameraPose Solve(Vector3 cannonRoot, Bounds structure, float aspect, Settings s = null) =>
             Solve(cannonRoot, Vector3.right, structure, aspect, s);
 
+        /// <summary>Per-device solve: topMargin = the HUD band (HudTopMargin); extraAbove = points that must also stay below the HUD
+        /// (the hint arc's apex and samples).</summary>
+        public static CannonCameraPose Solve(Vector3 cannonRoot, Bounds structure, float aspect, float topMargin, Vector3[] extraAbove = null)
+        {
+            var d = Default;
+            var s = new Settings { back = d.back, height = d.height, cannonRear = d.cannonRear, cannonTop = d.cannonTop, topMargin = Mathf.Clamp(topMargin, d.topMargin, 0.4f),
+                                   bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov };
+            return Solve(cannonRoot, Vector3.right, structure, aspect, s, extraAbove);
+        }
+
         /// <summary>firingDir = the cannon's yaw-0 direction (Wrecker: world +x). The camera stays on that line even when a layout is
         /// off-centre, so the cannon is always centred and the swipe→yaw mapping never changes between levels.</summary>
-        public static CannonCameraPose Solve(Vector3 cannonRoot, Vector3 firingDir, Bounds structure, float aspect, Settings s = null)
+        public static CannonCameraPose Solve(Vector3 cannonRoot, Vector3 firingDir, Bounds structure, float aspect, Settings s = null, Vector3[] extraAbove = null)
         {
             s ??= Default;
             aspect = Mathf.Clamp(aspect, 0.3f, 2.5f);
@@ -64,6 +84,12 @@ namespace Crashverse.Meta
             // angles above (+) / below (-) the horizon, worst case over the structure's depth
             float top = structure.max.y, bottom = structure.min.y;
             float aTop = Mathf.Atan2(top - cam.y, nearAlong) * Mathf.Rad2Deg;
+            if (extraAbove != null)
+                foreach (var p in extraAbove)
+                {
+                    float along = Vector3.Dot(p - cam, dir); if (along < 1f) continue;
+                    aTop = Mathf.Max(aTop, Mathf.Atan2(p.y - cam.y, along) * Mathf.Rad2Deg);
+                }
             float aStructBottom = Mathf.Atan2(bottom - cam.y, farAlong) * Mathf.Rad2Deg;
             float aCannonLow = Mathf.Atan2(ground - cam.y, Mathf.Max(0.5f, s.back - s.cannonRear)) * Mathf.Rad2Deg;
             float hi = Mathf.Max(aTop, aStructBottom), lo = Mathf.Min(aCannonLow, aStructBottom);
@@ -79,7 +105,7 @@ namespace Crashverse.Meta
             // pitch: put the cannon's lowest point bottomMargin above the bottom edge (bottom-anchored framing, like the mockup)
             float pitchDown = -(lo + fovV * (0.5f - s.bottomMargin)); // positive = looking down
             // never tilt so far up that the building's top leaves the frame
-            float topEdge = -pitchDown + fovV * (0.5f - s.topMargin * 0.5f);
+            float topEdge = -pitchDown + fovV * (0.5f - s.topMargin);   // the HUD band starts here
             if (topEdge < aTop) pitchDown -= aTop - topEdge;
             var rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(pitchDown, 0f, 0f);
             return new CannonCameraPose { position = cam, rotation = rot, fov = fovV };
