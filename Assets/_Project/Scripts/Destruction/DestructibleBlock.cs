@@ -123,9 +123,24 @@ namespace Crashverse.Destruction
             if (!withJoint) return;
             var j = gameObject.AddComponent<FixedJoint>();
             j.connectedBody = s.Body;
-            float f = material != null ? material.jointBreakForce : 800f;
-            j.breakForce = f; j.breakTorque = f;
+            // JointBreakPolicy: never breaks from force/torque (resting load, debris). Only the damage path removes it.
+            j.breakForce = Crashverse.Sim.JointBreakPolicy.BreakForce;
+            j.breakTorque = Crashverse.Sim.JointBreakPolicy.BreakTorque;
         }
+
+        /// <summary>
+        /// Drops this piece's joints to <paramref name="support"/> once it stops supporting (broken, collapsed, out of bounds).
+        /// With unbreakable joints this is what keeps SupportRule exact: a falling support must not drag a dependent that
+        /// still has other supports, and a dependent must not hold a falling support up. Immediate, so removal is tick-exact.
+        /// </summary>
+        void DetachJointsTo(DestructibleBlock support)
+        {
+            if (support == null) return;
+            var body = support.Body;
+            foreach (var j in GetComponents<Joint>()) if (j != null && j.connectedBody == body) DestroyJoint(j);
+        }
+
+        static void DestroyJoint(Joint j) => JointRemoval.Remove(j); // tick-exact, callback-safe
 
         /// <summary>Applies damage. Returns HP actually removed (for Titan damage scoring).</summary>
         public float ApplyDamage(float amount, bool directHit, bool splash = false)
@@ -214,12 +229,13 @@ namespace Crashverse.Destruction
 
         void DestroyOwnJoints()
         {
-            foreach (var j in GetComponents<Joint>()) if (j != null) Destroy(j);
+            foreach (var j in GetComponents<Joint>()) if (j != null) DestroyJoint(j);
         }
 
         void NotifyDependents()
         {
             var deps = _dependents.ToArray();
+            foreach (var d in deps) if (d != null) d.DetachJointsTo(this);
             foreach (var d in deps) if (d != null) d.EvaluateSupport();
         }
 
@@ -272,6 +288,7 @@ namespace Crashverse.Destruction
             DebrisDamageQueue.Enqueue(this, other != null ? other.blockId : "~" + c.gameObject.name, milli);
         }
 
+        /// <summary>Unreachable under JointBreakPolicy (thresholds are infinite); kept so a non-policy joint still reports.</summary>
         void OnJointBreak(float breakForce)
         {
             if (_broken) return;

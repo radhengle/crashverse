@@ -45,6 +45,7 @@ jobs:
         run: |
           python3 Tools/ci/check_release_guards.py
           python3 Tools/ci/test_check_release_guards.py
+          python3 Tools/ci/check_joint_break_policy.py
           dotnet build Tools/CompileCheck
           dotnet build Tools/CompileCheck -p:CrashverseDev=true
           dotnet run --project Tools/Tests
