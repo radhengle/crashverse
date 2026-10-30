@@ -134,4 +134,5 @@ def run(asset):
     S["materials"]=[f"M_Real{kit}",f"M_Real{kit}_Inner"]; S["textures"]=[os.path.relpath(P,ROOT)+"_A/_N/_ORM",os.path.relpath(PI,ROOT)+"_A/_N/_ORM"]
     S["modules"][mod]={**st,"frac":frac,"source":os.path.relpath(f"{src_dir}/Kit_{skit}_{mod}.fbx",ROOT) if mod!="Block" else "Tools/Blender/build_kit2.py Block (kit v3.1 recipe)"}
     json.dump(S,open(sp,"w"),indent=1); print("DONE",asset,json.dumps(st))
-for a in sys.argv[sys.argv.index("--")+1:]: run(a)
+if __name__=="__main__":
+    for a in sys.argv[sys.argv.index("--")+1:]: run(a)

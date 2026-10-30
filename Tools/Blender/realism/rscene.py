@@ -10,7 +10,7 @@ def cap_textures(cap=1024):
     base=cap
     for im in bpy.data.images:
         p=bpy.path.abspath(im.filepath); cap=512 if "/Props/Props_Village/" in p else base   # Android: props 512, tiling 1024
-        if not p or not os.path.exists(p) or im.size[0]<=cap: continue
+        if not p or not os.path.exists(p) or im.size[0]<=cap or not p.lower().endswith((".png",".jpg")): continue
         q=f"{CAP}/{cap}_{abs(hash(p))%10**8}_{os.path.basename(p)}"
         if not os.path.exists(q) or os.path.getmtime(q)<os.path.getmtime(p):
             subprocess.check_call(["/usr/bin/python3","-c",f"from PIL import Image;I=Image.open({p!r});w,h=I.size;I.resize(({cap},max(1,h*{cap}//w)),Image.LANCZOS).save({q!r})"])
