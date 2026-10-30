@@ -37,6 +37,42 @@
    "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
    "frac": "Wood",
    "source": "Tools/Blender/build_kit2.py Block (kit v3.1 recipe)"
+  },
+  "Joint": {
+   "LOD0": 892,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    0.32,
+    3.0,
+    0.3
+   ],
+   "aabb": [
+    [
+     -0.16,
+     -0.15,
+     -0.0
+    ],
+    [
+     0.16,
+     0.15,
+     3.0
+    ]
+   ],
+   "frags": 12,
+   "frag_max": 44,
+   "Fractured": 528,
+   "mass": "9.8-15.9",
+   "min_axis_m": 0.293,
+   "joints": 11,
+   "anchors": 1,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Wood",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx"
   }
  },
  "tile_m": 1.4,
