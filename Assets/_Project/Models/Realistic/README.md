@@ -102,18 +102,19 @@ Folder: `Buildings/Bld_Bakery/`. Built by `Tools/Blender/realistic/bakery.py`, w
 | Chimney | Chim (oven flue at the back) | 1.24 × 0.94 | 6.87 | 10.17 | 288 | Floor, Roof_Left, UpperStorey |
 | Base | Base (granite plinth, indestructible) | 8.64 × 6.84 | 0.35 | 0.35 | 408 | Ground |
 
-- **Props:** the layout's `props[]` lists 3 × `Props/Props_Village/Prop_BreadCrate.fbx` (one stacked) and 1 × `Prop_Bench.fbx` in front of the window. They are new indestructible props on the existing Props_Village atlas.
+- **Props:** the layout's `props[]` lists 3 bread crates (BreadCrate1-3, one stacked on 1+2) and 1 × `Prop_Bench.fbx` (indestructible) in front of the window. The crates are the L3 destructible decoys: `Props/Props_Village/Kit_RealBread_Crate.fbx` (LOD0-2, 356 tris) + `Kit_RealBread_Crate_Fractured.fbx` (wood, 8 fragments, 740 tris, 0.9-2.5 kg, JNT break forces blank, ANCHOR Ground; fracture_class Wood). Same mesh and Props_Village UVs as the indestructible `Prop_BreadCrate.fbx`; material M_RealBread / M_RealBread_Inner on T_Props_Village (`texture_set` in `models/HeroBuildings/Kit_RealBread_stats.json`). The kit crate clustering cannot reach 8 pieces on a 0.62 × 0.42 × 0.30 m crate with the 0.15 m min axis, so it is cut on a 4 × 2 grid (one fragment per cell; `Tools/Blender/realistic/bread_crate.py`).
+- **Dimensions** (`dimensions_m` in the layout and in `Kit_RealBakery_stats.json`, measured from the exported module tops): eaves 6.30 m, ridge 8.66 m, chimney top 10.17 m.
 - **Layout:** `Bld_Bakery.layout.json`. Stats: `models/HeroBuildings/Kit_RealBakery_stats.json`.
 
 ## Kit_RealStall + Bld_MarketArch (L8, realistic v1, 2026-10-30)
 Built by `Tools/Blender/realistic/market.py`. One material `M_RealStall` (`Kit_RealStall/Textures/T_RealStall_*`, 512, two stripe cells), and the arch uses it too.
 - **Kit_RealStall** (`Buildings/Kit_RealStall/`, `Kit_RealStall.layout.json`):
-  - Keystn: wooden keystone skid, 1.6 × 1.8 × 0.22 m, Ground, 740 LOD0 tris. It is a separate prop piece; when it goes, the stall falls.
-  - StallA / StallB: 1.7 × 2.17 m including the awning overhang (body 1.6 × 1.8), top 2.40 m, 1,124 LOD0 tris each, resting on Keystn. They have identical meshes and the same material; only the awning UVs differ (red Stripe cell vs blue StripeB cell). Place one of them.
+  - Keystn: wooden keystone skid, 1.5 × 1.8 × 0.22 m, Ground, 720 LOD0 tris, pivot exactly on its bottom face (y = 0), deck top at y = 0.22 = the stall pivot. It is a separate prop piece; when it goes, the stall falls.
+  - StallA / StallB: 1.6 × 2.17 m overall INCLUDING the awning (frame 1.5 × 1.8), top 2.40 m, 1,124 LOD0 tris each, resting on Keystn. They have identical meshes and the same material; only the awning UVs differ (red Stripe cell vs blue StripeB cell). Place one of them.
 - **Bld_MarketArch** (`Buildings/Bld_MarketArch/`, `Bld_MarketArch.layout.json`):
-  - Pieces: Pads (granite, indestructible), PostL, PostR (timber + knee brace + steel shoe), Beam (beam + cap board + 4 lantern hooks) and Sign (steel sign box, no text, gold border).
+  - Pieces: Pads (granite, indestructible), PostL, PostR (timber + knee brace + steel shoe), Beam (beam + cap board + 4 lantern hooks) and Sign (steel sign box, no text, gold border, bolted to the beam cap on two steel bracket frames: base plates, uprights into the box, strap plates, diagonal stays).
   - Size: the posts' outer faces are 10.4 m apart, with a 9.6 m clear span and 3.5 m clear height. The beam overhangs to 11.1 m and the sign top is at 4.93 m.
-  - `stall_slots[]` gives 4 stall positions on a 2.2 m pitch (x = ±1.1, ±3.3).
+  - `stall_slots[]` gives 4 stall positions on a 1.6 m pitch (x = ±0.8, ±2.4); lantern hooks on the beam sit over the slots. Arch span unchanged (10.4 m overall, 9.6 m clear).
   - LOD0 1,324 tris.
 - **Stats:** `models/HeroBuildings/Kit_RealStall_stats.json`, shared by both.
 - **Pending:** the vertex colour (Col) tint vs damage-mask question is unchanged (Graphics), and KitPathOk is with Developer.

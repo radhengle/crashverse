@@ -1,5 +1,5 @@
 """Bld_Bakery (L3), realistic v1: modular + destructible, same pipeline as Bld_Townhouse (house_modular + modkit) in a bakery colourway
-(T_RealBakery: darker timber, cream plaster, red/cream striped awning cell). 8 m (X) x 6 m (Z), 2 storeys, eaves 6.3 m, ridge ~8.5 m, chimney ~10 m.
+(T_RealBakery: darker timber, cream plaster, red/cream striped awning cell). 8 m (X) x 6 m (Z), 2 storeys, eaves 6.3 m, ridge 8.66 m (measured: top of the Roof modules), chimney 10.17 m.
 usage: blender -b -P bakery.py"""
 import bpy,bmesh,math,os,sys,json
 from mathutils import Vector,Matrix
@@ -119,10 +119,15 @@ ATTACH={"Base":"Ground",**{m:["Base"] for m in G6},"Floor":G6,**{m:["Floor"] for
 PROPS_DIR="Assets/_Project/Models/Realistic/Props/Props_Village"
 def props_layout():
     U=MK.U; out=[]
-    for asset,(x,y,rz) in (("Prop_BreadCrate",(-2.9,-4.35,.08)),("Prop_BreadCrate",(-2.05,-4.4,-.12)),("Prop_BreadCrate",(-2.5,-4.38,.3)),("Prop_Bench",(-.75,-4.15,0.0))):
-        z=.0 if asset!="Prop_BreadCrate" or len([o for o in out if o["asset"].endswith("BreadCrate.fbx")])<2 else .42
-        q=Matrix.Rotation(rz,3,'Z').to_quaternion()
-        out.append({"asset":f"{PROPS_DIR}/{asset}.fbx","position":U(Vector((x,y,z))),"rotation":{"x":0.0,"y":round(-q.z,4),"z":0.0,"w":round(q.w,4)},"note":"street side, indestructible prop (shared Props_Village atlas)"})
+    nb=0
+    for asset,(x,y,rz) in (("Kit_RealBread_Crate",(-2.9,-4.35,.08)),("Kit_RealBread_Crate",(-2.05,-4.4,-.12)),("Kit_RealBread_Crate",(-2.5,-4.38,.3)),("Prop_Bench",(-.75,-4.15,0.0))):
+        z=.42 if asset=="Kit_RealBread_Crate" and nb==2 else 0.0
+        q=Matrix.Rotation(rz,3,'Z').to_quaternion(); e={"asset":f"{PROPS_DIR}/{asset}.fbx","position":U(Vector((x,y,z))),"rotation":{"x":0.0,"y":round(-q.z,4),"z":0.0,"w":round(q.w,4)}}
+        if asset=="Kit_RealBread_Crate":
+            nb+=1; e.update({"id":f"BreadCrate{nb}","destructible":True,"fractured":f"{PROPS_DIR}/Kit_RealBread_Crate_Fractured.fbx","fracture_class":"Wood",
+                "anchor_to":"Ground" if nb<3 else ["BreadCrate1","BreadCrate2"],"note":"L3 destructible decoy (8 wood fragments); stacked crate rests on crates 1+2"})
+        else: e.update({"id":"Bench","destructible":False,"note":"street side, indestructible prop (shared Props_Village atlas)"})
+        out.append(e)
     return out
 if __name__=="__main__":
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -132,4 +137,9 @@ if __name__=="__main__":
     MK.export_set(dict(kit="Kit_RealBakery",out=OUT,rel=REL,building="Bld_Bakery",mat="M_RealBakery",tex=OUT+"/Textures/T_RealBakery",
         inner_tex=R.REAL+"/Buildings/Bld_Townhouse/Textures/T_RealHouse_Inner",stats=HM.ROOT+"/models/HeroBuildings/Kit_RealBakery_stats.json",
         parts=P,MODS=MODS,ASM=ASM,ATTACH=ATTACH,cls_of=HM.cls_of,ground=G6,perim=("Floor",),front="shop front faces +Z (Level Designer rotates the root to face -X)",
-        extra={"props":props_layout(),"dimensions_m":{"walls_x":8.0,"walls_z":6.0,"eaves":Z2,"ridge":round(Z2+(YB-YF+JET)/2*math.tan(G['PITCH'])+.1,2)}}))
+        extra={"props":props_layout()}))
+    # dimensions from the exported modules (ridge = top of the Roof modules, chimney = top of the Chimney module) -> layout + stats agree
+    import json; LP=OUT+"/Bld_Bakery.layout.json"; lay=json.load(open(LP)); top={m["id"]:m["top_y_m"] for m in lay["modules"]}
+    dim={"walls_x":8.0,"walls_z":6.0,"eaves":round(Z2,2),"ridge":round(max(top["Roof_Left"],top["Roof_Right"])+1e-6,2),"chimney_top":round(top["Chimney"]+1e-6,2)}
+    lay["dimensions_m"]=dim; json.dump(lay,open(LP,"w"),indent=1)
+    SP=HM.ROOT+"/models/HeroBuildings/Kit_RealBakery_stats.json"; st=json.load(open(SP)); st["dimensions_m"]=dim; json.dump(st,open(SP,"w"),indent=1); print("DIM",dim)

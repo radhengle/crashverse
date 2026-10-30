@@ -1,7 +1,7 @@
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx [Kit] LOD0 tris=740 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx [KitFractured] LOD0 tris=596 LODs=[0] hulls=9 frags=9 -> PASS
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx [Kit] LOD0 tris=1124 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA_Fractured.fbx [KitFractured] LOD0 tris=784 LODs=[0] hulls=10 frags=10 -> PASS
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx [Kit] LOD0 tris=1124 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
-wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB_Fractured.fbx [KitFractured] LOD0 tris=784 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx [Kit] LOD0 tris=720 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx [KitFractured] LOD0 tris=584 LODs=[0] hulls=9 frags=9 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx [Kit] LOD0 tris=1124 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA_Fractured.fbx [KitFractured] LOD0 tris=748 LODs=[0] hulls=9 frags=9 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx [Kit] LOD0 tris=1124 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB_Fractured.fbx [KitFractured] LOD0 tris=748 LODs=[0] hulls=9 frags=9 -> PASS
 RESULT: ALL PASS (6 groups, 6 files)
