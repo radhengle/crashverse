@@ -28,6 +28,8 @@ namespace Crashverse.Destruction
         readonly List<DestructibleBlock> _dependents = new List<DestructibleBlock>();
         Rigidbody _rb;
         Renderer _renderer;
+        /// <summary>Realistic v1 visual child (RealKit), hidden with the block when it breaks or falls out.</summary>
+        public GameObject visual;
         Color _baseColor;
         bool _broken, _collapsed, _outOfBounds;
         int _damageStep;
@@ -173,6 +175,7 @@ namespace Crashverse.Destruction
                 if (chunks > 0) DebrisPool.Instance.SpawnBurst(transform.position, transform.localScale, material, Mathf.Min(chunks, material.maxDebrisChunks), Crashverse.Gameplay.PieceIds.Of(blockId)); // legacy: no layout
             }
             if (_renderer != null) _renderer.enabled = false;
+            if (visual != null) visual.SetActive(false);
             var col = GetComponent<Collider>();
             if (col != null) col.enabled = false;
             Body.isKinematic = true;
@@ -204,6 +207,7 @@ namespace Crashverse.Destruction
             Body.isKinematic = true;
             Body.detectCollisions = false;
             if (_renderer != null) _renderer.enabled = false;
+            if (visual != null) visual.SetActive(false);
             WentOutOfBounds?.Invoke(this);
             NotifyDependents();
         }

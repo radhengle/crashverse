@@ -201,8 +201,10 @@ namespace Crashverse.Core
                 foreach (var blk in s.builder.Blocks)
                 {
                     if (blk == null) continue;
-                    var r = blk.GetComponent<Renderer>(); if (r == null) continue;
-                    if (!any) { b = r.bounds; any = true; } else b.Encapsulate(r.bounds);
+                    // collider bounds: the box is the block (its cube renderer is disabled when RealKit dresses it)
+                    var c = blk.GetComponent<Collider>(); var r = blk.GetComponent<Renderer>();
+                    Bounds bb; if (c != null && c.enabled) bb = c.bounds; else if (r != null) bb = r.bounds; else continue;
+                    if (!any) { b = bb; any = true; } else b.Encapsulate(bb);
                 }
             return b;
         }

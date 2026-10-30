@@ -21,7 +21,7 @@ namespace Crashverse.EditorTools.Import
     {
         // Run after any generic project postprocessors so these settings win.
         public override int GetPostprocessOrder() => 100;
-        public override uint GetVersion() => 4;   // 3: hero building fractureClass + T_Bld/hero kit 1024 Android cap; 4: Models/Realistic/** texture branch (RenderTiers)
+        public override uint GetVersion() => 5;   // 3: hero building fractureClass + T_Bld/hero kit 1024 Android cap; 4: Models/Realistic/** texture branch (RenderTiers); 5: Kit_Real* readable meshes
 
         // ---------------- FBX ----------------
         void OnPreprocessModel()
@@ -40,6 +40,8 @@ namespace Crashverse.EditorTools.Import
             // Mesh
             mi.meshCompression = cls == C.AssetClass.Hero || cls == C.AssetClass.KitFractured ? ModelImporterMeshCompression.Low : ModelImporterMeshCompression.Medium;
             mi.isReadable = false;                       // colliders are cooked in-editor on the prefab; runtime never reads vertices
+            // Realistic v1 pieces: RealKit fits each piece to its block and rebuilds UV0 from the scaled positions at load (small meshes)
+            if (C.KitPathOk(assetPath) && assetPath.Replace('\\', '/').StartsWith(C.RealisticRoot, System.StringComparison.Ordinal)) mi.isReadable = true;
             mi.optimizeMeshPolygons = true;
             mi.optimizeMeshVertices = true;
             mi.weldVertices = true;

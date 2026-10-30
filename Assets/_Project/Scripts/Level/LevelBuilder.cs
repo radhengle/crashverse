@@ -44,6 +44,7 @@ namespace Crashverse.Level
                 block.Configure(bd, mat);
                 var hints = go.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
                 block.PrepareChunks(DebrisPool.ChunkTierIndex, hints != null ? hints.fractureClass : null); // deterministic chunk layout, built once per level load
+                block.visual = RealKit.Dress(go, bd); // realistic v1 piece, visual only (collider/mass/joints/chunks unchanged)
                 Crashverse.Gameplay.PieceFeedbackWiring.Attach(block); // VFX #31 DamageFeedback, pieceId = StableId.Of(blockId)
                 if (bd.spinDps > 0f && bd.spinAxis != null && bd.spinAxis.Length == 3)
                 {
