@@ -201,43 +201,43 @@
      "powerup": null,
      "split_targets": null,
      "world": [
-      8.2,
-      1.05,
-      1.6
+      7.4,
+      1.045,
+      2.0
      ],
      "aim": {
       "1.0": {
-       "yaw": 3.25,
-       "elevation": 8.0,
-       "hintYaw": 3.0,
-       "hintPitch": 8.0,
+       "yaw": 4.17,
+       "elevation": 7.67,
+       "hintYaw": 4.0,
+       "hintPitch": 7.5,
        "drag_dp": [
-        13.0,
-        -113.4
+        16.7,
+        -115.5
        ],
        "swipe": [
         540,
         1300,
-        574,
-        1598
+        584,
+        1603
        ],
        "first_hit": "propL",
        "clear": true
       },
       "1.2": {
-       "yaw": 3.25,
-       "elevation": 9.86,
-       "hintYaw": 3.0,
-       "hintPitch": 10.0,
+       "yaw": 4.17,
+       "elevation": 9.47,
+       "hintYaw": 4.0,
+       "hintPitch": 9.5,
        "drag_dp": [
-        13.0,
-        -100.9
+        16.7,
+        -103.5
        ],
        "swipe": [
         540,
         1300,
-        574,
-        1565
+        584,
+        1572
        ],
        "first_hit": "propL",
        "clear": true
@@ -251,43 +251,43 @@
      "powerup": null,
      "split_targets": null,
      "world": [
-      8.2,
-      1.05,
-      -1.6
+      7.4,
+      1.045,
+      -2.0
      ],
      "aim": {
       "1.0": {
-       "yaw": -3.25,
-       "elevation": 8.0,
-       "hintYaw": -3.0,
-       "hintPitch": 8.0,
+       "yaw": -4.17,
+       "elevation": 7.67,
+       "hintYaw": -4.0,
+       "hintPitch": 7.5,
        "drag_dp": [
-        -13.0,
-        -113.4
+        -16.7,
+        -115.5
        ],
        "swipe": [
         540,
         1300,
-        506,
-        1598
+        496,
+        1603
        ],
        "first_hit": "propR",
        "clear": true
       },
       "1.2": {
-       "yaw": -3.25,
-       "elevation": 9.86,
-       "hintYaw": -3.0,
-       "hintPitch": 10.0,
+       "yaw": -4.17,
+       "elevation": 9.47,
+       "hintYaw": -4.0,
+       "hintPitch": 9.5,
        "drag_dp": [
-        -13.0,
-        -100.9
+        -16.7,
+        -103.5
        ],
        "swipe": [
         540,
         1300,
-        506,
-        1565
+        496,
+        1572
        ],
        "first_hit": "propR",
        "clear": true
@@ -700,25 +700,25 @@
       "key2"
      ],
      "world": [
-      8.9,
-      4.25,
+      10.0,
+      2.35,
       -0.8
      ],
      "aim": {
       "1.0": {
-       "yaw": -1.59,
-       "elevation": 14.8,
+       "yaw": -1.53,
+       "elevation": 11.28,
        "hintYaw": -1.5,
-       "hintPitch": 15.0,
+       "hintPitch": 11.5,
        "drag_dp": [
-        -6.3,
-        -68.0
+        -6.1,
+        -91.5
        ],
        "swipe": [
         540,
         1300,
-        523,
-        1479
+        524,
+        1540
        ],
        "first_hit": [
         "key0",
@@ -728,19 +728,19 @@
        "clear": true
       },
       "1.2": {
-       "yaw": -1.59,
-       "elevation": 16.83,
+       "yaw": -1.53,
+       "elevation": 13.34,
        "hintYaw": -1.5,
-       "hintPitch": 17.0,
+       "hintPitch": 13.5,
        "drag_dp": [
-        -6.3,
-        -54.5
+        -6.1,
+        -77.7
        ],
        "swipe": [
         540,
         1300,
-        523,
-        1443
+        524,
+        1504
        ],
        "first_hit": [
         "key0",
@@ -758,43 +758,43 @@
      "powerup": null,
      "split_targets": null,
      "world": [
-      8.9,
-      4.25,
+      10.0,
+      2.35,
       2.4
      ],
      "aim": {
       "1.0": {
-       "yaw": 4.75,
-       "elevation": 14.82,
+       "yaw": 4.57,
+       "elevation": 11.31,
        "hintYaw": 4.5,
-       "hintPitch": 15.0,
+       "hintPitch": 11.5,
        "drag_dp": [
-        19.0,
-        -67.9
+        18.3,
+        -91.3
        ],
        "swipe": [
         540,
         1300,
-        590,
-        1478
+        588,
+        1540
        ],
        "first_hit": "key3",
        "clear": true
       },
       "1.2": {
-       "yaw": 4.75,
-       "elevation": 16.85,
+       "yaw": 4.57,
+       "elevation": 13.38,
        "hintYaw": 4.5,
-       "hintPitch": 17.0,
+       "hintPitch": 13.5,
        "drag_dp": [
-        19.0,
-        -54.3
+        18.3,
+        -77.5
        ],
        "swipe": [
         540,
         1300,
-        590,
-        1443
+        588,
+        1503
        ],
        "first_hit": "key3",
        "clear": true

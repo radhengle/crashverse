@@ -6,6 +6,7 @@ Reads origin/3d-modeler/realistic-v1 with `git show` (never checks it out) and w
   modules:   models/HeroBuildings/Kit_*_stats.json: size, pivot, fragments, joints, anchors, mass range, fracture class
 Stats AABBs are Blender space (Z up, Y = depth); Unity size = (x, z, y). Module pivot: anchor 'bottom' / aabb z-min 0 =
 bottom-centre; Kit_Real* fragments pivot at their centre of mass (pivot_com).
+rev 9: realistic layouts also list props[] (Bld_Bakery) and stall_slots (Bld_MarketArch).
 Usage: inventory.py [ref]   (default origin/3d-modeler/realistic-v1)"""
 import json, math, os, subprocess, sys
 HERE=os.path.dirname(os.path.abspath(__file__)); REF=sys.argv[1] if len(sys.argv)>1 else 'origin/3d-modeler/realistic-v1'
@@ -63,7 +64,10 @@ for f in sorted(x for x in files if x.startswith('Assets/_Project/Models/Realist
         pieces=[dict(id=p['id'],module=p['module'],kit=p['kit'],pos=[p['position'][k] for k in 'xyz'],anchor_to=p['anchor_to'],
                      fracture_class=p['fracture_class'],intact=p.get('intact'),fractured=p.get('fractured')) for p in d['pieces']],
         piece_count=d['piece_count'],module_count=d['module_count'],connections=len(d['connections']),
-        joint_break_values_set=any(c.get('break_force_N') not in ('',None) for c in d['connections']),anchor_note=d.get('anchor_note'))
+        joint_break_values_set=any(c.get('break_force_N') not in ('',None) for c in d['connections']),anchor_note=d.get('anchor_note'),
+        props=[dict(asset=p['asset'],pos=[p['position'][k] for k in 'xyz'],yaw_deg=round(math.degrees(2*math.atan2(p['rotation']['y'],p['rotation']['w'])),1),
+                    note=p.get('note','')) for p in d.get('props',[])],   # rev 9: Bld_Bakery street props
+        stall_slots=d.get('stall_slots'))                                   # rev 9: Bld_MarketArch stall positions
 out=dict(ref=REF,commit=git('rev-parse','--short',REF).strip(),unity_prefabs=prefabs,buildings=buildings,modules=modules)
 json.dump(out,open(os.path.join(HERE,'prefab_inventory.json'),'w'),indent=1)
 print('ref',out['commit'],'unity .prefab files:',len(prefabs))

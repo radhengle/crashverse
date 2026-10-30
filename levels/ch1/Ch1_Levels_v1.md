@@ -1,4 +1,4 @@
-# CRASHVERSE — Chapter 1 Sunnyville Isles, Levels v1 (rev 8: realistic townhouse on L3 (interim), building prefabs, L7 spike fix)
+# CRASHVERSE — Chapter 1 Sunnyville Isles, Levels v1 (rev 9: realistic Bld_Bakery on L3, Kit_RealStall market on L8, integration/v2 merged)
 Owner: Level Designer · Branch `level-designer/ch1-tuning` (draft PR into `integration/v2`; supersedes #13, already merged to main) · Rules: Level_Rulings_v1 (#1–10, 7a), gravity ×1.2 (PR #15), powerups v2 ids (earthquake = SHOCKWAVE, multi_shot = SPLIT).
 
 **Pipeline:** `python3 sync_to_assets.py` (gen_levels → Resources layouts + chapter1.json → derive_hints at g×1.0) → `SIM_GSCALE=1.2 python3 sim.py` → `python3 ../daily_boss/daily_boss_sim.py` → `python3 ci_win_shots.py` → `python3 frame_check.py --json > frame_check.json` → `python3 mkdoc.py`.
@@ -9,12 +9,12 @@ Owner: Level Designer · Branch `level-designer/ch1-tuning` (draft PR into `inte
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | 1 | Easy | 4 | 0.6/0.3 | 1 | 1 | 3 | post | 100.0 | 22.2% | 84.7% | 0/19750 | ✅ | ✅ |
 | 2 | Easy | 5 | 0.4/0.2 | 2 | 3 | 3 | sillL, sillR | 100.0 | 14.0% | 53.9% | 0/22912 | ✅ | ✅ |
-| 3 | Medium | 5 | 0.6/0.3 | 2 | 2 | 3 | propL, propR | 93.0 | 6.5% | 55.3% | 0/24649 | ✅ | ✅ |
+| 3 | Medium | 5 | 0.6/0.3 | 2 | 2 | 3 | propL, propR | 93.0 | 6.5% | 51.4% | 0/22049 | ✅ | ✅ |
 | 4 | Hard | 5 | 0.6/0.3 | 2 | 2 | 3 | beamL, beamR | 100.0 | 1.7% | 36.6% | 0/26512 | ✅ | ✅ |
 | 5 | Breather | 5 | 0.6/0.3 | 1 | 2 | 4 | bridge | 94.4 | 20.3% | 72.4% | 0/11571 | ✅ | ✅ |
 | 6 | Medium | 5 | 0.6/0.3 | 2 | 2 | 3 | braceL, braceR | 100.0 | 15.3% | 76.7% | 0/19123 | ✅ | ✅ |
 | 7 | Hard | 5 | 0.6/0.3 | 2 | 2 | 3 | ring0, annex | 87.8 | 2.7% | 30.2% | 0/28770 | ✅ | ✅ |
-| 8 | Breather | 6 | 0.6/0.3 | 4 (2) | 2 | 4 | multi_shot:key0+key1+key2, key3 | 100.0 | 0.8% | 43.5% | 0/37534 | ✅ | ✅ |
+| 8 | Breather | 6 | 0.6/0.3 | 4 (2) | 2 | 4 | multi_shot:key0+key1+key2, key3 | 100.0 | 2.2% | 67.6% | 0/4786 | ✅ | ✅ |
 | 9 | Hard | 5 | 0.6/0.3 | 2 | 2 | 3 | lhRing, seaDeck | 93.3 | 2.3% | 42.2% | 0/21800 | ✅ | ✅ |
 | 10 | Boss | 8 | 0.375/0.25 | 5 | 5 | 3 | shoulderL, shoulderR, core(open), any(closed), core(open) | defeat | n/a | n/a | n/a | ✅ | ✅ |
 
@@ -40,15 +40,15 @@ Debris: no collision reaches the 60 cap in any level (ruling 10 check holds).
 - Why it's fun: L1 taught "hit the support"; L2 teaches "find every support". 3★ allows one miss.
 - Proof: min 2 via sillL, sillR; 3★ needs ≤3; margin 3.
 - Frame (assumed fixed camera): x [197, 852] px, y [634, 1166] px; slack 132 px (tight cam 114 px).
-### L3. Brick Bakery — Two-storey bakery, INTERIM skin: realistic modular Bld_Townhouse (1:1) on a timber cellar with two wood props [Medium]
-- **Changed (rev 8):** interim re-layout from the realistic modular Bld_Townhouse (realistic-v1 @ e725121) at 1:1: one block per LD module (ShopFront, Wall_Left/Right/Back, Floor, UpperStorey, Roof_Left/Right, Chimney; Base = held, non-objective plinth), supports from the module anchors, street facing the cannon. A 1.8 m timber cellar (two props, two slabs) between Base and the ground walls keeps the beat. 5 shots, default bands, 2-shot line (propL, propR), ≥95% mastery (props + awning post) kept. Random win 55.3%, random 3★ 6.5%.
+### L3. Brick Bakery — Two-storey bakery: 3D Modeler's realistic modular Bld_Bakery (1:1) on a timber cellar with two wood props [Medium]
+- **Changed (rev 9):** the interim townhouse is replaced by 3D Modeler's realistic modular Bld_Bakery (realistic-v1 @ a24f5ec) at 1:1: one block per LD module (ShopFront, Wall_Left/Right/Back, Floor, UpperStorey, Roof_Left/Right, Chimney stub; Base = held, non-objective), supports from the module anchors, shop front facing the cannon (parts + rotY −90). The 1.8 m timber cellar (two props, two slabs) stays: the 2-shot line is still propL, propR (93%). The street bread crates replace the awning decoy: crateL + stacked crateTop are objective decoys (≥95% mastery = props + one crate, 3 shots); crateR and the bench are indestructible dressing. 5 shots and default bands kept. Random win 51.4%, random 3★ 6.5% (rev 8: 55.3% / 6.5%).
 - Materials: wood + brick · Shots 5 · Bands 0.6/0.3 · Teaches: Brick needs support loss
-- Goal: destroy 85% · Mastery: **Destroy at least 95% of the bakery** · Hint: `propL` (yaw 3.0, pitch 8.0 at g×1.0)
+- Goal: destroy 85% · Mastery: **Destroy at least 95% of the bakery** · Hint: `propL` (yaw 4.0, pitch 7.5 at g×1.0)
 - Chain collapse: Two props → cellar slabs → ShopFront, side and back walls → Floor → UpperStorey → both roof halves and the chimney
-- Risk/reward: The shop-awning post holds only the awning
-- Why it's fun: Stone walls feel useless until the props go and the whole townhouse slumps. Moves to the 8×6 m bakery when it lands (Oct 31).
+- Risk/reward: The bread crates on the street never fall with the bakery
+- Why it's fun: Stone walls feel useless until the props go and the whole bakery slumps; the crates are the 95% mastery chaser.
 - Proof: min 2 via propL, propR; 3★ needs ≤2; margin 3.
-- Frame (assumed fixed camera): x [279, 791] px, y [382, 1177] px; slack 148 px (tight cam 194 px).
+- Frame (assumed fixed camera): x [206, 879] px, y [351, 1193] px; slack 117 px (tight cam 119 px).
 ### L4. Windmill — Windmill with a brick annex [Hard]
 - Layout unchanged; mastery text reworded.
 - Materials: wood + brick · Shots 5 · Bands 0.6/0.3 · Teaches: Collapse chains between pieces
@@ -85,15 +85,15 @@ Debris: no collision reaches the 60 cap in any level (ruling 10 check holds).
 - Why it's fun: Read the gold ring, then pick the heavy ground piece: the crown lands intact.
 - Proof: min 2 via ring0, annex; 3★ needs ≤2; margin 3.
 - Frame (assumed fixed camera): x [231, 777] px, y [360, 1170] px; slack 126 px (tight cam 148 px).
-### L8. Market Arcade — Market arcade with a clock arch (Multi Shot forced) [Breather]
-- **Changed:** 5 → 6 shots (breather after L7; 3★ still needs Multi Shot); recomposed 14 → 10.4 m wide; keystones 1.6 m apart under their own bays (Multi Shot geometry verified: the split at key1 hits key0+key1+key2 at g×1.0 and ×1.2); hint key1 = the Multi Shot aim.
-- Materials: all 3 · Shots 6 · Bands 0.6/0.3 · Teaches: Choose loadout deliberately (Multi Shot)
-- Goal: destroy 85% · Mastery: **Earn 3 stars** · Hint: `key1` (yaw -1.5, pitch 15.0 at g×1.0)
-- Chain collapse: One Multi Shot breaks 3 keystones → 3 bays, arch, steel sign and clock ripple down; one more shot for bay 4
-- Risk/reward: The steel sign looks like the target
+### L8. Market Arcade — Market row: 4 timber stalls on keystones under a market arch with a steel sign (Multi Shot forced) [Breather]
+- **Changed (rev 9):** re-laid out from 3D Modeler's Kit_RealStall + Bld_MarketArch (realistic-v1 @ a24f5ec, sign refit 8c99d49) at 1:1: four stalls (StallA/StallB alternating), each on its own Keystn = key0-3 (wood, spans two stone quay piers), under the arch (Pads, Post_Left/Right, Beam: non-objective) with the steel Sign as the trap. Stalls at a 1.6 m pitch, not the 2.2 m stall_slots, so Multi Shot at key1 still takes key0+key1+key2 at g×1.0 and ×1.2 (sim 3.5 m split window; outer stalls also clear the posts). 6 shots, bands, 2-shot line (Multi Shot key0-2, key3), mastery "Earn 3 stars" and hint key1 kept. Random win 67.6%, random 3★ 2.2% (rev 8: 43.5% / 0.8%).
+- Materials: wood (+ steel sign, stone quay) · Shots 6 · Bands 0.6/0.3 · Teaches: Choose loadout deliberately (Multi Shot)
+- Goal: destroy 85% · Mastery: **Earn 3 stars** · Hint: `key1` (yaw -1.5, pitch 11.5 at g×1.0)
+- Chain collapse: One Multi Shot breaks keystones 0-2 → stalls 0-2 drop to the quay; one more shot for keystone 3
+- Risk/reward: The steel sign and the arch look like the target but are not objectives
 - Why it's fun: The power-up showcase: one shot does three shots' work.
 - Proof: min 2 via multi_shot:key0+key1+key2, key3; 3★ needs ≤2; margin 4.
-- Frame (assumed fixed camera): x [179, 901] px, y [522, 1166] px; slack 115 px (tight cam 93 px).
+- Frame (assumed fixed camera): x [168, 912] px, y [750, 1166] px; slack 103 px (tight cam 83 px).
 ### L9. Lighthouse Gauntlet — Lighthouse + seawall, joined by a catwalk [Hard]
 - **Changed:** 6 → 5 shots ("tight budget" was 4 spare); rock trimmed 12 → 10.6 m for the frame.
 - Materials: all 3 · Shots 5 · Bands 0.6/0.3 · Teaches: Tests everything; tight budget

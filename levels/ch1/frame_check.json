@@ -91,29 +91,29 @@
    "layout": "c1_l03_bakery",
    "primary": {
     "x": [
-     279,
-     791
+     206,
+     879
     ],
     "y": [
-     382,
-     1177
+     351,
+     1193
     ],
     "fits": true,
     "worst_piece": "Chimney",
-    "slack_px": 148
+    "slack_px": 117
    },
    "tight": {
     "x": [
-     263,
-     807
+     189,
+     896
     ],
     "y": [
-     428,
-     1255
+     398,
+     1270
     ],
     "fits": true,
-    "worst_piece": "Chimney",
-    "slack_px": 194
+    "worst_piece": "Roof_Right",
+    "slack_px": 119
    }
   },
   {
@@ -241,29 +241,29 @@
    "layout": "c1_l08_market_arcade",
    "primary": {
     "x": [
-     179,
-     901
+     168,
+     912
     ],
     "y": [
-     522,
+     750,
      1166
     ],
     "fits": true,
-    "worst_piece": "rock",
-    "slack_px": 115
+    "worst_piece": "beam",
+    "slack_px": 103
    },
    "tight": {
     "x": [
-     158,
-     922
+     148,
+     932
     ],
     "y": [
-     572,
+     809,
      1245
     ],
     "fits": true,
-    "worst_piece": "rock",
-    "slack_px": 93
+    "worst_piece": "beam",
+    "slack_px": 83
    }
   },
   {

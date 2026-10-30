@@ -181,3 +181,82 @@ Input: 3D Modeler's `Models/Realistic/Buildings/Bld_Townhouse/` @ e725121 (11 LD
   - Physics EditMode suite (Physics/Tests, engine-free, run through NUnit on .NET 8): 123/123, including JointBreakPolicyTests and ChunkedDestructionTests' L1–10 + boss layout chunk budget on our layouts.
   - CompileCheck builds. Tools/Tests: 5140 passed, 0 failed. Server: 201 passed. Tools/ci/check_joint_break_policy.py: OK. derive_hints --check: clean.
   - Not run: Editor/Tests/Gameplay/JointBreakPolicyPhysicsTests (needs the Unity editor and PhysX; no Unity on the box).
+
+## Rev 9: Bld_Bakery on L3, Kit_RealStall market on L8, integration/v2 merged (2026-10-30)
+Input: 3D Modeler's realistic-v1 @ a24f5ec (Bld_Bakery, Kit_RealStall, Bld_MarketArch). The branch has since moved to 8c99d49, which only refits
+the MarketArch sign (2.66 × 0.30 × 0.82, bolted to the beam cap). L8 uses that refit. Read with `git fetch` + `git show` only.
+- **Merge:** `origin/integration/v2` (fb37202) was merged into `level-designer/ch1-tuning` as a regular merge commit (8363e17). It merged clean, and
+  integration/v2 touched none of the level files. The merge brings BlockData `model/rotY/parts/modelScale`, `RealKit.DressParts`, the manifest
+  builder, `CannonCameraRules`, `DailyBossData.hints[]/heroSlot`, chunked destruction, CollapseRules land-break and the JointBreakPolicy.
+- **L3 → Bld_Bakery (1:1), replacing the interim townhouse.**
+  - One block per LD module. Supports come from the module anchor_to. Materials follow the fracture class (Stone/Roof → brick, Wood → wood).
+  - Every module block carries `parts` (its Kit_RealBakery piece FBX), `rotY` −90 (shop front faces the cannon, Wall_Left on screen-left) and
+    `modelScale` 1. Each box is centred on its module pivot and starts at the pivot height (+1.8 m cellar lift), so the loader puts the parts where
+    3D Modeler placed them. Boxes are trimmed at the next module's pivot, with 1–3 mm clearances, so no cubes overlap. The side and back walls sit
+    behind the 8 m shop front.
+  - The Base (8.64 × 6.84, Kit_RealBakery_Base) is held and non-objective. The timber cellar (two wood props over the Base, two brick slabs
+    under the ground walls) stays, so the 2-shot beat survives.
+  - The chimney is a 1.5 m stub above the roof with no parts. Kit_RealBakery_Chim's pivot (y 3.30) is inside the Floor, UpperStorey and roof
+    boxes, and `parts` can only spawn at the box base. See gap 9 in the prefabs README.
+  - Props: crateL and the stacked crateTop (Prop_BreadCrate) are objective wood decoys on the street. They never fall with the house, so
+    props alone reach 93% (3★), and the ≥95% mastery needs one crate on top of the props (3 shots, as rev 8's awning post did). crateR and the
+    bench stay indestructible dressing, as authored (crateTop also rests on crateR, so it never floats). This replaces the rev 8 awning decoy.
+    Props use `parts` at their props[] positions and yaws.
+- **L8 → 4 × Kit_RealStall under Bld_MarketArch (1:1).**
+  - Each stall's Keystn (1.6 × 0.22 × 1.8, wood) is that stall's keystone (key0–3) and spans two stone quay piers (held). The stall
+    (StallA/StallB alternating, wood) stands on it. A broken keystone drops its stall 1.06 m onto the quay, and in game it land-breaks at ≥4 m/s.
+  - The arch (Pads held; Post_Left/Right, Beam: non-objective wood; Sign: steel joint, non-objective) frames the row, and the steel sign is the
+    trap. The arch is non-objective because otherwise about 7 of 15 objective mass would never fall and the Multi Shot line would break.
+    Objective = 4 keys + 4 stalls.
+  - **Pitch: 1.6 m, not the 2.2 m stall_slots.**
+    - At 2.2 m (keys at ±1.1, ±3.3), ci_win_shots' geometric split at key1 does reach key0/key1/key2: the children land at z −3.07 / +0.78
+      around key1 at −1.1, about ±1.95 m.
+    - But the sim's Multi Shot window (3 targets pairwise ≤3.5 m) rejects key0–key2 at 4.4 m. The sim's best line becomes key0, key1,
+      split(key2+stall2+key3) = 3 shots, so 3★ (2 shots) is impossible at both gravities.
+    - At the 2.2 m slots the outer stalls (±3.3 ± 0.85) would also run into the post footprints (Post_Left 1.455 wide at ±4.49, inner face ±3.77).
+    - At 1.6 m (±0.8, ±2.4, the rev 6 keystone spacing) the sim and ci agree: multi_shot:key0+key1+key2, key3.
+    - Cost: the 1.7 m stall visuals overlap their neighbours by 0.1 m.
+  - The stall collider is centred on the module pivot (z 0.187) but only 1.325 m deep. Its front stops 5 cm behind the keystone front, so the
+    0.37 m counter/awning overhang is visual only and a shot at the 22 cm keystone meets the keystone first. The piers are 1.0 m deep for the same
+    reason. Both are covered by gap 9 (no visual offset).
+- **Numbers (g×1.0 = g×1.2, every level passes):**
+
+  | level | best line | final | random 3★ | random win | frame slack (primary/tight) |
+  |---|---|---|---|---|---|
+  | L3 | propL, propR (2) | 93.0% (mastery: + crate = 96.5%) | 6.5% (rev 8 6.5%) | 51.4% (rev 8 55.3%) | 117/119 px (rev 8 148/194) |
+  | L8 | multi_shot:key0+key1+key2, key3 (2; 4 without Multi Shot) | 100% | 2.2% (rev 8 0.8%) | 67.6% (rev 8 43.5%) | 103/83 px (rev 8 115/93) |
+
+  - Budgets, bands, best-line counts and mastery goals are unchanged.
+  - The other levels are identical to rev 8.1.
+  - Policy self-test: OK.
+  - ci_win_shots: all 14 clear at both gravities. L8's Multi Shot at key1 first-hits [key0, key1, key2] at ×1.0 (yaw −1.5, pitch 11.5) and
+    ×1.2 (pitch 13.5).
+  - frame_check: all OK; the worst level is still L9 at 88/65.
+  - Daily Boss: 3★ possible every day for the next 60 days.
+  - derive_hints: L3 hint propL moves to yaw 4.0 / pitch 7.5 and L8 hint key1 to pitch 11.5. The season_s1 e2/e4 event hints follow, and
+    `--check` is clean.
+  - Note: frame_check is still the LD fixed-camera approximation. integration/v2 now has the real `CannonCameraRules`, which fits the pose to the
+    structure bounds, so the taller bakery (chimney stub top 11.97 m) is framed by the game, not by a fixed pose.
+- **Tests on the merged tree:**
+  - Tools/Tests: 5135 passed, 0 failed.
+  - Server: 201 passed, 10 skipped.
+  - Physics/Tests (NUnit, engine-free): 123/123, including the chunk-budget test on these layouts.
+- **For 3D Modeler:**
+  1. stall_slots: re-pitch to 1.6 m (x ±0.8, ±2.4) or narrow StallA/StallB to ≤1.6 m. Alternatively, Level Designer + Developer widen the sim
+     split window to match the measured ±1.95 m spread; that is a sim rule change across all levels.
+  2. Bakery: the layout `dimensions_m` ridge is 8.52, but the README and module tops give 8.66.
+  3. The Prop_BreadCrate / Prop_Bench props have no `_Fractured` set and are marked indestructible. L3 uses two crates as destructible decoys,
+     so a fractured crate (or a confirmed "cube-break is fine") is needed.
+  4. The Keystn pivot is at y −0.0098 (1 cm below its base). Harmless, but every other module pivot is at its base.
+  5. realistic-v1 (Kit_RealBakery_*, Kit_RealStall_*, Props_Village) is not in integration/v2. Until it merges, the L3/L8 parts are not found:
+     the build logs a `[RealKit] … not found` error per part and the blocks stay cubes.
+- **For Developer:** the gap is an optional visual offset on BlockData, e.g. `modelOffset`. Parts spawn at the box base centre, which forces the
+  chimney stub and the trimmed stall collider.
+- **Rev 9 PR text (for the user to paste into PR #57; the body was not edited):**
+  > **Rev 9:** integration/v2 merged in (regular merge, clean). **L3** now uses 3D Modeler's realistic modular Bld_Bakery (realistic-v1 @ a24f5ec)
+  > at 1:1, wired through `parts`/`rotY`. It has one block per module, with the shop front facing the cannon and the timber cellar kept, so the
+  > 2-shot props line is unchanged. The street bread crates are the mastery decoy. **L8** is four Kit_RealStall stalls, each on its own keystone,
+  > under the Bld_MarketArch arch, with the steel sign as the trap. Multi Shot at key1 still takes key0–2 at gravity ×1.0 and ×1.2, with stalls
+  > at a 1.6 m pitch instead of the 2.2 m stall_slots (3D Modeler to re-slot). Kept: budgets, star bands, best lines, mastery.
+  > L3 random win is 51.4% and 3★ is 6.5%; L8 is 67.6% and 2.2%. Frame slack is 117 px on L3 and 103 px on L8. Tools/Tests 5135/0,
+  > server 201, physics 123/123. Visuals need realistic-v1 merged into integration/v2.

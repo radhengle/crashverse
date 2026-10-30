@@ -6,6 +6,13 @@ HERE=os.path.dirname(os.path.abspath(__file__))
 def B(id,mat,p,s,sup=(),joint=False,role="",nonObj=False,color="",indestructible=False):
     return dict(id=id,mat=mat,p=list(p),s=list(s),sup=list(sup),joint=joint,role=role,nonObj=nonObj,color=color,
                 explosive=False,indestructible=indestructible,spinAxis=[],pivot=[],spinDps=0.0)
+RB="Assets/_Project/Models/Realistic/Buildings/"
+def MOD(b,folder,kit,pieces):
+    """rev 9: dress a block with a realistic module (integration/v2 loader: BlockData.parts spawned at the block's
+    base-footprint centre, 1:1, yawed by rotY). rotY -90 turns the module's +Z street/front to face the cannon (-x).
+    The block box is centred on the module pivot (x/z) and starts at the pivot height, so the parts land where
+    3D Modeler placed them (plus any level lift)."""
+    b=dict(b); b["parts"]=[f"{RB}{folder}/{kit}_{p}.fbx" for p in pieces]; b["rotY"]=-90.0; b["modelScale"]=[1.0,1.0,1.0]; return b
 ROCK=lambda id,p,s: B(id,"brick",p,s,nonObj=True,indestructible=True,color="8A8A8A",role="island")
 
 def L1():  # EASY "Seagull Perch": T-shaped cliff lookout on ONE crooked post; side cabins + bell ride the deck
@@ -37,40 +44,50 @@ def L2():  # EASY "Leaning Water Tower": stilts stand on TWO sills (rev 6: L1 al
         B("shedRoof","wood",(4.3,5.0,-1.2),(1.8,.4,1.6),["shed"])]
     return b
 
-def L3():  # MEDIUM "Two-Storey Bakery", rev 8 INTERIM: 3D Modeler's modular realistic Bld_Townhouse (realistic-v1
-    # @ e725121, Kit_RealHouse) at 1:1 from its module transforms, until the 8x6 m bakery lands (due Oct 31).
-    # One layout block per Level Designer MODULE (the README splits modules into pieces only for the 1,500-tri FBX budget
-    # and 63-char joint names; all pieces of a module drop in at the module pivot). Block ids = module ids.
-    # House frame = layout space: +z = street (ShopFront), +x = the house's left (Wall_Left, Roof_Left). face_wrecker turns
-    # +z to -x, so the street faces the cannon and the house's left is screen-left. Supports = module anchor_to (which
-    # match the 69 piece contacts); materials per fracture class (Stone -> brick, Wood -> wood, Roof clay tile -> brick).
-    # Base = indestructible, non-objective, held. L3's beat (brick needs support loss: two wood props) is kept by standing
-    # the house on a timber cellar: Base -> props -> cellar slabs -> the four ground-wall modules. The cellar is the only
-    # layer that is not in the model (the contacts have Base -> ground walls); it lifts the house by C = 1.8 m.
-    # Boxes are cut at the contact heights so no two cubes overlap (LevelBuilder spawns physics boxes): ground walls
-    # 0.35-2.72, Floor 2.72-3.22 (front jetty to z 2.91), UpperStorey shell 3.22-5.44 (gables + balcony are in its mesh),
-    # roof halves 5.44-6.9 (ridge contact 6.73-6.96), Chimney from the roof to its real top 9.55.
-    # The optional Annex is left out (ground mass that would not fall with the house). rev 7's shop-awning decoy stays.
-    C=1.8
-    def H(id,mat,x0,x1,y0,y1,z0,z1,sup,**k):   # box from house-local extents (y lifted by the cellar)
-        return B(id,mat,(round((x0+x1)/2,3),round((y0+y1)/2+C,3),round((z0+z1)/2,3)),(round(x1-x0,3),round(y1-y0,3),round(z1-z0,3)),sup,**k)
-    b=[B("Base","brick",(0,.175,.15),(7.04,.35,6.04),nonObj=True,indestructible=True,color="8A8A8A",role="island"),
-       B("propL","wood",(1.6,1.05,1.8),(.45,1.4,.45),["Base"],role="prop"),      # house-left = screen-left
-       B("propR","wood",(-1.6,1.05,1.8),(.45,1.4,.45),["Base"],role="prop"),
-       B("slabL","brick",(1.605,1.95,.03),(3.21,.4,5.46),["propL"]),
-       B("slabR","brick",(-1.605,1.95,.03),(3.21,.4,5.46),["propR"])]
-    S=["slabL","slabR"]; g0,g1=.35,2.72
-    b+=[H("ShopFront","brick",-3.31,3.31,g0,g1,2.16,2.76,S,role="wall"),       # door, window, lantern, hanging sign
-        H("Wall_Left","brick",2.745,3.31,g0,g1,-2.15,2.15,S,role="wall"),
-        H("Wall_Right","brick",-3.31,-2.745,g0,g1,-2.15,2.15,S,role="wall"),
-        H("Wall_Back","brick",-3.21,3.21,g0,g1,-2.7,-2.16,S,role="wall"),
-        H("Floor","wood",-3.21,3.21,2.72,3.22,-2.17,2.91,["ShopFront","Wall_Back","Wall_Left","Wall_Right"]),
-        H("UpperStorey","wood",-3.28,3.28,3.22,5.44,-2.7,3.0,["Floor"],role="wall"),
-        H("Roof_Left","brick",-.05,3.28,5.44,6.9,-2.7,3.0,["UpperStorey"],role="roof",color="B5523B"),
-        H("Roof_Right","brick",-3.28,-.05,5.44,6.9,-2.7,3.0,["UpperStorey"],role="roof",color="B5523B"),
-        H("Chimney","brick",-2.635,-1.765,6.9,9.55,-.96,-.24,["Roof_Right","UpperStorey"]),
-        B("awningPost","wood",(3.45,1.35,3.0),(.3,2.0,.3),["Base"],role="prop"),      # decoy: holds only the shop awning
-        B("awning","wood",(3.1,2.5,3.1),(1.0,.3,.6),["awningPost"])]
+def L3():  # MEDIUM "Two-Storey Bakery" (rev 9): 3D Modeler's Bld_Bakery (realistic-v1 @ a24f5ec, Kit_RealBakery), 1:1.
+    # Walls 8 x 6 m, eaves 6.30, ridge 8.66, shop front (+Z) faces the cannon after face_wrecker (parts yawed -90).
+    # One block per LD module, supports = module anchor_to (= the 69 contacts), materials per fracture class
+    # (Stone -> brick, Wood -> wood, Roof pantile -> brick). Base = indestructible, non-objective, held.
+    # The rev 8 timber cellar stays (Base -> two wood props -> two brick slabs -> the four ground walls, lift C = 1.8 m):
+    # it is the only layer not in the model and it keeps L3's two-prop beat. Every module box is centred on its module
+    # pivot and starts at the pivot height (+C) so the loader's parts land in place; boxes are trimmed at the next
+    # module's pivot so no two cubes overlap (ground walls 0.34-2.535, Floor 2.535-3.495, UpperStorey 3.495-5.78,
+    # roof halves 5.78-8.66). The chimney's pivot (3.30) sits inside the Floor/UpperStorey/roof, so its block is the
+    # stub above the roof with no parts (generic RealPieceRules brick; gap reported to Developer).
+    # The street props (props[]: three bread crates, one stacked, and a bench) stand on the street in front of the
+    # shop. crateL and the stacked crateTop are the decoy (ground mass that never falls with the house: props alone
+    # = 93%, 3 stars); the >=95% mastery needs one crate shot on top of the props (3 shots, as rev 8's awning post).
+    # crateR and the bench stay indestructible dressing as 3D Modeler authored them (crateTop also rests on crateR).
+    C=1.8; F="Bld_Bakery"; K="Kit_RealBakery"
+    def H(id,mat,cx,cz,w,d,y0,y1,sup,pieces=None,**k):   # box centred on (cx, cz), base y0 (house-local), lifted by C
+        b=B(id,mat,(cx,round((y0+y1)/2+C,4),cz),(w,round(y1-y0,4),d),sup,**k)
+        return MOD(b,F,K,pieces) if pieces else b
+    b=[MOD(B("Base","brick",(0,.175,.15),(8.64,.35,6.84),nonObj=True,indestructible=True,color="8A8A8A",role="island"),F,K,["Base"]),
+       B("propL","wood",(2.0,1.045,2.6),(.45,1.39,.45),["Base"],role="prop"),     # house-left = screen-left
+       B("propR","wood",(-2.0,1.045,2.6),(.45,1.39,.45),["Base"],role="prop"),
+       B("slabL","brick",(2.0555,1.9415,.182),(4.111,.4,6.586),["propL"]),
+       B("slabR","brick",(-2.0555,1.9415,.182),(4.111,.4,6.586),["propR"])]
+    S=["slabL","slabR"]; g1=2.5351; gf=g1-.001; gs=g1-.003   # 1-3 mm clearances (no touching-face overlaps)
+    b+=[H("ShopFront","brick",.0007,3.1747,8.0,.6,.3417,gf,S,["ShopW","ShopD"],role="wall"),   # window+awning, door+loaf sign
+        H("Wall_Left","brick",3.8271,.0017,.34,5.08,.3458,gs,S,["WallL"],role="wall"),
+        H("Wall_Right","brick",-3.828,-.0012,.34,5.08,.3438,gs,S,["WallR"],role="wall"),
+        H("Wall_Back","brick",.0008,-2.828,7.998,.566,.3417,gs,S,["BackD","BackW"],role="wall"),
+        H("Floor","wood",0,.368,8.02,5.876,g1,3.4944,["ShopFront","Wall_Back","Wall_Left","Wall_Right"],["Floor"]),
+        H("UpperStorey","wood",-.0005,.2269,8.262,6.696,3.4954,5.7815,["Floor"],
+          ["UpFL","UpFC","UpFR","UpB","UpL","UpR","GabL","GabR"],role="wall"),
+        H("Roof_Left","brick",2.205,.1498,4.41,7.316,5.7825,8.66,["UpperStorey"],["RfLF","RfLB"],role="roof",color="B5523B"),
+        H("Roof_Right","brick",-2.235,.1501,4.47,7.315,5.7825,8.66,["UpperStorey"],["RfRF","RfRB"],role="roof",color="B5523B"),
+        H("Chimney","brick",1.4005,-1.5496,1.0,.8,8.661,10.165,["Floor","Roof_Left","UpperStorey"])]
+    # street props (props[]), on the street at y 0 in front of the Base (bakery-local z 4.15-4.4)
+    b+=[B("crateL","wood",(2.9,.21,4.35),(.7,.42,.5),[],role="prop"),
+        B("crateR","wood",(2.05,.21,4.4),(.7,.42,.5),[],nonObj=True,indestructible=True,color="8B6B4A"),
+        B("crateTop","wood",(2.5,.63,4.38),(.7,.42,.5),["crateL","crateR"],role="prop"),
+        B("bench","wood",(.75,.225,4.15),(1.4,.45,.45),[],nonObj=True,indestructible=True,color="8B6B4A")]
+    for i,c in enumerate(b[-4:]):
+        b[len(b)-4+i]=dict(c,parts=["Assets/_Project/Models/Realistic/Props/Props_Village/"+("Prop_Bench.fbx" if c["id"]=="bench" else "Prop_BreadCrate.fbx")],
+                           rotY=round(-90.0+{"crateL":-4.6,"crateR":6.9,"crateTop":-17.2}.get(c["id"],0.0),1),modelScale=[1.0,1.0,1.0])
+    # 1:1 at the prop's base centre (props[] positions and yaws); crate box .7 x .42 x .5 and bench 1.4 x .45 x .45 are
+    # LD estimates (props[] carries no bounds; the stack height .42 is from the stacked crate's y)
     return b
 
 def L4():  # windmill: brick drums on wooden ring-beams; hitting low beams chains everything above
@@ -155,19 +172,37 @@ def L7():  # HARD "Clockwork Watchtower" (rev 7, PM overrode the M1 layout lock 
         B("barrelDecor","wood",(4.0,.6,2),(.8,1.2,.8),[],nonObj=True,color="E5484D")]
     return b
 
-def L8():  # market arcade: 4 wood keystones 1.5m apart hold 4 bays on stone piers -> Splitstrike takes 3 at once
-    # rev 6: 10.4 m wide (was 14 m, which ran off the fixed behind-cannon frame); keystone spacing 1.6 m keeps any
-    # three neighbours inside Multi Shot's 3.5 m spread, and each keystone now sits under its own bay
-    b=[ROCK("rock",(0,.6,0),(10.4,1.2,4))]
-    for i,x in enumerate([-4.4,-2.2,0,2.2,4.4]): b.append(B(f"pier{i}","brick",(x,2.6,0),(.6,2.8,.8),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"))
-    for i,x in enumerate([-3.3,-1.1,1.1,3.3]):
-        b+=[B(f"key{i}","wood",(-2.4+1.6*i,4.25,1.1),(.6,.5,.4),[f"pier{i}",f"pier{i+1}"],role="keystone"),
-            B(f"bay{i}","brick",(x,4.7,0),(2.1,.5,2),[f"key{i}"]),
-            B(f"stall{i}","brick",(x,5.6,0),(1.8,1.2,1.6),[f"bay{i}"]),
-            B(f"awning{i}","wood",(x,6.4,.3),(2.1,.3,2.2),[f"stall{i}"])]
-    b+=[B("archL","wood",(-.9,7.3,0),(.3,1.4,.3),["stall1"]),B("archR","wood",(.9,7.3,0),(.3,1.4,.3),["stall2"]),
-        B("sign","steel",(0,8.1,0),(2.2,.5,.3),["archL","archR"],joint=True,role="steel_joint"),
-        B("clock","wood",(0,8.8,0),(1.0,1.0,.3),["sign"])]
+L8_PITCH=float(__import__("os").environ.get("L8_PITCH","1.6"))
+def L8():  # BREATHER "Market Arcade" (rev 9): 4 Kit_RealStall stalls under 3D Modeler's Bld_MarketArch (a24f5ec; sign refit 8c99d49), 1:1.
+    # Each stall stands on its own Keystn (key0-3, the objective keystones, wood), which spans the quay pier gap
+    # either side of it; a broken keystone drops its stall 1.06 m to the quay (lands >= 4 m/s -> CollapseRules breaks it).
+    # The arch (Pads -> PostL/PostR -> Beam -> steel Sign) frames the row and is non-objective: the posts/beam are a
+    # wasted shot and the steel Sign is the trap (steel joint, 2x on a direct hit but it is not the target).
+    # Slot pitch: the arch's stall_slots are 2.2 m apart (x +/-1.1, +/-3.3) but Multi Shot's +/-8 deg split spreads
+    # only ~1.25 m either side at this range, so key0-2 at 2.2 m cannot be taken by one split (checked with
+    # ci_win_shots.first_hit at both gravities). The stalls stand at 1.6 m (x +/-0.8, +/-2.4, the rev 6 keystone
+    # spacing, 3.2 m key0-key2 < the 3.5 m split window), centred in the arch; 3D Modeler asked to re-slot.
+    P=L8_PITCH; xs=[(i-1.5)*P for i in range(4)]
+    b=[ROCK("rock",(0,.6,0),(10.4,1.2,4)),
+       MOD(B("pads","brick",(0,1.3,0),(10.7,.2,.7),["rock"],nonObj=True,indestructible=True,color="8A8A8A",role="island"),"Bld_MarketArch","Kit_RealStall",["Pads"])]
+    # quay piers (stone, indestructible, under the keystone joints): one between neighbours, one under each outer end
+    px=[xs[0]-P/2+.2]+[(xs[i]+xs[i+1])/2 for i in range(3)]+[xs[3]+P/2-.2]
+    for i,x in enumerate(px):
+        b.append(B(f"pier{i}","brick",(round(x,4),1.82,0),(.4,.84,1.0),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"))
+    for i,x in enumerate(xs):
+        x=round(x,4)
+        b+=[MOD(B(f"key{i}","wood",(x,2.35,0),(1.6,.22,1.8),[f"pier{i}",f"pier{i+1}"],role="keystone"),"Kit_RealStall","Kit_RealStall",["Keystn"]),
+            MOD(B(f"stall{i}","wood",(x,3.55,.1873),(1.6,2.18,1.325),[f"key{i}"],role="wall"),"Kit_RealStall","Kit_RealStall",["StallA" if i%2==0 else "StallB"])]
+    # The stall collider is centred on the module pivot (z .1873, as the loader places parts there) but only 1.325 m
+    # deep: its front stops 5 cm behind the keystone's front (z .85 vs .90), so the counter/awning overhang (to z 1.27)
+    # is visual only and a shot at the 22 cm keystone reaches the keystone first (gap reported: no visual offset field).
+    # Quay piers are 1.0 m deep (behind the keystone front) for the same reason.
+    # (sign = 8c99d49 refit: 2.655 x .824 x .30 bolted to the beam cap, pivot 8 mm into the cap -> box starts on the cap)
+    # arch posts at the module pivots (+/-4.49), beam on both, steel sign on the beam (all non-objective)
+    b+=[MOD(B("postL","wood",(4.4923,3.03,0),(.4,3.26,.44),["pads"],nonObj=True,role="wall"),"Bld_MarketArch","Kit_RealStall",["PostL"]),
+        MOD(B("postR","wood",(-4.4904,3.03,0),(.4,3.26,.44),["pads"],nonObj=True,role="wall"),"Bld_MarketArch","Kit_RealStall",["PostR"]),
+        MOD(B("beam","wood",(0,4.922,.0009),(11.1,.524,.422),["postL","postR"],nonObj=True,role="roof"),"Bld_MarketArch","Kit_RealStall",["Beam"]),
+        MOD(B("sign","steel",(0,5.592,0),(2.655,.816,.3),["beam"],joint=True,nonObj=True,role="steel_joint"),"Bld_MarketArch","Kit_RealStall",["Sign"])]
     return b
 
 def L9():  # HARD "Lighthouse Gauntlet": steel-ringed lighthouse + seawall; a catwalk ties lantern gallery to seawall crest

@@ -1,6 +1,6 @@
 {
  "ref": "origin/3d-modeler/realistic-v1",
- "commit": "e725121",
+ "commit": "8c99d49",
  "unity_prefabs": [],
  "buildings": {
   "Bld_BrickHouse": {
@@ -3800,6 +3800,891 @@
    "sized_from": "no stats JSON for its kit (v3 kit): size unknown",
    "realistic_variant": null
   },
+  "Bld_Bakery (realistic)": {
+   "layout": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Bld_Bakery.layout.json",
+   "style": "realistic v1",
+   "space": "Unity (Y up, left-handed); shop front faces +Z (Level Designer rotates the root to face -X); positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+   "footprint_m": [
+    8.93,
+    7.483
+   ],
+   "modules": [
+    {
+     "id": "ShopFront",
+     "label": "Shop front: stone street wall with wide display window, striped awning, door, lantern, hanging loaf sign",
+     "pivot": [
+      0.0007,
+      0.3419,
+      3.1747
+     ],
+     "footprint_m": [
+      8.004,
+      1.599
+     ],
+     "height_m": 3.162,
+     "pieces": [
+      "ShopW",
+      "ShopD"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Wall_Left",
+     "label": "Ground-floor stone side wall, left (window)",
+     "pivot": [
+      3.8271,
+      0.3458,
+      0.0017
+     ],
+     "footprint_m": [
+      0.568,
+      5.113
+     ],
+     "height_m": 3.159,
+     "pieces": [
+      "WallL"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Wall_Right",
+     "label": "Ground-floor stone side wall, right (window)",
+     "pivot": [
+      -3.828,
+      0.3438,
+      -0.0012
+     ],
+     "footprint_m": [
+      0.566,
+      5.11
+     ],
+     "height_m": 3.16,
+     "pieces": [
+      "WallR"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Wall_Back",
+     "label": "Ground-floor stone back wall (back door + window)",
+     "pivot": [
+      0.0008,
+      0.3417,
+      -2.828
+     ],
+     "footprint_m": [
+      8.009,
+      0.566
+     ],
+     "height_m": 3.162,
+     "pieces": [
+      "BackD",
+      "BackW"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Floor",
+     "label": "First-floor slab / beam with jetty joists (rests on the ground walls)",
+     "pivot": [
+      -0.0,
+      2.5351,
+      0.368
+     ],
+     "footprint_m": [
+      8.02,
+      5.876
+     ],
+     "height_m": 1.005,
+     "pieces": [
+      "Floor"
+     ],
+     "anchor_to": [
+      "ShopFront",
+      "Wall_Back",
+      "Wall_Left",
+      "Wall_Right"
+     ]
+    },
+    {
+     "id": "UpperStorey",
+     "label": "Timber-frame upper storey resting on the Floor slab: 4 walls, 2 gables, flower boxes",
+     "pivot": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "footprint_m": [
+      8.262,
+      6.696
+     ],
+     "height_m": 4.879,
+     "pieces": [
+      "UpFL",
+      "UpFC",
+      "UpFR",
+      "UpB",
+      "UpL",
+      "UpR",
+      "GabL",
+      "GabR"
+     ],
+     "anchor_to": [
+      "Floor"
+     ]
+    },
+    {
+     "id": "Roof_Left",
+     "label": "Clay-tile roof, left half (both slopes), seen from the street",
+     "pivot": [
+      2.205,
+      5.7825,
+      0.1498
+     ],
+     "footprint_m": [
+      4.49,
+      7.316
+     ],
+     "height_m": 2.875,
+     "pieces": [
+      "RfLF",
+      "RfLB"
+     ],
+     "anchor_to": [
+      "UpperStorey"
+     ]
+    },
+    {
+     "id": "Roof_Right",
+     "label": "Clay-tile roof, right half",
+     "pivot": [
+      -2.235,
+      5.7825,
+      0.1501
+     ],
+     "footprint_m": [
+      4.49,
+      7.315
+     ],
+     "height_m": 2.874,
+     "pieces": [
+      "RfRF",
+      "RfRB"
+     ],
+     "anchor_to": [
+      "UpperStorey"
+     ]
+    },
+    {
+     "id": "Chimney",
+     "label": "Oven chimney at the back (stone, two pots)",
+     "pivot": [
+      1.4005,
+      3.2957,
+      -1.5496
+     ],
+     "footprint_m": [
+      1.242,
+      0.942
+     ],
+     "height_m": 6.869,
+     "pieces": [
+      "Chim"
+     ],
+     "anchor_to": [
+      "Floor",
+      "Roof_Left",
+      "UpperStorey"
+     ]
+    },
+    {
+     "id": "Base",
+     "label": "Granite plinth (indestructible)",
+     "pivot": [
+      -0.0,
+      0.0,
+      0.15
+     ],
+     "footprint_m": [
+      8.64,
+      6.84
+     ],
+     "height_m": 0.35,
+     "pieces": [
+      "Base"
+     ],
+     "anchor_to": [
+      "Ground"
+     ]
+    }
+   ],
+   "pieces": [
+    {
+     "id": "Base",
+     "module": "Base",
+     "kit": "Kit_RealBakery_Base",
+     "pos": [
+      -0.0,
+      0.0,
+      0.15
+     ],
+     "anchor_to": "Ground",
+     "fracture_class": "Indestructible",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Base.fbx",
+     "fractured": null
+    },
+    {
+     "id": "ShopW",
+     "module": "ShopFront",
+     "kit": "Kit_RealBakery_ShopW",
+     "pos": [
+      0.0007,
+      0.3419,
+      3.1747
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW_Fractured.fbx"
+    },
+    {
+     "id": "ShopD",
+     "module": "ShopFront",
+     "kit": "Kit_RealBakery_ShopD",
+     "pos": [
+      0.0007,
+      0.3419,
+      3.1747
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD_Fractured.fbx"
+    },
+    {
+     "id": "WallL",
+     "module": "Wall_Left",
+     "kit": "Kit_RealBakery_WallL",
+     "pos": [
+      3.8271,
+      0.3458,
+      0.0017
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL_Fractured.fbx"
+    },
+    {
+     "id": "WallR",
+     "module": "Wall_Right",
+     "kit": "Kit_RealBakery_WallR",
+     "pos": [
+      -3.828,
+      0.3438,
+      -0.0012
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR_Fractured.fbx"
+    },
+    {
+     "id": "BackD",
+     "module": "Wall_Back",
+     "kit": "Kit_RealBakery_BackD",
+     "pos": [
+      0.0008,
+      0.3417,
+      -2.828
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD_Fractured.fbx"
+    },
+    {
+     "id": "BackW",
+     "module": "Wall_Back",
+     "kit": "Kit_RealBakery_BackW",
+     "pos": [
+      0.0008,
+      0.3417,
+      -2.828
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW_Fractured.fbx"
+    },
+    {
+     "id": "Floor",
+     "module": "Floor",
+     "kit": "Kit_RealBakery_Floor",
+     "pos": [
+      -0.0,
+      2.5351,
+      0.368
+     ],
+     "anchor_to": [
+      "ShopW",
+      "ShopD",
+      "BackD",
+      "BackW",
+      "WallL",
+      "WallR"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor_Fractured.fbx"
+    },
+    {
+     "id": "UpFL",
+     "module": "UpperStorey",
+     "kit": "Kit_RealBakery_UpFL",
+     "pos": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL_Fractured.fbx"
+    },
+    {
+     "id": "UpFC",
+     "module": "UpperStorey",
+     "kit": "Kit_RealBakery_UpFC",
+     "pos": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC_Fractured.fbx"
+    },
+    {
+     "id": "UpFR",
+     "module": "UpperStorey",
+     "kit": "Kit_RealBakery_UpFR",
+     "pos": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR_Fractured.fbx"
+    },
+    {
+     "id": "UpB",
+     "module": "UpperStorey",
+     "kit": "Kit_RealBakery_UpB",
+     "pos": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB_Fractured.fbx"
+    },
+    {
+     "id": "UpL",
+     "module": "UpperStorey",
+     "kit": "Kit_RealBakery_UpL",
+     "pos": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL_Fractured.fbx"
+    },
+    {
+     "id": "UpR",
+     "module": "UpperStorey",
+     "kit": "Kit_RealBakery_UpR",
+     "pos": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR_Fractured.fbx"
+    },
+    {
+     "id": "GabL",
+     "module": "UpperStorey",
+     "kit": "Kit_RealBakery_GabL",
+     "pos": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "UpL"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL_Fractured.fbx"
+    },
+    {
+     "id": "GabR",
+     "module": "UpperStorey",
+     "kit": "Kit_RealBakery_GabR",
+     "pos": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "UpR"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR_Fractured.fbx"
+    },
+    {
+     "id": "RfLF",
+     "module": "Roof_Left",
+     "kit": "Kit_RealBakery_RfLF",
+     "pos": [
+      2.205,
+      5.7825,
+      0.1498
+     ],
+     "anchor_to": [
+      "UpFL",
+      "UpFC",
+      "GabL"
+     ],
+     "fracture_class": "Roof",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF_Fractured.fbx"
+    },
+    {
+     "id": "RfLB",
+     "module": "Roof_Left",
+     "kit": "Kit_RealBakery_RfLB",
+     "pos": [
+      2.205,
+      5.7825,
+      0.1498
+     ],
+     "anchor_to": [
+      "UpB",
+      "GabL"
+     ],
+     "fracture_class": "Roof",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB_Fractured.fbx"
+    },
+    {
+     "id": "RfRF",
+     "module": "Roof_Right",
+     "kit": "Kit_RealBakery_RfRF",
+     "pos": [
+      -2.235,
+      5.7825,
+      0.1501
+     ],
+     "anchor_to": [
+      "UpFC",
+      "UpFR",
+      "GabR"
+     ],
+     "fracture_class": "Roof",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF_Fractured.fbx"
+    },
+    {
+     "id": "RfRB",
+     "module": "Roof_Right",
+     "kit": "Kit_RealBakery_RfRB",
+     "pos": [
+      -2.235,
+      5.7825,
+      0.1501
+     ],
+     "anchor_to": [
+      "UpB",
+      "GabR"
+     ],
+     "fracture_class": "Roof",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB_Fractured.fbx"
+    },
+    {
+     "id": "Chim",
+     "module": "Chimney",
+     "kit": "Kit_RealBakery_Chim",
+     "pos": [
+      1.4005,
+      3.2957,
+      -1.5496
+     ],
+     "anchor_to": [
+      "RfLB",
+      "UpB",
+      "Floor"
+     ],
+     "fracture_class": "Stone",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Chim.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Chim_Fractured.fbx"
+    }
+   ],
+   "piece_count": 21,
+   "module_count": 10,
+   "connections": 69,
+   "joint_break_values_set": false,
+   "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+   "props": [
+    {
+     "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+     "pos": [
+      2.9,
+      0.0,
+      4.35
+     ],
+     "yaw_deg": -4.6,
+     "note": "street side, indestructible prop (shared Props_Village atlas)"
+    },
+    {
+     "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+     "pos": [
+      2.05,
+      0.0,
+      4.4
+     ],
+     "yaw_deg": 6.9,
+     "note": "street side, indestructible prop (shared Props_Village atlas)"
+    },
+    {
+     "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+     "pos": [
+      2.5,
+      0.42,
+      4.38
+     ],
+     "yaw_deg": -17.2,
+     "note": "street side, indestructible prop (shared Props_Village atlas)"
+    },
+    {
+     "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_Bench.fbx",
+     "pos": [
+      0.75,
+      0.0,
+      4.15
+     ],
+     "yaw_deg": -0.0,
+     "note": "street side, indestructible prop (shared Props_Village atlas)"
+    }
+   ],
+   "stall_slots": null
+  },
+  "Bld_MarketArch (realistic)": {
+   "layout": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Bld_MarketArch.layout.json",
+   "style": "realistic v1",
+   "space": "Unity (Y up, left-handed); arch plane is X/Y; +Z = market front; positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+   "footprint_m": [
+    11.1,
+    0.7
+   ],
+   "modules": [
+    {
+     "id": "Base",
+     "label": "Granite post pads (indestructible)",
+     "pivot": [
+      -0.0,
+      0.0,
+      -0.0
+     ],
+     "footprint_m": [
+      10.7,
+      0.7
+     ],
+     "height_m": 0.2,
+     "pieces": [
+      "Pads"
+     ],
+     "anchor_to": [
+      "Ground"
+     ]
+    },
+    {
+     "id": "Post_Left",
+     "label": "Timber post, left",
+     "pivot": [
+      4.4923,
+      0.2,
+      -0.0
+     ],
+     "footprint_m": [
+      1.455,
+      0.44
+     ],
+     "height_m": 3.76,
+     "pieces": [
+      "PostL"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Post_Right",
+     "label": "Timber post, right",
+     "pivot": [
+      -4.4904,
+      0.2,
+      -0.0
+     ],
+     "footprint_m": [
+      1.459,
+      0.44
+     ],
+     "height_m": 3.76,
+     "pieces": [
+      "PostR"
+     ],
+     "anchor_to": [
+      "Base"
+     ]
+    },
+    {
+     "id": "Beam",
+     "label": "Timber beam spanning 10.4 m, 3.5 m clear",
+     "pivot": [
+      -0.0,
+      3.46,
+      0.0009
+     ],
+     "footprint_m": [
+      11.1,
+      0.422
+     ],
+     "height_m": 0.524,
+     "pieces": [
+      "Beam"
+     ],
+     "anchor_to": [
+      "Post_Left",
+      "Post_Right"
+     ]
+    },
+    {
+     "id": "Sign",
+     "label": "Steel sign, no text",
+     "pivot": [
+      -0.0,
+      3.9762,
+      -0.0
+     ],
+     "footprint_m": [
+      2.655,
+      0.3
+     ],
+     "height_m": 0.824,
+     "pieces": [
+      "Sign"
+     ],
+     "anchor_to": [
+      "Beam"
+     ]
+    }
+   ],
+   "pieces": [
+    {
+     "id": "Pads",
+     "module": "Base",
+     "kit": "Kit_RealStall_Pads",
+     "pos": [
+      -0.0,
+      0.0,
+      -0.0
+     ],
+     "anchor_to": "Ground",
+     "fracture_class": "Indestructible",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Pads.fbx",
+     "fractured": null
+    },
+    {
+     "id": "PostL",
+     "module": "Post_Left",
+     "kit": "Kit_RealStall_PostL",
+     "pos": [
+      4.4923,
+      0.2,
+      -0.0
+     ],
+     "anchor_to": [
+      "Pads"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL_Fractured.fbx"
+    },
+    {
+     "id": "PostR",
+     "module": "Post_Right",
+     "kit": "Kit_RealStall_PostR",
+     "pos": [
+      -4.4904,
+      0.2,
+      -0.0
+     ],
+     "anchor_to": [
+      "Pads"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR_Fractured.fbx"
+    },
+    {
+     "id": "Beam",
+     "module": "Beam",
+     "kit": "Kit_RealStall_Beam",
+     "pos": [
+      -0.0,
+      3.46,
+      0.0009
+     ],
+     "anchor_to": [
+      "PostL",
+      "PostR"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam_Fractured.fbx"
+    },
+    {
+     "id": "Sign",
+     "module": "Sign",
+     "kit": "Kit_RealStall_Sign",
+     "pos": [
+      -0.0,
+      3.9762,
+      -0.0
+     ],
+     "anchor_to": [
+      "Beam"
+     ],
+     "fracture_class": "Steel",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign_Fractured.fbx"
+    }
+   ],
+   "piece_count": 5,
+   "module_count": 5,
+   "connections": 5,
+   "joint_break_values_set": false,
+   "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+   "props": [],
+   "stall_slots": [
+    {
+     "slot": 1,
+     "position": {
+      "x": 3.3,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "rotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+     },
+     "piece": "Kit_RealStall (Keystn + StallA/StallB)"
+    },
+    {
+     "slot": 2,
+     "position": {
+      "x": 1.1,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "rotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+     },
+     "piece": "Kit_RealStall (Keystn + StallA/StallB)"
+    },
+    {
+     "slot": 3,
+     "position": {
+      "x": -1.1,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "rotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+     },
+     "piece": "Kit_RealStall (Keystn + StallA/StallB)"
+    },
+    {
+     "slot": 4,
+     "position": {
+      "x": -3.3,
+      "y": 0.0,
+      "z": -0.0
+     },
+     "rotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0
+     },
+     "piece": "Kit_RealStall (Keystn + StallA/StallB)"
+    }
+   ]
+  },
   "Bld_Townhouse (realistic)": {
    "layout": "Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Bld_Townhouse.layout.json",
    "style": "realistic v1",
@@ -4425,7 +5310,116 @@
    "module_count": 11,
    "connections": 69,
    "joint_break_values_set": false,
-   "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Base is indestructible (no fractured set)."
+   "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Base is indestructible (no fractured set).",
+   "props": [],
+   "stall_slots": null
+  },
+  "Kit_RealStall (realistic)": {
+   "layout": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall.layout.json",
+   "style": "realistic v1",
+   "space": "Unity (Y up, left-handed); counter front faces +Z; positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+   "footprint_m": [
+    1.7,
+    2.174
+   ],
+   "modules": [
+    {
+     "id": "Stall",
+     "label": "Market stall: counter, corner posts, rails, striped cloth awning (choose StallA or StallB)",
+     "pivot": [
+      -0.0,
+      0.22,
+      0.1873
+     ],
+     "footprint_m": [
+      1.7,
+      2.174
+     ],
+     "height_m": 2.18,
+     "pieces": [
+      "StallA",
+      "StallB"
+     ],
+     "anchor_to": [
+      "Keystone"
+     ]
+    },
+    {
+     "id": "Keystone",
+     "label": "Wooden keystone skid under the stall",
+     "pivot": [
+      -0.0,
+      -0.0098,
+      -0.0
+     ],
+     "footprint_m": [
+      1.6,
+      1.8
+     ],
+     "height_m": 0.225,
+     "pieces": [
+      "Keystn"
+     ],
+     "anchor_to": [
+      "Ground"
+     ]
+    }
+   ],
+   "pieces": [
+    {
+     "id": "Keystn",
+     "module": "Keystone",
+     "kit": "Kit_RealStall_Keystn",
+     "pos": [
+      -0.0,
+      -0.0098,
+      -0.0
+     ],
+     "anchor_to": "Ground",
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx"
+    },
+    {
+     "id": "StallA",
+     "module": "Stall",
+     "kit": "Kit_RealStall_StallA",
+     "pos": [
+      -0.0,
+      0.22,
+      0.1873
+     ],
+     "anchor_to": [
+      "Keystn"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA_Fractured.fbx"
+    },
+    {
+     "id": "StallB",
+     "module": "Stall",
+     "kit": "Kit_RealStall_StallB",
+     "pos": [
+      -0.0,
+      0.22,
+      0.1873
+     ],
+     "anchor_to": [
+      "Keystn"
+     ],
+     "fracture_class": "Wood",
+     "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx",
+     "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB_Fractured.fbx"
+    }
+   ],
+   "piece_count": 3,
+   "module_count": 2,
+   "connections": 2,
+   "joint_break_values_set": false,
+   "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+   "props": [],
+   "stall_slots": null
   }
  },
  "modules": {
@@ -5059,6 +6053,426 @@
    "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx",
    "note": "lean-to stone annex with tile roof, chimney, door, window, ivy (back +Y on a host wall)"
   },
+  "Kit_RealBakery_Base": {
+   "kit": "Kit_RealBakery",
+   "module": "Base",
+   "size_unity": [
+    8.64,
+    0.35,
+    6.84
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": null,
+   "joints": null,
+   "anchors": null,
+   "fracture_class": "Indestructible",
+   "mass_kg": null,
+   "density_kg_m3": null,
+   "lod0_tris": 408,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Base.fbx",
+   "fractured_fbx": null
+  },
+  "Kit_RealBakery_ShopW": {
+   "kit": "Kit_RealBakery",
+   "module": "ShopW",
+   "size_unity": [
+    4.209,
+    3.16,
+    1.599
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 10,
+   "joints": 33,
+   "anchors": 3,
+   "fracture_class": "Stone",
+   "mass_kg": 12306.1,
+   "density_kg_m3": 2300,
+   "lod0_tris": 988,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW_Fractured.fbx"
+  },
+  "Kit_RealBakery_ShopD": {
+   "kit": "Kit_RealBakery",
+   "module": "ShopD",
+   "size_unity": [
+    3.807,
+    3.157,
+    1.276
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 7,
+   "joints": 11,
+   "anchors": 3,
+   "fracture_class": "Stone",
+   "mass_kg": 11560.1,
+   "density_kg_m3": 2300,
+   "lod0_tris": 1456,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD_Fractured.fbx"
+  },
+  "Kit_RealBakery_WallL": {
+   "kit": "Kit_RealBakery",
+   "module": "WallL",
+   "size_unity": [
+    0.568,
+    3.159,
+    5.113
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 8,
+   "joints": 13,
+   "anchors": 4,
+   "fracture_class": "Stone",
+   "mass_kg": 16210.4,
+   "density_kg_m3": 2300,
+   "lod0_tris": 566,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL_Fractured.fbx"
+  },
+  "Kit_RealBakery_WallR": {
+   "kit": "Kit_RealBakery",
+   "module": "WallR",
+   "size_unity": [
+    0.566,
+    3.16,
+    5.11
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 8,
+   "joints": 13,
+   "anchors": 4,
+   "fracture_class": "Stone",
+   "mass_kg": 16210.3,
+   "density_kg_m3": 2300,
+   "lod0_tris": 566,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR_Fractured.fbx"
+  },
+  "Kit_RealBakery_BackD": {
+   "kit": "Kit_RealBakery",
+   "module": "BackD",
+   "size_unity": [
+    4.011,
+    3.161,
+    0.516
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 6,
+   "joints": 9,
+   "anchors": 3,
+   "fracture_class": "Stone",
+   "mass_kg": 12277.2,
+   "density_kg_m3": 2300,
+   "lod0_tris": 558,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD_Fractured.fbx"
+  },
+  "Kit_RealBakery_BackW": {
+   "kit": "Kit_RealBakery",
+   "module": "BackW",
+   "size_unity": [
+    4.007,
+    3.159,
+    0.566
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 6,
+   "joints": 9,
+   "anchors": 3,
+   "fracture_class": "Stone",
+   "mass_kg": 12630.7,
+   "density_kg_m3": 2300,
+   "lod0_tris": 544,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW_Fractured.fbx"
+  },
+  "Kit_RealBakery_Floor": {
+   "kit": "Kit_RealBakery",
+   "module": "Floor",
+   "size_unity": [
+    8.02,
+    1.005,
+    5.876
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 33,
+   "anchors": 8,
+   "fracture_class": "Wood",
+   "mass_kg": 4623.0,
+   "density_kg_m3": 600,
+   "lod0_tris": 1376,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor_Fractured.fbx"
+  },
+  "Kit_RealBakery_UpFL": {
+   "kit": "Kit_RealBakery",
+   "module": "UpFL",
+   "size_unity": [
+    2.721,
+    2.805,
+    0.437
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 14,
+   "joints": 49,
+   "anchors": 3,
+   "fracture_class": "Wood",
+   "mass_kg": 848.8,
+   "density_kg_m3": 600,
+   "lod0_tris": 1122,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL_Fractured.fbx"
+  },
+  "Kit_RealBakery_UpFC": {
+   "kit": "Kit_RealBakery",
+   "module": "UpFC",
+   "size_unity": [
+    2.6,
+    2.806,
+    0.282
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 9,
+   "joints": 18,
+   "anchors": 3,
+   "fracture_class": "Wood",
+   "mass_kg": 770.3,
+   "density_kg_m3": 600,
+   "lod0_tris": 782,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC_Fractured.fbx"
+  },
+  "Kit_RealBakery_UpFR": {
+   "kit": "Kit_RealBakery",
+   "module": "UpFR",
+   "size_unity": [
+    2.722,
+    2.807,
+    0.435
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 14,
+   "joints": 49,
+   "anchors": 3,
+   "fracture_class": "Wood",
+   "mass_kg": 849.0,
+   "density_kg_m3": 600,
+   "lod0_tris": 1084,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR_Fractured.fbx"
+  },
+  "Kit_RealBakery_UpB": {
+   "kit": "Kit_RealBakery",
+   "module": "UpB",
+   "size_unity": [
+    8.044,
+    2.806,
+    0.285
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 13,
+   "joints": 30,
+   "anchors": 6,
+   "fracture_class": "Wood",
+   "mass_kg": 2404.3,
+   "density_kg_m3": 600,
+   "lod0_tris": 1192,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB_Fractured.fbx"
+  },
+  "Kit_RealBakery_UpL": {
+   "kit": "Kit_RealBakery",
+   "module": "UpL",
+   "size_unity": [
+    0.285,
+    2.809,
+    6.348
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 9,
+   "joints": 20,
+   "anchors": 5,
+   "fracture_class": "Wood",
+   "mass_kg": 1838.0,
+   "density_kg_m3": 600,
+   "lod0_tris": 900,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL_Fractured.fbx"
+  },
+  "Kit_RealBakery_UpR": {
+   "kit": "Kit_RealBakery",
+   "module": "UpR",
+   "size_unity": [
+    0.285,
+    2.806,
+    6.343
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 35,
+   "anchors": 7,
+   "fracture_class": "Wood",
+   "mass_kg": 1838.1,
+   "density_kg_m3": 600,
+   "lod0_tris": 936,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR_Fractured.fbx"
+  },
+  "Kit_RealBakery_GabL": {
+   "kit": "Kit_RealBakery",
+   "module": "GabL",
+   "size_unity": [
+    0.272,
+    2.08,
+    6.3
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 10,
+   "joints": 18,
+   "anchors": 7,
+   "fracture_class": "Wood",
+   "mass_kg": 851.7,
+   "density_kg_m3": 600,
+   "lod0_tris": 334,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL_Fractured.fbx"
+  },
+  "Kit_RealBakery_GabR": {
+   "kit": "Kit_RealBakery",
+   "module": "GabR",
+   "size_unity": [
+    0.272,
+    2.081,
+    6.3
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 10,
+   "joints": 18,
+   "anchors": 7,
+   "fracture_class": "Wood",
+   "mass_kg": 851.7,
+   "density_kg_m3": 600,
+   "lod0_tris": 332,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR_Fractured.fbx"
+  },
+  "Kit_RealBakery_RfLF": {
+   "kit": "Kit_RealBakery",
+   "module": "RfLF",
+   "size_unity": [
+    4.455,
+    2.749,
+    3.775
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 10,
+   "joints": 24,
+   "anchors": 5,
+   "fracture_class": "Roof",
+   "mass_kg": 4416.4,
+   "density_kg_m3": 1500,
+   "lod0_tris": 1268,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF_Fractured.fbx"
+  },
+  "Kit_RealBakery_RfLB": {
+   "kit": "Kit_RealBakery",
+   "module": "RfLB",
+   "size_unity": [
+    4.49,
+    2.874,
+    3.808
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 16,
+   "joints": 38,
+   "anchors": 4,
+   "fracture_class": "Roof",
+   "mass_kg": 4286.0,
+   "density_kg_m3": 1500,
+   "lod0_tris": 1016,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB_Fractured.fbx"
+  },
+  "Kit_RealBakery_RfRF": {
+   "kit": "Kit_RealBakery",
+   "module": "RfRF",
+   "size_unity": [
+    4.454,
+    2.749,
+    3.774
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 11,
+   "joints": 25,
+   "anchors": 6,
+   "fracture_class": "Roof",
+   "mass_kg": 4416.4,
+   "density_kg_m3": 1500,
+   "lod0_tris": 1248,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF_Fractured.fbx"
+  },
+  "Kit_RealBakery_RfRB": {
+   "kit": "Kit_RealBakery",
+   "module": "RfRB",
+   "size_unity": [
+    4.49,
+    2.873,
+    3.807
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 10,
+   "joints": 20,
+   "anchors": 5,
+   "fracture_class": "Roof",
+   "mass_kg": 4492.7,
+   "density_kg_m3": 1500,
+   "lod0_tris": 1252,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB_Fractured.fbx"
+  },
+  "Kit_RealBakery_Chim": {
+   "kit": "Kit_RealBakery",
+   "module": "Chim",
+   "size_unity": [
+    1.242,
+    6.869,
+    0.942
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 7,
+   "joints": 6,
+   "anchors": 1,
+   "fracture_class": "Stone",
+   "mass_kg": 13303.9,
+   "density_kg_m3": 2300,
+   "lod0_tris": 288,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Chim.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Chim_Fractured.fbx"
+  },
   "Kit_RealBrick_Block": {
    "kit": "Kit_RealBrick",
    "module": "Block",
@@ -5656,6 +7070,166 @@
    "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof.fbx",
    "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof_Fractured.fbx",
    "note": ""
+  },
+  "Kit_RealStall_Keystn": {
+   "kit": "Kit_RealStall",
+   "module": "Keystn",
+   "size_unity": [
+    1.6,
+    0.225,
+    1.8
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 9,
+   "joints": 20,
+   "anchors": 9,
+   "fracture_class": "Wood",
+   "mass_kg": 153.2,
+   "density_kg_m3": 600,
+   "lod0_tris": 740,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx"
+  },
+  "Kit_RealStall_StallA": {
+   "kit": "Kit_RealStall",
+   "module": "StallA",
+   "size_unity": [
+    1.7,
+    2.18,
+    2.174
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 10,
+   "joints": 22,
+   "anchors": 4,
+   "fracture_class": "Wood",
+   "mass_kg": 234.4,
+   "density_kg_m3": 600,
+   "lod0_tris": 1124,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA_Fractured.fbx"
+  },
+  "Kit_RealStall_StallB": {
+   "kit": "Kit_RealStall",
+   "module": "StallB",
+   "size_unity": [
+    1.7,
+    2.18,
+    2.174
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 10,
+   "joints": 22,
+   "anchors": 4,
+   "fracture_class": "Wood",
+   "mass_kg": 234.4,
+   "density_kg_m3": 600,
+   "lod0_tris": 1124,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB_Fractured.fbx"
+  },
+  "Kit_RealStall_Pads": {
+   "kit": "Kit_RealStall",
+   "module": "Pads",
+   "size_unity": [
+    10.7,
+    0.2,
+    0.7
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": null,
+   "joints": null,
+   "anchors": null,
+   "fracture_class": "Indestructible",
+   "mass_kg": null,
+   "density_kg_m3": null,
+   "lod0_tris": 88,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Pads.fbx",
+   "fractured_fbx": null
+  },
+  "Kit_RealStall_PostL": {
+   "kit": "Kit_RealStall",
+   "module": "PostL",
+   "size_unity": [
+    1.455,
+    3.76,
+    0.44
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 9,
+   "joints": 9,
+   "anchors": 1,
+   "fracture_class": "Wood",
+   "mass_kg": 392.1,
+   "density_kg_m3": 600,
+   "lod0_tris": 204,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL_Fractured.fbx"
+  },
+  "Kit_RealStall_PostR": {
+   "kit": "Kit_RealStall",
+   "module": "PostR",
+   "size_unity": [
+    1.459,
+    3.76,
+    0.44
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 8,
+   "joints": 8,
+   "anchors": 1,
+   "fracture_class": "Wood",
+   "mass_kg": 392.1,
+   "density_kg_m3": 600,
+   "lod0_tris": 220,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR_Fractured.fbx"
+  },
+  "Kit_RealStall_Beam": {
+   "kit": "Kit_RealStall",
+   "module": "Beam",
+   "size_unity": [
+    11.1,
+    0.524,
+    0.422
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 12,
+   "joints": 11,
+   "anchors": 12,
+   "fracture_class": "Wood",
+   "mass_kg": 1096.0,
+   "density_kg_m3": 600,
+   "lod0_tris": 448,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam_Fractured.fbx"
+  },
+  "Kit_RealStall_Sign": {
+   "kit": "Kit_RealStall",
+   "module": "Sign",
+   "size_unity": [
+    2.655,
+    0.824,
+    0.3
+   ],
+   "pivot": "module pivot (centre of the module base footprint, +Z street)",
+   "frag_pivot": "fragment volume centre of mass",
+   "frags": 5,
+   "joints": 4,
+   "anchors": 2,
+   "fracture_class": "Steel",
+   "mass_kg": 2446.2,
+   "density_kg_m3": 7850,
+   "lod0_tris": 604,
+   "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign.fbx",
+   "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign_Fractured.fbx"
   },
   "Kit_RealSteel_Block": {
    "kit": "Kit_RealSteel",

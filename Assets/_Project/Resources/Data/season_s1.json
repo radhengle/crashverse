@@ -88,8 +88,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "propL",
-     "hintYaw": 3.0,
-     "hintPitch": 8.0
+     "hintYaw": 4.0,
+     "hintPitch": 7.5
     },
     {
      "id": "magnetic_mayhem_e3",
@@ -157,7 +157,7 @@
      "islandKillY": -2.0,
      "hintTarget": "key1",
      "hintYaw": -1.5,
-     "hintPitch": 15.0
+     "hintPitch": 11.5
     },
     {
      "id": "magnetic_mayhem_e5",
@@ -273,8 +273,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "propL",
-     "hintYaw": 3.0,
-     "hintPitch": 8.0
+     "hintYaw": 4.0,
+     "hintPitch": 7.5
     },
     {
      "id": "seismic_surge_e3",
@@ -342,7 +342,7 @@
      "islandKillY": -2.0,
      "hintTarget": "key1",
      "hintYaw": -1.5,
-     "hintPitch": 15.0
+     "hintPitch": 11.5
     },
     {
      "id": "seismic_surge_e5",
@@ -458,8 +458,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "propL",
-     "hintYaw": 3.0,
-     "hintPitch": 14.0
+     "hintYaw": 4.0,
+     "hintPitch": 13.0
     },
     {
      "id": "gravity_games_e3",
@@ -527,7 +527,7 @@
      "islandKillY": -2.0,
      "hintTarget": "key1",
      "hintYaw": -1.5,
-     "hintPitch": 21.0
+     "hintPitch": 17.5
     },
     {
      "id": "gravity_games_e5",
@@ -643,8 +643,8 @@
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
      "hintTarget": "propL",
-     "hintYaw": 3.0,
-     "hintPitch": 8.0
+     "hintYaw": 4.0,
+     "hintPitch": 7.5
     },
     {
      "id": "sonic_rupture_e3",
@@ -712,7 +712,7 @@
      "islandKillY": -2.0,
      "hintTarget": "key1",
      "hintYaw": -1.5,
-     "hintPitch": 15.0
+     "hintPitch": 11.5
     },
     {
      "id": "sonic_rupture_e5",

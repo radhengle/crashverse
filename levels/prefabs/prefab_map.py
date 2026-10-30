@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Maps every Ch1 L1-10 and Daily Boss (Daily Titan) layout piece to a 3D Modeler building-kit module (rev 8).
-rev 8: L3 blocks are the realistic Bld_Townhouse LD modules (one block per module; the module pieces spawn at its pivot).
-Data-only sidecar: LevelBuilder.Build still spawns one scaled cube per BlockData and has no field to name a model,
-so nothing here is read at runtime yet (see CODE GAPS in PREFAB_MAP.md). Each entry gives the module, its intact and
+"""Maps every Ch1 L1-10 and Daily Boss (Daily Titan) layout piece to a 3D Modeler building-kit module (rev 9).
+rev 9: L3 = realistic Bld_Bakery, L8 = Kit_RealStall x4 + Bld_MarketArch. Those blocks carry the integration/v2 loader fields
+(BlockData.parts / rotY / modelScale): the runtime spawns the listed FBX at the block's base-footprint centre, so for them this
+map is a read-back of the layout, not a proposal. Every other level is still a data-only proposal (cube + this sidecar). Each entry gives the module, its intact and
 fractured FBX, the per-axis scale that turns the module's AABB into the block's size, the yaw the module needs (BlockData
 has no rotation field), and whether the module's fracture class matches the gameplay material.
 Inputs: ../ch1/gen_levels.py (authored +z-front frame, before face_wrecker), Resources titan layouts, prefab_inventory.json.
@@ -14,17 +14,17 @@ INV=json.load(open(os.path.join(HERE,'prefab_inventory.json'))); MOD=INV['module
 RES=os.path.join(HERE,'../../Assets/_Project/Resources/Data')
 MATCLS={'wood':{'Wood'},'brick':{'Stone','Brick','Roof'},'steel':{'Steel'}}
 # Building each level is re-skinned as (rev 7). 'stylized' = modular Kit_* (landed, breakable); 'realistic' = CC0 Real look.
-BUILDING={3:'Bld_Townhouse (realistic, modular, e725121) - INTERIM until the bakery',7:'Bld_Watchtower',9:'Bld_Watchtower + Bld_Gatehouse wall','titan':'Bld_CastleKeep modules'}
-WAITING={3:['8x6 m bakery prefab (3D Modeler, due Oct 31): L3 moves to it; the realistic townhouse is the interim skin'],
+BUILDING={3:'Bld_Bakery (realistic, modular, a24f5ec) - parts wired',8:'4 x Kit_RealStall + Bld_MarketArch (realistic, a24f5ec/8c99d49) - parts wired',7:'Bld_Watchtower',9:'Bld_Watchtower + Bld_Gatehouse wall','titan':'Bld_CastleKeep modules'}
+WAITING={3:['realistic-v1 FBX (Kit_RealBakery_*, Props_Village) merged into integration/v2: until then the parts log not-found and the cubes stay'],
  7:['realistic Watchtower (only the stylized Kit_Tower set exists)'],
- 8:['Stall module + arch with steel sign (3D Modeler, due Oct 31 - Nov 1): block layout kept until then'],
+ 8:['realistic-v1 FBX (Kit_RealStall_*) merged into integration/v2', 'stall_slots re-pitched to 1.6 m (or sim split window decision): see REPORT rev 9'],
  9:['realistic Watchtower and Gatehouse wall (only stylized sets exist)'],
  'titan':['realistic castle keep/wall (only the stylized Kit_Keep set exists)'],
  10:['none planned: Tidewarden boss body is Developer/3D Modeler boss art, not a building prefab']}
 EXPLICIT={  # level -> [(id regex, module, building piece it stands for)]
  3:[(r'propL|propR','Kit_RealWood_Joint','cellar prop (level scaffolding, not in the model)'),
     (r'slab[LR]','Kit_RealBrick_Floor','cellar deck (level scaffolding, not in the model)'),
-    (r'awningPost','Kit_RealWood_Joint','shop awning post (level decoy)'),(r'awning','Kit_RealWood_Floor','shop awning (level decoy)')],
+    (r'Chimney','Kit_RealBrick_Block','chimney stub above the roof (Kit_RealBakery_Chim not wired: its pivot is inside Floor/UpperStorey/roof and parts spawn at the box base)')],
  7:[(r'plinth','Kit_Base_Indestructible','base'),(r'ring\d','Kit_RealSteel_Floor','gold clockwork ring between storeys (JNT seam)'),
     (r'wallF1','Kit_Tower_RingDoor','S0_RingDoor (front quarter)'),(r'wall[BLR]1','Kit_Tower_RingDoor','S0_RingDoor (quarter)'),
     (r'wall.2','Kit_Tower_RingSlit','S1_RingSlit (quarter)'),(r'crownFloor','Kit_RealBrick_Floor','Floor_4 (brick deck under the crown)'),
@@ -53,7 +53,7 @@ def generic(b):
     return f'Kit_{m}_Block','block'
 RH=next((v for k,v in INV['buildings'].items() if k.startswith('Bld_Townhouse (realistic')),None)
 RHMOD={m['id']:m for m in (RH or {}).get('modules',[])}
-MATRH={'Stone':'brick','Wood':'wood','Roof':'brick','Indestructible':'brick'}
+MATRH={'Stone':'brick','Wood':'wood','Roof':'brick','Indestructible':'brick','Steel':'steel'}
 def rh_entry(b):
     m=RHMOD[b['id']]; ps=[MOD['Kit_RealHouse_'+p] for p in m['pieces']]; cls=sorted({p['fracture_class'] for p in ps})
     return dict(id=b['id'],mat=b['mat'],role=b.get('role',''),size=b['s'],module='Bld_Townhouse(realistic) module '+m['id'],
@@ -64,8 +64,25 @@ def rh_entry(b):
         frags=sum(p['frags'] or 0 for p in ps) or None,joints=sum(p['joints'] or 0 for p in ps) or None,
         fracture_class='/'.join(cls),material_match=all(MATRH[c]==b['mat'] for c in cls),
         breakable=not b.get('indestructible') and all(p['fractured_fbx'] for p in ps))
+REAL={k:v for k,v in INV['buildings'].items() if k.endswith('(realistic)')}
+def parts_entry(b):
+    """rev 9: block already names its FBX parts (BlockData.parts); report module, FBX, class and fit."""
+    names=[os.path.basename(p)[:-4] for p in b['parts']]; ps=[MOD.get(n) for n in names]
+    kp='_'.join(names[0].split('_')[:2])+'_'   # e.g. Kit_RealBakery_ ; module match = the block's parts are a subset of the module's pieces
+    lm=next(((bn,m) for bn,bd in REAL.items() for m in bd.get('modules',[]) if set(names)<=set(kp+x for x in m['pieces'])),(None,None))
+    cls=sorted({p['fracture_class'] for p in ps if p}) if all(ps) else []
+    mod=(f"{lm[0].replace(' (realistic)','')} module {lm[1]['id']}" if lm[1] else '+'.join(names))
+    return dict(id=b['id'],mat=b['mat'],role=b.get('role',''),size=b['s'],module=mod,stands_for=(lm[1] or {}).get('label') or 'street prop (props[])',
+        yaw_deg=b.get('rotY'),scale=b.get('modelScale') or [1,1,1],parts=b['parts'],placed_at_block_bottom_centre=[b['p'][0],round(b['p'][1]-b['s'][1]/2,4),b['p'][2]],
+        placement_note='authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout',
+        module_pivot=(lm[1] or {}).get('pivot'),anchor_to=(lm[1] or {}).get('anchor_to'),pieces=names,
+        intact_fbx=b['parts'],fractured_fbx=[p['fractured_fbx'] for p in ps if p and p['fractured_fbx']],
+        frags=sum((p or {}).get('frags') or 0 for p in ps) or None,joints=sum((p or {}).get('joints') or 0 for p in ps) or None,
+        fracture_class='/'.join(cls) or ('Indestructible prop' if not all(ps) else None),
+        material_match=all(MATRH.get(c)==b['mat'] for c in cls) if cls else None,
+        breakable=not b.get('indestructible') and bool(ps) and all(p and p['fractured_fbx'] for p in ps))
 def entry(lv,b):
-    if lv==3 and b['id'] in RHMOD: return rh_entry(b)
+    if b.get('parts'): return parts_entry(b)
     mod=note=None
     for rx,mm,nn in EXPLICIT.get(lv,[]):
         if re.fullmatch(rx,b['id']): mod,note=mm,nn; break
@@ -92,13 +109,13 @@ for t in sorted(x[:-5] for x in os.listdir(os.path.join(RES,'Layouts')) if x.sta
                           pieces=[entry('titan',b) for b in bl])
 json.dump(out,open(os.path.join(HERE,'prefab_map.json'),'w'),indent=1)
 # ---- markdown
-L=['# Prefab map, Ch1 L1-10 + Daily Titan (rev 8)','',f"Generated by `prefab_map.py` from `prefab_inventory.json` (3d-modeler/realistic-v1 @ {INV['commit']}). Data only: the runtime does not read it yet.",'']
+L=['# Prefab map, Ch1 L1-10 + Daily Titan (rev 9)','',f"Generated by `prefab_map.py` from `prefab_inventory.json` (3d-modeler/realistic-v1 @ {INV['commit']}). L3 and L8 blocks carry `parts`/`rotY`/`modelScale` (integration/v2 loader): those rows read the layout back. Other levels: data only.",'']
 for k,v in out['levels'].items():
     mm=sum(1 for p in v['pieces'] if p['material_match'] is False)
     L+=[f"## {k} `{v['layout']}`: {v['building']}",'',('Waiting on: '+'; '.join(v['waiting_on'])) if v['waiting_on'] else 'Waiting on: nothing (all modules landed)','',
         '| piece | mat | module | stands for | yaw | scale x/y/z | frags | class ok |','|---|---|---|---|---|---|---|---|']
     for p in v['pieces']:
-        mod=p['module']+(f" ({'+'.join(p['pieces'])})" if p.get('pieces') else '')
+        mod=p['module']+(f" ({'+'.join(x.split('_')[-1] for x in p['pieces'])})" if p.get('pieces') else '')
         L.append(f"| {p['id']} | {p['mat']} | {mod} | {p['stands_for']} | {p['yaw_deg']} | {'/'.join(map(str,p['scale'])) if p['scale'] else '-'} | {p['frags'] or '-'} | {'-' if p['material_match'] is None else 'yes' if p['material_match'] else 'NO'} |")
     L+=['',f"{mm} piece(s) where the module's fracture class differs from the gameplay material (gameplay mat wins; the module only skins it)." if mm else '','']
 open(os.path.join(HERE,'PREFAB_MAP.md'),'w').write('\n'.join(L))
