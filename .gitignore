@@ -65,3 +65,7 @@ Assets/_Project/Resources/Audio/sfx_routing.json.meta
 *.blend
 *.blend1
 .aapt2/
+
+# Python bytecode
+__pycache__/
+*.pyc
