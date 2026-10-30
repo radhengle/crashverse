@@ -1,0 +1,450 @@
+{
+ "cameras": {
+  "primary": {
+   "fov": 50.0,
+   "eye": [
+    -28.0,
+    5.0,
+    0.0
+   ],
+   "pitch": 8.0
+  },
+  "tight": {
+   "fov": 50.0,
+   "eye": [
+    -26.0,
+    4.0,
+    0.0
+   ],
+   "pitch": 5.0
+  }
+ },
+ "safe": {
+  "left": 64.8,
+  "right": 1015.1999999999999,
+  "top": 234.0,
+  "bottom": 1872.0
+ },
+ "rows": [
+  {
+   "id": "c1_l01",
+   "layout": "c1_l01_lookout_hut",
+   "primary": {
+    "x": [
+     335,
+     745
+    ],
+    "y": [
+     681,
+     1166
+    ],
+    "fits": true,
+    "worst_piece": "deck",
+    "slack_px": 270
+   },
+   "tight": {
+    "x": [
+     323,
+     757
+    ],
+    "y": [
+     737,
+     1245
+    ],
+    "fits": true,
+    "worst_piece": "deck",
+    "slack_px": 258
+   }
+  },
+  {
+   "id": "c1_l02",
+   "layout": "c1_l02_stilt_tower",
+   "primary": {
+    "x": [
+     197,
+     852
+    ],
+    "y": [
+     634,
+     1166
+    ],
+    "fits": true,
+    "worst_piece": "shedRoof",
+    "slack_px": 132
+   },
+   "tight": {
+    "x": [
+     179,
+     871
+    ],
+    "y": [
+     686,
+     1245
+    ],
+    "fits": true,
+    "worst_piece": "shedRoof",
+    "slack_px": 114
+   }
+  },
+  {
+   "id": "c1_l03",
+   "layout": "c1_l03_bakery",
+   "primary": {
+    "x": [
+     297,
+     783
+    ],
+    "y": [
+     629,
+     1166
+    ],
+    "fits": true,
+    "worst_piece": "rock",
+    "slack_px": 232
+   },
+   "tight": {
+    "x": [
+     283,
+     797
+    ],
+    "y": [
+     685,
+     1245
+    ],
+    "fits": true,
+    "worst_piece": "rock",
+    "slack_px": 218
+   }
+  },
+  {
+   "id": "c1_l04",
+   "layout": "c1_l04_windmill",
+   "primary": {
+    "x": [
+     292,
+     716
+    ],
+    "y": [
+     501,
+     1171
+    ],
+    "fits": true,
+    "worst_piece": "annexRoof",
+    "slack_px": 228
+   },
+   "tight": {
+    "x": [
+     280,
+     727
+    ],
+    "y": [
+     545,
+     1249
+    ],
+    "fits": true,
+    "worst_piece": "annexRoof",
+    "slack_px": 215
+   }
+  },
+  {
+   "id": "c1_l05",
+   "layout": "c1_l05_twin_cottages",
+   "primary": {
+    "x": [
+     177,
+     903
+    ],
+    "y": [
+     790,
+     1161
+    ],
+    "fits": true,
+    "worst_piece": "rockL",
+    "slack_px": 113
+   },
+   "tight": {
+    "x": [
+     156,
+     924
+    ],
+    "y": [
+     849,
+     1241
+    ],
+    "fits": true,
+    "worst_piece": "rockL",
+    "slack_px": 91
+   }
+  },
+  {
+   "id": "c1_l06",
+   "layout": "c1_l06_granary",
+   "primary": {
+    "x": [
+     297,
+     783
+    ],
+    "y": [
+     416,
+     1166
+    ],
+    "fits": true,
+    "worst_piece": "dome",
+    "slack_px": 182
+   },
+   "tight": {
+    "x": [
+     283,
+     797
+    ],
+    "y": [
+     460,
+     1245
+    ],
+    "fits": true,
+    "worst_piece": "rock",
+    "slack_px": 218
+   }
+  },
+  {
+   "id": "c1_l07",
+   "layout": "m1_clockwork_tower",
+   "primary": {
+    "x": [
+     260,
+     734
+    ],
+    "y": [
+     423,
+     1170
+    ],
+    "fits": true,
+    "worst_piece": "crownRoof",
+    "slack_px": 189
+   },
+   "tight": {
+    "x": [
+     242,
+     744
+    ],
+    "y": [
+     466,
+     1248
+    ],
+    "fits": true,
+    "worst_piece": "barrelDecor",
+    "slack_px": 178
+   }
+  },
+  {
+   "id": "c1_l08",
+   "layout": "c1_l08_market_arcade",
+   "primary": {
+    "x": [
+     179,
+     901
+    ],
+    "y": [
+     522,
+     1166
+    ],
+    "fits": true,
+    "worst_piece": "rock",
+    "slack_px": 115
+   },
+   "tight": {
+    "x": [
+     158,
+     922
+    ],
+    "y": [
+     572,
+     1245
+    ],
+    "fits": true,
+    "worst_piece": "rock",
+    "slack_px": 93
+   }
+  },
+  {
+   "id": "c1_l09",
+   "layout": "c1_l09_lighthouse_gauntlet",
+   "primary": {
+    "x": [
+     153,
+     918
+    ],
+    "y": [
+     468,
+     1176
+    ],
+    "fits": true,
+    "worst_piece": "breakwater",
+    "slack_px": 88
+   },
+   "tight": {
+    "x": [
+     130,
+     942
+    ],
+    "y": [
+     516,
+     1254
+    ],
+    "fits": true,
+    "worst_piece": "breakwater",
+    "slack_px": 65
+   }
+  },
+  {
+   "id": "c1_l10",
+   "layout": "c1_l10_tidewarden",
+   "primary": {
+    "x": [
+     351,
+     729
+    ],
+    "y": [
+     554,
+     1166
+    ],
+    "fits": true,
+    "worst_piece": "armL",
+    "slack_px": 286
+   },
+   "tight": {
+    "x": [
+     341,
+     739
+    ],
+    "y": [
+     605,
+     1245
+    ],
+    "fits": true,
+    "worst_piece": "armL",
+    "slack_px": 276
+   }
+  },
+  {
+   "id": "daily_boss",
+   "layout": "titan_ash_bridge",
+   "primary": {
+    "x": [
+     267,
+     772
+    ],
+    "y": [
+     438,
+     1162
+    ],
+    "fits": true,
+    "worst_piece": "crate",
+    "slack_px": 202
+   },
+   "tight": {
+    "x": [
+     250,
+     783
+    ],
+    "y": [
+     483,
+     1241
+    ],
+    "fits": true,
+    "worst_piece": "crate",
+    "slack_px": 185
+   }
+  },
+  {
+   "id": "daily_boss",
+   "layout": "titan_caldera_rim",
+   "primary": {
+    "x": [
+     267,
+     755
+    ],
+    "y": [
+     438,
+     1162
+    ],
+    "fits": true,
+    "worst_piece": "crate",
+    "slack_px": 202
+   },
+   "tight": {
+    "x": [
+     250,
+     766
+    ],
+    "y": [
+     483,
+     1241
+    ],
+    "fits": true,
+    "worst_piece": "crate",
+    "slack_px": 185
+   }
+  },
+  {
+   "id": "daily_boss",
+   "layout": "titan_forge_floor",
+   "primary": {
+    "x": [
+     349,
+     731
+    ],
+    "y": [
+     438,
+     1152
+    ],
+    "fits": true,
+    "worst_piece": "head",
+    "slack_px": 204
+   },
+   "tight": {
+    "x": [
+     340,
+     740
+    ],
+    "y": [
+     483,
+     1233
+    ],
+    "fits": true,
+    "worst_piece": "head",
+    "slack_px": 249
+   }
+  },
+  {
+   "id": "daily_boss",
+   "layout": "titan_slag_foundry",
+   "primary": {
+    "x": [
+     366,
+     714
+    ],
+    "y": [
+     438,
+     1152
+    ],
+    "fits": true,
+    "worst_piece": "head",
+    "slack_px": 204
+   },
+   "tight": {
+    "x": [
+     357,
+     723
+    ],
+    "y": [
+     483,
+     1233
+    ],
+    "fits": true,
+    "worst_piece": "head",
+    "slack_px": 249
+   }
+  }
+ ]
+}

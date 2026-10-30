@@ -20,10 +20,13 @@ def L1():  # EASY "Seagull Perch": T-shaped cliff lookout on ONE crooked post; s
       B("bell","wood",(0,6.3,.25),(.4,.5,.4),["bellFrame"]),
       B("flag","wood",(2.1,5.3,0),(.1,1.0,.1),["cabinR"],nonObj=True,color="E5484D")]
 
-def L2():  # EASY "Leaning Water Tower": stilts on one sill; a catwalk links the tank to a pump shed -> domino
-    b=[ROCK("rock",(0,.6,0),(9,1.2,4)),B("sill","wood",(0,1.4,.2),(3.2,.4,2.8),["rock"],role="support")]
+def L2():  # EASY "Leaning Water Tower": stilts stand on TWO sills (rev 6: L1 already taught the one-support shot;
+    # L2 teaches "find every support"); a catwalk links the tank to a pump shed -> domino
+    b=[ROCK("rock",(0,.6,0),(9,1.2,4)),
+       B("sillL","wood",(-1.2,1.4,.2),(1.1,.4,2.8),["rock"],role="support"),
+       B("sillR","wood",(1.2,1.4,.2),(1.1,.4,2.8),["rock"],role="support")]
     for i,(x,z) in enumerate([(-1.2,-1),(1.2,-1),(-1.2,1),(1.2,1)]):
-        b.append(B(f"stilt{i}","wood",(x,3.0,z),(.35,2.8,.35),["sill"],role="stilt"))
+        b.append(B(f"stilt{i}","wood",(x,3.0,z),(.35,2.8,.35),["sillL" if x<0 else "sillR"],role="stilt"))
     b+=[B("frame","wood",(0,4.6,0),(3,.4,2.6),[f"stilt{i}" for i in range(4)]),
         B("tankLo","wood",(0,5.4,0),(2.4,1.2,2.4),["frame"],role="tank"),
         B("tankHi","wood",(0,6.6,0),(2.4,1.2,2.4),["tankLo"],role="tank"),
@@ -71,26 +74,29 @@ def L4():  # windmill: brick drums on wooden ring-beams; hitting low beams chain
     return b
 
 def L5():  # twin cottages on one bridge: the bridge plank is the shared support
-    b=[ROCK("rockL",(-5,.6,0),(3,1.2,3)),ROCK("rockR",(5,.6,0),(3,1.2,3)),
-       B("pierL","brick",(-3.2,2.0,0),(.8,1.6,.8),["rockL"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
-       B("pierR","brick",(3.2,2.0,0),(.8,1.6,.8),["rockR"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
-       B("bridge","wood",(0,3.0,0),(7.2,.4,2.0),["pierL","pierR"],role="bridge")]
-    for side,x in (("L",-2),("R",2)):
-        b+=[B(f"floor{side}","wood",(x,3.4,0),(2.4,.4,2),["bridge"]),
-            B(f"wallF{side}","brick",(x,4.2,.85),(2.2,1.2,.3),[f"floor{side}"],role="wall"),
-            B(f"wallB{side}","brick",(x,4.2,-.85),(2.2,1.2,.3),[f"floor{side}"],role="wall"),
-            B(f"roof{side}","wood",(x,5.1,0),(2.6,.6,2.2),[f"wallF{side}",f"wallB{side}"],role="roof")]
+    # rev 6: 10.6 m wide (was 13 m) so both rocks sit inside the fixed behind-cannon frame
+    b=[ROCK("rockL",(-4.1,.6,0),(2.4,1.2,3)),ROCK("rockR",(4.1,.6,0),(2.4,1.2,3)),
+       B("pierL","brick",(-2.9,2.0,0),(.8,1.6,.8),["rockL"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
+       B("pierR","brick",(2.9,2.0,0),(.8,1.6,.8),["rockR"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
+       B("bridge","wood",(0,3.0,0),(6.6,.4,2.0),["pierL","pierR"],role="bridge")]
+    for side,x in (("L",-1.75),("R",1.75)):
+        b+=[B(f"floor{side}","wood",(x,3.4,0),(2.2,.4,2),["bridge"]),
+            B(f"wallF{side}","brick",(x,4.2,.85),(2.0,1.2,.3),[f"floor{side}"],role="wall"),
+            B(f"wallB{side}","brick",(x,4.2,-.85),(2.0,1.2,.3),[f"floor{side}"],role="wall"),
+            B(f"roof{side}","wood",(x,5.1,0),(2.4,.6,2.2),[f"wallF{side}",f"wallB{side}"],role="roof")]
     b+=[B("wheelAxle","wood",(0,2.4,.9),(.4,.8,.4),["bridge"]),          # water-wheel hangs under the bridge: falls with it
         B("wheel","wood",(0,1.6,1.2),(1.8,1.8,.3),["wheelAxle"]),
-        B("lanterns","wood",(0,4.4,0),(1.4,.2,.2),["roofL","roofR"])]       # string between roofs: 2nd domino
+        B("lanterns","wood",(0,4.6,0),(1.2,.2,.2),["roofL","roofR"])]       # string between roofs: 2nd domino
     return b
 
 def L6():  # MEDIUM "Grain Silo": tall 3-drum brick silo on two gold steel braces over stone piers; side hopper rides the deck
     b=[ROCK("rock",(0,.6,0),(7,1.2,4))]
     for s_,x in (("L",-1.4),("R",1.4)):
         b+=[B(f"col{s_}","brick",(x,2.4,.9),(.6,2.4,.6),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
-            B(f"brace{s_}","steel",(x,3.85,.9),(.9,.5,.9),[f"col{s_}"],joint=True,role="brace")]
-    b+=[B("braceM","steel",(0,3.85,-.9),(.9,.5,.9),["rock"],joint=True,role="brace"),
+            B(f"brace{s_}","steel",(x,3.85,.9),(.9,.5,.9),[f"col{s_}"],joint=True,role="steel_joint")]
+    # rev 6: role steel_joint (mastery ALL_ROLE_BROKEN counts role steel_joint; "brace" made the goal impossible).
+    # braceM now hangs under the deck (was bolted to the rock, so it never fell and capped the best line at 87%).
+    b+=[B("braceM","steel",(0,3.85,-.9),(.9,.5,.9),["deck"],joint=True,role="steel_joint"),
         B("deck","brick",(0,4.3,0),(3.6,.4,3),["braceL","braceR"]),
         B("drum0","brick",(0,5.5,0),(2.6,2.0,2.6),["deck"],role="wall"),
         B("drum1","brick",(0,7.5,0),(2.4,2.0,2.4),["drum0"],role="wall"),
@@ -118,24 +124,26 @@ def L7():  # M1 Clockwork Tower (contract §7). Plinth indestructible, ring0 sea
         B("crownWood","wood",(0,8.3,0),(2.8,1.4,2.8),["crownFloor"],role="crown"),
         B("crownBrick","brick",(0,9.4,0),(2.4,.8,2.4),["crownWood"],role="crown"),
         B("crownRoof","brick",(0,10.15,0),(3,.7,3),["crownBrick"],role="crown",color="4D7BC4"),
-        B("barrelDecor","wood",(5.5,.6,2),(.8,1.2,.8),[],nonObj=True,color="E5484D")]
+        B("barrelDecor","wood",(3.6,.6,2),(.8,1.2,.8),[],nonObj=True,color="E5484D")]
     return b
 
 def L8():  # market arcade: 4 wood keystones 1.5m apart hold 4 bays on stone piers -> Splitstrike takes 3 at once
-    b=[ROCK("rock",(0,.6,0),(14,1.2,4))]
-    for i,x in enumerate([-6,-3,0,3,6]): b.append(B(f"pier{i}","brick",(x,2.6,0),(.8,2.8,.8),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"))
-    for i,x in enumerate([-4.5,-1.5,1.5,4.5]):
-        b+=[B(f"key{i}","wood",(-2.25+1.5*i,4.25,1.1),(.6,.5,.4),[f"pier{i}",f"pier{i+1}"],role="keystone"),
-            B(f"bay{i}","brick",(x,4.7,0),(2.8,.5,2),[f"key{i}"]),
-            B(f"stall{i}","brick",(x,5.6,0),(2.4,1.2,1.6),[f"bay{i}"]),
-            B(f"awning{i}","wood",(x,6.4,.3),(2.8,.3,2.2),[f"stall{i}"])]
+    # rev 6: 10.4 m wide (was 14 m, which ran off the fixed behind-cannon frame); keystone spacing 1.6 m keeps any
+    # three neighbours inside Multi Shot's 3.5 m spread, and each keystone now sits under its own bay
+    b=[ROCK("rock",(0,.6,0),(10.4,1.2,4))]
+    for i,x in enumerate([-4.4,-2.2,0,2.2,4.4]): b.append(B(f"pier{i}","brick",(x,2.6,0),(.6,2.8,.8),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"))
+    for i,x in enumerate([-3.3,-1.1,1.1,3.3]):
+        b+=[B(f"key{i}","wood",(-2.4+1.6*i,4.25,1.1),(.6,.5,.4),[f"pier{i}",f"pier{i+1}"],role="keystone"),
+            B(f"bay{i}","brick",(x,4.7,0),(2.1,.5,2),[f"key{i}"]),
+            B(f"stall{i}","brick",(x,5.6,0),(1.8,1.2,1.6),[f"bay{i}"]),
+            B(f"awning{i}","wood",(x,6.4,.3),(2.1,.3,2.2),[f"stall{i}"])]
     b+=[B("archL","wood",(-.9,7.3,0),(.3,1.4,.3),["stall1"]),B("archR","wood",(.9,7.3,0),(.3,1.4,.3),["stall2"]),
         B("sign","steel",(0,8.1,0),(2.2,.5,.3),["archL","archR"],joint=True,role="steel_joint"),
         B("clock","wood",(0,8.8,0),(1.0,1.0,.3),["sign"])]
     return b
 
 def L9():  # HARD "Lighthouse Gauntlet": steel-ringed lighthouse + seawall; a catwalk ties lantern gallery to seawall crest
-    b=[ROCK("rock",(0,.6,0),(12,1.2,6)),
+    b=[ROCK("rock",(0,.6,0),(10.6,1.2,6)),   # rev 6: 10.6 m (was 12) for the fixed camera frame
        B("lhBase","brick",(-3,2.2,-1),(2.6,2.0,2.6),["rock"],role="island",nonObj=True,indestructible=True,color="8A8A8A"),
        B("lhRing","steel",(-3,3.45,-1),(2.8,.5,2.8),["lhBase"],joint=True,role="steel_joint"),
        B("lhShaft0","brick",(-3,4.7,-1),(2.2,2.0,2.2),["lhRing"]),
@@ -176,9 +184,19 @@ def face_wrecker(b):
 LAYOUTS={1:("c1_l01_lookout_hut",L1),2:("c1_l02_stilt_tower",L2),3:("c1_l03_bakery",L3),4:("c1_l04_windmill",L4),
  5:("c1_l05_twin_cottages",L5),6:("c1_l06_granary",L6),7:("m1_clockwork_tower",L7),8:("c1_l08_market_arcade",L8),
  9:("c1_l09_lighthouse_gauntlet",L9),10:("c1_l10_tidewarden",L10)}
-OVR={1:dict(hintTarget="post",mastery=dict(type="DESTROYED_AT_LEAST",value=0.95,role="",text=">=95% destroyed")),2:dict(hintTarget="sill",mastery=dict(type="ROLE_BELOW_HEIGHT",value=0,role="tank",text="Topple the tank off the island edge")),3:dict(hintTarget="propL"),4:dict(hintTarget="beamL"),
- 5:dict(hintTarget="bridge"),6:dict(hintTarget="braceL"),7:dict(hintTarget="scaffold"),8:dict(hintTarget="key1"),
- 9:dict(hintTarget="lhRing"),10:dict(shots=8,star3Pct=0.375,star2Pct=0.25,hintTarget="shoulderL",mastery=dict(type="NO_CLOSED_SHUTTER_HIT",value=0,role="shutter",text="Defeat the Tidewarden without hitting the closed shutter"))}
+M=lambda t,txt,v=0,role="": dict(type=t,value=v,role=role,text=txt)
+# rev 6 tuning: readable mastery text (type/value/role unchanged except where noted), hint = first shot of the sim's best line
+OVR={1:dict(hintTarget="post",mastery=M("DESTROYED_AT_LEAST","Destroy at least 95% of the lookout",0.95)),
+ 2:dict(shots=5,hintTarget="sillL",star3Pct=0.4,star2Pct=0.2,teaches="Find every support, not the walls",
+        mastery=M("ROLE_BELOW_HEIGHT","Knock the water tank off the cliff",0,"tank")),
+ 3:dict(hintTarget="propL",mastery=M("DESTROYED_AT_LEAST","Destroy at least 95% of the bakery",0.95)),
+ 4:dict(hintTarget="beamL",mastery=M("THREE_STARS_NO_ROLE_HITS","3 stars without hitting a brick wall",0,"wall")),
+ 5:dict(hintTarget="bridge",mastery=M("CLEAR_IN_SHOTS","Drop both cottages with 1 shot",1)),
+ 6:dict(hintTarget="braceL",mastery=M("ALL_ROLE_BROKEN","Break all 3 gold steel joints",0,"steel_joint")),
+ 7:dict(hintTarget="scaffold",mastery=M("ROLE_INTACT","Topple the tower without breaking the crown",0.8,"crown")),
+ 8:dict(shots=6,hintTarget="key1",mastery=M("STARS","Earn 3 stars",3)),
+ 9:dict(shots=5,hintTarget="lhRing",mastery=M("NO_POWERUP","Win without using a power-up")),
+ 10:dict(shots=8,star3Pct=0.375,star2Pct=0.25,hintTarget="shoulderL",mastery=M("NO_CLOSED_SHUTTER_HIT","Defeat the Tidewarden without hitting the closed shutter",0,"shutter"))}
 if __name__=="__main__":
     os.makedirs(os.path.join(HERE,"layouts"),exist_ok=True)
     for n,(lid,f) in LAYOUTS.items():

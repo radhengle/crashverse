@@ -105,3 +105,17 @@ No collision reaches the 60 cap. The worst case is a 4 kg steel piece dropping a
 - **Orientation fix:** the Wrecker fires along +x, but the layouts were authored front-facing +z. gen_levels.py now turns every layout to face the Wrecker, and sim.py's occlusion is now taken along −x. Without this, the L4, L6, L7, L8 and L10 lines were blocked by side pieces. L10's core moves 0.4 m forward so it sits proud of the torso. The sim results are unchanged.
 - Hint angles were re-derived with Developer's derive_hints.py (PR #12) and match ci_win_shots (season event hints updated too).
 - **Root cause of the missed win (engine, not data):** logcat shows `Can't add component because class 'BoxCollider' / 'SphereCollider' doesn't exist!`. IL2CPP managed-code stripping removed the collider classes, which are only ever added at runtime. Blocks and projectiles have no colliders, so every shot passes through and 0% is destroyed, whatever the aim. Fix (Developer/Release): `Assets/link.xml` preserving `UnityEngine.PhysicsModule` (BoxCollider, SphereCollider, Rigidbody, FixedJoint), or lower Managed Stripping Level. Secondary: main's L1 hint (yaw 4, pitch 22) was hand-set and doesn't hit main's `post0` either.
+
+## Rev 6 tuning (2026-10-30, branch level-designer/ch1-tuning → integration/v2)
+Scope (PM): no new content; tune Ch1 L1–10 and the Daily Boss for fair difficulty, clear goals and fun destruction.
+- Evidence used: QA DevBuild7_RunThrough + PR55_Review (L1 hint line wins 100% in 1 shot in PlayMode and on the emulator,
+  API 34/36; 3★). No device evidence exists for L2–L10 or the Daily Boss (the smoke covers only L1; no gameplay video).
+- sim.py: power-up ids map through powerups.json effects (v2 renamed shockwave → earthquake, splitstrike → multi_shot,
+  which had silently switched Multi Shot off in the sim, so L8 read as 1★); the random player now fires a forced power-up;
+  SIM_GSCALE env (default 1.2). Power-up lines are shown power-up first.
+- ci_win_shots.py: `clear` requires the intended first hit at both g×1.0 and g×1.2; Multi Shot split modelled.
+- New: frame_check.py (fixed behind-cannon camera, assumed parameters), sync_to_assets.py, ../daily_boss/daily_boss_sim.py.
+- Level changes: L2 (two sills, 5 shots, 0.4/0.2), L5 (narrower), L6 (steel_joint roles, braceM hangs from deck),
+  L7 (decor only), L8 (6 shots, narrower, keystones 1.6 m), L9 (5 shots, rock trimmed); readable mastery texts.
+- Daily Boss: titan arenas turned to face the cannon (BUG-24 transform, in gen_content.py too), steel legs are joints,
+  arena hint pelvis → legL (derived by derive_hints.py, now also covering titan_templates), dailyBoss 6–8 → 5–6 shots.

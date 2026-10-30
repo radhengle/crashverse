@@ -14,10 +14,21 @@ Stars: ratio = shotsLeft/shots >= star3Pct / star2Pct (exact).
 """
 import json, sys, itertools, random, os
 HP={'wood':30,'brick':60,'steel':120}; MASS={'wood':1.0,'brick':2.5,'steel':4.0}
-DMG=60; SHOCK=40; SPLIT=0.5; G=9.81*1.2;  # PR #15 gravity x1.2
+DMG=60; SHOCK=40; SPLIT=0.5; GSCALE=float(os.environ.get('SIM_GSCALE','1.2')); G=9.81*GSCALE  # PR #15 gravity x1.2 (SIM_GSCALE=1.0 = live build)
 MATF={'wood':1.0,'brick':1.1,'steel':0.8}; CAPLOG={'hits':0,'capped':0}; DEBRIS_MIN_V=2.0; DEBRIS_CAP=60
 DEBRIS=True
 HERE=os.path.dirname(os.path.abspath(__file__))
+DATA=os.path.join(HERE,'../../Assets/_Project/Resources/Data')
+def _effects():
+    """powerups.json v2 ids -> sim effect (earthquake = SHOCKWAVE, multi_shot = SPLIT). v1 ids still accepted."""
+    m={'shockwave':'shockwave','splitstrike':'splitstrike'}
+    try:
+        for p in json.load(open(os.path.join(DATA,'powerups.json')))['powerups']:
+            e={'SHOCKWAVE':'shockwave','SPLIT':'splitstrike'}.get(p.get('effect'))
+            if e: m[p['id']]=e
+    except Exception: pass
+    return m
+EFFECT=_effects()
 
 class State:
     def __init__(s,blocks):
@@ -120,6 +131,20 @@ def min_shots(blocks,win,budget,powerups=(),boss=False):
         if len(frontier)>60000: frontier=frontier[:60000]
     return None,None
 
+def min_shots_from(st0,win,budget,pw=frozenset()):
+    frontier=[(st0,frozenset(pw),())]; seen=set()
+    for depth in range(1,budget+1):
+        nxt=[]
+        for st,p,seq in frontier:
+            for a in actions(st,p):
+                n=apply(st,a); np_=p-{a[0]} if a[0] else p
+                if n.ratio()>=win: return depth,seq+(a,)
+                k=(n.key(),np_)
+                if k in seen: continue
+                seen.add(k); nxt.append((n,np_,seq+(a,)))
+        frontier=nxt[:60000]
+    return None,None
+
 def boss_min(blocks,budget,toggle_on_phase_shot):
     """SG-05: phase1 break both steel shoulders (joint 2x). Phase2 shutter OPEN, toggles after every shot.
     Core needs 2 direct hits while open. toggle_on_phase_shot=True mirrors GameSession (shutter closes right
@@ -138,15 +163,18 @@ def stars(budget,used,s3,s2):
     r=(budget-used)/budget
     return 3 if r>=s3 else 2 if r>=s2 else 1
 
-def random_play(blocks,win,budget,trials=4000,seed=1):
-    """Naive player: random hittable target each shot. Returns (win rate, 3-star-capable rate by shots used)."""
+def random_play(blocks,win,budget,trials=4000,seed=1,pw=()):
+    """Naive player: random hittable target each shot. With pw (a forced power-up), it fires the power-up on its
+    first shot at a random valid target (what a new player with an equipped tile does). Returns shots used per run."""
     rnd=random.Random(seed); res=[]
     for _ in range(trials):
-        st=State(blocks); used=None
+        st=State(blocks); used=None; left=set(pw)
         for k in range(1,budget+1):
             h=st.hittable()
             if not h: break
-            st=apply(st,(None,rnd.choice(h)))
+            pa=[a for a in actions(st,left) if a[0]] if left else []
+            if pa: a=rnd.choice(pa); left-={a[0]}; st=apply(st,a)
+            else: st=apply(st,(None,rnd.choice(h)))
             if st.ratio()>=win: used=k;break
         res.append(used)
     return res
@@ -168,14 +196,24 @@ def main():
             rows.append(dict(id=L['id'],shots=B,min=a,min_code=b,need3=need3,stars=stars(B,a,s3,s2) if a<=B else 0,
                  stars_code=stars(B,b,s3,s2) if b<=B else 0,margin=B-a,rand3=None,seq='shoulderL, shoulderR, core(open), any(closed), core(open)'))
             continue
-        pw=[f['powerup'] for f in L.get('forced',[])]
+        pw=[EFFECT[f['powerup']] for f in L.get('forced',[]) if f['powerup'] in EFFECT]
         n,seq=min_shots(lay,L['winThreshold'],B)
         npw,seqp=min_shots(lay,L['winThreshold'],B,pw) if pw else (n,seq)
+        if pw and npw is not None and npw<(n or 99) and seqp and not seqp[0][0]:
+            # rev 6: show the power-up line power-up FIRST (the hint/CI open with the Multi Shot / Earthquake moment)
+            # when an equally short line exists; prefer the one whose split centres on a lower-numbered piece.
+            s0=State(lay)
+            for a in sorted((x for x in actions(s0,set(pw)) if x[0]),key=lambda x:str(x[1])):
+                s1=apply(s0,a)
+                if s1.ratio()>=L['winThreshold'] and npw==1: seqp=(a,); break
+                m,rest=min_shots_from(s1,L['winThreshold'],npw-1,set(pw)-{a[0]})
+                if m is not None and m==npw-1: seqp=(a,)+rest; break
         CAPLOG['hits']=CAPLOG['capped']=0
-        rp=random_play(lay,L['winThreshold'],B)
+        rp=random_play(lay,L['winThreshold'],B,pw=pw)
         cap=(CAPLOG['hits'],CAPLOG['capped'])
         r3=sum(1 for u in rp if u is not None and u<=need3)/len(rp); rw=sum(1 for u in rp if u)/len(rp)
-        fmt=lambda q:', '.join((f'{a}:' if a else '')+(t if isinstance(t,str) else '+'.join(t)) for a,t in q) if q else '-'
+        PUID={EFFECT[f['powerup']]:f['powerup'] for f in L.get('forced',[]) if f['powerup'] in EFFECT}  # show v2 ids (multi_shot)
+        fmt=lambda q:', '.join((f'{PUID.get(a,a)}:' if a else '')+(t if isinstance(t,str) else '+'.join(t)) for a,t in q) if q else '-'
         fin=State(lay)
         for a in (seqp if npw<=n else seq): fin=apply(fin,a)
         crown=[i for i,x in fin.b.items() if x.get('role')=='crown']

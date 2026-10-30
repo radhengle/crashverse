@@ -72,6 +72,15 @@ def main():
             if L["id"] in res and (L.get("hintYaw"), L.get("hintPitch")) != res[L["id"]]:
                 stale.append((L["id"], (L.get("hintYaw"), L.get("hintPitch")), res[L["id"]]))
                 L["hintYaw"], L["hintPitch"] = res[L["id"]]
+    # Daily Boss / ranked Titan arenas (titan_templates.json): the arena hint is derived the same way (gravity x1.0).
+    titan_p = DATA / "titan_templates.json"
+    titan = json.load(open(titan_p)) if titan_p.exists() and not args else None
+    if titan:
+        res = derive([dict(id=a["id"], layout=a["layout"], hintTarget=a.get("hintTarget", "")) for a in titan.get("arenas", [])], lay, v, 9.81)
+        for a in titan.get("arenas", []):
+            if a["id"] in res and (a.get("hintYaw"), a.get("hintPitch")) != res[a["id"]]:
+                stale.append(("titan:" + a["id"], (a.get("hintYaw"), a.get("hintPitch")), res[a["id"]]))
+                a["hintYaw"], a["hintPitch"] = res[a["id"]]
     if "--check" in sys.argv:
         for x in stale: print("STALE", *x)
         print("hints up to date" if not stale else f"{len(stale)} stale hint(s): run python3 Tools/ContentGen/derive_hints.py")
@@ -79,6 +88,7 @@ def main():
     if "--season-only" not in sys.argv: json.dump(doc, open(chap, "w"), indent=1)
     elif any(x[0] in {L["id"] for L in doc["levels"]} for x in stale): print("NOTE: chapter hints are stale; Level Designer owns chapter1.json, run derive_hints.py there")
     if season: json.dump(season, open(season_p, "w"), indent=1)
+    if titan: json.dump(titan, open(titan_p, "w"), indent=1)
     for x in stale: print("updated", *x)
     print(f"{len(stale)} hint(s) updated")
 
