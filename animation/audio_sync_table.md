@@ -23,6 +23,8 @@ Frame = @60 fps from the start of the named state/trigger (negative = before). m
 | BREAK_WOOD / BREAK_BRICK / BREAK_STEEL_JOINT | 0 / 0 | piece HP 0 | snap / crumble / metal pop |
 | IMPACT_GLASS | 0 / 0 | Impact (material int 6) | glass hit tink (velocity → volume) |
 | BREAK_GLASS | 0 / 0 | glass piece HP 0 (shatter, one step) | glass shatter |
+| IMPACT_STONE | 0 / 0 | Impact (material int 7) | stone hit knock (velocity → volume) |
+| BREAK_STONE | 0 / 0 | stone piece HP 0 | stone crack and crumble |
 | EXPLODE_CRATE (alias, deprecated: EXPLODE_BARREL) | 6 / 100 | after swell | explosion |
 | BREAK_STEEL | 0 / 0 | non-joint steel HP 0 | metal tear |
 | DAMAGE_STEP | 0 / 0 | darken+crack step applied (payload material, step 1/2) | material crack |
