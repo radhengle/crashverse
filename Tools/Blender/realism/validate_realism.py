@@ -18,6 +18,8 @@ def img_stats(p):
     return im,w,h
 for f in sorted(glob.glob(R+"/**/*.fbx",recursive=True)):
     rel=os.path.relpath(f,R); e=[]; base=os.path.splitext(os.path.basename(f))[0]; ru=rules(rel,base)
+    if base.startswith("Kit_Real") and base.endswith("_Fractured"): continue   # break-apart sets: validate_fracture.py (#28/#52 rules)
+    if base.startswith("Kit_Real"): ru={**ru,"lods":{0,1,2}}                   # realistic kit modules: LOD0-2 like every kit piece
     bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=f)
     objs=list(bpy.data.objects)
     for o in objs:
@@ -42,6 +44,7 @@ for f in sorted(glob.glob(R+"/**/*.fbx",recursive=True)):
     mats=sorted({s.material.name for o in rend for s in o.material_slots if s.material})
     # textures referenced by the materials must exist; enforce naming/size
     texdir=os.path.join(os.path.dirname(f),"Textures"); asset=os.path.basename(os.path.dirname(f))
+    if asset.startswith("Kit_Real"): asset=asset[4:]                             # one shared tiling set per realistic kit: T_Real<M>_*
     need=[f"T_{asset}_{k}.png" for k in ("A","N","ORM")]
     for n in need:
         p=os.path.join(texdir,n)

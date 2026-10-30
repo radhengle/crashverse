@@ -7,7 +7,7 @@
 import sys,os,bpy,bmesh,random,math; sys.path.insert(0,os.path.dirname(__file__)); from cv_lib import *
 from mathutils import Vector, Matrix
 A=sys.argv[sys.argv.index("--")+1:]; OUT=A[0]; ONLYM=A[1].split(",") if len(A)>1 and A[1] else None; ONLYP=A[2].split(",") if len(A)>2 else None
-GLB="/workspace/wt/3d-modeler-v3/models/BuildingKit"
+GLB=os.environ.get("KIT_GLB","/workspace/wt/3d-modeler-v3/models/BuildingKit")
 RNG={"Wood":(8,16),"Brick":(12,24),"Steel":(4,10),"Glass":(8,16),"Stone":(4,10),"Roof":(8,16)}
 MINAX={"Glass":0.02}
 CELLSZ={"Wood":(0.25,1.5),"Brick":(0.5,0.25),"Steel":(1.0,0.5),"Glass":(0.75,0.75),"Stone":(0.75,0.5),"Roof":(0.6,0.5)}
@@ -31,6 +31,7 @@ PIECES={  # name: (boxes, fracture grid hint per box (n along longest axes), cli
  "WindowFrame":lambda m:(frame(1.0,1.0,True,z=0.15),None,"support"),
  "Gable":lambda m:([B(0,0,0,3.0,TH[m],1.05)],GABLE_CLIP(3.0,1.05),"support"),
  "Roof":lambda m:([B(0,0,0,3.6,2.3,0.16)],None,"support"),
+ "Block":lambda m:([B(0,0,0,1.0,1.0,1.0)],None,"ground"),   # realistic v1: solid 1 m block for box-shaped layout blocks (scaled per block)
  "GlassWall":lambda m:([B(0,0,0.12,2.76,0.03,2.76),B(-1.44,0,0,0.12,0.12,3),B(1.44,0,0,0.12,0.12,3),B(0,0,0,2.76,0.12,0.12,True),B(0,0,2.88,2.76,0.12,0.12,True)],None,"ground"),
 }
 for k in ("Wall",):
@@ -243,6 +244,6 @@ def build(mat,piece):
     print(f"BUILT {name} LOD0={lt} frags={len(frags)} frag_tris_max={max(ft)} frac_total={sum(ft)} mass={min(o['mass_kg'] for o in frags)}-{max(o['mass_kg'] for o in frags)}",flush=True)
 for m,ps in KIT.items():
     if ONLYM and m not in ONLYM: continue
-    for p in ps:
+    for p in (ONLYP if ONLYP and "Block" in ONLYP else ps):   # Block is opt-in (realistic v1), not part of the v3 kit
         if ONLYP and p not in ONLYP: continue
         build(m,p)

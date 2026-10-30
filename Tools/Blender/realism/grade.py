@@ -21,6 +21,12 @@ MATS={
  "OakBark":   ("jolcham_oak_bark_01","#8E7A62",.16,(.80,.95)),
  "PineBark":  ("pine_bark","#9A6E52",.16,(.80,.95)),
  "SandFace":  ("mossy_rock","#CDBA90",.08,(.70,.82)),
+ # realistic v1 (L1-10 + Daily Boss block kit): brick running bond, brushed steel plate, clay roof tiles + fracture interiors
+ "Brick":     ("brick_wall_001","#D2664C",.12,(.75,.85)),
+ "Steel":     ("metal_plate","#AEB6C2",.08,(.25,.35),1.0),
+ "Roof":      ("clay_roof_tiles","#D9703F",.10,(.60,.70)),
+ "BrickInner":("clay_floor_001","#E9997C",.08,(.85,.95)),
+ "WoodInner": ("rough_wood","#EBC28E",.10,(.75,.90)),
 }
 def load(p,mode="RGB"): return np.asarray(Image.open(p).convert(mode)).astype(np.float32)/255
 def blur(a,r):
@@ -46,7 +52,7 @@ def delight(A,AO):
     A=A/np.clip(S,.3,3)[...,None]**.85            # remove large-scale baked light gradients
     A=A/np.clip(AO,.25,1)[...,None]**.6           # remove baked cavity shadow
     return np.clip(A,0,1)
-KEEP={"Plaster":(0,.15),"WoodBeam":(.1,.35),"WoodPlank":(.15,.4),"OakBark":(.12,.5),"PineBark":(.12,.4),"Rock":(.2,.5),"SandFace":(.05,.3)}
+KEEP={"Steel":(0,.2),"WoodInner":(.1,.35),"Brick":(.3,.8),"Roof":(.3,.8),"BrickInner":(.2,.5),"Plaster":(0,.15),"WoodBeam":(.1,.35),"WoodPlank":(.15,.4),"OakBark":(.12,.5),"PineBark":(.12,.4),"Rock":(.2,.5),"SandFace":(.05,.3)}
 def grade(A,target,var,keep=(.35,1)):
     t=hx(target)/255; th,ts,tv=colorsys.rgb_to_hsv(*t)
     h,s,v=rgb2hsv(A)
@@ -70,13 +76,13 @@ def save(a,p,size=2048):
     if im.size!=(size,size): im=im.resize((size,size),Image.LANCZOS)
     im.save(p)
 def run(names=None):
-    for n,(scan,tgt,var,rr) in MATS.items():
+    for n,(scan,tgt,var,rr,*mt) in MATS.items():
         if names and n not in names: continue
         b=f"{PH}/{scan}/{scan}_"
         A=load(b+"Diffuse_2k.jpg"); AO=load(b+"AO_2k.jpg","L"); R=load(b+"Rough_2k.jpg","L")
         N=load(b+"nor_gl_2k.png"); H=load(b+"Displacement_2k.png","L")
         G=grade(delight(A,AO),tgt,var,KEEP.get(n,(.35,1)))
-        O=pack_orm(AO,R,0.0,rr=rr)
+        O=pack_orm(AO,R,mt[0] if mt else 0.0,rr=rr)
         for d,sz in ((MASTER,2048),(OUT,1024)):
             save(G,f"{d}/T_{n}_A.png",sz); save(N,f"{d}/T_{n}_N.png",sz); save(O,f"{d}/T_{n}_ORM.png",sz)
         g=(G*255).reshape(-1,3).mean(0); hh,ss,vv=colorsys.rgb_to_hsv(*(g/255))
