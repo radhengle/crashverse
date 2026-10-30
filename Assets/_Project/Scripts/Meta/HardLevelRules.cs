@@ -4,7 +4,7 @@ namespace Crashverse.Meta
 {
     /// <summary>Target UI §7: hard levels (skull node on the map): tighter steps and a darker theme.
     /// GD ruling (2026-10-24): only levels TAGGED hard in data (LevelEntry.hard) are hard; the "every 10th" index is a design
-    /// convention, never applied automatically (c1_l10 Tidewarden keeps its authored 8 shots and 0.375/0.25 bands).</summary>
+    /// convention, never applied automatically (c1_l10, the King's Palace, keeps its authored 7 shots and 0.42/0.28 bands).</summary>
     public static class HardLevelRules
     {
         public const int Every = 10;
