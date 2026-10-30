@@ -1,0 +1,42 @@
+Kit_RealBakery_BackD.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_BackD_Fractured.fbx: meshes=6 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_BackW.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_BackW_Fractured.fbx: meshes=6 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_Base.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_Chim.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_Chim_Fractured.fbx: meshes=7 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_Floor.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_Floor_Fractured.fbx: meshes=16 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_GabL.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_GabL_Fractured.fbx: meshes=10 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_GabR.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_GabR_Fractured.fbx: meshes=10 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_RfLB.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_RfLB_Fractured.fbx: meshes=16 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_RfLF.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_RfLF_Fractured.fbx: meshes=10 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_RfRB.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_RfRB_Fractured.fbx: meshes=10 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_RfRF.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_RfRF_Fractured.fbx: meshes=11 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_ShopD.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_ShopD_Fractured.fbx: meshes=7 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_ShopW.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_ShopW_Fractured.fbx: meshes=10 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_UpB.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpB_Fractured.fbx: meshes=13 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_UpFC.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpFC_Fractured.fbx: meshes=9 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_UpFL.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpFL_Fractured.fbx: meshes=14 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_UpFR.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpFR_Fractured.fbx: meshes=14 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_UpL.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpL_Fractured.fbx: meshes=9 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_UpR.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpR_Fractured.fbx: meshes=16 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_WallL.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_WallL_Fractured.fbx: meshes=8 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+Kit_RealBakery_WallR.fbx: meshes=3 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_WallR_Fractured.fbx: meshes=8 materials=['M_RealBakery', 'M_RealBakery_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS

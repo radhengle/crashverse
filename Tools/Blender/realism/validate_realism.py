@@ -49,6 +49,8 @@ for f in sorted(glob.glob(R+"/**/*.fbx",recursive=True)):
     need=[f"T_{asset}_{k}.png" for k in ("A","N","ORM")]
     for n in need:
         p=os.path.join(texdir,n)
+        if not os.path.exists(p):   # shared kit atlas living in the kit's own folder (e.g. Bld_MarketArch uses Kit_RealStall/Textures)
+            _rr=f[:f.index("/Realistic/")+len("/Realistic")] if "/Realistic/" in f else R; alt=glob.glob(os.path.join(_rr,"**","Textures",n),recursive=True); p=alt[0] if alt else p
         if not os.path.exists(p): e.append(f"missing {n}"); continue
         im=bpy.data.images.load(p,check_existing=True); w,h=im.size
         if w>2048 or h>2048 or (w&(w-1)) or (h&(h-1)): e.append(f"{n}: {w}x{h} not POT<=2048")

@@ -1,0 +1,49 @@
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD.fbx [Kit] LOD0 tris=558 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD_Fractured.fbx [KitFractured] LOD0 tris=554 LODs=[0] hulls=6 frags=6 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW.fbx [Kit] LOD0 tris=544 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW_Fractured.fbx [KitFractured] LOD0 tris=500 LODs=[0] hulls=6 frags=6 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Base.fbx [Kit] LOD0 tris=408 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 408 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Chim.fbx [Kit] LOD0 tris=288 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 288 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Chim_Fractured.fbx [KitFractured] LOD0 tris=312 LODs=[0] hulls=7 frags=7 -> PASS
+    warn  LOD0 312 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor.fbx [Kit] LOD0 tris=1376 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor_Fractured.fbx [KitFractured] LOD0 tris=1284 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL.fbx [Kit] LOD0 tris=334 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 334 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL_Fractured.fbx [KitFractured] LOD0 tris=458 LODs=[0] hulls=10 frags=10 -> PASS
+    warn  LOD0 458 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR.fbx [Kit] LOD0 tris=332 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 332 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR_Fractured.fbx [KitFractured] LOD0 tris=340 LODs=[0] hulls=10 frags=10 -> PASS
+    warn  LOD0 340 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB.fbx [Kit] LOD0 tris=1016 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB_Fractured.fbx [KitFractured] LOD0 tris=1452 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF.fbx [Kit] LOD0 tris=1268 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF_Fractured.fbx [KitFractured] LOD0 tris=1288 LODs=[0] hulls=10 frags=10 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB.fbx [Kit] LOD0 tris=1252 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB_Fractured.fbx [KitFractured] LOD0 tris=1412 LODs=[0] hulls=10 frags=10 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF.fbx [Kit] LOD0 tris=1248 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF_Fractured.fbx [KitFractured] LOD0 tris=1324 LODs=[0] hulls=11 frags=11 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD.fbx [Kit] LOD0 tris=1456 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD_Fractured.fbx [KitFractured] LOD0 tris=854 LODs=[0] hulls=7 frags=7 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW.fbx [Kit] LOD0 tris=988 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW_Fractured.fbx [KitFractured] LOD0 tris=1168 LODs=[0] hulls=10 frags=10 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB.fbx [Kit] LOD0 tris=1192 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB_Fractured.fbx [KitFractured] LOD0 tris=1468 LODs=[0] hulls=13 frags=13 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC.fbx [Kit] LOD0 tris=782 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC_Fractured.fbx [KitFractured] LOD0 tris=658 LODs=[0] hulls=9 frags=9 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL.fbx [Kit] LOD0 tris=1122 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL_Fractured.fbx [KitFractured] LOD0 tris=902 LODs=[0] hulls=14 frags=14 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR.fbx [Kit] LOD0 tris=1084 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR_Fractured.fbx [KitFractured] LOD0 tris=876 LODs=[0] hulls=14 frags=14 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL.fbx [Kit] LOD0 tris=900 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL_Fractured.fbx [KitFractured] LOD0 tris=1088 LODs=[0] hulls=9 frags=9 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR.fbx [Kit] LOD0 tris=936 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR_Fractured.fbx [KitFractured] LOD0 tris=1376 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL.fbx [Kit] LOD0 tris=566 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL_Fractured.fbx [KitFractured] LOD0 tris=622 LODs=[0] hulls=8 frags=8 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR.fbx [Kit] LOD0 tris=566 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR_Fractured.fbx [KitFractured] LOD0 tris=602 LODs=[0] hulls=8 frags=8 -> PASS
+RESULT: ALL PASS (41 groups, 41 files)

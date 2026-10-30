@@ -1,0 +1,9 @@
+Prop_Barrel.fbx: LOD0=732t/1m LOD1=216t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+Prop_Bench.fbx: LOD0=552t/1m LOD1=196t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+Prop_BreadCrate.fbx: LOD0=356t/1m LOD1=276t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+Prop_Cart.fbx: LOD0=2036t/1m LOD1=884t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+Prop_Crate.fbx: LOD0=764t/1m LOD1=476t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+Prop_Rock_A.fbx: LOD0=320t/1m LOD1=80t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+Prop_Rock_B.fbx: LOD0=320t/1m LOD1=80t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+Prop_Rock_C.fbx: LOD0=320t/1m LOD1=80t/1m hulls=0 materials=['M_Props_Village'] -> PASS
+REALISM RESULT: ALL PASS

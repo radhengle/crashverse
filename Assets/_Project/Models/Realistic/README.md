@@ -81,3 +81,26 @@ Whole building footprint: 9.49 × 6.84 m with the annex (7.04 × 6.04 m plinth).
 - **Fracture (#28/#52):** classes are Stone for ground walls and chimney (4–10 fragments), Wood for floor, upper walls, gables, balcony and annex (8–16), and Roof (8–16). Fragments are `<piece>_frag_##`, each with an exact convex `UCX_`, plus `JNT_<a>__<b>` (force/torque blank), `ANCHOR_` (Ground/Support), `mass_kg`, `density_kg_m3` and `fracture_class`. Pivot = volume centre of mass. Fragments are at least 0.15 m on every axis, under 300 tris each and at most 1,500 tris per set. Stats: `models/HeroBuildings/Kit_RealHouse_stats.json`.
 - **Why a module has several pieces:** the #28 Kit budget is 1,500 LOD0 tris per FBX, and Blender/FBX names are capped at 63 characters, so `JNT_<fragA>__<fragB>` forces piece codes of 6 characters or fewer.
 - **Pending:** the KitPathOk path exception (Models/Realistic) is owned by Developer. `CrashverseGlossyPBR` reads vertex colour R as the damage mask, but these meshes carry Col as a tint (as the realism test did), so a shader decision is needed.
+
+## Bld_Bakery, modular + destructible (L3, realistic v1, 2026-10-30)
+Folder: `Buildings/Bld_Bakery/`. Built by `Tools/Blender/realistic/bakery.py`, which uses the townhouse pipeline (`house_modular.py` building parts + `modkit.py` export).
+- **Size:** walls 8 m (X) × 6 m (Z), 2 storeys. Eaves (wall top) 6.30 m, ridge 8.66 m, oven chimney top 10.17 m.
+- **Colourway:** `T_RealBakery_*` (1024) is derived from the graded T_RealHouse set by `variant_atlas.py`, with no new sources. It has darker timber, cream plaster and a red/cream striped awning cell. The display window is 3.0 m with 4 panes and loaves on a display shelf. Roof pantiles are larger. Materials: `M_RealBakery`, plus `M_RealBakery_Inner`, which points at the shared `Bld_Townhouse/Textures/T_RealHouse_Inner_*`.
+- **Facing:** the shop front faces Unity **+Z**; Level Designer rotates the root to face -X. Every module pivot is the centre of the module's base footprint. All pieces of a module share it.
+- **Totals:** LOD0 18,216 tris, LOD1 9,964, LOD2 4,990; fractured sets total 18,538.
+
+| Module | Pieces | Footprint X × Z (m) | Height (m) | Top (m) | LOD0 tris | Rests on |
+|---|---|---|---|---|---|---|
+| ShopFront | ShopW (display window + awning), ShopD (door, lantern, loaf sign) | 8.00 × 1.60 | 3.16 | 3.50 | 2,444 | Base |
+| Wall_Left | WallL | 0.57 × 5.11 | 3.16 | 3.50 | 566 | Base |
+| Wall_Right | WallR | 0.57 × 5.11 | 3.16 | 3.50 | 566 | Base |
+| Wall_Back | BackD, BackW | 8.01 × 0.57 | 3.16 | 3.50 | 1,102 | Base |
+| Floor | Floor (slab + jetty joists) | 8.02 × 5.88 | 1.01 | 3.54 | 1,376 | the 4 ground walls |
+| UpperStorey | UpFL, UpFC, UpFR, UpB, UpL, UpR, GabL, GabR | 8.26 × 6.70 | 4.88 | 8.38 | 6,682 | Floor (falls when the ground walls go) |
+| Roof_Left | RfLF, RfLB | 4.49 × 7.32 | 2.88 | 8.66 | 2,284 | UpperStorey |
+| Roof_Right | RfRF, RfRB | 4.49 × 7.32 | 2.87 | 8.66 | 2,500 | UpperStorey |
+| Chimney | Chim (oven flue at the back) | 1.24 × 0.94 | 6.87 | 10.17 | 288 | Floor, Roof_Left, UpperStorey |
+| Base | Base (granite plinth, indestructible) | 8.64 × 6.84 | 0.35 | 0.35 | 408 | Ground |
+
+- **Props:** the layout's `props[]` lists 3 × `Props/Props_Village/Prop_BreadCrate.fbx` (one stacked) and 1 × `Prop_Bench.fbx` in front of the window. They are new indestructible props on the existing Props_Village atlas.
+- **Layout:** `Bld_Bakery.layout.json`. Stats: `models/HeroBuildings/Kit_RealBakery_stats.json`.

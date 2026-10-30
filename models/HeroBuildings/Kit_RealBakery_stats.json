@@ -1,0 +1,587 @@
+{
+ "set": "Kit_RealBakery",
+ "building": "Bld_Bakery",
+ "modules": {
+  "Base": {
+   "frac": null,
+   "module": "Base",
+   "label": "Granite plinth",
+   "tris": {
+    "LOD0": 408,
+    "LOD1": 184,
+    "LOD2": 136
+   },
+   "bounds_m": [
+    8.64,
+    6.84,
+    0.35
+   ]
+  },
+  "ShopW": {
+   "frac": "Stone",
+   "module": "ShopFront",
+   "label": "Shop front, display window + awning",
+   "tris": {
+    "LOD0": 988,
+    "LOD1": 712,
+    "LOD2": 432
+   },
+   "bounds_m": [
+    4.209,
+    1.599,
+    3.16
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 238,
+   "frag_tris_total": 1168,
+   "mass_kg_total": 12306.1,
+   "mass_kg_range": [
+    93.28,
+    2241.05
+   ],
+   "density_kg_m3": 2300,
+   "joints": 33,
+   "anchors": 3,
+   "min_axis_m": 0.165
+  },
+  "ShopD": {
+   "frac": "Stone",
+   "module": "ShopFront",
+   "label": "Shop front, door + lantern + sign",
+   "tris": {
+    "LOD0": 1456,
+    "LOD1": 588,
+    "LOD2": 318
+   },
+   "bounds_m": [
+    3.807,
+    1.276,
+    3.157
+   ],
+   "fragments": 7,
+   "frag_source_lod": 1,
+   "frag_tris_max": 200,
+   "frag_tris_total": 854,
+   "mass_kg_total": 11560.1,
+   "mass_kg_range": [
+    25.62,
+    2511.9
+   ],
+   "density_kg_m3": 2300,
+   "joints": 11,
+   "anchors": 3,
+   "min_axis_m": 0.22
+  },
+  "WallL": {
+   "frac": "Stone",
+   "module": "Wall_Left",
+   "label": "Side wall left",
+   "tris": {
+    "LOD0": 566,
+    "LOD1": 354,
+    "LOD2": 168
+   },
+   "bounds_m": [
+    0.568,
+    5.113,
+    3.159
+   ],
+   "fragments": 8,
+   "frag_source_lod": 1,
+   "frag_tris_max": 174,
+   "frag_tris_total": 622,
+   "mass_kg_total": 16210.4,
+   "mass_kg_range": [
+    1313.3,
+    2784.14
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 4,
+   "min_axis_m": 0.45
+  },
+  "WallR": {
+   "frac": "Stone",
+   "module": "Wall_Right",
+   "label": "Side wall right",
+   "tris": {
+    "LOD0": 566,
+    "LOD1": 334,
+    "LOD2": 168
+   },
+   "bounds_m": [
+    0.566,
+    5.11,
+    3.16
+   ],
+   "fragments": 8,
+   "frag_source_lod": 1,
+   "frag_tris_max": 182,
+   "frag_tris_total": 602,
+   "mass_kg_total": 16210.3,
+   "mass_kg_range": [
+    1313.3,
+    2784.14
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 4,
+   "min_axis_m": 0.45
+  },
+  "BackD": {
+   "frac": "Stone",
+   "module": "Wall_Back",
+   "label": "Back wall, door part",
+   "tris": {
+    "LOD0": 558,
+    "LOD1": 342,
+    "LOD2": 186
+   },
+   "bounds_m": [
+    4.011,
+    0.516,
+    3.161
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 222,
+   "frag_tris_total": 554,
+   "mass_kg_total": 12277.2,
+   "mass_kg_range": [
+    1440.0,
+    2204.04
+   ],
+   "density_kg_m3": 2300,
+   "joints": 9,
+   "anchors": 3,
+   "min_axis_m": 0.45
+  },
+  "BackW": {
+   "frac": "Stone",
+   "module": "Wall_Back",
+   "label": "Back wall, window part",
+   "tris": {
+    "LOD0": 544,
+    "LOD1": 312,
+    "LOD2": 146
+   },
+   "bounds_m": [
+    4.007,
+    0.566,
+    3.159
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 164,
+   "frag_tris_total": 500,
+   "mass_kg_total": 12630.7,
+   "mass_kg_range": [
+    1404.17,
+    2567.29
+   ],
+   "density_kg_m3": 2300,
+   "joints": 9,
+   "anchors": 3,
+   "min_axis_m": 0.45
+  },
+  "Floor": {
+   "frac": "Wood",
+   "module": "Floor",
+   "label": "First-floor slab",
+   "tris": {
+    "LOD0": 1376,
+    "LOD1": 596,
+    "LOD2": 324
+   },
+   "bounds_m": [
+    8.02,
+    5.876,
+    1.005
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 180,
+   "frag_tris_total": 1284,
+   "mass_kg_total": 4623.0,
+   "mass_kg_range": [
+    218.19,
+    577.08
+   ],
+   "density_kg_m3": 600,
+   "joints": 33,
+   "anchors": 8,
+   "min_axis_m": 0.2
+  },
+  "UpFL": {
+   "frac": "Wood",
+   "module": "UpperStorey",
+   "label": "Upper front wall, left bay",
+   "tris": {
+    "LOD0": 1122,
+    "LOD1": 558,
+    "LOD2": 316
+   },
+   "bounds_m": [
+    2.721,
+    0.437,
+    2.805
+   ],
+   "fragments": 14,
+   "frag_source_lod": 1,
+   "frag_tris_max": 168,
+   "frag_tris_total": 902,
+   "mass_kg_total": 848.8,
+   "mass_kg_range": [
+    5.4,
+    117.79
+   ],
+   "density_kg_m3": 600,
+   "joints": 49,
+   "anchors": 3,
+   "min_axis_m": 0.152
+  },
+  "UpFC": {
+   "frac": "Wood",
+   "module": "UpperStorey",
+   "label": "Upper front wall, centre bay",
+   "tris": {
+    "LOD0": 782,
+    "LOD1": 398,
+    "LOD2": 172
+   },
+   "bounds_m": [
+    2.6,
+    0.282,
+    2.806
+   ],
+   "fragments": 9,
+   "frag_source_lod": 1,
+   "frag_tris_max": 164,
+   "frag_tris_total": 658,
+   "mass_kg_total": 770.3,
+   "mass_kg_range": [
+    52.39,
+    100.61
+   ],
+   "density_kg_m3": 600,
+   "joints": 18,
+   "anchors": 3,
+   "min_axis_m": 0.17
+  },
+  "UpFR": {
+   "frac": "Wood",
+   "module": "UpperStorey",
+   "label": "Upper front wall, right bay",
+   "tris": {
+    "LOD0": 1084,
+    "LOD1": 568,
+    "LOD2": 278
+   },
+   "bounds_m": [
+    2.722,
+    0.435,
+    2.807
+   ],
+   "fragments": 14,
+   "frag_source_lod": 1,
+   "frag_tris_max": 98,
+   "frag_tris_total": 876,
+   "mass_kg_total": 849.0,
+   "mass_kg_range": [
+    5.81,
+    101.4
+   ],
+   "density_kg_m3": 600,
+   "joints": 49,
+   "anchors": 3,
+   "min_axis_m": 0.154
+  },
+  "UpB": {
+   "frac": "Wood",
+   "module": "UpperStorey",
+   "label": "Upper back wall",
+   "tris": {
+    "LOD0": 1192,
+    "LOD1": 832,
+    "LOD2": 436
+   },
+   "bounds_m": [
+    8.044,
+    0.285,
+    2.806
+   ],
+   "fragments": 13,
+   "frag_source_lod": 1,
+   "frag_tris_max": 264,
+   "frag_tris_total": 1468,
+   "mass_kg_total": 2404.3,
+   "mass_kg_range": [
+    17.38,
+    286.69
+   ],
+   "density_kg_m3": 600,
+   "joints": 30,
+   "anchors": 6,
+   "min_axis_m": 0.162
+  },
+  "UpL": {
+   "frac": "Wood",
+   "module": "UpperStorey",
+   "label": "Upper side wall left",
+   "tris": {
+    "LOD0": 900,
+    "LOD1": 620,
+    "LOD2": 282
+   },
+   "bounds_m": [
+    0.285,
+    6.348,
+    2.809
+   ],
+   "fragments": 9,
+   "frag_source_lod": 1,
+   "frag_tris_max": 264,
+   "frag_tris_total": 1088,
+   "mass_kg_total": 1838.0,
+   "mass_kg_range": [
+    30.97,
+    316.78
+   ],
+   "density_kg_m3": 600,
+   "joints": 20,
+   "anchors": 5,
+   "min_axis_m": 0.16
+  },
+  "UpR": {
+   "frac": "Wood",
+   "module": "UpperStorey",
+   "label": "Upper side wall right",
+   "tris": {
+    "LOD0": 936,
+    "LOD1": 516,
+    "LOD2": 298
+   },
+   "bounds_m": [
+    0.285,
+    6.343,
+    2.806
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 164,
+   "frag_tris_total": 1376,
+   "mass_kg_total": 1838.1,
+   "mass_kg_range": [
+    85.84,
+    166.71
+   ],
+   "density_kg_m3": 600,
+   "joints": 35,
+   "anchors": 7,
+   "min_axis_m": 0.24
+  },
+  "GabL": {
+   "frac": "Wood",
+   "module": "UpperStorey",
+   "label": "Gable left",
+   "tris": {
+    "LOD0": 334,
+    "LOD1": 182,
+    "LOD2": 130
+   },
+   "bounds_m": [
+    0.272,
+    6.3,
+    2.08
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 84,
+   "frag_tris_total": 458,
+   "mass_kg_total": 851.7,
+   "mass_kg_range": [
+    36.99,
+    159.04
+   ],
+   "density_kg_m3": 600,
+   "joints": 18,
+   "anchors": 7,
+   "min_axis_m": 0.2
+  },
+  "GabR": {
+   "frac": "Wood",
+   "module": "UpperStorey",
+   "label": "Gable right",
+   "tris": {
+    "LOD0": 332,
+    "LOD1": 128,
+    "LOD2": 116
+   },
+   "bounds_m": [
+    0.272,
+    6.3,
+    2.081
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 52,
+   "frag_tris_total": 340,
+   "mass_kg_total": 851.7,
+   "mass_kg_range": [
+    36.99,
+    159.04
+   ],
+   "density_kg_m3": 600,
+   "joints": 18,
+   "anchors": 7,
+   "min_axis_m": 0.2
+  },
+  "RfLF": {
+   "frac": "Roof",
+   "module": "Roof_Left",
+   "label": "Roof left half, street slope",
+   "tris": {
+    "LOD0": 1268,
+    "LOD1": 628,
+    "LOD2": 260
+   },
+   "bounds_m": [
+    4.455,
+    3.775,
+    2.749
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 240,
+   "frag_tris_total": 1288,
+   "mass_kg_total": 4416.4,
+   "mass_kg_range": [
+    40.26,
+    881.21
+   ],
+   "density_kg_m3": 1500,
+   "joints": 24,
+   "anchors": 5,
+   "min_axis_m": 0.45
+  },
+  "RfLB": {
+   "frac": "Roof",
+   "module": "Roof_Left",
+   "label": "Roof left half, back slope + ridge",
+   "tris": {
+    "LOD0": 1016,
+    "LOD1": 584,
+    "LOD2": 308
+   },
+   "bounds_m": [
+    4.49,
+    3.808,
+    2.874
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 168,
+   "frag_tris_total": 1452,
+   "mass_kg_total": 4286.0,
+   "mass_kg_range": [
+    182.28,
+    386.29
+   ],
+   "density_kg_m3": 1500,
+   "joints": 38,
+   "anchors": 4,
+   "min_axis_m": 0.709
+  },
+  "RfRF": {
+   "frac": "Roof",
+   "module": "Roof_Right",
+   "label": "Roof right half, street slope",
+   "tris": {
+    "LOD0": 1248,
+    "LOD1": 648,
+    "LOD2": 172
+   },
+   "bounds_m": [
+    4.454,
+    3.774,
+    2.749
+   ],
+   "fragments": 11,
+   "frag_source_lod": 1,
+   "frag_tris_max": 260,
+   "frag_tris_total": 1324,
+   "mass_kg_total": 4416.4,
+   "mass_kg_range": [
+    40.29,
+    865.9
+   ],
+   "density_kg_m3": 1500,
+   "joints": 25,
+   "anchors": 6,
+   "min_axis_m": 0.447
+  },
+  "RfRB": {
+   "frac": "Roof",
+   "module": "Roof_Right",
+   "label": "Roof right half, back slope + ridge",
+   "tris": {
+    "LOD0": 1252,
+    "LOD1": 696,
+    "LOD2": 216
+   },
+   "bounds_m": [
+    4.49,
+    3.807,
+    2.873
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 288,
+   "frag_tris_total": 1412,
+   "mass_kg_total": 4492.7,
+   "mass_kg_range": [
+    57.81,
+    942.46
+   ],
+   "density_kg_m3": 1500,
+   "joints": 20,
+   "anchors": 5,
+   "min_axis_m": 0.791
+  },
+  "Chim": {
+   "frac": "Stone",
+   "module": "Chimney",
+   "label": "Oven chimney",
+   "tris": {
+    "LOD0": 288,
+    "LOD1": 184,
+    "LOD2": 128
+   },
+   "bounds_m": [
+    1.242,
+    0.942,
+    6.869
+   ],
+   "fragments": 7,
+   "frag_source_lod": 1,
+   "frag_tris_max": 84,
+   "frag_tris_total": 312,
+   "mass_kg_total": 13303.9,
+   "mass_kg_range": [
+    16.52,
+    2627.03
+   ],
+   "density_kg_m3": 2300,
+   "joints": 6,
+   "anchors": 1,
+   "min_axis_m": 0.173
+  }
+ },
+ "tris_total": {
+  "LOD0": 18216,
+  "LOD1": 9964,
+  "LOD2": 4990,
+  "Fractured": 18538
+ }
+}

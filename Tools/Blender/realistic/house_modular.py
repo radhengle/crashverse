@@ -9,12 +9,22 @@ HERE=os.path.dirname(os.path.abspath(__file__)); ROOT=os.path.abspath(os.path.jo
 sys.path.insert(0,os.path.join(HERE,"..","realism")); import rlib as R, townhouse as TH
 from townhouse import XF,YF,YB,Z0,Z1,Z2,JET,PITCH,Mt
 OUT=R.REAL+"/Buildings/Bld_Townhouse"; TH.TEX=OUT; KIT="Kit_RealHouse"; STATS=ROOT+"/models/HeroBuildings/Kit_RealHouse_stats.json"
-RNG={"Wood":(8,16),"Stone":(4,10),"Roof":(8,16)}; DENS={"Stone":2300,"Wood":600,"Roof":1500}; MINAX=.15
+RNG={"Wood":(8,16),"Stone":(4,10),"Roof":(8,16),"Steel":(4,10)}; DENS={"Stone":2300,"Wood":600,"Roof":1500,"Steel":7850}; MINAX=.15
 TS,TU=.45,.17          # stone wall / upper plaster wall thickness
 FR_X=-0.6              # front ground wall split (window segment | door segment)
 class House(TH.House):
     def __init__(s,lod):
         super().__init__(lod); s.tags=[]; s.tile_seg0=2   # 2-segment tiles at LOD0 keeps the intact house inside 15-20k
+    joist=.45
+    def sill(s,kind): return 0.02 if kind=="door" else 1.05
+    def ground_charm(s,name):
+        if name=="StoneWall_FrontDoor": s.lantern(); s.sign()
+        if name=="StoneWall_FrontWin": s.flower_box(-1.55,YF,Z0+1.05,.95)
+    def upper_frames(s,yf): return {}
+    def upper_charm(s,name,yf):
+        if name=="UpperWall_Front": s.flower_box(-1.5,yf-.01,Z1+.85,.95)
+    def upper_extra(s,name,yf):
+        if name=="UpperWall_Front": s.balcony(yf-.01); s.mark("Balcony")
     def mark(s,mod): s.tags+= [mod]*(len(s.B.parts)-len(s.tags))
     # ---------- ground storey: 6 stone wall segments (openings, frames, shutters and charm included)
     def stone_storey(s):
@@ -23,7 +33,7 @@ class House(TH.House):
               "StoneWall_Left":((-XF,-XF+TS),(YF+TS,YB-TS)),"StoneWall_Right":((XF-TS,XF),(YF+TS,YB-TS))}
         s.gopen=[]
         for kind,side,c,w,h in s.OPEN_G:
-            z0=Z0+(0.02 if kind=="door" else 1.05); dep=.22; sx,sy=side; wall=YF if sy<0 else YB if sy>0 else (XF if sx>0 else -XF)
+            z0=Z0+s.sill(kind); dep=.22; sx,sy=side; wall=YF if sy<0 else YB if sy>0 else (XF if sx>0 else -XF)
             s.gopen.append((kind,side,c,w,h,z0,dep,wall))
         def seg_of(o):
             kind,side,c=o[0],o[1],o[2]
@@ -42,16 +52,15 @@ class House(TH.House):
             g=lambda L:(lambda zz:(1-.05*max(0,1-(zz-Z0)/.6),)*3)(L.vert.co.z)
             R.tint(bm,lambda L:(*g(L),1)); s.B.add(bm)
             for o in s.gopen:
-                if seg_of(o)==name: s.opening_frame(o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[0],shut=(o[1]==(0,-1)))
-            if name=="StoneWall_FrontDoor": s.lantern(); s.sign()
-            if name=="StoneWall_FrontWin": s.flower_box(-1.55,YF,Z0+1.05,.95)
+                if seg_of(o)==name: s.opening_frame(o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[0],shut=(o[1]==(0,-1) and o[0]=="win"))
+            s.ground_charm(name)
             s.mark(name)
     # ---------- floor / beam: interior floor, jetty boards, joist ends and corner brackets
     def floor(s):
         s.block((0,(YF+YB)/2,Z1-.1),(2*XF-2*TS+.04,YB-YF-2*TS+.04,.2),"WoodPlank",.0)
         yf=YF-JET; s.block((0,(yf+YF+TS)/2,Z1+.015),(2*XF+.02,YF+TS-yf,.05),"WoodPlank",.006)
         if s.lod<2:
-            step=.45 if s.lod==0 else .9; x=-XF+.25
+            step=s.joist if s.lod==0 else s.joist*2; x=-XF+.25
             while x<XF-.2:
                 s.beam((x,YF+.05,Z1-.07),(x,YF-JET+.03,Z1-.07),.14,.12,(0,0,1),bev=.012,warp=0); x+=step
             for sx in (-1,1): s.beam((sx*(XF-.12),YF+.02,Z1-.95),(sx*(XF-.12),YF-JET+.05,Z1-.14),.13,.12,(sx,0,0),warp=0)
@@ -86,10 +95,10 @@ class House(TH.House):
             if s.lod==0: R.jitter(bm,.006,1.1,5)
             s.B.add(bm,(.98,.97,.95))
             for sd,c,w,h,z0,wall in ops: s.opening_frame(sd,c,w,h,z0,TU,wall,"win",shut=(sd==(0,-1)),lin=None)
-            face_frame(*frames[name])
-            if name=="UpperWall_Front": s.flower_box(-1.5,yf-.01,Z1+.85,.95)
+            face_frame(*s.upper_frames(yf).get(name,frames.get(name)))
+            s.upper_charm(name,yf)
             s.mark(name)
-            if name=="UpperWall_Front": s.balcony(yf-.01); s.mark("Balcony")
+            s.upper_extra(name,yf)
     # ---------- roof: two halves (deck, fascia, barge boards, rafter tails, tiles; ridge on the back half), 2 gables, chimney
     def roof(s):
         yf=YF-JET; half=(YB-yf)/2; yc=(YB+yf)/2; ov=.45; vx=XF+.4; rise=half*math.tan(PITCH); zr=Z2+rise; s.ridge=(yc,zr); s.eave=ov
@@ -139,7 +148,7 @@ class House(TH.House):
             R.jitter(bm,.015,6,k+3); R.uv_cells(bm,s.A,"Flowers",None,(k*.3,0,0),cut=False); s.B.add(bm)
     def sign(s):
         """hanging shop sign: steel wall plate + bracket arm + brace, painted board (SignBoard cell, icon only: no text to localise)"""
-        x,z=FR_X+.3,Z0+2.45; y=YF
+        x,z=getattr(s,"SIGN_X",FR_X+.3),Z0+2.45; y=YF
         s.B.part((.05,.03,.36),Mt((x,y-.015,z+.05)),"Steel",0,0,1,seed=21)
         s.beam((x,y-.02,z+.2),(x,y-.82,z+.2),.035,.035,(0,0,1),cell="Steel",bev=0,warp=0,ends=False)
         if s.lod<2: s.beam((x,y-.02,z-.1),(x,y-.5,z+.19),.025,.025,(1,0,0),cell="Steel",bev=0,warp=0,ends=False)
@@ -332,6 +341,9 @@ ATTACH={"Base":"Ground","AnnexF":"Ground","AnnexB":"Ground",**{m:["Base"] for m 
 def split_parts(bms,sp):
     """keep the side of plane sp=(axis,value,side): components by centroid; closed components that straddle it are bisected"""
     if not sp: return bms
+    if isinstance(sp[0],tuple):   # several planes: keep the intersection of the kept sides
+        for q in sp: bms=split_parts(bms,q)
+        return bms
     ax,val,sd=sp; out=[]; no=Vector((0,0,0)); no[ax]=1; co=Vector((0,0,0)); co[ax]=val
     for bm in bms:
         for c in comps(bm):
@@ -390,7 +402,7 @@ def seal(c):
                 for la,lb in zip(reversed(f.loops),g.loops): lb[uv].uv=la[uv].uv
 def fracture(mod,bms_src,cls,dens):
     global DENS_C; DENS_C=dens; lo_n,hi_n=RNG[cls]
-    L0={"Stone":1.3,"Wood":.9,"Roof":1.0}[cls]
+    L0={"Stone":1.3,"Wood":.9,"Roof":1.0}.get(cls,.8)
     for L in (L0,L0*1.5,L0*2.2,L0*.8,L0*.65,L0*.5,L0*.4):
         items=[]
         for bm in bms_src:
