@@ -37,6 +37,42 @@
    "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
    "frac": "Steel",
    "source": "Tools/Blender/build_kit2.py Block (kit v3.1 recipe)"
+  },
+  "Floor": {
+   "LOD0": 804,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    3.0,
+    0.18,
+    3.0
+   ],
+   "aabb": [
+    [
+     -1.5,
+     -1.5,
+     -0.01
+    ],
+    [
+     1.5,
+     1.5,
+     0.17
+    ]
+   ],
+   "frags": 7,
+   "frag_max": 64,
+   "Fractured": 376,
+   "mass": "90.5-280.6",
+   "min_axis_m": 0.16,
+   "joints": 12,
+   "anchors": 6,
+   "anchor_to": [
+    "Support"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Steel",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor.fbx"
   }
  },
  "tile_m": 1.5,
