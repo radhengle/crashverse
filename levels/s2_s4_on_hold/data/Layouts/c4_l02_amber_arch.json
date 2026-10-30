@@ -1,0 +1,213 @@
+{
+ "id": "c4_l02_amber_arch",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    5,
+    1.2,
+    8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "amberL",
+   "mat": "glass",
+   "p": [
+    -1.0,
+    2.3,
+    -1.6
+   ],
+   "s": [
+    0.6,
+    2.2,
+    0.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "pillar",
+   "nonObj": false,
+   "color": "F59E0B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "amberR",
+   "mat": "glass",
+   "p": [
+    -1.0,
+    2.3,
+    1.6
+   ],
+   "s": [
+    0.6,
+    2.2,
+    0.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "pillar",
+   "nonObj": false,
+   "color": "F59E0B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "lintel",
+   "mat": "stone",
+   "p": [
+    0,
+    3.7,
+    0
+   ],
+   "s": [
+    2.6,
+    0.6,
+    4.4
+   ],
+   "sup": [
+    "amberL",
+    "amberR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "fossilL",
+   "mat": "stone",
+   "p": [
+    0,
+    4.8,
+    -1
+   ],
+   "s": [
+    2.2,
+    1.6,
+    1.8
+   ],
+   "sup": [
+    "lintel"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "fossilR",
+   "mat": "stone",
+   "p": [
+    0,
+    4.8,
+    1
+   ],
+   "s": [
+    2.2,
+    1.6,
+    1.8
+   ],
+   "sup": [
+    "lintel"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "crest",
+   "mat": "stone",
+   "p": [
+    0,
+    6.0,
+    0
+   ],
+   "s": [
+    2.2,
+    0.8,
+    4
+   ],
+   "sup": [
+    "fossilL",
+    "fossilR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "backCliff",
+   "mat": "stone",
+   "p": [
+    1.4,
+    2.4,
+    0
+   ],
+   "s": [
+    0.6,
+    2.4,
+    3.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": true,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

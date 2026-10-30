@@ -1,0 +1,328 @@
+{
+ "id": "c3_l07_penthouse",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    10
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pierL",
+   "mat": "brick",
+   "p": [
+    -1.6,
+    2.2,
+    -1.8
+   ],
+   "s": [
+    0.6,
+    2.0,
+    0.6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pierR",
+   "mat": "brick",
+   "p": [
+    -1.6,
+    2.2,
+    1.8
+   ],
+   "s": [
+    0.6,
+    2.0,
+    0.6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "jointL",
+   "mat": "steel",
+   "p": [
+    -1.6,
+    3.45,
+    -1.8
+   ],
+   "s": [
+    0.9,
+    0.5,
+    0.9
+   ],
+   "sup": [
+    "pierL"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "jointR",
+   "mat": "steel",
+   "p": [
+    -1.6,
+    3.45,
+    1.8
+   ],
+   "s": [
+    0.9,
+    0.5,
+    0.9
+   ],
+   "sup": [
+    "pierR"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "slab",
+   "mat": "brick",
+   "p": [
+    0,
+    3.9,
+    0
+   ],
+   "s": [
+    3,
+    0.4,
+    4.6
+   ],
+   "sup": [
+    "jointL",
+    "jointR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pent",
+   "mat": "glass",
+   "p": [
+    0,
+    5.0,
+    0
+   ],
+   "s": [
+    2.6,
+    1.8,
+    4
+   ],
+   "sup": [
+    "slab"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "E879F9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "penRoof",
+   "mat": "steel",
+   "p": [
+    0,
+    6.2,
+    0
+   ],
+   "s": [
+    3,
+    0.6,
+    4.4
+   ],
+   "sup": [
+    "pent"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pool",
+   "mat": "brick",
+   "p": [
+    0,
+    6.9,
+    0
+   ],
+   "s": [
+    2,
+    0.8,
+    3
+   ],
+   "sup": [
+    "penRoof"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "22D3EE",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "garageL",
+   "mat": "brick",
+   "p": [
+    -3.1,
+    2.0,
+    -1.8
+   ],
+   "s": [
+    0.4,
+    1.6,
+    1.2
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": true,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "turbineV",
+   "mat": "glass",
+   "p": [
+    -2.6,
+    4.75,
+    1.8
+   ],
+   "s": [
+    0.15,
+    3.6,
+    1.16
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "moving",
+   "nonObj": true,
+   "color": "22D3EE",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [
+    -1,
+    0,
+    0
+   ],
+   "pivot": [
+    -2.6,
+    4.75,
+    1.8
+   ],
+   "spinDps": 90
+  },
+  {
+   "id": "turbineH",
+   "mat": "glass",
+   "p": [
+    -2.6,
+    4.75,
+    1.8
+   ],
+   "s": [
+    0.15,
+    1.16,
+    3.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "moving",
+   "nonObj": true,
+   "color": "22D3EE",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [
+    -1,
+    0,
+    0
+   ],
+   "pivot": [
+    -2.6,
+    4.75,
+    1.8
+   ],
+   "spinDps": 90
+  }
+ ]
+}

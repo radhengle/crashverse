@@ -1,0 +1,238 @@
+{
+ "id": "c3_l06_sky_bridge",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    5,
+    1.2,
+    12
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "legL",
+   "mat": "brick",
+   "p": [
+    -0.8,
+    2.4,
+    -3
+   ],
+   "s": [
+    0.8,
+    2.4,
+    0.8
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "column",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "towerL",
+   "mat": "glass",
+   "p": [
+    0,
+    4.6,
+    -3
+   ],
+   "s": [
+    2.2,
+    2.0,
+    2.2
+   ],
+   "sup": [
+    "legL"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "E879F9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "crownL",
+   "mat": "steel",
+   "p": [
+    0,
+    6.0,
+    -3
+   ],
+   "s": [
+    2.4,
+    0.8,
+    2.4
+   ],
+   "sup": [
+    "towerL"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "legR",
+   "mat": "brick",
+   "p": [
+    -0.8,
+    2.4,
+    3
+   ],
+   "s": [
+    0.8,
+    2.4,
+    0.8
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "column",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "towerR",
+   "mat": "glass",
+   "p": [
+    0,
+    4.6,
+    3
+   ],
+   "s": [
+    2.2,
+    2.0,
+    2.2
+   ],
+   "sup": [
+    "legR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "E879F9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "crownR",
+   "mat": "steel",
+   "p": [
+    0,
+    6.0,
+    3
+   ],
+   "s": [
+    2.4,
+    0.8,
+    2.4
+   ],
+   "sup": [
+    "towerR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "skybridge",
+   "mat": "steel",
+   "p": [
+    0,
+    5.6,
+    0
+   ],
+   "s": [
+    1.2,
+    0.6,
+    3.8
+   ],
+   "sup": [
+    "towerL",
+    "towerR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "kiosk",
+   "mat": "glass",
+   "p": [
+    -1.4,
+    1.9,
+    0
+   ],
+   "s": [
+    1.0,
+    1.4,
+    1.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "decoy",
+   "nonObj": true,
+   "color": "E879F9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

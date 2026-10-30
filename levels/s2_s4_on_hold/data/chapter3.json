@@ -1,0 +1,511 @@
+{
+ "id": "c3_neon_city",
+ "name": "Neon City",
+ "nextRegion": "Primeval Peaks",
+ "islands": [
+  {
+   "id": "downtown",
+   "name": "Downtown Deck",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "gateAfterLevel": ""
+  },
+  {
+   "id": "arcade",
+   "name": "Arcade Row",
+   "pos": [
+    22,
+    4,
+    8
+   ],
+   "gateAfterLevel": "c3_l03"
+  },
+  {
+   "id": "skyline",
+   "name": "Skyline Heights",
+   "pos": [
+    44,
+    8,
+    0
+   ],
+   "gateAfterLevel": "c3_l06"
+  },
+  {
+   "id": "spire",
+   "name": "Spire Plaza",
+   "pos": [
+    64,
+    12,
+    10
+   ],
+   "gateAfterLevel": "c3_l09"
+  }
+ ],
+ "levels": [
+  {
+   "id": "c3_l01",
+   "number": 21,
+   "island": "downtown",
+   "name": "Neon Kiosk",
+   "layout": "c3_l01_neon_kiosk",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 4,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "New material: glass (12 HP) shatters but holds nothing",
+   "mastery": {
+    "type": "DESTROYED_AT_LEAST",
+    "value": 0.95,
+    "role": "",
+    "text": ">=95% destroyed"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c2_l10",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "pole",
+   "hintYaw": 0.0,
+   "hintPitch": 14.0,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l02",
+   "number": 22,
+   "island": "downtown",
+   "name": "Glass Atrium",
+   "layout": "c3_l02_glass_atrium",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Glass skins are decoys: hit the columns",
+   "mastery": {
+    "type": "THREE_STARS_NO_ROLE_HITS",
+    "value": 0,
+    "role": "wall",
+    "text": "3 stars with no wall hits"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c3_l01",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "colL",
+   "hintYaw": -3.5,
+   "hintPitch": 13.0,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l03",
+   "number": 23,
+   "island": "downtown",
+   "name": "Rooftop Billboard",
+   "layout": "c3_l03_rooftop_billboard",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Guided Rocket: steer round the steel hoardings to the joint",
+   "mastery": {
+    "type": "CLEAR_IN_SHOTS",
+    "value": 2.0,
+    "role": "",
+    "text": "Clear in 2 shots"
+   },
+   "forced": [
+    {
+     "slot": "Booster",
+     "powerup": "guided_rocket"
+    }
+   ],
+   "lockedSlots": [],
+   "requires": "c3_l02",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "legB",
+   "hintYaw": 3.0,
+   "hintPitch": 13.5,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l04",
+   "number": 24,
+   "island": "arcade",
+   "name": "Energy-Core Tower",
+   "layout": "c3_l04_core_tower",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Energy cores blast glass and brick, not steel",
+   "mastery": {
+    "type": "ALL_ROLE_BROKEN",
+    "value": 0,
+    "role": "steel_joint",
+    "text": "Break both joints"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c3_l03",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "jointL",
+   "hintYaw": -3.0,
+   "hintPitch": 15.0,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l05",
+   "number": 25,
+   "island": "arcade",
+   "name": "Core Arcade",
+   "layout": "c3_l05_core_arcade",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Breather: a core chain clears the arcade",
+   "mastery": {
+    "type": "CLEAR_IN_SHOTS",
+    "value": 1.0,
+    "role": "",
+    "text": "Clear in 1 shot"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c3_l04",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "core0",
+   "hintYaw": -6.0,
+   "hintPitch": 11.5,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l06",
+   "number": 26,
+   "island": "arcade",
+   "name": "Sky Bridge",
+   "layout": "c3_l06_sky_bridge",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Two towers, one bridge: drop both legs",
+   "mastery": {
+    "type": "DESTROYED_AT_LEAST",
+    "value": 0.95,
+    "role": "",
+    "text": ">=95% destroyed"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c3_l05",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "legL",
+   "hintYaw": -6.0,
+   "hintPitch": 13.0,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l07",
+   "number": 27,
+   "island": "skyline",
+   "name": "Spinning Penthouse",
+   "layout": "c3_l07_penthouse",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Time Freeze: slow the turbine to shoot through its gap",
+   "mastery": {
+    "type": "STARS",
+    "value": 3.0,
+    "role": "",
+    "text": "3 stars"
+   },
+   "forced": [
+    {
+     "slot": "Booster",
+     "powerup": "time_freeze"
+    }
+   ],
+   "lockedSlots": [],
+   "requires": "c3_l06",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "jointL",
+   "hintYaw": -3.5,
+   "hintPitch": 15.0,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l08",
+   "number": 28,
+   "island": "skyline",
+   "name": "Rooftop Greenhouse",
+   "layout": "c3_l08_greenhouse",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Breather: two props, one glass house",
+   "mastery": {
+    "type": "DESTROYED_AT_LEAST",
+    "value": 1.0,
+    "role": "",
+    "text": "100% destroyed"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c3_l07",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "propL",
+   "hintYaw": -3.0,
+   "hintPitch": 12.0,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l09",
+   "number": 29,
+   "island": "skyline",
+   "name": "Data Center",
+   "layout": "c3_l09_data_center",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Use the core next to the leg; save the joint for last",
+   "mastery": {
+    "type": "NO_POWERUP",
+    "value": 0,
+    "role": "",
+    "text": "No power-up used"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c3_l08",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 2,
+   "islandKillY": -2.0,
+   "hintTarget": "joint",
+   "hintYaw": -3.5,
+   "hintPitch": 15.0,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c3_l10",
+   "number": 30,
+   "island": "spire",
+   "name": "Neon Spire",
+   "layout": "c3_l10_neon_spire",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 7,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "glass"
+   ],
+   "teaches": "Hard level: shatter the curtain, then both joints",
+   "mastery": {
+    "type": "NO_POWERUP",
+    "value": 0,
+    "role": "",
+    "text": "No power-up used"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c3_l09",
+   "bossId": "",
+   "reward": [
+    {
+     "type": "coins",
+     "amount": 500,
+     "id": ""
+    },
+    {
+     "type": "gate",
+     "amount": 1,
+     "id": "primeval_peaks"
+    }
+   ],
+   "star3Pct": 0.5,
+   "star2Pct": 0.33,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "curtainL",
+   "hintYaw": -3.5,
+   "hintPitch": 12.5,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  }
+ ]
+}

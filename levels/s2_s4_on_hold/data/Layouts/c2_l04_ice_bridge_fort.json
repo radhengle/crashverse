@@ -1,0 +1,286 @@
+{
+ "id": "c2_l04_ice_bridge_fort",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    12
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "baseL",
+   "mat": "brick",
+   "p": [
+    0,
+    2.2,
+    -3.5
+   ],
+   "s": [
+    2,
+    2,
+    2
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "jointL",
+   "mat": "steel",
+   "p": [
+    -0.6,
+    3.45,
+    -3.5
+   ],
+   "s": [
+    0.8,
+    0.5,
+    1.6
+   ],
+   "sup": [
+    "baseL"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "7FA7C9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "towerL",
+   "mat": "stone",
+   "p": [
+    0,
+    4.9,
+    -3.5
+   ],
+   "s": [
+    1.8,
+    2.4,
+    1.8
+   ],
+   "sup": [
+    "jointL"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "turretL",
+   "mat": "brick",
+   "p": [
+    0,
+    6.6,
+    -3.5
+   ],
+   "s": [
+    2.0,
+    1.0,
+    2.0
+   ],
+   "sup": [
+    "towerL"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "F1F6FA",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "baseR",
+   "mat": "brick",
+   "p": [
+    0,
+    2.2,
+    3.5
+   ],
+   "s": [
+    2,
+    2,
+    2
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "jointR",
+   "mat": "steel",
+   "p": [
+    -0.6,
+    3.45,
+    3.5
+   ],
+   "s": [
+    0.8,
+    0.5,
+    1.6
+   ],
+   "sup": [
+    "baseR"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "7FA7C9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "towerR",
+   "mat": "stone",
+   "p": [
+    0,
+    4.9,
+    3.5
+   ],
+   "s": [
+    1.8,
+    2.4,
+    1.8
+   ],
+   "sup": [
+    "jointR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "turretR",
+   "mat": "brick",
+   "p": [
+    0,
+    6.6,
+    3.5
+   ],
+   "s": [
+    2.0,
+    1.0,
+    2.0
+   ],
+   "sup": [
+    "towerR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "F1F6FA",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "bridge",
+   "mat": "stone",
+   "p": [
+    0,
+    5.6,
+    0
+   ],
+   "s": [
+    1.4,
+    0.5,
+    5.2
+   ],
+   "sup": [
+    "towerL",
+    "towerR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "arch",
+   "mat": "stone",
+   "p": [
+    -1.6,
+    2.4,
+    0
+   ],
+   "s": [
+    0.6,
+    2.4,
+    2.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": true,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

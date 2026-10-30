@@ -1,0 +1,184 @@
+{
+ "id": "c3_l01_neon_kiosk",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    5,
+    1.2,
+    6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "plinth",
+   "mat": "brick",
+   "p": [
+    -1.5,
+    1.9,
+    0
+   ],
+   "s": [
+    0.6,
+    1.4,
+    0.6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pole",
+   "mat": "steel",
+   "p": [
+    -1.5,
+    2.85,
+    0
+   ],
+   "s": [
+    0.8,
+    0.5,
+    0.8
+   ],
+   "sup": [
+    "plinth"
+   ],
+   "joint": true,
+   "role": "steel_joint",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "deck",
+   "mat": "steel",
+   "p": [
+    0,
+    3.3,
+    0
+   ],
+   "s": [
+    2.6,
+    0.3,
+    3.4
+   ],
+   "sup": [
+    "pole"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "paneF",
+   "mat": "glass",
+   "p": [
+    -1.2,
+    4.1,
+    0
+   ],
+   "s": [
+    0.15,
+    1.4,
+    3.2
+   ],
+   "sup": [
+    "deck"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "E879F9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "paneB",
+   "mat": "glass",
+   "p": [
+    1.2,
+    4.1,
+    0
+   ],
+   "s": [
+    0.15,
+    1.4,
+    3.2
+   ],
+   "sup": [
+    "deck"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "E879F9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sign",
+   "mat": "brick",
+   "p": [
+    0,
+    5.1,
+    0
+   ],
+   "s": [
+    2.6,
+    0.6,
+    3.4
+   ],
+   "sup": [
+    "paneF",
+    "paneB"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "22D3EE",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

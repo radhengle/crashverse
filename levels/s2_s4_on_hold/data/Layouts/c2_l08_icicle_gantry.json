@@ -1,0 +1,212 @@
+{
+ "id": "c2_l08_icicle_gantry",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    5,
+    1.2,
+    12
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "postL",
+   "mat": "wood",
+   "p": [
+    -0.8,
+    2.3,
+    -3
+   ],
+   "s": [
+    0.5,
+    2.2,
+    0.5
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "postR",
+   "mat": "wood",
+   "p": [
+    -0.8,
+    2.3,
+    3
+   ],
+   "s": [
+    0.5,
+    2.2,
+    0.5
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "gantry",
+   "mat": "wood",
+   "p": [
+    0,
+    3.6,
+    0
+   ],
+   "s": [
+    2,
+    0.4,
+    7
+   ],
+   "sup": [
+    "postL",
+    "postR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "icicle0",
+   "mat": "stone",
+   "p": [
+    0,
+    4.6,
+    -2.4
+   ],
+   "s": [
+    1.4,
+    1.6,
+    1.2
+   ],
+   "sup": [
+    "gantry"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "icicle1",
+   "mat": "stone",
+   "p": [
+    0,
+    4.6,
+    -0.8
+   ],
+   "s": [
+    1.4,
+    1.6,
+    1.2
+   ],
+   "sup": [
+    "gantry"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "icicle2",
+   "mat": "stone",
+   "p": [
+    0,
+    4.6,
+    0.8
+   ],
+   "s": [
+    1.4,
+    1.6,
+    1.2
+   ],
+   "sup": [
+    "gantry"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "icicle3",
+   "mat": "stone",
+   "p": [
+    0,
+    4.6,
+    2.4
+   ],
+   "s": [
+    1.4,
+    1.6,
+    1.2
+   ],
+   "sup": [
+    "gantry"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

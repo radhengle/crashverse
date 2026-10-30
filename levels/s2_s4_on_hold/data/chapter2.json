@@ -1,0 +1,514 @@
+{
+ "id": "c2_frozen_peaks",
+ "name": "Frozen Peaks",
+ "nextRegion": "Neon City",
+ "islands": [
+  {
+   "id": "glacier",
+   "name": "Glacier Gate",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "gateAfterLevel": ""
+  },
+  {
+   "id": "pinewood",
+   "name": "Pinewood Ridge",
+   "pos": [
+    22,
+    4,
+    8
+   ],
+   "gateAfterLevel": "c2_l03"
+  },
+  {
+   "id": "icefall",
+   "name": "Icefall Pass",
+   "pos": [
+    44,
+    8,
+    0
+   ],
+   "gateAfterLevel": "c2_l06"
+  },
+  {
+   "id": "summit",
+   "name": "Frost Summit",
+   "pos": [
+    64,
+    12,
+    10
+   ],
+   "gateAfterLevel": "c2_l09"
+  }
+ ],
+ "levels": [
+  {
+   "id": "c2_l01",
+   "number": 11,
+   "island": "glacier",
+   "name": "Ski Lodge",
+   "layout": "c2_l01_ski_lodge",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 4,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "teaches": "New material: snow-stone (90 HP) is tough, hit the timber",
+   "mastery": {
+    "type": "DESTROYED_AT_LEAST",
+    "value": 0.95,
+    "role": "",
+    "text": ">=95% destroyed"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c1_l10",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "logpile",
+   "hintYaw": 0.0,
+   "hintPitch": 11.5,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l02",
+   "number": 12,
+   "island": "glacier",
+   "name": "Snow-Stone Chalet",
+   "layout": "c2_l02_snow_chalet",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "stone"
+   ],
+   "teaches": "Stone faces cost 2 shots: take the props",
+   "mastery": {
+    "type": "THREE_STARS_NO_ROLE_HITS",
+    "value": 0,
+    "role": "wall",
+    "text": "3 stars with no wall hits"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c2_l01",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "propL",
+   "hintYaw": -3.0,
+   "hintPitch": 12.0,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l03",
+   "number": 13,
+   "island": "glacier",
+   "name": "Frost Depot",
+   "layout": "c2_l03_frost_depot",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "steel",
+    "stone"
+   ],
+   "teaches": "Mega Bomb: one blast takes the whole stilt grid",
+   "mastery": {
+    "type": "CLEAR_IN_SHOTS",
+    "value": 1.0,
+    "role": "",
+    "text": "Clear in 1 shot"
+   },
+   "forced": [
+    {
+     "slot": "Core",
+     "powerup": "mega_bomb"
+    }
+   ],
+   "lockedSlots": [],
+   "requires": "c2_l02",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "stiltF1",
+   "hintYaw": 0.0,
+   "hintPitch": 12.0,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l04",
+   "number": 14,
+   "island": "pinewood",
+   "name": "Ice-Bridge Fort",
+   "layout": "c2_l04_ice_bridge_fort",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "brick",
+    "steel",
+    "stone"
+   ],
+   "teaches": "Frosted steel joints among stone decoys",
+   "mastery": {
+    "type": "THREE_STARS_NO_ROLE_HITS",
+    "value": 0,
+    "role": "wall",
+    "text": "3 stars with no wall hits"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c2_l03",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "jointL",
+   "hintYaw": -7.0,
+   "hintPitch": 15.5,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l05",
+   "number": 15,
+   "island": "pinewood",
+   "name": "Snow-Cannon Row",
+   "layout": "c2_l05_snow_cannons",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick"
+   ],
+   "teaches": "Shield: the canister hides behind a snow fence; a shielded miss is free",
+   "mastery": {
+    "type": "STARS",
+    "value": 3.0,
+    "role": "",
+    "text": "3 stars"
+   },
+   "forced": [
+    {
+     "slot": "Booster",
+     "powerup": "shield"
+    }
+   ],
+   "lockedSlots": [],
+   "requires": "c2_l04",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "fence",
+   "hintYaw": -1.5,
+   "hintPitch": 11.5,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l06",
+   "number": 16,
+   "island": "pinewood",
+   "name": "Avalanche Shelter",
+   "layout": "c2_l06_avalanche_shelter",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "steel",
+    "stone"
+   ],
+   "teaches": "Steel joints take 2x under a heavy snow roof",
+   "mastery": {
+    "type": "ALL_ROLE_BROKEN",
+    "value": 0,
+    "role": "brace",
+    "text": "Break both braces"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c2_l05",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "braceL",
+   "hintYaw": -3.0,
+   "hintPitch": 15.0,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l07",
+   "number": 17,
+   "island": "icefall",
+   "name": "Glacier Vault",
+   "layout": "c2_l07_glacier_vault",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "steel",
+    "stone"
+   ],
+   "teaches": "Laser Beam: pierce two slabs to the hidden key",
+   "mastery": {
+    "type": "STARS",
+    "value": 3.0,
+    "role": "",
+    "text": "3 stars"
+   },
+   "forced": [
+    {
+     "slot": "Booster",
+     "powerup": "laser_beam"
+    }
+   ],
+   "lockedSlots": [],
+   "requires": "c2_l06",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "keyB",
+   "hintYaw": 3.0,
+   "hintPitch": 12.5,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l08",
+   "number": 18,
+   "island": "icefall",
+   "name": "Icicle Gantry",
+   "layout": "c2_l08_icicle_gantry",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "stone"
+   ],
+   "teaches": "Breather: two posts drop a row of icicles",
+   "mastery": {
+    "type": "SHOTS_LEFT_AT_LEAST",
+    "value": 3.0,
+    "role": "",
+    "text": "Win with 3+ shots left"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c2_l07",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "gantry",
+   "hintYaw": 0.0,
+   "hintPitch": 16.0,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l09",
+   "number": 19,
+   "island": "icefall",
+   "name": "Cable-Car Station",
+   "layout": "c2_l09_cable_car_station",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 5,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "steel",
+    "stone"
+   ],
+   "teaches": "Mixed holders: one joint, one post; ignore the gondola",
+   "mastery": {
+    "type": "NO_POWERUP",
+    "value": 0,
+    "role": "",
+    "text": "No power-up used"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c2_l08",
+   "bossId": "",
+   "reward": [],
+   "star3Pct": 0.6,
+   "star2Pct": 0.3,
+   "starCapIfPowerupUsed": 2,
+   "islandKillY": -2.0,
+   "hintTarget": "joint",
+   "hintYaw": -3.0,
+   "hintPitch": 15.0,
+   "heroSlot": {
+    "kind": "keep",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  },
+  {
+   "id": "c2_l10",
+   "number": 20,
+   "island": "summit",
+   "name": "Frost Citadel",
+   "layout": "c2_l10_frost_citadel",
+   "objective": "DESTROY_STRUCTURE",
+   "shots": 7,
+   "winThreshold": 0.85,
+   "materials": [
+    "wood",
+    "brick",
+    "steel",
+    "stone"
+   ],
+   "teaches": "Hard level: open the gate, then both joints",
+   "mastery": {
+    "type": "NO_POWERUP",
+    "value": 0,
+    "role": "",
+    "text": "No power-up used"
+   },
+   "forced": [],
+   "lockedSlots": [],
+   "requires": "c2_l09",
+   "bossId": "",
+   "reward": [
+    {
+     "type": "coins",
+     "amount": 500,
+     "id": ""
+    },
+    {
+     "type": "gate",
+     "amount": 1,
+     "id": "neon_city"
+    }
+   ],
+   "star3Pct": 0.5,
+   "star2Pct": 0.33,
+   "starCapIfPowerupUsed": 3,
+   "islandKillY": -2.0,
+   "hintTarget": "gate",
+   "hintYaw": 3.5,
+   "hintPitch": 13.0,
+   "heroSlot": {
+    "kind": "gatehouse",
+    "fbx": "",
+    "pos": [
+     9,
+     0,
+     0
+    ],
+    "rotY": 0
+   }
+  }
+ ]
+}

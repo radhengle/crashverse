@@ -1,0 +1,289 @@
+{
+ "id": "c4_l08_nest_tower",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "trunk",
+   "mat": "wood",
+   "p": [
+    -0.6,
+    2.4,
+    0
+   ],
+   "s": [
+    0.7,
+    2.4,
+    0.7
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "fork",
+   "mat": "wood",
+   "p": [
+    0,
+    3.9,
+    0
+   ],
+   "s": [
+    3,
+    0.6,
+    3
+   ],
+   "sup": [
+    "trunk"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "nest",
+   "mat": "wood",
+   "p": [
+    0,
+    4.8,
+    0
+   ],
+   "s": [
+    3.4,
+    1.2,
+    3.4
+   ],
+   "sup": [
+    "fork"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "5E8C31",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "eggA",
+   "mat": "stone",
+   "p": [
+    0,
+    5.8,
+    -0.6
+   ],
+   "s": [
+    1,
+    1.2,
+    1
+   ],
+   "sup": [
+    "nest"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "F1E3C3",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "eggB",
+   "mat": "stone",
+   "p": [
+    0,
+    5.8,
+    0.6
+   ],
+   "s": [
+    1,
+    1.2,
+    1
+   ],
+   "sup": [
+    "nest"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "F1E3C3",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "fern0",
+   "mat": "wood",
+   "p": [
+    -1.6,
+    1.9,
+    -2.4
+   ],
+   "s": [
+    1.0,
+    1.4,
+    1.0
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "decoy",
+   "nonObj": true,
+   "color": "5E8C31",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "fern1",
+   "mat": "wood",
+   "p": [
+    -1.6,
+    1.9,
+    2.4
+   ],
+   "s": [
+    1.0,
+    1.4,
+    1.0
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "decoy",
+   "nonObj": true,
+   "color": "5E8C31",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "fern2",
+   "mat": "wood",
+   "p": [
+    1.6,
+    1.9,
+    -2.4
+   ],
+   "s": [
+    1.0,
+    1.4,
+    1.0
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "decoy",
+   "nonObj": true,
+   "color": "5E8C31",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "fern3",
+   "mat": "wood",
+   "p": [
+    1.6,
+    1.9,
+    2.4
+   ],
+   "s": [
+    1.0,
+    1.4,
+    1.0
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "decoy",
+   "nonObj": true,
+   "color": "5E8C31",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "bigEgg",
+   "mat": "stone",
+   "p": [
+    0,
+    4.4,
+    1.6
+   ],
+   "s": [
+    1.0,
+    1.2,
+    1.0
+   ],
+   "sup": [
+    "fork"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "F1E3C3",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

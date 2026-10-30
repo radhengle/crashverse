@@ -1,0 +1,186 @@
+{
+ "id": "c3_l08_greenhouse",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    5,
+    1.2,
+    8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "propL",
+   "mat": "wood",
+   "p": [
+    -1.2,
+    1.9,
+    -1.6
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "propR",
+   "mat": "wood",
+   "p": [
+    -1.2,
+    1.9,
+    1.6
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "bed",
+   "mat": "brick",
+   "p": [
+    0,
+    2.8,
+    0
+   ],
+   "s": [
+    3,
+    0.4,
+    4
+   ],
+   "sup": [
+    "propL",
+    "propR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "hothouse",
+   "mat": "glass",
+   "p": [
+    0,
+    3.9,
+    0
+   ],
+   "s": [
+    2.6,
+    1.8,
+    3.6
+   ],
+   "sup": [
+    "bed"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "E879F9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "ridge",
+   "mat": "steel",
+   "p": [
+    0,
+    5.0,
+    0
+   ],
+   "s": [
+    1.0,
+    0.4,
+    3.8
+   ],
+   "sup": [
+    "hothouse"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "3B3F5C",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "planter",
+   "mat": "brick",
+   "p": [
+    0,
+    4.0,
+    0
+   ],
+   "s": [
+    1.6,
+    0.8,
+    2.6
+   ],
+   "sup": [
+    "bed"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "22C55E",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

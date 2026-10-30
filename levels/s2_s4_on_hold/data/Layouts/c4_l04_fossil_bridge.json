@@ -1,0 +1,238 @@
+{
+ "id": "c4_l04_fossil_bridge",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    12
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "towerL",
+   "mat": "stone",
+   "p": [
+    0.4,
+    2.6,
+    -3.2
+   ],
+   "s": [
+    1.8,
+    2.8,
+    1.8
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": true,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pinL",
+   "mat": "wood",
+   "p": [
+    -1.0,
+    3.0,
+    -1.7600000000000002
+   ],
+   "s": [
+    0.4,
+    0.6,
+    0.4
+   ],
+   "sup": [
+    "towerL"
+   ],
+   "joint": false,
+   "role": "pin",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "towerR",
+   "mat": "stone",
+   "p": [
+    0.4,
+    2.6,
+    3.2
+   ],
+   "s": [
+    1.8,
+    2.8,
+    1.8
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": true,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pinR",
+   "mat": "wood",
+   "p": [
+    -1.0,
+    3.0,
+    1.7600000000000002
+   ],
+   "s": [
+    0.4,
+    0.6,
+    0.4
+   ],
+   "sup": [
+    "towerR"
+   ],
+   "joint": false,
+   "role": "pin",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "span",
+   "mat": "stone",
+   "p": [
+    -0.2,
+    3.6,
+    0
+   ],
+   "s": [
+    2.2,
+    0.5,
+    5.6
+   ],
+   "sup": [
+    "pinL",
+    "pinR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "ribs",
+   "mat": "stone",
+   "p": [
+    -0.2,
+    4.6,
+    0
+   ],
+   "s": [
+    1.8,
+    1.4,
+    4.8
+   ],
+   "sup": [
+    "span"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "spine",
+   "mat": "stone",
+   "p": [
+    -0.2,
+    5.6,
+    0
+   ],
+   "s": [
+    1.2,
+    0.6,
+    5.2
+   ],
+   "sup": [
+    "ribs"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "skullRock",
+   "mat": "stone",
+   "p": [
+    -1.8,
+    2.0,
+    0
+   ],
+   "s": [
+    0.6,
+    1.6,
+    1.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": true,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

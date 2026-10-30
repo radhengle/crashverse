@@ -1,0 +1,9 @@
+{
+ "defaultDamage": 60,
+ "launchSpeed": 28,
+ "projectileMass": 0.8,
+ "projectileScale": 0.45,
+ "splitSpreadDeg": 8,
+ "aimYawDegPerDp": 0.25,
+ "aimPitchDegPerDp": 0.15
+}

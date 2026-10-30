@@ -1,0 +1,313 @@
+{
+ "id": "c4_l10_primeval_fortress",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    12
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "gateCrystal",
+   "mat": "glass",
+   "p": [
+    -2.0,
+    2.6,
+    1.8
+   ],
+   "s": [
+    0.4,
+    2.4,
+    1.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "gate",
+   "nonObj": false,
+   "color": "F59E0B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "bonewall",
+   "mat": "stone",
+   "p": [
+    -2.0,
+    2.6,
+    -3.8
+   ],
+   "s": [
+    0.6,
+    2.4,
+    1.2
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": true,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pierL",
+   "mat": "brick",
+   "p": [
+    -1.0,
+    2.2,
+    -1.8
+   ],
+   "s": [
+    0.8,
+    2.0,
+    0.8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pierR",
+   "mat": "brick",
+   "p": [
+    -1.0,
+    2.2,
+    1.8
+   ],
+   "s": [
+    0.8,
+    2.0,
+    0.8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pinL",
+   "mat": "wood",
+   "p": [
+    -1.0,
+    3.45,
+    -1.8
+   ],
+   "s": [
+    1.0,
+    0.5,
+    1.0
+   ],
+   "sup": [
+    "pierL"
+   ],
+   "joint": false,
+   "role": "pin",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pinR",
+   "mat": "wood",
+   "p": [
+    -1.0,
+    3.45,
+    1.8
+   ],
+   "s": [
+    1.0,
+    0.5,
+    1.0
+   ],
+   "sup": [
+    "pierR"
+   ],
+   "joint": false,
+   "role": "pin",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "keepFloor",
+   "mat": "stone",
+   "p": [
+    0,
+    4.0,
+    0
+   ],
+   "s": [
+    3.2,
+    0.5,
+    4.8
+   ],
+   "sup": [
+    "pinL",
+    "pinR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "keepL",
+   "mat": "stone",
+   "p": [
+    0,
+    5.4,
+    -1.4
+   ],
+   "s": [
+    2.6,
+    2.4,
+    1.8
+   ],
+   "sup": [
+    "keepFloor"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "keepR",
+   "mat": "stone",
+   "p": [
+    0,
+    5.4,
+    1.4
+   ],
+   "s": [
+    2.6,
+    2.4,
+    1.8
+   ],
+   "sup": [
+    "keepFloor"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "tusks",
+   "mat": "stone",
+   "p": [
+    0,
+    7.0,
+    0
+   ],
+   "s": [
+    3.2,
+    0.8,
+    5
+   ],
+   "sup": [
+    "keepL",
+    "keepR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "F1E3C3",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "amberCrown",
+   "mat": "glass",
+   "p": [
+    0,
+    8.0,
+    0
+   ],
+   "s": [
+    1.4,
+    1.2,
+    1.4
+   ],
+   "sup": [
+    "tusks"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "F59E0B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

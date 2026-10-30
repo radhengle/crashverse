@@ -1,0 +1,268 @@
+{
+ "id": "c2_l03_frost_depot",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    10
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stiltF0",
+   "mat": "wood",
+   "p": [
+    -0.6,
+    1.9,
+    -1.0
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stiltF1",
+   "mat": "wood",
+   "p": [
+    -0.6,
+    1.9,
+    0
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stiltF2",
+   "mat": "wood",
+   "p": [
+    -0.6,
+    1.9,
+    1.0
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stiltB0",
+   "mat": "wood",
+   "p": [
+    0.6,
+    1.9,
+    -1.0
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stiltB1",
+   "mat": "wood",
+   "p": [
+    0.6,
+    1.9,
+    0
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "stiltB2",
+   "mat": "wood",
+   "p": [
+    0.6,
+    1.9,
+    1.0
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "loft",
+   "mat": "steel",
+   "p": [
+    0,
+    2.8,
+    0
+   ],
+   "s": [
+    2.4,
+    0.4,
+    3.6
+   ],
+   "sup": [
+    "stiltF0",
+    "stiltF1",
+    "stiltF2",
+    "stiltB0",
+    "stiltB1",
+    "stiltB2"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "7FA7C9",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "depot",
+   "mat": "stone",
+   "p": [
+    0,
+    3.9,
+    0
+   ],
+   "s": [
+    2.0,
+    1.8,
+    3.2
+   ],
+   "sup": [
+    "loft"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "depotRoof",
+   "mat": "stone",
+   "p": [
+    0,
+    5.1,
+    0
+   ],
+   "s": [
+    2.4,
+    0.6,
+    3.6
+   ],
+   "sup": [
+    "depot"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "F1F6FA",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

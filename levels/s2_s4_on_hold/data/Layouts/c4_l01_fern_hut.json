@@ -1,0 +1,159 @@
+{
+ "id": "c4_l01_fern_hut",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "log",
+   "mat": "wood",
+   "p": [
+    -0.6,
+    1.7,
+    0
+   ],
+   "s": [
+    0.6,
+    1.0,
+    0.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "platform",
+   "mat": "wood",
+   "p": [
+    0,
+    2.4,
+    0
+   ],
+   "s": [
+    3,
+    0.4,
+    3.6
+   ],
+   "sup": [
+    "log"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "hut",
+   "mat": "wood",
+   "p": [
+    0,
+    3.4,
+    0
+   ],
+   "s": [
+    2.4,
+    1.6,
+    3
+   ],
+   "sup": [
+    "platform"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "5E8C31",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "thatch",
+   "mat": "wood",
+   "p": [
+    0,
+    4.5,
+    0
+   ],
+   "s": [
+    3,
+    0.6,
+    3.6
+   ],
+   "sup": [
+    "hut"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "5E8C31",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "skull",
+   "mat": "stone",
+   "p": [
+    0,
+    5.1,
+    0
+   ],
+   "s": [
+    0.8,
+    0.6,
+    0.8
+   ],
+   "sup": [
+    "thatch"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

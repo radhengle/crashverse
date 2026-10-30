@@ -1,0 +1,240 @@
+{
+ "id": "c2_l02_snow_chalet",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    5,
+    1.2,
+    8
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "propL",
+   "mat": "wood",
+   "p": [
+    -1.3,
+    1.9,
+    -1.6
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "propR",
+   "mat": "wood",
+   "p": [
+    -1.3,
+    1.9,
+    1.6
+   ],
+   "s": [
+    0.4,
+    1.4,
+    0.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "slabL",
+   "mat": "brick",
+   "p": [
+    0,
+    2.8,
+    -1
+   ],
+   "s": [
+    3.2,
+    0.4,
+    2
+   ],
+   "sup": [
+    "propL"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "slabR",
+   "mat": "brick",
+   "p": [
+    0,
+    2.8,
+    1
+   ],
+   "s": [
+    3.2,
+    0.4,
+    2
+   ],
+   "sup": [
+    "propR"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallF",
+   "mat": "stone",
+   "p": [
+    -1.4,
+    3.8,
+    0
+   ],
+   "s": [
+    0.4,
+    1.6,
+    3.6
+   ],
+   "sup": [
+    "slabL",
+    "slabR"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallB",
+   "mat": "stone",
+   "p": [
+    1.4,
+    3.8,
+    0
+   ],
+   "s": [
+    0.4,
+    1.6,
+    3.6
+   ],
+   "sup": [
+    "slabL",
+    "slabR"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roof",
+   "mat": "stone",
+   "p": [
+    0,
+    4.9,
+    0
+   ],
+   "s": [
+    3.4,
+    0.6,
+    4
+   ],
+   "sup": [
+    "wallF",
+    "wallB"
+   ],
+   "joint": false,
+   "role": "roof",
+   "nonObj": false,
+   "color": "F1F6FA",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "sled",
+   "mat": "wood",
+   "p": [
+    -1.6,
+    1.6,
+    3.0
+   ],
+   "s": [
+    0.6,
+    0.4,
+    1.2
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "decoy",
+   "nonObj": true,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

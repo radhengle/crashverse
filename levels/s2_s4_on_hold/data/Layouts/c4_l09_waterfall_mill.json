@@ -1,0 +1,220 @@
+{
+ "id": "c4_l09_waterfall_mill",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    10
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "pier",
+   "mat": "wood",
+   "p": [
+    -1.0,
+    2.2,
+    -1.6
+   ],
+   "s": [
+    0.5,
+    2.0,
+    0.5
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "crystal",
+   "mat": "glass",
+   "p": [
+    -1.0,
+    2.2,
+    1.6
+   ],
+   "s": [
+    0.6,
+    2.0,
+    0.6
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "pillar",
+   "nonObj": false,
+   "color": "F59E0B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "mill",
+   "mat": "stone",
+   "p": [
+    0,
+    3.6,
+    0
+   ],
+   "s": [
+    3,
+    0.6,
+    4.4
+   ],
+   "sup": [
+    "pier",
+    "crystal"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "house",
+   "mat": "wood",
+   "p": [
+    0,
+    4.8,
+    0
+   ],
+   "s": [
+    2.4,
+    1.8,
+    3.6
+   ],
+   "sup": [
+    "mill"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roof",
+   "mat": "stone",
+   "p": [
+    0,
+    6.0,
+    0
+   ],
+   "s": [
+    2.8,
+    0.6,
+    4
+   ],
+   "sup": [
+    "house"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wheel",
+   "mat": "wood",
+   "p": [
+    0,
+    3.0,
+    2.6
+   ],
+   "s": [
+    2.4,
+    2.4,
+    0.3
+   ],
+   "sup": [
+    "mill"
+   ],
+   "joint": false,
+   "role": "moving",
+   "nonObj": true,
+   "color": "8B5A2B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [
+    0,
+    0,
+    1
+   ],
+   "pivot": [
+    0,
+    3.0,
+    2.6
+   ],
+   "spinDps": 45
+  },
+  {
+   "id": "chute",
+   "mat": "stone",
+   "p": [
+    0,
+    2.4,
+    -2.6
+   ],
+   "s": [
+    1.6,
+    2.4,
+    0.8
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": true,
+   "color": "C9B48A",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}

@@ -1,0 +1,186 @@
+{
+ "id": "c2_l01_ski_lodge",
+ "blocks": [
+  {
+   "id": "ground",
+   "mat": "brick",
+   "p": [
+    0,
+    0.6,
+    0
+   ],
+   "s": [
+    6,
+    1.2,
+    6
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "island",
+   "nonObj": true,
+   "color": "8A8A8A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "logpile",
+   "mat": "wood",
+   "p": [
+    -0.8,
+    1.6,
+    0
+   ],
+   "s": [
+    1.0,
+    0.8,
+    1.4
+   ],
+   "sup": [
+    "ground"
+   ],
+   "joint": false,
+   "role": "support",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "floor",
+   "mat": "wood",
+   "p": [
+    0,
+    2.2,
+    0
+   ],
+   "s": [
+    3,
+    0.4,
+    4
+   ],
+   "sup": [
+    "logpile"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallF",
+   "mat": "wood",
+   "p": [
+    -1.4,
+    3.1,
+    0
+   ],
+   "s": [
+    0.2,
+    1.4,
+    3.8
+   ],
+   "sup": [
+    "floor"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "wallB",
+   "mat": "wood",
+   "p": [
+    1.4,
+    3.1,
+    0
+   ],
+   "s": [
+    0.2,
+    1.4,
+    3.8
+   ],
+   "sup": [
+    "floor"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "roof",
+   "mat": "stone",
+   "p": [
+    0,
+    4.1,
+    0
+   ],
+   "s": [
+    3.4,
+    0.6,
+    4.4
+   ],
+   "sup": [
+    "wallF",
+    "wallB"
+   ],
+   "joint": false,
+   "role": "roof",
+   "nonObj": false,
+   "color": "F1F6FA",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  },
+  {
+   "id": "chimney",
+   "mat": "stone",
+   "p": [
+    0.8,
+    4.9,
+    1.2
+   ],
+   "s": [
+    0.6,
+    1.0,
+    0.6
+   ],
+   "sup": [
+    "roof"
+   ],
+   "joint": false,
+   "role": "",
+   "nonObj": false,
+   "color": "CFE8F7",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0
+  }
+ ]
+}
