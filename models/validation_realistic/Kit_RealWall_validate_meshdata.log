@@ -1,0 +1,11 @@
+Kit_RealWall_Corner.fbx: meshes=3 materials=['M_RealWall'] -> PASS
+Kit_RealWall_Corner_Fractured.fbx: meshes=10 materials=['M_RealWall', 'M_RealWall_Inner'] -> PASS
+Kit_RealWall_Cren.fbx: meshes=3 materials=['M_RealWall'] -> PASS
+Kit_RealWall_CrenC.fbx: meshes=3 materials=['M_RealWall'] -> PASS
+Kit_RealWall_CrenC_Fractured.fbx: meshes=7 materials=['M_RealWall', 'M_RealWall_Inner'] -> PASS
+Kit_RealWall_Cren_Fractured.fbx: meshes=4 materials=['M_RealWall', 'M_RealWall_Inner'] -> PASS
+Kit_RealWall_Seg.fbx: meshes=3 materials=['M_RealWall'] -> PASS
+Kit_RealWall_SegSl.fbx: meshes=3 materials=['M_RealWall'] -> PASS
+Kit_RealWall_SegSl_Fractured.fbx: meshes=6 materials=['M_RealWall', 'M_RealWall_Inner'] -> PASS
+Kit_RealWall_Seg_Fractured.fbx: meshes=6 materials=['M_RealWall', 'M_RealWall_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS

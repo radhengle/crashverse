@@ -1,0 +1,6 @@
+Kit_RealWall_Corner_Fractured.fbx: frags=10 (Stone 4-10) tris max=144 total=436 mass 154.0-3743.8 kg UCX=10 JNT=13 ANCHOR=4 -> PASS
+Kit_RealWall_CrenC_Fractured.fbx: frags=7 (Stone 4-10) tris max=86 total=312 mass 101.8-303.8 kg UCX=7 JNT=13 ANCHOR=4 -> PASS
+Kit_RealWall_Cren_Fractured.fbx: frags=4 (Stone 4-10) tris max=122 total=248 mass 146.5-421.2 kg UCX=4 JNT=6 ANCHOR=2 -> PASS
+Kit_RealWall_SegSl_Fractured.fbx: frags=6 (Stone 4-10) tris max=152 total=444 mass 417.7-1673.3 kg UCX=6 JNT=10 ANCHOR=4 -> PASS
+Kit_RealWall_Seg_Fractured.fbx: frags=6 (Stone 4-10) tris max=68 total=268 mass 417.7-1733.7 kg UCX=6 JNT=10 ANCHOR=4 -> PASS
+RESULT: ALL PASS

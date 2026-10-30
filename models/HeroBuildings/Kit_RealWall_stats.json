@@ -1,0 +1,153 @@
+{
+ "set": "Kit_RealWall",
+ "building": "Kit_RealWall",
+ "modules": {
+  "Seg": {
+   "frac": "Stone",
+   "module": "Seg",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92
+   },
+   "bounds_m": [
+    1.506,
+    1.12,
+    1.512
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 68,
+   "frag_tris_total": 268,
+   "mass_kg_total": 6008.9,
+   "mass_kg_range": [
+    417.67,
+    1733.72
+   ],
+   "density_kg_m3": 2300,
+   "joints": 10,
+   "anchors": 4,
+   "min_axis_m": 0.22
+  },
+  "SegSl": {
+   "frac": "Stone",
+   "module": "SegSl",
+   "label": "Straight wall segment with a cross arrow slit",
+   "tris": {
+    "LOD0": 464,
+    "LOD1": 272,
+    "LOD2": 92
+   },
+   "bounds_m": [
+    1.506,
+    1.12,
+    1.512
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 152,
+   "frag_tris_total": 444,
+   "mass_kg_total": 5764.1,
+   "mass_kg_range": [
+    417.67,
+    1673.32
+   ],
+   "density_kg_m3": 2300,
+   "joints": 10,
+   "anchors": 4,
+   "min_axis_m": 0.22
+  },
+  "Corner": {
+   "frac": "Stone",
+   "module": "Corner",
+   "label": "Corner pier 1.0 x 1.0 x 1.5 with quoins (joins two runs at 90 deg)",
+   "tris": {
+    "LOD0": 580,
+    "LOD1": 436,
+    "LOD2": 76
+   },
+   "bounds_m": [
+    1.12,
+    1.12,
+    1.509
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 144,
+   "frag_tris_total": 436,
+   "mass_kg_total": 6179.0,
+   "mass_kg_range": [
+    153.99,
+    3743.81
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 4,
+   "min_axis_m": 0.22
+  },
+  "Cren": {
+   "frac": "Stone",
+   "module": "Cren",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80
+   },
+   "bounds_m": [
+    1.501,
+    1.203,
+    0.704
+   ],
+   "fragments": 4,
+   "frag_source_lod": 1,
+   "frag_tris_max": 122,
+   "frag_tris_total": 248,
+   "mass_kg_total": 1233.1,
+   "mass_kg_range": [
+    146.51,
+    421.18
+   ],
+   "density_kg_m3": 2300,
+   "joints": 6,
+   "anchors": 2,
+   "min_axis_m": 0.2
+  },
+  "CrenC": {
+   "frac": "Stone",
+   "module": "CrenC",
+   "label": "Corner crenellation 1.2 x 1.2 x 0.7 (L-shaped merlon), sits on Corner",
+   "tris": {
+    "LOD0": 368,
+    "LOD1": 208,
+    "LOD2": 84
+   },
+   "bounds_m": [
+    1.204,
+    1.203,
+    0.704
+   ],
+   "fragments": 7,
+   "frag_source_lod": 1,
+   "frag_tris_max": 86,
+   "frag_tris_total": 312,
+   "mass_kg_total": 1372.2,
+   "mass_kg_range": [
+    101.8,
+    303.79
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 4,
+   "min_axis_m": 0.2
+  }
+ },
+ "tris_total": {
+  "LOD0": 2018,
+  "LOD1": 1248,
+  "LOD2": 424,
+  "Fractured": 1708
+ },
+ "texture_set": "RealCastle"
+}

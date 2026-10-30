@@ -1,0 +1,6 @@
+Kit_RealWall_Corner.fbx: LOD0=580t/1m LOD1=436t/1m LOD2=76t/1m hulls=1 materials=['M_RealWall'] -> PASS
+Kit_RealWall_Cren.fbx: LOD0=292t/1m LOD1=184t/1m LOD2=80t/1m hulls=1 materials=['M_RealWall'] -> PASS
+Kit_RealWall_CrenC.fbx: LOD0=368t/1m LOD1=208t/1m LOD2=84t/1m hulls=1 materials=['M_RealWall'] -> PASS
+Kit_RealWall_Seg.fbx: LOD0=314t/1m LOD1=148t/1m LOD2=92t/1m hulls=1 materials=['M_RealWall'] -> PASS
+Kit_RealWall_SegSl.fbx: LOD0=464t/1m LOD1=272t/1m LOD2=92t/1m hulls=1 materials=['M_RealWall'] -> PASS
+REALISM RESULT: ALL PASS

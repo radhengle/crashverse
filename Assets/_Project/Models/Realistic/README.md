@@ -147,3 +147,86 @@ Built by `Tools/Blender/realistic/market.py`. One material `M_RealStall` (`Kit_R
 | crownWood | CrWdA, CrWdB | 2.83 × 2.83 | 1.40 | 7.80 | 2,364 | Wood 11+11 | crownFloor |
 | crownBrick | CrBk | 2.41 × 2.41 | 0.81 | 8.61 | 912 | Stone 6 | crownWood |
 | crownRoof | CrRfA, CrRfB | 2.71 × 2.71 | 2.18 | 10.65 | 2,848 | Roof 16+16 | crownBrick |
+
+## Bld_CastleKeep (realistic v1, L9 / Daily Boss arena backdrop)
+
+- **Folder:** `Buildings/Bld_CastleKeep/` (`Kit_RealKeep_<piece>.fbx` + `_Fractured.fbx`, `Bld_CastleKeep.layout.json`). Builder: `Tools/Blender/realistic/keep.py` (same `castle_lib.py` wall, door, slit, ring, corbel, parapet and tile-roof builders as the tower).
+- **Look:** 7 m square two-storey sandstone keep on a granite plinth: an arched oak door with voussoirs and iron straps, arched windows and arrow slits, an oak floor, a corbelled crown, crenellated parapets, a terracotta hipped roof and 4 corbelled corner turrets (bartizans) with tile cones and finials. Shared atlas `RealCastle` (stats `texture_set`), material `M_RealKeep`.
+- **Modules:** walls are split by face and storey, so a hit on a lower face drops the face above it (`anchor_to`). The front wall is split at the door (W1FL/W1FR) and the crown into L/R halves to keep every FBX ≤ 1,500 tris.
+- **Placement:** no current level places a keep. The titan arenas map their blocks to `Kit_Keep`, but the realistic boss body is the golem, so this keep is the arena backdrop or the L9 castle centrepiece.
+- **Tris:** LOD0 19,990 (hero budget ≤ 20k), LOD1 14,382, LOD2 5,356, fractured 20,660.
+
+| Module | Pieces | Footprint m | Height m | Top m | LOD0 | Fracture | Rests on |
+|---|---|---|---|---|---|---|---|
+| Base | Base | 7.50 × 7.50 | 0.30 | 0.30 | 236 | Indestructible  | Ground |
+| Wall_F1 | W1FL, W1FR | 7.02 × 0.69 | 3.05 | 3.31 | 1,870 | Stone 10+10 | Base |
+| Wall_B1 | W1B | 7.02 × 0.69 | 3.01 | 3.31 | 1,244 | Stone 10 | Base |
+| Wall_L1 | W1L | 0.69 × 5.81 | 3.01 | 3.31 | 716 | Stone 8 | Base |
+| Wall_R1 | W1R | 0.69 × 5.81 | 3.01 | 3.31 | 664 | Stone 8 | Base |
+| Floor_1 | Floor | 5.80 × 5.80 | 0.35 | 3.22 | 508 | Wood 16 | Wall_B1, Wall_F1, Wall_L1, Wall_R1 |
+| Wall_F2 | W2F | 7.02 × 0.64 | 2.71 | 6.00 | 1,236 | Stone 10 | Wall_F1 |
+| Wall_B2 | W2B | 7.02 × 0.64 | 2.71 | 6.01 | 1,392 | Stone 10 | Wall_B1 |
+| Wall_L2 | W2L | 0.63 × 5.81 | 2.71 | 6.00 | 492 | Stone 8 | Wall_L1 |
+| Wall_R2 | W2R | 0.63 × 5.81 | 2.71 | 6.01 | 554 | Stone 8 | Wall_R1 |
+| Crown | CrownL, CrownR | 7.60 × 7.60 | 2.36 | 6.40 | 2,592 | Stone 10+10 | Wall_B2, Wall_F2, Wall_L2, Wall_R2 |
+| Parapet_F | PF | 7.61 × 0.31 | 0.91 | 7.30 | 440 | Stone 6 | Crown |
+| Parapet_B | PB | 7.60 × 0.31 | 0.91 | 7.31 | 324 | Stone 6 | Crown |
+| Parapet_L | PL | 0.31 × 7.01 | 0.91 | 7.30 | 368 | Stone 5 | Crown |
+| Parapet_R | PR | 0.31 × 7.00 | 0.91 | 7.30 | 344 | Stone 5 | Crown |
+| Roof | RoofA, RoofB | 6.23 × 6.23 | 3.58 | 9.85 | 2,824 | Roof 16+16 | Crown |
+| Turret_FL | TFL, CFL | 2.02 × 1.98 | 4.71 | 9.80 | 1,066 | Stone 6+16 | Crown |
+| Turret_FR | TFR, CFR | 2.02 × 1.98 | 4.70 | 9.80 | 1,022 | Stone 6+16 | Crown |
+| Turret_BL | TBL, CBL | 2.02 × 1.98 | 4.70 | 9.80 | 1,052 | Stone 6+16 | Crown |
+| Turret_BR | TBR, CBR | 2.02 × 1.98 | 4.70 | 9.80 | 1,046 | Stone 6+16 | Crown |
+
+## Kit_RealWall (realistic v1, tiling castle curtain wall)
+
+- **Folder:** `Buildings/Kit_RealWall/`. Builder: `Tools/Blender/realistic/wallkit.py`. Material `M_RealWall` on the shared `RealCastle` atlas. The requested name `Kit_RealCastleWall_` breaks the prefix+code ≤ 20 rule, so the kit is `Kit_RealWall_`.
+- **Tiling:** pivots sit at the base-centre. Segments tile on a 1.5 m pitch along local X, and the corner closes a 90° turn on a 1.0 m wall thickness. Crenellations sit on top of a segment (y = 1.5) or a corner (CrenC).
+- **L9 fit:** in `Kit_RealWall.layout.json` `level_fit`, sea0..2 become Seg/SegSl (yaw 90) and seaCrest becomes 3 × Cren. Level blocks are 1.4 m long on a 1.5 m pitch and the crest block is 0.5 tall (the Cren is 0.7 tall with its merlons).
+
+| Piece | Size m (L × D × H) | LOD0 | LOD1 | LOD2 | Fracture |
+|---|---|---|---|---|---|
+| Seg | 1.5 × 1.0 × 1.5 | 314 | 148 | 92 | Stone 6 |
+| SegSl (arrow slit) | 1.5 × 1.0 × 1.5 | 464 | 272 | 92 | Stone 6 |
+| Corner | 1.0 × 1.0 × 1.5 | 580 | 436 | 76 | Stone 10 |
+| Cren (merlons) | 1.5 × 1.2 × 0.7 | 292 | 184 | 80 | Stone 4 |
+| CrenC (corner merlons) | 1.2 × 1.2 × 0.7 | 368 | 208 | 84 | Stone 7 |
+
+## Bld_Gatehouse (realistic v1, L9 / Daily Boss arena gate)
+
+- **Folder:** `Buildings/Bld_Gatehouse/` (`Kit_RealGate_ArchL/ArchR/Portc` + `Bld_Gatehouse.layout.json`). Builder: `Tools/Blender/realistic/gatehouse.py`.
+- **Reuse:** the two flanking towers are **instances of the Bld_StoneTower FBX** (`TL_`/`TR_` ids, `reused_from`, yaw -90, Unity x ±2.8). They use storeys 1–2 plus the crenellated crownBrick, dropped onto storey 2, which keeps the set inside 20k. The wall-walk merlons are 2 × `Kit_RealWall_Cren`.
+- **Gate:** a dressed round arch split into L/R halves (Stone) and an iron-strapped oak portcullis with iron-shod points, half raised (Steel 10, anchored to the arch so it falls with it).
+- **Demo:** `Bld_Gatehouse_WallRuns.layout.json` holds 2 wall runs (24 Kit_RealWall pieces) leaving the towers, as seen in the sheet. It is an example only.
+- **Tris:** LOD0 19,338, LOD1 12,522, LOD2 3,526, fractured 17,486 (wall runs not counted).
+
+| Module | Pieces | Footprint m | Height m | Top m | LOD0 | Fracture | Rests on |
+|---|---|---|---|---|---|---|---|
+| Arch | ArchL, ArchR | 3.01 × 2.15 | 5.51 | 5.50 | 1,234 | Stone 9+9 | Ground |
+| Portcullis | Portc | 2.56 × 0.18 | 3.46 | 4.20 | 1,296 | Steel 10 | Arch |
+| TL_doorSteps | TL_Steps | 1.20 × 0.43 | 0.50 | 0.50 | 88 | Indestructible  | Ground |
+| TL_ring0 | TL_R0 | 2.63 × 2.63 | 0.50 | 0.50 | 1,068 | Wood 16 | Ground |
+| TL_wallF1 | TL_W1F | 2.62 × 0.45 | 2.30 | 2.76 | 1,114 | Stone 10 | TL_ring0 |
+| TL_wallB1 | TL_W1B | 2.62 × 0.39 | 2.26 | 2.75 | 784 | Stone 10 | TL_ring0 |
+| TL_wallL1 | TL_W1L | 0.38 × 1.91 | 2.26 | 2.75 | 344 | Stone 4 | TL_ring0 |
+| TL_wallR1 | TL_W1R | 0.38 × 1.91 | 2.26 | 2.75 | 388 | Stone 4 | TL_ring0 |
+| TL_ring1 | TL_R1 | 2.63 × 2.63 | 0.50 | 3.25 | 1,088 | Wood 16 | TL_wallB1, TL_wallF1, TL_wallL1, TL_wallR1 |
+| TL_wallF2 | TL_W2F | 2.62 × 0.48 | 2.25 | 5.50 | 872 | Stone 10 | TL_ring1 |
+| TL_wallB2 | TL_W2B | 2.62 × 0.39 | 2.25 | 5.50 | 634 | Stone 10 | TL_ring1 |
+| TL_wallL2 | TL_W2L | 0.38 × 1.91 | 2.26 | 5.51 | 406 | Stone 4 | TL_ring1 |
+| TL_wallR2 | TL_W2R | 0.38 × 1.90 | 2.26 | 5.50 | 414 | Stone 4 | TL_ring1 |
+| TL_crownBrick | TL_CrBk | 2.41 × 2.41 | 0.81 | 6.30 | 912 | Stone 6 | TL_wallF2, TL_wallB2, TL_wallL2, TL_wallR2 |
+| TR_doorSteps | TR_Steps | 1.20 × 0.43 | 0.50 | 0.50 | 88 | Indestructible  | Ground |
+| TR_ring0 | TR_R0 | 2.63 × 2.63 | 0.50 | 0.50 | 1,068 | Wood 16 | Ground |
+| TR_wallF1 | TR_W1F | 2.62 × 0.45 | 2.30 | 2.76 | 1,114 | Stone 10 | TR_ring0 |
+| TR_wallB1 | TR_W1B | 2.62 × 0.39 | 2.26 | 2.75 | 784 | Stone 10 | TR_ring0 |
+| TR_wallL1 | TR_W1L | 0.38 × 1.91 | 2.26 | 2.75 | 344 | Stone 4 | TR_ring0 |
+| TR_wallR1 | TR_W1R | 0.38 × 1.91 | 2.26 | 2.75 | 388 | Stone 4 | TR_ring0 |
+| TR_ring1 | TR_R1 | 2.63 × 2.63 | 0.50 | 3.25 | 1,088 | Wood 16 | TR_wallB1, TR_wallF1, TR_wallL1, TR_wallR1 |
+| TR_wallF2 | TR_W2F | 2.62 × 0.48 | 2.25 | 5.50 | 872 | Stone 10 | TR_ring1 |
+| TR_wallB2 | TR_W2B | 2.62 × 0.39 | 2.25 | 5.50 | 634 | Stone 10 | TR_ring1 |
+| TR_wallL2 | TR_W2L | 0.38 × 1.91 | 2.26 | 5.51 | 406 | Stone 4 | TR_ring1 |
+| TR_wallR2 | TR_W2R | 0.38 × 1.90 | 2.26 | 5.50 | 414 | Stone 4 | TR_ring1 |
+| TR_crownBrick | TR_CrBk | 2.41 × 2.41 | 0.81 | 6.30 | 912 | Stone 6 | TR_wallF2, TR_wallB2, TR_wallL2, TR_wallR2 |
+| WallWalk | Cren1, Cren2 | 3.00 × 1.20 | 0.70 | 6.20 | 584 | Stone 4+4 | Arch |

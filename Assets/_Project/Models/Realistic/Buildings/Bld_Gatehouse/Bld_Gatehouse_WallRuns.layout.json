@@ -1,0 +1,797 @@
+{
+ "pieces": [
+  {
+   "id": "Seg_1",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Seg",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg_Fractured.fbx",
+   "position": {
+    "x": 4.85,
+    "y": 0,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92,
+    "Fractured": 268
+   }
+  },
+  {
+   "id": "Cren_2",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": 4.85,
+    "y": 1.5,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "SegSl_3",
+   "label": "Straight wall segment with a cross arrow slit",
+   "module": "run-1",
+   "kit": "Kit_RealWall_SegSl",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl_Fractured.fbx",
+   "position": {
+    "x": 6.35,
+    "y": 0,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 464,
+    "LOD1": 272,
+    "LOD2": 92,
+    "Fractured": 444
+   }
+  },
+  {
+   "id": "Cren_4",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": 6.35,
+    "y": 1.5,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "Seg_5",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Seg",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg_Fractured.fbx",
+   "position": {
+    "x": 7.85,
+    "y": 0,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92,
+    "Fractured": 268
+   }
+  },
+  {
+   "id": "Cren_6",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": 7.85,
+    "y": 1.5,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "Corner_7",
+   "label": "Corner pier 1.0 x 1.0 x 1.5 with quoins (joins two runs at 90 deg)",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Corner",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Corner.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Corner_Fractured.fbx",
+   "position": {
+    "x": 9.1,
+    "y": 0,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 580,
+    "LOD1": 436,
+    "LOD2": 76,
+    "Fractured": 436
+   }
+  },
+  {
+   "id": "CrenC_8",
+   "label": "Corner crenellation 1.2 x 1.2 x 0.7 (L-shaped merlon), sits on Corner",
+   "module": "run-1",
+   "kit": "Kit_RealWall_CrenC",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_CrenC.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_CrenC_Fractured.fbx",
+   "position": {
+    "x": 9.1,
+    "y": 1.5,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": [
+    "Corner"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 368,
+    "LOD1": 208,
+    "LOD2": 84,
+    "Fractured": 312
+   }
+  },
+  {
+   "id": "Seg_9",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Seg",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg_Fractured.fbx",
+   "position": {
+    "x": 9.1,
+    "y": 0,
+    "z": -1.25
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": -90,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92,
+    "Fractured": 268
+   }
+  },
+  {
+   "id": "Cren_10",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": 9.1,
+    "y": 1.5,
+    "z": -1.25
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 90,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "SegSl_11",
+   "label": "Straight wall segment with a cross arrow slit",
+   "module": "run-1",
+   "kit": "Kit_RealWall_SegSl",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl_Fractured.fbx",
+   "position": {
+    "x": 9.1,
+    "y": 0,
+    "z": -2.75
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": -90,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 464,
+    "LOD1": 272,
+    "LOD2": 92,
+    "Fractured": 444
+   }
+  },
+  {
+   "id": "Cren_12",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run-1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": 9.1,
+    "y": 1.5,
+    "z": -2.75
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 90,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "Seg_13",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "module": "run1",
+   "kit": "Kit_RealWall_Seg",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg_Fractured.fbx",
+   "position": {
+    "x": -4.85,
+    "y": 0,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92,
+    "Fractured": 268
+   }
+  },
+  {
+   "id": "Cren_14",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": -4.85,
+    "y": 1.5,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "SegSl_15",
+   "label": "Straight wall segment with a cross arrow slit",
+   "module": "run1",
+   "kit": "Kit_RealWall_SegSl",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl_Fractured.fbx",
+   "position": {
+    "x": -6.35,
+    "y": 0,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 464,
+    "LOD1": 272,
+    "LOD2": 92,
+    "Fractured": 444
+   }
+  },
+  {
+   "id": "Cren_16",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": -6.35,
+    "y": 1.5,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "Seg_17",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "module": "run1",
+   "kit": "Kit_RealWall_Seg",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg_Fractured.fbx",
+   "position": {
+    "x": -7.85,
+    "y": 0,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92,
+    "Fractured": 268
+   }
+  },
+  {
+   "id": "Cren_18",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": -7.85,
+    "y": 1.5,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "Corner_19",
+   "label": "Corner pier 1.0 x 1.0 x 1.5 with quoins (joins two runs at 90 deg)",
+   "module": "run1",
+   "kit": "Kit_RealWall_Corner",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Corner.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Corner_Fractured.fbx",
+   "position": {
+    "x": -9.1,
+    "y": 0,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 580,
+    "LOD1": 436,
+    "LOD2": 76,
+    "Fractured": 436
+   }
+  },
+  {
+   "id": "CrenC_20",
+   "label": "Corner crenellation 1.2 x 1.2 x 0.7 (L-shaped merlon), sits on Corner",
+   "module": "run1",
+   "kit": "Kit_RealWall_CrenC",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_CrenC.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_CrenC_Fractured.fbx",
+   "position": {
+    "x": -9.1,
+    "y": 1.5,
+    "z": 0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": -90,
+    "z": 0
+   },
+   "anchor_to": [
+    "Corner"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 368,
+    "LOD1": 208,
+    "LOD2": 84,
+    "Fractured": 312
+   }
+  },
+  {
+   "id": "Seg_21",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "module": "run1",
+   "kit": "Kit_RealWall_Seg",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg_Fractured.fbx",
+   "position": {
+    "x": -9.1,
+    "y": 0,
+    "z": -1.25
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": -90,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92,
+    "Fractured": 268
+   }
+  },
+  {
+   "id": "Cren_22",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": -9.1,
+    "y": 1.5,
+    "z": -1.25
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": -90,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "SegSl_23",
+   "label": "Straight wall segment with a cross arrow slit",
+   "module": "run1",
+   "kit": "Kit_RealWall_SegSl",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl_Fractured.fbx",
+   "position": {
+    "x": -9.1,
+    "y": 0,
+    "z": -2.75
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": -90,
+    "z": 0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 464,
+    "LOD1": 272,
+    "LOD2": 92,
+    "Fractured": 444
+   }
+  },
+  {
+   "id": "Cren_24",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "run1",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": -9.1,
+    "y": 1.5,
+    "z": -2.75
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0,
+    "y": -90,
+    "z": 0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  }
+ ],
+ "note": "Demo/blockout layout: two Kit_RealWall curtain-wall runs (Seg/SegSl + Cren) leaving the gatehouse towers. Used for the preview sheet; LD may copy or ignore."
+}

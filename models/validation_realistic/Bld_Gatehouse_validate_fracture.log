@@ -1,0 +1,4 @@
+Kit_RealGate_ArchL_Fractured.fbx: frags=9 (Stone 4-10) tris max=102 total=670 mass 35.9-6458.2 kg UCX=9 JNT=15 ANCHOR=2 -> PASS
+Kit_RealGate_ArchR_Fractured.fbx: frags=9 (Stone 4-10) tris max=120 total=656 mass 35.9-6458.2 kg UCX=9 JNT=15 ANCHOR=2 -> PASS
+Kit_RealGate_Portc_Fractured.fbx: frags=10 (Steel 4-10) tris max=216 total=1344 mass 203.7-456.7 kg UCX=10 JNT=22 ANCHOR=3 -> PASS
+RESULT: ALL PASS
