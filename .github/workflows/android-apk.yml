@@ -379,6 +379,8 @@ jobs:
           name: crashverse-android-apk-release-unsigned
           path: rel
       - name: QA first-run flow (age gate → map → L1 → win → retry → fail)
+        env:
+          ALL_LEVEL_SHOTS: ${{ matrix.rep == 1 && '1' || '0' }} # rep 1 (API 34 + 36): screenshot L1-10 HUD framing
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: ${{ matrix.api }}

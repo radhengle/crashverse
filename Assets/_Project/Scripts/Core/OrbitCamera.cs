@@ -55,6 +55,10 @@ namespace Crashverse.Core
             Pose = Crashverse.Meta.CannonCameraRules.Solve(_cannonRoot, _structure, aspect, TopMargin, _extra);
             if (_cam != null) _cam.fieldOfView = Pose.fov;
             Apply();
+            // emulator smoke gate: the building top (and hint arc) must sit below the HUD line (viewport y <= 1 - TopMargin)
+            var sr = Crashverse.Meta.CannonCameraRules.ViewportRect(Pose, aspect, _structure); float arcTop = 0f;
+            if (_extra != null) foreach (var p in _extra) if (p.x > _cannonRoot.x + 4f) arcTop = Mathf.Max(arcTop, Crashverse.Meta.CannonCameraRules.ToViewport(Pose, aspect, p).y);
+            Debug.Log($"[CAM] {Screen.width}x{Screen.height} dpi {Screen.dpi:F0} safeTop {Screen.height - Screen.safeArea.yMax:F0} hudLine {1f - TopMargin:F3} buildingTop {sr.yMax:F3} arcTop {arcTop:F3} fov {Pose.fov:F1}");
         }
 
         void Apply()

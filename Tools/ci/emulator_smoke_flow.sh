@@ -127,8 +127,10 @@ if adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|MapScreen" || { sleep 3; adb lo
     [ -n "$BF" ] && { tap ${BF%|*} ${BF#*|} 8; check boss_load; shot 11_boss_hud; }
   else echo "boss: no Button_DailyBoss probe" | tee -a "$OUT/coords.txt"; fi
 else echo "boss: back did not return to the map (screens skipped)" | tee -a "$OUT/coords.txt"; fi
-# L3 / L8 realistic modules (dev build only: --es cv_dev_level opens that Level Select; screens only, crash-gated)
-for LV in c1_l03 c1_l08; do
+# L3 / L8 realistic modules, and with ALL_LEVEL_SHOTS=1 every level L1-10 (HUD vs building tops at 1080x2340)
+# (dev build only: --es cv_dev_level opens that Level Select; screens only, crash-gated)
+LVS="c1_l03 c1_l08"; [ "${ALL_LEVEL_SHOTS:-0}" = 1 ] && LVS="c1_l01 c1_l02 c1_l03 c1_l04 c1_l05 c1_l06 c1_l07 c1_l08 c1_l09 c1_l10"
+for LV in $LVS; do
   adb shell am force-stop $PKG; sleep 2; adb logcat -c
   adb shell am start -n $PKG/com.unity3d.player.UnityPlayerActivity --es cv_dev_level $LV >/dev/null 2>&1; sleep 14
   if adb logcat -d -s Unity | grep -q "cv_dev_level opened $LV"; then
@@ -136,5 +138,9 @@ for LV in c1_l03 c1_l08; do
     [ -n "$BP" ] && { tap ${BP%|*} ${BP#*|} 10; check "dev_$LV"; shot "12_${LV}_hud"; adb logcat -d -s Unity | grep -o "\[RealKit\] [^ ]*: [0-9]*/[0-9]* blocks dressed[^\r]*" | tail -1 | tee -a "$OUT/realkit.txt"; }
   else echo "$LV: cv_dev_level not honoured (release build?)" | tee -a "$OUT/realkit.txt"; fi
 done
+# camera HUD gate: every framed level/boss logs [CAM] ... hudLine H buildingTop T arcTop A; T and A must be <= H (+0.01)
+adb logcat -d -s Unity | grep -o "\[CAM\] [^\r]*" | tee "$OUT/cam.txt"
+if awk '{for(i=1;i<=NF;i++){if($i=="hudLine")h=$(i+1);if($i=="buildingTop")t=$(i+1);if($i=="arcTop")a=$(i+1)} if(t+0>h+0.01||a+0>h+0.01){print "HUD covers: "$0; bad=1}} END{exit !bad}' "$OUT/cam.txt"; then
+  echo "FAIL: building top or hint arc under the HUD (see cam.txt)"; adb logcat -d > "$OUT/logcat.txt"; exit 1; fi
 check final   # whole-run logcat gate (QA C-2)
 adb logcat -d > "$OUT/logcat.txt"; echo "SMOKE PASS (screens in $OUT for visual review)"
