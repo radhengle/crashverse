@@ -1,0 +1,10 @@
+Kit_RealStall_Beam.fbx: meshes=3 materials=['M_RealStall'] -> PASS
+Kit_RealStall_Beam_Fractured.fbx: meshes=12 materials=['M_RealStall', 'M_RealStall_Inner'] -> PASS
+Kit_RealStall_Pads.fbx: meshes=3 materials=['M_RealStall'] -> PASS
+Kit_RealStall_PostL.fbx: meshes=3 materials=['M_RealStall'] -> PASS
+Kit_RealStall_PostL_Fractured.fbx: meshes=9 materials=['M_RealStall', 'M_RealStall_Inner'] -> PASS
+Kit_RealStall_PostR.fbx: meshes=3 materials=['M_RealStall'] -> PASS
+Kit_RealStall_PostR_Fractured.fbx: meshes=8 materials=['M_RealStall', 'M_RealStall_Inner'] -> PASS
+Kit_RealStall_Sign.fbx: meshes=3 materials=['M_RealStall'] -> PASS
+Kit_RealStall_Sign_Fractured.fbx: meshes=4 materials=['M_RealStall', 'M_RealStall_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS

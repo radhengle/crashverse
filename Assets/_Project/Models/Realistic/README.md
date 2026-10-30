@@ -104,3 +104,16 @@ Folder: `Buildings/Bld_Bakery/`. Built by `Tools/Blender/realistic/bakery.py`, w
 
 - **Props:** the layout's `props[]` lists 3 × `Props/Props_Village/Prop_BreadCrate.fbx` (one stacked) and 1 × `Prop_Bench.fbx` in front of the window. They are new indestructible props on the existing Props_Village atlas.
 - **Layout:** `Bld_Bakery.layout.json`. Stats: `models/HeroBuildings/Kit_RealBakery_stats.json`.
+
+## Kit_RealStall + Bld_MarketArch (L8, realistic v1, 2026-10-30)
+Built by `Tools/Blender/realistic/market.py`. One material `M_RealStall` (`Kit_RealStall/Textures/T_RealStall_*`, 512, two stripe cells), and the arch uses it too.
+- **Kit_RealStall** (`Buildings/Kit_RealStall/`, `Kit_RealStall.layout.json`):
+  - Keystn: wooden keystone skid, 1.6 × 1.8 × 0.22 m, Ground, 740 LOD0 tris. It is a separate prop piece; when it goes, the stall falls.
+  - StallA / StallB: 1.7 × 2.17 m including the awning overhang (body 1.6 × 1.8), top 2.40 m, 1,124 LOD0 tris each, resting on Keystn. They have identical meshes and the same material; only the awning UVs differ (red Stripe cell vs blue StripeB cell). Place one of them.
+- **Bld_MarketArch** (`Buildings/Bld_MarketArch/`, `Bld_MarketArch.layout.json`):
+  - Pieces: Pads (granite, indestructible), PostL, PostR (timber + knee brace + steel shoe), Beam (beam + cap board + 4 lantern hooks) and Sign (steel sign box, no text, gold border).
+  - Size: the posts' outer faces are 10.4 m apart, with a 9.6 m clear span and 3.5 m clear height. The beam overhangs to 11.1 m and the sign top is at 4.93 m.
+  - `stall_slots[]` gives 4 stall positions on a 2.2 m pitch (x = ±1.1, ±3.3).
+  - LOD0 1,324 tris.
+- **Stats:** `models/HeroBuildings/Kit_RealStall_stats.json`, shared by both.
+- **Pending:** the vertex colour (Col) tint vs damage-mask question is unchanged (Graphics), and KitPathOk is with Developer.

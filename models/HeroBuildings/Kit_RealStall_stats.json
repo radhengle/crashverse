@@ -1,0 +1,231 @@
+{
+ "set": "Kit_RealStall",
+ "building": "Kit_RealStall",
+ "modules": {
+  "Keystn": {
+   "frac": "Wood",
+   "module": "Keystone",
+   "label": "Keystone: wooden skid the stall rests on (separate prop piece)",
+   "tris": {
+    "LOD0": 740,
+    "LOD1": 300,
+    "LOD2": 196
+   },
+   "bounds_m": [
+    1.6,
+    1.8,
+    0.225
+   ],
+   "fragments": 9,
+   "frag_source_lod": 1,
+   "frag_tris_max": 98,
+   "frag_tris_total": 596,
+   "mass_kg_total": 153.2,
+   "mass_kg_range": [
+    12.43,
+    21.79
+   ],
+   "density_kg_m3": 600,
+   "joints": 20,
+   "anchors": 9,
+   "min_axis_m": 0.222
+  },
+  "StallA": {
+   "frac": "Wood",
+   "module": "Stall",
+   "label": "Market stall, red/cream awning (variant A)",
+   "tris": {
+    "LOD0": 1124,
+    "LOD1": 528,
+    "LOD2": 376
+   },
+   "bounds_m": [
+    1.7,
+    2.174,
+    2.18
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 132,
+   "frag_tris_total": 784,
+   "mass_kg_total": 234.4,
+   "mass_kg_range": [
+    13.18,
+    40.35
+   ],
+   "density_kg_m3": 600,
+   "joints": 22,
+   "anchors": 4,
+   "min_axis_m": 0.16
+  },
+  "StallB": {
+   "frac": "Wood",
+   "module": "Stall",
+   "label": "Market stall, blue/cream awning (variant B: same mesh, UV offset to the StripeB cell)",
+   "tris": {
+    "LOD0": 1124,
+    "LOD1": 528,
+    "LOD2": 376
+   },
+   "bounds_m": [
+    1.7,
+    2.174,
+    2.18
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 132,
+   "frag_tris_total": 784,
+   "mass_kg_total": 234.4,
+   "mass_kg_range": [
+    13.18,
+    40.35
+   ],
+   "density_kg_m3": 600,
+   "joints": 22,
+   "anchors": 4,
+   "min_axis_m": 0.16
+  },
+  "Pads": {
+   "frac": null,
+   "module": "Base",
+   "label": "Granite post pads (indestructible)",
+   "tris": {
+    "LOD0": 88,
+    "LOD1": 24,
+    "LOD2": 24
+   },
+   "bounds_m": [
+    10.7,
+    0.7,
+    0.2
+   ]
+  },
+  "PostL": {
+   "frac": "Wood",
+   "module": "Post_Left",
+   "label": "Arch post left + knee brace + steel shoe",
+   "tris": {
+    "LOD0": 204,
+    "LOD1": 108,
+    "LOD2": 64
+   },
+   "bounds_m": [
+    1.455,
+    0.44,
+    3.76
+   ],
+   "fragments": 9,
+   "frag_source_lod": 1,
+   "frag_tris_max": 62,
+   "frag_tris_total": 272,
+   "mass_kg_total": 392.1,
+   "mass_kg_range": [
+    4.53,
+    70.7
+   ],
+   "density_kg_m3": 600,
+   "joints": 9,
+   "anchors": 1,
+   "min_axis_m": 0.18
+  },
+  "PostR": {
+   "frac": "Wood",
+   "module": "Post_Right",
+   "label": "Arch post right + knee brace + steel shoe",
+   "tris": {
+    "LOD0": 220,
+    "LOD1": 116,
+    "LOD2": 28
+   },
+   "bounds_m": [
+    1.459,
+    0.44,
+    3.76
+   ],
+   "fragments": 8,
+   "frag_source_lod": 1,
+   "frag_tris_max": 78,
+   "frag_tris_total": 268,
+   "mass_kg_total": 392.1,
+   "mass_kg_range": [
+    10.64,
+    70.7
+   ],
+   "density_kg_m3": 600,
+   "joints": 8,
+   "anchors": 1,
+   "min_axis_m": 0.182
+  },
+  "Beam": {
+   "frac": "Wood",
+   "module": "Beam",
+   "label": "Arch beam (10.4 m) + cap board + lantern hooks",
+   "tris": {
+    "LOD0": 448,
+    "LOD1": 240,
+    "LOD2": 236
+   },
+   "bounds_m": [
+    11.1,
+    0.422,
+    0.524
+   ],
+   "fragments": 12,
+   "frag_source_lod": 1,
+   "frag_tris_max": 64,
+   "frag_tris_total": 592,
+   "mass_kg_total": 1096.0,
+   "mass_kg_range": [
+    89.46,
+    92.47
+   ],
+   "density_kg_m3": 600,
+   "joints": 11,
+   "anchors": 12,
+   "min_axis_m": 0.42
+  },
+  "Sign": {
+   "frac": "Steel",
+   "module": "Sign",
+   "label": "Steel sign box (no text) on two steel posts",
+   "tris": {
+    "LOD0": 364,
+    "LOD1": 332,
+    "LOD2": 52
+   },
+   "bounds_m": [
+    2.6,
+    0.18,
+    0.95
+   ],
+   "fragments": 4,
+   "frag_source_lod": 1,
+   "frag_tris_max": 184,
+   "frag_tris_total": 512,
+   "mass_kg_total": 2364.6,
+   "mass_kg_range": [
+    581.13,
+    612.8
+   ],
+   "density_kg_m3": 7850,
+   "joints": 3,
+   "anchors": 2,
+   "min_axis_m": 0.18
+  }
+ },
+ "tris_total": {
+  "LOD0": 2988,
+  "LOD1": 1356,
+  "LOD2": 948,
+  "Fractured": 2164
+ },
+ "buildings": {
+  "Bld_MarketArch": {
+   "LOD0": 1324,
+   "LOD1": 820,
+   "LOD2": 404,
+   "Fractured": 1644
+  }
+ }
+}
