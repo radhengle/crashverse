@@ -139,7 +139,11 @@ namespace Crashverse.Data
     [Serializable] public class RewardBundle { public int coins, gems, chests; public bool IsEmpty => coins == 0 && gems == 0 && chests == 0; }
     /// <summary>Level complete rewards (local wallet). Gems stay earned-only (Economy v1).</summary>
     [Serializable] public class LevelRewardRules { public int coinsFirstClear = 50, coinsPerStar = 25, replayCoins = 10, gemsFirst3Star = 5, chestEveryLevels = 5, hardBonusCoins = 100, hardBonusGems = 5; }
-    [Serializable] public class DailyBossData { public string[] layouts; public string[] names; public int baseShots = 6; public int shotSpread = 2; public float winThreshold = 0.85f; public RewardBundle reward = new RewardBundle(); }
+    [Serializable] public class DailyBossData { public string[] layouts; public string[] names; public int baseShots = 6; public int shotSpread = 2; public float winThreshold = 0.85f; public RewardBundle reward = new RewardBundle();
+        /// <summary>Optional per-arena aim hint (Level Designer, PR #57). Missing entries fall back to the titan arena with the same layout.</summary>
+        public DailyBossHint[] hints; }
+    /// <summary>Daily Boss arena hint: same meaning as LevelEntry.hintTarget/hintYaw/hintPitch (derived at gravity x1.0); text is an optional card line.</summary>
+    [Serializable] public class DailyBossHint { public string layout; public string hintTarget; public float hintYaw; public float hintPitch; public string text; }
     /// <summary>One of the 4 season themes (map banner, backgrounds, level range). comingSoon = no levels in this build yet.</summary>
     [Serializable] public class SeasonTheme { public string id, name, bg, accent, dark; public int number, firstLevel, lastLevel; public bool comingSoon; }
     [Serializable] public class AchievementDef { public string id, name, text, type, icon; public int target; public RewardBundle reward = new RewardBundle(); }

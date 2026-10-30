@@ -69,3 +69,6 @@ Assets/_Project/Resources/Audio/sfx_routing.json.meta
 # Python bytecode
 __pycache__/
 *.pyc
+
+# V2-01: pinned aapt2 fetched by CI
+.aapt2-override/

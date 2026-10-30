@@ -28,6 +28,22 @@ adb shell settings put secure immersive_mode_confirmations confirmed || true; ad
 adb install -r -g "$APK"; adb shell pm clear $PKG >/dev/null 2>&1 || true; adb logcat -c
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null
 for i in $(seq 1 30); do adb shell pidof $PKG >/dev/null && break; sleep 2; done
+# QA V2-01: flip a framework (target "android") overlay => CONFIG_ASSETS_PATHS (0x80000000). The activity must NOT be relaunched
+# and Unity must not kill itself (SIG 9): same pid, no wm_relaunch for our package, no Unity onDestroy.
+assets_flip(){ local tag=$1 pid0 pid1 ov
+  ov=$(adb shell cmd overlay list android 2>/dev/null | tr -d '\r' | grep -E '^\[ \] ' | awk '{print $3}' \
+       | grep -E 'theme\.icon|theme\.font|cutout\.emulation|navbar' | head -1)
+  [ -z "$ov" ] && { echo "V2-01 $tag: no disabled framework overlay to flip (skipped)" | tee -a "$OUT/v2_01.txt"; return 0; }
+  pid0=$(adb shell pidof $PKG | tr -d '\r'); adb logcat -b events -c; adb logcat -c
+  adb shell cmd overlay enable --user 0 "$ov"; sleep 4; adb shell cmd overlay disable --user 0 "$ov"; sleep 5
+  pid1=$(adb shell pidof $PKG | tr -d '\r')
+  local cfg; cfg=$(adb logcat -d -b events | grep -E 'configuration_changed' | tr -d '\r' | tail -4 | tr '\n' ' ')
+  local rel; rel=$(adb logcat -d -b events | grep -E 'wm_relaunch(_resume)?_activity|am_relaunch' | grep "$PKG" || true)
+  local des; des=$(adb logcat -d -s Unity | grep -E 'onDestroy|SIG(KILL| 9)' || true)
+  echo "V2-01 $tag: overlay=$ov pid $pid0 -> ${pid1:-dead} relaunch='${rel}' unityDestroy='${des}' events='${cfg}'" | tee -a "$OUT/v2_01.txt"
+  if [ -z "$pid1" ] || [ "$pid0" != "$pid1" ] || [ -n "$rel" ] || [ -n "$des" ]; then
+    shot "FAIL_v2_01_$tag"; adb logcat -d > "$OUT/logcat.txt"; adb logcat -d -b events > "$OUT/events.txt"; echo "FAIL: V2-01 assets-paths change relaunched/killed the game ($tag)"; exit 1; fi
+  shot "v2_01_after_$tag"; }
 sleep 12; check launch; shot 01_launch
 shot 02_agegate
 settle month; tap $MONTH_X $MONTH_Y; settle month_opt; tap $MONTH_OPT_X $MONTH_OPT_Y; check month    # BUG-20 regression
@@ -52,8 +68,10 @@ begin ProfileScreen "after Play as Guest"; settle profile
 tap $AVATAR_X $AVATAR_Y 1; tap $BADGE_X $BADGE_Y 1; check profile; shot 05_profile
 adb logcat -c; tap $PCONT_X $PCONT_Y 3; check profile_continue
 begin MapScreen "after creating the guest profile"; settle map; shot 05_map_guest
+assets_flip map; settle map_v201
 adb logcat -c; tap $NODE1_X $NODE1_Y 3; begin LevelSelectScreen "after tapping level 1"; check level_select; shot 06_level_select
 tap $PLAY_X $PLAY_Y 6; check l1_load; shot 06_l1_hud
+assets_flip l1_hud
 # QA LOW + P0 (aim mirrored on dev-build-6): real touch swipes through AimController; +yaw is screen-left from the run camera,
 # so a RIGHT swipe must drive the logged target yaw negative and a LEFT swipe positive (no hook, no Drag() shortcut).
 D=$(adb shell wm density | grep -o '[0-9]*$' | tail -1); SW=$(( 100 * D / 160 ))
@@ -100,5 +118,14 @@ FM=$(adb logcat -d -s Unity | grep -o "CVTAP|ResultsScreen|Button_Map|[0-9]*|[0-
 [ -n "$FM" ] && { MAP_X=${FM%|*}; MAP_Y=${FM#*|}; }; echo "fail-panel Map at $MAP_X,$MAP_Y" | tee -a "$OUT/coords.txt"
 adb logcat -c; tap $MAP_X $MAP_Y 4; begin MapScreen "after Map on the results"; settle map2; shot 09_map_after_win
 adb logcat -c; tap $NODE2_X $NODE2_Y 3; begin LevelSelectScreen "after tapping level 2"; check level2; shot 09_level2_select
+# Daily Boss (unlocked by the L1 win): card + boss arena HUD screenshots for the mockup compare. Screens only, but crash-gated.
+adb logcat -c; adb shell input keyevent 4; sleep 3
+if adb logcat -d -s Unity | grep -q "CVTAP|BEGIN|MapScreen" || { sleep 3; adb logcat -d -s Unity | grep -q "CVTAP|MapScreen|"; }; then
+  settle map3; DB=$(adb logcat -d -s Unity | grep -o "CVTAP|MapScreen|Button_DailyBoss|[0-9]*|[0-9]*" | tail -1 | cut -d'|' -f4,5)
+  if [ -n "$DB" ]; then adb logcat -c; tap ${DB%|*} ${DB#*|} 3; check boss_card; shot 10_boss_card
+    BF=$(adb logcat -d -s Unity | grep -o "CVTAP|DailyBossScreen|Button_Fight|[0-9]*|[0-9]*" | tail -1 | cut -d'|' -f4,5)
+    [ -n "$BF" ] && { tap ${BF%|*} ${BF#*|} 8; check boss_load; shot 11_boss_hud; }
+  else echo "boss: no Button_DailyBoss probe" | tee -a "$OUT/coords.txt"; fi
+else echo "boss: back did not return to the map (screens skipped)" | tee -a "$OUT/coords.txt"; fi
 check final   # whole-run logcat gate (QA C-2)
 adb logcat -d > "$OUT/logcat.txt"; echo "SMOKE PASS (screens in $OUT for visual review)"

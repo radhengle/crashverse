@@ -18,6 +18,10 @@ namespace Crashverse.UI
     {
         ScrollRect _sr; RectTransform _content, _bgLayer; Text _coins, _gems, _stars, _name; Image _avatar;
         readonly List<Image> _bgTiles = new List<Image>(); RectTransform _frontierNode; float _lastW = -1f;
+        RectTransform _view, _topBar, _ribbon, _dock;
+        /// <summary>Layout probes for the PlayMode overlap test (QA MED): the path viewport and the header/dock bands.</summary>
+        public RectTransform Viewport => _view; public RectTransform TopBar => _topBar; public RectTransform Ribbon => _ribbon; public RectTransform Dock => _dock;
+        public RectTransform PathContent => _content;
         public override bool OnBack() => false; // root: router asks to quit
 
         protected override void Build(RectTransform root)
@@ -26,13 +30,15 @@ namespace Crashverse.UI
             var fill = UIFactory.Panel("MapFill", root, UITheme.H("2E7BC4")); UIFactory.Stretch(fill.rectTransform); fill.raycastTarget = false;
 
             // scroll view (full screen; bars float on top)
+            // QA MED: the path scrolls only between the header and the dock (no node under the ★ pill on any aspect ratio)
             var view = UIFactory.Rect("MapView", root); UIFactory.Stretch(view);
+            view.offsetMax = new Vector2(0f, -WorldMapRules.HeaderHeight); view.offsetMin = new Vector2(0f, WorldMapRules.DockHeight); _view = view;
             var vimg = view.gameObject.AddComponent<Image>(); vimg.color = new Color(0, 0, 0, 0.001f);
             view.gameObject.AddComponent<RectMask2D>();
             _content = UIFactory.Rect("Path", view);
             _content.anchorMin = new Vector2(0f, 0f); _content.anchorMax = new Vector2(1f, 0f); _content.pivot = new Vector2(0.5f, 0f);
             int n = ch.levels.Length;
-            float h = WorldMapRules.ContentHeight(n);
+            float h = WorldMapRules.ContentHeight(n, FeatureFlags.Seasons2to4);
             _content.sizeDelta = new Vector2(0f, h); _content.anchoredPosition = Vector2.zero;
             _sr = view.gameObject.AddComponent<ScrollRect>();
             _sr.content = _content; _sr.viewport = view; _sr.horizontal = false; _sr.vertical = true; _sr.movementType = ScrollRect.MovementType.Clamped;
@@ -48,7 +54,7 @@ namespace Crashverse.UI
                 }
 
             // season banners where each season's levels begin (Seasons 2–4 themed by their bg_season_* art)
-            if (meta.seasons != null)
+            if (FeatureFlags.Seasons2to4 && meta.seasons != null)
                 foreach (var s in meta.seasons)
                 {
                     int at = Array.FindIndex(ch.levels, l => l.number == s.firstLevel); if (at <= 0) continue;
@@ -71,7 +77,15 @@ namespace Crashverse.UI
             var dbl = V2.Title(db.transform, AppServices.Progress.HasDailyBossWin(DailyBossRules.DateKey(DateTime.Now)) ? "DEFEATED" : "DAILY BOSS", Th.captionSp, Color.white, Th);
             UIFactory.Place(dbl.rectTransform, new Vector2(0.5f, 0f), new Vector2(120f, 22f), new Vector2(0f, -14f));
 
-            // next season locked island at the top
+            // next season locked island at the top (Seasons 2–4 hidden: no island, no "coming soon")
+            if (FeatureFlags.Seasons2to4) BuildNextSeason(meta, ch, save, h);
+
+            BuildTopBar(root, meta);
+            BuildDock(root);
+        }
+
+        void BuildNextSeason(MetaV2Data meta, ChapterData ch, CampaignSave save, float h)
+        {
             SeasonTheme next = null; // the first season not open yet (all open: none)
             if (meta.seasons != null) foreach (var s in meta.seasons) if (!SeasonRules.IsOpen(s, ch, save)) { next = s; break; }
             var ns = V2.RoundButton(_content, "", new Color(0.1f, 0.1f, 0.2f, 0.75f), () => Router.Push(new SeasonsScreen()), Th, 96f, "Button_NextSeason");
@@ -80,9 +94,6 @@ namespace Crashverse.UI
             string nsTxt = next == null ? "MORE SEASONS\nComing soon" : "NEXT SEASON\n" + next.name + (next.comingSoon ? " · Coming soon" : $" · Clear Level {next.firstLevel - 1}");
             var nsl = V2.Title(ns.transform, nsTxt, Th.captionSp, Color.white, Th);
             UIFactory.Place(nsl.rectTransform, new Vector2(0.5f, 0f), new Vector2(220f, 40f), new Vector2(0f, -24f));
-
-            BuildTopBar(root, meta);
-            BuildDock(root);
         }
 
         static void Pin(RectTransform rt, float x01, float y, Vector2 size)
@@ -117,7 +128,9 @@ namespace Crashverse.UI
 
         void BuildTopBar(RectTransform root, MetaV2Data meta)
         {
-            var top = UIFactory.Rect("TopBar", root); UIFactory.Band(top, true, 56f);
+            var head = UIFactory.Panel("HeaderBack", root, new Color(Th.navy900.r, Th.navy900.g, Th.navy900.b, 0.55f)); head.raycastTarget = false;
+            UIFactory.Band(head.rectTransform, true, WorldMapRules.HeaderHeight);
+            var top = UIFactory.Rect("TopBar", root); UIFactory.Band(top, true, 56f); _topBar = top;
             var row = UIFactory.HStack(top, 6f, 48f); UIFactory.Stretch(row, 4f);
             var pr = AppServices.Progress.Data.profile;
             var av = V2.RoundButton(row, "", Th.goldTrim, () => Router.Push(new ProfileScreen(true)), Th, 48f, "Button_Profile");
@@ -138,34 +151,33 @@ namespace Crashverse.UI
             // season banner (ribbon) under the bar
             var s = SeasonRules.Current(meta, AppServices.Content.Chapter1, AppServices.Save);
             var rib = V2.RoundPanel("SeasonBanner", root, UITheme.H("E11D48"));
-            UIFactory.Place(rib.rectTransform, new Vector2(0f, 1f), new Vector2(170f, 56f), new Vector2(8f, -62f));
+            UIFactory.Place(rib.rectTransform, new Vector2(0f, 1f), new Vector2(170f, 60f), new Vector2(8f, -62f)); _ribbon = rib.rectTransform; // inside the header band (56..122 dp)
             var rl = V2.Title(rib.transform, s != null ? $"SEASON {s.number}\n{s.name.ToUpperInvariant()}" : "SEASON 1", Th.captionSp, Th.goldFill, Th); UIFactory.Stretch(rl.rectTransform, 2f);
         }
 
         void BuildDock(RectTransform root)
         {
             var dock = V2.RoundPanel("Dock", root, new Color(Th.navy900.r, Th.navy900.g, Th.navy900.b, 0.88f));
-            UIFactory.Band(dock.rectTransform, false, 64f, 4f, 6f);
+            UIFactory.Band(dock.rectTransform, false, 64f, 4f, 6f); _dock = dock.rectTransform;
             var dr = UIFactory.HStack(dock.transform, Th.gap, 56f); UIFactory.Stretch(dr, 4f);
             V2.Glossy(dr, "Power-Ups", Th.violet, () => Router.Push(new PowerUpsScreen()), Th, 52f, 0f, Th.captionSp, "Button_PowerUps");
-            V2.Glossy(dr, "Seasons", Th.cyan, () => Router.Push(new SeasonsScreen()), Th, 52f, 0f, Th.captionSp, "Button_Seasons");
+            if (FeatureFlags.Seasons2to4) V2.Glossy(dr, "Seasons", Th.cyan, () => Router.Push(new SeasonsScreen()), Th, 52f, 0f, Th.captionSp, "Button_Seasons");
             V2.Glossy(dr, "Rewards", Th.orange, () => Router.Push(new ProgressionScreen()), Th, 52f, 0f, Th.captionSp, "Button_Rewards");
-            V2.Glossy(dr, "More", Th.navy500, OpenMore, Th, 52f, 0f, Th.captionSp, "Button_More");
+            if (FeatureFlags.AnyExtra) V2.Glossy(dr, "More", Th.navy500, OpenMore, Th, 52f, 0f, Th.captionSp, "Button_More");
         }
 
         void OpenMore()
         {
             bool live = AppServices.TimeSynced && AppServices.Backend != null && AppServices.Backend.IsOnline; // SG-20: time-gated online UI
             Action gate(Func<UIScreen> f) => () => { if (live) Router.Push(f()); else Router.Toast("Online features are coming soon"); };
-            Router.Push(new ListModal("More", new List<(string, Action)>
-            {
-                ("Daily Titan (online)", gate(() => new TitanScreen())),
-                ("Daily Login", () => Router.Push(new LocalDailyLoginScreen())),        // offline: local date, rollback-safe
-                ("Season Pass (free)", () => Router.Push(new LocalSeasonPassScreen())),  // offline: free track only
-                ("Leaderboard (local)", () => Router.Push(new LocalLeaderboardScreen())), // offline: your best vs practice rivals
-                ("Store", () => Router.Push(new StoreScreen())),
-                ("Settings", () => Router.Push(new SettingsModal())),
-            }));
+            var items = new List<(string, Action)>(); // FeatureFlags: unfinished features have no entry at all
+            if (FeatureFlags.OnlineTitan) items.Add(("Daily Titan (online)", gate(() => new TitanScreen())));
+            if (FeatureFlags.DailyLogin) items.Add(("Daily Login", () => Router.Push(new LocalDailyLoginScreen())));        // offline: local date, rollback-safe
+            if (FeatureFlags.SeasonPass) items.Add(("Season Pass (free)", () => Router.Push(new LocalSeasonPassScreen())));  // offline: free track only
+            if (FeatureFlags.Leaderboard) items.Add(("Leaderboard (local)", () => Router.Push(new LocalLeaderboardScreen()))); // offline: your best vs practice rivals
+            if (FeatureFlags.Store) items.Add(("Store", () => Router.Push(new StoreScreen())));
+            items.Add(("Settings", () => Router.Push(new SettingsModal())));
+            Router.Push(new ListModal("More", items));
         }
 
         void OpenLevel(LevelEntry lvl)
@@ -343,7 +355,7 @@ namespace Crashverse.UI
         protected override void Build(RectTransform root)
         {
             var db = AppServices.Content; _key = DailyBossRules.DateKey(DateTime.Now);
-            _lvl = DailyBossRules.ForDate(_key, db.Meta.dailyBoss);
+            _lvl = DailyBossRules.ForDate(_key, db.Meta.dailyBoss, db.Titan);
             UIArt.Background(root, "bg_season_primeval_peaks", new Color(0.55f, 0.3f, 0.35f, 1f));
             var card = V2.Card("DailyBoss", root, Th); UIFactory.Stretch(card.rectTransform, 14f);
             var v = V2.Split(card.transform, 132f, out var foot, 12f);
@@ -354,12 +366,17 @@ namespace Crashverse.UI
             UIFactory.Label(v, "Changes every day · " + DateTime.Now.ToString("ddd d MMM"), Th.captionSp, Th.body, TextAnchor.MiddleCenter, Th);
             V2.LayoutPreview(v, db.GetLayout(_lvl.layout), new Vector2(300f, 180f), true);
             UIFactory.Label(v, $"Steps: {_lvl.shots}   ·   Knock its HP to 0 (destroy {Mathf.RoundToInt(_lvl.winThreshold * 100)}%)", Th.bodySp, Color.white, TextAnchor.MiddleCenter, Th);
+            var hint = DailyBossRules.HintFor(_lvl.layout, db.Meta.dailyBoss, db.Titan); // PR #57: the arena hint shows on the Daily Boss too
+            if (hint != null) UIFactory.Label(v, "Hint: " + (string.IsNullOrEmpty(hint.text) ? "aim at the " + HintName(hint) : hint.text), Th.captionSp, Th.goldFill, TextAnchor.MiddleCenter, Th).name = "Label_BossHint";
             bool done = AppServices.Progress.HasDailyBossWin(_key);
             var r = db.Meta.dailyBoss.reward;
             UIFactory.Label(v, done ? "Defeated today! Come back tomorrow for a new boss. (Replays give no reward.)" : $"Reward: {r.coins} coins · {r.gems} gems · {r.chests} chest", Th.bodySp, done ? Th.green : Th.goldFill, TextAnchor.MiddleCenter, Th);
             V2.Glossy(foot, done ? "Replay" : "Fight", UITheme.H("DC2626"), Fight, Th, 60f, 0f, Th.titleSp, "Button_Fight");
             UIFactory.Button(foot, "Back", Th.navy500, () => Router.Pop(), Th, 48);
         }
+
+        // screen side from the aim: finger right => yaw < 0 (P0 mapping), so a negative hint yaw is the right-hand side of the screen
+        static string HintName(DailyBossHint h) => (h.hintTarget ?? "").StartsWith("leg") ? (h.hintYaw < 0f ? "right-hand leg" : "left-hand leg") : h.hintTarget;
 
         void Fight()
         {

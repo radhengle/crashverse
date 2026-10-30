@@ -47,18 +47,19 @@ namespace Crashverse.Backend.Tests
         [Test]
         public void Seasons_open_only_after_the_previous_last_level_and_coming_soon_stays_shut()
         {
-            var m = Db.Meta; var s = NewSave();
-            Assert.True(SeasonRules.IsOpen(m.seasons[0], Db.Chapter1, s), "season 1 open from the start");
-            Assert.AreSame(m.seasons[0], SeasonRules.Current(m, Db.Chapter1, s));
-            foreach (var later in m.seasons.Skip(1)) Assert.False(SeasonRules.IsOpen(later, Db.Chapter1, s), later.name + " shut on a new install");
+            var all = ContentDatabase.LoadBundled(true); // Seasons 2–4 are flagged off for players; the rules stay tested
+            var m = all.Meta; var s = NewSave();
+            Assert.True(SeasonRules.IsOpen(m.seasons[0], all.Chapter1, s), "season 1 open from the start");
+            Assert.AreSame(m.seasons[0], SeasonRules.Current(m, all.Chapter1, s));
+            foreach (var later in m.seasons.Skip(1)) Assert.False(SeasonRules.IsOpen(later, all.Chapter1, s), later.name + " shut on a new install");
             foreach (var cs in m.seasons.Where(x => x.comingSoon))
             {
-                foreach (var l in Db.Chapter1.levels) s.RecordResult(l.id, true, 3, false);
-                Assert.False(SeasonRules.IsOpen(cs, Db.Chapter1, s), cs.name + " is coming soon: never open");
+                foreach (var l in all.Chapter1.levels) s.RecordResult(l.id, true, 3, false);
+                Assert.False(SeasonRules.IsOpen(cs, all.Chapter1, s), cs.name + " is coming soon: never open");
             }
             Assert.AreSame(m.seasons[0], SeasonRules.ForLevel(m, 1));
             var s2 = m.seasons.First(x => x.number == 2);
-            if (!s2.comingSoon) { s.RecordResult(L(s2.firstLevel - 1).id, true, 1, false); Assert.True(SeasonRules.IsOpen(s2, Db.Chapter1, s), "season 2 opens after Level 10"); }
+            if (!s2.comingSoon) { s.RecordResult(L(s2.firstLevel - 1).id, true, 1, false); Assert.True(SeasonRules.IsOpen(s2, all.Chapter1, s), "season 2 opens after Level 10"); }
         }
 
         [Test]
@@ -104,6 +105,28 @@ namespace Crashverse.Backend.Tests
             p.OpenChest(rules); Assert.True(p.OpenChest(rules).IsEmpty, "no chests left");
             var q = new PlayerProgress(Path.Combine(_dir, "other.json")); q.Grant(new RewardBundle { chests = 1 });
             Assert.AreEqual(c1.coins, q.OpenChest(rules).coins, "same roll for the same chest index");
+        }
+    
+        [Test]
+        public void DailyBoss_hint_comes_from_dailyBoss_hints_then_the_titan_arena_with_that_layout()
+        {
+            var d = new DailyBossData { layouts = new[] { "titan_a" }, names = new[] { "X" } };
+            var t = new TitanTemplates { arenas = new[] { new TitanArena { id = "a", layout = "titan_a", hintTarget = "legL", hintYaw = -2.5f, hintPitch = 10.5f } } };
+            Assert.IsFalse(DailyBossRules.ForDate("20261030", d).HasHint, "no titan data: no hint");
+            var e = DailyBossRules.ForDate("20261030", d, t);
+            Assert.IsTrue(e.HasHint); Assert.AreEqual("legL", e.hintTarget); Assert.AreEqual(-2.5f, e.hintYaw); Assert.AreEqual(10.5f, e.hintPitch);
+            d.hints = new[] { new DailyBossHint { layout = "titan_a", hintTarget = "legR", hintYaw = 3f, hintPitch = 9f, text = "Topple it" } };
+            e = DailyBossRules.ForDate("20261030", d, t);
+            Assert.AreEqual("legR", e.hintTarget); Assert.AreEqual(3f, e.hintYaw);
+            Assert.AreEqual("Topple it", DailyBossRules.HintFor("titan_a", d, t).text);
+            Assert.IsNull(DailyBossRules.HintFor("titan_zzz", d, t));
+        }
+
+        [Test]
+        public void Bundled_daily_boss_has_a_hint_for_every_arena()
+        {
+            var db = ContentDatabase.LoadBundled();
+            foreach (var l in db.Meta.dailyBoss.layouts) Assert.IsNotNull(DailyBossRules.HintFor(l, db.Meta.dailyBoss, db.Titan), l);
         }
     }
 }

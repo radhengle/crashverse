@@ -37,7 +37,10 @@ namespace Crashverse.Data
         /// <summary>Like LoadText but silent when the resource doesn't exist (optional content).</summary>
         public static string TryLoadText(string resourcePath) { var ta = Resources.Load<TextAsset>(resourcePath); return ta == null ? null : ta.text; }
 
-        public static ContentDatabase LoadBundled()
+        public static ContentDatabase LoadBundled() => LoadBundled(Crashverse.Meta.FeatureFlags.Seasons2to4);
+
+        /// <summary>allSeasons: Seasons 2–4 merged in (delivered chapters + placeholders). The game passes FeatureFlags.Seasons2to4 (off).</summary>
+        public static ContentDatabase LoadBundled(bool allSeasons)
         {
             var db = LoadCore();
             db.Chapter1Authored = db.Chapter1;
@@ -49,8 +52,20 @@ namespace Crashverse.Data
                 try { var c = JsonUtility.FromJson<ChapterData>(t); if (c != null) delivered.Add(c); }
                 catch (System.Exception e) { Debug.LogWarning("[Content] chapter" + n + " ignored: " + e.Message); }
             }
-            db.Chapter1 = Crashverse.Meta.SeasonContent.Merge(db.Chapter1, db.Meta, delivered, id => db.TryGetLayout(id) != null, l => db._layouts[l.id] = l);
+            if (allSeasons)
+                db.Chapter1 = Crashverse.Meta.SeasonContent.Merge(db.Chapter1, db.Meta, delivered, id => db.TryGetLayout(id) != null, l => db._layouts[l.id] = l);
+            else HideUnshippedSeasons(db); // user scope 2026-10-30: Chapter 1 levels 1-10 + Daily Boss only
             return db;
+        }
+
+        /// <summary>FeatureFlags.Seasons2to4 off: only Chapter 1 levels 1–10 and Season 1 exist for the player (no placeholders, no
+        /// "coming soon" seasons). Data files stay in the build; nothing is deleted.</summary>
+        public static void HideUnshippedSeasons(ContentDatabase db)
+        {
+            if (db?.Chapter1?.levels != null)
+                db.Chapter1 = new ChapterData { id = db.Chapter1.id, name = db.Chapter1.name, nextRegion = db.Chapter1.nextRegion, islands = db.Chapter1.islands,
+                    levels = System.Array.FindAll(db.Chapter1.levels, l => l != null && l.number >= 1 && l.number <= Crashverse.Meta.FeatureFlags.ShippedLevelCount) };
+            if (db?.Meta?.seasons != null) db.Meta.seasons = System.Array.FindAll(db.Meta.seasons, s => s != null && s.number <= 1);
         }
 
         static ContentDatabase LoadCore()

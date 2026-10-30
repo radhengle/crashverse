@@ -64,16 +64,30 @@ namespace Crashverse.Backend.Tests
         [Test]
         public void Seasons_2_to_4_are_playable_with_valid_layouts()
         {
-            var ch = Db.Chapter1;
+            var all = ContentDatabase.LoadBundled(true); // flagged off for players (FeatureFlags.Seasons2to4); the code path stays tested
+            var ch = all.Chapter1;
             Assert.AreEqual(40, ch.levels.Length);
             foreach (var l in ch.levels.Where(x => x.number > 10))
             {
-                var lay = Db.GetLayout(l.layout); Assert.NotNull(lay, l.id);
+                var lay = all.GetLayout(l.layout); Assert.NotNull(lay, l.id);
                 var ids = lay.blocks.Select(b => b.id).ToList();
                 Assert.True(lay.blocks.All(b => b.sup.All(ids.Contains)), l.id + " supports resolve");
                 Assert.True(HeroSlotRules.ClearOfLanes(HeroSlotRules.Position(l.heroSlot)), l.id + " hero slot clear of lanes");
             }
-            Assert.True(Db.Meta.seasons.All(x => !x.comingSoon));
+            Assert.True(all.Meta.seasons.All(x => !x.comingSoon));
+        }
+
+        [Test]
+        public void Shipped_scope_is_chapter1_levels_1_to_10_and_season_1_only()
+        {
+            Assert.False(FeatureFlags.Seasons2to4 || FeatureFlags.SeasonPass || FeatureFlags.Leaderboard || FeatureFlags.Achievements || FeatureFlags.DailyLogin
+                         || FeatureFlags.OnlineTitan || FeatureFlags.Store, "unfinished features stay hidden (user scope 2026-10-30)");
+            var db = ContentDatabase.LoadBundled();
+            CollectionAssert.AreEqual(Enumerable.Range(1, 10).ToArray(), db.Chapter1.levels.Select(l => l.number).ToArray());
+            Assert.False(db.Chapter1.levels.Any(SeasonContent.IsPlaceholder), "no procedural placeholder levels");
+            Assert.True(db.Meta.seasons.All(x => x.number == 1), "only Season 1 is visible");
+            Assert.NotNull(db.Meta.dailyBoss, "Daily Boss stays");
+            foreach (var l in db.Chapter1.levels) Assert.NotNull(db.GetLayout(l.layout), l.id + " layout");
         }
     }
 }

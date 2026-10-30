@@ -13,6 +13,11 @@ namespace Crashverse.Meta
     public static class WorldMapRules
     {
         public const float Spacing = 132f, BottomPad = 220f, TopPad = 420f, Amplitude = 0.30f;
+        /// <summary>Top padding when there is no next-season island above the last level (FeatureFlags.Seasons2to4 off).</summary>
+        public const float TopPadNoIsland = 150f;
+        /// <summary>QA MED (V2-05 follow-up): the map header (wallet bar 56 dp + season ribbon / name row) and the dock own these bands;
+        /// the scrolling path viewport sits between them, so a node can never render under the ★/coin/gem pills or the dock.</summary>
+        public const float HeaderHeight = 128f, DockHeight = 76f;
 
         public static MapNodeKind KindFor(LevelEntry l) => HardLevelRules.IsHard(l) ? MapNodeKind.Hard : l.IsBoss ? MapNodeKind.Boss : MapNodeKind.Normal;
 
@@ -23,6 +28,7 @@ namespace Crashverse.Meta
         public static float X(int i) => 0.5f + Amplitude * (float)System.Math.Sin(i * 1.05);
         public static float Y(int i) => BottomPad + i * Spacing;
         public static float ContentHeight(int count) => BottomPad + (count - 1) * Spacing + TopPad;
+        public static float ContentHeight(int count, bool nextSeasonIsland) => BottomPad + (count - 1) * Spacing + (nextSeasonIsland ? TopPad : TopPadNoIsland);
 
         /// <summary>Daily Boss node sits beside the path near the player's frontier, on the side away from the path.</summary>
         public static float DailyBossX(int frontier) => X(frontier) > 0.5f ? 0.2f : 0.8f;

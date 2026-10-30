@@ -114,6 +114,13 @@ jobs:
           restore-keys: |
             Library-Android-${{ env.CRASHVERSE_BUILD_PROFILE }}-
 
+      - name: Fetch pinned aapt2 8.7.3 (QA V2-01; read by AssetsPathsGradleHook as android.aapt2FromMavenOverride)
+        run: |
+          set -e
+          mkdir -p .aapt2-override
+          curl -sSfL https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2/8.7.3-12006047/aapt2-8.7.3-12006047-linux.jar -o .aapt2-override/aapt2.jar
+          echo "028916a040b58f34c9c89984e1bc48f8da6581662014f2b66391860def8b9c36  .aapt2-override/aapt2.jar" | sha256sum -c -
+          unzip -o -q .aapt2-override/aapt2.jar aapt2 -d .aapt2-override && chmod 755 .aapt2-override/aapt2 && .aapt2-override/aapt2 version
       - name: Build APK
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
         env:
@@ -281,6 +288,13 @@ jobs:
           restore-keys: |
             Library-Android-release-
             Library-Android-dev-
+      - name: Fetch pinned aapt2 8.7.3 (QA V2-01; read by AssetsPathsGradleHook as android.aapt2FromMavenOverride)
+        run: |
+          set -e
+          mkdir -p .aapt2-override
+          curl -sSfL https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2/8.7.3-12006047/aapt2-8.7.3-12006047-linux.jar -o .aapt2-override/aapt2.jar
+          echo "028916a040b58f34c9c89984e1bc48f8da6581662014f2b66391860def8b9c36  .aapt2-override/aapt2.jar" | sha256sum -c -
+          unzip -o -q .aapt2-override/aapt2.jar aapt2 -d .aapt2-override && chmod 755 .aapt2-override/aapt2 && .aapt2-override/aapt2 version
       - name: Build release APK (unsigned)
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
         env:
@@ -329,9 +343,20 @@ jobs:
       matrix:
         api: [34, 36] # 36 = Android 16, the user's Nothing Phone 3a. arm64 images can't boot on x86 runners.
         rep: [1]
-        include: # QA V2-01: API 34 three times per run (stability evidence for the age-gate teardown)
-          - { api: 34, rep: 2 }
-          - { api: 34, rep: 3 }
+        target: [default]
+        # QA V2-01: API 34 ten times per run, the 10th on a Google Play services image (where the late GMS overlay commits that
+        # used to relaunch our activity happen). Every run also flips a framework overlay on the map and in the L1 HUD
+        # (CONFIG_ASSETS_PATHS) and fails on a relaunch / pid change / Unity onDestroy.
+        include:
+          - { api: 34, rep: 2, target: default }
+          - { api: 34, rep: 3, target: default }
+          - { api: 34, rep: 4, target: default }
+          - { api: 34, rep: 5, target: default }
+          - { api: 34, rep: 6, target: default }
+          - { api: 34, rep: 7, target: default }
+          - { api: 34, rep: 8, target: default }
+          - { api: 34, rep: 9, target: default }
+          - { api: 34, rep: 10, target: google_apis }
     steps:
       - name: Checkout (scripts only)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -358,7 +383,7 @@ jobs:
         with:
           api-level: ${{ matrix.api }}
           arch: x86_64
-          target: default # AOSP image, no Google Play services: GMS boot ANRs, late overlay commits (asset-path relaunch of our activity) and GMS CPU load starving SwiftShader (GPU-hang ANRs) were every smoke flake in runs 40099266488/40102001893/40105864952; the game is offline and needs no GMS
+          target: ${{ matrix.target }} # default = AOSP image, no Google Play services: GMS boot ANRs, late overlay commits (asset-path relaunch of our activity) and GMS CPU load starving SwiftShader (GPU-hang ANRs) were every smoke flake in runs 40099266488/40102001893/40105864952; the game is offline and needs no GMS
           disable-animations: true
           cores: 4
           ram-size: 4096M
