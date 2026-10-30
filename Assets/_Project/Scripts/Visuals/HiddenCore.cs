@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Crashverse.Sim;
 using Crashverse.Destruction;
 using Crashverse.VFX;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace Crashverse.Visuals
     /// </summary>
     public class HiddenCore : MonoBehaviour
     {
-        public const float Radius = 6f, Damage = 400f, Impulse = 1800f, ExposeHpFrac = 0.66f;
+        public const float Radius = Crashverse.Meta.HiddenCoreRules.Radius, Impulse = 1800f;
 
         public DestructibleBlock Host { get; private set; }
         public bool Exposed { get; private set; }
@@ -25,26 +26,22 @@ namespace Crashverse.Visuals
         Transform _crate; Renderer[] _glowR; MaterialPropertyBlock _mpb; ParticleSystem _fuse; Light _flash;
         bool _queued; float _flashT = -1f; readonly List<DestructibleBlock> _neighbours = new List<DestructibleBlock>();
 
-        static uint Fnv(string s) { uint h = 2166136261u; if (s != null) foreach (char c in s) { h ^= c; h *= 16777619u; } return h; }
-
         public static DestructibleBlock Pick(IReadOnlyList<DestructibleBlock> blocks, int seed, string levelId)
         {
-            var cand = new List<DestructibleBlock>(); Vector3 c = Vector3.zero; int n = 0;
+            var list = new List<DestructibleBlock>(); var cands = new List<Crashverse.Meta.HiddenCoreRules.Candidate>();
             foreach (var b in blocks)
             {
-                if (b == null || b.indestructible || b.explosive || !b.isObjectivePiece || b.isRoof || b.role == "island" || b.role == "roof") continue;
-                var s = b.transform.localScale; if (Mathf.Min(s.x, Mathf.Min(s.y, s.z)) < 0.35f) continue;
-                if (b.Supports.Count + b.Dependents.Count == 0) continue;
-                cand.Add(b); c += b.transform.position; n++;
+                if (b == null) continue;
+                var s = b.transform.localScale; var p = b.transform.position;
+                list.Add(b);
+                cands.Add(new Crashverse.Meta.HiddenCoreRules.Candidate
+                {
+                    id = b.blockId, x = p.x, y = p.y, z = p.z, minSide = Mathf.Min(s.x, Mathf.Min(s.y, s.z)), links = b.Supports.Count + b.Dependents.Count,
+                    eligible = !b.indestructible && !b.explosive && b.isObjectivePiece && !b.isRoof && b.role != "island" && b.role != "roof",
+                });
             }
-            if (n == 0) return null;
-            c /= n;
-            cand.Sort((a, d) => string.CompareOrdinal(a.blockId, d.blockId)); // stable base order
-            var inner = new List<DestructibleBlock>(cand);
-            inner.Sort((a, d) => { int k = (a.transform.position - c).sqrMagnitude.CompareTo((d.transform.position - c).sqrMagnitude); return k != 0 ? k : string.CompareOrdinal(a.blockId, d.blockId); });
-            int pool = Mathf.Max(1, Mathf.CeilToInt(inner.Count * 0.6f));
-            var rng = new System.Random((int)((uint)seed ^ Fnv(levelId)));
-            return inner[rng.Next(pool)];
+            int i = Crashverse.Meta.HiddenCoreRules.PickHost(cands, seed, levelId);
+            return i < 0 ? null : list[i];
         }
 
         public static HiddenCore Attach(IReadOnlyList<DestructibleBlock> blocks, int seed, string levelId, Transform parent)
@@ -116,11 +113,15 @@ namespace Crashverse.Visuals
         void OnHostDamaged(DestructibleBlock b, float removed, bool direct)
         {
             if (Spent) return;
-            if (Exposed) { if (direct) _queued = true; return; }
-            if (!b.IsBroken && b.currentHp <= b.MaxHp * ExposeHpFrac) Expose();
+            if (Crashverse.Meta.HiddenCoreRules.OnHostEvent(Exposed, direct, false) == Crashverse.Meta.HiddenCoreRules.Outcome.Detonate) { _queued = true; return; }
+            if (!Exposed && !b.IsBroken && Crashverse.Meta.HiddenCoreRules.ShouldExpose(b.currentHp, b.MaxHp, false)) Expose();
         }
 
-        void OnHostBroken(DestructibleBlock b) { if (Spent) return; if (Exposed) _queued = true; else Dud(); }
+        void OnHostBroken(DestructibleBlock b)
+        {
+            if (Spent) return;
+            if (Crashverse.Meta.HiddenCoreRules.OnHostEvent(Exposed, false, true) == Crashverse.Meta.HiddenCoreRules.Outcome.Detonate) _queued = true; else Dud();
+        }
 
         void Expose()
         {
@@ -165,7 +166,16 @@ namespace Crashverse.Visuals
             Vector3 at = _crate != null ? _crate.position : Host.transform.position;
             if (_crate != null) _crate.gameObject.SetActive(false);
             if (!Host.IsBroken) Host.Break();
-            Explosion.Detonate(at, Radius, Damage, Host);
+            // huge radial blast: 400 at the centre falling to 40 % at 6 m (HiddenCoreRules.BlastDamage)
+            using (ImpactSourceScope.Push(ImpactSourceKind.Explosion))
+                foreach (var c in Physics.OverlapSphere(at, Radius))
+                {
+                    var bl = c.GetComponentInParent<DestructibleBlock>();
+                    if (bl == null || bl == Host || bl.IsBroken || bl.indestructible) continue;
+                    float dmg = Crashverse.Meta.HiddenCoreRules.BlastDamage((bl.transform.position - at).magnitude); if (dmg <= 0f) continue;
+                    bl.NoteImpact(at, (bl.transform.position - at).normalized);
+                    bl.ApplyDamage(dmg, false, splash: true);
+                }
             foreach (var c in Physics.OverlapSphere(at, Radius * 1.4f))
             {
                 var rb = c.attachedRigidbody; if (rb == null || rb.isKinematic) continue;

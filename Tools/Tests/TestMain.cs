@@ -24,6 +24,7 @@ static class T
         Tests.Register(); SfxTests.Register();
         AnimTests.Register(); // Animation Spec v1 implementation (anim/* PRs)
         UiMotionTests.Register(); // 06 UI motion
+        HiddenCoreTests.Register(); // Season 1: hidden core on every campaign level
         foreach (var (n, a) in Cases)
         {
             try { a(); } catch (Exception e) { _fail++; Console.WriteLine($"FAIL {n}: threw {e.GetType().Name}: {e.Message}"); }
