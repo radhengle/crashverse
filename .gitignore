@@ -53,3 +53,5 @@ Tools/Tests/bin/
 Tools/Tests/obj/
 *.blend
 *.blend1
+__pycache__/
+*.pyc

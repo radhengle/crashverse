@@ -224,8 +224,8 @@
  },
  "GrassClump": {
   "tris": {
-   "GrassClump_LOD0": 6,
-   "GrassClump_LOD1": 4
+   "GrassClump_LOD0": 8,
+   "GrassClump_LOD1": 6
   },
   "materials": [
    "M_GrassClump"

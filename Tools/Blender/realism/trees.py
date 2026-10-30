@@ -68,7 +68,7 @@ class TB:
                 p=base+up*(H*(t-basefrac))+side*(W*(u-.5))+nrm*off-Vector((0,0,1))*bend*H*t*t
                 vt=s.bm.verts.new(p); cn=s.crown_n(p)
                 if clump: cn=((p-clump[0]).normalized()*.65+cn*.35).normalized()
-                s.vn[vt]=(cn*.75+nrm*.25).normalized()
+                s.vn[vt]=(cn*.6+nrm*.4).normalized()   # more card normal = more leaf-level light/shade
                 row.append((vt,u,t)); 
             grid.append(row)
         for j in range(segs):
@@ -79,7 +79,7 @@ class TB:
                     L[s.uv].uv=(r[0]+(r[2]-r[0])*x[1], r[1]+(r[3]-r[1])*x[2])
                     a_=s.crown_ao(L.vert.co)
                     if clump:
-                        rr=(L.vert.co-clump[0]).length/clump[1]; a_=min(a_,max(.5,.45+.55*rr)); tn=clump[2]
+                        rr=(L.vert.co-clump[0]).length/clump[1]; a_=min(a_,max(.5,.35+.65*rr)); tn=clump[2]
                     else: tn=1
                     L[s.col]=(a_*tn,a_*tn*1.01,a_*tn*.97,1); L[s.uv2].uv=(sway*(.6+.4*x[2]),phase)
     def to_object(s,name,mat):

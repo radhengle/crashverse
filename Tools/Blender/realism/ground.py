@@ -63,17 +63,19 @@ def ground(lod=0):
         db=bmesh.new(); strip(db,at,"Dirt",pts,a0,a1,.018,2 if lod==0 else 1,.25,sd,(.97,.97,.97,1)); B.add(db)
     return B
 def grass_clump(lod):
+    """star of cards tilted outward (reads as a tuft from the high gameplay camera, not as vertical spikes)"""
     meta=json.load(open(GTEX+"/cards.json"))["cards"]; bm=bmesh.new(); uv=bm.loops.layers.uv.new("UV0"); uv2=bm.loops.layers.uv.new("UV2")
-    col=bm.loops.layers.float_color.new("Col"); n=3 if lod==0 else 2; W,H=.5,.26
+    col=bm.loops.layers.float_color.new("Col"); n=4 if lod==0 else 3; W,H=.62,.3; tilt=math.radians(28)
     for k in range(n):
-        a=math.pi*k/n; d=Vector((math.cos(a),math.sin(a),0)); r=meta["G0" if k%2==0 else "G1"]["uv"]
-        vs=[bm.verts.new(p) for p in (-d*W/2,d*W/2,d*W/2+Vector((0,0,H)),-d*W/2+Vector((0,0,H)))]
+        a=2*math.pi*k/n+.3; d=Vector((math.cos(a),math.sin(a),0)); out=Vector((-d.y,d.x,0)); r=meta["G0" if k%2==0 else "G1"]["uv"]
+        top=Vector((0,0,H*math.cos(tilt)))+out*H*math.sin(tilt); c=-out*.05
+        vs=[bm.verts.new(p) for p in (c-d*W/2,c+d*W/2,c+d*W/2+top,c-d*W/2+top)]
         f=bm.faces.new(vs)
         for L,(u,v) in zip(f.loops,((0,0),(1,0),(1,1),(0,1))):
-            L[uv].uv=(r[0]+(r[2]-r[0])*u,r[1]+(r[3]-r[1])*v); L[uv2].uv=(v,0); L[col]=(.88+.12*v,)*3+(1,)
+            L[uv].uv=(r[0]+(r[2]-r[0])*u,r[1]+(r[3]-r[1])*v); L[uv2].uv=(v,0); L[col]=(.92+.08*v,)*3+(1,)
     me=bpy.data.meshes.new(f"GrassClump_LOD{lod}"); bm.to_mesh(me)
     for p in me.polygons: p.use_smooth=True
-    me.normals_split_custom_set_from_vertices([(0,0,1)]*len(me.vertices))   # up-facing normals: soft, even grass lighting
+    me.normals_split_custom_set_from_vertices([(0,0,1)]*len(me.vertices))   # up-facing normals: lit like the ground
     o=bpy.data.objects.new(me.name,me); bpy.context.scene.collection.objects.link(o); return o
 def scatter(proto,n,seed=4,avoid_house=True):
     rng=random.Random(seed); pts=curve_pts(); out=[]
@@ -87,8 +89,9 @@ def scatter(proto,n,seed=4,avoid_house=True):
         dens=1.0 if d>1.8 else .35+.65*(d-1.1)/.7
         near_wall=(abs(x)<4.4 and -4.2<y<3.8)
         if rng.random()>dens*(1.6 if near_wall else 1): continue
-        if rng.random()<.35 and not near_wall and d>2.5: continue
+        patch=.5+.5*noise.noise(Vector((x*.18,y*.18,4.2)))           # meadow patches instead of uniform noise
+        if rng.random()>.25+.9*patch and not near_wall and d>2.5: continue
         o=bpy.data.objects.new("grass",proto.data); bpy.context.scene.collection.objects.link(o)
-        s=rng.uniform(.7,1.35); o.scale=(s,s,s*rng.uniform(.8,1.25)); o.rotation_euler.z=rng.uniform(0,6.3)
+        s=rng.uniform(.75,1.5); o.scale=(s,s,s*rng.uniform(.75,1.3)); o.rotation_euler.z=rng.uniform(0,6.3)
         o.location=(x,y,height(x,y)-.02); o.visible_shadow=False; out.append(o)   # mobile: detail grass casts no shadows
     return out
