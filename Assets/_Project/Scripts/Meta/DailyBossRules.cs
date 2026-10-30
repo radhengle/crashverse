@@ -51,6 +51,7 @@ namespace Crashverse.Meta
                 objective = "DESTROY_STRUCTURE", shots = shots, winThreshold = d.winThreshold > 0 ? d.winThreshold : 0.85f,
                 materials = new[] { "wood", "brick", "steel" }, forced = new SlotRule[0], lockedSlots = new string[0], requires = "", bossId = "",
                 reward = new Reward[0], mastery = null,
+                heroSlot = d.heroSlot,
             };
         }
 

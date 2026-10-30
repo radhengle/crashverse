@@ -54,6 +54,11 @@ namespace Crashverse.Data
         public string id; public string mat; public float[] p; public float[] s; public string[] sup;
         public bool joint; public string role; public bool nonObj; public string color; public bool explosive;
         public bool indestructible; public float[] spinAxis; public float[] pivot; public float spinDps;
+        /// <summary>Optional kit module (Level Designer prefab map): an FBX asset path under Assets/_Project/Models/ or a module name
+        /// (e.g. "Kit_Tower_RingDoor"). Empty = RealPieceRules picks a Kit_Real* piece. Visual only: the box collider stays size s.</summary>
+        public string model;
+        /// <summary>Optional visual yaw of the module in degrees (side walls 90). The collider is never rotated.</summary>
+        public float rotY;
     }
 
     [Serializable] public class LayoutData { public string id; public BlockData[] blocks; }
@@ -141,7 +146,9 @@ namespace Crashverse.Data
     [Serializable] public class LevelRewardRules { public int coinsFirstClear = 50, coinsPerStar = 25, replayCoins = 10, gemsFirst3Star = 5, chestEveryLevels = 5, hardBonusCoins = 100, hardBonusGems = 5; }
     [Serializable] public class DailyBossData { public string[] layouts; public string[] names; public int baseShots = 6; public int shotSpread = 2; public float winThreshold = 0.85f; public RewardBundle reward = new RewardBundle();
         /// <summary>Optional per-arena aim hint (Level Designer, PR #57). Missing entries fall back to the titan arena with the same layout.</summary>
-        public DailyBossHint[] hints; }
+        public DailyBossHint[] hints;
+        /// <summary>Optional hero building slot for the boss arena (same format as LevelEntry.heroSlot).</summary>
+        public HeroSlot heroSlot; }
     /// <summary>Daily Boss arena hint: same meaning as LevelEntry.hintTarget/hintYaw/hintPitch (derived at gravity x1.0); text is an optional card line.</summary>
     [Serializable] public class DailyBossHint { public string layout; public string hintTarget; public float hintYaw; public float hintPitch; public string text; }
     /// <summary>One of the 4 season themes (map banner, backgrounds, level range). comingSoon = no levels in this build yet.</summary>

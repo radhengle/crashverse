@@ -24,6 +24,21 @@ namespace Crashverse.Level
         public static string TexPath(string kit, string stem) =>
             RealKit.ModelsRoot + (kit == "Props" ? "Props/" : "Buildings/") + "Kit_Real" + kit + "/Textures/T_Real" + kit + stem + ".png";
 
+        /// <summary>Editor: an authored BlockData.model (FBX path, or module name searched under Assets/_Project/Models).</summary>
+        public static Piece ResolveEditor(string model)
+        {
+            var name = RealKit.ModuleName(model); if (name == null) return null;
+            string path = model.EndsWith(".fbx", StringComparison.OrdinalIgnoreCase) ? model : null;
+            if (path == null)
+                foreach (var g in UnityEditor.AssetDatabase.FindAssets(name + " t:Model", new[] { "Assets/_Project/Models" }))
+                {
+                    var p = UnityEditor.AssetDatabase.GUIDToAssetPath(g);
+                    if (System.IO.Path.GetFileNameWithoutExtension(p) == name) { path = p; break; }
+                }
+            var go = path != null ? UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(path) : null;
+            return go != null ? new Piece { name = name, model = go } : null;
+        }
+
         /// <summary>Editor: build an in-memory manifest from Models/Realistic (also used by the build-time writer).</summary>
         public static RealKitManifest FromAssetDatabase()
         {

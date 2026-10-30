@@ -173,6 +173,7 @@ namespace UnityEngine
     public static class Mathf
     {
         public const float Rad2Deg = 57.29578f, Deg2Rad = 0.01745329f;
+        public static float DeltaAngle(float a, float b) { float d = (b - a) % 360f; if (d > 180f) d -= 360f; if (d < -180f) d += 360f; return d; }
         public static float Atan2(float y, float x) => (float)Math.Atan2(y, x);
         public static float Atan(float x) => (float)Math.Atan(x);
         public static float Tan(float x) => (float)Math.Tan(x);
