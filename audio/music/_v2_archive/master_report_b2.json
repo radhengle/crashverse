@@ -1,0 +1,60 @@
+{
+ "season1_wrecking_frontier_hub": {
+  "bpm": 116,
+  "samples_master": 2919724,
+  "samples_ogg": 2919724,
+  "dur_s": 66.207,
+  "loop_start": 0,
+  "loop_end": 2919724,
+  "LUFS_ogg": -16.0,
+  "TP_ogg": -1.6,
+  "boundary_jump_master": 0.00594,
+  "p99_step_master": 0.12627,
+  "boundary_jump_ogg": 0.00864,
+  "p99_step_ogg": 0.11696
+ },
+ "season2_stormfront_hub": {
+  "bpm": 100,
+  "samples_master": 3386880,
+  "samples_ogg": 3386880,
+  "dur_s": 76.8,
+  "loop_start": 0,
+  "loop_end": 3386880,
+  "LUFS_ogg": -16.0,
+  "TP_ogg": -2.3,
+  "boundary_jump_master": 0.00651,
+  "p99_step_master": 0.09396,
+  "boundary_jump_ogg": 0.00617,
+  "p99_step_ogg": 0.08561
+ },
+ "stinger_win_3star": {
+  "bpm": 100,
+  "samples_master": 211680,
+  "samples_ogg": 211680,
+  "dur_s": 4.8,
+  "loop_start": null,
+  "loop_end": null,
+  "LUFS_ogg": -16.0,
+  "TP_ogg": -3.6
+ },
+ "stinger_boss_defeat": {
+  "bpm": 144,
+  "samples_master": 245858,
+  "samples_ogg": 245858,
+  "dur_s": 5.575,
+  "loop_start": null,
+  "loop_end": null,
+  "LUFS_ogg": -15.8,
+  "TP_ogg": -3.3
+ },
+ "stinger_boss_phase2": {
+  "bpm": 144,
+  "samples_master": 118335,
+  "samples_ogg": 118335,
+  "dur_s": 2.683,
+  "loop_start": null,
+  "loop_end": null,
+  "LUFS_ogg": -16.0,
+  "TP_ogg": -4.6
+ }
+}

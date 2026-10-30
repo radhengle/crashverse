@@ -1,0 +1,38 @@
+== 40108489911 attempt 1
+120915065196	Emulator smoke API ${{ matrix.api }} x86_64 1080x2340	skipped
+120915066088	Publish prerelease (only after signing gate + emulator smoke on every API)	skipped
+== 40108489911 attempt 2
+120931081691	Emulator smoke API 34 x86_64 1080x2340	failure
+120931081697	Emulator smoke API 34 x86_64 1080x2340	success
+120931081735	Emulator smoke API 36 x86_64 1080x2340	success
+120931081806	Emulator smoke API 34 x86_64 1080x2340	success
+120933734381	Publish prerelease (only after signing gate + emulator smoke on every API)	skipped
+== 40105864952 attempt 1
+120910565353	Emulator smoke API 36 x86_64 1080x2340	failure
+120910565361	Emulator smoke API 34 x86_64 1080x2340	success
+120910565459	Emulator smoke API 34 x86_64 1080x2340	success
+120910565549	Emulator smoke API 34 x86_64 1080x2340	failure
+120914622093	Publish prerelease (only after signing gate + emulator smoke on every API)	skipped
+== 40102001893 attempt 1
+120904696613	Emulator smoke API 34 x86_64 1080x2340	failure
+120904696628	Emulator smoke API 34 x86_64 1080x2340	failure
+120904696634	Emulator smoke API 36 x86_64 1080x2340	cancelled
+120904696647	Emulator smoke API 34 x86_64 1080x2340	failure
+== 40101892127 attempt 1
+== 40100099084 attempt 1
+120898581524	Emulator smoke API 34 x86_64 1080x2340	cancelled
+120898581558	Emulator smoke API 34 x86_64 1080x2340	cancelled
+120898581578	Emulator smoke API 34 x86_64 1080x2340	cancelled
+120898581650	Emulator smoke API 36 x86_64 1080x2340	cancelled
+== 40099266488 attempt 1
+120891457841	Emulator smoke API 34 x86_64 1080x2340	failure
+120891457869	Emulator smoke API 36 x86_64 1080x2340	failure
+120891457875	Emulator smoke API 34 x86_64 1080x2340	failure
+120891457907	Emulator smoke API 34 x86_64 1080x2340	failure
+120892793769	Publish prerelease (only after signing gate + emulator smoke on every API)	skipped
+== 40096963364 attempt 1
+120884802163	Emulator smoke API 36 x86_64 1080x2340	success
+120884802164	Emulator smoke API 34 x86_64 1080x2340	success
+120884802170	Emulator smoke API 34 x86_64 1080x2340	success
+120884802220	Emulator smoke API 34 x86_64 1080x2340	success
+120887643398	Publish prerelease (only after signing gate + emulator smoke on every API)	skipped

@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="157" result="Passed" total="157" passed="157" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:27Z" duration="4.8416322">
+  <test-suite type="TestSuite" id="1226" name="CRASHVERSE" fullname="CRASHVERSE" runstate="Runnable" testcasecount="157" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:27Z" duration="4.841632" total="157" passed="157" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <test-suite type="Assembly" id="1240" name="Assembly-CSharp-Editor.dll" fullname="/github/workspace/Library/ScriptAssemblies/Assembly-CSharp-Editor.dll" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.199484" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1241" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.198876" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1242" name="EditorTests" fullname="Crashverse.EditorTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.068231" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1227" name="RenderMaterialsTests" fullname="Crashverse.EditorTests.RenderMaterialsTests" classname="Crashverse.EditorTests.RenderMaterialsTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.063652" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1229" name="LitIsNeverNull" fullname="Crashverse.EditorTests.RenderMaterialsTests.LitIsNeverNull" methodname="LitIsNeverNull" classname="Crashverse.EditorTests.RenderMaterialsTests" runstate="Runnable" seed="1172864462" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.031046" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1230" name="PrimitiveAndProceduralRenderersGetIt" fullname="Crashverse.EditorTests.RenderMaterialsTests.PrimitiveAndProceduralRenderersGetIt" methodname="PrimitiveAndProceduralRenderersGetIt" classname="Crashverse.EditorTests.RenderMaterialsTests" runstate="Runnable" seed="2095981438" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.013197" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1228" name="ShippedMaterialIsInResourcesAndSupported" fullname="Crashverse.EditorTests.RenderMaterialsTests.ShippedMaterialIsInResourcesAndSupported" methodname="ShippedMaterialIsInResourcesAndSupported" classname="Crashverse.EditorTests.RenderMaterialsTests" runstate="Runnable" seed="785349546" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.003075" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+        </test-suite>
+        <test-suite type="TestSuite" id="1243" name="Tests" fullname="Crashverse.Tests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.127046" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1244" name="EditMode" fullname="Crashverse.Tests.EditMode" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.018424" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1231" name="RulesEditModeTests" fullname="Crashverse.Tests.EditMode.RulesEditModeTests" classname="Crashverse.Tests.EditMode.RulesEditModeTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.017253" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1234" name="Age_gate_under_13_and_invalid_dates" fullname="Crashverse.Tests.EditMode.RulesEditModeTests.Age_gate_under_13_and_invalid_dates" methodname="Age_gate_under_13_and_invalid_dates" classname="Crashverse.Tests.EditMode.RulesEditModeTests" runstate="Runnable" seed="1980100663" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.004347" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1233" name="Star_bands_exact_thresholds_pass" fullname="Crashverse.Tests.EditMode.RulesEditModeTests.Star_bands_exact_thresholds_pass" methodname="Star_bands_exact_thresholds_pass" classname="Crashverse.Tests.EditMode.RulesEditModeTests" runstate="Runnable" seed="250794675" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.005442" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1232" name="Win_is_exactly_85_percent_in_basis_points" fullname="Crashverse.Tests.EditMode.RulesEditModeTests.Win_is_exactly_85_percent_in_basis_points" methodname="Win_is_exactly_85_percent_in_basis_points" classname="Crashverse.Tests.EditMode.RulesEditModeTests" runstate="Runnable" seed="641990809" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.003968" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestSuite" id="1245" name="Gameplay" fullname="Crashverse.Tests.Gameplay" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.042415" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1235" name="PieceFeedbackWiringTests" fullname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests" classname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.041785" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1239" name="AllBuiltDestructibles_GetDamageFeedbackWhenVfxPresent" fullname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests.AllBuiltDestructibles_GetDamageFeedbackWhenVfxPresent" methodname="AllBuiltDestructibles_GetDamageFeedbackWhenVfxPresent" classname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests" runstate="Runnable" seed="1507596327" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.024248" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1236" name="PieceId_MatchesPhysics20StableIdValues" fullname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests.PieceId_MatchesPhysics20StableIdValues" methodname="PieceId_MatchesPhysics20StableIdValues" classname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests" runstate="Runnable" seed="948474162" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.003214" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1237" name="PooledDebris_PieceIdStableAcrossReuse_AndClearedWhenPooled" fullname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests.PooledDebris_PieceIdStableAcrossReuse_AndClearedWhenPooled" methodname="PooledDebris_PieceIdStableAcrossReuse_AndClearedWhenPooled" classname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests" runstate="Runnable" seed="788705106" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.007289" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1238" name="VfxMaterialMapping" fullname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests.VfxMaterialMapping" methodname="VfxMaterialMapping" classname="Crashverse.Tests.Gameplay.PieceFeedbackWiringTests" runstate="Runnable" seed="1537167315" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.002970" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1269" name="Crashverse.Backend.EditModeTests.dll" fullname="/github/workspace/Library/ScriptAssemblies/Crashverse.Backend.EditModeTests.dll" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:23Z" duration="0.285359" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1270" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:23Z" duration="0.284689" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1271" name="Backend" fullname="Crashverse.Backend" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:23Z" duration="0.281297" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1272" name="Tests" fullname="Crashverse.Backend.Tests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:23Z" duration="0.277874" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1246" name="LocalBackendServiceTests" fullname="Crashverse.Backend.Tests.LocalBackendServiceTests" classname="Crashverse.Backend.Tests.LocalBackendServiceTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.088895" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1249" name="AgeGate_AdultAccepted_Under13Blocked_BadDobRejected" fullname="Crashverse.Backend.Tests.LocalBackendServiceTests.AgeGate_AdultAccepted_Under13Blocked_BadDobRejected" methodname="AgeGate_AdultAccepted_Under13Blocked_BadDobRejected" classname="Crashverse.Backend.Tests.LocalBackendServiceTests" runstate="Runnable" seed="756654581" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.042799" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1253" name="BeginAttempt_IssuesTokenBoundToLevel" fullname="Crashverse.Backend.Tests.LocalBackendServiceTests.BeginAttempt_IssuesTokenBoundToLevel" methodname="BeginAttempt_IssuesTokenBoundToLevel" classname="Crashverse.Backend.Tests.LocalBackendServiceTests" runstate="Runnable" seed="1577802870" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.008240" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1251" name="EmailAuth_RegisterThenLogin_PasswordNeverPersisted" fullname="Crashverse.Backend.Tests.LocalBackendServiceTests.EmailAuth_RegisterThenLogin_PasswordNeverPersisted" methodname="EmailAuth_RegisterThenLogin_PasswordNeverPersisted" classname="Crashverse.Backend.Tests.LocalBackendServiceTests" runstate="Runnable" seed="580381778" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.008761" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1250" name="LinkAccount_RequiresToken_AndRecordsProvider" fullname="Crashverse.Backend.Tests.LocalBackendServiceTests.LinkAccount_RequiresToken_AndRecordsProvider" methodname="LinkAccount_RequiresToken_AndRecordsProvider" classname="Crashverse.Backend.Tests.LocalBackendServiceTests" runstate="Runnable" seed="1911844097" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.008411" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1247" name="NewInstall_IsGuest_AndPersistsAcrossRestarts" fullname="Crashverse.Backend.Tests.LocalBackendServiceTests.NewInstall_IsGuest_AndPersistsAcrossRestarts" methodname="NewInstall_IsGuest_AndPersistsAcrossRestarts" classname="Crashverse.Backend.Tests.LocalBackendServiceTests" runstate="Runnable" seed="1022679520" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.004986" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1252" name="Offline_ThrowsForServerCalls" fullname="Crashverse.Backend.Tests.LocalBackendServiceTests.Offline_ThrowsForServerCalls" methodname="Offline_ThrowsForServerCalls" classname="Crashverse.Backend.Tests.LocalBackendServiceTests" runstate="Runnable" seed="2011676892" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.004376" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1248" name="TestClock_FreezeAndAdvance" fullname="Crashverse.Backend.Tests.LocalBackendServiceTests.TestClock_FreezeAndAdvance" methodname="TestClock_FreezeAndAdvance" classname="Crashverse.Backend.Tests.LocalBackendServiceTests" runstate="Runnable" seed="1800629281" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.005759" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1254" name="ServerContractsTests" fullname="Crashverse.Backend.Tests.ServerContractsTests" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:23Z" duration="0.185248" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1263" name="AgeBands_AreTheFourServerStrings" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_AreTheFourServerStrings" methodname="AgeBands_AreTheFourServerStrings" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="433916551" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.003330" asserts="0">
+                <properties />
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1262" name="AgeBands_IsMinor" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_IsMinor" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.021246" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1255" name="AgeBands_IsMinor(&quot;13to15&quot;,True)" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_IsMinor(&quot;13to15&quot;,True)" methodname="AgeBands_IsMinor" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="372571551" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.003098" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1256" name="AgeBands_IsMinor(&quot;16to17&quot;,True)" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_IsMinor(&quot;16to17&quot;,True)" methodname="AgeBands_IsMinor" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="798364134" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.002734" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1257" name="AgeBands_IsMinor(&quot;adult&quot;,False)" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_IsMinor(&quot;adult&quot;,False)" methodname="AgeBands_IsMinor" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="198268840" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.002690" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1258" name="AgeBands_IsMinor(&quot;under13&quot;,False)" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_IsMinor(&quot;under13&quot;,False)" methodname="AgeBands_IsMinor" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="1898719827" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.002691" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1259" name="AgeBands_IsMinor(&quot;13to17&quot;,False)" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_IsMinor(&quot;13to17&quot;,False)" methodname="AgeBands_IsMinor" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="1556239986" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.002679" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1260" name="AgeBands_IsMinor(null,False)" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_IsMinor(null,False)" methodname="AgeBands_IsMinor" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="1282261518" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.002672" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1261" name="AgeBands_IsMinor(&quot;&quot;,False)" fullname="Crashverse.Backend.Tests.ServerContractsTests.AgeBands_IsMinor(&quot;&quot;,False)" methodname="AgeBands_IsMinor" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="290552421" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.002651" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-case id="1264" name="AuthProvider_SerializesAsName_NotInt" fullname="Crashverse.Backend.Tests.ServerContractsTests.AuthProvider_SerializesAsName_NotInt" methodname="AuthProvider_SerializesAsName_NotInt" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="106917457" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.047241" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1265" name="LinkCredential_WireShape" fullname="Crashverse.Backend.Tests.ServerContractsTests.LinkCredential_WireShape" methodname="LinkCredential_WireShape" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="50441961" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.057389" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1266" name="ScoreSubmission_FixedPointInputs_RoundTrip" fullname="Crashverse.Backend.Tests.ServerContractsTests.ScoreSubmission_FixedPointInputs_RoundTrip" methodname="ScoreSubmission_FixedPointInputs_RoundTrip" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="366902243" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.024442" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1268" name="TitanScoring_ClampsDamage_AndKillBonus" fullname="Crashverse.Backend.Tests.ServerContractsTests.TitanScoring_ClampsDamage_AndKillBonus" methodname="TitanScoring_ClampsDamage_AndKillBonus" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="1869334741" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:22Z" duration="0.003042" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1267" name="WrappedLists_RoundTrip_JsonUtility_And_Newtonsoft" fullname="Crashverse.Backend.Tests.ServerContractsTests.WrappedLists_RoundTrip_JsonUtility_And_Newtonsoft" methodname="WrappedLists_RoundTrip_JsonUtility_And_Newtonsoft" classname="Crashverse.Backend.Tests.ServerContractsTests" runstate="Runnable" seed="744028150" result="Passed" start-time="2026-10-24 06:13:22Z" end-time="2026-10-24 06:13:23Z" duration="0.025348" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1318" name="Crashverse.Import.Tests.dll" fullname="/github/workspace/Library/ScriptAssemblies/Crashverse.Import.Tests.dll" runstate="Runnable" testcasecount="37" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:26Z" duration="3.594388" total="37" passed="37" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1319" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="37" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:26Z" duration="3.593539" total="37" passed="37" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1320" name="Tests" fullname="Crashverse.Tests" runstate="Runnable" testcasecount="37" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:26Z" duration="3.590053" total="37" passed="37" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1301" name="ImportedPhysicsHintsTests" fullname="Crashverse.Tests.ImportedPhysicsHintsTests" classname="Crashverse.Tests.ImportedPhysicsHintsTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.013664" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1303" name="NoPropertiesAddsNoComponent" fullname="Crashverse.Tests.ImportedPhysicsHintsTests.NoPropertiesAddsNoComponent" methodname="NoPropertiesAddsNoComponent" classname="Crashverse.Tests.ImportedPhysicsHintsTests" runstate="Runnable" seed="1117364825" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003999" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1302" name="ReadsSIPropertiesAndNeverOverwritesWithMissingOrBlank" fullname="Crashverse.Tests.ImportedPhysicsHintsTests.ReadsSIPropertiesAndNeverOverwritesWithMissingOrBlank" methodname="ReadsSIPropertiesAndNeverOverwritesWithMissingOrBlank" classname="Crashverse.Tests.ImportedPhysicsHintsTests" runstate="Runnable" seed="2087435976" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.005499" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1273" name="ImportNamingTests" fullname="Crashverse.Tests.ImportNamingTests" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.082540" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1292" name="Fragment" fullname="Crashverse.Tests.ImportNamingTests.Fragment" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.021796" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1286" name="Fragment(&quot;Wall_frag_03&quot;,True)" fullname="Crashverse.Tests.ImportNamingTests.Fragment(&quot;Wall_frag_03&quot;,True)" methodname="Fragment" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1721591812" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003585" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1287" name="Fragment(&quot;Wall_frag_03_LOD1&quot;,True)" fullname="Crashverse.Tests.ImportNamingTests.Fragment(&quot;Wall_frag_03_LOD1&quot;,True)" methodname="Fragment" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1942601151" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003010" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1288" name="Fragment(&quot;UCX_Wall_frag_03&quot;,False)" fullname="Crashverse.Tests.ImportNamingTests.Fragment(&quot;UCX_Wall_frag_03&quot;,False)" methodname="Fragment" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="2025697706" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002692" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1289" name="Fragment(&quot;JNT_Wall_frag_01__Wall_frag_02&quot;,False)" fullname="Crashverse.Tests.ImportNamingTests.Fragment(&quot;JNT_Wall_frag_01__Wall_frag_02&quot;,False)" methodname="Fragment" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="133870092" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002675" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1290" name="Fragment(&quot;ANCHOR_Wall_frag_01&quot;,False)" fullname="Crashverse.Tests.ImportNamingTests.Fragment(&quot;ANCHOR_Wall_frag_01&quot;,False)" methodname="Fragment" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="195180437" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002672" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1291" name="Fragment(&quot;Wall&quot;,False)" fullname="Crashverse.Tests.ImportNamingTests.Fragment(&quot;Wall&quot;,False)" methodname="Fragment" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="721509980" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002671" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-case id="1299" name="FragmentLimitIs400" fullname="Crashverse.Tests.ImportNamingTests.FragmentLimitIs400" methodname="FragmentLimitIs400" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="2036013292" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002714" asserts="0">
+              <properties />
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1280" name="HullTarget" fullname="Crashverse.Tests.ImportNamingTests.HullTarget" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.018182" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1274" name="HullTarget(&quot;UCX_Wall_frag_03&quot;,&quot;Wall_frag_03&quot;)" fullname="Crashverse.Tests.ImportNamingTests.HullTarget(&quot;UCX_Wall_frag_03&quot;,&quot;Wall_frag_03&quot;)" methodname="HullTarget" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1633999712" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002969" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1275" name="HullTarget(&quot;UCX_Kit_Brick_Wall_frag_17&quot;,&quot;Kit_Brick_Wall_frag_17&quot;)" fullname="Crashverse.Tests.ImportNamingTests.HullTarget(&quot;UCX_Kit_Brick_Wall_frag_17&quot;,&quot;Kit_Brick_Wall_frag_17&quot;)" methodname="HullTarget" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="903250349" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002687" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1276" name="HullTarget(&quot;UCX_Carriage_01&quot;,&quot;Carriage&quot;)" fullname="Crashverse.Tests.ImportNamingTests.HullTarget(&quot;UCX_Carriage_01&quot;,&quot;Carriage&quot;)" methodname="HullTarget" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1085085969" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002747" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1277" name="HullTarget(&quot;UCX_Barrel&quot;,&quot;Barrel&quot;)" fullname="Crashverse.Tests.ImportNamingTests.HullTarget(&quot;UCX_Barrel&quot;,&quot;Barrel&quot;)" methodname="HullTarget" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="2053559768" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002662" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1278" name="HullTarget(&quot;Wheel_FL_COL&quot;,&quot;Wheel_FL&quot;)" fullname="Crashverse.Tests.ImportNamingTests.HullTarget(&quot;Wheel_FL_COL&quot;,&quot;Wheel_FL&quot;)" methodname="HullTarget" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1535112753" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002875" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1279" name="HullTarget(&quot;Wheel_FL_COL_02&quot;,&quot;Wheel_FL&quot;)" fullname="Crashverse.Tests.ImportNamingTests.HullTarget(&quot;Wheel_FL_COL_02&quot;,&quot;Wheel_FL&quot;)" methodname="HullTarget" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1489389003" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002682" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1295" name="Joint" fullname="Crashverse.Tests.ImportNamingTests.Joint" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.008263" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1293" name="Joint(&quot;JNT_Wall_frag_01__Wall_frag_02&quot;,&quot;Wall_frag_01&quot;,&quot;Wall_frag_02&quot;)" fullname="Crashverse.Tests.ImportNamingTests.Joint(&quot;JNT_Wall_frag_01__Wall_frag_02&quot;,&quot;Wall_frag_01&quot;,&quot;Wall_frag_02&quot;)" methodname="Joint" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1692910103" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003724" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1294" name="Joint(&quot;JNT_Wall_frag_01__Wall_frag_02_01&quot;,&quot;Wall_frag_01&quot;,&quot;Wall_frag_02&quot;)" fullname="Crashverse.Tests.ImportNamingTests.Joint(&quot;JNT_Wall_frag_01__Wall_frag_02_01&quot;,&quot;Wall_frag_01&quot;,&quot;Wall_frag_02&quot;)" methodname="Joint" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="563274373" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002705" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-case id="1296" name="JointNeedsTwoFragments" fullname="Crashverse.Tests.ImportNamingTests.JointNeedsTwoFragments" methodname="JointNeedsTwoFragments" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="2072553688" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002777" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1300" name="KitPath" fullname="Crashverse.Tests.ImportNamingTests.KitPath" methodname="KitPath" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1207857352" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.002903" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1298" name="LodChainRequirementExcludesFracturedKit" fullname="Crashverse.Tests.ImportNamingTests.LodChainRequirementExcludesFracturedKit" methodname="LodChainRequirementExcludesFracturedKit" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="687698814" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003699" asserts="0">
+              <properties />
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1285" name="NotAHull" fullname="Crashverse.Tests.ImportNamingTests.NotAHull" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.015538" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1281" name="NotAHull(&quot;Wall_frag_03&quot;)" fullname="Crashverse.Tests.ImportNamingTests.NotAHull(&quot;Wall_frag_03&quot;)" methodname="NotAHull" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="445310469" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003223" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1282" name="NotAHull(&quot;JNT_Wall_frag_01__Wall_frag_02&quot;)" fullname="Crashverse.Tests.ImportNamingTests.NotAHull(&quot;JNT_Wall_frag_01__Wall_frag_02&quot;)" methodname="NotAHull" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="62219868" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003265" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1283" name="NotAHull(&quot;ANCHOR_Wall_frag_01&quot;)" fullname="Crashverse.Tests.ImportNamingTests.NotAHull(&quot;ANCHOR_Wall_frag_01&quot;)" methodname="NotAHull" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="97829733" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003793" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1284" name="NotAHull(&quot;Socket_Muzzle&quot;)" fullname="Crashverse.Tests.ImportNamingTests.NotAHull(&quot;Socket_Muzzle&quot;)" methodname="NotAHull" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1152676919" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003766" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-case id="1297" name="Sockets" fullname="Crashverse.Tests.ImportNamingTests.Sockets" methodname="Sockets" classname="Crashverse.Tests.ImportNamingTests" runstate="Runnable" seed="1404740827" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.003850" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1304" name="PrefabBuilderImportTests" fullname="Crashverse.Tests.PrefabBuilderImportTests" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:26Z" duration="3.489750" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1305" name="BuildsCollidersLodSocketsAndSortsFragments" fullname="Crashverse.Tests.PrefabBuilderImportTests.BuildsCollidersLodSocketsAndSortsFragments" methodname="BuildsCollidersLodSocketsAndSortsFragments" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="1512207774" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.495362" asserts="0">
+              <properties />
+              <output><![CDATA[[CrashverseImport] Kit_Test_Wall_Fractured: hull UCX_Missing_frag_09 targets 'Missing_frag_09', which does not exist. Skipped (no collider).
+[CrashverseImport] Kit_Test_Wall_Fractured: 3 fragments found by name (*_frag_##) but tag 'Fragment' is not in TagManager; ask Developer to add it. Names remain the marker.
+]]></output>
+            </test-case>
+            <test-case id="1308" name="FracturedKitIgnoresLodObjectsWithWarning" fullname="Crashverse.Tests.PrefabBuilderImportTests.FracturedKitIgnoresLodObjectsWithWarning" methodname="FracturedKitIgnoresLodObjectsWithWarning" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="1278473185" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:23Z" duration="0.331680" asserts="0">
+              <properties />
+              <output><![CDATA[[CrashverseImport] Kit_Test_Lods_Fractured: fractured kit pieces use LOD0 only; ignoring 2 LOD1/LOD2 objects (Wall_frag_01_LOD1, Wall_frag_02_LOD2).
+[CrashverseImport] Kit_Test_Lods_Fractured: 2 fragments found by name (*_frag_##) but tag 'Fragment' is not in TagManager; ask Developer to add it. Names remain the marker.
+]]></output>
+            </test-case>
+            <test-case id="1310" name="FragmentAt400TrisIsRejected_399Builds" fullname="Crashverse.Tests.PrefabBuilderImportTests.FragmentAt400TrisIsRejected_399Builds" methodname="FragmentAt400TrisIsRejected_399Builds" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="680023397" result="Passed" start-time="2026-10-24 06:13:23Z" end-time="2026-10-24 06:13:24Z" duration="0.359004" asserts="0">
+              <properties />
+              <output><![CDATA[[CrashverseImport] Kit_Test_Frag400_Fractured: fragment Big_frag_01 has 400 tris, must be < 400. Prefab NOT built.
+[CrashverseImport] Kit_Test_Frag399_Fractured: 2 fragments found by name (*_frag_##) but tag 'Fragment' is not in TagManager; ask Developer to add it. Names remain the marker.
+]]></output>
+            </test-case>
+            <test-case id="1316" name="InnerMaterialPrefersInnerMapsAndFallsBackPerMap" fullname="Crashverse.Tests.PrefabBuilderImportTests.InnerMaterialPrefersInnerMapsAndFallsBackPerMap" methodname="InnerMaterialPrefersInnerMapsAndFallsBackPerMap" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="146855698" result="Passed" start-time="2026-10-24 06:13:24Z" end-time="2026-10-24 06:13:24Z" duration="0.392654" asserts="0">
+              <properties />
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1314" name="MissingLodIsRejected" fullname="Crashverse.Tests.PrefabBuilderImportTests.MissingLodIsRejected" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:24Z" end-time="2026-10-24 06:13:25Z" duration="0.582687" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1311" name="MissingLodIsRejected(&quot;Kit_Test_NoLod2&quot;,&quot;LOD2&quot;)" fullname="Crashverse.Tests.PrefabBuilderImportTests.MissingLodIsRejected(&quot;Kit_Test_NoLod2&quot;,&quot;LOD2&quot;)" methodname="MissingLodIsRejected" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="1244957786" result="Passed" start-time="2026-10-24 06:13:24Z" end-time="2026-10-24 06:13:24Z" duration="0.201965" asserts="0">
+                <properties />
+                <output><![CDATA[[CrashverseImport] Kit_Test_NoLod2: LOD2 missing (LOD0-LOD2 required for Kit). Prefab NOT built.
+]]></output>
+              </test-case>
+              <test-case id="1312" name="MissingLodIsRejected(&quot;Island_Test_NoLod1&quot;,&quot;LOD1&quot;)" fullname="Crashverse.Tests.PrefabBuilderImportTests.MissingLodIsRejected(&quot;Island_Test_NoLod1&quot;,&quot;LOD1&quot;)" methodname="MissingLodIsRejected" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="1317207201" result="Passed" start-time="2026-10-24 06:13:24Z" end-time="2026-10-24 06:13:25Z" duration="0.200430" asserts="0">
+                <properties />
+                <output><![CDATA[[CrashverseImport] Island_Test_NoLod1: LOD1 missing (LOD0-LOD2 required for Environment). Prefab NOT built.
+]]></output>
+              </test-case>
+              <test-case id="1313" name="MissingLodIsRejected(&quot;Wrecker_Test_NoLods&quot;,&quot;LOD1&quot;)" fullname="Crashverse.Tests.PrefabBuilderImportTests.MissingLodIsRejected(&quot;Wrecker_Test_NoLods&quot;,&quot;LOD1&quot;)" methodname="MissingLodIsRejected" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="556074441" result="Passed" start-time="2026-10-24 06:13:25Z" end-time="2026-10-24 06:13:25Z" duration="0.177126" asserts="0">
+                <properties />
+                <output><![CDATA[[CrashverseImport] Wrecker_Test_NoLods: LOD1 missing (LOD0-LOD2 required for Hero). Prefab NOT built.
+[CrashverseImport] Wrecker_Test_NoLods: LOD2 missing (LOD0-LOD2 required for Hero). Prefab NOT built.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1309" name="OverBudgetFracturedTotalIsRejected" fullname="Crashverse.Tests.PrefabBuilderImportTests.OverBudgetFracturedTotalIsRejected" methodname="OverBudgetFracturedTotalIsRejected" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="1167087655" result="Passed" start-time="2026-10-24 06:13:25Z" end-time="2026-10-24 06:13:25Z" duration="0.294583" asserts="0">
+              <properties />
+              <output><![CDATA[[CrashverseImport] Kit_Test_Heavy_Fractured: LOD0 1501 tris over budget 1500. Prefab NOT built.
+]]></output>
+            </test-case>
+            <test-case id="1306" name="OverBudgetKitPieceIsRejectedAndNoPrefabWritten" fullname="Crashverse.Tests.PrefabBuilderImportTests.OverBudgetKitPieceIsRejectedAndNoPrefabWritten" methodname="OverBudgetKitPieceIsRejectedAndNoPrefabWritten" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="204905977" result="Passed" start-time="2026-10-24 06:13:25Z" end-time="2026-10-24 06:13:25Z" duration="0.216512" asserts="0">
+              <properties />
+              <output><![CDATA[[CrashverseImport] Kit_Test_Big: LOD0 1600 tris over budget 1500. Prefab NOT built.
+]]></output>
+            </test-case>
+            <test-case id="1315" name="OverBudgetWreckerIsRejected" fullname="Crashverse.Tests.PrefabBuilderImportTests.OverBudgetWreckerIsRejected" methodname="OverBudgetWreckerIsRejected" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="676259173" result="Passed" start-time="2026-10-24 06:13:25Z" end-time="2026-10-24 06:13:26Z" duration="0.230940" asserts="0">
+              <properties />
+              <output><![CDATA[[CrashverseImport] Wrecker_Test_Big: LOD0 12001 tris over budget 12000. Prefab NOT built.
+]]></output>
+            </test-case>
+            <test-case id="1317" name="WiresGlossyPbrMaterialsAndTextureImport" fullname="Crashverse.Tests.PrefabBuilderImportTests.WiresGlossyPbrMaterialsAndTextureImport" methodname="WiresGlossyPbrMaterialsAndTextureImport" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="1814823654" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.282375" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1307" name="WithinBudgetKitPieceBuilds" fullname="Crashverse.Tests.PrefabBuilderImportTests.WithinBudgetKitPieceBuilds" methodname="WithinBudgetKitPieceBuilds" classname="Crashverse.Tests.PrefabBuilderImportTests" runstate="Runnable" seed="22269957" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.299450" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1392" name="Crashverse.Physics.Tests.dll" fullname="/github/workspace/Library/ScriptAssemblies/Crashverse.Physics.Tests.dll" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.257924" total="59" passed="59" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1393" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.256702" total="59" passed="59" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1394" name="Sim" fullname="Crashverse.Sim" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.253326" total="59" passed="59" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1395" name="Tests" fullname="Crashverse.Sim.Tests" runstate="Runnable" testcasecount="59" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.249809" total="59" passed="59" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1347" name="CascadeAndHitStopTests" fullname="Crashverse.Sim.Tests.CascadeAndHitStopTests" classname="Crashverse.Sim.Tests.CascadeAndHitStopTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.012921" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1348" name="Cascade_IdsAndCounts_Replay" fullname="Crashverse.Sim.Tests.CascadeAndHitStopTests.Cascade_IdsAndCounts_Replay" methodname="Cascade_IdsAndCounts_Replay" classname="Crashverse.Sim.Tests.CascadeAndHitStopTests" runstate="Runnable" seed="2106883978" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.005578" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1349" name="HitStop_Defaults_AndReduceMotion" fullname="Crashverse.Sim.Tests.CascadeAndHitStopTests.HitStop_Defaults_AndReduceMotion" methodname="HitStop_Defaults_AndReduceMotion" classname="Crashverse.Sim.Tests.CascadeAndHitStopTests" runstate="Runnable" seed="1105881295" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003038" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1321" name="DebrisDamageTests" fullname="Crashverse.Sim.Tests.DebrisDamageTests" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.037490" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1332" name="Accumulator_DuplicatePairCountsOnce" fullname="Crashverse.Sim.Tests.DebrisDamageTests.Accumulator_DuplicatePairCountsOnce" methodname="Accumulator_DuplicatePairCountsOnce" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="1558202135" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.005072" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1331" name="Accumulator_StableOrder_RegardlessOfReportOrder" fullname="Crashverse.Sim.Tests.DebrisDamageTests.Accumulator_StableOrder_RegardlessOfReportOrder" methodname="Accumulator_StableOrder_RegardlessOfReportOrder" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="1978714470" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003724" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1322" name="AtThreshold_NoDamage" fullname="Crashverse.Sim.Tests.DebrisDamageTests.AtThreshold_NoDamage" methodname="AtThreshold_NoDamage" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="2135140824" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003163" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1323" name="BelowThreshold_NoDamage" fullname="Crashverse.Sim.Tests.DebrisDamageTests.BelowThreshold_NoDamage" methodname="BelowThreshold_NoDamage" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="2119941460" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002776" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1326" name="CappedAt60PerCollision" fullname="Crashverse.Sim.Tests.DebrisDamageTests.CappedAt60PerCollision" methodname="CappedAt60PerCollision" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="169652006" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002801" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1329" name="ConfigFromData" fullname="Crashverse.Sim.Tests.DebrisDamageTests.ConfigFromData" methodname="ConfigFromData" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="1432002585" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002791" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1324" name="JustAboveThreshold_IsContinuous_AboutZero" fullname="Crashverse.Sim.Tests.DebrisDamageTests.JustAboveThreshold_IsContinuous_AboutZero" methodname="JustAboveThreshold_IsContinuous_AboutZero" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="611946749" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002791" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1327" name="MaterialMultipliers" fullname="Crashverse.Sim.Tests.DebrisDamageTests.MaterialMultipliers" methodname="MaterialMultipliers" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="1600365243" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002785" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1328" name="RestingContact_NoDamage" fullname="Crashverse.Sim.Tests.DebrisDamageTests.RestingContact_NoDamage" methodname="RestingContact_NoDamage" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="819524478" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002774" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1325" name="Scaling_LinearInMassAndExcessSpeed" fullname="Crashverse.Sim.Tests.DebrisDamageTests.Scaling_LinearInMassAndExcessSpeed" methodname="Scaling_LinearInMassAndExcessSpeed" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="77540756" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002786" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1330" name="UnitConversion_Rounds" fullname="Crashverse.Sim.Tests.DebrisDamageTests.UnitConversion_Rounds" methodname="UnitConversion_Rounds" classname="Crashverse.Sim.Tests.DebrisDamageTests" runstate="Runnable" seed="1028628463" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002900" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1387" name="DebrisRulesTests" fullname="Crashverse.Sim.Tests.DebrisRulesTests" classname="Crashverse.Sim.Tests.DebrisRulesTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.016659" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1389" name="DebrisStream_DiffersFromMainStream" fullname="Crashverse.Sim.Tests.DebrisRulesTests.DebrisStream_DiffersFromMainStream" methodname="DebrisStream_DiffersFromMainStream" classname="Crashverse.Sim.Tests.DebrisRulesTests" runstate="Runnable" seed="1486539887" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.004625" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1391" name="NonRanked_UsesTierCap" fullname="Crashverse.Sim.Tests.DebrisRulesTests.NonRanked_UsesTierCap" methodname="NonRanked_UsesTierCap" classname="Crashverse.Sim.Tests.DebrisRulesTests" runstate="Runnable" seed="1448990030" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003917" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1390" name="RankedCap_SameAcrossTiers" fullname="Crashverse.Sim.Tests.DebrisRulesTests.RankedCap_SameAcrossTiers" methodname="RankedCap_SameAcrossTiers" classname="Crashverse.Sim.Tests.DebrisRulesTests" runstate="Runnable" seed="883332563" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002856" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1388" name="RetryReseed_GivesSameSequence" fullname="Crashverse.Sim.Tests.DebrisRulesTests.RetryReseed_GivesSameSequence" methodname="RetryReseed_GivesSameSequence" classname="Crashverse.Sim.Tests.DebrisRulesTests" runstate="Runnable" seed="622713440" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003267" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1337" name="ImpactClassifierTests" fullname="Crashverse.Sim.Tests.ImpactClassifierTests" classname="Crashverse.Sim.Tests.ImpactClassifierTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.016267" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1342" name="Defaults_AreValid" fullname="Crashverse.Sim.Tests.ImpactClassifierTests.Defaults_AreValid" methodname="Defaults_AreValid" classname="Crashverse.Sim.Tests.ImpactClassifierTests" runstate="Runnable" seed="1181132356" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002876" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1341" name="Size_FromMass" fullname="Crashverse.Sim.Tests.ImpactClassifierTests.Size_FromMass" methodname="Size_FromMass" classname="Crashverse.Sim.Tests.ImpactClassifierTests" runstate="Runnable" seed="1492074399" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002902" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1338" name="Tier_Boundaries" fullname="Crashverse.Sim.Tests.ImpactClassifierTests.Tier_Boundaries" methodname="Tier_Boundaries" classname="Crashverse.Sim.Tests.ImpactClassifierTests" runstate="Runnable" seed="550627669" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002897" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1339" name="Tier_NaNAndNegative_AreLight" fullname="Crashverse.Sim.Tests.ImpactClassifierTests.Tier_NaNAndNegative_AreLight" methodname="Tier_NaNAndNegative_AreLight" classname="Crashverse.Sim.Tests.ImpactClassifierTests" runstate="Runnable" seed="1715751965" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002780" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1340" name="Tier_UsesDataThresholds" fullname="Crashverse.Sim.Tests.ImpactClassifierTests.Tier_UsesDataThresholds" methodname="Tier_UsesDataThresholds" classname="Crashverse.Sim.Tests.ImpactClassifierTests" runstate="Runnable" seed="1202110442" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002799" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1343" name="ImpactOrderTests" fullname="Crashverse.Sim.Tests.ImpactOrderTests" classname="Crashverse.Sim.Tests.ImpactOrderTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.013628" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1346" name="Flush_Clears" fullname="Crashverse.Sim.Tests.ImpactOrderTests.Flush_Clears" methodname="Flush_Clears" classname="Crashverse.Sim.Tests.ImpactOrderTests" runstate="Runnable" seed="427898182" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.004142" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1344" name="Order_IsIndependentOfCallbackOrder" fullname="Crashverse.Sim.Tests.ImpactOrderTests.Order_IsIndependentOfCallbackOrder" methodname="Order_IsIndependentOfCallbackOrder" classname="Crashverse.Sim.Tests.ImpactOrderTests" runstate="Runnable" seed="937096211" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.005063" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1345" name="Order_SamePiece_KeepsInsertionOrder" fullname="Crashverse.Sim.Tests.ImpactOrderTests.Order_SamePiece_KeepsInsertionOrder" methodname="Order_SamePiece_KeepsInsertionOrder" classname="Crashverse.Sim.Tests.ImpactOrderTests" runstate="Runnable" seed="2034077818" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002989" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1350" name="ImpactReviewFixTests" fullname="Crashverse.Sim.Tests.ImpactReviewFixTests" classname="Crashverse.Sim.Tests.ImpactReviewFixTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.019257" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1355" name="Cascade_PerMaterialCounts" fullname="Crashverse.Sim.Tests.ImpactReviewFixTests.Cascade_PerMaterialCounts" methodname="Cascade_PerMaterialCounts" classname="Crashverse.Sim.Tests.ImpactReviewFixTests" runstate="Runnable" seed="715944703" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003071" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1353" name="FlushPoint_ExactlyOnePerMode" fullname="Crashverse.Sim.Tests.ImpactReviewFixTests.FlushPoint_ExactlyOnePerMode" methodname="FlushPoint_ExactlyOnePerMode" classname="Crashverse.Sim.Tests.ImpactReviewFixTests" runstate="Runnable" seed="1370740816" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002799" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1356" name="Make_DefaultsMaterialTypesToTerrain" fullname="Crashverse.Sim.Tests.ImpactReviewFixTests.Make_DefaultsMaterialTypesToTerrain" methodname="Make_DefaultsMaterialTypesToTerrain" classname="Crashverse.Sim.Tests.ImpactReviewFixTests" runstate="Runnable" seed="182110172" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002924" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1354" name="MaterialCounts_DominantAndTies" fullname="Crashverse.Sim.Tests.ImpactReviewFixTests.MaterialCounts_DominantAndTies" methodname="MaterialCounts_DominantAndTies" classname="Crashverse.Sim.Tests.ImpactReviewFixTests" runstate="Runnable" seed="2031127664" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002806" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1352" name="TickTag_AutoSimCallback_UsesTickThatStepped" fullname="Crashverse.Sim.Tests.ImpactReviewFixTests.TickTag_AutoSimCallback_UsesTickThatStepped" methodname="TickTag_AutoSimCallback_UsesTickThatStepped" classname="Crashverse.Sim.Tests.ImpactReviewFixTests" runstate="Runnable" seed="1051138147" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002774" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1351" name="TickTag_RankedInsideBody_UsesCurrentTick" fullname="Crashverse.Sim.Tests.ImpactReviewFixTests.TickTag_RankedInsideBody_UsesCurrentTick" methodname="TickTag_RankedInsideBody_UsesCurrentTick" classname="Crashverse.Sim.Tests.ImpactReviewFixTests" runstate="Runnable" seed="2137246711" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002728" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1357" name="ImpactWiringTests" fullname="Crashverse.Sim.Tests.ImpactWiringTests" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.029815" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1365" name="Cascade_StartJoinEnd_Replays" fullname="Crashverse.Sim.Tests.ImpactWiringTests.Cascade_StartJoinEnd_Replays" methodname="Cascade_StartJoinEnd_Replays" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" seed="71470329" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003499" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1358" name="CrackSteps_33_66_90" fullname="Crashverse.Sim.Tests.ImpactWiringTests.CrackSteps_33_66_90" methodname="CrackSteps_33_66_90" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" seed="1950997243" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002947" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1360" name="CrackSteps_BigHitEmitsEachStepOnce" fullname="Crashverse.Sim.Tests.ImpactWiringTests.CrackSteps_BigHitEmitsEachStepOnce" methodname="CrackSteps_BigHitEmitsEachStepOnce" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" seed="21157344" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003134" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1359" name="CrackSteps_DamagePermille" fullname="Crashverse.Sim.Tests.ImpactWiringTests.CrackSteps_DamagePermille" methodname="CrackSteps_DamagePermille" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" seed="1831800724" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002959" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1361" name="Qualify_ImpulseOrSpeed" fullname="Crashverse.Sim.Tests.ImpactWiringTests.Qualify_ImpulseOrSpeed" methodname="Qualify_ImpulseOrSpeed" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" seed="1154808893" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002872" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1364" name="SourceScope_NestsAndDefaultsToDebris" fullname="Crashverse.Sim.Tests.ImpactWiringTests.SourceScope_NestsAndDefaultsToDebris" methodname="SourceScope_NestsAndDefaultsToDebris" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" seed="563307472" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.004190" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1363" name="StableId_IsStableAndNotReserved" fullname="Crashverse.Sim.Tests.ImpactWiringTests.StableId_IsStableAndNotReserved" methodname="StableId_IsStableAndNotReserved" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" seed="1943019206" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003168" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1362" name="Throttle_UnorderedPair_Cooldown" fullname="Crashverse.Sim.Tests.ImpactWiringTests.Throttle_UnorderedPair_Cooldown" methodname="Throttle_UnorderedPair_Cooldown" classname="Crashverse.Sim.Tests.ImpactWiringTests" runstate="Runnable" seed="751515326" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.004521" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1366" name="MaterialGlassStoneTests" fullname="Crashverse.Sim.Tests.MaterialGlassStoneTests" classname="Crashverse.Sim.Tests.MaterialGlassStoneTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.015906" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1370" name="DebrisMultipliers_GlassAndStone" fullname="Crashverse.Sim.Tests.MaterialGlassStoneTests.DebrisMultipliers_GlassAndStone" methodname="DebrisMultipliers_GlassAndStone" classname="Crashverse.Sim.Tests.MaterialGlassStoneTests" runstate="Runnable" seed="434332685" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002809" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1371" name="Glass_NeonChapterAndLaterOnly" fullname="Crashverse.Sim.Tests.MaterialGlassStoneTests.Glass_NeonChapterAndLaterOnly" methodname="Glass_NeonChapterAndLaterOnly" classname="Crashverse.Sim.Tests.MaterialGlassStoneTests" runstate="Runnable" seed="224361519" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002876" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1369" name="MaterialCounts_Tie_GoesToLowerEnumValue" fullname="Crashverse.Sim.Tests.MaterialGlassStoneTests.MaterialCounts_Tie_GoesToLowerEnumValue" methodname="MaterialCounts_Tie_GoesToLowerEnumValue" classname="Crashverse.Sim.Tests.MaterialGlassStoneTests" runstate="Runnable" seed="557759304" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002758" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1368" name="MaterialCounts_TracksStone_AndDominantCanBeStone" fullname="Crashverse.Sim.Tests.MaterialGlassStoneTests.MaterialCounts_TracksStone_AndDominantCanBeStone" methodname="MaterialCounts_TracksStone_AndDominantCanBeStone" classname="Crashverse.Sim.Tests.MaterialGlassStoneTests" runstate="Runnable" seed="997708022" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002844" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1367" name="MaterialType_ExistingValuesUnchanged_StoneAppended" fullname="Crashverse.Sim.Tests.MaterialGlassStoneTests.MaterialType_ExistingValuesUnchanged_StoneAppended" methodname="MaterialType_ExistingValuesUnchanged_StoneAppended" classname="Crashverse.Sim.Tests.MaterialGlassStoneTests" runstate="Runnable" seed="247438955" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002875" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1372" name="PhysShakeHookTests" fullname="Crashverse.Sim.Tests.PhysShakeHookTests" classname="Crashverse.Sim.Tests.PhysShakeHookTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.007176" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1373" name="NoSink_IsNoOp" fullname="Crashverse.Sim.Tests.PhysShakeHookTests.NoSink_IsNoOp" methodname="NoSink_IsNoOp" classname="Crashverse.Sim.Tests.PhysShakeHookTests" runstate="Runnable" seed="1268715010" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003013" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1374" name="Sink_GetsNameMaterialBTier" fullname="Crashverse.Sim.Tests.PhysShakeHookTests.Sink_GetsNameMaterialBTier" methodname="Sink_GetsNameMaterialBTier" classname="Crashverse.Sim.Tests.PhysShakeHookTests" runstate="Runnable" seed="1120865751" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003102" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1375" name="SimRngTests" fullname="Crashverse.Sim.Tests.SimRngTests" classname="Crashverse.Sim.Tests.SimRngTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.049466" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1377" name="DifferentSeeds_Diverge" fullname="Crashverse.Sim.Tests.SimRngTests.DifferentSeeds_Diverge" methodname="DifferentSeeds_Diverge" classname="Crashverse.Sim.Tests.SimRngTests" runstate="Runnable" seed="1421156692" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002787" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1381" name="Fork_IsDeterministic" fullname="Crashverse.Sim.Tests.SimRngTests.Fork_IsDeterministic" methodname="Fork_IsDeterministic" classname="Crashverse.Sim.Tests.SimRngTests" runstate="Runnable" seed="1852788445" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002808" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1380" name="Ranges_InBounds" fullname="Crashverse.Sim.Tests.SimRngTests.Ranges_InBounds" methodname="Ranges_InBounds" classname="Crashverse.Sim.Tests.SimRngTests" runstate="Runnable" seed="1255164091" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.029444" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1379" name="Reset_Replays" fullname="Crashverse.Sim.Tests.SimRngTests.Reset_Replays" methodname="Reset_Replays" classname="Crashverse.Sim.Tests.SimRngTests" runstate="Runnable" seed="1255474051" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003348" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1376" name="SameSeed_SameSequence" fullname="Crashverse.Sim.Tests.SimRngTests.SameSeed_SameSequence" methodname="SameSeed_SameSequence" classname="Crashverse.Sim.Tests.SimRngTests" runstate="Runnable" seed="1017809966" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.006329" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1378" name="ZeroSeed_IsUsable" fullname="Crashverse.Sim.Tests.SimRngTests.ZeroSeed_IsUsable" methodname="ZeroSeed_IsUsable" classname="Crashverse.Sim.Tests.SimRngTests" runstate="Runnable" seed="802312638" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002812" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1333" name="SupportRuleTests" fullname="Crashverse.Sim.Tests.SupportRuleTests" classname="Crashverse.Sim.Tests.SupportRuleTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.009671" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1335" name="AllSupportsRemoved_Collapse" fullname="Crashverse.Sim.Tests.SupportRuleTests.AllSupportsRemoved_Collapse" methodname="AllSupportsRemoved_Collapse" classname="Crashverse.Sim.Tests.SupportRuleTests" runstate="Runnable" seed="1816862565" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002787" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1336" name="Grounded_NeverCollapses" fullname="Crashverse.Sim.Tests.SupportRuleTests.Grounded_NeverCollapses" methodname="Grounded_NeverCollapses" classname="Crashverse.Sim.Tests.SupportRuleTests" runstate="Runnable" seed="2226613" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002749" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1334" name="OneOfTwoSupportsRemoved_NoCollapse" fullname="Crashverse.Sim.Tests.SupportRuleTests.OneOfTwoSupportsRemoved_NoCollapse" methodname="OneOfTwoSupportsRemoved_NoCollapse" classname="Crashverse.Sim.Tests.SupportRuleTests" runstate="Runnable" seed="1346203283" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002721" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1382" name="TickInputQueueTests" fullname="Crashverse.Sim.Tests.TickInputQueueTests" classname="Crashverse.Sim.Tests.TickInputQueueTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.015827" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1385" name="Clear_ResetsConsumedTick" fullname="Crashverse.Sim.Tests.TickInputQueueTests.Clear_ResetsConsumedTick" methodname="Clear_ResetsConsumedTick" classname="Crashverse.Sim.Tests.TickInputQueueTests" runstate="Runnable" seed="1418846999" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.004083" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1383" name="Drains_InTickOrder_StableWithinTick" fullname="Crashverse.Sim.Tests.TickInputQueueTests.Drains_InTickOrder_StableWithinTick" methodname="Drains_InTickOrder_StableWithinTick" classname="Crashverse.Sim.Tests.TickInputQueueTests" runstate="Runnable" seed="1531745191" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.004470" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1384" name="Rejects_InputsForConsumedTicks" fullname="Crashverse.Sim.Tests.TickInputQueueTests.Rejects_InputsForConsumedTicks" methodname="Rejects_InputsForConsumedTicks" classname="Crashverse.Sim.Tests.TickInputQueueTests" runstate="Runnable" seed="289408900" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002819" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1386" name="SecondsToTicks_RoundsUp" fullname="Crashverse.Sim.Tests.TickInputQueueTests.SecondsToTicks_RoundsUp" methodname="SecondsToTicks_RoundsUp" classname="Crashverse.Sim.Tests.TickInputQueueTests" runstate="Runnable" seed="1035931434" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002829" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1402" name="Crashverse.Rendering.LightingTests.dll" fullname="/github/workspace/Library/ScriptAssemblies/Crashverse.Rendering.LightingTests.dll" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.094620" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1403" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.094256" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1404" name="Rendering" fullname="Crashverse.Rendering" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.090894" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1405" name="Tests" fullname="Crashverse.Rendering.Tests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.087494" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1396" name="LightingPostTests" fullname="Crashverse.Rendering.Tests.LightingPostTests" classname="Crashverse.Rendering.Tests.LightingPostTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.083937" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1398" name="LowTier_IsCheapest" fullname="Crashverse.Rendering.Tests.LightingPostTests.LowTier_IsCheapest" methodname="LowTier_IsCheapest" classname="Crashverse.Rendering.Tests.LightingPostTests" runstate="Runnable" seed="1297404558" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003227" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1400" name="Skybox_ShipsInResources" fullname="Crashverse.Rendering.Tests.LightingPostTests.Skybox_ShipsInResources" methodname="Skybox_ShipsInResources" classname="Crashverse.Rendering.Tests.LightingPostTests" runstate="Runnable" seed="1907464967" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.010929" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1401" name="TierLookup_MapsQualityNames" fullname="Crashverse.Rendering.Tests.LightingPostTests.TierLookup_MapsQualityNames" methodname="TierLookup_MapsQualityNames" classname="Crashverse.Rendering.Tests.LightingPostTests" runstate="Runnable" seed="1432026229" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.002804" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1397" name="UrpTierAssets_MatchRenderTiers" fullname="Crashverse.Rendering.Tests.LightingPostTests.UrpTierAssets_MatchRenderTiers" methodname="UrpTierAssets_MatchRenderTiers" classname="Crashverse.Rendering.Tests.LightingPostTests" runstate="Runnable" seed="182896624" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003605" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1399" name="VolumeProfiles_HaveExpectedEffects" fullname="Crashverse.Rendering.Tests.LightingPostTests.VolumeProfiles_HaveExpectedEffects" methodname="VolumeProfiles_HaveExpectedEffects" classname="Crashverse.Rendering.Tests.LightingPostTests" runstate="Runnable" seed="1095034" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:26Z" duration="0.003346" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1412" name="Crashverse.Rendering.Tests.dll" fullname="/github/workspace/Library/ScriptAssemblies/Crashverse.Rendering.Tests.dll" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:27Z" duration="0.272417" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1413" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:27Z" duration="0.271585" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1414" name="Rendering" fullname="Crashverse.Rendering" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:27Z" duration="0.268145" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1415" name="Tests" fullname="Crashverse.Rendering.Tests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:27Z" duration="0.264753" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1406" name="RenderingSetupTests" fullname="Crashverse.Rendering.Tests.RenderingSetupTests" classname="Crashverse.Rendering.Tests.RenderingSetupTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:26Z" end-time="2026-10-24 06:13:27Z" duration="0.261247" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1411" name="BuildScenes_NoRendererMissingMaterial" fullname="Crashverse.Rendering.Tests.RenderingSetupTests.BuildScenes_NoRendererMissingMaterial" methodname="BuildScenes_NoRendererMissingMaterial" classname="Crashverse.Rendering.Tests.RenderingSetupTests" runstate="Runnable" seed="801456371" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.157004" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1407" name="GraphicsSettings_HasUrpAsset" fullname="Crashverse.Rendering.Tests.RenderingSetupTests.GraphicsSettings_HasUrpAsset" methodname="GraphicsSettings_HasUrpAsset" classname="Crashverse.Rendering.Tests.RenderingSetupTests" runstate="Runnable" seed="1298625332" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003401" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1410" name="Prefabs_NoRendererMissingMaterial" fullname="Crashverse.Rendering.Tests.RenderingSetupTests.Prefabs_NoRendererMissingMaterial" methodname="Prefabs_NoRendererMissingMaterial" classname="Crashverse.Rendering.Tests.RenderingSetupTests" runstate="Runnable" seed="1375099386" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.004841" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1408" name="QualitySettings_HasLowMidHigh_EachWithUrpAsset" fullname="Crashverse.Rendering.Tests.RenderingSetupTests.QualitySettings_HasLowMidHigh_EachWithUrpAsset" methodname="QualitySettings_HasLowMidHigh_EachWithUrpAsset" classname="Crashverse.Rendering.Tests.RenderingSetupTests" runstate="Runnable" seed="1074030246" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.004323" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1409" name="RequiredShaders_ExistAndAreAlwaysIncluded" fullname="Crashverse.Rendering.Tests.RenderingSetupTests.RequiredShaders_ExistAndAreAlwaysIncluded" methodname="RequiredShaders_ExistAndAreAlwaysIncluded" classname="Crashverse.Rendering.Tests.RenderingSetupTests" runstate="Runnable" seed="347175211" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.034333" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1424" name="Crashverse.Rules.Tests.dll" fullname="/github/workspace/Library/ScriptAssemblies/Crashverse.Rules.Tests.dll" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.033164" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1425" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.031665" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1426" name="Tests" fullname="Crashverse.Tests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.028176" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1420" name="ComboAndCounterTests" fullname="Crashverse.Tests.ComboAndCounterTests" classname="Crashverse.Tests.ComboAndCounterTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.014545" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1422" name="CampaignScore_Floors" fullname="Crashverse.Tests.ComboAndCounterTests.CampaignScore_Floors" methodname="CampaignScore_Floors" classname="Crashverse.Tests.ComboAndCounterTests" runstate="Runnable" seed="800561118" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003278" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1421" name="Combo_TickWindowInclusive" fullname="Crashverse.Tests.ComboAndCounterTests.Combo_TickWindowInclusive" methodname="Combo_TickWindowInclusive" classname="Crashverse.Tests.ComboAndCounterTests" runstate="Runnable" seed="1887893029" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003221" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1423" name="ObjectiveCounter_CountsOncePerObjective" fullname="Crashverse.Tests.ComboAndCounterTests.ObjectiveCounter_CountsOncePerObjective" methodname="ObjectiveCounter_CountsOncePerObjective" classname="Crashverse.Tests.ComboAndCounterTests" runstate="Runnable" seed="1291136684" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003463" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1416" name="RulesTests" fullname="Crashverse.Tests.RulesTests" classname="Crashverse.Tests.RulesTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.010006" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1419" name="StarRules_ExactBandsPass" fullname="Crashverse.Tests.RulesTests.StarRules_ExactBandsPass" methodname="StarRules_ExactBandsPass" classname="Crashverse.Tests.RulesTests" runstate="Runnable" seed="930616209" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003164" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1417" name="WinRule_ExactThresholdPasses" fullname="Crashverse.Tests.RulesTests.WinRule_ExactThresholdPasses" methodname="WinRule_ExactThresholdPasses" classname="Crashverse.Tests.RulesTests" runstate="Runnable" seed="1031343572" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.002811" asserts="0">
+              <properties />
+            </test-case>
+            <test-case id="1418" name="WinRule_FractionBpFloors" fullname="Crashverse.Tests.RulesTests.WinRule_FractionBpFloors" methodname="WinRule_FractionBpFloors" classname="Crashverse.Tests.RulesTests" runstate="Runnable" seed="1232685915" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.002751" asserts="0">
+              <properties />
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1447" name="Crashverse.VFX.Tests.dll" fullname="/github/workspace/Library/ScriptAssemblies/Crashverse.VFX.Tests.dll" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.080207" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2045" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1448" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.079856" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1449" name="VFX" fullname="Crashverse.VFX" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.076525" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1450" name="Tests" fullname="Crashverse.VFX.Tests" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.073088" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1440" name="BudgetAndLimiterTests" fullname="Crashverse.VFX.Tests.BudgetAndLimiterTests" classname="Crashverse.VFX.Tests.BudgetAndLimiterTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.010545" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1442" name="Budget_OldestCulledFirst" fullname="Crashverse.VFX.Tests.BudgetAndLimiterTests.Budget_OldestCulledFirst" methodname="Budget_OldestCulledFirst" classname="Crashverse.VFX.Tests.BudgetAndLimiterTests" runstate="Runnable" seed="1118133109" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003382" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1441" name="SpawnLimiter_ThreePer100ms" fullname="Crashverse.VFX.Tests.BudgetAndLimiterTests.SpawnLimiter_ThreePer100ms" methodname="SpawnLimiter_ThreePer100ms" classname="Crashverse.VFX.Tests.BudgetAndLimiterTests" runstate="Runnable" seed="832066570" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.002963" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1433" name="DamageRulesTests" fullname="Crashverse.VFX.Tests.DamageRulesTests" classname="Crashverse.VFX.Tests.DamageRulesTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.011182" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1436" name="CrackStepMapping" fullname="Crashverse.VFX.Tests.DamageRulesTests.CrackStepMapping" methodname="CrackStepMapping" classname="Crashverse.VFX.Tests.DamageRulesTests" runstate="Runnable" seed="1383701236" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003603" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1434" name="FlashCappedAndReduceMotion" fullname="Crashverse.VFX.Tests.DamageRulesTests.FlashCappedAndReduceMotion" methodname="FlashCappedAndReduceMotion" classname="Crashverse.VFX.Tests.DamageRulesTests" runstate="Runnable" seed="1971745388" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003060" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1435" name="FlashTiming" fullname="Crashverse.VFX.Tests.DamageRulesTests.FlashTiming" methodname="FlashTiming" classname="Crashverse.VFX.Tests.DamageRulesTests" runstate="Runnable" seed="336874957" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003154" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1437" name="ImpactAdapterTests" fullname="Crashverse.VFX.Tests.ImpactAdapterTests" classname="Crashverse.VFX.Tests.ImpactAdapterTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.009237" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1438" name="ReadsImpactEventShape" fullname="Crashverse.VFX.Tests.ImpactAdapterTests.ReadsImpactEventShape" methodname="ReadsImpactEventShape" classname="Crashverse.VFX.Tests.ImpactAdapterTests" runstate="Runnable" seed="159370391" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.005065" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1439" name="RoutingRules" fullname="Crashverse.VFX.Tests.ImpactAdapterTests.RoutingRules" methodname="RoutingRules" classname="Crashverse.VFX.Tests.ImpactAdapterTests" runstate="Runnable" seed="2005139887" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003132" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1443" name="VfxPerfStatsTests" fullname="Crashverse.VFX.Tests.VfxPerfStatsTests" classname="Crashverse.VFX.Tests.VfxPerfStatsTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.016816" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1446" name="ArgsAndRollingWindow" fullname="Crashverse.VFX.Tests.VfxPerfStatsTests.ArgsAndRollingWindow" methodname="ArgsAndRollingWindow" classname="Crashverse.VFX.Tests.VfxPerfStatsTests" runstate="Runnable" seed="2004337883" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.006802" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1445" name="MissingGpuTiming_FallsBackToFrameTime" fullname="Crashverse.VFX.Tests.VfxPerfStatsTests.MissingGpuTiming_FallsBackToFrameTime" methodname="MissingGpuTiming_FallsBackToFrameTime" classname="Crashverse.VFX.Tests.VfxPerfStatsTests" runstate="Runnable" seed="264649360" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.005130" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1444" name="PassAndFailAgainstMidTargets" fullname="Crashverse.VFX.Tests.VfxPerfStatsTests.PassAndFailAgainstMidTargets" methodname="PassAndFailAgainstMidTargets" classname="Crashverse.VFX.Tests.VfxPerfStatsTests" runstate="Runnable" seed="1432251901" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003614" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1427" name="VfxRecipeTests" fullname="Crashverse.VFX.Tests.VfxRecipeTests" classname="Crashverse.VFX.Tests.VfxRecipeTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.021040" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1428" name="AllRecipesExistAndFitImpactLane" fullname="Crashverse.VFX.Tests.VfxRecipeTests.AllRecipesExistAndFitImpactLane" methodname="AllRecipesExistAndFitImpactLane" classname="Crashverse.VFX.Tests.VfxRecipeTests" runstate="Runnable" seed="1467987312" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.005809" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1430" name="DustColoursPerMaterial" fullname="Crashverse.VFX.Tests.VfxRecipeTests.DustColoursPerMaterial" methodname="DustColoursPerMaterial" classname="Crashverse.VFX.Tests.VfxRecipeTests" runstate="Runnable" seed="1393872767" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003394" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1431" name="ExplosionHasStepPuffsRingAndDebris" fullname="Crashverse.VFX.Tests.VfxRecipeTests.ExplosionHasStepPuffsRingAndDebris" methodname="ExplosionHasStepPuffsRingAndDebris" classname="Crashverse.VFX.Tests.VfxRecipeTests" runstate="Runnable" seed="200997642" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003284" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1429" name="MuzzleFlash_ArtColoursAndLowTierDropsSparks" fullname="Crashverse.VFX.Tests.VfxRecipeTests.MuzzleFlash_ArtColoursAndLowTierDropsSparks" methodname="MuzzleFlash_ArtColoursAndLowTierDropsSparks" classname="Crashverse.VFX.Tests.VfxRecipeTests" runstate="Runnable" seed="1149388424" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003213" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1432" name="ReduceMotion_FlashLayersCappedCountsUnchanged" fullname="Crashverse.VFX.Tests.VfxRecipeTests.ReduceMotion_FlashLayersCappedCountsUnchanged" methodname="ReduceMotion_FlashLayersCappedCountsUnchanged" classname="Crashverse.VFX.Tests.VfxRecipeTests" runstate="Runnable" seed="73430631" result="Passed" start-time="2026-10-24 06:13:27Z" end-time="2026-10-24 06:13:27Z" duration="0.003553" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

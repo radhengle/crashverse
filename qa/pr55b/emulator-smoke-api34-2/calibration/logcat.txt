@@ -1,0 +1,54 @@
+--------- beginning of main
+10-24 17:06:37.025  2579  2647 D EGL_emulation: app_time_stats: avg=1276.75ms min=1276.75ms max=1276.75ms count=1
+10-24 17:06:38.315  2579  2602 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 17:06:38.315  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.315  2579  2602 I Unity   : 
+10-24 17:06:38.315  2579  2602 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 17:06:38.315  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.315  2579  2602 I Unity   : 
+10-24 17:06:38.315  2579  2602 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 17:06:38.315  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.315  2579  2602 I Unity   : 
+10-24 17:06:38.316  2579  2602 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 17:06:38.316  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.316  2579  2602 I Unity   : 
+10-24 17:06:38.319  2579  2602 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 17:06:38.319  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.319  2579  2602 I Unity   : 
+10-24 17:06:38.319  2579  2602 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 17:06:38.319  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.319  2579  2602 I Unity   : 
+10-24 17:06:38.319  2579  2602 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 17:06:38.319  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.319  2579  2602 I Unity   : 
+10-24 17:06:38.320  2579  2602 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 17:06:38.320  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.320  2579  2602 I Unity   : 
+10-24 17:06:38.320  2579  2602 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 17:06:38.320  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.320  2579  2602 I Unity   : 
+10-24 17:06:38.320  2579  2602 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 17:06:38.320  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.320  2579  2602 I Unity   : 
+10-24 17:06:38.321  2579  2602 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 17:06:38.321  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.321  2579  2602 I Unity   : 
+10-24 17:06:38.321  2579  2602 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 17:06:38.321  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.321  2579  2602 I Unity   : 
+10-24 17:06:38.321  2579  2602 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 17:06:38.321  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.321  2579  2602 I Unity   : 
+10-24 17:06:38.321  2579  2602 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 17:06:38.321  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.321  2579  2602 I Unity   : 
+10-24 17:06:38.322  2579  2602 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+10-24 17:06:38.322  2579  2602 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:38.322  2579  2602 I Unity   : 
+10-24 17:06:38.370   410   498 D AudioFlinger: mixer(0x7a5111095930) throttle end: throttle time(2)
+--------- beginning of kernel
+10-24 17:06:38.589     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
+10-24 17:06:38.974  2579  2647 D EGL_emulation: app_time_stats: avg=444.26ms min=19.96ms max=868.56ms count=2
+10-24 17:06:40.481  2579  2647 D EGL_emulation: app_time_stats: avg=241.04ms min=59.42ms max=410.89ms count=3
+10-24 17:06:40.924     0     0 I logd    : logdr: UID=2000 GID=2000 PID=3237 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:06:41.029     0     0 I logd    : logdr: UID=2000 GID=2000 PID=3242 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

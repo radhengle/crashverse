@@ -1,0 +1,25 @@
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.50]     Crashverse.Server.Tests.PurgeOwnershipTests.Emu_DeletingB_KeepsAsFriendsDoc_DropsB [SKIP]
+  Skipped Crashverse.Server.Tests.PurgeOwnershipTests.Emu_DeletingB_KeepsAsFriendsDoc_DropsB [1 ms]
+[xUnit.net 00:00:00.71]     Crashverse.Server.Tests.PurgeOwnershipTests.Emu_KeepRunsTop100_ExcludesShadowAndHidden [SKIP]
+[xUnit.net 00:00:00.71]     Crashverse.Server.Tests.PurgeOwnershipTests.Emu_AuditRedaction_ByPidOnly_NotDisplayName [SKIP]
+  Skipped Crashverse.Server.Tests.PurgeOwnershipTests.Emu_KeepRunsTop100_ExcludesShadowAndHidden [1 ms]
+  Skipped Crashverse.Server.Tests.PurgeOwnershipTests.Emu_AuditRedaction_ByPidOnly_NotDisplayName [1 ms]
+[xUnit.net 00:00:00.88]     Crashverse.Server.Tests.FirestoreEmulatorTests.FirestoreLease_ExpiredIsTakenOver_LiveIsRespected [SKIP]
+[xUnit.net 00:00:00.88]     Crashverse.Server.Tests.FirestoreEmulatorTests.ServerRunsEndToEnd_OnFirestore [SKIP]
+[xUnit.net 00:00:00.88]     Crashverse.Server.Tests.FirestoreEmulatorTests.FirestoreStore_CrudUniquenessAppendOnlyAndLocks [SKIP]
+[xUnit.net 00:00:00.88]     Crashverse.Server.Tests.FirestoreEmulatorTests.N3_LeaseLost_WritesCannotCommit [SKIP]
+[xUnit.net 00:00:00.88]     Crashverse.Server.Tests.FirestoreEmulatorTests.ClientSdkAccess_IsDenied_ByRules [SKIP]
+[xUnit.net 00:00:00.88]     Crashverse.Server.Tests.FirestoreEmulatorTests.Purge_OnFirestore_LeavesNoPlayerRows [SKIP]
+[xUnit.net 00:00:00.88]     Crashverse.Server.Tests.FirestoreEmulatorTests.AccountPrivacyFlow_RunsOnFirestore [SKIP]
+  Skipped Crashverse.Server.Tests.FirestoreEmulatorTests.FirestoreLease_ExpiredIsTakenOver_LiveIsRespected [1 ms]
+  Skipped Crashverse.Server.Tests.FirestoreEmulatorTests.ServerRunsEndToEnd_OnFirestore [1 ms]
+  Skipped Crashverse.Server.Tests.FirestoreEmulatorTests.FirestoreStore_CrudUniquenessAppendOnlyAndLocks [1 ms]
+  Skipped Crashverse.Server.Tests.FirestoreEmulatorTests.N3_LeaseLost_WritesCannotCommit [1 ms]
+  Skipped Crashverse.Server.Tests.FirestoreEmulatorTests.ClientSdkAccess_IsDenied_ByRules [1 ms]
+  Skipped Crashverse.Server.Tests.FirestoreEmulatorTests.Purge_OnFirestore_LeavesNoPlayerRows [1 ms]
+  Skipped Crashverse.Server.Tests.FirestoreEmulatorTests.AccountPrivacyFlow_RunsOnFirestore [1 ms]
+
+Passed!  - Failed:     0, Passed:   196, Skipped:    10, Total:   206, Duration: 1 s - Crashverse.Server.Tests.dll (net8.0)

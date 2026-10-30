@@ -1,0 +1,5 @@
+120932353266	Emulator smoke API 36 x86_64 1080x2340	success
+120932353296	Emulator smoke API 34 x86_64 1080x2340	success
+120932353307	Emulator smoke API 34 x86_64 1080x2340	success
+120932353493	Emulator smoke API 34 x86_64 1080x2340	success
+120937262196	Publish prerelease (only after signing gate + emulator smoke on every API)	skipped

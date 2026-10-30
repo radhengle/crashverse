@@ -1,0 +1,769 @@
+--------- beginning of main
+10-24 15:05:27.542  5661  5768 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.auth.account.be.legacy.AuthCronService started execution. cause:5 exec_start_elapsed_seconds: 236 [CONTEXT service_id=218 ]
+10-24 15:05:27.547  5661  5768 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.auth.account.be.legacy.AuthCronService finished executing. cause:5 result: 3 elapsed_millis: 1398 uptime_millis: 1398 exec_start_elapsed_seconds: 236 [CONTEXT service_id=218 ]
+--------- beginning of system
+10-24 15:05:27.556   551   993 D OomAdjuster: Not killing cached processes
+10-24 15:05:27.594   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+10-24 15:05:27.601   417   515 D AudioFlinger: mixer(0x7ee664950930) throttle end: throttle time(5)
+10-24 15:05:27.612   930  3121 I Role    : com.google.android.gms not qualified for android.app.role.SYSTEM_CALL_STREAMING due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.telecom.CallStreamingService', mCategories='[]', mDataScheme='null', mDataType='null'}, mMinTargetSdkVersion=1, mFlags='0', mPermission='android.permission.BIND_CALL_STREAMING_SERVICE', mQueryFlags=0, mMetaData=[]}
+10-24 15:05:27.614   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_CALL_STREAMING
+10-24 15:05:27.615   930  3121 W Role    : Default holder doesn't have required signing certificate: com.google.android.apps.work.clouddpc:23962F4B43B9857638EA66F4D419518EAE282491ACDA4B94707BD59003C45E58
+10-24 15:05:27.705  4719  4719 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=922.0, y[0]=2162.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=243547, downTime=243547, deviceId=-1, source=0x1002, displayId=0, eventId=-835508470 }
+10-24 15:05:27.743  4719  4719 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=922.0, y[0]=2162.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=243547, downTime=243547, deviceId=-1, source=0x1002, displayId=0, eventId=-160426536 }
+10-24 15:05:27.756   356  6834 I resolv  : GetAddrInfoHandler::run: {102 786534 102 983142 10128 0}
+10-24 15:05:27.761  4177  5610 D TrafficStats: tagSocket(114) with statsTag=0x1809, statsUid=-1
+10-24 15:05:27.774   356   404 I netd    : tetherGetStats() -> {[]} <0.34ms>
+10-24 15:05:27.783  4177  5610 D TrafficStats: tagSocket(114) with statsTag=0x1809, statsUid=-1
+10-24 15:05:27.786  4177  5610 D TrafficStats: tagSocket(114) with statsTag=0x1809, statsUid=-1
+10-24 15:05:27.799  4177  5610 W SystemServiceRegistry: No service published for: persistent_data_block
+10-24 15:05:27.818   356   404 I netd    : bandwidthSetGlobalAlert(2097152) <0.11ms>
+10-24 15:05:27.834  4177  5610 W libc    : Access denied finding property "persist.adb.tls_server.enable"
+10-24 15:05:27.834  4177  5610 W libc    : Access denied finding property "service.adb.tls.port"
+10-24 15:05:27.832  4177  4177 W binder:4177_6: type=1400 audit(0.0:36): avc:  denied  { read } for  name="u:object_r:system_adbd_prop:s0" dev="tmpfs" ino=292 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:system_adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
+10-24 15:05:27.832  4177  4177 W binder:4177_6: type=1400 audit(0.0:37): avc:  denied  { read } for  name="u:object_r:adbd_prop:s0" dev="tmpfs" ino=60 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
+10-24 15:05:28.138   417   515 D AudioFlinger: mixer(0x7ee664950930) throttle end: throttle time(12)
+10-24 15:05:28.166   417   515 D AudioFlinger: mixer(0x7ee664950930) throttle end: throttle time(3)
+10-24 15:05:28.328   417   515 D AudioFlinger: mixer(0x7ee664950930) throttle end: throttle time(2)
+10-24 15:05:28.396  3652  3988 I NewModuleHelper: Received com.google.android.chimera.container.NEW_MODULE_TIMEOUT with retries remaining: 3
+10-24 15:05:28.470  6828  6828 I crash_dump64: obtaining output fd from tombstoned, type: kDebuggerdNativeBacktrace
+10-24 15:05:28.476   215   215 I tombstoned: received crash request for pid 5661
+10-24 15:05:28.476   215   215 I tombstoned: found intercept fd 512 for pid 5661 and type kDebuggerdNativeBacktrace
+10-24 15:05:28.479  6828  6828 I crash_dump64: performing dump of process 5661 (target tid = 5661)
+10-24 15:05:28.555   551   645 E RoleControllerManager: Error calling grantDefaultRoles()
+10-24 15:05:28.555   551   645 E RoleControllerManager: java.util.concurrent.TimeoutException
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture.triggerTimeout(AndroidFuture.java:289)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture$$ExternalSyntheticLambda1.run(Unknown Source:2)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.run(SystemServer.java:970)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.main(SystemServer.java:664)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:05:28.555   551   645 E RoleControllerManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:949)
+10-24 15:05:28.602   551   634 W SensorService: Dropping 1 cached events (984/984) to save 1/1 new events. 100 events previously dropped
+10-24 15:05:28.663   417   515 D AudioFlinger: mixer(0x7ee664950930) throttle end: throttle time(2)
+10-24 15:05:28.924  5661  5666 E libunwindstack: Timeout waiting for ucontext
+10-24 15:05:28.996   551   993 W ProcessStats: Tracking association SourceState{f75b580 com.google.android.gms.unstable/10128 BFgs #5797} whose proc state 4 is better than process ProcessState{9a7ee1c com.google.android.gms.persistent/10128 pkg=com.google.android.gms} proc state 9 (5918 skipped)
+10-24 15:05:29.104   551   568 I system_server: Background concurrent copying GC freed 1008440(32MB) AllocSpace objects, 35(956KB) LOS objects, 46% free, 27MB/51MB, paused 56us,68us total 2.607s
+10-24 15:05:29.229   417   515 D AudioFlinger: mixer(0x7ee664950930) throttle end: throttle time(11)
+10-24 15:05:29.237   551  6639 E system_server: libdebuggerd_client: timeout expired
+10-24 15:05:29.255  3652  3988 I NewModuleHelper: Sending com.google.android.chimera.IntentOperation.NEW_MODULE Container service: com.google.android.gms.chimera.GmsIntentOperationService Intents: 2,true,false
+10-24 15:05:29.264  3652  3988 I NewModuleHelper: Sending com.google.android.chimera.IntentOperation.NEW_MODULE Container service: com.google.android.gms.chimera.PersistentIntentOperationService Intents: 2,true,false
+10-24 15:05:29.267   551  6639 W ActivityManager: Native stack dump failed!
+10-24 15:05:29.267   551  6639 E ActivityManager: Aborting stack trace dump (current extra pid=5661); deadline exceeded.
+10-24 15:05:29.355   551  6639 E ActivityManager: ANR in com.crashverse.game
+10-24 15:05:29.355   551  6639 E ActivityManager: PID: 4296
+10-24 15:05:29.355   551  6639 E ActivityManager: Reason: App requested: Buffer processing hung up due to stuck fence. Indicates GPU hang
+10-24 15:05:29.355   551  6639 E ActivityManager: ErrorId: 72d325fc-7322-4367-9187-8ad1b9ad048f
+10-24 15:05:29.355   551  6639 E ActivityManager: Frozen: false
+10-24 15:05:29.355   551  6639 E ActivityManager: Load: 37.34 / 19.3 / 7.65
+10-24 15:05:29.355   551  6639 E ActivityManager: ----- Output from /proc/pressure/memory -----
+10-24 15:05:29.355   551  6639 E ActivityManager: some avg10=2.53 avg60=3.62 avg300=1.82 total=7684456
+10-24 15:05:29.355   551  6639 E ActivityManager: full avg10=0.07 avg60=0.18 avg300=0.12 total=979993
+10-24 15:05:29.355   551  6639 E ActivityManager: ----- End output from /proc/pressure/memory -----
+10-24 15:05:29.355   551  6639 E ActivityManager: ----- Output from /proc/pressure/cpu -----
+10-24 15:05:29.355   551  6639 E ActivityManager: some avg10=78.75 avg60=74.46 avg300=34.75 total=139157291
+10-24 15:05:29.355   551  6639 E ActivityManager: full avg10=0.00 avg60=0.00 avg300=0.00 total=0
+10-24 15:05:29.355   551  6639 E ActivityManager: ----- End output from /proc/pressure/cpu -----
+10-24 15:05:29.355   551  6639 E ActivityManager: ----- Output from /proc/pressure/io -----
+10-24 15:05:29.355   551  6639 E ActivityManager: some avg10=7.27 avg60=10.74 avg300=6.16 total=27111503
+10-24 15:05:29.355   551  6639 E ActivityManager: full avg10=0.01 avg60=0.31 avg300=0.58 total=4209998
+10-24 15:05:29.355   551  6639 E ActivityManager: ----- End output from /proc/pressure/io -----
+10-24 15:05:29.355   551  6639 E ActivityManager: 
+10-24 15:05:29.355   551  6639 E ActivityManager: CPU usage from 186ms to 21033ms later (2026-10-24 15:05:08.421 to 2026-10-24 15:05:29.268):
+10-24 15:05:29.355   551  6639 E ActivityManager:   41% 4296/com.crashverse.game: 5.2% user + 36% kernel / faults: 5243 minor 31 major
+10-24 15:05:29.355   551  6639 E ActivityManager:   23% 551/system_server: 12% user + 11% kernel / faults: 24658 minor 3 major
+10-24 15:05:29.355   551  6639 E ActivityManager:   20% 4177/com.google.android.gms.unstable: 3.9% user + 16% kernel / faults: 2852 minor
+10-24 15:05:29.355   551  6639 E ActivityManager:   9.7% 5661/com.google.android.gms.persistent: 4.8% user + 4.9% kernel / faults: 19700 minor 53 major
+10-24 15:05:29.355   551  6639 E ActivityManager:   4.2% 930/com.google.android.permissioncontroller: 2.1% user + 2% kernel / faults: 4703 minor
+10-24 15:05:29.355   551  6639 E ActivityManager:   4.1% 3652/com.google.android.gms: 2% user + 2.1% kernel / faults: 6231 minor 2 major
+10-24 15:05:29.355   551  6639 E ActivityManager:   3.5% 4719/com.google.android.apps.nexuslauncher: 2.2% user + 1.3% kernel / faults: 11524 minor 2 major
+10-24 15:05:29.355   551  6639 E ActivityManager:   2% 463/logcat: 0.1% user + 1.9% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:   2% 2175/android.process.media: 1.1% user + 0.9% kernel / faults: 1205 minor
+10-24 15:05:29.355   551  6639 E ActivityManager:   1.2% 4733/com.google.android.googlequicksearchbox:search: 0.7% user + 0.5% kernel / faults: 3919 minor
+10-24 15:05:29.355   551  6639 E ActivityManager: 94% TOTAL: 28% user + 61% kernel + 1.6% iowait + 2.7% softirq
+10-24 15:05:29.355   551  6639 E ActivityManager: CPU usage from 357ms to 2639ms later (2026-10-24 15:05:08.592 to 2026-10-24 15:05:10.873):
+10-24 15:05:29.355   551  6639 E ActivityManager:   31% 551/system_server: 15% user + 16% kernel / faults: 2676 minor
+10-24 15:05:29.355   551  6639 E ActivityManager:     6.6% 6641/AnrAuxiliaryTas: 1.8% user + 4.8% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     4.2% 1830/pool-50-thread-: 1.8% user + 2.4% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     2.4% 2660/binder:551_1A: 1.2% user + 1.2% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.8% 568/HeapTaskDaemon: 1.2% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.8% 586/android.bg: 0.6% user + 1.2% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.8% 645/oregroundThread: 1.2% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.8% 2086/binder:551_15: 1.2% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.8% 2723/binder:551_1D: 0.6% user + 1.2% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.2% 587/ActivityManager: 0.6% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.2% 843/binder:551_4: 0.6% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.2% 993/binder:551_6: 0.6% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.2% 2682/binder:551_1B: 1.2% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 569/ReferenceQueueD: 0.6% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 570/FinalizerDaemon: 0.6% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 572/binder:551_1: 0.6% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 576/android.fg: 0% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 607/PackageManagerB: 0% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 610/PackageManager: 0% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 636/eduling.default: 0% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 657/InputReader: 0.6% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 858/ConnectivitySer: 0.6% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 2052/binder:551_13: 0.6% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 2060/binder:551_14: 0% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.6% 2107/binder:551_17: 0% user + 0.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:    +0% 6687/Thread-74: 0% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:   35% 4296/com.crashverse.game: 15% user + 20% kernel / faults: 1133 minor
+10-24 15:05:29.355   551  6639 E ActivityManager:     20% 4301/Signal Catcher: 11% user + 8.6% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     9.5% 4773/UnityGfxDeviceW: 0% user + 9.5% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     3.4% 4789/UnityMain: 0% user + 3.4% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.8% 5143/UnityChoreograp: 0.8% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:   20% 4177/com.google.android.gms.unstable: 1.7% user + 18% kernel / faults: 512 minor
+10-24 15:05:29.355   551  6639 E ActivityManager:     19% 4616/binder:4177_4: 0.8% user + 18% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     0.8% 4207/binder:4177_1: 0.8% user + 0% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:   11% 5661/com.google.android.gms.persistent: 6.2% user + 4.9% kernel / faults: 409 minor
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.2% 5747/queued-work-loo: 0% user + 1.2% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.2% 5756/lowpool[0]: 0% user + 1.2% kernel
+10-24 15:05:29.355   551  6639 E ActivityManager:     1.2% 6180/highpool[7]: 0% user + 1.2% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:     1.2% 6637/lowpool[15]: 1.2% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   7% 4719/com.google.android.apps.nexuslauncher: 3.5% user + 3.5% kernel / faults: 1155 minor
+10-24 15:05:29.366   551  6639 E ActivityManager:     6.1% 4834/launcher-loader: 3.5% user + 2.6% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   5.2% 3652/com.google.android.gms: 2.9% user + 2.2% kernel / faults: 409 minor 1 major
+10-24 15:05:29.366   551  6639 E ActivityManager:     0.7% 3652/gle.android.gms: 0.7% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:     0.7% 4386/IN_START_ACTION: 0.7% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:     0.7% 6588/.BOOT_COMPLETED: 0.7% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   3% 463/logcat: 0% user + 3% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   3.1% 930/com.google.android.permissioncontroller: 1.8% user + 1.2% kernel / faults: 164 minor
+10-24 15:05:29.366   551  6639 E ActivityManager:     3.1% 3121/RoleControllerS: 1.8% user + 1.2% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:    +0% 6686/binder:930_A: 0% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   3.3% 5297/com.google.android.youtube: 1.1% user + 2.2% kernel / faults: 929 minor 2364 major
+10-24 15:05:29.366   551  6639 E ActivityManager:     1.1% 5339/Profile Saver: 0% user + 1.1% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:     1.1% 5381/BG Thread #3: 1.1% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:     1.1% 5407/Lite Thread #0: 1.1% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:    +0% 6688/binder:5297_6: 0% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.9% 50/kworker/1:1-virtio_vsock: 0% user + 0.9% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.9% 66/kworker/u8:2-ext4-rsv-conversion: 0% user + 0.9% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   1% 151/logd: 0.5% user + 0.5% kernel / faults: 10 minor
+10-24 15:05:29.366   551  6639 E ActivityManager:     1% 162/logd.control: 0.5% user + 0.5% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:     0.5% 4217/logd.reader.per: 0% user + 0.5% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   1% 342/kworker/0:3-events: 0% user + 1% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.4% 51/kworker/1:1H-kblockd: 0% user + 0.4% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.4% 79/kworker/2:1H-kblockd: 0% user + 0.4% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.5% 208/jbd2/dm-40-8: 0% user + 0.5% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.5% 378/android.hardware.sensors-service.multihal: 0% user + 0.5% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:     0.5% 391/android.hardwar: 0% user + 0.5% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.5% 406/android.hardware.graphics.composer3-service.ranchu: 0% user + 0.5% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.6% 438/adbd: 0.6% user + 0% kernel / faults: 5 minor
+10-24 15:05:29.366   551  6639 E ActivityManager:     0.6% 445/adbd: 0% user + 0.6% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.6% 927/com.android.systemui: 0.6% user + 0% kernel / faults: 55 minor
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.6% 1904/android.process.acore: 0.6% user + 0% kernel / faults: 11 minor
+10-24 15:05:29.366   551  6639 E ActivityManager:    +0% 6685/binder:1904_C: 0% user + 0% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager:   0.6% 3486/kworker/u8:5-ext4-rsv-conversion: 0% user + 0.6% kernel
+10-24 15:05:29.366   551  6639 E ActivityManager: 95% TOTAL: 37% user + 54% kernel + 0.6% iowait + 2.7% softirq
+10-24 15:05:29.385  5661  5666 W .gms.persistent: Suspending all threads took: 380.248ms
+10-24 15:05:29.386   215   215 I tombstoned: received crash request for pid 5661
+10-24 15:05:29.401   215   215 E tombstoned: Traces for pid 5661 written to: trace_01
+10-24 15:05:29.401  5661  5666 I .gms.persistent: Wrote stack traces to tombstoned
+10-24 15:05:29.496   551  6639 D ActivityManager: Completed ANR of com.crashverse.game in 21262ms, latency 157ms
+10-24 15:05:29.515   551   577 W ActivityTaskManager:   Force finishing activity com.crashverse.game/com.unity3d.player.UnityPlayerActivity
+10-24 15:05:29.524   927   969 V WindowManagerShell: Transition requested: android.os.BinderProxy@3c96a3b TransitionRequestInfo { type = CLOSE, triggerTask = null, remoteTransition = null, displayChange = null }
+10-24 15:05:29.533   356   404 I netd    : tetherGetStats() -> {[]} <0.41ms>
+10-24 15:05:29.534  5661  5971 W .gms.persistent: Long monitor contention with owner lowpool[2] (5768) at void bytb.v(byps, byps, int)(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2) waiters=0 in int bytb.l(bysm, aphn) for 1.970s
+10-24 15:05:29.543   551  6844 I DropBoxManagerService: add tag=data_app_anr isTagEnabled=true flags=0x6
+10-24 15:05:29.555   927   969 W Looper  : Slow dispatch took 33ms wmshell.main h=android.os.Handler c=com.android.wm.shell.transition.Transitions$TransitionPlayerImpl$$ExternalSyntheticLambda1@fc26558 m=0
+10-24 15:05:29.560   551   577 I ActivityManager: Killing 4296:com.crashverse.game/u0a192 (adj 0): user request after error
+10-24 15:05:29.568   356   404 I netd    : bandwidthSetGlobalAlert(2097152) <0.12ms>
+10-24 15:05:29.573   356   404 I netd    : bandwidthRemoveInterfaceQuota(eth0) <0.59ms>
+10-24 15:05:29.573   356   404 I netd    : bandwidthSetInterfaceQuota(eth0, 9223372036854775807) <0.38ms>
+10-24 15:05:29.673  3652  6316 E WorkSourceUtil: Could not find package: com.google.android.gms.westworld
+10-24 15:05:29.681   551   589 I libprocessgroup: Successfully killed process cgroup uid 10192 pid 4296 in 115ms
+10-24 15:05:29.718   927   969 W Looper  : Slow delivery took 163ms wmshell.main h=android.os.Handler c=null m=12
+10-24 15:05:29.808   357   357 I Zygote  : Process 4296 exited due to signal 9 (Killed)
+10-24 15:05:29.809  3652  6715 W gle.android.gms: Long monitor contention with owner [com.google.android.gms.chimera.container.intentoperation.GmsIntentOperationChimeraService-Executor] idle (6316) at void hjm.run()(:com.google.android.gms@231818047@23.18.18 (190800-535401451):3) waiters=0 in void hjm.run() for 9.660s
+--------- beginning of kernel
+10-24 15:05:30.012     0     0 I binder  : undelivered transaction 498716, process died.
+10-24 15:05:29.818   927   969 W Looper  : Drained
+10-24 15:05:29.830   551  2265 I ImeTracker: com.crashverse.game:3fb035ee: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_REMOVE_CLIENT
+10-24 15:05:29.831   551  1782 I WindowManager: WIN DEATH: Window{a6bb704 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity}
+10-24 15:05:29.836   551  1782 W InputManager-JNI: Input channel object 'a6bb704 com.crashverse.game/com.unity3d.player.UnityPlayerActivity (client)' was disposed without first being removed with the input manager!
+10-24 15:05:29.842   551  2265 I ImeTracker: com.crashverse.game:3fb035ee: onCancelled at PHASE_SERVER_SHOULD_HIDE
+10-24 15:05:29.888   551  1830 W AppSearchIcing: icing-search-engine.cc:283: Error: 5, Message: Document (com.google.android.googlequicksearchbox$OneSearchZeroStateGoogleSuggestions/default, zp) not found.
+10-24 15:05:29.921   927   927 D CentralSurfaces: Received new disable state: enaihbcrso.qingr (unchanged)
+10-24 15:05:29.931   551   580 W WindowManager: Failed to deliver inset control state change to w=Window{a6bb704 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity EXITING}
+10-24 15:05:29.931   551   580 W WindowManager: android.os.DeadObjectException
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.os.BinderProxy.transactNative(Native Method)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.view.IWindow$Stub$Proxy.insetsControlChanged(IWindow.java:479)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.WindowState.notifyInsetsControlChanged(WindowState.java:3802)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.InsetsStateController.lambda$notifyPendingInsetsControlChanged$3(InsetsStateController.java:343)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.InsetsStateController.$r8$lambda$8yykPRG1GyNq_J17QvL9d5xANMc(InsetsStateController.java:0)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.InsetsStateController$$ExternalSyntheticLambda2.run(R8$$SyntheticClass:0)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.WindowAnimator.executeAfterPrepareSurfacesRunnables(WindowAnimator.java:294)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.WindowAnimator.animate(WindowAnimator.java:202)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.WindowAnimator.lambda$new$1(WindowAnimator.java:99)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.WindowAnimator.$r8$lambda$aHNu1uhcqxihX5NZc4McDDQPAyw(WindowAnimator.java:0)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.wm.WindowAnimator$$ExternalSyntheticLambda1.doFrame(R8$$SyntheticClass:0)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1337)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1348)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.view.Choreographer.doCallbacks(Choreographer.java:952)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.view.Choreographer.doFrame(Choreographer.java:878)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1322)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:29.931   551   580 W WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:67)
+10-24 15:05:29.931   551   580 W WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+10-24 15:05:29.946   551   636 D ActivityManager: sync unfroze 5318 com.google.android.gm for 6
+10-24 15:05:29.951   417   515 D audioserver: FGS Logger Transaction failed
+10-24 15:05:29.951   417   515 D audioserver: -129
+10-24 15:05:29.969   417   515 D audioserver: FGS Logger Transaction failed
+10-24 15:05:29.969   417   515 D audioserver: -129
+10-24 15:05:30.006   551   577 D DisplayManagerService: Drop pending events for gone uid 10192
+10-24 15:05:30.034   551   577 W Looper  : Slow dispatch took 220ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=com.android.server.am.UidObserverController$$ExternalSyntheticLambda0@b4d1415 m=0
+10-24 15:05:30.035   551   577 W Looper  : Slow delivery took 210ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=null m=31
+10-24 15:05:30.045  4733  4733 W A       : Calling with an invalid UID, the interface will not work
+10-24 15:05:30.059   551   645 E RoleControllerManager: Error calling grantDefaultRoles()
+10-24 15:05:30.059   551   645 E RoleControllerManager: java.util.concurrent.TimeoutException
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture.triggerTimeout(AndroidFuture.java:289)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture$$ExternalSyntheticLambda1.run(Unknown Source:2)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.run(SystemServer.java:970)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.main(SystemServer.java:664)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:05:30.059   551   645 E RoleControllerManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:949)
+10-24 15:05:30.069  1137  1485 D BtGatt.ScanManager: uid 10128 isForeground true scanMode -1
+10-24 15:05:30.072  1137  1485 D BtGatt.ScanManager: uid 10128 isForeground true scanMode -1
+10-24 15:05:30.115  4719  5189 D OneSearchSuggestProvider: Created the binder channel successfully for end point service =com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService , mChannel=z1{delegate=s1{logId=1, target=directaddress:///AndroidComponentAddress%5BIntent%20%7B%20act=grpc.io.action.BIND%20cmp=com.google.android.googlequicksearchbox/com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService%20%7D%5D}} , mOneSearchConnection=X1.T@b969b85
+10-24 15:05:30.126  2175  6774 D DownloadManager: [5] Finished with status SUCCESS
+10-24 15:05:30.317   551   577 W Looper  : Drained
+10-24 15:05:30.340  4733  4733 I A       : Created gRPC endpoint to "search" for service class com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService
+10-24 15:05:30.354  4733  4992 W BlobLobber: Not processing download id 5, not a BlobLobber blob
+10-24 15:05:30.357  4733  4992 W BlobLobber: Notification for download id 5 which we didn't know or failed
+10-24 15:05:30.470   551  1782 W system_server: Long monitor contention with owner appscheduling.default (636) at void com.android.server.job.controllers.QuotaController$QcHandler.handleMessage(android.os.Message)(QuotaController.java:2797) waiters=0 in void com.android.server.job.JobServiceContext.doJobFinished(com.android.server.job.JobServiceContext$JobCallback, int, boolean) for 134ms
+10-24 15:05:30.490  4733  4871 I ModelDnldProcssHelpr: #handleDownloadComplete, downloadId=5
+10-24 15:05:30.496  4733  4871 E ModelDnldProcssHelpr: pending download info for pending_hotword_model_download_info is null
+10-24 15:05:30.497  4733  4871 E ModelDnldProcssHelpr: pending download info for pending_xgoogle_hotword_model_download_info is null
+10-24 15:05:30.517  4733  4938 W SearchServiceCore: Abort, client detached.
+10-24 15:05:30.517  4733  4938 W SearchServiceCore: Abort, client detached.
+10-24 15:05:30.750   551  2265 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-24 15:05:30.750   551  2265 D PackageManager: Clear ephemeral installer activity
+10-24 15:05:30.755   551  2265 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-24 15:05:30.755   551  2265 D PackageManager: Clear ephemeral installer activity
+10-24 15:05:30.756   551  2725 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-24 15:05:30.761   551  2725 D PackageManager: Clear ephemeral installer activity
+10-24 15:05:30.767   551  2726 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-24 15:05:30.769   551  2726 D PackageManager: Clear ephemeral installer activity
+10-24 15:05:30.780   551  2726 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-24 15:05:30.780   551  2726 D PackageManager: Clear ephemeral installer activity
+10-24 15:05:30.797   551  2726 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-24 15:05:30.797   551  2726 D PackageManager: Clear ephemeral installer activity
+10-24 15:05:30.804   551  2265 D PackageManager: Instant App installer not found with android.intent.action.INSTALL_INSTANT_APP_PACKAGE
+10-24 15:05:30.805   551  2265 D PackageManager: Clear ephemeral installer activity
+10-24 15:05:30.815  4733  4733 I BgTaskExecutorImpl: Starting NONEXCLUSIVE background task ZIP_DOWNLOAD_PROCESSOR.
+10-24 15:05:30.917   423   423 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+10-24 15:05:30.917  4719  4958 E OpenGLRenderer: Unable to match the desired swap behavior.
+10-24 15:05:30.939   551   579 V WindowManager: Unknown focus tokens, dropping reportFocusChanged
+10-24 15:05:31.040  4733  4893 I ZipDownloadProcessorTsk: cacheDestination: /data/user/0/com.google.android.googlequicksearchbox/app_g3_models/en-US.zip
+10-24 15:05:31.160   551   645 E RoleControllerManager: Error calling grantDefaultRoles()
+10-24 15:05:31.160   551   645 E RoleControllerManager: java.util.concurrent.TimeoutException
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture.triggerTimeout(AndroidFuture.java:289)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture$$ExternalSyntheticLambda1.run(Unknown Source:2)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.run(SystemServer.java:970)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.main(SystemServer.java:664)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:05:31.160   551   645 E RoleControllerManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:949)
+10-24 15:05:31.184  4719  6849 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[NexusLauncherActivity]#0) as ready
+10-24 15:05:31.184  4719  6849 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[NexusLauncherActivity]#1) as ready
+10-24 15:05:31.236   927  1008 D EGL_emulation: app_time_stats: avg=68633.82ms min=68633.82ms max=68633.82ms count=1
+10-24 15:05:31.236   927   927 I Choreographer: Skipped 45 frames!  The application may be doing too much work on its main thread.
+10-24 15:05:31.304  5661  5768 W .gms.persistent: Long monitor contention with owner netscheduler-queue-handler (5971) at void bytb.o(int)(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4) waiters=0 in void bytb.t(boolean, awbu) for 1.748s
+10-24 15:05:31.421   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+10-24 15:05:31.430   930  3121 I Role    : com.google.android.gms not qualified for android.app.role.SYSTEM_CALL_STREAMING due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.telecom.CallStreamingService', mCategories='[]', mDataScheme='null', mDataType='null'}, mMinTargetSdkVersion=1, mFlags='0', mPermission='android.permission.BIND_CALL_STREAMING_SERVICE', mQueryFlags=0, mMetaData=[]}
+10-24 15:05:31.457   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_CALL_STREAMING
+10-24 15:05:31.458   930  3121 W Role    : Default holder doesn't have required signing certificate: com.google.android.apps.work.clouddpc:23962F4B43B9857638EA66F4D419518EAE282491ACDA4B94707BD59003C45E58
+10-24 15:05:31.573  5661  5768 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.checkin.CheckinService started execution. cause:9 exec_start_elapsed_seconds: 246 [CONTEXT service_id=218 ]
+10-24 15:05:31.821   927  5400 I OpenGLRenderer: Davey! duration=1232ms; Flags=0, FrameTimelineVsyncId=41612, IntendedVsync=245853603261, Vsync=246020269921, InputEventId=0, HandleInputStart=246028557448, AnimationStart=246028558300, PerformTraversalsStart=246028558610, DrawStart=246029054707, FrameDeadline=245870269927, FrameInterval=246028462671, FrameStartTime=16666666, SyncQueued=246033534059, SyncStart=246033552684, IssueDrawCommandsStart=246033601285, SwapBuffers=246767953803, FrameCompleted=247086233922, DequeueBufferDuration=3236, QueueBufferDuration=154729, GpuCompleted=247086233922, SwapBuffersCompleted=247079692493, DisplayPresentTime=0, CommandSubmissionCompleted=246767953803, 
+10-24 15:05:31.821   551   610 I AppsFilter: interaction: PackageSetting{5c60a3e com.crashverse.game/10192} -> PackageSetting{6e2c3bc com.google.android.gm/10142} BLOCKED
+10-24 15:05:32.050   551   580 I Choreographer: Skipped 41 frames!  The application may be doing too much work on its main thread.
+10-24 15:05:32.051   551   579 W system_server: Long monitor contention with owner android.anim (580) at android.content.res.Configuration com.android.server.wm.ActivityTaskManagerService.getGlobalConfigurationForPid(int)(ActivityTaskManagerService.java:1133) waiters=0 in void com.android.server.wm.WindowManagerService$H.handleMessage(android.os.Message) for 710ms
+10-24 15:05:32.053   551   576 V WindowManager: Sent Transition #8 createdAt=10-24 15:05:29.515 via request=TransitionRequestInfo { type = CLOSE, triggerTask = null, remoteTransition = null, displayChange = null }
+10-24 15:05:32.053   551   576 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+10-24 15:05:32.053   551   576 V WindowManager:     info={id=8 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{6a945a1 Task{8fd9a2d #1 type=home}}} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xa4bdf4a sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{WCT{RemoteToken{32053ab Task{c4abf5b #8 type=standard A=10192:com.crashverse.game}}} m=CLOSE f=NONE leash=Surface(name=Task=8)/@0x1de5bbc sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{f72c579 token=android.os.Binder@276a240})/@0x5fc1ac1 sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0}]}
+10-24 15:05:32.058   551   610 W system_server: Long monitor contention with owner android.anim (580) at android.content.res.Configuration com.android.server.wm.ActivityTaskManagerService.getGlobalConfigurationForPid(int)(ActivityTaskManagerService.java:1133) waiters=1 in void com.android.server.wm.ActivityTaskManagerService$LocalService.cleanupDisabledPackageComponents(java.lang.String, java.util.Set, int, boolean) for 234ms
+10-24 15:05:32.063   927   969 V WindowManagerShell: onTransitionReady android.os.BinderProxy@3c96a3b: {id=8 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@1f5e87a} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xeb9036e sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@ae5582b} m=CLOSE f=NONE leash=Surface(name=Task=8)/@0x8e62a0f sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{f72c579 token=android.os.Binder@276a240})/@0x16aaa9c sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0}]}
+10-24 15:05:32.063   927   969 V WindowManagerShell: Playing animation for (#8)android.os.BinderProxy@3c96a3b@0
+10-24 15:05:32.063   927   969 V WindowManagerShell:  try handler com.android.wm.shell.transition.DefaultMixedHandler@1b2d2ca
+10-24 15:05:32.063   927   969 V WindowManagerShell:  try handler com.android.wm.shell.keyguard.KeyguardTransitionHandler@7997c3b
+10-24 15:05:32.063   927   969 V WindowManagerShell:  try handler com.android.wm.shell.activityembedding.ActivityEmbeddingController@d60f58
+10-24 15:05:32.063   927   969 V WindowManagerShell:  try handler com.android.wm.shell.recents.RecentsTransitionHandler@9e188b1
+10-24 15:05:32.063   927   969 V ShellRecents: RecentsTransitionHandler.startAnimation: no controller found
+10-24 15:05:32.063   927   969 V WindowManagerShell:  try handler com.android.wm.shell.pip.PipTransition@6935196
+10-24 15:05:32.063   927   969 V WindowManagerShell:  try handler com.android.wm.shell.splitscreen.StageCoordinator@f99a117
+10-24 15:05:32.063   927   969 V WindowManagerShell:  try handler com.android.wm.shell.transition.RemoteTransitionHandler@248c904
+10-24 15:05:32.063   927   969 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=8 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@1f5e87a} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xeb9036e sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@ae5582b} m=CLOSE f=NONE leash=Surface(name=Task=8)/@0x8e62a0f sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{f72c579 token=android.os.Binder@276a240})/@0x16aaa9c sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0}]}
+10-24 15:05:32.063   927   969 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@c5d488, appThread = android.app.IApplicationThread$Stub$Proxy@42d1e21, debugName = LauncherToDream }}
+10-24 15:05:32.064   927   969 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@4ea1246, appThread = android.app.IApplicationThread$Stub$Proxy@15f4c07, debugName = QuickstepLaunchHome }}
+10-24 15:05:32.064   927   969 D RemoteTransitionHandler: Found filterPair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@4ea1246, appThread = android.app.IApplicationThread$Stub$Proxy@15f4c07, debugName = QuickstepLaunchHome }}
+10-24 15:05:32.064   927   969 V WindowManagerShell:  Delegate animation for #8 to RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@4ea1246, appThread = android.app.IApplicationThread$Stub$Proxy@15f4c07, debugName = QuickstepLaunchHome }
+10-24 15:05:32.071   551  1787 W system_server: Long monitor contention with owner PackageManager (610) at int com.android.server.am.ActivityManagerService$LocalService.broadcastIntent(android.content.Intent, android.content.IIntentReceiver, java.lang.String[], boolean, int, int[], java.util.function.BiFunction, android.os.Bundle)(ActivityManagerService.java:18097) waiters=0 in android.content.Intent com.android.server.am.ActivityManagerService.registerReceiverWithFeature(android.app.IApplicationThread, java.lang.String, java.lang.String, java.lang.String, android.content.IIntentReceiver, android.content.IntentFilter, java.lang.String, int, int) for 229ms
+10-24 15:05:32.108  1137  1137 V MediaPlayerList: mPackageChangedBroadcastReceiver: action: android.intent.action.PACKAGE_CHANGED
+10-24 15:05:32.112  1137  1137 V MediaPlayerList: mPackageChangedBroadcastReceiver: action: android.intent.action.PACKAGE_CHANGED
+10-24 15:05:32.114   930  5643 I PermissionControllerServiceImpl: Updating user sensitive for uid 10142
+10-24 15:05:32.118   927   969 V WindowManagerShell:  animated by com.android.wm.shell.transition.RemoteTransitionHandler@248c904
+10-24 15:05:32.118   927   969 W Looper  : Slow dispatch took 55ms wmshell.main h=android.os.Handler c=com.android.wm.shell.transition.Transitions$TransitionPlayerImpl$$ExternalSyntheticLambda0@21c7b5d m=0
+10-24 15:05:32.118   927   969 W Looper  : Slow delivery took 60ms wmshell.main h=android.os.Handler c=com.android.wm.shell.bubbles.BubbleController$BubblesImpl$$ExternalSyntheticLambda5@aa50cd2 m=0
+10-24 15:05:32.131   927   927 D ControlsListingControllerImpl: ServiceConfig reloaded, count: 0
+10-24 15:05:32.131   927   927 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 15:05:32.138   551   645 I RoleService: Granting default roles...
+10-24 15:05:32.153  1165  1165 D CarrierSvcBindHelper: onPackageModified: com.google.android.gm
+10-24 15:05:32.153  1165  1165 D CarrierSvcBindHelper: No carrier app for: 0
+10-24 15:05:32.210  1165  1461 D ImsResolver: maybeAddedImsService, packageName: com.google.android.gm
+10-24 15:05:32.236   927   969 W Looper  : Drained
+10-24 15:05:32.329  5661  6559 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.checkin.CheckinService finished executing. cause:9 result: 3 elapsed_millis: 1309 uptime_millis: 1309 exec_start_elapsed_seconds: 246 [CONTEXT service_id=218 ]
+10-24 15:05:32.337   551   657 I InputReader: Reconfiguring input devices, changes=KEYBOARD_LAYOUTS
+10-24 15:05:32.346   927  5400 I OpenGLRenderer: Davey! duration=959ms; Flags=0, FrameTimelineVsyncId=41647, IntendedVsync=246320269909, Vsync=247070269879, InputEventId=0, HandleInputStart=247097969923, AnimationStart=247097970674, PerformTraversalsStart=247097970884, DrawStart=247098004928, FrameDeadline=247103603211, FrameInterval=247079874743, FrameStartTime=16666666, SyncQueued=247098038601, SyncStart=247730164822, IssueDrawCommandsStart=247730200188, SwapBuffers=247826946701, FrameCompleted=247912389885, DequeueBufferDuration=3336, QueueBufferDuration=142336, GpuCompleted=247912389885, SwapBuffersCompleted=247888116361, DisplayPresentTime=0, CommandSubmissionCompleted=247826946701, 
+10-24 15:05:32.372   927  1006 D StylusManager: Stylus InputDevice changed: 14 virtio_input_multi_touch_11
+10-24 15:05:32.373   927  1006 D StylusManager: Stylus InputDevice changed: 13 virtio_input_multi_touch_10
+10-24 15:05:32.373   927  1006 D StylusManager: Stylus InputDevice changed: 10 virtio_input_multi_touch_7
+10-24 15:05:32.373   927  1006 D StylusManager: Stylus InputDevice changed: 9 virtio_input_multi_touch_6
+10-24 15:05:32.374   927  1006 D StylusManager: Stylus InputDevice changed: 7 virtio_input_multi_touch_4
+10-24 15:05:32.374   927  1006 D StylusManager: Stylus InputDevice changed: 12 virtio_input_multi_touch_9
+10-24 15:05:32.374   927  1006 D StylusManager: Stylus InputDevice changed: 11 virtio_input_multi_touch_8
+10-24 15:05:32.374   927  1006 D StylusManager: Stylus InputDevice changed: 5 virtio_input_multi_touch_2
+10-24 15:05:32.386   927  1006 D StylusManager: Stylus InputDevice changed: 6 virtio_input_multi_touch_3
+10-24 15:05:32.387   927  1006 D StylusManager: Stylus InputDevice changed: 4 virtio_input_multi_touch_1
+10-24 15:05:32.389   215   215 W tombstoned: skipping tombstone file creation due to intercept
+10-24 15:05:32.401   927  1006 D StylusManager: Stylus InputDevice changed: 8 virtio_input_multi_touch_5
+10-24 15:05:32.489  5661  5768 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.ads.social.GcmSchedulerWakeupService started execution. cause:5 exec_start_elapsed_seconds: 248 [CONTEXT service_id=218 ]
+10-24 15:05:32.522  5661  5661 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.presencemanager.service.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+10-24 15:05:32.526  5661  5661 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.presencemanager.service.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+10-24 15:05:32.748     0     0 I init    : Untracked pid 6828 exited with status 0
+10-24 15:05:32.753     0     0 I init    : Untracked pid 6828 did not have an associated service entry and will not be reaped
+10-24 15:05:32.564   551   589 I ActivityManager: Process PhantomProcessRecord {4637026 6828:5661:crash_dump64/u0a128} died
+10-24 15:05:32.795     0     0 I init    : Untracked pid 6836 exited with status 0
+10-24 15:05:32.802     0     0 I init    : Untracked pid 6836 did not have an associated service entry and will not be reaped
+10-24 15:05:32.613   551   589 I ActivityManager: Process PhantomProcessRecord {bd8e5b9 6836:5661:com.google.android.gms.persistent/u0a128} died
+10-24 15:05:32.613   551  1106 D OomAdjuster: Not killing cached processes
+10-24 15:05:32.620   551  2265 W PermissionManagerService: Datasource AttributionSource { uid = 10142, packageName = com.google.android.gm, attributionTag = null, token = android.os.BinderProxy@b676fac, next = android.content.AttributionSourceState@a192475 } protecting data with platform defined runtime permission android.permission.READ_CONTACTS while not having android.permission.UPDATE_APP_OPS_STATS
+10-24 15:05:32.630   930   943 I ssioncontroller: Background young concurrent copying GC freed 106938(6032KB) AllocSpace objects, 0(0B) LOS objects, 49% free, 6132KB/11MB, paused 22us,11us total 116.416ms
+10-24 15:05:32.637  5661  5661 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.presencemanager.service.INTERNAL_IDENTITY dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+10-24 15:05:32.637  5661  5661 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.presencemanager.service.INTERNAL_IDENTITY dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+10-24 15:05:32.652   362  1694 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 4998272
+10-24 15:05:32.662  5661  6559 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.ads.social.GcmSchedulerWakeupService finished executing. cause:5 result: 1 elapsed_millis: 211 uptime_millis: 211 exec_start_elapsed_seconds: 248 [CONTEXT service_id=218 ]
+10-24 15:05:32.674  5661  6166 I Fitness : OnPackageChangedOperation got intent: Intent { act=android.intent.action.PACKAGE_CHANGED dat=package: flg=0x45000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) } [CONTEXT service_id=17 ]
+10-24 15:05:32.690  5661  6659 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_CHANGED [CONTEXT service_id=17 ]
+10-24 15:05:32.716   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+10-24 15:05:32.719   930  3121 I Role    : com.google.android.gms not qualified for android.app.role.SYSTEM_CALL_STREAMING due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.telecom.CallStreamingService', mCategories='[]', mDataScheme='null', mDataType='null'}, mMinTargetSdkVersion=1, mFlags='0', mPermission='android.permission.BIND_CALL_STREAMING_SERVICE', mQueryFlags=0, mMetaData=[]}
+10-24 15:05:32.719   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_CALL_STREAMING
+10-24 15:05:32.720   930  3121 W Role    : Default holder doesn't have required signing certificate: com.google.android.apps.work.clouddpc:23962F4B43B9857638EA66F4D419518EAE282491ACDA4B94707BD59003C45E58
+10-24 15:05:32.724   551   586 E system_server: No package ID 7f found for resource ID 0x7f08060c.
+10-24 15:05:32.724   551   586 E system_server: No package ID 7f found for resource ID 0x7f15043b.
+10-24 15:05:32.773  1791  1791 I AiAiEcho: AppFetcherImpl onPackageChanged com.google.android.gm.
+10-24 15:05:32.773   551   586 D AppWidgetServiceImpl: Provider info from ComponentInfo{com.google.android.gm/com.google.android.gm.widget.GmailWidgetProvider} won't be persisted.
+10-24 15:05:32.775  1791  3350 I AiAiEcho: AppIndexer Package:[com.google.android.gm] UserProfile:[0] Enabled:[true].
+10-24 15:05:32.775  1791  3350 I AiAiEcho: AppFetcherImplV2 updateApps package:[com.google.android.gm], userId:[0], reason:[package is updated.].
+10-24 15:05:32.804  3652  6596 I Checkin : [CheckinOperation] Starting Checkin: Default Task Reason : 1 Force : false UserId : 0 Start time : 248648
+10-24 15:05:32.806  3652  6596 I CheckinUtil: Classify the device as Phone. [CONTEXT service_id=130 ]
+10-24 15:05:32.834  4719  4719 D CompatibilityChangeReporter: Compat change id reported: 163400105; UID 10169; state: ENABLED
+10-24 15:05:32.834  4719  4719 W TextView: onProvideContentCaptureStructure(): calling assumeLayout()
+10-24 15:05:32.879  5661  5768 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.gass.chimera.SchedulePeriodicTasksService started execution. cause:5 exec_start_elapsed_seconds: 248 [CONTEXT service_id=218 ]
+10-24 15:05:32.910  5661  6559 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.gass.chimera.SchedulePeriodicTasksService finished executing. cause:5 result: 1 elapsed_millis: 93 uptime_millis: 93 exec_start_elapsed_seconds: 248 [CONTEXT service_id=218 ]
+10-24 15:05:32.944  4719  4719 I Choreographer: Skipped 179 frames!  The application may be doing too much work on its main thread.
+10-24 15:05:33.077  3652  6596 I Checkin : [AndroidCheckinProtoModule] Checkin reason type: 1 attempt count: 1.
+10-24 15:05:33.156   551  1106 D CompatibilityChangeReporter: Compat change id reported: 214016041; UID 10169; state: ENABLED
+10-24 15:05:33.156   551  1106 I ImeTracker: com.google.android.apps.nexuslauncher:54def031: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+10-24 15:05:33.161   551  1106 I ImeTracker: com.google.android.apps.nexuslauncher:54def031: onCancelled at PHASE_SERVER_SHOULD_HIDE
+10-24 15:05:33.174  4733  4733 D CompatibilityChangeReporter: Compat change id reported: 237531167; UID 10132; state: DISABLED
+10-24 15:05:33.174  4733  4733 W OpenGLRenderer: Unknown dataspace 0
+10-24 15:05:33.272  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():3227 
+10-24 15:05:33.278  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 0, unlocked = true
+10-24 15:05:33.278  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=com.google.android.apps.nexuslauncher fieldId=0 fieldName=null extras=null}, false)
+10-24 15:05:33.278  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
+10-24 15:05:33.285   551   580 W WindowManager: Failed to deliver inset control state change to w=Window{a6bb704 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity EXITING}
+10-24 15:05:33.285   551   580 W WindowManager: android.os.DeadObjectException
+10-24 15:05:33.285   551   580 W WindowManager: 	at android.os.BinderProxy.transactNative(Native Method)
+10-24 15:05:33.285   551   580 W WindowManager: 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+10-24 15:05:33.285   551   580 W WindowManager: 	at android.view.IWindow$Stub$Proxy.insetsControlChanged(IWindow.java:479)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.WindowState.notifyInsetsControlChanged(WindowState.java:3802)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.InsetsStateController.lambda$notifyPendingInsetsControlChanged$3(InsetsStateController.java:343)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.InsetsStateController.$r8$lambda$8yykPRG1GyNq_J17QvL9d5xANMc(InsetsStateController.java:0)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.InsetsStateController$$ExternalSyntheticLambda2.run(R8$$SyntheticClass:0)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.WindowAnimator.executeAfterPrepareSurfacesRunnables(WindowAnimator.java:294)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.RootWindowContainer.performSurfacePlacementNoTrace(RootWindowContainer.java:811)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.RootWindowContainer.performSurfacePlacement(RootWindowContainer.java:756)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.WindowSurfacePlacer.performSurfacePlacementLoop(WindowSurfacePlacer.java:177)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.WindowSurfacePlacer.performSurfacePlacement(WindowSurfacePlacer.java:126)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.WindowSurfacePlacer.performSurfacePlacement(WindowSurfacePlacer.java:115)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.wm.WindowSurfacePlacer$Traverser.run(WindowSurfacePlacer.java:57)
+10-24 15:05:33.285   551   580 W WindowManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:33.285   551   580 W WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:33.285   551   580 W WindowManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:33.285   551   580 W WindowManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:33.285   551   580 W WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:67)
+10-24 15:05:33.285   551   580 W WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+10-24 15:05:33.291  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+10-24 15:05:33.310  5661  5673 I .gms.persistent: Background young concurrent copying GC freed 182731(10012KB) AllocSpace objects, 0(0B) LOS objects, 40% free, 13MB/23MB, paused 53us,30us total 201.432ms
+10-24 15:05:33.326   927   969 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#8)android.os.BinderProxy@3c96a3b@0
+10-24 15:05:33.332   551   572 W WindowManager: Exception thrown during dispatchAppVisibility Window{a6bb704 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity EXITING}
+10-24 15:05:33.332   551   572 W WindowManager: android.os.DeadObjectException
+10-24 15:05:33.332   551   572 W WindowManager: 	at android.os.BinderProxy.transactNative(Native Method)
+10-24 15:05:33.332   551   572 W WindowManager: 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+10-24 15:05:33.332   551   572 W WindowManager: 	at android.view.IWindow$Stub$Proxy.dispatchAppVisibility(IWindow.java:546)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.WindowState.sendAppVisibilityToClients(WindowState.java:3271)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.WindowContainer.sendAppVisibilityToClients(WindowContainer.java:1221)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.WindowToken.setClientVisible(WindowToken.java:409)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.ActivityRecord.setClientVisible(ActivityRecord.java:6946)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.ActivityRecord.postApplyAnimation(ActivityRecord.java:5637)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.ActivityRecord.commitVisibility(ActivityRecord.java:5580)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.Transition.finishTransition(Transition.java:1151)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.TransitionController.finishTransition(TransitionController.java:868)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.WindowOrganizerController.finishTransition(WindowOrganizerController.java:396)
+10-24 15:05:33.332   551   572 W WindowManager: 	at android.window.IWindowOrganizerController$Stub.onTransact(IWindowOrganizerController.java:286)
+10-24 15:05:33.332   551   572 W WindowManager: 	at com.android.server.wm.WindowOrganizerController.onTransact(WindowOrganizerController.java:181)
+10-24 15:05:33.332   551   572 W WindowManager: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+10-24 15:05:33.332   551   572 W WindowManager: 	at android.os.Binder.execTransact(Binder.java:1275)
+10-24 15:05:33.332   551   572 I Process : Sending signal. PID: 4296 SIG: 9
+10-24 15:05:33.355   551   579 W ActivityManager: setHasOverlayUi called on unknown pid: 4296
+10-24 15:05:33.366   927   969 V WindowManagerShell: Track 0 became idle
+10-24 15:05:33.366   927   969 V WindowManagerShell: All active transition animations finished
+10-24 15:05:33.366   927   969 W Looper  : Slow dispatch took 41ms wmshell.main h=android.os.Handler c=com.android.wm.shell.transition.RemoteTransitionHandler$1$$ExternalSyntheticLambda0@c28aca0 m=0
+10-24 15:05:33.366   927   969 W Looper  : Slow delivery took 40ms wmshell.main h=android.os.Handler c=com.android.wm.shell.bubbles.BubbleController$BubblesImpl$$ExternalSyntheticLambda5@5aa7059 m=0
+10-24 15:05:33.366   927   969 W Looper  : Drained
+10-24 15:05:33.366   927  4654 D KeyguardService: setOccluded(false)
+10-24 15:05:33.366   927  4654 D KeyguardViewMediator: setOccluded(false)
+10-24 15:05:33.366   927   927 D KeyguardViewMediator: handleSetOccluded(false)
+10-24 15:05:33.436  4719  5157 I OpenGLRenderer: Davey! duration=2900ms; Flags=1, FrameTimelineVsyncId=41584, IntendedVsync=245703603267, Vsync=245703603267, InputEventId=0, HandleInputStart=245712955318, AnimationStart=245712955980, PerformTraversalsStart=245712956160, DrawStart=246763637224, FrameDeadline=245720269933, FrameInterval=245712950790, FrameStartTime=16666666, SyncQueued=246764955816, SyncStart=247061991036, IssueDrawCommandsStart=247591352842, SwapBuffers=248665271122, FrameCompleted=248900683238, DequeueBufferDuration=3086, QueueBufferDuration=156061, GpuCompleted=248900683238, SwapBuffersCompleted=248673922783, DisplayPresentTime=0, CommandSubmissionCompleted=248665271122, 
+10-24 15:05:33.439   551   576 V WindowManager: Finish Transition #8: created at 10-24 15:05:29.515 collect-started=0.042ms request-sent=0.079ms started=39.269ms ready=308.381ms sent=2533.764ms finished=3816.402ms
+10-24 15:05:33.492  1825  1825 I GsaVoiceInteractionSrv: Handling ACTION_START_HOTWORD
+10-24 15:05:33.492  1825  2217 I GsaVoiceInteractionSrv: disregardVoiceMatch: false
+10-24 15:05:33.510   551   645 E RoleControllerManager: Error calling grantDefaultRoles()
+10-24 15:05:33.510   551   645 E RoleControllerManager: java.util.concurrent.TimeoutException
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture.triggerTimeout(AndroidFuture.java:289)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture$$ExternalSyntheticLambda1.run(Unknown Source:2)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.run(SystemServer.java:970)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.main(SystemServer.java:664)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:05:33.510   551   645 E RoleControllerManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:949)
+10-24 15:05:33.515   551  1786 I RemoteProvisionSysSvc: getRegistration(android.hardware.security.keymint.IRemotelyProvisionedComponent/default)
+10-24 15:05:33.525   551   551 I RegistrationProxy: onServiceConnected: com.android.rkpdapp.service.RemoteProvisioningService
+10-24 15:05:33.538   551  1786 I RegistrationProxy: IGetRegistrationCallback.onSuccess
+10-24 15:05:33.735     0     0 I servicemanager: Found android.hardware.security.keymint.IRemotelyProvisionedComponent/default in device VINTF manifest.
+10-24 15:05:33.551  5661  5768 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.gass.chimera.SchedulePeriodicTasksService started execution. cause:5 exec_start_elapsed_seconds: 248 [CONTEXT service_id=218 ]
+10-24 15:05:33.570   551   572 I RemoteProvisionSysSvc: Fetching key 10128 for client 175962918
+10-24 15:05:33.570   551   572 I RegistrationProxy: getKeyAsync operation started with callback 18920295
+10-24 15:05:33.573  4939  5088 I RkpdRegistrationBinder: Key requested for : android.hardware.security.keymint.IRemotelyProvisionedComponent/default, clientUid: 1017, keyId: 10128, callback: 206824543
+10-24 15:05:33.576  4939  5088 I RkpdRegistrationBinder: Key successfully assigned to client
+10-24 15:05:33.624  4733  4733 I A       : Constructor was called
+10-24 15:05:33.633  4733  4733 I A       : No savedInstanceState.
+10-24 15:05:33.633  4733  4733 I A       : makeRequest: subscribing to new source
+10-24 15:05:33.635  4733  4733 I A       : OnCreate Was Called
+10-24 15:05:33.636  4733  4733 I A       : getMinusOnePromotion
+10-24 15:05:33.647   927  1008 D EGL_emulation: app_time_stats: avg=589.29ms min=6.61ms max=1604.75ms count=3
+10-24 15:05:33.663   551   551 I RemoteProvisionSysSvc: Successfully fetched key for client 175962918
+10-24 15:05:33.672   551   579 I DisplayDeviceRepository: Display device changed: DisplayDeviceInfo{"Built-in Screen": uniqueId="local:4619827259835644672", 1080 x 2340, modeId 1, renderFrameRate 60.000004, defaultModeId 1, supportedModes [{id=1, width=1080, height=2340, fps=60.000004, alternativeRefreshRates=[], supportedHdrTypes=[]}], colorMode 0, supportedColorModes [0], hdrCapabilities HdrCapabilities{mSupportedHdrTypes=[], mMaxLuminance=500.0, mMaxAverageLuminance=500.0, mMinLuminance=0.0}, allmSupported false, gameContentTypeSupported false, density 160, 160.0 x 160.0 dpi, appVsyncOff 1000000, presDeadline 16666666, touch INTERNAL, rotation 0, type INTERNAL, address {port=0, model=0x401cec6a7a2b7b}, deviceProductInfo DeviceProductInfo{name=EMU_display_0, manufacturerPnpId=GGL, productId=1, modelYear=null, manufactureDate=ManufactureDate{week=27, year=2006}, connectionToSinkType=0}, state ON, committedState ON, frameRateOverride , brightnessMinimum 0.0, brightnessMaximum 1.0, brightnessDefault 0.39763778, hdrSdrRatio NaN, FLAG_ALLOWED_TO_BE_DEFAULT_DISPLAY, FLAG_ROTATES_WITH_CONTENT, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS, FLAG_TRUSTED, installOrientation 0, displayShape DisplayShape{ spec=-1084927657 displayWidth=1080 displayHeight=2340 physicalPixelDisplaySizeRatio=1.0 rotation=0 offsetX=0 offsetY=0 scale=1.0}}
+10-24 15:05:33.683  4719  5157 I OpenGLRenderer: Davey! duration=3691ms; Flags=0, FrameTimelineVsyncId=41598, IntendedVsync=245803603263, Vsync=248786936477, InputEventId=0, HandleInputStart=248810968767, AnimationStart=248810969168, PerformTraversalsStart=248811016727, DrawStart=248811097908, FrameDeadline=248920269805, FrameInterval=248788313641, FrameStartTime=16666666, SyncQueued=248811190070, SyncStart=248811224324, IssueDrawCommandsStart=248811282152, SwapBuffers=249149408646, FrameCompleted=249495070022, DequeueBufferDuration=3136, QueueBufferDuration=139010, GpuCompleted=249495070022, SwapBuffersCompleted=249157310629, DisplayPresentTime=0, CommandSubmissionCompleted=249149408646, 
+10-24 15:05:33.684  4719  4719 W TextView: onProvideContentCaptureStructure(): calling assumeLayout()
+10-24 15:05:33.803   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+10-24 15:05:33.808   930  3121 I Role    : com.google.android.gms not qualified for android.app.role.SYSTEM_CALL_STREAMING due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.telecom.CallStreamingService', mCategories='[]', mDataScheme='null', mDataType='null'}, mMinTargetSdkVersion=1, mFlags='0', mPermission='android.permission.BIND_CALL_STREAMING_SERVICE', mQueryFlags=0, mMetaData=[]}
+10-24 15:05:33.809   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_CALL_STREAMING
+10-24 15:05:33.815   930  3121 W Role    : Default holder doesn't have required signing certificate: com.google.android.apps.work.clouddpc:23962F4B43B9857638EA66F4D419518EAE282491ACDA4B94707BD59003C45E58
+10-24 15:05:34.086     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6869 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 15:05:33.936  4733  4904 I A       : #enqueuePeriodicJob: running = false
+10-24 15:05:34.072  4733  4889 W A       : Couldn't calculate ClientInstanceId, no account name
+10-24 15:05:34.142  4733  4904 I A       : #scheduledRefresh: enable_prod_refresh is true but we have no valid refresh schedule
+10-24 15:05:34.196  4733  4902 I A       : loading data on surface MinusOne.
+10-24 15:05:34.201  5661  6106 W SQLiteConnectionPool: The connection pool for database '/data/user/0/com.google.android.gms/databases/phenotype.db' has been unable to grant a connection to thread 136 (lowpool[10]) with flags 0x2 for 30.002 seconds.
+10-24 15:05:34.201  5661  6106 W SQLiteConnectionPool: Connections: 0 active, 1 idle, 1 available.
+10-24 15:05:34.212  4733  4733 I Choreographer: Skipped 61 frames!  The application may be doing too much work on its main thread.
+10-24 15:05:34.227  4733  4733 I A       : onApplyWindowInsets: systemWindowInsets=Insets{left=0, top=63, right=0, bottom=0}
+10-24 15:05:34.227  4733  4733 I A       : onApplyWindowInsets: systemWindowInsets=Insets{left=0, top=63, right=0, bottom=0}
+10-24 15:05:34.230   551  1786 D CoreBackPreview: Window{d8c3ea2 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@1e1ef28, mPriority=0, mIsAnimationCallback=false}
+10-24 15:05:34.234  4177  5610 W libc    : Access denied finding property "persist.adb.tls_server.enable"
+10-24 15:05:34.234  4177  5610 W libc    : Access denied finding property "service.adb.tls.port"
+10-24 15:05:34.232  4177  4177 W binder:4177_6: type=1400 audit(0.0:38): avc:  denied  { read } for  name="u:object_r:system_adbd_prop:s0" dev="tmpfs" ino=292 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:system_adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
+10-24 15:05:34.303  5661  5756 W GoogleCertificatesImpl: Source stamp verification failed, package: com.google.android.webview status: CANNOT_VERIFY
+10-24 15:05:34.320   551  6866 W OpenGLRenderer: Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-24 15:05:34.321   551  6866 W OpenGLRenderer: Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-24 15:05:34.330   423   423 E BpTransactionCompletedListener: Failed to transact (-32)
+10-24 15:05:34.330   423   423 E BpTransactionCompletedListener: Failed to transact (-32)
+10-24 15:05:34.232  4177  4177 W binder:4177_6: type=1400 audit(0.0:39): avc:  denied  { read } for  name="u:object_r:adbd_prop:s0" dev="tmpfs" ino=60 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
+10-24 15:05:34.389  4719  5157 I OpenGLRenderer: Davey! duration=1353ms; Flags=0, FrameTimelineVsyncId=41766, IntendedVsync=248820269809, Vsync=249020269801, InputEventId=0, HandleInputStart=249041418392, AnimationStart=249041418973, PerformTraversalsStart=249132509323, DrawStart=249307034995, FrameDeadline=249520269781, FrameInterval=249035346256, FrameStartTime=16666666, SyncQueued=249322774500, SyncStart=249322843438, IssueDrawCommandsStart=249322932425, SwapBuffers=249492254348, FrameCompleted=250173994191, DequeueBufferDuration=11941765, QueueBufferDuration=167422, GpuCompleted=250173994191, SwapBuffersCompleted=249527566163, DisplayPresentTime=0, CommandSubmissionCompleted=249492254348, 
+10-24 15:05:34.424  6874  6874 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+10-24 15:05:34.424  6874  6874 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+10-24 15:05:34.457  3652  6318 D TrafficStats: tagSocket(88) with statsTag=0x30001803, statsUid=-1
+10-24 15:05:34.549   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+10-24 15:05:34.551   930  3121 I Role    : com.google.android.gms not qualified for android.app.role.SYSTEM_CALL_STREAMING due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.telecom.CallStreamingService', mCategories='[]', mDataScheme='null', mDataType='null'}, mMinTargetSdkVersion=1, mFlags='0', mPermission='android.permission.BIND_CALL_STREAMING_SERVICE', mQueryFlags=0, mMetaData=[]}
+10-24 15:05:34.551   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_CALL_STREAMING
+10-24 15:05:34.552   930  3121 W Role    : Default holder doesn't have required signing certificate: com.google.android.apps.work.clouddpc:23962F4B43B9857638EA66F4D419518EAE282491ACDA4B94707BD59003C45E58
+10-24 15:05:34.591  5661  5948 I FontLog : Received query Google Sans, URI content://com.google.android.gms.fonts [CONTEXT service_id=132 ]
+10-24 15:05:34.592  5661  5948 I FontLog : Query [Google Sans] resolved to {Google Sans, wdth 100.0, wght 400, ital 0.0, bestEffort false} [CONTEXT service_id=132 ]
+10-24 15:05:34.651  5661  5948 I FontLog : Font PFD returned from cache for {Google Sans, wdth 100.0, wght 400, ital 0.0, bestEffort false} [CONTEXT service_id=132 ]
+10-24 15:05:34.651  5661  5948 I FontLog : Fetch {Google Sans, wdth 100.0, wght 400, ital 0.0, bestEffort false} end status Status{statusCode=SUCCESS, resolution=null} [CONTEXT service_id=132 ]
+10-24 15:05:34.840  5661  5948 I FontLog : Pulling font file for id = 2, cache size = 2 [CONTEXT service_id=132 ]
+10-24 15:05:34.850  4719  4727 I s.nexuslauncher: Background young concurrent copying GC freed 67445(2421KB) AllocSpace objects, 15(1464KB) LOS objects, 32% free, 7455KB/10MB, paused 21us,15us total 1.213s
+10-24 15:05:34.853  4719  4729 W System  : A resource failed to call release. 
+10-24 15:05:34.923  4733  6863 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+10-24 15:05:34.924  4733  6863 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+10-24 15:05:34.938  4733  6863 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+10-24 15:05:34.978  4177  5610 W SystemServiceRegistry: No service published for: persistent_data_block
+10-24 15:05:34.988  4719  4958 D EGL_emulation: app_time_stats: avg=716.17ms min=358.16ms max=1305.13ms count=3
+10-24 15:05:34.992  4719  4719 I Choreographer: Skipped 69 frames!  The application may be doing too much work on its main thread.
+10-24 15:05:35.015   356  6877 I resolv  : GetAddrInfoHandler::run: {102 786534 102 983142 10128 0}
+10-24 15:05:35.016  4177  5610 D TrafficStats: tagSocket(114) with statsTag=0x1809, statsUid=-1
+10-24 15:05:35.029  4177  5610 D TrafficStats: tagSocket(114) with statsTag=0x1809, statsUid=-1
+10-24 15:05:35.030  4177  5610 D TrafficStats: tagSocket(114) with statsTag=0x1809, statsUid=-1
+10-24 15:05:35.128   927  4654 I OpenGLRenderer: Davey! duration=1408ms; Flags=0, FrameTimelineVsyncId=41861, IntendedVsync=249220269793, Vsync=249236936459, InputEventId=0, HandleInputStart=249245737524, AnimationStart=249245738125, PerformTraversalsStart=249287889789, DrawStart=249287917631, FrameDeadline=249536936447, FrameInterval=249245729919, FrameStartTime=16666666, SyncQueued=249288109479, SyncStart=249491460514, IssueDrawCommandsStart=249497126882, SwapBuffers=249613981516, FrameCompleted=250831835822, DequeueBufferDuration=3065, QueueBufferDuration=144970, GpuCompleted=250831835822, SwapBuffersCompleted=250230626010, DisplayPresentTime=0, CommandSubmissionCompleted=249613981516, 
+10-24 15:05:35.160   423   905 W ServiceManagerCppClient: Permission failure: android.permission.CAPTURE_BLACKOUT_CONTENT from uid=2000 pid=6874
+10-24 15:05:35.160   423   905 D PermissionCache: checking android.permission.CAPTURE_BLACKOUT_CONTENT for uid=2000 => denied (348 us)
+10-24 15:05:35.297  4733  6875 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[NexusLauncherActivity]#0) as ready
+10-24 15:05:35.297  4733  6875 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[NexusLauncherActivity]#1) as ready
+10-24 15:05:35.351  5661  5948 I FontLog : Received query Google Sans:500, URI content://com.google.android.gms.fonts [CONTEXT service_id=132 ]
+10-24 15:05:35.351  5661  5948 I FontLog : Query [Google Sans:500] resolved to {Google Sans, wdth 100.0, wght 500, ital 0.0, bestEffort false} [CONTEXT service_id=132 ]
+10-24 15:05:35.388  5661  5948 I FontLog : Font PFD returned from cache for {Google Sans, wdth 100.0, wght 500, ital 0.0, bestEffort false} [CONTEXT service_id=132 ]
+10-24 15:05:35.388  5661  5948 I FontLog : Fetch {Google Sans, wdth 100.0, wght 500, ital 0.0, bestEffort false} end status Status{statusCode=SUCCESS, resolution=null} [CONTEXT service_id=132 ]
+10-24 15:05:35.434  4733  4902 W A       : GetSuggestions failed
+10-24 15:05:35.434  4733  4902 W A       : com.google.common.util.concurrent.dv: Timed out: h@3cfc800[status=PENDING, setFuture=[h@e685839[status=PENDING, setFuture=[h@2651e7e[status=PENDING, info=[inputFuture=[h@7cc8fdf[status=PENDING, info=[inputFuture=[kotlinx.coroutines.d.b@b69642c[status=PENDING, delegate=[SettableFuture@e6d3ef5[status=PENDING]]]], function=[propagating=[com.google.android.apps.search.googleapp.search.suggest.sources.a.aj@430a48a]]]]], function=[propagating=[com.google.android.apps.search.googleapp.search.suggest.sources.a.be@7944afb]]]]]]]]
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: Unable to get suggestions from AGA
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: io.grpc.StatusRuntimeException: UNKNOWN
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: 	at S2.d.a(Unknown Source:68)
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: 	at io.grpc.internal.p.b(Unknown Source:32)
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: 	at io.grpc.internal.p.a(Unknown Source:14)
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: 	at io.grpc.internal.C.run(Unknown Source:6)
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: 	at io.grpc.internal.y2.run(Unknown Source:18)
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:05:35.444  4719  6865 E OneSearchSuggestProvider: 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:05:35.942  4719  5157 I OpenGLRenderer: Davey! duration=1815ms; Flags=0, FrameTimelineVsyncId=41838, IntendedVsync=249136936463, Vsync=249553603113, InputEventId=0, HandleInputStart=249564425027, AnimationStart=249564511588, PerformTraversalsStart=249565226112, DrawStart=249565270224, FrameDeadline=250203603087, FrameInterval=249561469769, FrameStartTime=16666666, SyncQueued=249565384348, SyncStart=249565419003, IssueDrawCommandsStart=249565496567, SwapBuffers=250232194228, FrameCompleted=250951986479, DequeueBufferDuration=5199, QueueBufferDuration=255507, GpuCompleted=250951986479, SwapBuffersCompleted=250832626287, DisplayPresentTime=0, CommandSubmissionCompleted=250232194228, 
+10-24 15:05:35.948  4733  6863 W OpenGLRenderer: Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-24 15:05:35.950  4719  4719 I Choreographer: Skipped 52 frames!  The application may be doing too much work on its main thread.
+10-24 15:05:35.953  4733  6863 W OpenGLRenderer: Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-24 15:05:35.971  5661  5948 I FontLog : Pulling font file for id = 3, cache size = 3 [CONTEXT service_id=132 ]
+10-24 15:05:36.170     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+10-24 15:05:35.975   154   154 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+10-24 15:05:35.975  6874  6876 I Gralloc4: mapper 4.x is not supported
+10-24 15:05:36.053  3652  3652 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.chimera.container.moduleinstall.ModuleInstallService.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.GmsApiService }
+10-24 15:05:36.138   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+10-24 15:05:36.141   930  3121 I Role    : com.google.android.gms not qualified for android.app.role.SYSTEM_CALL_STREAMING due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.telecom.CallStreamingService', mCategories='[]', mDataScheme='null', mDataType='null'}, mMinTargetSdkVersion=1, mFlags='0', mPermission='android.permission.BIND_CALL_STREAMING_SERVICE', mQueryFlags=0, mMetaData=[]}
+10-24 15:05:36.141   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_CALL_STREAMING
+10-24 15:05:36.142   930  3121 W Role    : Default holder doesn't have required signing certificate: com.google.android.apps.work.clouddpc:23962F4B43B9857638EA66F4D419518EAE282491ACDA4B94707BD59003C45E58
+10-24 15:05:36.272  4733  4889 W earchbox:search: Long monitor contention with owner BG Thread #0 (4871) at void java.lang.Runtime.loadLibrary0(java.lang.ClassLoader, java.lang.Class, java.lang.String)(Runtime.java:1084) waiters=0 in void java.lang.Runtime.loadLibrary0(java.lang.ClassLoader, java.lang.Class, java.lang.String) for 2.045s
+10-24 15:05:36.285   551   645 E RoleControllerManager: Error calling grantDefaultRoles()
+10-24 15:05:36.285   551   645 E RoleControllerManager: java.util.concurrent.TimeoutException
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture.triggerTimeout(AndroidFuture.java:289)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture$$ExternalSyntheticLambda1.run(Unknown Source:2)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.run(SystemServer.java:970)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.main(SystemServer.java:664)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:05:36.285   551   645 E RoleControllerManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:949)
+10-24 15:05:36.570     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
+10-24 15:05:36.386  4719  5157 I OpenGLRenderer: Davey! duration=1438ms; Flags=0, FrameTimelineVsyncId=41920, IntendedVsync=249586936445, Vsync=249620269777, InputEventId=0, HandleInputStart=249632268533, AnimationStart=249632268954, PerformTraversalsStart=249635626923, DrawStart=249635721309, FrameDeadline=250970269723, FrameInterval=249632262101, FrameStartTime=16666666, SyncQueued=249635903550, SyncStart=250832657706, IssueDrawCommandsStart=250832859353, SwapBuffers=251469092143, FrameCompleted=252222013411, DequeueBufferDuration=309196872, QueueBufferDuration=326419, GpuCompleted=252222013411, SwapBuffersCompleted=251785849370, DisplayPresentTime=0, CommandSubmissionCompleted=251469092143, 
+10-24 15:05:36.399  4719  4958 D EGL_emulation: app_time_stats: avg=550.39ms min=456.79ms max=644.00ms count=2
+10-24 15:05:36.399  4719  4719 D SearchTargetUtil:  query= size=0
+10-24 15:05:36.465   551  4340 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+10-24 15:05:36.578  5405  5417 W gs.intelligence: Cleared Reference was only reachable from finalizer (only reported once)
+10-24 15:05:37.013  4719  5157 I OpenGLRenderer: Davey! duration=979ms; Flags=0, FrameTimelineVsyncId=42048, IntendedVsync=250886936393, Vsync=250886936393, InputEventId=0, HandleInputStart=250897979711, AnimationStart=250897980463, PerformTraversalsStart=250897980654, DrawStart=250898033141, FrameDeadline=252253603005, FrameInterval=250897975444, FrameStartTime=16666666, SyncQueued=250898192739, SyncStart=251794148754, IssueDrawCommandsStart=251794229204, SwapBuffers=252220604568, FrameCompleted=252762830904, DequeueBufferDuration=5650, QueueBufferDuration=142636, GpuCompleted=252762830904, SwapBuffersCompleted=252242715798, DisplayPresentTime=0, CommandSubmissionCompleted=252220604568, 
+10-24 15:05:37.193  4733  4902 W NamedFutures: Timeout future task has been cancelled: 60000 milliseconds
+10-24 15:05:37.623   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+10-24 15:05:37.646   930  3121 I Role    : com.google.android.gms not qualified for android.app.role.SYSTEM_CALL_STREAMING due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.telecom.CallStreamingService', mCategories='[]', mDataScheme='null', mDataType='null'}, mMinTargetSdkVersion=1, mFlags='0', mPermission='android.permission.BIND_CALL_STREAMING_SERVICE', mQueryFlags=0, mMetaData=[]}
+10-24 15:05:37.646   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_CALL_STREAMING
+10-24 15:05:37.648   930  3121 W Role    : Default holder doesn't have required signing certificate: com.google.android.apps.work.clouddpc:23962F4B43B9857638EA66F4D419518EAE282491ACDA4B94707BD59003C45E58
+10-24 15:05:37.729  4719  4958 D EGL_emulation: app_time_stats: avg=619.07ms min=526.63ms max=711.51ms count=2
+10-24 15:05:37.825  4733  4871 W A       : Didn't find the session (MAIN_FEED, true)
+10-24 15:05:37.857  4719  5157 I OpenGLRenderer: Davey! duration=2251ms; Flags=0, FrameTimelineVsyncId=42055, IntendedVsync=250920269725, Vsync=251786936357, InputEventId=0, HandleInputStart=251841018895, AnimationStart=251841019656, PerformTraversalsStart=251841071282, DrawStart=251841120614, FrameDeadline=252786936317, FrameInterval=251794297478, FrameStartTime=16666666, SyncQueued=251841189293, SyncStart=252242759791, IssueDrawCommandsStart=252243625687, SwapBuffers=252731463002, FrameCompleted=253573104733, DequeueBufferDuration=92286447, QueueBufferDuration=7200793, GpuCompleted=253573104733, SwapBuffersCompleted=252866202423, DisplayPresentTime=0, CommandSubmissionCompleted=252731463002, 
+10-24 15:05:37.862  4733  4871 W A       : Didn't find the session (MAIN_FEED, false)
+10-24 15:05:37.886   551  1786 D OomAdjuster: Not killing cached processes
+10-24 15:05:38.159   551   577 W Looper  : Slow delivery took 260ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=com.android.server.am.UidObserverController$$ExternalSyntheticLambda0@b4d1415 m=0
+10-24 15:05:38.393  4719  5157 I OpenGLRenderer: Davey! duration=1411ms; Flags=0, FrameTimelineVsyncId=42187, IntendedVsync=252520269661, Vsync=252536936327, InputEventId=0, HandleInputStart=252542203176, AnimationStart=252542203857, PerformTraversalsStart=252590470679, DrawStart=252590779174, FrameDeadline=253603602951, FrameInterval=252542196985, FrameStartTime=16666666, SyncQueued=252591113288, SyncStart=252866582342, IssueDrawCommandsStart=252873002308, SwapBuffers=253566003445, FrameCompleted=254207116244, DequeueBufferDuration=128288827, QueueBufferDuration=6470049, GpuCompleted=254207116244, SwapBuffersCompleted=253705138963, DisplayPresentTime=0, CommandSubmissionCompleted=253566003445, 
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: EXCLUSIVE background task SEND_GSA_HOME_REQUEST was cancelled.
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: java.util.concurrent.CancellationException: Task was cancelled.
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.d.s(PG:3)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.d.get(PG:4)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.eb.a(PG:1)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.ci.r(PG:2)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.cb.run(PG:4)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.android.apps.gsa.shared.util.c.a.cf.b(PG:1)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.android.apps.gsa.shared.util.c.a.ci.run(PG:1)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.ae.run(PG:1)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.i.run(PG:2)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.p.run(PG:4)
+10-24 15:05:38.500  4733  5031 E BgTaskExecutorImpl: 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:05:38.543  4733  4750 I earchbox:search: JIT allocated 94KB for compiled code of java.lang.Object com.google.android.apps.gsa.binaries.velvet.app.amm.c()
+10-24 15:05:38.543  4733  4750 I earchbox:search: Compiler allocated 5206KB to compile java.lang.Object com.google.android.apps.gsa.binaries.velvet.app.amm.c()
+10-24 15:05:38.608   930   943 I ssioncontroller: Background young concurrent copying GC freed 109162(6075KB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6360KB/11MB, paused 95us,42us total 352.200ms
+10-24 15:05:38.651  4733  5034 W A       : Calling registerSyncInternal api failed.
+10-24 15:05:38.795  4733  4904 W A       : RenderableStreamDataSource#loadData - failed precheck
+10-24 15:05:38.795  4733  4904 W A       : DiscoverPrecheckException(precheckFailureReason=com.google.android.apps.search.googleapp.discover.w.a.c@3c638a8)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.w.bb.d(PG:16)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.w.ap.invokeSuspend(PG:5)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.w.ap.invoke(PG:1)
+10-24 15:05:38.795  4733  4904 W A       : 	at kotlinx.coroutines.f.b.a(PG:1)
+10-24 15:05:38.795  4733  4904 W A       : 	at kotlinx.coroutines.m.a(PG:11)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.v.bb.f(PG:2)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.v.bb.d(PG:15)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.v.an.invokeSuspend(PG:1)
+10-24 15:05:38.795  4733  4904 W A       : 	at i.c.b.a.a.resumeWith(PG:4)
+10-24 15:05:38.795  4733  4904 W A       : 	at kotlinx.coroutines.bk.run(PG:14)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.apps.tiktok.coroutines.f.run(PG:1)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.libraries.i.ae.run(PG:1)
+10-24 15:05:38.795  4733  4904 W A       : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:05:38.795  4733  4904 W A       : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.libraries.i.k.run(PG:2)
+10-24 15:05:38.795  4733  4904 W A       : 	at com.google.android.libraries.i.p.run(PG:4)
+10-24 15:05:38.795  4733  4904 W A       : 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:05:39.269     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+10-24 15:05:39.076   154   154 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+10-24 15:05:39.078  4733  6863 I Gralloc4: mapper 4.x is not supported
+10-24 15:05:39.100   551  2052 W ProcessStats: Tracking association SourceState{d9dfa0c com.google.android.gms/10128 Service #5968} whose proc state 8 is better than process ProcessState{9a7ee1c com.google.android.gms.persistent/10128 pkg=com.google.android.gms} proc state 9 (2459 skipped)
+10-24 15:05:39.102   551   577 W Looper  : Drained
+10-24 15:05:39.217  4733  6863 E OpenGLRenderer: Unable to match the desired swap behavior.
+10-24 15:05:39.394  4733  4733 I ContentCaptureHelper: Setting logging level to DEBUG
+10-24 15:05:39.394  4733  4733 D ContentCaptureManager: setFlushViewTreeAppearingEventDisabled(): setting to false
+10-24 15:05:39.446  4733  4733 I Choreographer: Skipped 313 frames!  The application may be doing too much work on its main thread.
+10-24 15:05:39.470   551   656 I InputDispatcher: d8c3ea2 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity (server) spent 3679ms processing FocusEvent(hasFocus=true)
+10-24 15:05:39.478   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+10-24 15:05:39.520   930  3121 I Role    : com.google.android.gms not qualified for android.app.role.SYSTEM_CALL_STREAMING due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.telecom.CallStreamingService', mCategories='[]', mDataScheme='null', mDataType='null'}, mMinTargetSdkVersion=1, mFlags='0', mPermission='android.permission.BIND_CALL_STREAMING_SERVICE', mQueryFlags=0, mMetaData=[]}
+10-24 15:05:39.520   930  3121 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_CALL_STREAMING
+10-24 15:05:39.525   930  3121 W Role    : Default holder doesn't have required signing certificate: com.google.android.apps.work.clouddpc:23962F4B43B9857638EA66F4D419518EAE282491ACDA4B94707BD59003C45E58
+10-24 15:05:39.528   356  6883 I resolv  : GetAddrInfoHandler::run: {102 786534 102 983142 10128 0}
+10-24 15:05:39.533   356  6884 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 15:05:39.533   356  6884 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x750e297a6510
+10-24 15:05:39.533   356  6884 I resolv  : doQuery: rcode=0, ancount=8, return value=264
+10-24 15:05:39.546   551   645 E RoleControllerManager: Error calling grantDefaultRoles()
+10-24 15:05:39.546   551   645 E RoleControllerManager: java.util.concurrent.TimeoutException
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture.triggerTimeout(AndroidFuture.java:289)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at android.permission.jarjar.com.android.internal.infra.AndroidFuture$$ExternalSyntheticLambda1.run(Unknown Source:2)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.run(SystemServer.java:970)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at com.android.server.SystemServer.main(SystemServer.java:664)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:05:39.546   551   645 E RoleControllerManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:949)
+10-24 15:05:39.558   356  6885 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 15:05:39.558   356  6885 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x750e497a3690
+10-24 15:05:39.558   356  6885 I resolv  : doQuery: rcode=0, ancount=8, return value=168
+10-24 15:05:39.564  4733  5653 I OpenGLRenderer: Davey! duration=6242ms; Flags=1, FrameTimelineVsyncId=41804, IntendedVsync=249036936467, Vsync=250053603093, InputEventId=0, HandleInputStart=250056253220, AnimationStart=250056253961, PerformTraversalsStart=250056254162, DrawStart=255073324454, FrameDeadline=249053603133, FrameInterval=250056120582, FrameStartTime=16666666, SyncQueued=255093086309, SyncStart=255128123380, IssueDrawCommandsStart=255141548171, SwapBuffers=255160454057, FrameCompleted=255314330996, DequeueBufferDuration=3696, QueueBufferDuration=453206, GpuCompleted=255314330996, SwapBuffersCompleted=255230448031, DisplayPresentTime=0, CommandSubmissionCompleted=255160454057, 
+10-24 15:05:39.568  3652  6596 D TrafficStats: tagSocket(130) with statsTag=0x30000408, statsUid=-1
+10-24 15:05:39.576  5661  6176 W SQLiteConnectionPool: The connection pool for database '/data/user/0/com.google.android.gms/databases/phenotype.db' has been unable to grant a connection to thread 161 (highpool[6]) with flags 0x2 for 60.084003 seconds.
+10-24 15:05:39.576  5661  6176 W SQLiteConnectionPool: Connections: 0 active, 1 idle, 1 available.
+10-24 15:05:39.603  3652  6596 W Conscrypt: Could not set socket write timeout: java.net.SocketException: Socket closed
+10-24 15:05:39.604  3652  6596 W Conscrypt: 	at com.google.android.gms.org.conscrypt.Platform.setSocketWriteTimeout(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 15:05:39.604  3652  6596 W Conscrypt: 	at com.google.android.gms.org.conscrypt.ConscryptFileDescriptorSocket.setSoWriteTimeout(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 15:05:39.633  3652  3689 I gle.android.gms: Background young concurrent copying GC freed 94617(6230KB) AllocSpace objects, 40(4500KB) LOS objects, 35% free, 16MB/25MB, paused 17.541ms,137us total 252.224ms
+10-24 15:05:39.697  4733  4733 I A       : StreamFragmentPeer#onPending
+10-24 15:05:39.698  4733  4733 I A       : #fetchAndStoreData() on surface MinusOne.
+10-24 15:05:39.705  4733  4733 E A       : Task 255 failed or timed out. Client 20817746991284772 disconnecting from SearchService!
+10-24 15:05:39.705  4733  4733 E A       : java.util.concurrent.CancellationException: Task was cancelled.
+10-24 15:05:39.705  4733  4733 E A       : 	at com.google.common.util.concurrent.d.s(PG:3)
+10-24 15:05:39.705  4733  4733 E A       : 	at com.google.common.util.concurrent.d.get(PG:4)
+10-24 15:05:39.705  4733  4733 E A       : 	at com.google.common.util.concurrent.eb.a(PG:1)
+10-24 15:05:39.705  4733  4733 E A       : 	at com.google.common.util.concurrent.ci.r(PG:2)
+10-24 15:05:39.705  4733  4733 E A       : 	at com.google.common.util.concurrent.cb.run(PG:4)
+10-24 15:05:39.705  4733  4733 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.ba.run(PG:1)
+10-24 15:05:39.705  4733  4733 E A       : 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:05:39.705  4733  4733 E A       : 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:05:39.705  4733  4733 E A       : 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:05:39.705  4733  4733 E A       : 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:05:39.705  4733  4733 E A       : 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+10-24 15:05:39.705  4733  4733 E A       : 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:05:39.705  4733  4733 E A       : 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:05:39.705  4733  4733 E A       : 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+10-24 15:05:39.717  4733  4938 W SearchServiceCore: Abort, client detached.
+10-24 15:05:39.717  4733  4938 W SearchServiceCore: Abort, client detached.
+10-24 15:05:39.734   551   624 W JobScheduler: Job didn't exist in JobStore: 1b5a898 #u0a132/-151 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
+10-24 15:05:39.800  4733  4938 W SearchServiceCore: Abort, client detached.
+10-24 15:05:39.833  5661  5768 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.gass.chimera.SchedulePeriodicTasksService finished executing. cause:5 result: 1 elapsed_millis: 6708 uptime_millis: 6708 exec_start_elapsed_seconds: 248 [CONTEXT service_id=218 ]
+10-24 15:05:39.875   551   644 D ActivityManager: freezing 2979 com.google.android.apps.wallpaper
+10-24 15:05:39.888  4733  4904 W A       : Fetch failed. Renderable stream failure reason: USER_SIGNED_OUT
+10-24 15:05:39.888  4733  4904 W A       : DiscoverPrecheckException(precheckFailureReason=com.google.android.apps.search.googleapp.discover.w.a.c@3c638a8)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.w.bb.d(PG:16)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.w.ax.invokeSuspend(PG:5)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.w.ax.invoke(PG:1)
+10-24 15:05:39.888  4733  4904 W A       : 	at kotlinx.coroutines.f.b.a(PG:1)
+10-24 15:05:39.888  4733  4904 W A       : 	at kotlinx.coroutines.m.a(PG:11)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.w.bb.c(PG:2)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.v.am.invokeSuspend(PG:5)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.v.am.invoke(PG:1)
+10-24 15:05:39.888  4733  4904 W A       : 	at kotlinx.coroutines.f.b.a(PG:1)
+10-24 15:05:39.888  4733  4904 W A       : 	at kotlinx.coroutines.m.a(PG:11)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.apps.search.googleapp.discover.v.al.invokeSuspend(PG:4)
+10-24 15:05:39.888  4733  4904 W A       : 	at i.c.b.a.a.resumeWith(PG:4)
+10-24 15:05:39.888  4733  4904 W A       : 	at kotlinx.coroutines.bk.run(PG:14)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.apps.tiktok.coroutines.f.run(PG:1)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.libraries.i.ae.run(PG:1)
+10-24 15:05:39.888  4733  4904 W A       : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:05:39.888  4733  4904 W A       : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.libraries.i.k.run(PG:2)
+10-24 15:05:39.888  4733  4904 W A       : 	at com.google.android.libraries.i.p.run(PG:4)
+10-24 15:05:39.888  4733  4904 W A       : 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:05:39.905   551   644 D ActivityManager: freezing 5841 com.google.android.healthconnect.controller
+10-24 15:05:39.913   551   644 D ActivityManager: freezing 5833 com.google.android.marvin.talkback
+10-24 15:05:39.914   551   644 D ActivityManager: freezing 1386 com.google.android.cellbroadcastreceiver
+10-24 15:05:39.915   551   644 D ActivityManager: freezing 4404 com.android.traceur
+10-24 15:05:39.919   551   644 D ActivityManager: freezing 5788 com.android.emergency
+10-24 15:05:39.979  4733  4904 I A       : GMSCore Auth returned 0 accounts.
+10-24 15:05:39.979  4733  4904 I A       : GoogleOwnersProvider returned 0 accounts.
+10-24 15:05:40.160  3652  6596 W Conscrypt: Could not set socket write timeout: java.net.SocketException: Socket closed
+10-24 15:05:40.160  3652  6596 W Conscrypt: 	at com.google.android.gms.org.conscrypt.Platform.setSocketWriteTimeout(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 15:05:40.160  3652  6596 W Conscrypt: 	at com.google.android.gms.org.conscrypt.ConscryptFileDescriptorSocket.setSoWriteTimeout(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 15:05:40.213   551   568 I system_server: Background young concurrent copying GC freed 777489(22MB) AllocSpace objects, 19(2024KB) LOS objects, 46% free, 27MB/51MB, paused 89us,65us total 783.402ms
+10-24 15:05:40.252   927  1008 D EGL_emulation: app_time_stats: avg=3302.16ms min=739.19ms max=5865.12ms count=2
+10-24 15:05:40.349   551  2682 I ImeTracker: com.google.android.apps.nexuslauncher:bf778fbb: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_SAME_WINDOW_FOCUSED_WITHOUT_EDITOR
+10-24 15:05:40.349   551  2682 I ImeTracker: com.google.android.apps.nexuslauncher:bf778fbb: onCancelled at PHASE_SERVER_SHOULD_HIDE
+10-24 15:05:40.391  4733  4733 I Choreographer: Skipped 33 frames!  The application may be doing too much work on its main thread.
+10-24 15:05:40.392  4733  4733 W A       : Failed RenderableStream callback; SubscriptionCallbacks#onError(Throwable) called.
+10-24 15:05:40.392  4733  4733 W A       : com.google.android.apps.search.googleapp.discover.v.i: DiscoverPrecheckException(precheckFailureReason=com.google.android.apps.search.googleapp.discover.w.a.c@3c638a8)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.v.ak.a(PG:1)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.v.am.invokeSuspend(PG:17)
+10-24 15:05:40.392  4733  4733 W A       : 	at i.c.b.a.a.resumeWith(PG:4)
+10-24 15:05:40.392  4733  4733 W A       : 	at kotlinx.coroutines.bk.run(PG:14)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.apps.tiktok.coroutines.f.run(PG:1)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.libraries.i.ae.run(PG:1)
+10-24 15:05:40.392  4733  4733 W A       : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:05:40.392  4733  4733 W A       : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.libraries.i.k.run(PG:2)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.libraries.i.p.run(PG:4)
+10-24 15:05:40.392  4733  4733 W A       : 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:05:40.392  4733  4733 W A       : Caused by: DiscoverPrecheckException(precheckFailureReason=com.google.android.apps.search.googleapp.discover.w.a.c@3c638a8)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.w.bb.d(PG:16)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.w.ax.invokeSuspend(PG:5)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.w.ax.invoke(PG:1)
+10-24 15:05:40.392  4733  4733 W A       : 	at kotlinx.coroutines.f.b.a(PG:1)
+10-24 15:05:40.392  4733  4733 W A       : 	at kotlinx.coroutines.m.a(PG:11)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.w.bb.c(PG:2)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.v.am.invokeSuspend(PG:5)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.v.am.invoke(PG:1)
+10-24 15:05:40.392  4733  4733 W A       : 	at kotlinx.coroutines.f.b.a(PG:1)
+10-24 15:05:40.392  4733  4733 W A       : 	at kotlinx.coroutines.m.a(PG:11)
+10-24 15:05:40.392  4733  4733 W A       : 	at com.google.android.apps.search.googleapp.discover.v.al.invokeSuspend(PG:4)
+10-24 15:05:40.392  4733  4733 W A       : 	... 9 more
+10-24 15:05:40.618     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6887 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 15:05:40.423  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():3227 
+10-24 15:05:40.432  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 0, unlocked = true
+10-24 15:05:40.432  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=com.google.android.apps.nexuslauncher fieldId=0 fieldName=null extras=null}, false)
+10-24 15:05:40.432  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
+10-24 15:05:40.437  1662  1662 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+10-24 15:05:40.438  3652  6596 I Checkin : [CheckinRequestProcessor] updateCheckinIdTokenFileFromResponse, Reading existing AID
+10-24 15:05:40.439  3652  6596 I Checkin : [CheckinRequestProcessor] Default Task : Checkin Succeeded: https://android.googleapis.com/checkin (fragment #1).

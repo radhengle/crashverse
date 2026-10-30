@@ -1,0 +1,166 @@
+{
+ "_shared_gain_db": -12.6,
+ "_worst_TP_any_combo": -1.3,
+ "titan_foundry_crater": {
+  "bpm": 128,
+  "samples_ogg": 2257920,
+  "dur_s": 51.2,
+  "loop_start": 0,
+  "loop_end": 2257920,
+  "LUFS_ogg": -17.3,
+  "TP_ogg": -2.8,
+  "boundary_jump_ogg": 0.0375,
+  "p99_step_ogg": 0.08631
+ },
+ "titan_cinder_bridge": {
+  "bpm": 128,
+  "samples_ogg": 2257920,
+  "dur_s": 51.2,
+  "loop_start": 0,
+  "loop_end": 2257920,
+  "LUFS_ogg": -17.3,
+  "TP_ogg": -3.0,
+  "boundary_jump_ogg": 0.03207,
+  "p99_step_ogg": 0.08479
+ },
+ "titan_ash_citadel": {
+  "bpm": 128,
+  "samples_ogg": 2257920,
+  "dur_s": 51.2,
+  "loop_start": 0,
+  "loop_end": 2257920,
+  "LUFS_ogg": -16.9,
+  "TP_ogg": -3.0,
+  "boundary_jump_ogg": 0.03001,
+  "p99_step_ogg": 0.08521
+ },
+ "titan_obsidian_forge": {
+  "bpm": 128,
+  "samples_ogg": 2257920,
+  "dur_s": 51.2,
+  "loop_start": 0,
+  "loop_end": 2257920,
+  "LUFS_ogg": -17.0,
+  "TP_ogg": -2.6,
+  "boundary_jump_ogg": 0.03062,
+  "p99_step_ogg": 0.08469
+ },
+ "titan_int25": {
+  "bpm": 128,
+  "samples_ogg": 2257920,
+  "dur_s": 51.2,
+  "loop_start": 0,
+  "loop_end": 2257920,
+  "LUFS_ogg": -37.9,
+  "TP_ogg": -18.4,
+  "boundary_jump_ogg": 0.00623,
+  "p99_step_ogg": 0.05765
+ },
+ "titan_int50": {
+  "bpm": 128,
+  "samples_ogg": 2257920,
+  "dur_s": 51.2,
+  "loop_start": 0,
+  "loop_end": 2257920,
+  "LUFS_ogg": -34.0,
+  "TP_ogg": -17.8,
+  "boundary_jump_ogg": 0.00131,
+  "p99_step_ogg": 0.05774
+ },
+ "titan_int75": {
+  "bpm": 128,
+  "samples_ogg": 2257920,
+  "dur_s": 51.2,
+  "loop_start": 0,
+  "loop_end": 2257920,
+  "LUFS_ogg": -27.0,
+  "TP_ogg": -11.4,
+  "boundary_jump_ogg": 0.03766,
+  "p99_step_ogg": 0.08153
+ },
+ "_mixes_decoded": {
+  "foundry_crater+int25": {
+   "LUFS": -17.2,
+   "TP": -2.8,
+   "boundary_jump_ogg": 0.04374,
+   "p99_step_ogg": 0.09261
+  },
+  "foundry_crater+int50": {
+   "LUFS": -17.1,
+   "TP": -2.8,
+   "boundary_jump_ogg": 0.03619,
+   "p99_step_ogg": 0.09261
+  },
+  "foundry_crater+int75": {
+   "LUFS": -16.4,
+   "TP": -1.3,
+   "boundary_jump_ogg": 0.0732,
+   "p99_step_ogg": 0.105
+  },
+  "cinder_bridge+int25": {
+   "LUFS": -17.2,
+   "TP": -3.0,
+   "boundary_jump_ogg": 0.03831,
+   "p99_step_ogg": 0.09127
+  },
+  "cinder_bridge+int50": {
+   "LUFS": -17.1,
+   "TP": -2.9,
+   "boundary_jump_ogg": 0.03076,
+   "p99_step_ogg": 0.09128
+  },
+  "cinder_bridge+int75": {
+   "LUFS": -16.4,
+   "TP": -1.4,
+   "boundary_jump_ogg": 0.06777,
+   "p99_step_ogg": 0.10373
+  },
+  "ash_citadel+int25": {
+   "LUFS": -16.9,
+   "TP": -3.0,
+   "boundary_jump_ogg": 0.03573,
+   "p99_step_ogg": 0.09156
+  },
+  "ash_citadel+int50": {
+   "LUFS": -16.8,
+   "TP": -2.9,
+   "boundary_jump_ogg": 0.03079,
+   "p99_step_ogg": 0.09162
+  },
+  "ash_citadel+int75": {
+   "LUFS": -16.1,
+   "TP": -1.4,
+   "boundary_jump_ogg": 0.06767,
+   "p99_step_ogg": 0.10394
+  },
+  "obsidian_forge+int25": {
+   "LUFS": -17.0,
+   "TP": -2.6,
+   "boundary_jump_ogg": 0.03685,
+   "p99_step_ogg": 0.0912
+  },
+  "obsidian_forge+int50": {
+   "LUFS": -16.9,
+   "TP": -2.7,
+   "boundary_jump_ogg": 0.02931,
+   "p99_step_ogg": 0.09118
+  },
+  "obsidian_forge+int75": {
+   "LUFS": -16.2,
+   "TP": -1.6,
+   "boundary_jump_ogg": 0.06632,
+   "p99_step_ogg": 0.10367
+  }
+ },
+ "titan_preview_obsidian_full": {
+  "dur_s": 60.0,
+  "LUFS_ogg": -17.0,
+  "TP_ogg": -1.8,
+  "steps_s": [
+   0,
+   15,
+   30,
+   45
+  ]
+ }
+}
