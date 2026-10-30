@@ -45,9 +45,11 @@ namespace Crashverse.Visuals
             if (blocks == null || blocks.Count == 0) return;
             _swap.Clear();
             bool castle = CastleStone(levelId);
+            ArchitectureDresser.Apply(blocks); // Phase 1.5: timber pieces become real architecture (cabins, roofs, decks on stilts)
             foreach (var b in blocks)
             {
                 if (b == null) continue;
+                if (ArchitectureDresser.Dressed.Contains(b)) continue;
                 if (b.visual != null)
                 {
                     foreach (var r in b.visual.GetComponentsInChildren<Renderer>(true))
@@ -57,10 +59,9 @@ namespace Crashverse.Visuals
                         r.sharedMaterials = ms;
                     }
                 }
-                else Retexture(b, castle);
+                else if (!ArchitectureDresser.Dressed.Contains(b)) Retexture(b, castle);
             }
             Decorate(blocks, castle);
-            if (levelId != null && levelId.EndsWith("l01")) LookoutHut(blocks);
         }
 
         /// <summary>L1 "Royal Watch Post": a pitched shingle roof over the top piece, a ladder up the cannon-facing side and rope
@@ -194,7 +195,7 @@ namespace Crashverse.Visuals
             {
                 if (b == null || b.role == "island" || b.isRoof || b.role == "roof") continue;
                 var s = b.transform.localScale;
-                if (s.y >= 1.1f && s.z >= 1.1f && s.x <= Mathf.Max(s.y, s.z)) walls.Add(b);
+                if (s.y >= 1.1f && !ArchitectureDresser.Dressed.Contains(b) && s.z >= 1.1f && s.x <= Mathf.Max(s.y, s.z)) walls.Add(b);
                 float y = b.transform.position.y + s.y * 0.5f;
                 if (y > topY && s.x >= 0.25f && s.z >= 0.25f) { topY = y; top = b; }
             }

@@ -25,6 +25,7 @@ namespace Crashverse.Visuals
             Shore(root.transform, cannonRoot, structureBase);
             Horizon(root.transform, palaceLevel);
             Yard(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
+            Harbour(root.transform, structureBase);
             return root;
         }
 
@@ -222,6 +223,48 @@ namespace Crashverse.Visuals
                 var sack = Obj("Sack", cart, Sphere(), KingdomMaterials.Make("Sack", "T_K_Sand", new Color(0.95f, 0.88f, 0.72f), 0f, 0.95f, Vector2.one));
                 sack.transform.localPosition = new Vector3(-0.45f + i * 0.45f, 1.0f, 0f); sack.transform.localScale = new Vector3(0.45f, 0.35f, 0.55f);
             }
+        }
+
+        /// <summary>Concept L01 harbour: two plank piers on posts running from the beach into the lagoon beside the target, with
+        /// moored rowboats and mooring bollards. Visual only.</summary>
+        static void Harbour(Transform root, Vector3 structure)
+        {
+            var h = new GameObject("Harbour").transform; h.SetParent(root, false);
+            foreach (float side in new[] { -1f, 1f })
+            {
+                float zEdge = side * Rz * 0.88f, len = 9f, x = structure.x + side * 3f;
+                var pier = new GameObject("Pier").transform; pier.SetParent(h, false); pier.localPosition = new Vector3(x, 0f, zEdge);
+                float dir = side;
+                for (int i = 0; i < 14; i++)
+                    Box("PierPlank", pier, new Vector3(((i % 3) - 1) * 0.03f, 0.22f, dir * (i * 0.65f + 0.3f)), new Vector3(2.2f, 0.09f, 0.58f), KingdomMaterials.Planks, 1.2f, Quaternion.Euler(0f, (i % 2 == 0 ? 0.8f : -0.6f), 0f));
+                foreach (float px in new[] { -1.05f, 1.05f })
+                    for (float z = 0.6f; z < len; z += 2.2f)
+                    {
+                        var post = Obj("PierPost", pier, Cylinder(), KingdomMaterials.Wood);
+                        post.transform.localPosition = new Vector3(px, -0.2f, dir * z); post.transform.localScale = new Vector3(0.24f, 0.75f, 0.24f);
+                    }
+                // rowboats moored alongside
+                Rowboat(h, new Vector3(x + 2.3f, WaterY + 0.05f, zEdge + dir * 5.5f), side > 0 ? 8f : 172f);
+                if (side > 0) Rowboat(h, new Vector3(x - 2.4f, WaterY + 0.05f, zEdge + dir * 7.5f), -14f);
+            }
+        }
+
+        static void Rowboat(Transform parent, Vector3 at, float yaw)
+        {
+            var b = new GameObject("Rowboat").transform; b.SetParent(parent, false); b.localPosition = at; b.localRotation = Quaternion.Euler(0f, yaw, 0f);
+            var hull = KingdomMaterials.Make("BoatHull", "T_K_Wood", new Color(0.95f, 0.9f, 0.85f), 0f, 0.7f, Vector2.one);
+            var trim = KingdomMaterials.Make("BoatTrim", null, new Color(0.08f, 0.2f, 0.45f), 0f, 0.5f, Vector2.one);
+            // tapered hull from stacked strakes: wide amidships, narrow at bow/stern
+            for (int i = 0; i < 9; i++)
+            {
+                float f = (i - 4) / 4f, w = Mathf.Lerp(1.25f, 0.35f, f * f), y = 0.12f + (1f - f * f) * 0.0f + Mathf.Abs(f) * 0.12f;
+                Box("Strake", b, new Vector3(f * 1.7f, y, 0f), new Vector3(0.42f, 0.32f, w), hull, 1f);
+                Box("Gunwale", b, new Vector3(f * 1.7f, y + 0.18f, w * 0.5f), new Vector3(0.42f, 0.06f, 0.06f), trim, 1f);
+                Box("Gunwale", b, new Vector3(f * 1.7f, y + 0.18f, -w * 0.5f), new Vector3(0.42f, 0.06f, 0.06f), trim, 1f);
+            }
+            Box("Thwart", b, new Vector3(0.3f, 0.3f, 0f), new Vector3(0.25f, 0.05f, 1.1f), KingdomMaterials.Planks, 1f);
+            var oar = Obj("Oar", b, Cylinder(), KingdomMaterials.Wood);
+            oar.transform.localPosition = new Vector3(-0.2f, 0.4f, 0.2f); oar.transform.localRotation = Quaternion.Euler(80f, 20f, 0f); oar.transform.localScale = new Vector3(0.06f, 1.1f, 0.06f);
         }
 
         static void Props(Transform parent, Vector3 at, int seed)
