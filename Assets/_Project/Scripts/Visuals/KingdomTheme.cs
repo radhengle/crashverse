@@ -45,7 +45,7 @@ namespace Crashverse.Visuals
             if (blocks == null || blocks.Count == 0) return;
             _swap.Clear();
             bool castle = CastleStone(levelId);
-            ArchitectureDresser.Apply(blocks); // Phase 1.5: timber pieces become real architecture (cabins, roofs, decks on stilts)
+            ArchitectureDresser.Apply(blocks, castle); // Phase 1.5: timber pieces become real architecture (cabins, roofs, decks on stilts)
             foreach (var b in blocks)
             {
                 if (b == null) continue;

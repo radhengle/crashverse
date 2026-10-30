@@ -65,7 +65,7 @@ namespace Crashverse.Visuals
         public static HashSet<DestructibleBlock> Dressed = new HashSet<DestructibleBlock>();
 
         /// <summary>Dresses every undressed timber piece. Returns how many pieces were rebuilt.</summary>
-        public static int Apply(IReadOnlyList<DestructibleBlock> blocks)
+        public static int Apply(IReadOnlyList<DestructibleBlock> blocks, bool castle = false)
         {
             Dressed.Clear(); int n = 0;
             if (blocks == null) return 0;
@@ -73,11 +73,19 @@ namespace Crashverse.Visuals
             {
                 if (b == null || b.role == "island") continue;
                 var kind = b.material != null ? b.material.kind : MaterialKind.Wood;
-                if (kind != MaterialKind.Wood) continue;
+                if (kind != MaterialKind.Wood && kind != MaterialKind.Brick) continue;
+                if (b.role == "shoulder" || b.role == "arm" || b.role == "shutter" || b.role == "core" || b.role == "armor" || b.role == "prop") continue; // boss anatomy + props keep their look
+                if (b.visual != null && !BoxKitOnly(b.visual)) continue; // authored building modules / props already are real architecture
                 var s = b.transform.localScale; var id = (b.blockId ?? "").ToLowerInvariant();
                 var bld = new Builder();
                 bool ok;
-                if (b.isRoof || b.role == "roof" || id.Contains("roof")) ok = Roof(bld, s);
+                if (kind == MaterialKind.Brick)
+                {
+                    if (b.isRoof || b.role == "roof") ok = Roof(bld, s);
+                    else if (b.role == "shoulder" || b.role == "arm" || b.role == "shutter" || b.role == "core" || b.role == "armor") ok = false; // boss anatomy keeps its look
+                    else ok = Masonry(bld, s, castle, b, blocks);
+                }
+                else if (b.isRoof || b.role == "roof" || id.Contains("roof")) ok = Roof(bld, s);
                 else if (id.Contains("flag")) ok = Flag(bld, s);
                 else if (id == "bell" || id.EndsWith("bell")) ok = Bell(bld, s);
                 else if (id.Contains("frame")) ok = Frame(bld, s);
@@ -93,6 +101,17 @@ namespace Crashverse.Visuals
                 Dressed.Add(b); n++;
             }
             return n;
+        }
+
+        /// <summary>True when a piece's visual is only the generic realistic box kit (Kit_RealWood_Block etc.), not authored modules.</summary>
+        static bool BoxKitOnly(GameObject visual)
+        {
+            foreach (var mf in visual.GetComponentsInChildren<MeshFilter>(true))
+            {
+                var n = mf.name; int i = n.IndexOf("_LOD"); if (i > 0) n = n.Substring(0, i);
+                if (System.Array.IndexOf(Crashverse.Meta.RealPieceRules.Pieces, n) < 0) return false;
+            }
+            return true;
         }
 
         static Transform Metric(DestructibleBlock b, string name)
@@ -221,6 +240,49 @@ namespace Crashverse.Visuals
                     float f = y / lh; var p = Vector3.Lerp(new Vector3(-hx - 0.7f, -hy - drop, lz), new Vector3(-hx - 0.05f, hy + 0.6f, lz), f);
                     k.Log(Timber, p + Vector3.back * 0.25f, p + Vector3.forward * 0.25f, 0.03f);
                 }
+            }
+            return true;
+        }
+
+        /// <summary>Masonry piece: brick (town) or castle-stone body, dressed stone quoins at the corners, a moulded cornice, framed
+        /// windows on the cannon face when large enough, and battlements on the topmost castle pieces.</summary>
+        static bool Masonry(Builder k, Vector3 s, bool castle, DestructibleBlock self, IReadOnlyList<DestructibleBlock> blocks)
+        {
+            var body = castle ? KingdomMaterials.Stone : KingdomMaterials.Brick;
+            var quoin = KingdomMaterials.Make("Quoin", "T_K_Stone", new Color(0.92f, 0.9f, 0.86f), 0f, 0.85f, Vector2.one);
+            float hx = s.x * 0.5f, hy = s.y * 0.5f, hz = s.z * 0.5f;
+            k.Box(body, Vector3.zero, s, castle ? 2.5f : 1.6f);
+            if (Mathf.Min(s.x, s.z) >= 0.6f && s.y >= 0.6f)
+            {
+                int rows = Mathf.Max(2, Mathf.RoundToInt(s.y / 0.32f)); float rh = s.y / rows;
+                foreach (float x in new[] { -hx, hx })
+                    foreach (float z in new[] { -hz, hz })
+                        for (int i = 0; i < rows; i++)
+                        {
+                            bool lng = i % 2 == 0; var c = new Vector3(x - Mathf.Sign(x) * 0.12f + Mathf.Sign(x) * 0.015f, -hy + rh * (i + 0.5f), z - Mathf.Sign(z) * (lng ? 0.2f : 0.12f) + Mathf.Sign(z) * 0.015f);
+                            k.Box(quoin, c, new Vector3(lng ? 0.27f : 0.27f, rh * 0.9f, lng ? 0.43f : 0.27f), 1f);
+                        }
+                k.Box(quoin, new Vector3(0f, hy - 0.06f, 0f), new Vector3(s.x + 0.08f, 0.12f, s.z + 0.08f), 1f); // cornice
+            }
+            if (s.z >= 1.4f && s.y >= 1.2f)
+            {
+                float w = Mathf.Min(0.6f, s.z * 0.28f), h = Mathf.Min(0.8f, s.y * 0.45f);
+                foreach (float z in s.z >= 2.6f ? new[] { -s.z * 0.25f, s.z * 0.25f } : new[] { 0f })
+                {
+                    var c = new Vector3(-hx, 0.05f, z);
+                    k.Box(Dark, c + Vector3.left * 0.01f, new Vector3(0.02f, h, w), 1f);
+                    k.Box(quoin, c + new Vector3(-0.05f, h * 0.5f + 0.06f, 0f), new Vector3(0.1f, 0.12f, w + 0.2f), 1f);
+                    k.Box(quoin, c + new Vector3(-0.07f, -h * 0.5f - 0.05f, 0f), new Vector3(0.14f, 0.1f, w + 0.26f), 1f);
+                    k.Box(Timber, c + new Vector3(-0.03f, 0f, 0f), new Vector3(0.04f, h, 0.05f), 1f);
+                    k.Box(Timber, c + new Vector3(-0.03f, 0f, 0f), new Vector3(0.04f, 0.05f, w), 1f);
+                }
+            }
+            // battlements on the topmost castle pieces (nothing resting on them)
+            if (castle && self.Dependents.Count == 0 && s.x >= 0.8f && s.z >= 0.8f)
+            {
+                int n = Mathf.Max(2, Mathf.RoundToInt(s.z / 0.6f)); float mw = s.z / (n * 2 - 1);
+                foreach (float x in new[] { -hx + 0.15f, hx - 0.15f })
+                    for (int i = 0; i < n; i++) k.Box(body, new Vector3(x, hy + 0.22f, -hz + mw * (i * 2 + 0.5f)), new Vector3(0.3f, 0.44f, mw), 1.5f);
             }
             return true;
         }
