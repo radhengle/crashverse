@@ -1,0 +1,842 @@
+{
+ "events": {
+  "sfx_boss_tw_intro": {
+   "var": 1,
+   "hit_ms": 2400,
+   "trigger": "BOSS_TIDE_INTRO",
+   "desc": "Tidewarden rises from the sea: rising rumble + water surge, lantern ignites at 2.4 s",
+   "loop": false
+  },
+  "sfx_boss_tw_arms_rise": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_INTRO +1.0 s (code; no ARMS_RISE anim event yet)",
+   "desc": "arms lift: hydraulic creak + water streaming off",
+   "loop": false
+  },
+  "sfx_boss_tw_arms_drop": {
+   "var": 1,
+   "hit_ms": 600,
+   "trigger": "BOSS_TIDE_ARMS_DROP (t=0); whoosh peaks into ARMS_LAND at 600 ms",
+   "desc": "arms fall: heavy air whoosh, cut at the 600 ms land",
+   "loop": false
+  },
+  "sfx_boss_tw_arms_land": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_ARMS_LAND (36 f / 600 ms)",
+   "desc": "arms crash onto sea-stack/water: sub thump + stone crack + big splash + debris",
+   "loop": false
+  },
+  "sfx_boss_tw_chest_open": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_CHEST_OPEN (42 f / 700 ms)",
+   "desc": "chest plates grind open with a pressure hiss",
+   "loop": false
+  },
+  "sfx_boss_tw_phase2": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_PHASE2 (75 f / 1250 ms)",
+   "desc": "core flare + transform: sub-boom, lantern bell, steam blast, roar",
+   "loop": false
+  },
+  "sfx_boss_tw_core_hum": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "starts at BOSS_TIDE_PHASE2, loops while Phase 2 active",
+   "desc": "lantern core hum loop (seamless 1.5 s)",
+   "loop": true
+  },
+  "sfx_boss_tw_shutter_tell": {
+   "var": 2,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_TELL: pulses at 0 and 417 ms (2.4 Hz)",
+   "desc": "warning hum x2 at 2.4 Hz: low pulse + muted glow ping",
+   "loop": false
+  },
+  "sfx_boss_tw_shutter_close": {
+   "var": 2,
+   "hit_ms": 300,
+   "trigger": "BOSS_TIDE_SHUTTER_CLOSE: scrape over the 300 ms tween, thunk at 300 ms",
+   "desc": "heavy brick shutter slam",
+   "loop": false
+  },
+  "sfx_boss_tw_shutter_open": {
+   "var": 2,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_SHUTTER_OPEN",
+   "desc": "shutter grinds open",
+   "loop": false
+  },
+  "sfx_boss_tw_joint_hit": {
+   "var": 3,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_JOINT_HIT",
+   "desc": "shoulder joint clang (not broken)",
+   "loop": false
+  },
+  "sfx_boss_tw_shoulder_break": {
+   "var": 2,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_JOINT_BREAK",
+   "desc": "joint breaks: big clank + metal snap + hydraulic hiss + debris",
+   "loop": false
+  },
+  "sfx_boss_tw_hit_armor": {
+   "var": 2,
+   "hit_ms": 0,
+   "trigger": "DestructibleBlock.Damaged role=armor",
+   "desc": "armour plank hit: wood knock + metal band",
+   "loop": false
+  },
+  "sfx_boss_tw_core_hit": {
+   "var": 3,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_CORE_HIT",
+   "desc": "core hit: low lantern bell + glass crack + pained roar",
+   "loop": false
+  },
+  "sfx_boss_tw_roar": {
+   "var": 3,
+   "hit_ms": 0,
+   "trigger": "with BOSS_TIDE_CORE_HIT / JOINT_BREAK (code picks), intro end",
+   "desc": "watery sea-creature roar: formant growl with bubbling throat",
+   "loop": false
+  },
+  "sfx_boss_tw_defeat": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TIDE_DEFEAT (clip 4.0 s)",
+   "desc": "defeat: core burst, dying roar pitch-drop, collapse impacts at 1.2/2.0/2.6 s, huge splash 2.8 s, debris + water tail",
+   "loop": false
+  },
+  "sfx_titan_ranked_start": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_RANKED_START (before intro)",
+   "desc": "ranked warning: double anvil tick + sub boom + rising ember",
+   "loop": false
+  },
+  "sfx_titan_intro": {
+   "var": 1,
+   "hit_ms": 1000,
+   "trigger": "BOSS_TITAN_INTRO",
+   "desc": "Titan reveal: lava rise + bubbles, anvil hits at 1.0/1.5/2.0 s (Titan never attacks)",
+   "loop": false
+  },
+  "sfx_titan_rule_heated": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_RULE (loop, variant by day rule)",
+   "desc": "\"steel is heated\" rule: sizzle + hot metal tick (loop 2.0 s)",
+   "loop": true
+  },
+  "sfx_titan_rule_magma": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_RULE (loop, variant by day rule)",
+   "desc": "magma rule: slow lava bubbling (loop 2.0 s)",
+   "loop": true
+  },
+  "sfx_titan_rule_steam": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_RULE (loop, variant by day rule)",
+   "desc": "steam vents rule: pulsing hiss (loop 2.0 s)",
+   "loop": true
+  },
+  "sfx_titan_hit": {
+   "var": 3,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_HIT",
+   "desc": "damage hit: anvil clang + ember spray",
+   "loop": false
+  },
+  "sfx_titan_stage_25": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_STAGE at 25%",
+   "desc": "stage break 25%: armour crack + stagger groan + debris (escalating)",
+   "loop": false
+  },
+  "sfx_titan_stage_50": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_STAGE at 50%",
+   "desc": "stage break 50%: armour crack + stagger groan + debris (escalating)",
+   "loop": false
+  },
+  "sfx_titan_stage_75": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_STAGE at 75%",
+   "desc": "stage break 75%: armour crack + stagger groan + debris (escalating)",
+   "loop": false
+  },
+  "sfx_titan_roar": {
+   "var": 3,
+   "hit_ms": 0,
+   "trigger": "with BOSS_TITAN_STAGE (layer) and BOSS_TITAN_INTRO end",
+   "desc": "molten roar: deep distorted growl + sizzle + lava bubbles (not an attack)",
+   "loop": false
+  },
+  "sfx_titan_kill": {
+   "var": 1,
+   "hit_ms": 0,
+   "trigger": "BOSS_TITAN_DEFEAT",
+   "desc": "meltdown: sub-boom, falling roar, iron collapse, steam hiss tail",
+   "loop": false
+  }
+ },
+ "files": {
+  "sfx_boss_tw_intro": {
+   "event": "sfx_boss_tw_intro",
+   "dur_s": 3.0,
+   "samples": 132300,
+   "LUFS": -20.5,
+   "TP": -1.5,
+   "hit_ms_spec": 2400,
+   "first50_ms": 2405,
+   "max_rise_ms": 2405,
+   "trigger": "BOSS_TIDE_INTRO",
+   "loop": false,
+   "hits_ms": [
+    2400
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_arms_rise": {
+   "event": "sfx_boss_tw_arms_rise",
+   "dur_s": 1.5,
+   "samples": 66150,
+   "LUFS": -15.8,
+   "TP": -2.1,
+   "hit_ms_spec": 0,
+   "first50_ms": 65,
+   "max_rise_ms": 70,
+   "trigger": "BOSS_TIDE_INTRO +1.0 s (code; no ARMS_RISE anim event yet)",
+   "loop": false,
+   "body_onset_ms": 20,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_arms_drop": {
+   "event": "sfx_boss_tw_arms_drop",
+   "dur_s": 0.62,
+   "samples": 27342,
+   "LUFS": -23.5,
+   "TP": -1.6,
+   "hit_ms_spec": 600,
+   "first50_ms": 455,
+   "max_rise_ms": 575,
+   "trigger": "BOSS_TIDE_ARMS_DROP (t=0); whoosh peaks into ARMS_LAND at 600 ms",
+   "loop": false,
+   "peak_ms": 576,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_arms_land": {
+   "event": "sfx_boss_tw_arms_land",
+   "dur_s": 1.6,
+   "samples": 70560,
+   "LUFS": -15.3,
+   "TP": -1.2,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 295,
+   "trigger": "BOSS_TIDE_ARMS_LAND (36 f / 600 ms)",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_chest_open": {
+   "event": "sfx_boss_tw_chest_open",
+   "dur_s": 1.0,
+   "samples": 44100,
+   "LUFS": -17.1,
+   "TP": -2.0,
+   "hit_ms_spec": 0,
+   "first50_ms": 850,
+   "max_rise_ms": 850,
+   "trigger": "BOSS_TIDE_CHEST_OPEN (42 f / 700 ms)",
+   "loop": false,
+   "body_onset_ms": 20,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_phase2": {
+   "event": "sfx_boss_tw_phase2",
+   "dur_s": 2.0,
+   "samples": 88200,
+   "LUFS": -18.4,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 95,
+   "trigger": "BOSS_TIDE_PHASE2 (75 f / 1250 ms)",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_core_hum": {
+   "event": "sfx_boss_tw_core_hum",
+   "dur_s": 1.5,
+   "samples": 66150,
+   "LUFS": -11.3,
+   "TP": -1.4,
+   "hit_ms_spec": 0,
+   "first50_ms": 5,
+   "max_rise_ms": 1200,
+   "trigger": "starts at BOSS_TIDE_PHASE2, loops while Phase 2 active",
+   "loop": true,
+   "sync_ok": true,
+   "seam_jump": 0.00413,
+   "p99_step": 0.01575
+  },
+  "sfx_boss_tw_shutter_tell_01": {
+   "event": "sfx_boss_tw_shutter_tell",
+   "dur_s": 0.9,
+   "samples": 39690,
+   "LUFS": -12.9,
+   "TP": -1.4,
+   "hit_ms_spec": 0,
+   "first50_ms": 90,
+   "max_rise_ms": 630,
+   "trigger": "BOSS_TIDE_TELL: pulses at 0 and 417 ms (2.4 Hz)",
+   "loop": false,
+   "body_onset_ms": 0,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_shutter_tell_02": {
+   "event": "sfx_boss_tw_shutter_tell",
+   "dur_s": 0.9,
+   "samples": 39690,
+   "LUFS": -11.5,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 120,
+   "max_rise_ms": 200,
+   "trigger": "BOSS_TIDE_TELL: pulses at 0 and 417 ms (2.4 Hz)",
+   "loop": false,
+   "body_onset_ms": 0,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_shutter_close_01": {
+   "event": "sfx_boss_tw_shutter_close",
+   "dur_s": 0.9,
+   "samples": 39690,
+   "LUFS": -17.7,
+   "TP": -1.3,
+   "hit_ms_spec": 300,
+   "first50_ms": 300,
+   "max_rise_ms": 300,
+   "trigger": "BOSS_TIDE_SHUTTER_CLOSE: scrape over the 300 ms tween, thunk at 300 ms",
+   "loop": false,
+   "hits_ms": [
+    300
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_shutter_close_02": {
+   "event": "sfx_boss_tw_shutter_close",
+   "dur_s": 0.9,
+   "samples": 39690,
+   "LUFS": -19.3,
+   "TP": -1.5,
+   "hit_ms_spec": 300,
+   "first50_ms": 300,
+   "max_rise_ms": 300,
+   "trigger": "BOSS_TIDE_SHUTTER_CLOSE: scrape over the 300 ms tween, thunk at 300 ms",
+   "loop": false,
+   "hits_ms": [
+    300
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_shutter_open_01": {
+   "event": "sfx_boss_tw_shutter_open",
+   "dur_s": 0.6,
+   "samples": 26460,
+   "LUFS": -18.9,
+   "TP": -1.8,
+   "hit_ms_spec": 0,
+   "first50_ms": 500,
+   "max_rise_ms": 500,
+   "trigger": "BOSS_TIDE_SHUTTER_OPEN",
+   "loop": false,
+   "body_onset_ms": 15,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_shutter_open_02": {
+   "event": "sfx_boss_tw_shutter_open",
+   "dur_s": 0.6,
+   "samples": 26460,
+   "LUFS": -18.3,
+   "TP": -1.7,
+   "hit_ms_spec": 0,
+   "first50_ms": 500,
+   "max_rise_ms": 500,
+   "trigger": "BOSS_TIDE_SHUTTER_OPEN",
+   "loop": false,
+   "body_onset_ms": 15,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_joint_hit_01": {
+   "event": "sfx_boss_tw_joint_hit",
+   "dur_s": 0.6,
+   "samples": 26460,
+   "LUFS": -18.5,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 20,
+   "trigger": "BOSS_TIDE_JOINT_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_joint_hit_02": {
+   "event": "sfx_boss_tw_joint_hit",
+   "dur_s": 0.6,
+   "samples": 26460,
+   "LUFS": -18.0,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 20,
+   "trigger": "BOSS_TIDE_JOINT_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_joint_hit_03": {
+   "event": "sfx_boss_tw_joint_hit",
+   "dur_s": 0.6,
+   "samples": 26460,
+   "LUFS": -19.6,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 5,
+   "max_rise_ms": 10,
+   "trigger": "BOSS_TIDE_JOINT_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_shoulder_break_01": {
+   "event": "sfx_boss_tw_shoulder_break",
+   "dur_s": 1.0,
+   "samples": 44100,
+   "LUFS": -13.4,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 120,
+   "trigger": "BOSS_TIDE_JOINT_BREAK",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_shoulder_break_02": {
+   "event": "sfx_boss_tw_shoulder_break",
+   "dur_s": 1.0,
+   "samples": 44100,
+   "LUFS": -12.6,
+   "TP": -1.2,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 65,
+   "trigger": "BOSS_TIDE_JOINT_BREAK",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_hit_armor_01": {
+   "event": "sfx_boss_tw_hit_armor",
+   "dur_s": 0.8,
+   "samples": 35280,
+   "LUFS": -20.5,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 20,
+   "trigger": "DestructibleBlock.Damaged role=armor",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_hit_armor_02": {
+   "event": "sfx_boss_tw_hit_armor",
+   "dur_s": 0.8,
+   "samples": 35280,
+   "LUFS": -21.0,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 40,
+   "trigger": "DestructibleBlock.Damaged role=armor",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_core_hit_01": {
+   "event": "sfx_boss_tw_core_hit",
+   "dur_s": 1.0,
+   "samples": 44100,
+   "LUFS": -17.1,
+   "TP": -1.7,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 130,
+   "trigger": "BOSS_TIDE_CORE_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_core_hit_02": {
+   "event": "sfx_boss_tw_core_hit",
+   "dur_s": 1.0,
+   "samples": 44100,
+   "LUFS": -16.6,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 15,
+   "trigger": "BOSS_TIDE_CORE_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_core_hit_03": {
+   "event": "sfx_boss_tw_core_hit",
+   "dur_s": 1.0,
+   "samples": 44100,
+   "LUFS": -17.3,
+   "TP": -1.3,
+   "hit_ms_spec": 0,
+   "first50_ms": 5,
+   "max_rise_ms": 115,
+   "trigger": "BOSS_TIDE_CORE_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_boss_tw_roar_01": {
+   "event": "sfx_boss_tw_roar",
+   "dur_s": 1.5,
+   "samples": 66150,
+   "LUFS": -14.1,
+   "TP": -1.2,
+   "hit_ms_spec": 0,
+   "first50_ms": 115,
+   "max_rise_ms": 1040,
+   "trigger": "with BOSS_TIDE_CORE_HIT / JOINT_BREAK (code picks), intro end",
+   "loop": false,
+   "body_onset_ms": 10,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_roar_02": {
+   "event": "sfx_boss_tw_roar",
+   "dur_s": 1.5,
+   "samples": 66150,
+   "LUFS": -15.4,
+   "TP": -1.4,
+   "hit_ms_spec": 0,
+   "first50_ms": 110,
+   "max_rise_ms": 690,
+   "trigger": "with BOSS_TIDE_CORE_HIT / JOINT_BREAK (code picks), intro end",
+   "loop": false,
+   "body_onset_ms": 10,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_roar_03": {
+   "event": "sfx_boss_tw_roar",
+   "dur_s": 1.5,
+   "samples": 66150,
+   "LUFS": -14.5,
+   "TP": -1.7,
+   "hit_ms_spec": 0,
+   "first50_ms": 40,
+   "max_rise_ms": 630,
+   "trigger": "with BOSS_TIDE_CORE_HIT / JOINT_BREAK (code picks), intro end",
+   "loop": false,
+   "body_onset_ms": 15,
+   "sync_ok": true
+  },
+  "sfx_boss_tw_defeat": {
+   "event": "sfx_boss_tw_defeat",
+   "dur_s": 4.0,
+   "samples": 176400,
+   "LUFS": -15.0,
+   "TP": -1.3,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 280,
+   "trigger": "BOSS_TIDE_DEFEAT (clip 4.0 s)",
+   "loop": false,
+   "hits_ms": [
+    0,
+    1200,
+    2000,
+    2600
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_ranked_start": {
+   "event": "sfx_titan_ranked_start",
+   "dur_s": 1.0,
+   "samples": 44100,
+   "LUFS": -19.1,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 110,
+   "trigger": "BOSS_TITAN_RANKED_START (before intro)",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_intro": {
+   "event": "sfx_titan_intro",
+   "dur_s": 2.5,
+   "samples": 110250,
+   "LUFS": -12.5,
+   "TP": -1.4,
+   "hit_ms_spec": 1000,
+   "first50_ms": 1000,
+   "max_rise_ms": 2005,
+   "trigger": "BOSS_TITAN_INTRO",
+   "loop": false,
+   "hits_ms": [
+    1000,
+    1500,
+    2000
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_rule_heated": {
+   "event": "sfx_titan_rule_heated",
+   "dur_s": 2.0,
+   "samples": 88200,
+   "LUFS": -17.4,
+   "TP": -1.7,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 430,
+   "trigger": "BOSS_TITAN_RULE (loop, variant by day rule)",
+   "loop": true,
+   "sync_ok": true,
+   "seam_jump": 0.12348,
+   "p99_step": 0.21636
+  },
+  "sfx_titan_rule_magma": {
+   "event": "sfx_titan_rule_magma",
+   "dur_s": 2.0,
+   "samples": 88200,
+   "LUFS": -16.7,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 90,
+   "max_rise_ms": 195,
+   "trigger": "BOSS_TITAN_RULE (loop, variant by day rule)",
+   "loop": true,
+   "sync_ok": true,
+   "seam_jump": 0.00015,
+   "p99_step": 0.0167
+  },
+  "sfx_titan_rule_steam": {
+   "event": "sfx_titan_rule_steam",
+   "dur_s": 2.0,
+   "samples": 88200,
+   "LUFS": -14.1,
+   "TP": -1.2,
+   "hit_ms_spec": 0,
+   "first50_ms": 5,
+   "max_rise_ms": 600,
+   "trigger": "BOSS_TITAN_RULE (loop, variant by day rule)",
+   "loop": true,
+   "sync_ok": true,
+   "seam_jump": 0.11397,
+   "p99_step": 0.26304
+  },
+  "sfx_titan_hit_01": {
+   "event": "sfx_titan_hit",
+   "dur_s": 0.7,
+   "samples": 30869,
+   "LUFS": -21.3,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 135,
+   "trigger": "BOSS_TITAN_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_hit_02": {
+   "event": "sfx_titan_hit",
+   "dur_s": 0.7,
+   "samples": 30869,
+   "LUFS": -22.4,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 15,
+   "trigger": "BOSS_TITAN_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_hit_03": {
+   "event": "sfx_titan_hit",
+   "dur_s": 0.7,
+   "samples": 30869,
+   "LUFS": -17.8,
+   "TP": -1.4,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 85,
+   "trigger": "BOSS_TITAN_HIT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_stage_25": {
+   "event": "sfx_titan_stage_25",
+   "dur_s": 1.2,
+   "samples": 52920,
+   "LUFS": -17.2,
+   "TP": -1.2,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 220,
+   "trigger": "BOSS_TITAN_STAGE at 25%",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_stage_50": {
+   "event": "sfx_titan_stage_50",
+   "dur_s": 1.4,
+   "samples": 61739,
+   "LUFS": -15.0,
+   "TP": -1.2,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 135,
+   "trigger": "BOSS_TITAN_STAGE at 50%",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_stage_75": {
+   "event": "sfx_titan_stage_75",
+   "dur_s": 1.6,
+   "samples": 70560,
+   "LUFS": -13.7,
+   "TP": -1.0,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 445,
+   "trigger": "BOSS_TITAN_STAGE at 75%",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  },
+  "sfx_titan_roar_01": {
+   "event": "sfx_titan_roar",
+   "dur_s": 1.7,
+   "samples": 74970,
+   "LUFS": -13.2,
+   "TP": -1.4,
+   "hit_ms_spec": 0,
+   "first50_ms": 95,
+   "max_rise_ms": 595,
+   "trigger": "with BOSS_TITAN_STAGE (layer) and BOSS_TITAN_INTRO end",
+   "loop": false,
+   "body_onset_ms": 15,
+   "sync_ok": true
+  },
+  "sfx_titan_roar_02": {
+   "event": "sfx_titan_roar",
+   "dur_s": 1.7,
+   "samples": 74970,
+   "LUFS": -12.9,
+   "TP": -1.5,
+   "hit_ms_spec": 0,
+   "first50_ms": 70,
+   "max_rise_ms": 100,
+   "trigger": "with BOSS_TITAN_STAGE (layer) and BOSS_TITAN_INTRO end",
+   "loop": false,
+   "body_onset_ms": 15,
+   "sync_ok": true
+  },
+  "sfx_titan_roar_03": {
+   "event": "sfx_titan_roar",
+   "dur_s": 1.7,
+   "samples": 74970,
+   "LUFS": -13.8,
+   "TP": -1.7,
+   "hit_ms_spec": 0,
+   "first50_ms": 70,
+   "max_rise_ms": 350,
+   "trigger": "with BOSS_TITAN_STAGE (layer) and BOSS_TITAN_INTRO end",
+   "loop": false,
+   "body_onset_ms": 15,
+   "sync_ok": true
+  },
+  "sfx_titan_kill": {
+   "event": "sfx_titan_kill",
+   "dur_s": 2.5,
+   "samples": 110250,
+   "LUFS": -11.6,
+   "TP": -1.4,
+   "hit_ms_spec": 0,
+   "first50_ms": 0,
+   "max_rise_ms": 180,
+   "trigger": "BOSS_TITAN_DEFEAT",
+   "loop": false,
+   "hits_ms": [
+    0
+   ],
+   "sync_ok": true
+  }
+ }
+}

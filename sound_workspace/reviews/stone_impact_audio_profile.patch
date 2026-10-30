@@ -1,0 +1,17 @@
+--- a/Assets/_Project/Scripts/Physics/ImpactFeel.cs	2026-10-16 17:21:05.429888495 +0000
++++ b/Assets/_Project/Scripts/Physics/ImpactFeel.cs	2026-10-16 17:21:05.449888495 +0000
+@@ -63,10 +63,11 @@
+         {
+             new MaterialAudio { material = MaterialType.Wood,  mediumMinImpulse = 30f, heavyMinImpulse = 120f, pitchOffsetSemitones = 0f, hardness = 1, voiceCapLow = 4, voiceCapMid = 8, voiceCapHigh = 10, bank = "SFX/Destruction/Wood",  collapseSfx = "sfx_wood_collapse" },
+             new MaterialAudio { material = MaterialType.Brick, mediumMinImpulse = 40f, heavyMinImpulse = 150f, pitchOffsetSemitones = 0f, hardness = 3, voiceCapLow = 4, voiceCapMid = 8, voiceCapHigh = 10, bank = "SFX/Destruction/Brick", collapseSfx = "sfx_brick_collapse" },
+-            new MaterialAudio { material = MaterialType.Steel, mediumMinImpulse = 60f, heavyMinImpulse = 200f, pitchOffsetSemitones = 0f, hardness = 4, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8,  bank = "SFX/Destruction/Steel", collapseSfx = "sfx_steel_collapse" },
++            new MaterialAudio { material = MaterialType.Steel, mediumMinImpulse = 60f, heavyMinImpulse = 200f, pitchOffsetSemitones = 0f, hardness = 5, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8,  bank = "SFX/Destruction/Steel", collapseSfx = "sfx_steel_collapse" },
+             new MaterialAudio { material = MaterialType.Glass, mediumMinImpulse = 15f, heavyMinImpulse = 80f,  pitchOffsetSemitones = 3f, hardness = 2, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8,  bank = "SFX/Destruction/Glass", collapseSfx = "sfx_glass_collapse" },
+-            // Stone: PLACEHOLDER defaults (heavier/lower than brick) until Sound Manager tunes them and adds the bank.
+-            new MaterialAudio { material = MaterialType.Stone, mediumMinImpulse = 50f, heavyMinImpulse = 180f, pitchOffsetSemitones = -2f, hardness = 3, voiceCapLow = 4, voiceCapMid = 8, voiceCapHigh = 10, bank = "SFX/Destruction/Stone", collapseSfx = "sfx_stone_collapse" },
++            // Stone: tuned by Sound Manager 2026-10-16 (bank: sfx_stone_{impact,crack,break}_{s,m,l}_0{1..3}, sfx_stone_collapse_{s,m,l}_0{1,2}, sfx_stone_debris_0{1..4}).
++            // Heavier/lower than brick; hardness between brick (3) and steel (now 5) so steel > stone > brick in mixed pairs.
++            new MaterialAudio { material = MaterialType.Stone, mediumMinImpulse = 50f, heavyMinImpulse = 180f, pitchOffsetSemitones = -2f, hardness = 4, voiceCapLow = 3, voiceCapMid = 6, voiceCapHigh = 8, bank = "SFX/Destruction/Stone", collapseSfx = "sfx_stone_collapse" },
+             new MaterialAudio { material = MaterialType.Terrain, mediumMinImpulse = 40f, heavyMinImpulse = 150f, pitchOffsetSemitones = 0f, hardness = 0, voiceCapLow = 2, voiceCapMid = 3, voiceCapHigh = 4, bank = "SFX/Destruction/Impacts", collapseSfx = "" },
+         };
+ 

@@ -1,0 +1,106 @@
+event_name,trigger,params,sfx_ids,owner,anim_event,notes
+reload_start,Projectile.Impact (first impact of the shot),,sfx_cannon_reload,C,-,loop until ready
+reload_gate,"GameSession: unlock FIRE when settled AND reload >=1.0 s, then raise ANIM_WRECKER_READY",,(none - anim-driven),-,ANIM_WRECKER_READY,DEV HOOK: 1.0 s gate not in code
+combo_step_x2,ComboTracker.OnBreak when Current==2,count,sfx_combo_step,C,-,only x2; x3+ via UI_COMBO_UP
+projectile_despawn,Projectile.Despawn,,stop sfx_projectile_whoosh,C,-,
+music_level,GameSession.Begin,chapter/level,mus_<island> / mus_boss_* / mus_daily_titan + arena layer,C,-,
+music_intensity,GameSession.ResolveShot / combo>=5,shotsLeft,Intensity stem,C,-,
+music_boss_p2,BOSS_TIDE_PHASE2 received -> next bar,,mus_stinger_phase2; P2 layer,C,-,listens to anim event but plays music only
+stinger_win,GameSession.End(true),stars,mus_stinger_victory(_3star) / mus_stinger_boss_defeat,C,-,fade level music 0.3s; snapshot Results
+stinger_fail,GameSession.End(false) / GiveUp,,mus_stinger_fail,C,-,
+snapshot_pause,PauseModal Build/OnHide,,snapshot Paused,C,-,
+snapshot_background,GameSession.OnApplicationPause,,snapshot Background,C,-,
+titan_checkpoint,GameSession.CheckpointTitan,,(none),-,-,
+titan_rule_stop,GameSession.End (Titan),,stop sfx_titan_rule_loop,C,-,
+anim_wrecker_idle_fidget,animation state,,sfx_wrecker_fidget,A,ANIM_WRECKER_IDLE_FIDGET,
+anim_wrecker_aim_start,AimController.Drag,,sfx_wrecker_aim_hum;sfx_aim_stretch (loops),A,ANIM_WRECKER_AIM_START,
+anim_wrecker_aim_tick,AimController.Apply,,sfx_wrecker_aim_tick,A,ANIM_WRECKER_AIM_TICK,
+anim_wrecker_aim_clamp,AimController.Apply,,sfx_wrecker_aim_clamp,A,ANIM_WRECKER_AIM_CLAMP,
+anim_wrecker_aim_end,AimController.CancelAim,,stop aim loops,A,ANIM_WRECKER_AIM_END,
+anim_wrecker_fire_anticipate,FireController.Fire,,sfx_wrecker_breech,A,ANIM_WRECKER_FIRE_ANTICIPATE,RESOLVED: Developer accepted 66 ms spawn delay
+anim_wrecker_fire,FireController.Fire,,sfx_cannon_fire,A,ANIM_WRECKER_FIRE,
+anim_wrecker_muzzle_smoke,animation state,,sfx_wrecker_smoke_tail,A,ANIM_WRECKER_MUZZLE_SMOKE,
+anim_wrecker_recoil_land,animation state,,sfx_wrecker_recoil_land,A,ANIM_WRECKER_RECOIL_LAND,
+anim_wrecker_ready,GameSession fire.CanFire=true,,sfx_cannon_ready (+ stop sfx_cannon_reload),A,ANIM_WRECKER_READY,DEV HOOK: 1.0 s reload gate still needed
+anim_wrecker_slot_out,PowerUpRuntime.ToggleArm,,sfx_wrecker_slot_out,A,ANIM_WRECKER_SLOT_OUT,
+anim_wrecker_slot_in,PowerUpRuntime.ToggleArm,,sfx_wrecker_slot_in,A,ANIM_WRECKER_SLOT_IN,
+anim_wrecker_win,GameSession.End(true),,sfx_wrecker_win_hop,A,ANIM_WRECKER_WIN,
+anim_wrecker_fail,GameSession.End(false),,sfx_wrecker_fail_droop,A,ANIM_WRECKER_FAIL,
+anim_proj_launch,Projectile.Launch,,sfx_projectile_whoosh (loop),A,ANIM_PROJ_LAUNCH,"stop: code, Projectile.Despawn"
+impact_wood/brick/steel/steel_joint,Projectile.Impact,,(none),-,IMPACT_WOOD/BRICK/STEEL/STEEL_JOINT,visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_projectile_impact (+material layer)
+impact_terrain,Projectile.Impact,,(none),-,IMPACT_TERRAIN,visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_impact_terrain
+break_wood,DestructibleBlock.Break,,(none),-,BREAK_WOOD,visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_wood_break
+break_brick,DestructibleBlock.Break,,(none),-,BREAK_BRICK,visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_brick_break
+break_steel,DestructibleBlock.Break,,(none),-,BREAK_STEEL,visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_steel_break
+break_steel_joint,DestructibleBlock.Break (isSteelJoint),,(none),-,BREAK_STEEL_JOINT,visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_steel_joint_snap
+damage_step,DestructibleBlock.UpdateDamageVisual,,sfx_{mat}_crack,A,DAMAGE_STEP,cooldown 150ms/block
+debris_burst,DebrisPool.SpawnBurst,,sfx_{mat}_debris,A,DEBRIS_BURST,1 sound per burst
+explode_crate (alias explode_barrel),Explosion.Detonate,,sfx_explosive_crate,A,EXPLODE_CRATE (alias EXPLODE_BARREL),listen to both names until alias removed
+collapse_creak,DestructibleBlock.EvaluateSupport,,sfx_collapse_creak,A,COLLAPSE_CREAK,
+collapse_land,animation state,,(none),-,COLLAPSE_LAND,visuals-only; sound owned by PHYS_* (ImpactAudioProfile); was: sfx_wood_collapse|sfx_brick_collapse|sfx_steel_collapse
+debris_fall_off,KillPlane.FixedUpdate,,sfx_kill_plane_fall,A,DEBRIS_FALL_OFF,
+pu_arm_<name>,PowerUpRuntime.ToggleArm,,sfx_pu_<name>_arm,A,PU_ARM_<NAME>,
+pu_disarm,PowerUpRuntime.ToggleArm,,sfx_pu_disarm,A,PU_DISARM,not Time Fracture
+pu_shockwave_impact + _ring,Projectile.Shockwave,,sfx_pu_shockwave_fx (single clip; listen to IMPACT only),A,PU_SHOCKWAVE_IMPACT + _RING,RING ignored to avoid double
+pu_split,Projectile.Split,,sfx_pu_splitstrike_fx,A,PU_SPLIT,
+pu_gravity_open/loop/burst,GravityWellEffect,,sfx_pu_gravity_well_fx open/loop/burst,A,PU_GRAVITY_OPEN/LOOP/BURST,
+pu_chain_pulse,Projectile.ChainReactor,,sfx_pu_chain_reactor_fx,A,PU_CHAIN_PULSE,
+pu_chain_link,animation state,,sfx_pu_chain_link,A,PU_CHAIN_LINK,
+pu_phase_pass,(no code hook),,sfx_pu_phase_piercer_fx,A,PU_PHASE_PASS,DEV HOOK needed
+pu_phase_hit,(no code hook),,sfx_pu_phase_hit,A,PU_PHASE_HIT,DEV HOOK needed
+pu_time_start,PowerUpRuntime.ToggleArm -> TimeFractureEffect.Activate,,sfx_pu_time_fracture_fx + snapshot TimeFracture,A,PU_TIME_START,
+pu_time_warn,animation state,,sfx_pu_time_warn,A,PU_TIME_WARN,
+pu_time_end,TimeFractureEffect.Update,,end loop + snapshot Default,A,PU_TIME_END,
+boss_tide_intro,GameSession.Begin (L10),,sfx_boss_tw_intro,A,BOSS_TIDE_INTRO,music intro: code
+boss_tide_joint_hit,animation state,,sfx_boss_tw_joint_hit,A,BOSS_TIDE_JOINT_HIT,
+boss_tide_joint_break,shoulder Broken,,sfx_boss_tw_shoulder_break,A,BOSS_TIDE_JOINT_BREAK,
+boss_tide_arms_land,animation state,,sfx_boss_tw_arms_land,A,BOSS_TIDE_ARMS_LAND,
+boss_tide_chest_open,animation state,,sfx_boss_tw_chest_open,A,BOSS_TIDE_CHEST_OPEN,
+boss_tide_phase2,animation state,,sfx_boss_tw_phase2; start sfx_boss_tw_core_hum,A,BOSS_TIDE_PHASE2,mus_stinger_phase2 + P2 music: code on next bar
+boss_tide_tell,TidewardenController.OnShotResolved,,"sfx_boss_tw_shutter_tell (2 hits, 0/500ms)",A,BOSS_TIDE_TELL,MISMATCH: code glow sin(t*18)~2.9 Hz still - Dev to change to 4*pi
+boss_tide_shutter_close,TidewardenController.SetShutter(false),,sfx_boss_tw_shutter_close,A,BOSS_TIDE_SHUTTER_CLOSE,MISMATCH: code still teleports - Dev tween needed
+boss_tide_shutter_open,SetShutter(true),,sfx_boss_tw_shutter_open,A,BOSS_TIDE_SHUTTER_OPEN,
+boss_tide_core_hit,OnCoreDamaged,,sfx_boss_tw_core_hit,A,BOSS_TIDE_CORE_HIT,
+boss_tide_defeat,TidewardenController.Defeat,,sfx_boss_tw_defeat,A,BOSS_TIDE_DEFEAT,mus_stinger_boss_defeat: code
+boss_titan_ranked_start,GameSession.Begin (TitanRanked),,sfx_titan_ranked_start,A,BOSS_TITAN_RANKED_START,
+boss_titan_intro,GameSession.Begin (Titan),,sfx_titan_intro,A,BOSS_TITAN_INTRO,
+boss_titan_rule,animation state,,sfx_titan_rule_loop (variant by rule),A,BOSS_TITAN_RULE,
+boss_titan_hit,DestructionTracker.OnDamaged,,sfx_titan_hit,A,BOSS_TITAN_HIT,
+boss_titan_stage,animation state,,sfx_titan_stage,A,BOSS_TITAN_STAGE,
+boss_titan_defeat,GameSession.End(true),,sfx_titan_kill,A,BOSS_TITAN_DEFEAT,stinger: code
+ui_btn_press,UIFactory onClick,,sfx_ui_confirm|sfx_ui_back|sfx_ui_error|sfx_ui_click,A,UI_BTN_PRESS,
+ui_tab,LeaderboardScreen,,sfx_ui_tab,A,UI_TAB,
+ui_toggle,settings,,sfx_ui_toggle,A,UI_TOGGLE,
+ui_panel_in,UIRouter.Push,,sfx_ui_modal_open,A,UI_PANEL_IN,
+ui_panel_out,UIRouter.Pop,,sfx_ui_panel_out,A,UI_PANEL_OUT,
+ui_star_1/2/3,ResultsScreen.Build,,sfx_star_1/2/3,A,UI_STAR_1/2/3,
+ui_mastery_tick,animation state,,sfx_ui_mastery_tick,A,UI_MASTERY_TICK,
+ui_combo_up,ComboTracker.OnBreak,,sfx_combo_step (pitch by N) + sfx_combo_tier1 at x3,A,UI_COMBO_UP,x2 step: CODE (no anim event below x3)
+ui_combo_tier,ComboTracker.PopTier,,sfx_combo_tier2..4,A,UI_COMBO_TIER,
+ui_score_tick,animation state,,sfx_ui_score_tick,A,UI_SCORE_TICK,
+ui_damage_tick,Titan HUD,,sfx_titan_damage_tick,A,UI_DAMAGE_TICK,
+ui_coin_land,animation state,,sfx_reward_coin_single,A,UI_COIN_LAND,
+ui_chest_shake,animation state,,sfx_reward_chest_shake,A,UI_CHEST_SHAKE,
+ui_chest_open,animation state,,sfx_reward_chest_open,A,UI_CHEST_OPEN,
+ui_claim,DailyRewardsScreen.AddClaim,,sfx_ui_claim_stamp;sfx_reward_daily_claim,A,UI_CLAIM,
+ui_shard_gain,animation state,,sfx_reward_shard,A,UI_SHARD_GAIN,
+ui_extra_charge,animation state,,sfx_reward_extra_charge,A,UI_EXTRA_CHARGE,
+ui_season_tier_up,SeasonScreen.OnShow,,sfx_reward_season_tier_up,A,UI_SEASON_TIER_UP,
+ui_node_unlock,MapScreen.OnShow,,sfx_map_node_unlock,A,UI_NODE_UNLOCK,
+ui_marker_hop,animation state,,sfx_ui_marker_hop,A,UI_MARKER_HOP,
+ui_gate_open,animation state,,sfx_ui_gate_open,A,UI_GATE_OPEN,
+ui_shot_spend,HudScreen.Refresh,,sfx_ui_shot_spend,A,UI_SHOT_SPEND,
+ui_charge_spend,PowerUpRuntime.ConsumeForShot,,sfx_ui_charge_spend,A,UI_CHARGE_SPEND,
+ui_threshold_hit,HudScreen.Refresh,,sfx_ui_threshold_hit,A,UI_THRESHOLD_HIT,
+ui_win,GameSession.End(true),,sfx_win_stinger_sfx,A,UI_WIN,mus_stinger_victory: code
+ui_fail,GameSession.End(false),,sfx_fail_sfx,A,UI_FAIL,mus_stinger_fail: code; also Titan out-of-shots
+ui_hint_button_appear,ResultsScreen (HintRules.ShowHintButton),,sfx_hint_button,A,UI_HINT_BUTTON_APPEAR,
+ui_hint_show,GameSession.SetupHint,,sfx_hint_pulse,A,UI_HINT_SHOW,
+cam_slowmo_start,animation state,,snapshot SlowMo (LPF),A,CAM_SLOWMO_START,"big collapse / boss phase only; never win shot, Titan ranked, or Reduce Motion"
+cam_slowmo_end,animation state,,snapshot Default,A,CAM_SLOWMO_END,
+phys_impact,AnimEventBus PHYS_IMPACT (ImpactEventEmitter flush after physics step),"tier,impulse,materialA/B,sizeClass,source,pieceId,position",sfx_projectile_impact + sfx_{mat} layer; terrain->sfx_impact_terrain,C,-,"minImpulse 5; harder material wins, soft layer 0.3 on Heavy only; perPieceCooldownTicks 4; priority by source"
+phys_crack,AnimEventBus PHYS_CRACK,"damageStep,materialA,sizeClass,pieceId",sfx_{mat}_crack,C,-,+0.03 pitch per damageStep above 1
+phys_break,AnimEventBus PHYS_BREAK,"material,sizeClass,cascadeId,cascadeCount,source",sfx_{mat}_break,C,-,inside an active cascade max 1 voice + rattle (rattleWindowTicks 5)
+phys_joint_snap,AnimEventBus PHYS_JOINT_SNAP,"impulse,pieceId",sfx_steel_joint_snap,C,-,
+phys_collapse_start,AnimEventBus PHYS_COLLAPSE_START,"cascadeId,cascadeCount(planned),dominantMaterial",(none - opens cascade gate),C,-,starts fallback timer (150 ticks)
+phys_collapse_end,AnimEventBus PHYS_COLLAPSE_END,"cascadeId,cascadeCount(final),dominantMaterial,per-material counts",sfx_{dominant}_collapse (wood|brick|steel|glass),C,-,exactly one COLLAPSE_LAND per cascadeId; count 1-5 S / 6-20 M / 21+ L
