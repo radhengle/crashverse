@@ -1,5 +1,5 @@
 # integration/v2 status (Dev lead running checklist; resume from here)
-Updated: 2026-10-30 23:10 IST. PR #55 (integration/v2 -> main): DO NOT merge, DO NOT publish (PM/user after QA).
+Updated: 2026-10-30 23:25 IST.
 
 ## Merges
 - [x] wip/graphics a11b6b3, wip/vfx 453fba5, wip/anim 7ed1a90, wip/sound 30b01eb
@@ -16,8 +16,9 @@ Updated: 2026-10-30 23:10 IST. PR #55 (integration/v2 -> main): DO NOT merge, DO
 - [x] V2-01 assetsPaths (configChanges + compileSdk 36 + pinned aapt2 8.7.3); 10x API34 (1 google_apis) + API36 smoke
 - [x] 4 previously failing tests fixed (+ foliage instancing postprocessor)
 - [x] Loader gaps 1,2,3,5,6,7 + modelOffset; gap 4 (hero slot destructible) superseded: no level uses heroSlot fbx, buildings are block modules
-- [ ] Mockup side-by-side in /workspace/compare/ (from run 41090876169 artifacts)
-- [ ] #55 comment + re-review request to QA / Security
+- [x] Mockup side-by-side in /workspace/compare/ (compare_*.png + hud_L1-10_boss_1080x2340_api36.png, run 41090876169)
+- [x] #55 comment + re-review request (issuecomment-6529338227)
 
 ## CI
 - 097cf3a: APK (dev+release+11 emulator), AAB, EditMode, server-ci all green (run 41090876169)
+- 6f25553+: smoke [CAM] gate fix; PR run pending
