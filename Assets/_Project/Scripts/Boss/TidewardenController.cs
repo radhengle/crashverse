@@ -81,7 +81,9 @@ namespace Crashverse.Boss
         {
             Defeated = true;
             Crashverse.Feel.TideDefeatEvent.RaiseOnce(); // BOSS_TIDE_DEFEAT: haptic boom + music stinger; once per defeat. TODO(anim): moves to the rig defeat clip when it lands
-            foreach (var x in _all) if (x != _shutter && x.isObjectivePiece && !x.IsBroken) x.ForceCollapse(); // collapse cinematic
+            // collapse cinematic, progressive: pieces drop in authored order, 2 ticks apart (+ their CollapseRules delay)
+            int step = 0; var si = Crashverse.Destruction.StructuralIntegrity.Current;
+            foreach (var x in _all) if (x != _shutter && x.isObjectivePiece && !x.IsBroken) { if (si == null || !si.ScheduleCollapse(x, 2 * step++)) x.ForceCollapse(); }
             if (_core != null) _core.SetHighlight(Color.white, 1f);
             _defeatCollapse.Start(); // BOSS_TIDE_DEFEAT_COLLAPSE at +3500 ms unscaled. TODO(anim): moves to an anim event at frame 210 when the rig clip lands
         }

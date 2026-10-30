@@ -142,6 +142,7 @@ namespace Crashverse.Core
             arena.Build();
             if (ctx.IsHard || ctx.mode == RunMode.DailyBoss) ArenaBuilder.DarkTheme(0.55f); // v2: hard level / Daily Boss dark theme
             new GameObject("DebrisPool").AddComponent<DebrisPool>().transform.SetParent(_runRoot.transform);
+            new GameObject("GlassShardFx").AddComponent<GlassShardFx>().transform.SetParent(_runRoot.transform); // presentation-only glass shards
 
             var wreckerGo = new GameObject("Wrecker");
             wreckerGo.transform.SetParent(_runRoot.transform);

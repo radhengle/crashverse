@@ -42,6 +42,8 @@ namespace Crashverse.Level
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
                 var block = go.AddComponent<DestructibleBlock>();
                 block.Configure(bd, mat);
+                var hints = go.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
+                block.PrepareChunks(DebrisPool.ChunkTierIndex, hints != null ? hints.fractureClass : null); // deterministic chunk layout, built once per level load
                 Crashverse.Gameplay.PieceFeedbackWiring.Attach(block); // VFX #31 DamageFeedback, pieceId = StableId.Of(blockId)
                 if (bd.spinDps > 0f && bd.spinAxis != null && bd.spinAxis.Length == 3)
                 {
@@ -65,6 +67,7 @@ namespace Crashverse.Level
             foreach (var b in _blocks) if (b != null) Destroy(b.gameObject);
             _blocks.Clear(); _byId.Clear();
             if (DebrisPool.Instance != null) DebrisPool.Instance.ClearAll();
+            if (GlassShardFx.Instance != null) GlassShardFx.Instance.ClearAll();
         }
 
         static Vector3 V(float[] a) => a != null && a.Length == 3 ? new Vector3(a[0], a[1], a[2]) : Vector3.zero;

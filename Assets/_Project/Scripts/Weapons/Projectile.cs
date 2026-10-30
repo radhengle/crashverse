@@ -119,6 +119,7 @@ namespace Crashverse.Weapons
             {
                 if (_pierced.Count > 0 && mods.pierce && _rb != null) // trigger hit: no contact impulse, use momentum
                     ImpactReport.Collision(hit, null, null, _rb.mass * _rb.velocity.magnitude, _rb.velocity.magnitude, at, -_rb.velocity.normalized, ShotSource, ShotSourceId);
+                hit.NoteImpact(at, _rb != null && _rb.velocity.sqrMagnitude > 1e-6f ? -_rb.velocity.normalized : Vector3.up); // chunks release outward from the hit
                 using (ImpactSourceScope.Push(ShotSource, ShotSourceId)) hit.ApplyDamage(damage, directHit: true); // steel joints take 2x here
                 if (mods.shockwave) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.Shockwave)) Shockwave(hit);
             }
