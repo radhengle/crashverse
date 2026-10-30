@@ -109,6 +109,42 @@
    "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
    "frac": "Steel",
    "source": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx"
+  },
+  "Wall": {
+   "LOD0": 804,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    3.0,
+    3.0,
+    0.18
+   ],
+   "aabb": [
+    [
+     -1.5,
+     -0.09,
+     -0.0
+    ],
+    [
+     1.5,
+     0.09,
+     3.0
+    ]
+   ],
+   "frags": 7,
+   "frag_max": 68,
+   "Fractured": 380,
+   "mass": "122.2-201.7",
+   "min_axis_m": 0.16,
+   "joints": 12,
+   "anchors": 3,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Steel",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Wall.fbx"
   }
  },
  "tile_m": 1.5,
