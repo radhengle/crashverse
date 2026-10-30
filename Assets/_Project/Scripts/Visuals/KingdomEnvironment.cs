@@ -16,7 +16,7 @@ namespace Crashverse.Visuals
         static float Rx => Crashverse.Core.ArenaBuilder.IslandLength * 0.5f;
         static float Rz => Crashverse.Core.ArenaBuilder.IslandWidth * 0.5f;
 
-        public static GameObject Build(Transform parent, Vector3 cannonRoot, Vector3 structureBase, bool palaceLevel, bool dark)
+        public static GameObject Build(Transform parent, Vector3 cannonRoot, Vector3 structureBase, bool palaceLevel, bool dark, Bounds? structure = null)
         {
             var root = new GameObject("KingdomEnvironment"); root.transform.SetParent(parent, false);
             Ocean(root.transform);
@@ -24,6 +24,7 @@ namespace Crashverse.Visuals
             Deck(root.transform, cannonRoot);
             Shore(root.transform, cannonRoot, structureBase);
             Horizon(root.transform, palaceLevel);
+            Yard(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
             return root;
         }
 
@@ -176,6 +177,51 @@ namespace Crashverse.Visuals
                         b.transform.localScale = Vector3.one * 0.36f;
                     }
             Props(d, new Vector3(-2.4f, 0f, -2.3f), 0);
+        }
+
+        /// <summary>Set dressing around the target (concept art): a sand path from the deck, fences down both sides, barrel + crate
+        /// stacks at the front corners, a hand cart and a sack pile. Visual only (no colliders), outside the structure's footprint.</summary>
+        static void Yard(Transform root, Vector3 cannon, Bounds sb)
+        {
+            var y = new GameObject("Yard").transform; y.SetParent(root, false);
+            float halfW = Mathf.Max(2.5f, sb.extents.z), x0 = sb.min.x, x1 = sb.max.x, cz = sb.center.z;
+            // sand path (slightly raised so it never z-fights the grass)
+            float pathStart = cannon.x + 3.8f, pathEnd = x0 - 0.5f;
+            if (pathEnd > pathStart)
+                Box("SandPath", y, new Vector3((pathStart + pathEnd) * 0.5f, 0.015f, cz), new Vector3(pathEnd - pathStart, 0.03f, 3.2f), KingdomMaterials.Sand, 3f);
+            // fences along both sides of the yard
+            foreach (float side in new[] { -1f, 1f })
+            {
+                float z = cz + side * (halfW + 2.2f);
+                for (float x = x0 - 3f; x <= x1 + 1.5f; x += 1.6f)
+                {
+                    var post = Obj("FencePost", y, Cylinder(), KingdomMaterials.Wood);
+                    post.transform.localPosition = new Vector3(x, 0.5f, z); post.transform.localScale = new Vector3(0.14f, 0.5f, 0.14f);
+                }
+                foreach (float h in new[] { 0.45f, 0.85f })
+                    Box("FenceRail", y, new Vector3((x0 - 3f + x1 + 1.5f) * 0.5f, h, z), new Vector3(x1 + 4.5f - x0, 0.09f, 0.07f), KingdomMaterials.Planks, 1.5f);
+            }
+            // barrel + crate stacks at the front corners
+            Props(y, new Vector3(x0 - 1.6f, 0f, cz - halfW - 1.1f), 1);
+            Props(y, new Vector3(x0 - 1.2f, 0f, cz + halfW + 0.9f), 2);
+            Box("Crate", y, new Vector3(x0 - 0.6f, 1.1f, cz + halfW + 0.7f), new Vector3(0.6f, 0.6f, 0.6f), KingdomMaterials.Wood, 0.6f, Quaternion.Euler(0f, -12f, 0f));
+            // hand cart
+            var cart = new GameObject("Cart").transform; cart.SetParent(y, false);
+            cart.localPosition = new Vector3(x0 - 3.2f, 0f, cz + halfW + 1.4f); cart.localRotation = Quaternion.Euler(0f, 35f, 0f);
+            Box("CartBed", cart, new Vector3(0f, 0.75f, 0f), new Vector3(1.6f, 0.12f, 1.0f), KingdomMaterials.Planks, 1f);
+            Box("CartSideL", cart, new Vector3(0f, 0.95f, 0.47f), new Vector3(1.6f, 0.3f, 0.06f), KingdomMaterials.Planks, 1f);
+            Box("CartSideR", cart, new Vector3(0f, 0.95f, -0.47f), new Vector3(1.6f, 0.3f, 0.06f), KingdomMaterials.Planks, 1f);
+            Box("CartHandle", cart, new Vector3(-1.3f, 0.7f, 0f), new Vector3(1.2f, 0.07f, 0.07f), KingdomMaterials.Wood, 1f, Quaternion.Euler(0f, 0f, 10f));
+            foreach (float z in new[] { -0.56f, 0.56f })
+            {
+                var w = Obj("CartWheel", cart, Cylinder(), KingdomMaterials.Wood);
+                w.transform.localPosition = new Vector3(0.1f, 0.45f, z); w.transform.localRotation = Quaternion.Euler(90f, 0f, 0f); w.transform.localScale = new Vector3(0.9f, 0.04f, 0.9f);
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                var sack = Obj("Sack", cart, Sphere(), KingdomMaterials.Make("Sack", "T_K_Sand", new Color(0.95f, 0.88f, 0.72f), 0f, 0.95f, Vector2.one));
+                sack.transform.localPosition = new Vector3(-0.45f + i * 0.45f, 1.0f, 0f); sack.transform.localScale = new Vector3(0.45f, 0.35f, 0.55f);
+            }
         }
 
         static void Props(Transform parent, Vector3 at, int seed)

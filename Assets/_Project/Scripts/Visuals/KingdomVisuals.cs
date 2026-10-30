@@ -66,9 +66,9 @@ namespace Crashverse.Visuals
             if (w != null)
             {
                 w.SetColor("_HorizonColor", hz);
-                w.SetColor("_ShallowColor", dark ? new Color(0.10f, 0.42f, 0.45f) : new Color(0.18f, 0.86f, 0.84f));
-                w.SetColor("_MidColor", dark ? new Color(0.04f, 0.25f, 0.36f) : new Color(0.05f, 0.58f, 0.78f));
-                w.SetColor("_DeepColor", dark ? new Color(0.02f, 0.10f, 0.22f) : new Color(0.02f, 0.26f, 0.55f));
+                w.SetColor("_ShallowColor", dark ? new Color(0.10f, 0.42f, 0.45f) : new Color(0.22f, 0.95f, 0.86f));
+                w.SetColor("_MidColor", dark ? new Color(0.04f, 0.25f, 0.36f) : new Color(0.04f, 0.72f, 0.82f));
+                w.SetColor("_DeepColor", dark ? new Color(0.02f, 0.10f, 0.22f) : new Color(0.02f, 0.42f, 0.68f));
                 w.SetFloat("_WaveAmp", dark ? 0.22f : 0.12f);
             }
             if (dark) { RenderSettings.fogColor = hz; RenderSettings.fogStartDistance = 45f; RenderSettings.fogEndDistance = 300f; }
@@ -84,7 +84,7 @@ namespace Crashverse.Visuals
             if (palace && !dark && RenderSettings.sun != null) { RenderSettings.sun.intensity = 1.2f; RenderSettings.sun.color = new Color(0.85f, 0.88f, 1f); }
             try
             {
-                KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark);
+                KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark, GameplayDirector.StructureBounds(s, s.structureBase));
                 CannonDresser.Dress(wb);
                 if (s.builder != null) KingdomTheme.Apply(s.builder.Blocks, levelId);
 

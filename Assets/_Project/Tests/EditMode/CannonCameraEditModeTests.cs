@@ -116,8 +116,8 @@ namespace Crashverse.Backend.Tests
                     var c = CannonCameraRules.ViewportRect(pose, a, Cannon); var s = CannonCameraRules.ViewportRect(pose, a, b);
                     Assert.AreEqual(0.5f, c.center.x, 0.02f, "cannon horizontally centred: " + at);
                     Assert.Less(c.yMin, 0.08f, "cannon at the bottom: " + at);
-                    if (a < 0.7f) Assert.Greater(c.width, 0.35f, "cannon big (>= 35% of the width on phones): " + at); // tablets / 4:3 keep a smaller cannon
-                    Assert.Less(c.yMax, 0.6f, "cannon stays in the lower part (barrel tip may reach the building base): " + at);
+                    if (a < 0.7f) Assert.Greater(c.width, 0.28f, "cannon big (>= 28% of the width on phones): " + at); // tablets / 4:3 keep a smaller cannon
+                    Assert.Less(c.yMax, 0.55f, "cannon stays in the lower part (barrel tip may reach the building base): " + at);
                     Assert.Greater(s.center.y, c.center.y + 0.15f, "building above the cannon: " + at);
                     Assert.True(s.width >= 0.65f || s.yMax >= 0.7f, $"building fills the view (width {s.width:F2} >= 0.65 or top {s.yMax:F2} >= 0.70): " + at);
                 }

@@ -22,8 +22,8 @@ namespace Crashverse.Meta
         [System.Serializable]
         public class Settings
         {
-            public float back = 14f;         // metres behind the cannon root, along the firing line
-            public float height = 4.0f;      // camera height above the cannon's ground
+            public float back = 20f;         // metres behind the cannon root, along the firing line (PM QA 31 Oct: concept framing, muzzle ~40% up)
+            public float height = 8.0f;      // camera height above the cannon's ground (looks down on the cannon so it no longer covers the target)
             public float cannonRear = 1.8f;  // the cannon envelope reaches this far behind its root (rear roller / carriage)
             public float cannonTop = 2.6f;   // barrel tip / booster top at rest elevation
             public float topMargin = 0.06f;  // minimum share of the screen height above the structure's top (the HUD band, see HudTopMargin)
