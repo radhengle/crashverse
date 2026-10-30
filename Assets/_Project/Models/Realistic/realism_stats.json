@@ -1,0 +1,243 @@
+{
+ "Oak": {
+  "tris": {
+   "Oak_LOD0": 3918,
+   "Oak_LOD1": 1446,
+   "Oak_LOD2": 408,
+   "Oak_LOD3": 4
+  },
+  "materials": [
+   "M_Oak",
+   "M_Oak_Billboard"
+  ],
+  "submeshes_per_lod": {
+   "Oak_LOD0": 1,
+   "Oak_LOD1": 1,
+   "Oak_LOD2": 1,
+   "Oak_LOD3": 1
+  },
+  "textures": {
+   "T_Oak_A.png": "2048x2048 authored -> 1024 Android",
+   "T_Oak_N.png": "2048x2048 authored -> 1024 Android",
+   "T_Oak_ORM.png": "2048x2048 authored -> 1024 Android",
+   "T_Oak_Billboard_A.png": "1024x512 authored -> 1024 Android",
+   "T_Oak_Billboard_N.png": "1024x512 authored -> 1024 Android",
+   "T_Oak_Billboard_ORM.png": "1024x512 authored -> 1024 Android"
+  }
+ },
+ "Pine": {
+  "tris": {
+   "Pine_LOD0": 2472,
+   "Pine_LOD1": 938,
+   "Pine_LOD2": 176,
+   "Pine_LOD3": 4
+  },
+  "materials": [
+   "M_Pine",
+   "M_Pine_Billboard"
+  ],
+  "submeshes_per_lod": {
+   "Pine_LOD0": 1,
+   "Pine_LOD1": 1,
+   "Pine_LOD2": 1,
+   "Pine_LOD3": 1
+  },
+  "textures": {
+   "T_Pine_A.png": "2048x2048 authored -> 1024 Android",
+   "T_Pine_N.png": "2048x2048 authored -> 1024 Android",
+   "T_Pine_ORM.png": "2048x2048 authored -> 1024 Android",
+   "T_Pine_Billboard_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Pine_Billboard_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Pine_Billboard_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
+ },
+ "Bush": {
+  "tris": {
+   "Bush_LOD0": 1150,
+   "Bush_LOD1": 288,
+   "Bush_LOD2": 92,
+   "Bush_LOD3": 4
+  },
+  "materials": [
+   "M_Bush",
+   "M_Bush_Billboard"
+  ],
+  "submeshes_per_lod": {
+   "Bush_LOD0": 1,
+   "Bush_LOD1": 1,
+   "Bush_LOD2": 1,
+   "Bush_LOD3": 1
+  },
+  "textures": {
+   "T_Bush_A.png": "2048x2048 authored -> 1024 Android",
+   "T_Bush_N.png": "2048x2048 authored -> 1024 Android",
+   "T_Bush_ORM.png": "2048x2048 authored -> 1024 Android",
+   "T_Bush_Billboard_A.png": "1024x512 authored -> 1024 Android",
+   "T_Bush_Billboard_N.png": "1024x512 authored -> 1024 Android",
+   "T_Bush_Billboard_ORM.png": "1024x512 authored -> 1024 Android"
+  }
+ },
+ "Bld_Townhouse": {
+  "tris": {
+   "Bld_Townhouse_LOD0": 19900,
+   "Bld_Townhouse_LOD1": 8200,
+   "Bld_Townhouse_LOD2": 3626
+  },
+  "materials": [
+   "M_Bld_Townhouse"
+  ],
+  "submeshes_per_lod": {
+   "Bld_Townhouse_LOD0": 1,
+   "Bld_Townhouse_LOD1": 1,
+   "Bld_Townhouse_LOD2": 1
+  },
+  "textures": {
+   "T_Bld_Townhouse_A.png": "2048x2048 authored -> 1024 Android",
+   "T_Bld_Townhouse_N.png": "2048x2048 authored -> 1024 Android",
+   "T_Bld_Townhouse_ORM.png": "2048x2048 authored -> 1024 Android"
+  },
+  "colliders": 6
+ },
+ "Prop_Barrel": {
+  "tris": {
+   "Prop_Barrel_LOD0": 732,
+   "Prop_Barrel_LOD1": 216
+  },
+  "materials": [
+   "M_Props_Village"
+  ],
+  "submeshes_per_lod": {
+   "Prop_Barrel_LOD0": 1,
+   "Prop_Barrel_LOD1": 1
+  },
+  "textures": {
+   "T_Props_Village_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
+ },
+ "Prop_Crate": {
+  "tris": {
+   "Prop_Crate_LOD0": 764,
+   "Prop_Crate_LOD1": 476
+  },
+  "materials": [
+   "M_Props_Village"
+  ],
+  "submeshes_per_lod": {
+   "Prop_Crate_LOD0": 1,
+   "Prop_Crate_LOD1": 1
+  },
+  "textures": {
+   "T_Props_Village_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
+ },
+ "Prop_Cart": {
+  "tris": {
+   "Prop_Cart_LOD0": 2036,
+   "Prop_Cart_LOD1": 884
+  },
+  "materials": [
+   "M_Props_Village"
+  ],
+  "submeshes_per_lod": {
+   "Prop_Cart_LOD0": 1,
+   "Prop_Cart_LOD1": 1
+  },
+  "textures": {
+   "T_Props_Village_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
+ },
+ "Prop_Rock_A": {
+  "tris": {
+   "Prop_Rock_A_LOD0": 320,
+   "Prop_Rock_A_LOD1": 80
+  },
+  "materials": [
+   "M_Props_Village"
+  ],
+  "submeshes_per_lod": {
+   "Prop_Rock_A_LOD0": 1,
+   "Prop_Rock_A_LOD1": 1
+  },
+  "textures": {
+   "T_Props_Village_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
+ },
+ "Prop_Rock_B": {
+  "tris": {
+   "Prop_Rock_B_LOD0": 320,
+   "Prop_Rock_B_LOD1": 80
+  },
+  "materials": [
+   "M_Props_Village"
+  ],
+  "submeshes_per_lod": {
+   "Prop_Rock_B_LOD0": 1,
+   "Prop_Rock_B_LOD1": 1
+  },
+  "textures": {
+   "T_Props_Village_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
+ },
+ "Prop_Rock_C": {
+  "tris": {
+   "Prop_Rock_C_LOD0": 320,
+   "Prop_Rock_C_LOD1": 80
+  },
+  "materials": [
+   "M_Props_Village"
+  ],
+  "submeshes_per_lod": {
+   "Prop_Rock_C_LOD0": 1,
+   "Prop_Rock_C_LOD1": 1
+  },
+  "textures": {
+   "T_Props_Village_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
+ },
+ "Ground_Patch": {
+  "tris": {
+   "Ground_Patch_LOD0": 5200
+  },
+  "materials": [
+   "M_Ground_Patch"
+  ],
+  "submeshes_per_lod": {
+   "Ground_Patch_LOD0": 1
+  },
+  "textures": {
+   "T_Ground_Patch_A.png": "2048x2048 authored -> 1024 Android",
+   "T_Ground_Patch_N.png": "2048x2048 authored -> 1024 Android",
+   "T_Ground_Patch_ORM.png": "2048x2048 authored -> 1024 Android"
+  }
+ },
+ "GrassClump": {
+  "tris": {
+   "GrassClump_LOD0": 8,
+   "GrassClump_LOD1": 6
+  },
+  "materials": [
+   "M_GrassClump"
+  ],
+  "submeshes_per_lod": {
+   "GrassClump_LOD0": 1,
+   "GrassClump_LOD1": 1
+  },
+  "textures": {
+   "T_GrassClump_A.png": "2048x2048 authored -> 1024 Android",
+   "T_GrassClump_N.png": "2048x2048 authored -> 1024 Android",
+   "T_GrassClump_ORM.png": "2048x2048 authored -> 1024 Android"
+  }
+ }
+}

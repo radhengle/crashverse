@@ -1,0 +1,81 @@
+--------- beginning of main
+10-24 15:32:42.861  1196  1196 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=276338, downTime=276338, deviceId=-1, source=0x1002, displayId=0, eventId=-589470148 }
+10-24 15:32:42.878  1196  1196 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=276338, downTime=276338, deviceId=-1, source=0x1002, displayId=0, eventId=-619459463 }
+--------- beginning of system
+10-24 15:32:43.296   548  2154 D OomAdjuster: Not killing cached processes
+10-24 15:32:43.303  5959  5959 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.clearcut.service.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentDirectBootAwareApiService }
+10-24 15:32:43.631  5150  5311 D EGL_emulation: app_time_stats: avg=1235.48ms min=1235.48ms max=1235.48ms count=1
+10-24 15:32:44.820   919   919 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 15:32:45.294  5150  5311 D EGL_emulation: app_time_stats: avg=831.29ms min=158.59ms max=1503.99ms count=2
+10-24 15:32:46.378   904   904 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+10-24 15:32:46.910  1089  1315 D IpClient/wlan0: interfaceLinkStateChanged: ifindex 16 down
+10-24 15:32:46.937   357   357 I netd    : interfaceGetCfg(wlan0) -> {InterfaceConfigurationParcel{ifName: wlan0, hwAddr: 02:15:b2:00:00:00, ipv4Addr: 10.0.2.16, prefixLength: 24, flags: [up, broadcast, multicast]}} <0.09ms>
+10-24 15:32:46.955   904   904 I wpa_supplicant: wlan0: CTRL-EVENT-DISCONNECTED bssid=02:15:b2:00:00:01 reason=4 locally_generated=1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 15:32:46.957  5150  5175 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+10-24 15:32:46.958   904   904 I wpa_supplicant: assoc key_mgmt 0x4 network key_mgmt 0x4
+10-24 15:32:46.969   477   477 I wificond: Regulatory domain changed to country: 00 on wiphy_index: 1
+10-24 15:32:46.969   477   477 I wificond: UpdateBandInfo
+10-24 15:32:46.974   477   477 I wificond: 2.4Ghz frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+10-24 15:32:46.974   477   477 I wificond: 5Ghz non-DFS frequencies:
+10-24 15:32:46.975   477   477 I wificond: 5Ghz DFS frequencies: 5180 5200 5220 5240 5260 5280 5300 5320 5500 5520 5540 5560 5580 5600 5620 5640 5660 5680 5700 5745 5765 5785 5805 5825
+10-24 15:32:46.975   477   477 I wificond: 6Ghz frequencies:
+10-24 15:32:46.975   477   477 I wificond: 60Ghz frequencies:
+10-24 15:32:46.986   548  2154 D WifiNl80211Manager: OnRegDomainChanged 00
+--------- beginning of kernel
+10-24 15:32:47.146     0     0 I logd    : logdr: UID=2000 GID=2000 PID=7413 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 15:32:46.990   548  2154 D WifiNative: onCountryCodeChanged: 00
+10-24 15:32:46.990   548  2154 I WifiCountryCode: Receive onDriverCountryCodeChanged 00
+10-24 15:32:47.002   548   839 W LastMileLogger: Failed to read event trace: /sys/kernel/debug/tracing/instances/wifi/trace
+10-24 15:32:47.010   548   839 E WifiStaIfaceAidlImpl: stopRssiMonitoring failed with service-specific exception: android.os.ServiceSpecificException:  (code 5)
+10-24 15:32:47.016   548   839 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.sendStickyBroadcast:1626 com.android.server.wifi.ClientModeImpl.sendNetworkChangeBroadcast:3008 com.android.server.wifi.ClientModeImpl.lambda$sendNetworkChangeBroadcastWithCurrentState$14:2985 com.android.server.wifi.ClientModeImpl.$r8$lambda$q-j88Pjw4gROgoJFr8wBlBVbuJI:0 com.android.server.wifi.ClientModeImpl$$ExternalSyntheticLambda4.send:0 
+10-24 15:32:47.019  1089  1100 I rkstack.process: Background young concurrent copying GC freed 42140(1933KB) AllocSpace objects, 0(0B) LOS objects, 36% free, 3426KB/5413KB, paused 53us,11us total 108.860ms
+10-24 15:32:47.023   548   846 D ConnectivityService: [102 WIFI] EVENT_NETWORK_INFO_CHANGED, going from CONNECTED to DISCONNECTED
+10-24 15:32:47.025   548   846 D ConnectivityService: [102 WIFI] disconnected, was satisfying 65
+10-24 15:32:47.039   548   839 D WifiClientModeImpl[34662:wlan0]: ClientModeImpl: Leaving Connected state
+10-24 15:32:47.042   548   839 D WifiCountryCode: evaluateAllCmmStateAndApplyIfAllReady: {ConcreteClientModeManager{id=34297 iface=wlan0 role=ROLE_CLIENT_PRIMARY}=true}
+10-24 15:32:47.042   548   839 D WifiCountryCode: updateCountryCode to US
+10-24 15:32:47.042   548   839 D WifiCountryCode: setCountryCodeNative: US, isClientModeOnly: true mDriverCountryCode: US
+10-24 15:32:47.042   548   839 D WifiNative: onSetCountryCodeSucceeded: US
+10-24 15:32:47.042   548   839 I WifiCountryCode: Receive onSetCountryCodeSucceeded US
+10-24 15:32:47.043   548   839 I WifiNl80211Manager: Receive country code change to US
+10-24 15:32:47.043   477   477 I wificond: Receive notifyCountryCodeChanged
+10-24 15:32:47.043   477   477 I wificond: UpdateBandInfo
+10-24 15:32:47.043   548   839 I WifiClientModeImpl[34662:wlan0]: disconnectedstate enter
+10-24 15:32:47.043   548   839 E WifiScoringParams: Invalid frequency(-1), using 5G as default rssi array
+10-24 15:32:47.047   548   839 D WifiNetworkAgent: NetworkAgent: NetworkAgent channel lost
+10-24 15:32:47.047   477   477 I wificond: 2.4Ghz frequencies: 2412 2417 2422 2427 2432 2437 2442 2447 2452 2457 2462 2467 2472 2484
+10-24 15:32:47.047   477   477 I wificond: 5Ghz non-DFS frequencies:
+10-24 15:32:47.047   477   477 I wificond: 5Ghz DFS frequencies: 5180 5200 5220 5240 5260 5280 5300 5320 5500 5520 5540 5560 5580 5600 5620 5640 5660 5680 5700 5745 5765 5785 5805 5825
+10-24 15:32:47.047   477   477 I wificond: 6Ghz frequencies:
+10-24 15:32:47.047   477   477 I wificond: 60Ghz frequencies:
+10-24 15:32:47.051  1089  1315 D ApfFilter: (wlan0): shutting down
+10-24 15:32:47.052  1089  1315 D DhcpClient: doQuit
+10-24 15:32:47.064  5150  5311 D EGL_emulation: app_time_stats: avg=113.78ms min=113.78ms max=113.78ms count=1
+10-24 15:32:47.070   548   839 E WifiStaIfaceAidlImpl: setDtimMultiplier failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+10-24 15:32:47.288     0     0 I logd    : logdr: UID=2000 GID=2000 PID=7418 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 15:32:47.141  1089  1315 D DhcpClient: DHCP Packet Handler stopped
+10-24 15:32:47.141  1089  1315 D DhcpClient: onQuitting
+10-24 15:32:47.142   357   422 I netd    : interfaceSetCfg(InterfaceConfigurationParcel{ifName: wlan0, hwAddr: , ipv4Addr: 0.0.0.0, prefixLength: 0, flags: []}) <0.14ms>
+10-24 15:32:47.144   357   406 I Netd    : Destroyed 4 sockets on 10.0.2.16 in 467us
+10-24 15:32:47.145   357   357 I netd    : tetherGetStats() -> {[]} <13.34ms>
+10-24 15:32:47.147  5959  6071 V NativeCrypto: Read error: ssl=0x75e132e74098: I/O error during system call, Software caused connection abort
+10-24 15:32:47.164  5959  7057 V NativeCrypto: SSL shutdown failed: ssl=0x75e132e74098: I/O error during system call, Broken pipe
+10-24 15:32:47.165  5959  7057 E WakeLock: GCM_HB_ALARM release without a matched acquire!
+10-24 15:32:47.165  5959  7057 W WakeLock: GCM_HB_ALARM counter does not exist
+10-24 15:32:47.178  5959  7057 I AlarmManager: setExactAndAllowWhileIdle [name: GCM_CONN_ALARM type: 2 triggerAtMillis: 287822]
+10-24 15:32:47.182  5959  7057 E WakeLock: GCM_CONN_ALARM release without a matched acquire!
+10-24 15:32:47.182  5959  7057 W WakeLock: GCM_CONN_ALARM counter does not exist

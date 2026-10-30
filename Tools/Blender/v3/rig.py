@@ -50,12 +50,13 @@ try: f=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',max(
 except Exception: f=ImageFont.load_default()
 t={text!r}; b=d.textbbox((0,0),t,font=f); pad=8
 d.rectangle([w-b[2]-3*pad,h-b[3]-3*pad,w-pad,h-pad],fill=(16,24,40)); d.text((w-b[2]-2*pad,h-b[3]-2*pad),t,font=f,fill=(232,176,75)); im.save({path!r})"""])
-def strip(paths,out,cols=4,cell=360,title=""):
+def strip(paths,out,cols=4,cell=360,title="",aspect=1.0):
     subprocess.check_call(["/usr/bin/python3","-c",f"""
 from PIL import Image,ImageDraw
-P={paths!r}; c={cols}; s={cell}; r=(len(P)+c-1)//c
-S=Image.new('RGB',(c*s,r*s+28),(16,24,40)); d=ImageDraw.Draw(S); d.text((8,8),{title!r},fill=(232,176,75))
-for i,p in enumerate(P): S.paste(Image.open(p).convert('RGB').resize((s,s)),((i%c)*s,28+(i//c)*s))
+P={paths!r}; c={cols}; s={cell}; t=int(s/{aspect}); r=(len(P)+c-1)//c
+S=Image.new('RGB',(c*s,r*t+28),(16,24,40)); d=ImageDraw.Draw(S); d.text((8,8),{title!r},fill=(232,176,75))
+for i,p in enumerate(P):
+    im=Image.open(p).convert('RGB'); k=min(s/im.width,t/im.height); im=im.resize((int(im.width*k),int(im.height*k))); S.paste(im,((i%c)*s+(s-im.width)//2,28+(i//c)*t+(t-im.height)//2))
 S.save({out!r})"""])
 
 def art_sky(sc):

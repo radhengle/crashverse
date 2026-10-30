@@ -100,12 +100,13 @@ namespace Crashverse.UI
             var g = V2Screens.Grid(v, new Vector2(104f, 112f), 3, 6f, 2 * 112f + 6f);
             Tile(g.transform, UIArt.Chest, "Level Rewards", "Coins, Gems, Chests", OpenChest, "Button_OpenChest");
             Tile(g.transform, UIArt.StarOn, "Star Collection", "Stars from every level", () => Router.Toast(StarsLine()), "Button_StarCollection");
-            Tile(g.transform, "badge_03_gold", "Season Pass", "Free track", () => Router.Push(new LocalSeasonPassScreen()), "Button_SeasonPass");
-            Tile(g.transform, "badge_02_silver", "Leaderboard", "Local", () => Router.Push(new LocalLeaderboardScreen()), "Button_Leaderboards");
-            Tile(g.transform, UIArt.Gem, "Daily Login", "7-day rewards", () => Router.Push(new LocalDailyLoginScreen()), "Button_DailyLogin");
-            Tile(g.transform, "badge_01_bronze", "Achievements", "Claim rewards", null, "Button_Achievements");
+            // FeatureFlags (user scope 2026-10-30): unfinished features get no tile at all
+            if (FeatureFlags.SeasonPass) Tile(g.transform, "badge_03_gold", "Season Pass", "Free track", () => Router.Push(new LocalSeasonPassScreen()), "Button_SeasonPass");
+            if (FeatureFlags.Leaderboard) Tile(g.transform, "badge_02_silver", "Leaderboard", "Local", () => Router.Push(new LocalLeaderboardScreen()), "Button_Leaderboards");
+            if (FeatureFlags.DailyLogin) Tile(g.transform, UIArt.Gem, "Daily Login", "7-day rewards", () => Router.Push(new LocalDailyLoginScreen()), "Button_DailyLogin");
+            if (FeatureFlags.Achievements) Tile(g.transform, "badge_01_bronze", "Achievements", "Claim rewards", null, "Button_Achievements");
             _chests = UIFactory.Label(v, "", Th.bodySp, Color.white, TextAnchor.MiddleCenter, Th);
-            V2.Title(v, "Achievements", Th.headingSp, Color.white, Th);
+            if (FeatureFlags.Achievements) V2.Title(v, "Achievements", Th.headingSp, Color.white, Th);
             _list = UIFactory.VStack(v, 4f, 0f);
             _list.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
@@ -142,6 +143,7 @@ namespace Crashverse.UI
             _wallet.text = $"{p.coins} coins   ·   {p.gems} gems   ·   {StarsLine()}";
             _chests.text = p.chests > 0 ? $"{p.chests} chest{(p.chests > 1 ? "s" : "")} to open: tap Level Rewards" : $"Chests opened: {p.chestsOpened}";
             for (int i = _list.childCount - 1; i >= 0; i--) UnityEngine.Object.Destroy(_list.GetChild(i).gameObject);
+            if (FeatureFlags.Achievements)
             foreach (var a in AppServices.Content.Meta.achievements ?? new AchievementDef[0])
             {
                 int prog = Math.Min(a.target, AchievementRules.Progress(a, ch, save, AppServices.Progress));

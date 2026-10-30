@@ -97,29 +97,52 @@ namespace Crashverse.Core
         /// Target UI v2: the world map is a 2D scrolling path (MapScreen) over the art pack backgrounds, so no 3D map world is built.
         /// First run (no local guest profile yet) goes through Login → Create Profile first.
         /// </summary>
+        /// <summary>QA V2-01 second line of defence: if the process dies mid-run (any relaunch Unity can't survive), the next launch
+        /// reopens that level's Level Select (or the Daily Boss card) instead of dropping the player on the map. Cleared on every
+        /// normal end of a run; only honoured on the first map after a launch.</summary>
+        public const string ResumeKey = "cv_resume_run";
+        static bool _resumeChecked;
+
         public static void ShowMap()
         {
+            string resume = _resumeChecked ? "" : PlayerPrefs.GetString(ResumeKey, "");
             EndRun();
             Crashverse.Audio.MusicPlayer.Ensure().PlayBase("sunnyville_map_loop");
             var r = AppServices.Router;
             if (AppServices.Progress != null && !AppServices.Progress.Data.profile.created)
             {
+                if (resume.Length > 0) PlayerPrefs.SetString(ResumeKey, resume); // keep it for the map after login
                 if (!(r.Top is LoginScreen) && !(r.Top is ProfileScreen)) r.PopAllAndPush(new LoginScreen());
                 return;
             }
             if (r.Top is MapScreen) return;
             r.PopAllAndPush(new MapScreen());
+            if (!_resumeChecked) { _resumeChecked = true; TryResume(resume); }
+        }
+
+        static void TryResume(string resume)
+        {
+            if (string.IsNullOrEmpty(resume)) return;
+            var r = AppServices.Router; var db = AppServices.Content;
+            if (resume == "dailyboss") { r.Push(new DailyBossScreen()); r.Toast("Back to the Daily Boss"); Debug.Log("[V2-01] resumed Daily Boss after restart"); return; }
+            var lvl = db?.GetLevel(resume);
+            if (lvl != null && Crashverse.Meta.UnlockRules.IsLevelUnlocked(lvl, AppServices.Save))
+            { r.Push(new LevelSelectScreen(lvl)); r.Toast("Back to Level " + lvl.number); Debug.Log("[V2-01] resumed " + resume + " after restart"); }
         }
 
         public static void StartRun(RunContext ctx)
         {
             EndRun();
+            _resumeChecked = true; // a run started normally: nothing to resume this launch
+            var rk = ctx.mode == RunMode.DailyBoss ? "dailyboss" : ctx.mode == RunMode.Campaign && ctx.level != null ? ctx.level.id : "";
+            if (rk.Length > 0) { PlayerPrefs.SetString(ResumeKey, rk); PlayerPrefs.Save(); }
             _runRoot = new GameObject("Run");
             var arena = new GameObject("Arena").AddComponent<ArenaBuilder>();
             arena.transform.SetParent(_runRoot.transform);
             arena.Build();
             if (ctx.IsHard || ctx.mode == RunMode.DailyBoss) ArenaBuilder.DarkTheme(0.55f); // v2: hard level / Daily Boss dark theme
             new GameObject("DebrisPool").AddComponent<DebrisPool>().transform.SetParent(_runRoot.transform);
+            new GameObject("GlassShardFx").AddComponent<GlassShardFx>().transform.SetParent(_runRoot.transform); // presentation-only glass shards
 
             var wreckerGo = new GameObject("Wrecker");
             wreckerGo.transform.SetParent(_runRoot.transform);
@@ -148,6 +171,8 @@ namespace Crashverse.Core
             RunCamera.enabled = true;
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
+            // User 2026-10-30 / Target UI §5: locked camera behind the cannon, framing the cannon (bottom centre) + the whole building
+            RunCamera.FrameBehindCannon(wreckerGo.transform.position, StructureBounds(s, s.structureBase));
             int fx = RenderMaterials.FixAll(_runRoot); if (fx > 0) Debug.LogWarning($"[BUG-23] run: {fx} renderers had no usable material");
             // #18/#20: PHYS_* ImpactEvents (Impact/Crack/Break/JointSnap/CollapseStart/End with pieceIds) on AnimEventBus.
             // Added after Begin so it binds to the SimRunner that Begin created. Presentation only; never read by the sim.
@@ -168,8 +193,25 @@ namespace Crashverse.Core
 #endif
         }
 
+        /// <summary>World bounds of the level's pieces as built (before any shot), or a 6 m box at the base if there are none.</summary>
+        public static Bounds StructureBounds(GameSession s, Vector3 fallbackBase)
+        {
+            bool any = false; var b = new Bounds(fallbackBase + Vector3.up * 3f, new Vector3(6f, 6f, 6f));
+            if (s != null && s.builder != null)
+                foreach (var blk in s.builder.Blocks)
+                {
+                    if (blk == null) continue;
+                    // collider bounds: the box is the block (its cube renderer is disabled when RealKit dresses it)
+                    var c = blk.GetComponent<Collider>(); var r = blk.GetComponent<Renderer>();
+                    Bounds bb; if (c != null && c.enabled) bb = c.bounds; else if (r != null) bb = r.bounds; else continue;
+                    if (!any) { b = bb; any = true; } else b.Encapsulate(bb);
+                }
+            return b;
+        }
+
         public static void EndRun()
         {
+            if (PlayerPrefs.HasKey(ResumeKey)) { PlayerPrefs.DeleteKey(ResumeKey); PlayerPrefs.Save(); }
             if (_runRoot != null) Object.Destroy(_runRoot);
             Time.timeScale = 1f;
             _runRoot = null; Session = null;

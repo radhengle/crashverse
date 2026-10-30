@@ -25,7 +25,7 @@ public class InterfaceAgreementTests
         var tok = att.GetProperty("attemptToken").GetString();
         // raw agreed JSON: SubmitScore {attemptToken, inputs[{tick,type,x,y}], clientScoreBp, buildHash} (+ run summary until the replay worker exists)
         var inputs = Enumerable.Range(1, 3).SelectMany(i => Harness.In(i * 200)).Select(e => new { e.tick, e.type, e.x, e.y }).ToArray();
-        var body = new { attemptToken = tok, inputs, clientScoreBp = 4321, buildHash = "dev", won = true, destroyedRatio = 0.9f, shotsLeft = 1, bestCombo = 3 };
+        var body = new { attemptToken = tok, inputs, clientScoreBp = 4321, buildHash = SimVersions.Current, won = true, destroyedRatio = 0.9f, shotsLeft = 1, bestCombo = 3 };
         var r = await h.Post("/v1/score", body, s);
         Assert.Equal(HttpStatusCode.OK, r.status);
         Assert.True(r["accepted"].GetBoolean()); Assert.Equal("pending", r["status"].GetString());
@@ -33,7 +33,7 @@ public class InterfaceAgreementTests
         var again = await h.Post("/v1/score", body, s); // same attempt token = same report → idempotent, not double-counted
         Assert.Equal("Already synced", again["message"].GetString());
         var run = (await h.X.Db.List<RunDoc>("runs")).Single();
-        Assert.Equal(4321, run.clientScore); Assert.Equal("dev", run.simVersion); Assert.Equal(12, run.campaign.inputs.Count);
+        Assert.Equal(4321, run.clientScore); Assert.Equal(SimVersions.Current, run.simVersion); Assert.Equal(12, run.campaign.inputs.Count);
     }
 
     [Fact]

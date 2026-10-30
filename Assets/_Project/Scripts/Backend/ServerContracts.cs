@@ -6,6 +6,11 @@ using Newtonsoft.Json.Converters;
 
 namespace Crashverse.Backend
 {
+    /// <summary>Simulation version shared by client and server. Bump whenever ranked/campaign outcomes change, so runs and replays
+    /// recorded on an older simulation are never validated against the new one (they fall to practice / are rejected).
+    /// sim-2-chunked: chunked destruction (3770394) + PR #57 titan arenas/joint legs; sim-3-jointpolicy: JointBreakPolicy (3806245, infinite support joints, tick-exact JointRemoval).</summary>
+    public static class SimVersions { public const string Current = "sim-3-jointpolicy"; }
+
     /// <summary>Shared (client + server) Titan scoring formula. Lives outside LocalBackendService so release builds keep it.</summary>
     public static class TitanScoring
     {

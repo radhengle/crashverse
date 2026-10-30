@@ -1,0 +1,735 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Bld_Watchtower",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); positions/rotations local to the building root",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  },
+  "note": "suggested placement on Island_Sunnyville"
+ },
+ "tris_total": {
+  "LOD0": 7375,
+  "LOD1": 3673,
+  "LOD2": 1419,
+  "Fractured": 16909
+ },
+ "piece_count": 15,
+ "pieces": [
+  {
+   "id": "S0_RingDoor",
+   "kit": "Kit_Tower_RingDoor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 829,
+    "LOD1": 414,
+    "LOD2": 165,
+    "Fractured": 1438
+   }
+  },
+  {
+   "id": "S1_RingSlit",
+   "kit": "Kit_Tower_RingSlit",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S0_RingDoor"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 928,
+    "LOD1": 460,
+    "LOD2": 185,
+    "Fractured": 1497
+   }
+  },
+  {
+   "id": "S2_RingSlit",
+   "kit": "Kit_Tower_RingSlit",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 6.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S1_RingSlit"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 928,
+    "LOD1": 460,
+    "LOD2": 185,
+    "Fractured": 1497
+   }
+  },
+  {
+   "id": "S3_RingWindow",
+   "kit": "Kit_Tower_RingWindow",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S2_RingSlit"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 982,
+    "LOD1": 491,
+    "LOD2": 194,
+    "Fractured": 1496
+   }
+  },
+  {
+   "id": "Crown",
+   "kit": "Kit_Tower_Crown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 12.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S3_RingWindow"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 496,
+    "LOD1": 248,
+    "LOD2": 99,
+    "Fractured": 1056
+   }
+  },
+  {
+   "id": "Roof",
+   "kit": "Kit_Tower_Roof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 13.42,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Crown"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 782,
+    "LOD1": 391,
+    "LOD2": 153,
+    "Fractured": 1500
+   }
+  },
+  {
+   "id": "Floor_1",
+   "kit": "Kit_Tower_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S0_RingDoor"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 80,
+    "LOD1": 40,
+    "LOD2": 16,
+    "Fractured": 723
+   }
+  },
+  {
+   "id": "Floor_2",
+   "kit": "Kit_Tower_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 6.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S1_RingSlit"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 80,
+    "LOD1": 40,
+    "LOD2": 16,
+    "Fractured": 723
+   }
+  },
+  {
+   "id": "Floor_3",
+   "kit": "Kit_Tower_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S2_RingSlit"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 80,
+    "LOD1": 40,
+    "LOD2": 16,
+    "Fractured": 723
+   }
+  },
+  {
+   "id": "Floor_4",
+   "kit": "Kit_Tower_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 12.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S3_RingWindow"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 80,
+    "LOD1": 40,
+    "LOD2": 16,
+    "Fractured": 723
+   }
+  },
+  {
+   "id": "Annex",
+   "kit": "Kit_Props_Shed",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx",
+   "position": {
+    "x": 2.65,
+    "y": 0.0,
+    "z": -0.35
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 1058,
+    "LOD1": 529,
+    "LOD2": 210,
+    "Fractured": 1416
+   }
+  },
+  {
+   "id": "Barrel_0",
+   "kit": "Kit_Props_Barrel",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+   "position": {
+    "x": -1.6,
+    "y": 0.0,
+    "z": 2.35
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.1736,
+    "z": 0.0,
+    "w": 0.9848
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -20.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 354,
+    "LOD1": 177,
+    "LOD2": 70,
+    "Fractured": 1434
+   }
+  },
+  {
+   "id": "Barrel_1",
+   "kit": "Kit_Props_Barrel",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+   "position": {
+    "x": -2.15,
+    "y": 0.0,
+    "z": 1.85
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.5373,
+    "z": 0.0,
+    "w": 0.8434
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -65.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 354,
+    "LOD1": 177,
+    "LOD2": 70,
+    "Fractured": 1434
+   }
+  },
+  {
+   "id": "Crate_0",
+   "kit": "Kit_Props_Crate",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx",
+   "position": {
+    "x": 1.75,
+    "y": 0.0,
+    "z": 2.35
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.1305,
+    "z": 0.0,
+    "w": 0.9914
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 15.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 172,
+    "LOD1": 83,
+    "LOD2": 12,
+    "Fractured": 670
+   }
+  },
+  {
+   "id": "Crate_1",
+   "kit": "Kit_Props_CrateSmall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx",
+   "position": {
+    "x": 1.7,
+    "y": 0.8,
+    "z": 2.3
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.1736,
+    "z": 0.0,
+    "w": 0.9848
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -20.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Crate_0"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 172,
+    "LOD1": 83,
+    "LOD2": 12,
+    "Fractured": 579
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "S0_RingDoor",
+   "b": "S1_RingSlit",
+   "point": {
+    "x": 0.0,
+    "y": 2.9436,
+    "z": 0.0461
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_RingDoor",
+   "b": "Floor_1",
+   "point": {
+    "x": 0.0,
+    "y": 2.82,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_RingDoor",
+   "b": "Annex",
+   "point": {
+    "x": 1.883,
+    "y": 1.5,
+    "z": -0.35
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_RingDoor",
+   "b": "Barrel_0",
+   "point": {
+    "x": -1.6,
+    "y": 0.466,
+    "z": 2.2594
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_RingDoor",
+   "b": "Barrel_1",
+   "point": {
+    "x": -1.8811,
+    "y": 0.466,
+    "z": 1.85
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_RingDoor",
+   "b": "Crate_0",
+   "point": {
+    "x": 1.6563,
+    "y": 0.4,
+    "z": 2.2263
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_RingDoor",
+   "b": "Crate_1",
+   "point": {
+    "x": 1.6993,
+    "y": 1.075,
+    "z": 2.2693
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_RingSlit",
+   "b": "S2_RingSlit",
+   "point": {
+    "x": 0.0,
+    "y": 5.9436,
+    "z": 0.0461
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_RingSlit",
+   "b": "Floor_1",
+   "point": {
+    "x": 0.0,
+    "y": 2.9436,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_RingSlit",
+   "b": "Floor_2",
+   "point": {
+    "x": 0.0,
+    "y": 5.82,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_RingSlit",
+   "b": "Annex",
+   "point": {
+    "x": 1.883,
+    "y": 3.3836,
+    "z": -0.35
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_RingSlit",
+   "b": "S3_RingWindow",
+   "point": {
+    "x": -0.1013,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_RingSlit",
+   "b": "Floor_2",
+   "point": {
+    "x": 0.0,
+    "y": 5.9436,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_RingSlit",
+   "b": "Floor_3",
+   "point": {
+    "x": 0.0,
+    "y": 8.82,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S3_RingWindow",
+   "b": "Crown",
+   "point": {
+    "x": -0.0713,
+    "y": 12.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S3_RingWindow",
+   "b": "Floor_3",
+   "point": {
+    "x": 0.0,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S3_RingWindow",
+   "b": "Floor_4",
+   "point": {
+    "x": 0.0,
+    "y": 11.82,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Crown",
+   "b": "Roof",
+   "point": {
+    "x": 0.0,
+    "y": 13.42,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Crown",
+   "b": "Floor_4",
+   "point": {
+    "x": 0.0,
+    "y": 12.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Barrel_0",
+   "b": "Barrel_1",
+   "point": {
+    "x": -1.8667,
+    "y": 0.466,
+    "z": 2.1083
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Crate_0",
+   "b": "Crate_1",
+   "point": {
+    "x": 1.7,
+    "y": 0.8,
+    "z": 2.3
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this instance's anchor_to list"
+}

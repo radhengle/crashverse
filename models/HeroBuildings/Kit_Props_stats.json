@@ -1,0 +1,127 @@
+{
+ "building": "Props",
+ "texel_px_per_m": 182.8,
+ "atlas": 2048,
+ "modules": {
+  "Barrel": {
+   "LOD0": 354,
+   "LOD1": 177,
+   "LOD2": 70,
+   "ucx": 8,
+   "aabb": [
+    [
+     -0.35199999809265137,
+     -0.35199999809265137,
+     0.0
+    ],
+    [
+     0.35199999809265137,
+     0.35199999809265137,
+     0.9319999814033508
+    ]
+   ],
+   "frac": "Wood",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "oak barrel, iron hoops",
+   "frags": 12,
+   "frag_max": 147,
+   "Fractured": 1434,
+   "mass": "9.5-28.2",
+   "joints": 35,
+   "anchors": 4,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "10/12"
+  },
+  "Crate": {
+   "LOD0": 172,
+   "LOD1": 83,
+   "LOD2": 12,
+   "ucx": 1,
+   "aabb": [
+    [
+     -0.42250004410743713,
+     -0.42250001430511475,
+     0.0
+    ],
+    [
+     0.42250004410743713,
+     0.42250004410743713,
+     0.800000011920929
+    ]
+   ],
+   "frac": "Wood",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "0.8 m crate",
+   "frags": 12,
+   "frag_max": 70,
+   "Fractured": 670,
+   "mass": "15.9-42.8",
+   "joints": 36,
+   "anchors": 9,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "12/12"
+  },
+  "CrateSmall": {
+   "LOD0": 172,
+   "LOD1": 83,
+   "LOD2": 12,
+   "ucx": 1,
+   "aabb": [
+    [
+     -0.29750004410743713,
+     -0.29750001430511475,
+     0.0
+    ],
+    [
+     0.29750004410743713,
+     0.29750004410743713,
+     0.550000011920929
+    ]
+   ],
+   "frac": "Wood",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "0.55 m crate (stacks)",
+   "frags": 10,
+   "frag_max": 76,
+   "Fractured": 579,
+   "mass": "4.0-14.6",
+   "joints": 23,
+   "anchors": 8,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "10/10"
+  },
+  "Shed": {
+   "LOD0": 1058,
+   "LOD1": 529,
+   "LOD2": 210,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.4500000476837158,
+     -1.350172996520996,
+     0.0
+    ],
+    [
+     1.4500000476837158,
+     0.9640372395515442,
+     3.880000114440918
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "lean-to stone annex with tile roof, chimney, door, window, ivy (back +Y on a host wall)",
+   "frags": 7,
+   "frag_max": 299,
+   "Fractured": 1416,
+   "mass": "959.6-2582.6",
+   "joints": 13,
+   "anchors": 5,
+   "trims_dropped": 29,
+   "cut_edges_bevelled": "2/7"
+  }
+ }
+}

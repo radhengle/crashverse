@@ -55,6 +55,8 @@ namespace UnityEngine
 
     public class Transform : Component
     {
+        public Matrix4x4 localToWorldMatrix => Matrix4x4.identity; public Matrix4x4 worldToLocalMatrix => Matrix4x4.identity;
+        public void SetPositionAndRotation(Vector3 p, Quaternion q) { position = p; rotation = q; }
         public Vector3 position;
         public Vector3 localPosition;
         public Vector3 localScale = Vector3.one;
@@ -99,6 +101,40 @@ namespace UnityEngine
         public static Vector3 operator *(Vector3 a, float s) => new Vector3(a.x * s, a.y * s, a.z * s);
         public static Vector3 operator *(float s, Vector3 a) => a * s;
         public static float Min(float a, float b) => Math.Min(a, b);
+        public float this[int i] { get => i == 0 ? x : i == 1 ? y : z; set { if (i == 0) x = value; else if (i == 1) y = value; else z = value; } }
+        public static Vector3 Scale(Vector3 a, Vector3 b) => new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
+        public static float Dot(Vector3 a, Vector3 b) => a.x * b.x + a.y * b.y + a.z * b.z;
+        public static Vector3 Cross(Vector3 a, Vector3 b) => new Vector3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+        public static Vector3 operator /(Vector3 a, float s) => new Vector3(a.x / s, a.y / s, a.z / s);
+        public static Vector3 Normalize(Vector3 v) => v.normalized;
+        public static float Distance(Vector3 a, Vector3 b) => (a - b).magnitude;
+        public static Vector3 Slerp(Vector3 a, Vector3 b, float t) => Lerp(a, b, t);
+        public static Vector3 ProjectOnPlane(Vector3 v, Vector3 n) => v - n * Dot(v, n);
+        public static Vector3 Max(Vector3 a, Vector3 b) => new Vector3(Math.Max(a.x, b.x), Math.Max(a.y, b.y), Math.Max(a.z, b.z));
+        public static Vector3 Min(Vector3 a, Vector3 b) => new Vector3(Math.Min(a.x, b.x), Math.Min(a.y, b.y), Math.Min(a.z, b.z));
+        public override string ToString() => $"({x}, {y}, {z})";
+    }
+
+    public struct Bounds
+    {
+        public Vector3 center, extents;
+        public Bounds(Vector3 c, Vector3 size) { center = c; extents = size * 0.5f; }
+        public Vector3 size { get => extents * 2f; set => extents = value * 0.5f; }
+        public Vector3 min => center - extents; public Vector3 max => center + extents;
+        public void Encapsulate(Vector3 p) { var mn = Vector3.Min(min, p); var mx = Vector3.Max(max, p); center = (mn + mx) * 0.5f; extents = (mx - mn) * 0.5f; }
+        public void Encapsulate(Bounds b) { Encapsulate(b.min); Encapsulate(b.max); }
+        public bool Contains(Vector3 p) => p.x >= min.x && p.y >= min.y && p.z >= min.z && p.x <= max.x && p.y <= max.y && p.z <= max.z;
+        public void SetMinMax(Vector3 mn, Vector3 mx) { center = (mn + mx) * 0.5f; extents = (mx - mn) * 0.5f; }
+    }
+
+    public struct Matrix4x4
+    {
+        public static Matrix4x4 identity => new Matrix4x4();
+        public Matrix4x4 inverse => this; public Matrix4x4 transpose => this;
+        public Vector3 MultiplyPoint3x4(Vector3 p) => p; public Vector3 MultiplyPoint(Vector3 p) => p; public Vector3 MultiplyVector(Vector3 v) => v;
+        public static Matrix4x4 TRS(Vector3 p, Quaternion q, Vector3 s) => identity;
+        public static Matrix4x4 Translate(Vector3 p) => identity; public static Matrix4x4 Rotate(Quaternion q) => identity; public static Matrix4x4 Scale(Vector3 s) => identity;
+        public static Matrix4x4 operator *(Matrix4x4 a, Matrix4x4 b) => a;
     }
 
     public struct Quaternion
@@ -110,6 +146,10 @@ namespace UnityEngine
         public static Quaternion AngleAxis(float d, Vector3 a) => identity;
         public static Vector3 operator *(Quaternion q, Vector3 v) => v;
         public static Quaternion operator *(Quaternion a, Quaternion b) => a;
+        public static Quaternion Slerp(Quaternion a, Quaternion b, float t) => b;
+        public static Quaternion LookRotation(Vector3 f) => identity; public static Quaternion LookRotation(Vector3 f, Vector3 up) => identity;
+        public static Quaternion Inverse(Quaternion q) => q;
+        public Vector3 eulerAngles => Vector3.zero;
     }
 
     public struct Color
@@ -132,6 +172,11 @@ namespace UnityEngine
 
     public static class Mathf
     {
+        public const float Rad2Deg = 57.29578f, Deg2Rad = 0.01745329f;
+        public static float DeltaAngle(float a, float b) { float d = (b - a) % 360f; if (d > 180f) d -= 360f; if (d < -180f) d += 360f; return d; }
+        public static float Atan2(float y, float x) => (float)Math.Atan2(y, x);
+        public static float Atan(float x) => (float)Math.Atan(x);
+        public static float Tan(float x) => (float)Math.Tan(x);
         public static float PerlinNoise(float x, float y) => 0.5f;
         public static float Abs(float v) => Math.Abs(v); public static int Abs(int v) => Math.Abs(v); public static float Sqrt(float v) => (float)Math.Sqrt(v);
         public static float Repeat(float t, float l) => t - (float)Math.Floor(t / l) * l; public static float PingPong(float t, float l) => l - Math.Abs(Repeat(t, l * 2) - l);
@@ -177,7 +222,7 @@ namespace UnityEngine
     public static class Screen { public static int width = 1080; public static int height = 1920; public static float dpi = 420; public static Rect safeArea = new Rect(0, 0, 1080, 1920); public static ScreenOrientation orientation; }
     public static class Application
     {
-        public static int targetFrameRate;
+        public static int targetFrameRate; public static bool isPlaying;
         public static string persistentDataPath = System.IO.Directory.CreateDirectory(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "crashverse_test")).FullName; // exists on fresh CI runners
         public static void Quit() { }
         public static RuntimePlatform platform = RuntimePlatform.LinuxEditor;
@@ -253,16 +298,19 @@ namespace UnityEngine
         public RigidbodyInterpolation interpolation;
         public float sleepThreshold;
         public void WakeUp() { }
+        public bool IsSleeping() => false;
         public Vector3 position;
         public void AddForce(Vector3 f, ForceMode m = ForceMode.Force) { }
         public void AddExplosionForce(float f, Vector3 p, float r, float up = 0f, ForceMode m = ForceMode.Force) { }
     }
 
-    public class Collider : Component { public bool enabled = true; public bool isTrigger; public Rigidbody attachedRigidbody; }
+    public class Collider : Component { public Bounds bounds; public bool enabled = true; public bool isTrigger; public Rigidbody attachedRigidbody; }
     public class MeshCollider : Collider { public Mesh sharedMesh; public bool convex; }
     public class Renderer : Component
     {
         public bool enabled = true; public Material sharedMaterial; public Material material;
+        public Bounds bounds; public Material[] sharedMaterials; public Material[] materials;
+        public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
         public void GetPropertyBlock(MaterialPropertyBlock b) { }
         public void SetPropertyBlock(MaterialPropertyBlock b) { }
     }
@@ -285,6 +333,7 @@ namespace UnityEngine
     {
         public static Camera main;
         public float fieldOfView;
+        public float aspect = 0.4615f;
         public CameraClearFlags clearFlags;
         public Color backgroundColor;
         public Vector3 WorldToScreenPoint(Vector3 p) => p;
@@ -356,6 +405,7 @@ namespace UnityEngine
     {
         public float x, y, width, height;
         public Rect(float x, float y, float w, float h) { this.x = x; this.y = y; width = w; height = h; }
+        public static Rect MinMaxRect(float x0, float y0, float x1, float y1) => new Rect(x0, y0, x1 - x0, y1 - y0);
         public float xMin => x; public float yMin => y; public float xMax => x + width; public float yMax => y + height;
         public Vector2 center => new Vector2(x + width / 2, y + height / 2);
         public static bool operator ==(Rect a, Rect b) => a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height;
@@ -388,6 +438,8 @@ namespace UnityEngine
 
 namespace UnityEngine.Rendering
 {
+    public enum ShadowCastingMode { Off, On, TwoSided, ShadowsOnly }
+    public enum IndexFormat { UInt16, UInt32 }
     public enum AmbientMode { Skybox, Trilight, Flat, Custom }
 }
 namespace UnityEngine.Audio { public class AudioMixerGroup : UnityEngine.Object { } public class AudioMixer : UnityEngine.Object { public AudioMixerGroup[] FindMatchingGroups(string subPath) => new AudioMixerGroup[0]; } }
@@ -399,4 +451,13 @@ namespace UnityEngine
     public struct Vector4 { public float x, y, z, w; public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; } public static Vector4 zero => new Vector4(0, 0, 0, 0); }
     public enum TextureFormat { RGBA32, ARGB32, RGB24 }
     public enum FontStyle { Normal, Bold, Italic, BoldAndItalic }
+}
+
+namespace UnityEngine
+{
+    public struct LOD { public float screenRelativeTransitionHeight; public Renderer[] renderers; public LOD(float h, Renderer[] r) { screenRelativeTransitionHeight = h; renderers = r; } }
+    public class LODGroup : Component { public void SetLODs(LOD[] l) { } public void RecalculateBounds() { } }
+    public struct GradientColorKey { public Color color; public float time; public GradientColorKey(Color c, float t) { color = c; time = t; } }
+    public struct GradientAlphaKey { public float alpha, time; public GradientAlphaKey(float a, float t) { alpha = a; time = t; } }
+    public class Gradient { public void SetKeys(GradientColorKey[] c, GradientAlphaKey[] a) { } }
 }

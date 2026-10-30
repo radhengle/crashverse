@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-24 09:54:48Z" end-time="2026-10-24 09:54:56Z" duration="8.4908062">
+  <test-suite type="TestSuite" id="1000" name="CRASHVERSE" fullname="CRASHVERSE" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 09:54:48Z" end-time="2026-10-24 09:54:56Z" duration="8.490806" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties />
+    <test-suite type="Assembly" id="1005" name="Assembly-CSharp.dll" fullname="/github/workspace/Library/ScriptAssemblies/Assembly-CSharp.dll" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 09:54:48Z" end-time="2026-10-24 09:54:56Z" duration="8.482007" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1256" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+      </properties>
+      <test-suite type="TestSuite" id="1006" name="Crashverse" fullname="Crashverse" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 09:54:48Z" end-time="2026-10-24 09:54:56Z" duration="8.481348" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1007" name="Tests" fullname="Crashverse.Tests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 09:54:48Z" end-time="2026-10-24 09:54:56Z" duration="8.480983" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1008" name="PlayMode" fullname="Crashverse.Tests.PlayMode" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 09:54:48Z" end-time="2026-10-24 09:54:56Z" duration="8.480542" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="FirstRunTapTests" fullname="Crashverse.Tests.PlayMode.FirstRunTapTests" classname="Crashverse.Tests.PlayMode.FirstRunTapTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-24 09:54:48Z" end-time="2026-10-24 09:54:56Z" duration="8.479129" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1003" name="Age_gate_to_L1_by_taps_only" fullname="Crashverse.Tests.PlayMode.FirstRunTapTests.Age_gate_to_L1_by_taps_only" methodname="Age_gate_to_L1_by_taps_only" classname="Crashverse.Tests.PlayMode.FirstRunTapTests" runstate="Runnable" seed="1194150122" result="Passed" start-time="2026-10-24 09:54:48Z" end-time="2026-10-24 09:54:55Z" duration="7.566844" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[CVTAP|META|screen|640|480|dpi=0
+CVTAP|BEGIN|ListModal
+CVTAP|ListModal|Button_Month|320|152|1
+CVTAP|ListModal|Button_Year|320|224|1
+CVTAP|ListModal|Button_Continue|320|296|0
+CVTAP|ListModal|Button_January|320|110|1
+CVTAP|ListModal|Button_February|320|166|1
+CVTAP|ListModal|Button_March|320|222|1
+CVTAP|ListModal|Button_April|320|278|1
+CVTAP|ListModal|Button_May|320|334|1
+CVTAP|ListModal|Button_Close|320|414|1
+CVTAP|BEGIN|MapScreen
+CVTAP|MapScreen|Button_1|320|260|1
+CVTAP|MapScreen|Button_🔒|386|260|1
+CVTAP|MapScreen|Button_🔒|451|260|1
+CVTAP|MapScreen|Button_🔒|579|172|1
+CVTAP|MapScreen|Button_🔒|638|172|1
+CVTAP|MapScreen|Button_Store|295|28|1
+CVTAP|MapScreen|Button_Settings|447|28|1
+CVTAP|MapScreen|Button_⚙|584|28|1
+CVTAP|MapScreen|Button_Titan|59|448|0
+CVTAP|MapScreen|Button_Daily|176|448|0
+CVTAP|MapScreen|Button_Season|294|448|0
+CVTAP|MapScreen|Button_Ranks|412|448|1
+CVTAP|MapScreen|Button_◎|555|448|1
+L1HINT level=c1_l01 hint=(0,11) shots=4 win=0.85 gravity=(0.00, -9.81, 0.00)
+L1HINT block flag pos=(10.00, 5.30, 2.10) bounds=(0.10, 1.00, 0.10) rb=True
+L1HINT block bell pos=(9.75, 6.30, 0.00) bounds=(0.40, 0.50, 0.40) rb=True
+L1HINT block bellFrame pos=(10.00, 6.40, 0.00) bounds=(0.30, 1.20, 0.80) rb=True
+L1HINT block roof pos=(10.00, 5.50, 0.00) bounds=(2.60, 0.60, 2.60) rb=True
+L1HINT block hut pos=(10.00, 4.40, 0.00) bounds=(2.00, 1.60, 2.00) rb=True
+L1HINT block cabinR pos=(10.00, 4.20, 2.10) bounds=(1.80, 1.20, 1.60) rb=True
+L1HINT block cabinL pos=(10.00, 4.20, -2.10) bounds=(1.80, 1.20, 1.60) rb=True
+L1HINT block deck pos=(10.00, 3.40, 0.00) bounds=(2.40, 0.40, 6.00) rb=True
+L1HINT block post pos=(9.40, 2.20, 0.00) bounds=(0.50, 2.00, 0.50) rb=True
+L1HINT block rock pos=(10.00, 0.60, 0.00) bounds=(4.00, 1.20, 4.00) rb=True
+L1HINT spawn=(-18.17, 2.17, 0.00)
+L1HINT shot 1 aim=(0,11) v=(27.49, 5.34, 0.00) spawn=(-18.09, 1.87, 0.00)
+CVPROJ launch tick=11 pos=(-18.09, 1.87, 0.00) v=(27.49, 5.34, 0.00) age=0
+L1HINT  t=0.61 proj=(-15.71, 2.29, 0.00)
+CVTAP|AIM|yaw=0.0
+CVTAP|BEGIN|HudScreen
+CVTAP|HudScreen|Button_II|102|32|1
+CVTAP|HudScreen|Button_FIRE|580|412|0
+CVTAP|HudScreen|Button_DevAimHint|488|424|1
+L1HINT  t=0.72 proj=(-12.52, 2.73, 0.00)
+L1HINT  t=0.82 proj=(-9.77, 3.01, 0.00)
+L1HINT  t=0.92 proj=(-7.02, 3.19, 0.00)
+L1HINT  t=1.02 proj=(-4.27, 3.27, 0.00)
+L1HINT  t=1.14 proj=(-1.06, 3.24, 0.00)
+L1HINT  t=1.25 proj=(2.14, 3.07, 0.00)
+L1HINT  t=1.35 proj=(4.89, 2.83, 0.00)
+L1HINT  t=1.47 proj=(8.10, 2.42, 0.00)
+CVPROJ collide 'post' (root 'Run') block=post at (9.15, 2.29, 0.00) pos=(8.92, 2.29, 0.00) v=(0.00, -4.47, 0.00) age=50
+CVPROJ despawn hit post pos=(8.92, 2.29, 0.00) v=(0.00, -4.47, 0.00) age=50
+L1HINT after shot 1: destroyed=12.5 % mass=1/8 state=Resolving
+CVTAP|BEGIN|HudScreen
+CVTAP|HudScreen|Button_II|100|32|1
+CVTAP|HudScreen|Button_FIRE|580|412|0
+CVTAP|HudScreen|Button_DevAimHint|488|424|1
+CVTAP|BEGIN|HudScreen
+CVTAP|HudScreen|Button_II|98|32|1
+CVTAP|HudScreen|Button_FIRE|580|412|0
+CVTAP|HudScreen|Button_DevAimHint|488|424|1
+L1HINT result state=Won destroyed=100.0 % shots=1
+]]></output>
+              </test-case>
+              <test-case id="1002" name="InputManager_has_the_axes_StandaloneInputModule_reads" fullname="Crashverse.Tests.PlayMode.FirstRunTapTests.InputManager_has_the_axes_StandaloneInputModule_reads" methodname="InputManager_has_the_axes_StandaloneInputModule_reads" classname="Crashverse.Tests.PlayMode.FirstRunTapTests" runstate="Runnable" seed="1590345817" result="Passed" start-time="2026-10-24 09:54:55Z" end-time="2026-10-24 09:54:56Z" duration="0.239246" asserts="0">
+                <properties />
+                <output><![CDATA[CVTAP|META|screen|640|480|dpi=0
+]]></output>
+              </test-case>
+              <test-case id="1004" name="Under_13_goes_to_the_block_screen" fullname="Crashverse.Tests.PlayMode.FirstRunTapTests.Under_13_goes_to_the_block_screen" methodname="Under_13_goes_to_the_block_screen" classname="Crashverse.Tests.PlayMode.FirstRunTapTests" runstate="Runnable" seed="1107647343" result="Passed" start-time="2026-10-24 09:54:56Z" end-time="2026-10-24 09:54:56Z" duration="0.652357" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[CVTAP|META|screen|640|480|dpi=0
+CVTAP|BEGIN|AgeGateScreen
+CVTAP|AgeGateScreen|Button_Month|320|152|1
+CVTAP|AgeGateScreen|Button_Year|320|224|1
+CVTAP|AgeGateScreen|Button_Continue|320|296|1
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

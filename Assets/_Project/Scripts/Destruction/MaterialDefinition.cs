@@ -32,7 +32,7 @@ namespace Crashverse.Destruction
         [Range(0f, 1f)] public float restitution = 0.1f;
         [Range(0f, 1.5f)] public float friction = 0.6f;
 
-        [Header("Joints")]
+        [Header("Joints (legacy data, NOT applied: Crashverse.Sim.JointBreakPolicy makes every structural joint unbreakable by force)")]
         public float jointBreakForce = 800f;
         public float jointBreakTorque = 800f;
 

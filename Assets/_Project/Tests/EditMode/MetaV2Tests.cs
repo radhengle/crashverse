@@ -11,7 +11,7 @@ namespace Crashverse.Backend.Tests
     public class MetaV2Tests
     {
         static ContentDatabase _db;
-        static ContentDatabase Db => _db ??= ContentDatabase.LoadBundled();
+        static ContentDatabase Db => _db ??= ContentDatabase.LoadBundled(true); // all seasons: content integrity incl. flagged-off S2-4
         string _path;
         [SetUp] public void SetUp() { _path = Path.Combine(Path.GetTempPath(), "cv_v2_" + Guid.NewGuid().ToString("N") + ".json"); }
         [TearDown] public void TearDown() { if (File.Exists(_path)) File.Delete(_path); }

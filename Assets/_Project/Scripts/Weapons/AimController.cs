@@ -27,7 +27,9 @@ namespace Crashverse.Weapons
         bool _dragging;
         int _fingerId = -1;
         Vector2 _last;
-        LineRenderer _arc, _ghost;
+        LineRenderer _arc, _ghost; Transform _marker;
+        /// <summary>Aim line probes for tests: the trajectory preview and its landing marker.</summary>
+        public LineRenderer Arc => _arc; public Transform LandingMarker => _marker;
 
         public bool Dragging => _dragging;
         public float Yaw => _yaw;
@@ -37,7 +39,20 @@ namespace Crashverse.Weapons
         {
             yawPivot = yaw; pitchPivot = pitch; projectileSpawn = spawn;
             _pitchRestLocal = pitch != null ? pitch.localPosition : Vector3.zero;
-            _arc = MakeLine("TrajectoryArc", new Color(1f, 1f, 1f, 0.9f), 0.12f);
+            // User 2026-10-30: a CLEAR aim line from behind the cannon: wider far end (stays readable 30 m out), white → orange,
+            // plus a landing marker where the shot first hits.
+            _arc = MakeLine("TrajectoryArc", new Color(1f, 1f, 1f, 0.95f), 0.16f);
+            _arc.endWidth = 0.34f; _arc.numCapVertices = 4;
+            var g = new Gradient();
+            g.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(1f, 0.85f, 0.3f), 0.6f), new GradientColorKey(new Color(1f, 0.48f, 0.1f), 1f) },
+                      new[] { new GradientAlphaKey(0.55f, 0f), new GradientAlphaKey(0.95f, 0.25f), new GradientAlphaKey(1f, 1f) });
+            _arc.colorGradient = g;
+            var mk = GameObject.CreatePrimitive(PrimitiveType.Cylinder); mk.name = "AimLandingMarker";
+            var mc = mk.GetComponent<Collider>(); if (mc != null) Destroy(mc); // never a physics target (the arc raycast must not hit it)
+            mk.transform.SetParent(transform, false); mk.transform.localScale = new Vector3(1.1f, 0.03f, 1.1f);
+            var mr = mk.GetComponent<Renderer>(); mr.sharedMaterial = _arc.sharedMaterial; mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            var mb = new MaterialPropertyBlock(); mb.SetColor("_Color", new Color(1f, 0.48f, 0.1f, 0.85f)); mr.SetPropertyBlock(mb);
+            _marker = mk.transform; _marker.gameObject.SetActive(false);
             _ghost = MakeLine("HintGhostArc", new Color(0.13f, 0.83f, 0.93f, 0.45f), 0.2f);
             _ghost.enabled = false;
             SnapVisualNow();
@@ -215,6 +230,12 @@ namespace Crashverse.Weapons
             }
             lr.positionCount = count;
             for (int i = 0; i < count; i++) lr.SetPosition(i, _pts[i]);
+            if (lr == _arc && _marker != null)
+            {
+                bool show = lr.enabled && count > 1 && _pts[count - 1].y > -5f;
+                _marker.gameObject.SetActive(show);
+                if (show) { _marker.position = _pts[count - 1] + Vector3.up * 0.05f; _marker.rotation = Quaternion.identity; }
+            }
         }
     }
 }

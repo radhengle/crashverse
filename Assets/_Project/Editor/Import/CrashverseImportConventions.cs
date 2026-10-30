@@ -112,7 +112,14 @@ namespace Crashverse.EditorTools.Import
         }
         /// <summary>Kit files must live under Assets/_Project/Models/BuildingKit/.</summary>
         public const string KitRoot = ModelsRoot + "BuildingKit/";
-        public static bool KitPathOk(string assetPath) => assetPath.Replace('\\', '/').StartsWith(KitRoot, StringComparison.Ordinal);
+        /// <summary>Realistic v1 (3D Modeler): Kit_Real* pieces live under Models/Realistic/** (validate_colliders.py agrees).</summary>
+        public const string RealisticRoot = ModelsRoot + "Realistic/";
+        public static bool KitPathOk(string assetPath)
+        {
+            var p = assetPath.Replace('\\', '/');
+            return p.StartsWith(KitRoot, StringComparison.Ordinal)
+                || (p.StartsWith(RealisticRoot, StringComparison.Ordinal) && System.IO.Path.GetFileName(p).StartsWith("Kit_Real", StringComparison.Ordinal));
+        }
         public static bool IsJoint(string name) => name != null && name.StartsWith("JNT_", StringComparison.Ordinal);
         /// <summary>Non-render helper empties that must survive prefab building untouched.</summary>
         public static bool IsHelper(string name) => SocketName(name) != null || IsJoint(name) || (name != null && (name.StartsWith("Spawn_", StringComparison.Ordinal) || IsAnchor(name) || name.EndsWith("_Hint", StringComparison.Ordinal) || name.StartsWith("VFX_", StringComparison.Ordinal)));

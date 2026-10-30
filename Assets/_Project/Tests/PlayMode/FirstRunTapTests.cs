@@ -111,6 +111,7 @@ namespace Crashverse.Tests.PlayMode
             Assert.AreEqual("Tap Tester", AppServices.Progress.Data.profile.name);
             Assert.AreEqual(1, AppServices.Progress.Data.profile.avatar); Assert.AreEqual(2, AppServices.Progress.Data.profile.badge);
             AssertNoBrokenRenderers("world map");
+            AssertMapNodesNeverUnderHeader();
 
             yield return TapNamed("Button_1");
             yield return WaitFor(() => AppServices.Router.Top is LevelSelectScreen, "L1 level select");
@@ -118,6 +119,8 @@ namespace Crashverse.Tests.PlayMode
             yield return WaitFor(() => AppServices.Router.Top is HudScreen, "L1 HUD (run started)");
             yield return null;
             AssertNoBrokenRenderers("L1 arena + structure");
+            yield return null; // one LateUpdate with the locked pose
+            AssertCannonFramedFromBehind();
             AssertSwipeAimsSameWayOnScreen();
             yield return PlayHintLineToResult();
             // v2 §6 Level Complete: rewards in the local wallet, Next Level → Level 2 select
@@ -126,6 +129,57 @@ namespace Crashverse.Tests.PlayMode
             Assert.Greater(AppServices.Progress.Data.coins, 0, "first clear coins granted");
             yield return TapNamed("Button_NextLevel");
             yield return WaitFor(() => AppServices.Router.Top is LevelSelectScreen ls && ls.Level.number == 2, "L2 level select after Next Level");
+        }
+
+        /// <summary>QA MED (#55): no map node may render under the ★/coin/gem pills, the season ribbon or the dock, on any aspect ratio.
+        /// The path viewport (RectMask2D) sits strictly between the header and the dock, so a node is clipped before it can overlap.
+        /// Only Chapter 1 levels 1–10 are on the map (no next-season island, no Seasons button, no "More" stubs).</summary>
+        static void AssertMapNodesNeverUnderHeader()
+        {
+            var map = (MapScreen)AppServices.Router.Top; Canvas.ForceUpdateCanvases();
+            Rect W(RectTransform rt) { var c = new Vector3[4]; rt.GetWorldCorners(c); return Rect.MinMaxRect(c[0].x, c[0].y, c[2].x, c[2].y); }
+            var vp = W(map.Viewport); var top = W(map.TopBar); var rib = W(map.Ribbon); var dock = W(map.Dock);
+            Assert.LessOrEqual(vp.yMax, top.yMin + 0.5f, $"path viewport {vp} below the wallet bar {top}");
+            Assert.LessOrEqual(vp.yMax, rib.yMin + 0.5f, $"path viewport {vp} below the season ribbon {rib}");
+            Assert.GreaterOrEqual(vp.yMin, dock.yMax - 0.5f, $"path viewport {vp} above the dock {dock}");
+            Assert.NotNull(map.Viewport.GetComponent<RectMask2D>(), "nodes are clipped to the viewport");
+            var names = UnityEngine.Object.FindObjectsOfType<Button>().Select(b => b.name).ToList();
+            for (int n = 1; n <= 10; n++) Assert.Contains("Button_" + n, names, "level " + n + " on the map");
+            Assert.False(names.Contains("Button_11"), "no Seasons 2-4 levels");
+            foreach (var hidden in new[] { "Button_NextSeason", "Button_Seasons", "Button_More", "Button_SeasonPass", "Button_Leaderboards", "Button_DailyLogin", "Button_Achievements" })
+                Assert.False(names.Contains(hidden), hidden + " hidden (unfinished feature)");
+            Assert.Contains("Button_DailyBoss", names, "Daily Boss on the map");
+        }
+
+        /// <summary>User 2026-10-30 / Target UI §5: locked camera behind the cannon. Through the real run camera: the whole cannon is
+        /// on screen, centred at the bottom and big; the whole building is on screen above it; the aim line and its landing marker show.</summary>
+        static void AssertCannonFramedFromBehind()
+        {
+            var s = GameplayDirector.Session; var cam = Camera.main; Assert.NotNull(cam, "run camera");
+            Assert.True(GameplayDirector.RunCamera.locked, "camera angle locked (no orbit)");
+            Rect VpRect(Bounds b)
+            {
+                float x0 = 9f, y0 = 9f, x1 = -9f, y1 = -9f;
+                for (int i = 0; i < 8; i++)
+                {
+                    var p = b.center + Vector3.Scale(b.extents, new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1));
+                    var v = cam.WorldToViewportPoint(p); Assert.Greater(v.z, 0f, "in front of the camera");
+                    x0 = Mathf.Min(x0, v.x); y0 = Mathf.Min(y0, v.y); x1 = Mathf.Max(x1, v.x); y1 = Mathf.Max(y1, v.y);
+                }
+                return Rect.MinMaxRect(x0, y0, x1, y1);
+            }
+            var wrecker = s.aim.GetComponentsInChildren<Renderer>().Where(r => !(r is LineRenderer) && !(r is ParticleSystemRenderer) && r.enabled && r.name != "AimLandingMarker").Select(r => r.bounds).ToList();
+            var cb = wrecker[0]; foreach (var b in wrecker) cb.Encapsulate(b);
+            var c = VpRect(cb); var st = VpRect(GameplayDirector.StructureBounds(s, s.structureBase));
+            Debug.Log($"CANNONCAM aspect={cam.aspect:F3} fov={cam.fieldOfView:F1} cannon={c} structure={st}");
+            const float tol = 0.01f;
+            Assert.True(c.xMin >= -tol && c.xMax <= 1f + tol && c.yMin >= -tol && c.yMax <= 1f + tol, "whole cannon on screen: " + c);
+            Assert.True(st.xMin >= -tol && st.xMax <= 1f + tol && st.yMin >= -tol && st.yMax <= 1f + tol, "whole building on screen: " + st);
+            Assert.AreEqual(0.5f, c.center.x, 0.03f, "cannon horizontally centred");
+            Assert.Less(c.yMin, 0.1f, "cannon at the bottom");
+            Assert.True(c.width > 0.3f || c.height > 0.4f, "cannon big (portrait: wide, landscape editor: tall): " + c);
+            Assert.Greater(st.center.y, c.center.y + 0.15f, "building above the cannon");
+            Assert.True(s.aim.Arc != null && s.aim.Arc.positionCount > 2, "aim line drawn");
         }
 
         /// <summary>P0 (dev-build-6): a left swipe must move the aim LEFT on screen, a right swipe RIGHT (was mirrored).

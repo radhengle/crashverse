@@ -1,0 +1,3134 @@
+{
+ "events": {
+  "sfx_wood_impact": {
+   "cat": "destruction",
+   "desc": "wood impact (ImpactAudioProfile kind=Impact; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Impact material=wood",
+   "loop": false,
+   "files": [
+    "sfx_wood_impact_s_01",
+    "sfx_wood_impact_s_02",
+    "sfx_wood_impact_s_03",
+    "sfx_wood_impact_m_01",
+    "sfx_wood_impact_m_02",
+    "sfx_wood_impact_m_03",
+    "sfx_wood_impact_l_01",
+    "sfx_wood_impact_l_02",
+    "sfx_wood_impact_l_03"
+   ]
+  },
+  "sfx_wood_crack": {
+   "cat": "destruction",
+   "desc": "wood crack (ImpactAudioProfile kind=Crack; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Crack material=wood",
+   "loop": false,
+   "files": [
+    "sfx_wood_crack_s_01",
+    "sfx_wood_crack_s_02",
+    "sfx_wood_crack_s_03",
+    "sfx_wood_crack_m_01",
+    "sfx_wood_crack_m_02",
+    "sfx_wood_crack_m_03",
+    "sfx_wood_crack_l_01",
+    "sfx_wood_crack_l_02",
+    "sfx_wood_crack_l_03"
+   ]
+  },
+  "sfx_wood_break": {
+   "cat": "destruction",
+   "desc": "wood break (ImpactAudioProfile kind=Break; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Break material=wood",
+   "loop": false,
+   "files": [
+    "sfx_wood_break_s_01",
+    "sfx_wood_break_s_02",
+    "sfx_wood_break_s_03",
+    "sfx_wood_break_m_01",
+    "sfx_wood_break_m_02",
+    "sfx_wood_break_m_03",
+    "sfx_wood_break_l_01",
+    "sfx_wood_break_l_02",
+    "sfx_wood_break_l_03"
+   ]
+  },
+  "sfx_wood_collapse": {
+   "cat": "destruction",
+   "desc": "wood layered collapse S/M/L x2 var (one per cascade)",
+   "trigger": "CollapseStart/COLLAPSE_LAND material=wood, size by cascadeCount",
+   "loop": false,
+   "files": [
+    "sfx_wood_collapse_s_01",
+    "sfx_wood_collapse_s_02",
+    "sfx_wood_collapse_m_01",
+    "sfx_wood_collapse_m_02",
+    "sfx_wood_collapse_l_01",
+    "sfx_wood_collapse_l_02"
+   ]
+  },
+  "sfx_wood_debris": {
+   "cat": "destruction",
+   "desc": "wood debris rattle (4 var)",
+   "trigger": "Debris ImpactEvents combined every 100 ms",
+   "loop": false,
+   "files": [
+    "sfx_wood_debris_01",
+    "sfx_wood_debris_02",
+    "sfx_wood_debris_03",
+    "sfx_wood_debris_04"
+   ]
+  },
+  "sfx_brick_impact": {
+   "cat": "destruction",
+   "desc": "brick impact (ImpactAudioProfile kind=Impact; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Impact material=brick",
+   "loop": false,
+   "files": [
+    "sfx_brick_impact_s_01",
+    "sfx_brick_impact_s_02",
+    "sfx_brick_impact_s_03",
+    "sfx_brick_impact_m_01",
+    "sfx_brick_impact_m_02",
+    "sfx_brick_impact_m_03",
+    "sfx_brick_impact_l_01",
+    "sfx_brick_impact_l_02",
+    "sfx_brick_impact_l_03"
+   ]
+  },
+  "sfx_brick_crack": {
+   "cat": "destruction",
+   "desc": "brick crack (ImpactAudioProfile kind=Crack; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Crack material=brick",
+   "loop": false,
+   "files": [
+    "sfx_brick_crack_s_01",
+    "sfx_brick_crack_s_02",
+    "sfx_brick_crack_s_03",
+    "sfx_brick_crack_m_01",
+    "sfx_brick_crack_m_02",
+    "sfx_brick_crack_m_03",
+    "sfx_brick_crack_l_01",
+    "sfx_brick_crack_l_02",
+    "sfx_brick_crack_l_03"
+   ]
+  },
+  "sfx_brick_break": {
+   "cat": "destruction",
+   "desc": "brick break (ImpactAudioProfile kind=Break; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Break material=brick",
+   "loop": false,
+   "files": [
+    "sfx_brick_break_s_01",
+    "sfx_brick_break_s_02",
+    "sfx_brick_break_s_03",
+    "sfx_brick_break_m_01",
+    "sfx_brick_break_m_02",
+    "sfx_brick_break_m_03",
+    "sfx_brick_break_l_01",
+    "sfx_brick_break_l_02",
+    "sfx_brick_break_l_03"
+   ]
+  },
+  "sfx_brick_collapse": {
+   "cat": "destruction",
+   "desc": "brick layered collapse S/M/L x2 var (one per cascade)",
+   "trigger": "CollapseStart/COLLAPSE_LAND material=brick, size by cascadeCount",
+   "loop": false,
+   "files": [
+    "sfx_brick_collapse_s_01",
+    "sfx_brick_collapse_s_02",
+    "sfx_brick_collapse_m_01",
+    "sfx_brick_collapse_m_02",
+    "sfx_brick_collapse_l_01",
+    "sfx_brick_collapse_l_02"
+   ]
+  },
+  "sfx_brick_debris": {
+   "cat": "destruction",
+   "desc": "brick debris rattle (4 var)",
+   "trigger": "Debris ImpactEvents combined every 100 ms",
+   "loop": false,
+   "files": [
+    "sfx_brick_debris_01",
+    "sfx_brick_debris_02",
+    "sfx_brick_debris_03",
+    "sfx_brick_debris_04"
+   ]
+  },
+  "sfx_steel_impact": {
+   "cat": "destruction",
+   "desc": "steel impact (ImpactAudioProfile kind=Impact; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Impact material=steel",
+   "loop": false,
+   "files": [
+    "sfx_steel_impact_s_01",
+    "sfx_steel_impact_s_02",
+    "sfx_steel_impact_s_03",
+    "sfx_steel_impact_m_01",
+    "sfx_steel_impact_m_02",
+    "sfx_steel_impact_m_03",
+    "sfx_steel_impact_l_01",
+    "sfx_steel_impact_l_02",
+    "sfx_steel_impact_l_03"
+   ]
+  },
+  "sfx_steel_crack": {
+   "cat": "destruction",
+   "desc": "steel crack (ImpactAudioProfile kind=Crack; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Crack material=steel",
+   "loop": false,
+   "files": [
+    "sfx_steel_crack_s_01",
+    "sfx_steel_crack_s_02",
+    "sfx_steel_crack_s_03",
+    "sfx_steel_crack_m_01",
+    "sfx_steel_crack_m_02",
+    "sfx_steel_crack_m_03",
+    "sfx_steel_crack_l_01",
+    "sfx_steel_crack_l_02",
+    "sfx_steel_crack_l_03"
+   ]
+  },
+  "sfx_steel_break": {
+   "cat": "destruction",
+   "desc": "steel break (ImpactAudioProfile kind=Break; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Break material=steel",
+   "loop": false,
+   "files": [
+    "sfx_steel_break_s_01",
+    "sfx_steel_break_s_02",
+    "sfx_steel_break_s_03",
+    "sfx_steel_break_m_01",
+    "sfx_steel_break_m_02",
+    "sfx_steel_break_m_03",
+    "sfx_steel_break_l_01",
+    "sfx_steel_break_l_02",
+    "sfx_steel_break_l_03"
+   ]
+  },
+  "sfx_steel_collapse": {
+   "cat": "destruction",
+   "desc": "steel layered collapse S/M/L x2 var (one per cascade)",
+   "trigger": "CollapseStart/COLLAPSE_LAND material=steel, size by cascadeCount",
+   "loop": false,
+   "files": [
+    "sfx_steel_collapse_s_01",
+    "sfx_steel_collapse_s_02",
+    "sfx_steel_collapse_m_01",
+    "sfx_steel_collapse_m_02",
+    "sfx_steel_collapse_l_01",
+    "sfx_steel_collapse_l_02"
+   ]
+  },
+  "sfx_steel_debris": {
+   "cat": "destruction",
+   "desc": "steel debris rattle (4 var)",
+   "trigger": "Debris ImpactEvents combined every 100 ms",
+   "loop": false,
+   "files": [
+    "sfx_steel_debris_01",
+    "sfx_steel_debris_02",
+    "sfx_steel_debris_03",
+    "sfx_steel_debris_04"
+   ]
+  },
+  "sfx_glass_impact": {
+   "cat": "destruction",
+   "desc": "glass impact (ImpactAudioProfile kind=Impact; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Impact material=glass",
+   "loop": false,
+   "files": [
+    "sfx_glass_impact_s_01",
+    "sfx_glass_impact_s_02",
+    "sfx_glass_impact_s_03",
+    "sfx_glass_impact_m_01",
+    "sfx_glass_impact_m_02",
+    "sfx_glass_impact_m_03",
+    "sfx_glass_impact_l_01",
+    "sfx_glass_impact_l_02",
+    "sfx_glass_impact_l_03"
+   ]
+  },
+  "sfx_glass_crack": {
+   "cat": "destruction",
+   "desc": "glass crack (ImpactAudioProfile kind=Crack; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Crack material=glass",
+   "loop": false,
+   "files": [
+    "sfx_glass_crack_s_01",
+    "sfx_glass_crack_s_02",
+    "sfx_glass_crack_s_03",
+    "sfx_glass_crack_m_01",
+    "sfx_glass_crack_m_02",
+    "sfx_glass_crack_m_03",
+    "sfx_glass_crack_l_01",
+    "sfx_glass_crack_l_02",
+    "sfx_glass_crack_l_03"
+   ]
+  },
+  "sfx_glass_break": {
+   "cat": "destruction",
+   "desc": "glass break (ImpactAudioProfile kind=Break; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Break material=glass",
+   "loop": false,
+   "files": [
+    "sfx_glass_break_s_01",
+    "sfx_glass_break_s_02",
+    "sfx_glass_break_s_03",
+    "sfx_glass_break_m_01",
+    "sfx_glass_break_m_02",
+    "sfx_glass_break_m_03",
+    "sfx_glass_break_l_01",
+    "sfx_glass_break_l_02",
+    "sfx_glass_break_l_03"
+   ]
+  },
+  "sfx_glass_collapse": {
+   "cat": "destruction",
+   "desc": "glass layered collapse S/M/L x2 var (one per cascade)",
+   "trigger": "CollapseStart/COLLAPSE_LAND material=glass, size by cascadeCount",
+   "loop": false,
+   "files": [
+    "sfx_glass_collapse_s_01",
+    "sfx_glass_collapse_s_02",
+    "sfx_glass_collapse_m_01",
+    "sfx_glass_collapse_m_02",
+    "sfx_glass_collapse_l_01",
+    "sfx_glass_collapse_l_02"
+   ]
+  },
+  "sfx_glass_debris": {
+   "cat": "destruction",
+   "desc": "glass debris rattle (4 var)",
+   "trigger": "Debris ImpactEvents combined every 100 ms",
+   "loop": false,
+   "files": [
+    "sfx_glass_debris_01",
+    "sfx_glass_debris_02",
+    "sfx_glass_debris_03",
+    "sfx_glass_debris_04"
+   ]
+  },
+  "sfx_stone_impact": {
+   "cat": "destruction",
+   "desc": "stone impact (ImpactAudioProfile kind=Impact; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Impact material=stone",
+   "loop": false,
+   "files": [
+    "sfx_stone_impact_s_01",
+    "sfx_stone_impact_s_02",
+    "sfx_stone_impact_s_03",
+    "sfx_stone_impact_m_01",
+    "sfx_stone_impact_m_02",
+    "sfx_stone_impact_m_03",
+    "sfx_stone_impact_l_01",
+    "sfx_stone_impact_l_02",
+    "sfx_stone_impact_l_03"
+   ]
+  },
+  "sfx_stone_crack": {
+   "cat": "destruction",
+   "desc": "stone crack (ImpactAudioProfile kind=Crack; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Crack material=stone",
+   "loop": false,
+   "files": [
+    "sfx_stone_crack_s_01",
+    "sfx_stone_crack_s_02",
+    "sfx_stone_crack_s_03",
+    "sfx_stone_crack_m_01",
+    "sfx_stone_crack_m_02",
+    "sfx_stone_crack_m_03",
+    "sfx_stone_crack_l_01",
+    "sfx_stone_crack_l_02",
+    "sfx_stone_crack_l_03"
+   ]
+  },
+  "sfx_stone_break": {
+   "cat": "destruction",
+   "desc": "stone break (ImpactAudioProfile kind=Break; sizes S/M/L x3 var)",
+   "trigger": "PHYS ImpactEvent kind=Break material=stone",
+   "loop": false,
+   "files": [
+    "sfx_stone_break_s_01",
+    "sfx_stone_break_s_02",
+    "sfx_stone_break_s_03",
+    "sfx_stone_break_m_01",
+    "sfx_stone_break_m_02",
+    "sfx_stone_break_m_03",
+    "sfx_stone_break_l_01",
+    "sfx_stone_break_l_02",
+    "sfx_stone_break_l_03"
+   ]
+  },
+  "sfx_stone_collapse": {
+   "cat": "destruction",
+   "desc": "stone layered collapse S/M/L x2 var (one per cascade)",
+   "trigger": "CollapseStart/COLLAPSE_LAND material=stone, size by cascadeCount",
+   "loop": false,
+   "files": [
+    "sfx_stone_collapse_s_01",
+    "sfx_stone_collapse_s_02",
+    "sfx_stone_collapse_m_01",
+    "sfx_stone_collapse_m_02",
+    "sfx_stone_collapse_l_01",
+    "sfx_stone_collapse_l_02"
+   ]
+  },
+  "sfx_stone_debris": {
+   "cat": "destruction",
+   "desc": "stone debris rattle (4 var)",
+   "trigger": "Debris ImpactEvents combined every 100 ms",
+   "loop": false,
+   "files": [
+    "sfx_stone_debris_01",
+    "sfx_stone_debris_02",
+    "sfx_stone_debris_03",
+    "sfx_stone_debris_04"
+   ]
+  },
+  "sfx_steel_joint_snap": {
+   "cat": "destruction",
+   "desc": "steel joint snap: snap + clank + spring twang (S/M/L x3)",
+   "trigger": "PHYS ImpactEvent kind=JointSnap",
+   "loop": false,
+   "files": [
+    "sfx_steel_jointsnap_s_01",
+    "sfx_steel_jointsnap_s_02",
+    "sfx_steel_jointsnap_s_03",
+    "sfx_steel_jointsnap_m_01",
+    "sfx_steel_jointsnap_m_02",
+    "sfx_steel_jointsnap_m_03",
+    "sfx_steel_jointsnap_l_01",
+    "sfx_steel_jointsnap_l_02",
+    "sfx_steel_jointsnap_l_03"
+   ]
+  },
+  "sfx_creak_wood": {
+   "cat": "destruction",
+   "desc": "wood stress creak (4 var)",
+   "trigger": "structure stress (sfx_collapse_creak)",
+   "loop": false,
+   "files": [
+    "sfx_creak_wood_01",
+    "sfx_creak_wood_02",
+    "sfx_creak_wood_03",
+    "sfx_creak_wood_04"
+   ]
+  },
+  "sfx_creak_steel": {
+   "cat": "destruction",
+   "desc": "steel stress creak (4 var)",
+   "trigger": "structure stress (sfx_collapse_creak)",
+   "loop": false,
+   "files": [
+    "sfx_creak_steel_01",
+    "sfx_creak_steel_02",
+    "sfx_creak_steel_03",
+    "sfx_creak_steel_04"
+   ]
+  },
+  "sfx_cannon_fire": {
+   "cat": "weapon",
+   "desc": "cannon pop: sub boom + toy pok + air + smoke",
+   "trigger": "FIRE (+66 ms after ANTICIPATE)",
+   "loop": false,
+   "files": [
+    "sfx_cannon_fire_01",
+    "sfx_cannon_fire_02",
+    "sfx_cannon_fire_03",
+    "sfx_cannon_fire_04"
+   ]
+  },
+  "sfx_wrecker_breech": {
+   "cat": "weapon",
+   "desc": "breech clack",
+   "trigger": "ANIM_WRECKER_FIRE_ANTICIPATE (FIRE tap)",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_breech_01",
+    "sfx_wrecker_breech_02"
+   ]
+  },
+  "sfx_cannon_reload": {
+   "cat": "weapon",
+   "desc": "reload ratchet loop (1.0 s), plays from impact until FIRE unlocks",
+   "trigger": "impact -> until FIRE unlock",
+   "loop": true,
+   "files": [
+    "sfx_cannon_reload_loop"
+   ]
+  },
+  "sfx_cannon_ready": {
+   "cat": "weapon",
+   "desc": "ready click + marimba blip",
+   "trigger": "ANIM_WRECKER_READY (FIRE unlock)",
+   "loop": false,
+   "files": [
+    "sfx_cannon_ready_01",
+    "sfx_cannon_ready_02"
+   ]
+  },
+  "sfx_pu_shockwave_arm": {
+   "cat": "powerup",
+   "desc": "shockwave armed: rising vibraphone arpeggio",
+   "trigger": "PowerUpRuntime arm",
+   "loop": false,
+   "files": [
+    "sfx_pu_shockwave_arm"
+   ]
+  },
+  "sfx_pu_shockwave_fx": {
+   "cat": "powerup",
+   "desc": "shockwave effect",
+   "trigger": "PowerUpRuntime effect",
+   "loop": false,
+   "files": [
+    "sfx_pu_shockwave_fx"
+   ]
+  },
+  "sfx_pu_splitstrike_arm": {
+   "cat": "powerup",
+   "desc": "splitstrike armed: rising vibraphone arpeggio",
+   "trigger": "PowerUpRuntime arm",
+   "loop": false,
+   "files": [
+    "sfx_pu_splitstrike_arm"
+   ]
+  },
+  "sfx_pu_splitstrike_fx": {
+   "cat": "powerup",
+   "desc": "splitstrike effect",
+   "trigger": "PowerUpRuntime effect",
+   "loop": false,
+   "files": [
+    "sfx_pu_splitstrike_fx"
+   ]
+  },
+  "sfx_pu_gravity_well_arm": {
+   "cat": "powerup",
+   "desc": "gravity_well armed: rising vibraphone arpeggio",
+   "trigger": "PowerUpRuntime arm",
+   "loop": false,
+   "files": [
+    "sfx_pu_gravity_well_arm"
+   ]
+  },
+  "sfx_pu_gravity_well_fx": {
+   "cat": "powerup",
+   "desc": "gravity_well effect loop",
+   "trigger": "PowerUpRuntime effect",
+   "loop": true,
+   "files": [
+    "sfx_pu_gravity_well_fx_loop"
+   ]
+  },
+  "sfx_pu_chain_reactor_arm": {
+   "cat": "powerup",
+   "desc": "chain_reactor armed: rising vibraphone arpeggio",
+   "trigger": "PowerUpRuntime arm",
+   "loop": false,
+   "files": [
+    "sfx_pu_chain_reactor_arm"
+   ]
+  },
+  "sfx_pu_chain_reactor_fx": {
+   "cat": "powerup",
+   "desc": "chain_reactor effect",
+   "trigger": "PowerUpRuntime effect",
+   "loop": false,
+   "files": [
+    "sfx_pu_chain_reactor_fx"
+   ]
+  },
+  "sfx_pu_phase_piercer_arm": {
+   "cat": "powerup",
+   "desc": "phase_piercer armed: rising vibraphone arpeggio",
+   "trigger": "PowerUpRuntime arm",
+   "loop": false,
+   "files": [
+    "sfx_pu_phase_piercer_arm"
+   ]
+  },
+  "sfx_pu_phase_piercer_fx": {
+   "cat": "powerup",
+   "desc": "phase_piercer effect",
+   "trigger": "PowerUpRuntime effect",
+   "loop": false,
+   "files": [
+    "sfx_pu_phase_piercer_fx"
+   ]
+  },
+  "sfx_pu_time_fracture_arm": {
+   "cat": "powerup",
+   "desc": "time_fracture armed: rising vibraphone arpeggio",
+   "trigger": "PowerUpRuntime arm",
+   "loop": false,
+   "files": [
+    "sfx_pu_time_fracture_arm"
+   ]
+  },
+  "sfx_pu_time_fracture_fx": {
+   "cat": "powerup",
+   "desc": "time_fracture effect loop",
+   "trigger": "PowerUpRuntime effect",
+   "loop": true,
+   "files": [
+    "sfx_pu_time_fracture_fx_loop"
+   ]
+  },
+  "sfx_pu_time_fracture_end": {
+   "cat": "powerup",
+   "desc": "time fracture shatter out",
+   "trigger": "Time Fracture ends",
+   "loop": false,
+   "files": [
+    "sfx_pu_time_fracture_end"
+   ]
+  },
+  "sfx_pu_disarm": {
+   "cat": "powerup",
+   "desc": "disarm: falling 2-note",
+   "trigger": "PU_DISARM",
+   "loop": false,
+   "files": [
+    "sfx_pu_disarm"
+   ]
+  },
+  "sfx_pu_chain_link": {
+   "cat": "powerup",
+   "desc": "chain link zap (pitch up per link)",
+   "trigger": "chain reactor link",
+   "loop": false,
+   "files": [
+    "sfx_pu_chain_link_01",
+    "sfx_pu_chain_link_02",
+    "sfx_pu_chain_link_03"
+   ]
+  },
+  "sfx_pu_phase_hit": {
+   "cat": "powerup",
+   "desc": "phase piercer passes through a block",
+   "trigger": "phase hit",
+   "loop": false,
+   "files": [
+    "sfx_pu_phase_hit_01",
+    "sfx_pu_phase_hit_02"
+   ]
+  },
+  "sfx_pu_time_warn": {
+   "cat": "powerup",
+   "desc": "time fracture ending warning",
+   "trigger": "Time Fracture 1 s left",
+   "loop": false,
+   "files": [
+    "sfx_pu_time_warn"
+   ]
+  },
+  "sfx_combo_tier1": {
+   "cat": "combo",
+   "desc": "combo tier 1: nylon arpeggio + piano (bigger per tier)",
+   "trigger": "ComboTracker tier up",
+   "loop": false,
+   "files": [
+    "sfx_combo_tier1"
+   ]
+  },
+  "sfx_combo_tier2": {
+   "cat": "combo",
+   "desc": "combo tier 2: nylon arpeggio + piano (bigger per tier)",
+   "trigger": "ComboTracker tier up",
+   "loop": false,
+   "files": [
+    "sfx_combo_tier2"
+   ]
+  },
+  "sfx_combo_tier3": {
+   "cat": "combo",
+   "desc": "combo tier 3: nylon arpeggio + piano (bigger per tier)",
+   "trigger": "ComboTracker tier up",
+   "loop": false,
+   "files": [
+    "sfx_combo_tier3"
+   ]
+  },
+  "sfx_combo_tier4": {
+   "cat": "combo",
+   "desc": "combo tier 4: nylon arpeggio + piano (bigger per tier)",
+   "trigger": "ComboTracker tier up",
+   "loop": false,
+   "files": [
+    "sfx_combo_tier4"
+   ]
+  },
+  "sfx_combo_step": {
+   "cat": "combo",
+   "desc": "combo step blip (pitch-shift +1 semitone/step in code, wrap +1 oct, cap x20)",
+   "trigger": "combo +1",
+   "loop": false,
+   "files": [
+    "sfx_combo_step"
+   ]
+  },
+  "sfx_star_1": {
+   "cat": "results",
+   "desc": "star 1 pop (rising pitch)",
+   "trigger": "results star reveal",
+   "loop": false,
+   "files": [
+    "sfx_star_1"
+   ]
+  },
+  "sfx_star_2": {
+   "cat": "results",
+   "desc": "star 2 pop (rising pitch)",
+   "trigger": "results star reveal",
+   "loop": false,
+   "files": [
+    "sfx_star_2"
+   ]
+  },
+  "sfx_star_3": {
+   "cat": "results",
+   "desc": "star 3 pop (rising pitch)",
+   "trigger": "results star reveal",
+   "loop": false,
+   "files": [
+    "sfx_star_3"
+   ]
+  },
+  "sfx_ui_click": {
+   "cat": "ui",
+   "desc": "UI click (toy pop / marimba)",
+   "trigger": "UI_BTN_PRESS/UI events",
+   "loop": false,
+   "files": [
+    "sfx_ui_click_01",
+    "sfx_ui_click_02",
+    "sfx_ui_click_03"
+   ]
+  },
+  "sfx_ui_confirm": {
+   "cat": "ui",
+   "desc": "UI confirm (toy pop / marimba)",
+   "trigger": "UI_BTN_PRESS/UI events",
+   "loop": false,
+   "files": [
+    "sfx_ui_confirm"
+   ]
+  },
+  "sfx_ui_back": {
+   "cat": "ui",
+   "desc": "UI back (toy pop / marimba)",
+   "trigger": "UI_BTN_PRESS/UI events",
+   "loop": false,
+   "files": [
+    "sfx_ui_back"
+   ]
+  },
+  "sfx_ui_error": {
+   "cat": "ui",
+   "desc": "UI error (toy pop / marimba)",
+   "trigger": "UI_BTN_PRESS/UI events",
+   "loop": false,
+   "files": [
+    "sfx_ui_error"
+   ]
+  },
+  "sfx_ui_tab": {
+   "cat": "ui",
+   "desc": "UI tab (toy pop / marimba)",
+   "trigger": "UI_BTN_PRESS/UI events",
+   "loop": false,
+   "files": [
+    "sfx_ui_tab"
+   ]
+  },
+  "sfx_ui_toggle": {
+   "cat": "ui",
+   "desc": "UI toggle (toy pop / marimba)",
+   "trigger": "UI_BTN_PRESS/UI events",
+   "loop": false,
+   "files": [
+    "sfx_ui_toggle"
+   ]
+  },
+  "sfx_ui_charge_spend": {
+   "cat": "ui",
+   "desc": "UI charge_spend (toy pop / marimba)",
+   "trigger": "UI_BTN_PRESS/UI events",
+   "loop": false,
+   "files": [
+    "sfx_ui_charge_spend"
+   ]
+  },
+  "sfx_ui_modal_open": {
+   "cat": "ui",
+   "desc": "UI modal_open (toy pop / marimba)",
+   "trigger": "UI_BTN_PRESS/UI events",
+   "loop": false,
+   "files": [
+    "sfx_ui_modal_open"
+   ]
+  },
+  "sfx_reward_coin_single": {
+   "cat": "reward",
+   "desc": "coin: warm vibraphone ding",
+   "trigger": "coin +1",
+   "loop": false,
+   "files": [
+    "sfx_reward_coin_single_01",
+    "sfx_reward_coin_single_02",
+    "sfx_reward_coin_single_03"
+   ]
+  },
+  "sfx_reward_coin_burst": {
+   "cat": "reward",
+   "desc": "coin burst (10 coins)",
+   "trigger": "coin burst",
+   "loop": false,
+   "files": [
+    "sfx_reward_coin_burst_01",
+    "sfx_reward_coin_burst_02",
+    "sfx_reward_coin_burst_03"
+   ]
+  },
+  "sfx_reward_chest_shake": {
+   "cat": "reward",
+   "desc": "chest wobble rattle",
+   "trigger": "chest shake",
+   "loop": false,
+   "files": [
+    "sfx_reward_chest_shake"
+   ]
+  },
+  "sfx_reward_chest_open": {
+   "cat": "reward",
+   "desc": "chest open: creak + thump + Cmaj9 nylon bloom",
+   "trigger": "chest open",
+   "loop": false,
+   "files": [
+    "sfx_reward_chest_open"
+   ]
+  }
+ },
+ "files": {
+  "sfx_wood_impact_s_01": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.1,
+   "TP": -5.6,
+   "loop": false
+  },
+  "sfx_wood_impact_s_02": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.9,
+   "loop": false
+  },
+  "sfx_wood_impact_s_03": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -5.0,
+   "loop": false
+  },
+  "sfx_wood_impact_m_01": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.8,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_wood_impact_m_02": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.6,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_wood_impact_m_03": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.8,
+   "TP": -2.1,
+   "loop": false
+  },
+  "sfx_wood_impact_l_01": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_wood_impact_l_02": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.8,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_wood_impact_l_03": {
+   "id": "sfx_wood_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_wood_crack_s_01": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.0,
+   "loop": false
+  },
+  "sfx_wood_crack_s_02": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -6.6,
+   "loop": false
+  },
+  "sfx_wood_crack_s_03": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.5,
+   "loop": false
+  },
+  "sfx_wood_crack_m_01": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -21.0,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_wood_crack_m_02": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.4,
+   "TP": -3.4,
+   "loop": false
+  },
+  "sfx_wood_crack_m_03": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -21.0,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_wood_crack_l_01": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.9,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_wood_crack_l_02": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.8,
+   "TP": -1.3,
+   "loop": false
+  },
+  "sfx_wood_crack_l_03": {
+   "id": "sfx_wood_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.4,
+   "TP": -2.1,
+   "loop": false
+  },
+  "sfx_wood_break_s_01": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -6.3,
+   "loop": false
+  },
+  "sfx_wood_break_s_02": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -6.0,
+   "loop": false
+  },
+  "sfx_wood_break_s_03": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -4.8,
+   "loop": false
+  },
+  "sfx_wood_break_m_01": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.6,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_wood_break_m_02": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.7,
+   "TP": -2.1,
+   "loop": false
+  },
+  "sfx_wood_break_m_03": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.5,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_wood_break_l_01": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.9,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_wood_break_l_02": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.8,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_wood_break_l_03": {
+   "id": "sfx_wood_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.7,
+   "TP": -1.5,
+   "loop": false
+  },
+  "sfx_wood_collapse_s_01": {
+   "id": "sfx_wood_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -4.7,
+   "loop": false
+  },
+  "sfx_wood_collapse_s_02": {
+   "id": "sfx_wood_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_wood_collapse_m_01": {
+   "id": "sfx_wood_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.5,
+   "TP": -3.1,
+   "loop": false
+  },
+  "sfx_wood_collapse_m_02": {
+   "id": "sfx_wood_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.5,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_wood_collapse_l_01": {
+   "id": "sfx_wood_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.0,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_wood_collapse_l_02": {
+   "id": "sfx_wood_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.5,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_wood_debris_01": {
+   "id": "sfx_wood_debris",
+   "cat": "destruction",
+   "dur_s": 0.25,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.2,
+   "loop": false
+  },
+  "sfx_wood_debris_02": {
+   "id": "sfx_wood_debris",
+   "cat": "destruction",
+   "dur_s": 0.3,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.1,
+   "loop": false
+  },
+  "sfx_wood_debris_03": {
+   "id": "sfx_wood_debris",
+   "cat": "destruction",
+   "dur_s": 0.22,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.2,
+   "loop": false
+  },
+  "sfx_wood_debris_04": {
+   "id": "sfx_wood_debris",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_brick_impact_s_01": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.0,
+   "loop": false
+  },
+  "sfx_brick_impact_s_02": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.6,
+   "loop": false
+  },
+  "sfx_brick_impact_s_03": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.9,
+   "loop": false
+  },
+  "sfx_brick_impact_m_01": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.7,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_brick_impact_m_02": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.9,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_brick_impact_m_03": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.8,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_brick_impact_l_01": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -17.2,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_brick_impact_l_02": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_brick_impact_l_03": {
+   "id": "sfx_brick_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -17.0,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_brick_crack_s_01": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -4.6,
+   "loop": false
+  },
+  "sfx_brick_crack_s_02": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.1,
+   "loop": false
+  },
+  "sfx_brick_crack_s_03": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -6.7,
+   "loop": false
+  },
+  "sfx_brick_crack_m_01": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.9,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_brick_crack_m_02": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.9,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_brick_crack_m_03": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -21.2,
+   "TP": -4.3,
+   "loop": false
+  },
+  "sfx_brick_crack_l_01": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.8,
+   "TP": -1.6,
+   "loop": false
+  },
+  "sfx_brick_crack_l_02": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.4,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_brick_crack_l_03": {
+   "id": "sfx_brick_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.8,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_brick_break_s_01": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -4.9,
+   "loop": false
+  },
+  "sfx_brick_break_s_02": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -5.1,
+   "loop": false
+  },
+  "sfx_brick_break_s_03": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -5.5,
+   "loop": false
+  },
+  "sfx_brick_break_m_01": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -19.0,
+   "TP": -3.3,
+   "loop": false
+  },
+  "sfx_brick_break_m_02": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.6,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_brick_break_m_03": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.7,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_brick_break_l_01": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.7,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_brick_break_l_02": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.8,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_brick_break_l_03": {
+   "id": "sfx_brick_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -16.0,
+   "TP": -1.5,
+   "loop": false
+  },
+  "sfx_brick_collapse_s_01": {
+   "id": "sfx_brick_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_brick_collapse_s_02": {
+   "id": "sfx_brick_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_brick_collapse_m_01": {
+   "id": "sfx_brick_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.5,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_brick_collapse_m_02": {
+   "id": "sfx_brick_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.5,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_brick_collapse_l_01": {
+   "id": "sfx_brick_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.1,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_brick_collapse_l_02": {
+   "id": "sfx_brick_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.0,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_brick_debris_01": {
+   "id": "sfx_brick_debris",
+   "cat": "destruction",
+   "dur_s": 0.25,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.3,
+   "loop": false
+  },
+  "sfx_brick_debris_02": {
+   "id": "sfx_brick_debris",
+   "cat": "destruction",
+   "dur_s": 0.3,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -5.2,
+   "loop": false
+  },
+  "sfx_brick_debris_03": {
+   "id": "sfx_brick_debris",
+   "cat": "destruction",
+   "dur_s": 0.22,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.7,
+   "loop": false
+  },
+  "sfx_brick_debris_04": {
+   "id": "sfx_brick_debris",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -5.8,
+   "loop": false
+  },
+  "sfx_steel_impact_s_01": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.6,
+   "loop": false
+  },
+  "sfx_steel_impact_s_02": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.6,
+   "loop": false
+  },
+  "sfx_steel_impact_s_03": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.9,
+   "loop": false
+  },
+  "sfx_steel_impact_m_01": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.5,
+   "TP": -3.0,
+   "loop": false
+  },
+  "sfx_steel_impact_m_02": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.5,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_steel_impact_m_03": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.7,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_steel_impact_l_01": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_steel_impact_l_02": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -17.0,
+   "TP": -2.1,
+   "loop": false
+  },
+  "sfx_steel_impact_l_03": {
+   "id": "sfx_steel_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_steel_crack_s_01": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.7,
+   "loop": false
+  },
+  "sfx_steel_crack_s_02": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -6.0,
+   "loop": false
+  },
+  "sfx_steel_crack_s_03": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.3,
+   "loop": false
+  },
+  "sfx_steel_crack_m_01": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.6,
+   "TP": -2.6,
+   "loop": false
+  },
+  "sfx_steel_crack_m_02": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.6,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_steel_crack_m_03": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.5,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_steel_crack_l_01": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -18.1,
+   "TP": -1.4,
+   "loop": false
+  },
+  "sfx_steel_crack_l_02": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.7,
+   "TP": -1.7,
+   "loop": false
+  },
+  "sfx_steel_crack_l_03": {
+   "id": "sfx_steel_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.7,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_steel_break_s_01": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -8.1,
+   "loop": false
+  },
+  "sfx_steel_break_s_02": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.5,
+   "TP": -8.1,
+   "loop": false
+  },
+  "sfx_steel_break_s_03": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -8.7,
+   "loop": false
+  },
+  "sfx_steel_break_m_01": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.5,
+   "TP": -4.4,
+   "loop": false
+  },
+  "sfx_steel_break_m_02": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.5,
+   "TP": -3.7,
+   "loop": false
+  },
+  "sfx_steel_break_m_03": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.5,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_steel_break_l_01": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.8,
+   "TP": -1.3,
+   "loop": false
+  },
+  "sfx_steel_break_l_02": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -16.2,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_steel_break_l_03": {
+   "id": "sfx_steel_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.8,
+   "TP": -1.4,
+   "loop": false
+  },
+  "sfx_steel_collapse_s_01": {
+   "id": "sfx_steel_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -6.0,
+   "loop": false
+  },
+  "sfx_steel_collapse_s_02": {
+   "id": "sfx_steel_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -5.8,
+   "loop": false
+  },
+  "sfx_steel_collapse_m_01": {
+   "id": "sfx_steel_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -17.1,
+   "TP": -6.3,
+   "loop": false
+  },
+  "sfx_steel_collapse_m_02": {
+   "id": "sfx_steel_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.5,
+   "TP": -3.9,
+   "loop": false
+  },
+  "sfx_steel_collapse_l_01": {
+   "id": "sfx_steel_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.6,
+   "TP": -4.0,
+   "loop": false
+  },
+  "sfx_steel_collapse_l_02": {
+   "id": "sfx_steel_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.3,
+   "TP": -3.9,
+   "loop": false
+  },
+  "sfx_steel_debris_01": {
+   "id": "sfx_steel_debris",
+   "cat": "destruction",
+   "dur_s": 0.25,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_steel_debris_02": {
+   "id": "sfx_steel_debris",
+   "cat": "destruction",
+   "dur_s": 0.3,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.6,
+   "loop": false
+  },
+  "sfx_steel_debris_03": {
+   "id": "sfx_steel_debris",
+   "cat": "destruction",
+   "dur_s": 0.22,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.4,
+   "loop": false
+  },
+  "sfx_steel_debris_04": {
+   "id": "sfx_steel_debris",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -23,
+   "LUFS": -23.2,
+   "TP": -5.4,
+   "loop": false
+  },
+  "sfx_glass_impact_s_01": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.6,
+   "TP": -7.0,
+   "loop": false
+  },
+  "sfx_glass_impact_s_02": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_glass_impact_s_03": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.7,
+   "loop": false
+  },
+  "sfx_glass_impact_m_01": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.6,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_glass_impact_m_02": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.6,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_glass_impact_m_03": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.6,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_glass_impact_l_01": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.8,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_glass_impact_l_02": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_glass_impact_l_03": {
+   "id": "sfx_glass_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.8,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_glass_crack_s_01": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.3,
+   "TP": -9.2,
+   "loop": false
+  },
+  "sfx_glass_crack_s_02": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.7,
+   "loop": false
+  },
+  "sfx_glass_crack_s_03": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -4.8,
+   "loop": false
+  },
+  "sfx_glass_crack_m_01": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.5,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_glass_crack_m_02": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.5,
+   "TP": -3.2,
+   "loop": false
+  },
+  "sfx_glass_crack_m_03": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.5,
+   "TP": -3.1,
+   "loop": false
+  },
+  "sfx_glass_crack_l_01": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.3,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_glass_crack_l_02": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.2,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_glass_crack_l_03": {
+   "id": "sfx_glass_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.3,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_glass_break_s_01": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -10.7,
+   "loop": false
+  },
+  "sfx_glass_break_s_02": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -21.3,
+   "TP": -7.9,
+   "loop": false
+  },
+  "sfx_glass_break_s_03": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -11.0,
+   "loop": false
+  },
+  "sfx_glass_break_m_01": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.5,
+   "TP": -5.8,
+   "loop": false
+  },
+  "sfx_glass_break_m_02": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.2,
+   "TP": -4.3,
+   "loop": false
+  },
+  "sfx_glass_break_m_03": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.5,
+   "TP": -6.4,
+   "loop": false
+  },
+  "sfx_glass_break_l_01": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.5,
+   "TP": -4.1,
+   "loop": false
+  },
+  "sfx_glass_break_l_02": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.5,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_glass_break_l_03": {
+   "id": "sfx_glass_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -15.5,
+   "TP": -2.6,
+   "loop": false
+  },
+  "sfx_glass_collapse_s_01": {
+   "id": "sfx_glass_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.6,
+   "TP": -8.0,
+   "loop": false
+  },
+  "sfx_glass_collapse_s_02": {
+   "id": "sfx_glass_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -6.9,
+   "loop": false
+  },
+  "sfx_glass_collapse_m_01": {
+   "id": "sfx_glass_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.5,
+   "TP": -6.1,
+   "loop": false
+  },
+  "sfx_glass_collapse_m_02": {
+   "id": "sfx_glass_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.0,
+   "TP": -5.3,
+   "loop": false
+  },
+  "sfx_glass_collapse_l_01": {
+   "id": "sfx_glass_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.0,
+   "TP": -5.2,
+   "loop": false
+  },
+  "sfx_glass_collapse_l_02": {
+   "id": "sfx_glass_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.0,
+   "TP": -4.8,
+   "loop": false
+  },
+  "sfx_glass_debris_01": {
+   "id": "sfx_glass_debris",
+   "cat": "destruction",
+   "dur_s": 0.25,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.9,
+   "loop": false
+  },
+  "sfx_glass_debris_02": {
+   "id": "sfx_glass_debris",
+   "cat": "destruction",
+   "dur_s": 0.3,
+   "target_LUFS": -23,
+   "LUFS": -23.6,
+   "TP": -6.1,
+   "loop": false
+  },
+  "sfx_glass_debris_03": {
+   "id": "sfx_glass_debris",
+   "cat": "destruction",
+   "dur_s": 0.22,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_glass_debris_04": {
+   "id": "sfx_glass_debris",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -23,
+   "LUFS": -22.9,
+   "TP": -4.5,
+   "loop": false
+  },
+  "sfx_stone_impact_s_01": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.1,
+   "loop": false
+  },
+  "sfx_stone_impact_s_02": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -22.9,
+   "TP": -4.8,
+   "loop": false
+  },
+  "sfx_stone_impact_s_03": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.315,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.9,
+   "loop": false
+  },
+  "sfx_stone_impact_m_01": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.6,
+   "TP": -3.0,
+   "loop": false
+  },
+  "sfx_stone_impact_m_02": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -20.1,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_stone_impact_m_03": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.45,
+   "target_LUFS": -19.5,
+   "LUFS": -19.5,
+   "TP": -2.6,
+   "loop": false
+  },
+  "sfx_stone_impact_l_01": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_stone_impact_l_02": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -17.2,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_stone_impact_l_03": {
+   "id": "sfx_stone_impact",
+   "cat": "destruction",
+   "dur_s": 0.652,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_stone_crack_s_01": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.1,
+   "loop": false
+  },
+  "sfx_stone_crack_s_02": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.4,
+   "loop": false
+  },
+  "sfx_stone_crack_s_03": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.245,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -4.2,
+   "loop": false
+  },
+  "sfx_stone_crack_m_01": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.7,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_stone_crack_m_02": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.5,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_stone_crack_m_03": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -20.5,
+   "LUFS": -20.6,
+   "TP": -2.1,
+   "loop": false
+  },
+  "sfx_stone_crack_l_01": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.1,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_stone_crack_l_02": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -18.0,
+   "TP": -1.1,
+   "loop": false
+  },
+  "sfx_stone_crack_l_03": {
+   "id": "sfx_stone_crack",
+   "cat": "destruction",
+   "dur_s": 0.507,
+   "target_LUFS": -17.5,
+   "LUFS": -17.5,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_stone_break_s_01": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -4.9,
+   "loop": false
+  },
+  "sfx_stone_break_s_02": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -5.2,
+   "loop": false
+  },
+  "sfx_stone_break_s_03": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 0.525,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -4.5,
+   "loop": false
+  },
+  "sfx_stone_break_m_01": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.7,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_stone_break_m_02": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.8,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_stone_break_m_03": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -18.5,
+   "LUFS": -18.7,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_stone_break_l_01": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -16.0,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_stone_break_l_02": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -16.1,
+   "TP": -1.7,
+   "loop": false
+  },
+  "sfx_stone_break_l_03": {
+   "id": "sfx_stone_break",
+   "cat": "destruction",
+   "dur_s": 1.087,
+   "target_LUFS": -15.5,
+   "LUFS": -16.1,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_stone_collapse_s_01": {
+   "id": "sfx_stone_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -4.0,
+   "loop": false
+  },
+  "sfx_stone_collapse_s_02": {
+   "id": "sfx_stone_collapse",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_stone_collapse_m_01": {
+   "id": "sfx_stone_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.6,
+   "TP": -2.4,
+   "loop": false
+  },
+  "sfx_stone_collapse_m_02": {
+   "id": "sfx_stone_collapse",
+   "cat": "destruction",
+   "dur_s": 1.8,
+   "target_LUFS": -16.5,
+   "LUFS": -16.5,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_stone_collapse_l_01": {
+   "id": "sfx_stone_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.0,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_stone_collapse_l_02": {
+   "id": "sfx_stone_collapse",
+   "cat": "destruction",
+   "dur_s": 2.8,
+   "target_LUFS": -15,
+   "LUFS": -15.0,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_stone_debris_01": {
+   "id": "sfx_stone_debris",
+   "cat": "destruction",
+   "dur_s": 0.25,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.6,
+   "loop": false
+  },
+  "sfx_stone_debris_02": {
+   "id": "sfx_stone_debris",
+   "cat": "destruction",
+   "dur_s": 0.3,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.7,
+   "loop": false
+  },
+  "sfx_stone_debris_03": {
+   "id": "sfx_stone_debris",
+   "cat": "destruction",
+   "dur_s": 0.22,
+   "target_LUFS": -23,
+   "LUFS": -23.1,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_stone_debris_04": {
+   "id": "sfx_stone_debris",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.9,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_s_01": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.42,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -4.0,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_s_02": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.42,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -3.7,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_s_03": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.42,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_m_01": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.6,
+   "target_LUFS": -18.5,
+   "LUFS": -18.7,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_m_02": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.6,
+   "target_LUFS": -18.5,
+   "LUFS": -18.6,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_m_03": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.6,
+   "target_LUFS": -18.5,
+   "LUFS": -18.7,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_l_01": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.87,
+   "target_LUFS": -15.5,
+   "LUFS": -15.9,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_l_02": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.87,
+   "target_LUFS": -15.5,
+   "LUFS": -16.1,
+   "TP": -1.5,
+   "loop": false
+  },
+  "sfx_steel_jointsnap_l_03": {
+   "id": "sfx_steel_joint_snap",
+   "cat": "destruction",
+   "dur_s": 0.87,
+   "target_LUFS": -15.5,
+   "LUFS": -15.8,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_creak_wood_01": {
+   "id": "sfx_creak_wood",
+   "cat": "destruction",
+   "dur_s": 0.6,
+   "target_LUFS": -22,
+   "LUFS": -21.3,
+   "TP": -6.1,
+   "loop": false
+  },
+  "sfx_creak_wood_02": {
+   "id": "sfx_creak_wood",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -5.8,
+   "loop": false
+  },
+  "sfx_creak_wood_03": {
+   "id": "sfx_creak_wood",
+   "cat": "destruction",
+   "dur_s": 0.55,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -7.4,
+   "loop": false
+  },
+  "sfx_creak_wood_04": {
+   "id": "sfx_creak_wood",
+   "cat": "destruction",
+   "dur_s": 0.7,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -6.6,
+   "loop": false
+  },
+  "sfx_creak_steel_01": {
+   "id": "sfx_creak_steel",
+   "cat": "destruction",
+   "dur_s": 0.6,
+   "target_LUFS": -22,
+   "LUFS": -21.8,
+   "TP": -9.8,
+   "loop": false
+  },
+  "sfx_creak_steel_02": {
+   "id": "sfx_creak_steel",
+   "cat": "destruction",
+   "dur_s": 0.75,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -11.3,
+   "loop": false
+  },
+  "sfx_creak_steel_03": {
+   "id": "sfx_creak_steel",
+   "cat": "destruction",
+   "dur_s": 0.55,
+   "target_LUFS": -22,
+   "LUFS": -21.8,
+   "TP": -11.3,
+   "loop": false
+  },
+  "sfx_creak_steel_04": {
+   "id": "sfx_creak_steel",
+   "cat": "destruction",
+   "dur_s": 0.7,
+   "target_LUFS": -22,
+   "LUFS": -21.5,
+   "TP": -12.4,
+   "loop": false
+  },
+  "sfx_cannon_fire_01": {
+   "id": "sfx_cannon_fire",
+   "cat": "weapon",
+   "dur_s": 0.8,
+   "target_LUFS": -14,
+   "LUFS": -14.7,
+   "TP": -2.1,
+   "loop": false
+  },
+  "sfx_cannon_fire_02": {
+   "id": "sfx_cannon_fire",
+   "cat": "weapon",
+   "dur_s": 0.8,
+   "target_LUFS": -14,
+   "LUFS": -14.5,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_cannon_fire_03": {
+   "id": "sfx_cannon_fire",
+   "cat": "weapon",
+   "dur_s": 0.8,
+   "target_LUFS": -14,
+   "LUFS": -14.3,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_cannon_fire_04": {
+   "id": "sfx_cannon_fire",
+   "cat": "weapon",
+   "dur_s": 0.8,
+   "target_LUFS": -14,
+   "LUFS": -14.5,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_wrecker_breech_01": {
+   "id": "sfx_wrecker_breech",
+   "cat": "weapon",
+   "dur_s": 0.18,
+   "target_LUFS": -18,
+   "LUFS": -18.6,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_wrecker_breech_02": {
+   "id": "sfx_wrecker_breech",
+   "cat": "weapon",
+   "dur_s": 0.18,
+   "target_LUFS": -18,
+   "LUFS": -18.5,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_cannon_reload_loop": {
+   "id": "sfx_cannon_reload",
+   "cat": "weapon",
+   "dur_s": 1.0,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -4.2,
+   "loop": true,
+   "seam_jump": 0.0,
+   "p99_step": 0.03784
+  },
+  "sfx_cannon_ready_01": {
+   "id": "sfx_cannon_ready",
+   "cat": "weapon",
+   "dur_s": 0.25,
+   "target_LUFS": -19,
+   "LUFS": -19.0,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_cannon_ready_02": {
+   "id": "sfx_cannon_ready",
+   "cat": "weapon",
+   "dur_s": 0.25,
+   "target_LUFS": -19,
+   "LUFS": -19.0,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_pu_shockwave_arm": {
+   "id": "sfx_pu_shockwave_arm",
+   "cat": "powerup",
+   "dur_s": 0.5,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -7.5,
+   "loop": false
+  },
+  "sfx_pu_shockwave_fx": {
+   "id": "sfx_pu_shockwave_fx",
+   "cat": "powerup",
+   "dur_s": 1.5,
+   "target_LUFS": -17,
+   "LUFS": -17.1,
+   "TP": -3.0,
+   "loop": false
+  },
+  "sfx_pu_splitstrike_arm": {
+   "id": "sfx_pu_splitstrike_arm",
+   "cat": "powerup",
+   "dur_s": 0.5,
+   "target_LUFS": -18,
+   "LUFS": -17.8,
+   "TP": -7.1,
+   "loop": false
+  },
+  "sfx_pu_splitstrike_fx": {
+   "id": "sfx_pu_splitstrike_fx",
+   "cat": "powerup",
+   "dur_s": 1.0,
+   "target_LUFS": -17,
+   "LUFS": -16.9,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_pu_gravity_well_arm": {
+   "id": "sfx_pu_gravity_well_arm",
+   "cat": "powerup",
+   "dur_s": 0.5,
+   "target_LUFS": -18,
+   "LUFS": -17.9,
+   "TP": -7.7,
+   "loop": false
+  },
+  "sfx_pu_gravity_well_fx_loop": {
+   "id": "sfx_pu_gravity_well_fx",
+   "cat": "powerup",
+   "dur_s": 1.5,
+   "target_LUFS": -20,
+   "LUFS": -20.0,
+   "TP": -9.0,
+   "loop": true,
+   "seam_jump": 0.00068,
+   "p99_step": 0.00526
+  },
+  "sfx_pu_chain_reactor_arm": {
+   "id": "sfx_pu_chain_reactor_arm",
+   "cat": "powerup",
+   "dur_s": 0.5,
+   "target_LUFS": -18,
+   "LUFS": -17.6,
+   "TP": -8.3,
+   "loop": false
+  },
+  "sfx_pu_chain_reactor_fx": {
+   "id": "sfx_pu_chain_reactor_fx",
+   "cat": "powerup",
+   "dur_s": 1.4,
+   "target_LUFS": -17,
+   "LUFS": -17.0,
+   "TP": -6.2,
+   "loop": false
+  },
+  "sfx_pu_phase_piercer_arm": {
+   "id": "sfx_pu_phase_piercer_arm",
+   "cat": "powerup",
+   "dur_s": 0.5,
+   "target_LUFS": -18,
+   "LUFS": -17.4,
+   "TP": -7.2,
+   "loop": false
+  },
+  "sfx_pu_phase_piercer_fx": {
+   "id": "sfx_pu_phase_piercer_fx",
+   "cat": "powerup",
+   "dur_s": 1.0,
+   "target_LUFS": -17,
+   "LUFS": -16.4,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_pu_time_fracture_arm": {
+   "id": "sfx_pu_time_fracture_arm",
+   "cat": "powerup",
+   "dur_s": 0.5,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -6.6,
+   "loop": false
+  },
+  "sfx_pu_time_fracture_fx_loop": {
+   "id": "sfx_pu_time_fracture_fx",
+   "cat": "powerup",
+   "dur_s": 2.0,
+   "target_LUFS": -20,
+   "LUFS": -20.0,
+   "TP": -10.8,
+   "loop": true,
+   "seam_jump": 0.00249,
+   "p99_step": 0.00502
+  },
+  "sfx_pu_time_fracture_end": {
+   "id": "sfx_pu_time_fracture_end",
+   "cat": "powerup",
+   "dur_s": 0.9,
+   "target_LUFS": -17,
+   "LUFS": -16.9,
+   "TP": -1.4,
+   "loop": false
+  },
+  "sfx_pu_disarm": {
+   "id": "sfx_pu_disarm",
+   "cat": "powerup",
+   "dur_s": 0.3,
+   "target_LUFS": -21,
+   "LUFS": -21.0,
+   "TP": -9.5,
+   "loop": false
+  },
+  "sfx_pu_chain_link_01": {
+   "id": "sfx_pu_chain_link",
+   "cat": "powerup",
+   "dur_s": 0.1,
+   "target_LUFS": -19,
+   "LUFS": -19.0,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_pu_chain_link_02": {
+   "id": "sfx_pu_chain_link",
+   "cat": "powerup",
+   "dur_s": 0.1,
+   "target_LUFS": -19,
+   "LUFS": -19.0,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_pu_chain_link_03": {
+   "id": "sfx_pu_chain_link",
+   "cat": "powerup",
+   "dur_s": 0.1,
+   "target_LUFS": -19,
+   "LUFS": -19.0,
+   "TP": -3.0,
+   "loop": false
+  },
+  "sfx_pu_phase_hit_01": {
+   "id": "sfx_pu_phase_hit",
+   "cat": "powerup",
+   "dur_s": 0.4,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -4.1,
+   "loop": false
+  },
+  "sfx_pu_phase_hit_02": {
+   "id": "sfx_pu_phase_hit",
+   "cat": "powerup",
+   "dur_s": 0.4,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -3.7,
+   "loop": false
+  },
+  "sfx_pu_time_warn": {
+   "id": "sfx_pu_time_warn",
+   "cat": "powerup",
+   "dur_s": 0.5,
+   "target_LUFS": -19,
+   "LUFS": -19.3,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_combo_tier1": {
+   "id": "sfx_combo_tier1",
+   "cat": "combo",
+   "dur_s": 0.8,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_combo_tier2": {
+   "id": "sfx_combo_tier2",
+   "cat": "combo",
+   "dur_s": 1.0,
+   "target_LUFS": -17,
+   "LUFS": -17.0,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_combo_tier3": {
+   "id": "sfx_combo_tier3",
+   "cat": "combo",
+   "dur_s": 1.2,
+   "target_LUFS": -16,
+   "LUFS": -15.9,
+   "TP": -2.1,
+   "loop": false
+  },
+  "sfx_combo_tier4": {
+   "id": "sfx_combo_tier4",
+   "cat": "combo",
+   "dur_s": 1.4,
+   "target_LUFS": -15,
+   "LUFS": -14.5,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_combo_step": {
+   "id": "sfx_combo_step",
+   "cat": "combo",
+   "dur_s": 0.12,
+   "target_LUFS": -20,
+   "LUFS": -20.0,
+   "TP": -8.3,
+   "loop": false
+  },
+  "sfx_star_1": {
+   "id": "sfx_star_1",
+   "cat": "results",
+   "dur_s": 0.7,
+   "target_LUFS": -18,
+   "LUFS": -18.2,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_star_2": {
+   "id": "sfx_star_2",
+   "cat": "results",
+   "dur_s": 0.7,
+   "target_LUFS": -17,
+   "LUFS": -17.5,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_star_3": {
+   "id": "sfx_star_3",
+   "cat": "results",
+   "dur_s": 0.7,
+   "target_LUFS": -16,
+   "LUFS": -16.6,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_ui_click_01": {
+   "id": "sfx_ui_click",
+   "cat": "ui",
+   "dur_s": 0.08,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -3.4,
+   "loop": false
+  },
+  "sfx_ui_click_02": {
+   "id": "sfx_ui_click",
+   "cat": "ui",
+   "dur_s": 0.08,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -3.2,
+   "loop": false
+  },
+  "sfx_ui_click_03": {
+   "id": "sfx_ui_click",
+   "cat": "ui",
+   "dur_s": 0.08,
+   "target_LUFS": -22,
+   "LUFS": -22.1,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_ui_confirm": {
+   "id": "sfx_ui_confirm",
+   "cat": "ui",
+   "dur_s": 0.35,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -8.8,
+   "loop": false
+  },
+  "sfx_ui_back": {
+   "id": "sfx_ui_back",
+   "cat": "ui",
+   "dur_s": 0.3,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -9.5,
+   "loop": false
+  },
+  "sfx_ui_error": {
+   "id": "sfx_ui_error",
+   "cat": "ui",
+   "dur_s": 0.35,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -6.4,
+   "loop": false
+  },
+  "sfx_ui_tab": {
+   "id": "sfx_ui_tab",
+   "cat": "ui",
+   "dur_s": 0.07,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_ui_toggle": {
+   "id": "sfx_ui_toggle",
+   "cat": "ui",
+   "dur_s": 0.1,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -5.7,
+   "loop": false
+  },
+  "sfx_ui_charge_spend": {
+   "id": "sfx_ui_charge_spend",
+   "cat": "ui",
+   "dur_s": 0.1,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -3.0,
+   "loop": false
+  },
+  "sfx_ui_modal_open": {
+   "id": "sfx_ui_modal_open",
+   "cat": "ui",
+   "dur_s": 0.3,
+   "target_LUFS": -22,
+   "LUFS": -22.1,
+   "TP": -2.6,
+   "loop": false
+  },
+  "sfx_reward_coin_single_01": {
+   "id": "sfx_reward_coin_single",
+   "cat": "reward",
+   "dur_s": 0.5,
+   "target_LUFS": -20,
+   "LUFS": -20.4,
+   "TP": -4.3,
+   "loop": false
+  },
+  "sfx_reward_coin_single_02": {
+   "id": "sfx_reward_coin_single",
+   "cat": "reward",
+   "dur_s": 0.5,
+   "target_LUFS": -20,
+   "LUFS": -20.0,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_reward_coin_single_03": {
+   "id": "sfx_reward_coin_single",
+   "cat": "reward",
+   "dur_s": 0.5,
+   "target_LUFS": -20,
+   "LUFS": -20.4,
+   "TP": -3.1,
+   "loop": false
+  },
+  "sfx_reward_coin_burst_01": {
+   "id": "sfx_reward_coin_burst",
+   "cat": "reward",
+   "dur_s": 1.5,
+   "target_LUFS": -17,
+   "LUFS": -17.0,
+   "TP": -4.4,
+   "loop": false
+  },
+  "sfx_reward_coin_burst_02": {
+   "id": "sfx_reward_coin_burst",
+   "cat": "reward",
+   "dur_s": 1.5,
+   "target_LUFS": -17,
+   "LUFS": -17.0,
+   "TP": -4.5,
+   "loop": false
+  },
+  "sfx_reward_coin_burst_03": {
+   "id": "sfx_reward_coin_burst",
+   "cat": "reward",
+   "dur_s": 1.5,
+   "target_LUFS": -17,
+   "LUFS": -17.0,
+   "TP": -4.2,
+   "loop": false
+  },
+  "sfx_reward_chest_shake": {
+   "id": "sfx_reward_chest_shake",
+   "cat": "reward",
+   "dur_s": 0.5,
+   "target_LUFS": -19,
+   "LUFS": -19.1,
+   "TP": -3.1,
+   "loop": false
+  },
+  "sfx_reward_chest_open": {
+   "id": "sfx_reward_chest_open",
+   "cat": "reward",
+   "dur_s": 1.5,
+   "target_LUFS": -16,
+   "LUFS": -15.8,
+   "TP": -2.5,
+   "loop": false
+  }
+ }
+}

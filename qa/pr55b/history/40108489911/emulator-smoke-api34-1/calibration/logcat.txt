@@ -1,0 +1,93 @@
+--------- beginning of main
+10-24 17:01:33.506  1193  1193 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=190667, downTime=190667, deviceId=-1, source=0x1002, displayId=0, eventId=-458222324 }
+10-24 17:01:33.508  1193  1193 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=190667, downTime=190667, deviceId=-1, source=0x1002, displayId=0, eventId=-813728138 }
+10-24 17:01:33.597  6047  6077 I Unity   : CVTAP|BEGIN|ResultsScreen
+10-24 17:01:33.598  6047  6077 I Unity   : CVTAP|RESULT|win
+10-24 17:01:33.598  6047  6077 I Unity   : CVTAP|ResultsScreen|Button_II|110|2209|1
+10-24 17:01:33.598  6047  6077 I Unity   : CVTAP|ResultsScreen|Button_FIRE|922|2162|0
+10-24 17:01:33.598  6047  6077 I Unity   : CVTAP|ResultsScreen|Button_DevAimHint|681|2193|1
+10-24 17:01:33.598  6047  6077 I Unity   : CVTAP|ResultsScreen|Button_Map|346|1532|1
+10-24 17:01:33.598  6047  6077 I Unity   : CVTAP|ResultsScreen|Button_Retry|734|1532|1
+10-24 17:01:33.598  6047  6077 I Unity   : CVTAP|ResultsScreen|Button_NextLevel|540|1690|1
+10-24 17:01:34.198  6047  6140 D EGL_emulation: app_time_stats: avg=693.57ms min=612.04ms max=775.10ms count=2
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 17:01:34.293  6047  6077 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+--------- beginning of system
+10-24 17:01:34.804   542   573 D OomAdjuster: Not killing cached processes
+10-24 17:01:34.836  5432  6593 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.checkin.CheckinService started execution. cause:4 exec_start_elapsed_seconds: 191 [CONTEXT service_id=218 ]
+10-24 17:01:34.848  5432  6575 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.checkin.CheckinService finished executing. cause:4 result: 1 elapsed_millis: 24 uptime_millis: 24 exec_start_elapsed_seconds: 191 [CONTEXT service_id=218 ]
+10-24 17:01:35.410  6047  6140 D EGL_emulation: app_time_stats: avg=1211.49ms min=1211.49ms max=1211.49ms count=1
+10-24 17:01:35.449  5432  6943 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.auth.account.be.legacy.AuthCronService started execution. cause:5 exec_start_elapsed_seconds: 192 [CONTEXT service_id=218 ]
+10-24 17:01:35.497   542   619 D ActivityManager: sync unfroze 3090 com.google.android.gms.unstable for 6
+10-24 17:01:35.619   410   517 D AudioFlinger: mixer(0x73573fb97930) throttle end: throttle time(1)
+10-24 17:01:35.893   356  6946 I resolv  : GetAddrInfoHandler::run: {100 786532 100 983140 10128 0}
+10-24 17:01:35.894  3090  6944 D TrafficStats: tagSocket(113) with statsTag=0x1809, statsUid=-1
+10-24 17:01:35.896  3090  6944 W libc    : Access denied finding property "persist.adb.tls_server.enable"
+10-24 17:01:35.896  3090  6944 W libc    : Access denied finding property "service.adb.tls.port"
+10-24 17:01:35.893  3090  3090 W binder:3090_B: type=1400 audit(0.0:52): avc:  denied  { read } for  name="u:object_r:system_adbd_prop:s0" dev="tmpfs" ino=292 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:system_adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
+10-24 17:01:35.893  3090  3090 W binder:3090_B: type=1400 audit(0.0:53): avc:  denied  { read } for  name="u:object_r:adbd_prop:s0" dev="tmpfs" ino=60 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
+10-24 17:01:35.917  5432  5471 W GmsUrlRequestImpl: Content-Type header is overwritten.
+10-24 17:01:35.919   356  6947 I resolv  : GetAddrInfoHandler::run: {100 786532 100 983140 10128 0}
+10-24 17:01:35.919   356  6948 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 17:01:35.919   356  6949 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 17:01:35.919   356  6949 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79ff60f17d70
+10-24 17:01:35.919   356  6949 I resolv  : doQuery: rcode=0, ancount=8, return value=168
+10-24 17:01:35.919   356  6948 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79ff10f14d10
+10-24 17:01:35.920   356  6948 I resolv  : doQuery: rcode=0, ancount=8, return value=264
+10-24 17:01:35.921  5432  5737 D TrafficStats: tagSocket(205) with statsTag=0x401, statsUid=10128
+10-24 17:01:35.969  5432  5471 W GLSUser : [AppCertManager] Exception while requesting key: 
+10-24 17:01:35.969  5432  5471 W GLSUser : java.util.concurrent.ExecutionException: avvw: Parse Proto Exception.
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dlnv.s(:com.google.android.gms@231818047@23.18.18 (190800-535401451):3)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dlnv.get(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at oub.b(:com.google.android.gms@231818047@23.18.18 (190800-535401451):78)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at otz.b(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at otu.a(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at otx.a(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at lzq.call(:com.google.android.gms@231818047@23.18.18 (190800-535401451):14)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at java.lang.Thread.run(Thread.java:1012)
+10-24 17:01:35.969  5432  5471 W GLSUser : Caused by: avvw: Parse Proto Exception.
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at avwn.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):5)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at avxk.onSucceeded(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at jf.onSucceeded(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):0)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at ie.run(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):4)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	... 6 more
+10-24 17:01:35.969  5432  5471 W GLSUser : Caused by: dzfz: Protocol message contained an invalid tag (zero).
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dzdb.k(:com.google.android.gms@231818047@23.18.18 (190800-535401451):13)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dzha.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):47)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dzha.h(:com.google.android.gms@231818047@23.18.18 (190800-535401451):45)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dzfd.A(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dzex.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dzcx.d(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dzcx.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at dzcx.n(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at avwn.h(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	at avwn.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+10-24 17:01:35.969  5432  5471 W GLSUser : 	... 9 more
+10-24 17:01:35.974  5432  6943 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.auth.account.be.legacy.AuthCronService finished executing. cause:5 result: 3 elapsed_millis: 535 uptime_millis: 535 exec_start_elapsed_seconds: 192 [CONTEXT service_id=218 ]
+10-24 17:01:36.148   906   906 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+10-24 17:01:36.288  5432  5432 D SharedPreferencesImpl: Time required to fsync /data/user/0/com.google.android.gms/shared_prefs/auth_cron_chimera_service_storage.xml: [<1: 1, <2: 0, <4: 1, <8: 0, <16: 0, <32: 0, <64: 0, <128: 0, <256: 0, <512: 1, <1024: 0, <2048: 0, <4096: 0, <8192: 0, <16384: 0, >=16384: 0]
+10-24 17:01:36.626  6047  6140 D EGL_emulation: app_time_stats: avg=142.96ms min=39.78ms max=344.29ms count=3
+--------- beginning of kernel
+10-24 17:01:38.012     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6950 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:01:37.849  6047  6140 D EGL_emulation: app_time_stats: avg=108.70ms min=38.18ms max=307.98ms count=4
+10-24 17:01:38.410     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6955 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:01:38.454     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6958 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

@@ -1,0 +1,3703 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Bld_CastleKeep",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); positions/rotations local to the building root",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  },
+  "note": "suggested placement on Island_Sunnyville"
+ },
+ "tris_total": {
+  "LOD0": 20593,
+  "LOD1": 10276,
+  "LOD2": 4018,
+  "Fractured": 63885
+ },
+ "piece_count": 52,
+ "pieces": [
+  {
+   "id": "S0_F_WallDoor",
+   "kit": "Kit_Keep_WallDoor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallDoor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallDoor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 702,
+    "LOD1": 350,
+    "LOD2": 140,
+    "Fractured": 1372
+   }
+  },
+  {
+   "id": "S0_B_WallSlit",
+   "kit": "Kit_Keep_WallSlit",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 617,
+    "LOD1": 308,
+    "LOD2": 123,
+    "Fractured": 1215
+   }
+  },
+  {
+   "id": "S0_L_WallSlit",
+   "kit": "Kit_Keep_WallSlit",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 617,
+    "LOD1": 308,
+    "LOD2": 123,
+    "Fractured": 1215
+   }
+  },
+  {
+   "id": "S0_R_WallSlit",
+   "kit": "Kit_Keep_WallSlit",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 617,
+    "LOD1": 308,
+    "LOD2": 123,
+    "Fractured": 1215
+   }
+  },
+  {
+   "id": "S1_F_WallBanner",
+   "kit": "Kit_Keep_WallBanner",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 3.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S0_F_WallDoor"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 888,
+    "LOD1": 444,
+    "LOD2": 176,
+    "Fractured": 1499
+   }
+  },
+  {
+   "id": "S1_B_Wall",
+   "kit": "Kit_Keep_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 3.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S0_B_WallSlit"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 422,
+    "LOD1": 211,
+    "LOD2": 83,
+    "Fractured": 1021
+   }
+  },
+  {
+   "id": "S1_L_Wall",
+   "kit": "Kit_Keep_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S0_L_WallSlit"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 422,
+    "LOD1": 211,
+    "LOD2": 83,
+    "Fractured": 1021
+   }
+  },
+  {
+   "id": "S1_R_WallBalcony",
+   "kit": "Kit_Keep_WallBalcony",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S0_R_WallSlit"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 790,
+    "LOD1": 395,
+    "LOD2": 157,
+    "Fractured": 1260
+   }
+  },
+  {
+   "id": "S2_F_Wall",
+   "kit": "Kit_Keep_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 6.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S1_F_WallBanner"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 422,
+    "LOD1": 211,
+    "LOD2": 83,
+    "Fractured": 1021
+   }
+  },
+  {
+   "id": "S2_B_WallBalcony",
+   "kit": "Kit_Keep_WallBalcony",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 6.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S1_B_Wall"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 790,
+    "LOD1": 395,
+    "LOD2": 157,
+    "Fractured": 1260
+   }
+  },
+  {
+   "id": "S2_L_Wall",
+   "kit": "Kit_Keep_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 6.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S1_L_Wall"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 422,
+    "LOD1": 211,
+    "LOD2": 83,
+    "Fractured": 1021
+   }
+  },
+  {
+   "id": "S2_R_Wall",
+   "kit": "Kit_Keep_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 6.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S1_R_WallBalcony"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 422,
+    "LOD1": 211,
+    "LOD2": 83,
+    "Fractured": 1021
+   }
+  },
+  {
+   "id": "T0_S0_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 0.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.3827,
+    "z": 0.0,
+    "w": 0.9239
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 45.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T0_S1_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 3.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.1305,
+    "z": 0.0,
+    "w": 0.9914
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 15.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T0_S0_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T0_S2_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 6.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.3827,
+    "z": 0.0,
+    "w": 0.9239
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 45.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T0_S1_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T0_S3_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 9.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.1305,
+    "z": 0.0,
+    "w": 0.9914
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 15.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T0_S2_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T0_Crown",
+   "kit": "Kit_Keep_TurretCrown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 12.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.3827,
+    "z": 0.0,
+    "w": 0.9239
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 45.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T0_S3_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 372,
+    "LOD1": 186,
+    "LOD2": 73,
+    "Fractured": 936
+   }
+  },
+  {
+   "id": "T0_Roof",
+   "kit": "Kit_Keep_TurretRoof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 13.3,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.3827,
+    "z": 0.0,
+    "w": 0.9239
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 45.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T0_Crown"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 571,
+    "LOD1": 284,
+    "LOD2": 114,
+    "Fractured": 1465
+   }
+  },
+  {
+   "id": "T1_S0_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 0.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.3827,
+    "z": 0.0,
+    "w": 0.9239
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -45.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T1_S1_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 3.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.6088,
+    "z": 0.0,
+    "w": 0.7934
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -75.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T1_S0_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T1_S2_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 6.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.3827,
+    "z": 0.0,
+    "w": 0.9239
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -45.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T1_S1_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T1_S3_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 9.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.6088,
+    "z": 0.0,
+    "w": 0.7934
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -75.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T1_S2_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T1_Crown",
+   "kit": "Kit_Keep_TurretCrown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 12.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.3827,
+    "z": 0.0,
+    "w": 0.9239
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -45.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T1_S3_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 372,
+    "LOD1": 186,
+    "LOD2": 73,
+    "Fractured": 936
+   }
+  },
+  {
+   "id": "T1_Roof",
+   "kit": "Kit_Keep_TurretRoof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 13.3,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.3827,
+    "z": 0.0,
+    "w": 0.9239
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -45.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T1_Crown"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 571,
+    "LOD1": 284,
+    "LOD2": 114,
+    "Fractured": 1465
+   }
+  },
+  {
+   "id": "T2_S0_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 0.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -135.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T2_S1_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 3.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.9914,
+    "z": 0.0,
+    "w": 0.1305
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -165.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T2_S0_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T2_S2_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 6.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T2_S1_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T2_S3_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 9.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.9914,
+    "z": 0.0,
+    "w": 0.1305
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -165.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T2_S2_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T2_S4_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 12.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T2_S3_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T2_Crown",
+   "kit": "Kit_Keep_TurretCrown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 15.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T2_S4_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 372,
+    "LOD1": 186,
+    "LOD2": 73,
+    "Fractured": 936
+   }
+  },
+  {
+   "id": "T2_Roof",
+   "kit": "Kit_Keep_TurretRoof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 16.3,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T2_Crown"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 571,
+    "LOD1": 284,
+    "LOD2": 114,
+    "Fractured": 1465
+   }
+  },
+  {
+   "id": "T3_S0_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 0.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 135.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T3_S1_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 3.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7934,
+    "z": 0.0,
+    "w": 0.6088
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 105.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T3_S0_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T3_S2_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 6.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T3_S1_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T3_S3_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 9.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7934,
+    "z": 0.0,
+    "w": 0.6088
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 105.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T3_S2_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T3_S4_Turret",
+   "kit": "Kit_Keep_Turret",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 12.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T3_S3_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 282,
+    "LOD1": 141,
+    "LOD2": 56,
+    "Fractured": 1377
+   }
+  },
+  {
+   "id": "T3_Crown",
+   "kit": "Kit_Keep_TurretCrown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 15.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T3_S4_Turret"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 372,
+    "LOD1": 186,
+    "LOD2": 73,
+    "Fractured": 936
+   }
+  },
+  {
+   "id": "T3_Roof",
+   "kit": "Kit_Keep_TurretRoof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 16.3,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.9239,
+    "z": 0.0,
+    "w": 0.3827
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 135.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "T3_Crown"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 571,
+    "LOD1": 284,
+    "LOD2": 114,
+    "Fractured": 1465
+   }
+  },
+  {
+   "id": "Top_F_Crown",
+   "kit": "Kit_Keep_Crown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 9.0,
+    "z": 3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S2_F_Wall"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 448,
+    "LOD1": 224,
+    "LOD2": 89,
+    "Fractured": 1309
+   }
+  },
+  {
+   "id": "Top_B_Crown",
+   "kit": "Kit_Keep_Crown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 9.0,
+    "z": -3.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S2_B_WallBalcony"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 448,
+    "LOD1": 224,
+    "LOD2": 89,
+    "Fractured": 1309
+   }
+  },
+  {
+   "id": "Top_L_Crown",
+   "kit": "Kit_Keep_Crown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S2_L_Wall"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 448,
+    "LOD1": 224,
+    "LOD2": 89,
+    "Fractured": 1309
+   }
+  },
+  {
+   "id": "Top_R_Crown",
+   "kit": "Kit_Keep_Crown",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S2_R_Wall"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 448,
+    "LOD1": 224,
+    "LOD2": 89,
+    "Fractured": 1309
+   }
+  },
+  {
+   "id": "Floor_1",
+   "kit": "Kit_Keep_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S0_F_WallDoor",
+    "S0_B_WallSlit",
+    "S0_L_WallSlit",
+    "S0_R_WallSlit"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 62,
+    "LOD1": 30,
+    "LOD2": 12,
+    "Fractured": 827
+   }
+  },
+  {
+   "id": "Floor_2",
+   "kit": "Kit_Keep_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 6.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S1_F_WallBanner",
+    "S1_B_Wall",
+    "S1_L_Wall",
+    "S1_R_WallBalcony"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 62,
+    "LOD1": 30,
+    "LOD2": 12,
+    "Fractured": 827
+   }
+  },
+  {
+   "id": "Floor_3",
+   "kit": "Kit_Keep_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "S2_F_Wall",
+    "S2_B_WallBalcony",
+    "S2_L_Wall",
+    "S2_R_Wall"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 62,
+    "LOD1": 30,
+    "LOD2": 12,
+    "Fractured": 827
+   }
+  },
+  {
+   "id": "Annex_L",
+   "kit": "Kit_Props_Shed",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx",
+   "position": {
+    "x": 4.2,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 1058,
+    "LOD1": 529,
+    "LOD2": 210,
+    "Fractured": 1416
+   }
+  },
+  {
+   "id": "Barrel_0",
+   "kit": "Kit_Props_Barrel",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+   "position": {
+    "x": 2.0,
+    "y": 0.0,
+    "z": 4.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.0872,
+    "z": 0.0,
+    "w": 0.9962
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -10.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 354,
+    "LOD1": 177,
+    "LOD2": 70,
+    "Fractured": 1434
+   }
+  },
+  {
+   "id": "Barrel_1",
+   "kit": "Kit_Props_Barrel",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+   "position": {
+    "x": 2.55,
+    "y": 0.0,
+    "z": 3.75
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.342,
+    "z": 0.0,
+    "w": 0.9397
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -40.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 354,
+    "LOD1": 177,
+    "LOD2": 70,
+    "Fractured": 1434
+   }
+  },
+  {
+   "id": "Barrel_2",
+   "kit": "Kit_Props_Barrel",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+   "position": {
+    "x": 2.2,
+    "y": 0.0,
+    "z": 4.55
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.6088,
+    "z": 0.0,
+    "w": 0.7934
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -75.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 354,
+    "LOD1": 177,
+    "LOD2": 70,
+    "Fractured": 1434
+   }
+  },
+  {
+   "id": "Crate_0",
+   "kit": "Kit_Props_Crate",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx",
+   "position": {
+    "x": -2.2,
+    "y": 0.0,
+    "z": 4.1
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.1305,
+    "z": 0.0,
+    "w": 0.9914
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -15.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 172,
+    "LOD1": 83,
+    "LOD2": 12,
+    "Fractured": 670
+   }
+  },
+  {
+   "id": "Crate_1",
+   "kit": "Kit_Props_Crate",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx",
+   "position": {
+    "x": -2.75,
+    "y": 0.0,
+    "z": 3.8
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.1736,
+    "z": 0.0,
+    "w": 0.9848
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 20.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 172,
+    "LOD1": 83,
+    "LOD2": 12,
+    "Fractured": 670
+   }
+  },
+  {
+   "id": "Crate_2",
+   "kit": "Kit_Props_CrateSmall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx",
+   "position": {
+    "x": -2.35,
+    "y": 0.8,
+    "z": 4.15
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.2588,
+    "z": 0.0,
+    "w": 0.9659
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -30.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Crate_0"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 172,
+    "LOD1": 83,
+    "LOD2": 12,
+    "Fractured": 579
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "S0_F_WallDoor",
+   "b": "S1_F_WallBanner",
+   "point": {
+    "x": 0.0,
+    "y": 3.005,
+    "z": 3.0948
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "T0_S0_Turret",
+   "point": {
+    "x": 1.6449,
+    "y": 1.5,
+    "z": 3.225
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "T0_S1_Turret",
+   "point": {
+    "x": 1.7662,
+    "y": 3.005,
+    "z": 3.225
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "T1_S0_Turret",
+   "point": {
+    "x": -1.6449,
+    "y": 1.5,
+    "z": 3.225
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "T1_S1_Turret",
+   "point": {
+    "x": -1.7662,
+    "y": 3.005,
+    "z": 3.225
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "Floor_1",
+   "point": {
+    "x": 0.0,
+    "y": 2.815,
+    "z": 2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "Barrel_0",
+   "point": {
+    "x": 1.8461,
+    "y": 0.466,
+    "z": 3.6711
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "Barrel_1",
+   "point": {
+    "x": 2.077,
+    "y": 0.466,
+    "z": 3.502
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "Crate_0",
+   "point": {
+    "x": -1.8913,
+    "y": 0.4,
+    "z": 3.6663
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_F_WallDoor",
+   "b": "Crate_2",
+   "point": {
+    "x": -2.0218,
+    "y": 1.075,
+    "z": 3.7468
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_B_WallSlit",
+   "b": "S1_B_Wall",
+   "point": {
+    "x": 0.0,
+    "y": 3.0,
+    "z": -3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_B_WallSlit",
+   "b": "T2_S0_Turret",
+   "point": {
+    "x": -1.6449,
+    "y": 1.5,
+    "z": -3.215
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_B_WallSlit",
+   "b": "T2_S1_Turret",
+   "point": {
+    "x": -1.7662,
+    "y": 3.0,
+    "z": -3.215
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_B_WallSlit",
+   "b": "T3_S0_Turret",
+   "point": {
+    "x": 1.6449,
+    "y": 1.5,
+    "z": -3.215
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_B_WallSlit",
+   "b": "T3_S1_Turret",
+   "point": {
+    "x": 1.7662,
+    "y": 3.0,
+    "z": -3.215
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_B_WallSlit",
+   "b": "Floor_1",
+   "point": {
+    "x": 0.0,
+    "y": 2.81,
+    "z": -2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_L_WallSlit",
+   "b": "S1_L_Wall",
+   "point": {
+    "x": 3.18,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_L_WallSlit",
+   "b": "T0_S0_Turret",
+   "point": {
+    "x": 3.215,
+    "y": 1.5,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_L_WallSlit",
+   "b": "T0_S1_Turret",
+   "point": {
+    "x": 3.215,
+    "y": 3.0,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_L_WallSlit",
+   "b": "T3_S0_Turret",
+   "point": {
+    "x": 3.215,
+    "y": 1.5,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_L_WallSlit",
+   "b": "T3_S1_Turret",
+   "point": {
+    "x": 3.215,
+    "y": 3.0,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_L_WallSlit",
+   "b": "Floor_1",
+   "point": {
+    "x": 2.75,
+    "y": 2.81,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_L_WallSlit",
+   "b": "Annex_L",
+   "point": {
+    "x": 3.483,
+    "y": 1.5,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_R_WallSlit",
+   "b": "S1_R_WallBalcony",
+   "point": {
+    "x": -3.215,
+    "y": 2.9645,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_R_WallSlit",
+   "b": "T1_S0_Turret",
+   "point": {
+    "x": -3.215,
+    "y": 1.5,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_R_WallSlit",
+   "b": "T1_S1_Turret",
+   "point": {
+    "x": -3.215,
+    "y": 3.0,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_R_WallSlit",
+   "b": "T2_S0_Turret",
+   "point": {
+    "x": -3.215,
+    "y": 1.5,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_R_WallSlit",
+   "b": "T2_S1_Turret",
+   "point": {
+    "x": -3.215,
+    "y": 3.0,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S0_R_WallSlit",
+   "b": "Floor_1",
+   "point": {
+    "x": -2.75,
+    "y": 2.81,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "S2_F_Wall",
+   "point": {
+    "x": 0.0,
+    "y": 6.0,
+    "z": 3.0948
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "T0_S0_Turret",
+   "point": {
+    "x": 1.6449,
+    "y": 3.0,
+    "z": 3.0948
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "T0_S1_Turret",
+   "point": {
+    "x": 1.7662,
+    "y": 4.5,
+    "z": 3.0948
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "T0_S2_Turret",
+   "point": {
+    "x": 1.6449,
+    "y": 6.0,
+    "z": 3.0948
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "T1_S0_Turret",
+   "point": {
+    "x": -1.6449,
+    "y": 3.0,
+    "z": 3.0948
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "T1_S1_Turret",
+   "point": {
+    "x": -1.7662,
+    "y": 4.5,
+    "z": 3.0948
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "T1_S2_Turret",
+   "point": {
+    "x": -1.6449,
+    "y": 6.0,
+    "z": 3.0948
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "Floor_1",
+   "point": {
+    "x": 0.0,
+    "y": 3.015,
+    "z": 2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_F_WallBanner",
+   "b": "Floor_2",
+   "point": {
+    "x": 0.0,
+    "y": 5.81,
+    "z": 2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "S2_B_WallBalcony",
+   "point": {
+    "x": 0.0,
+    "y": 5.9645,
+    "z": -3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "T2_S0_Turret",
+   "point": {
+    "x": -1.6449,
+    "y": 3.0,
+    "z": -3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "T2_S1_Turret",
+   "point": {
+    "x": -1.7662,
+    "y": 4.5,
+    "z": -3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "T2_S2_Turret",
+   "point": {
+    "x": -1.6449,
+    "y": 6.0,
+    "z": -3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "T3_S0_Turret",
+   "point": {
+    "x": 1.6449,
+    "y": 3.0,
+    "z": -3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "T3_S1_Turret",
+   "point": {
+    "x": 1.7662,
+    "y": 4.5,
+    "z": -3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "T3_S2_Turret",
+   "point": {
+    "x": 1.6449,
+    "y": 6.0,
+    "z": -3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "Floor_1",
+   "point": {
+    "x": 0.0,
+    "y": 3.015,
+    "z": -2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_B_Wall",
+   "b": "Floor_2",
+   "point": {
+    "x": 0.0,
+    "y": 5.81,
+    "z": -2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "S2_L_Wall",
+   "point": {
+    "x": 3.18,
+    "y": 6.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "T0_S0_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 3.0,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "T0_S1_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 4.5,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "T0_S2_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 6.0,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "T3_S0_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 3.0,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "T3_S1_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 4.5,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "T3_S2_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 6.0,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "Floor_1",
+   "point": {
+    "x": 2.75,
+    "y": 3.015,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "Floor_2",
+   "point": {
+    "x": 2.75,
+    "y": 5.81,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_L_Wall",
+   "b": "Annex_L",
+   "point": {
+    "x": 3.448,
+    "y": 3.44,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "S2_R_Wall",
+   "point": {
+    "x": -3.18,
+    "y": 6.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "T1_S0_Turret",
+   "point": {
+    "x": -3.35,
+    "y": 2.9645,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "T1_S1_Turret",
+   "point": {
+    "x": -3.35,
+    "y": 4.5,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "T1_S2_Turret",
+   "point": {
+    "x": -3.35,
+    "y": 6.0,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "T2_S0_Turret",
+   "point": {
+    "x": -3.35,
+    "y": 2.9645,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "T2_S1_Turret",
+   "point": {
+    "x": -3.35,
+    "y": 4.5,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "T2_S2_Turret",
+   "point": {
+    "x": -3.35,
+    "y": 6.0,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "Floor_1",
+   "point": {
+    "x": -2.75,
+    "y": 2.9795,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S1_R_WallBalcony",
+   "b": "Floor_2",
+   "point": {
+    "x": -2.75,
+    "y": 5.81,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "T0_S1_Turret",
+   "point": {
+    "x": 1.7662,
+    "y": 6.0,
+    "z": 3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "T0_S2_Turret",
+   "point": {
+    "x": 1.6449,
+    "y": 7.5,
+    "z": 3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "T0_S3_Turret",
+   "point": {
+    "x": 1.7662,
+    "y": 9.0,
+    "z": 3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "T1_S1_Turret",
+   "point": {
+    "x": -1.7662,
+    "y": 6.0,
+    "z": 3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "T1_S2_Turret",
+   "point": {
+    "x": -1.6449,
+    "y": 7.5,
+    "z": 3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "T1_S3_Turret",
+   "point": {
+    "x": -1.7662,
+    "y": 9.0,
+    "z": 3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "Top_F_Crown",
+   "point": {
+    "x": 0.0,
+    "y": 9.0,
+    "z": 3.18
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "Floor_2",
+   "point": {
+    "x": 0.0,
+    "y": 6.015,
+    "z": 2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_F_Wall",
+   "b": "Floor_3",
+   "point": {
+    "x": 0.0,
+    "y": 8.81,
+    "z": 2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "T2_S1_Turret",
+   "point": {
+    "x": -1.7662,
+    "y": 5.9645,
+    "z": -3.35
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "T2_S2_Turret",
+   "point": {
+    "x": -1.6449,
+    "y": 7.5,
+    "z": -3.35
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "T2_S3_Turret",
+   "point": {
+    "x": -1.7662,
+    "y": 9.0,
+    "z": -3.35
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "T3_S1_Turret",
+   "point": {
+    "x": 1.7662,
+    "y": 5.9645,
+    "z": -3.35
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "T3_S2_Turret",
+   "point": {
+    "x": 1.6449,
+    "y": 7.5,
+    "z": -3.35
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "T3_S3_Turret",
+   "point": {
+    "x": 1.7662,
+    "y": 9.0,
+    "z": -3.35
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "Top_B_Crown",
+   "point": {
+    "x": 0.0,
+    "y": 9.0,
+    "z": -3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "Floor_2",
+   "point": {
+    "x": 0.0,
+    "y": 5.9795,
+    "z": -2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_B_WallBalcony",
+   "b": "Floor_3",
+   "point": {
+    "x": 0.0,
+    "y": 8.81,
+    "z": -2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "T0_S1_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 6.0,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "T0_S2_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 7.5,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "T0_S3_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 9.0,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "T3_S1_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 6.0,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "T3_S2_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 7.5,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "T3_S3_Turret",
+   "point": {
+    "x": 3.18,
+    "y": 9.0,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "Top_L_Crown",
+   "point": {
+    "x": 3.18,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "Floor_2",
+   "point": {
+    "x": 2.75,
+    "y": 6.015,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_L_Wall",
+   "b": "Floor_3",
+   "point": {
+    "x": 2.75,
+    "y": 8.81,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "T1_S1_Turret",
+   "point": {
+    "x": -3.18,
+    "y": 6.0,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "T1_S2_Turret",
+   "point": {
+    "x": -3.18,
+    "y": 7.5,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "T1_S3_Turret",
+   "point": {
+    "x": -3.18,
+    "y": 9.0,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "T2_S1_Turret",
+   "point": {
+    "x": -3.18,
+    "y": 6.0,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "T2_S2_Turret",
+   "point": {
+    "x": -3.18,
+    "y": 7.5,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "T2_S3_Turret",
+   "point": {
+    "x": -3.18,
+    "y": 9.0,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "Top_R_Crown",
+   "point": {
+    "x": -3.18,
+    "y": 9.0,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "Floor_2",
+   "point": {
+    "x": -2.75,
+    "y": 6.015,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "S2_R_Wall",
+   "b": "Floor_3",
+   "point": {
+    "x": -2.75,
+    "y": 8.81,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S0_Turret",
+   "b": "T0_S1_Turret",
+   "point": {
+    "x": 3.0,
+    "y": 3.0,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S0_Turret",
+   "b": "Floor_1",
+   "point": {
+    "x": 1.9949,
+    "y": 2.81,
+    "z": 1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S0_Turret",
+   "b": "Annex_L",
+   "point": {
+    "x": 4.0231,
+    "y": 1.5,
+    "z": 1.3199
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S0_Turret",
+   "b": "Barrel_0",
+   "point": {
+    "x": 2.0,
+    "y": 0.466,
+    "z": 4.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S0_Turret",
+   "b": "Barrel_1",
+   "point": {
+    "x": 2.55,
+    "y": 0.466,
+    "z": 3.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S0_Turret",
+   "b": "Barrel_2",
+   "point": {
+    "x": 2.2,
+    "y": 0.466,
+    "z": 4.4645
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S1_Turret",
+   "b": "T0_S2_Turret",
+   "point": {
+    "x": 3.0,
+    "y": 6.0,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S1_Turret",
+   "b": "Floor_1",
+   "point": {
+    "x": 2.1162,
+    "y": 3.015,
+    "z": 2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S1_Turret",
+   "b": "Floor_2",
+   "point": {
+    "x": 2.1162,
+    "y": 5.81,
+    "z": 2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S1_Turret",
+   "b": "Annex_L",
+   "point": {
+    "x": 3.9018,
+    "y": 3.44,
+    "z": 1.4412
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S2_Turret",
+   "b": "T0_S3_Turret",
+   "point": {
+    "x": 3.0,
+    "y": 9.0,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S2_Turret",
+   "b": "Top_F_Crown",
+   "point": {
+    "x": 1.6449,
+    "y": 9.0,
+    "z": 3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S2_Turret",
+   "b": "Top_L_Crown",
+   "point": {
+    "x": 3.2,
+    "y": 9.0,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S2_Turret",
+   "b": "Floor_2",
+   "point": {
+    "x": 1.9949,
+    "y": 6.015,
+    "z": 1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S2_Turret",
+   "b": "Floor_3",
+   "point": {
+    "x": 1.9949,
+    "y": 8.81,
+    "z": 1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S3_Turret",
+   "b": "T0_Crown",
+   "point": {
+    "x": 3.0,
+    "y": 12.0,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S3_Turret",
+   "b": "Top_F_Crown",
+   "point": {
+    "x": 1.7662,
+    "y": 9.82,
+    "z": 3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S3_Turret",
+   "b": "Top_L_Crown",
+   "point": {
+    "x": 3.2,
+    "y": 9.82,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_S3_Turret",
+   "b": "Floor_3",
+   "point": {
+    "x": 2.1162,
+    "y": 9.015,
+    "z": 2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T0_Crown",
+   "b": "T0_Roof",
+   "point": {
+    "x": 3.0,
+    "y": 13.3,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S0_Turret",
+   "b": "T1_S1_Turret",
+   "point": {
+    "x": -3.0,
+    "y": 3.0,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S0_Turret",
+   "b": "Floor_1",
+   "point": {
+    "x": -1.9949,
+    "y": 2.81,
+    "z": 1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S0_Turret",
+   "b": "Crate_0",
+   "point": {
+    "x": -2.2,
+    "y": 0.4,
+    "z": 4.1
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S0_Turret",
+   "b": "Crate_1",
+   "point": {
+    "x": -2.75,
+    "y": 0.4,
+    "z": 3.8
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S0_Turret",
+   "b": "Crate_2",
+   "point": {
+    "x": -2.35,
+    "y": 1.075,
+    "z": 4.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S1_Turret",
+   "b": "T1_S2_Turret",
+   "point": {
+    "x": -3.0,
+    "y": 6.0,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S1_Turret",
+   "b": "Floor_1",
+   "point": {
+    "x": -2.1162,
+    "y": 3.015,
+    "z": 2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S1_Turret",
+   "b": "Floor_2",
+   "point": {
+    "x": -2.1162,
+    "y": 5.81,
+    "z": 2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S2_Turret",
+   "b": "T1_S3_Turret",
+   "point": {
+    "x": -3.0,
+    "y": 9.0,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S2_Turret",
+   "b": "Top_F_Crown",
+   "point": {
+    "x": -1.6449,
+    "y": 9.0,
+    "z": 3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S2_Turret",
+   "b": "Top_R_Crown",
+   "point": {
+    "x": -3.2,
+    "y": 9.0,
+    "z": 1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S2_Turret",
+   "b": "Floor_2",
+   "point": {
+    "x": -1.9949,
+    "y": 6.015,
+    "z": 1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S2_Turret",
+   "b": "Floor_3",
+   "point": {
+    "x": -1.9949,
+    "y": 8.81,
+    "z": 1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S3_Turret",
+   "b": "T1_Crown",
+   "point": {
+    "x": -3.0,
+    "y": 12.0,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S3_Turret",
+   "b": "Top_F_Crown",
+   "point": {
+    "x": -1.7662,
+    "y": 9.82,
+    "z": 3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S3_Turret",
+   "b": "Top_R_Crown",
+   "point": {
+    "x": -3.2,
+    "y": 9.82,
+    "z": 1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_S3_Turret",
+   "b": "Floor_3",
+   "point": {
+    "x": -2.1162,
+    "y": 9.015,
+    "z": 2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T1_Crown",
+   "b": "T1_Roof",
+   "point": {
+    "x": -3.0,
+    "y": 13.3,
+    "z": 3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S0_Turret",
+   "b": "T2_S1_Turret",
+   "point": {
+    "x": -3.0,
+    "y": 3.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S0_Turret",
+   "b": "Floor_1",
+   "point": {
+    "x": -1.9949,
+    "y": 2.81,
+    "z": -1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S1_Turret",
+   "b": "T2_S2_Turret",
+   "point": {
+    "x": -3.0,
+    "y": 6.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S1_Turret",
+   "b": "Floor_1",
+   "point": {
+    "x": -2.1162,
+    "y": 3.015,
+    "z": -2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S1_Turret",
+   "b": "Floor_2",
+   "point": {
+    "x": -2.1162,
+    "y": 5.81,
+    "z": -2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S2_Turret",
+   "b": "T2_S3_Turret",
+   "point": {
+    "x": -3.0,
+    "y": 9.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S2_Turret",
+   "b": "Top_B_Crown",
+   "point": {
+    "x": -1.6449,
+    "y": 9.0,
+    "z": -3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S2_Turret",
+   "b": "Top_R_Crown",
+   "point": {
+    "x": -3.2,
+    "y": 9.0,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S2_Turret",
+   "b": "Floor_2",
+   "point": {
+    "x": -1.9949,
+    "y": 6.015,
+    "z": -1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S2_Turret",
+   "b": "Floor_3",
+   "point": {
+    "x": -1.9949,
+    "y": 8.81,
+    "z": -1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S3_Turret",
+   "b": "T2_S4_Turret",
+   "point": {
+    "x": -3.0,
+    "y": 12.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S3_Turret",
+   "b": "Top_B_Crown",
+   "point": {
+    "x": -1.7662,
+    "y": 9.82,
+    "z": -3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S3_Turret",
+   "b": "Top_R_Crown",
+   "point": {
+    "x": -3.2,
+    "y": 9.82,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S3_Turret",
+   "b": "Floor_3",
+   "point": {
+    "x": -2.1162,
+    "y": 9.015,
+    "z": -2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_S4_Turret",
+   "b": "T2_Crown",
+   "point": {
+    "x": -3.0,
+    "y": 15.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T2_Crown",
+   "b": "T2_Roof",
+   "point": {
+    "x": -3.0,
+    "y": 16.3,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S0_Turret",
+   "b": "T3_S1_Turret",
+   "point": {
+    "x": 3.0,
+    "y": 3.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S0_Turret",
+   "b": "Floor_1",
+   "point": {
+    "x": 1.9949,
+    "y": 2.81,
+    "z": -1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S0_Turret",
+   "b": "Annex_L",
+   "point": {
+    "x": 4.0231,
+    "y": 1.5,
+    "z": -1.3199
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S1_Turret",
+   "b": "T3_S2_Turret",
+   "point": {
+    "x": 3.0,
+    "y": 6.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S1_Turret",
+   "b": "Floor_1",
+   "point": {
+    "x": 2.1162,
+    "y": 3.015,
+    "z": -2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S1_Turret",
+   "b": "Floor_2",
+   "point": {
+    "x": 2.1162,
+    "y": 5.81,
+    "z": -2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S1_Turret",
+   "b": "Annex_L",
+   "point": {
+    "x": 3.9018,
+    "y": 3.44,
+    "z": -1.4412
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S2_Turret",
+   "b": "T3_S3_Turret",
+   "point": {
+    "x": 3.0,
+    "y": 9.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S2_Turret",
+   "b": "Top_B_Crown",
+   "point": {
+    "x": 1.6449,
+    "y": 9.0,
+    "z": -3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S2_Turret",
+   "b": "Top_L_Crown",
+   "point": {
+    "x": 3.2,
+    "y": 9.0,
+    "z": -1.6449
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S2_Turret",
+   "b": "Floor_2",
+   "point": {
+    "x": 1.9949,
+    "y": 6.015,
+    "z": -1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S2_Turret",
+   "b": "Floor_3",
+   "point": {
+    "x": 1.9949,
+    "y": 8.81,
+    "z": -1.9949
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S3_Turret",
+   "b": "T3_S4_Turret",
+   "point": {
+    "x": 3.0,
+    "y": 12.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S3_Turret",
+   "b": "Top_B_Crown",
+   "point": {
+    "x": 1.7662,
+    "y": 9.82,
+    "z": -3.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S3_Turret",
+   "b": "Top_L_Crown",
+   "point": {
+    "x": 3.2,
+    "y": 9.82,
+    "z": -1.7662
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S3_Turret",
+   "b": "Floor_3",
+   "point": {
+    "x": 2.1162,
+    "y": 9.015,
+    "z": -2.1162
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_S4_Turret",
+   "b": "T3_Crown",
+   "point": {
+    "x": 3.0,
+    "y": 15.0,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "T3_Crown",
+   "b": "T3_Roof",
+   "point": {
+    "x": 3.0,
+    "y": 16.3,
+    "z": -3.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_F_Crown",
+   "b": "Floor_3",
+   "point": {
+    "x": 0.0,
+    "y": 9.015,
+    "z": 2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_B_Crown",
+   "b": "Floor_3",
+   "point": {
+    "x": 0.0,
+    "y": 9.015,
+    "z": -2.75
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_L_Crown",
+   "b": "Floor_3",
+   "point": {
+    "x": 2.75,
+    "y": 9.015,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_R_Crown",
+   "b": "Floor_3",
+   "point": {
+    "x": -2.75,
+    "y": 9.015,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Barrel_0",
+   "b": "Barrel_1",
+   "point": {
+    "x": 2.2309,
+    "y": 0.466,
+    "z": 3.9191
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Barrel_0",
+   "b": "Barrel_2",
+   "point": {
+    "x": 2.0883,
+    "y": 0.466,
+    "z": 4.2633
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Barrel_1",
+   "b": "Barrel_2",
+   "point": {
+    "x": 2.3426,
+    "y": 0.466,
+    "z": 4.1824
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Crate_0",
+   "b": "Crate_1",
+   "point": {
+    "x": -2.463,
+    "y": 0.4,
+    "z": 3.962
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Crate_0",
+   "b": "Crate_2",
+   "point": {
+    "x": -2.3305,
+    "y": 0.8,
+    "z": 4.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Crate_1",
+   "b": "Crate_2",
+   "point": {
+    "x": -2.4824,
+    "y": 0.8,
+    "z": 4.0426
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this instance's anchor_to list"
+}

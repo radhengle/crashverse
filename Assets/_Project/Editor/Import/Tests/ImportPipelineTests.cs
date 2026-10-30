@@ -51,7 +51,9 @@ namespace Crashverse.Tests
 
         [Test] public void FragmentLimitIs400() => Assert.AreEqual(400, C.FragmentTriLimit);
 
-        [Test] public void KitPath() { Assert.IsTrue(C.KitPathOk("Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx")); Assert.IsFalse(C.KitPathOk("Assets/_Project/Models/Kit_Wood/Kit_Wood_Wall.fbx")); }
+        [Test] public void KitPath() { Assert.IsTrue(C.KitPathOk("Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx")); Assert.IsFalse(C.KitPathOk("Assets/_Project/Models/Kit_Wood/Kit_Wood_Wall.fbx"));
+            Assert.IsTrue(C.KitPathOk("Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall.fbx"), "realistic v1 pieces");
+            Assert.IsFalse(C.KitPathOk("Assets/_Project/Models/Realistic/Foliage/Oak/Oak.fbx"), "only Kit_Real* under Realistic"); }
     }
 
     public class ImportedPhysicsHintsTests

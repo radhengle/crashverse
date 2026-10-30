@@ -1,0 +1,731 @@
+--------- beginning of main
+10-24 15:31:29.006   421   512 D AudioFlinger: mixer(0x7acc23b12930) throttle end: throttle time(3)
+10-24 15:31:29.010  5295  5428 D EGL_emulation: app_time_stats: avg=3628.89ms min=3628.89ms max=3628.89ms count=1
+10-24 15:31:29.128   551   590 W system_server: Long monitor contention with owner binder:551_1D (2860) at android.content.ComponentName com.android.server.am.ActivityManagerService.startService(android.app.IApplicationThread, android.content.Intent, java.lang.String, boolean, java.lang.String, java.lang.String, int, boolean, int, java.lang.String, java.lang.String)(ActivityManagerService.java:13195) waiters=0 in boolean com.android.server.am.BroadcastQueueModernImpl.lambda$new$0(android.os.Message) for 113ms
+10-24 15:31:29.133  1213  1213 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=922.0, y[0]=2162.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=224303, downTime=224303, deviceId=-1, source=0x1002, displayId=0, eventId=-156947345 }
+10-24 15:31:29.275  1213  1213 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=922.0, y[0]=2162.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=224303, downTime=224303, deviceId=-1, source=0x1002, displayId=0, eventId=-163219800 }
+10-24 15:31:29.360  5295  5333 I Unity   : CVPROJ launch tick=25 pos=(-18.09, 1.87, 0.00) v=(27.49, 5.34, 0.00) age=0
+10-24 15:31:29.427  5295  5333 I Unity   : CVTAP|BEGIN|HudScreen
+10-24 15:31:29.427  5295  5333 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:31:29.427  5295  5333 I Unity   : 
+10-24 15:31:29.433  5295  5333 I Unity   : CVTAP|HudScreen|Button_II|110|2209|1
+10-24 15:31:29.433  5295  5333 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:31:29.433  5295  5333 I Unity   : 
+10-24 15:31:29.434  5295  5333 I Unity   : CVTAP|HudScreen|Button_FIRE|922|2162|0
+10-24 15:31:29.434  5295  5333 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:31:29.434  5295  5333 I Unity   : 
+10-24 15:31:29.434  5295  5333 I Unity   : CVTAP|HudScreen|Button_DevAimHint|688|2200|1
+10-24 15:31:29.434  5295  5333 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:31:29.434  5295  5333 I Unity   : 
+10-24 15:31:29.673  5086  6240 I Fitness : OnPackageChangedOperation got intent: Intent { act=android.intent.action.PACKAGE_CHANGED dat=package: flg=0x45000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) } [CONTEXT service_id=17 ]
+10-24 15:31:29.758   421   512 D AudioFlinger: mixer(0x7acc23b12930) throttle end: throttle time(2)
+10-24 15:31:29.776  5086  6240 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_CHANGED [CONTEXT service_id=17 ]
+10-24 15:31:29.833  5086  5091 W .gms.persistent: Suspending all threads took: 10.650ms
+10-24 15:31:29.833   217   217 I tombstoned: received crash request for pid 5086
+10-24 15:31:29.834   217   217 I tombstoned: found intercept fd 512 for pid 5086 and type kDebuggerdJavaBacktrace
+10-24 15:31:29.834   217   217 W tombstoned: skipping tombstone file creation due to intercept
+10-24 15:31:29.834   551  6227 I system_server: libdebuggerd_client: done dumping process 5086
+10-24 15:31:29.837  5086  5091 I .gms.persistent: Wrote stack traces to tombstoned
+--------- beginning of system
+10-24 15:31:29.884   551  6227 I ActivityManager: Done dumping
+10-24 15:31:29.978   551  6227 E ActivityManager: ANR in com.crashverse.game
+10-24 15:31:29.978   551  6227 E ActivityManager: PID: 5295
+10-24 15:31:29.978   551  6227 E ActivityManager: Reason: App requested: Buffer processing hung up due to stuck fence. Indicates GPU hang
+10-24 15:31:29.978   551  6227 E ActivityManager: ErrorId: 6c8ac4e8-ed5d-43d3-af40-f83e1a9e0ded
+10-24 15:31:29.978   551  6227 E ActivityManager: Frozen: false
+10-24 15:31:29.978   551  6227 E ActivityManager: Load: 26.28 / 15.04 / 6.01
+10-24 15:31:29.978   551  6227 E ActivityManager: ----- Output from /proc/pressure/memory -----
+10-24 15:31:29.978   551  6227 E ActivityManager: some avg10=0.11 avg60=1.19 avg300=0.87 total=4397310
+10-24 15:31:29.978   551  6227 E ActivityManager: full avg10=0.00 avg60=0.09 avg300=0.06 total=686493
+10-24 15:31:29.978   551  6227 E ActivityManager: ----- End output from /proc/pressure/memory -----
+10-24 15:31:29.978   551  6227 E ActivityManager: ----- Output from /proc/pressure/cpu -----
+10-24 15:31:29.978   551  6227 E ActivityManager: some avg10=56.91 avg60=65.93 avg300=32.35 total=128445235
+10-24 15:31:29.978   551  6227 E ActivityManager: full avg10=0.00 avg60=0.00 avg300=0.00 total=0
+10-24 15:31:29.978   551  6227 E ActivityManager: ----- End output from /proc/pressure/cpu -----
+10-24 15:31:29.978   551  6227 E ActivityManager: ----- Output from /proc/pressure/io -----
+10-24 15:31:29.978   551  6227 E ActivityManager: some avg10=2.63 avg60=7.99 avg300=5.58 total=25222785
+10-24 15:31:29.978   551  6227 E ActivityManager: full avg10=0.08 avg60=0.56 avg300=0.72 total=4556628
+10-24 15:31:29.978   551  6227 E ActivityManager: ----- End output from /proc/pressure/io -----
+10-24 15:31:29.978   551  6227 E ActivityManager: 
+10-24 15:31:29.978   551  6227 E ActivityManager: CPU usage from 2ms to 8945ms later (2026-10-24 15:31:20.942 to 2026-10-24 15:31:29.884):
+10-24 15:31:29.978   551  6227 E ActivityManager:   65% 5295/com.crashverse.game: 8.7% user + 56% kernel / faults: 6675 minor 75 major
+10-24 15:31:29.978   551  6227 E ActivityManager:   47% 5086/com.google.android.gms.persistent: 30% user + 17% kernel / faults: 13466 minor 39 major
+10-24 15:31:29.978   551  6227 E ActivityManager:   9.2% 551/system_server: 5.3% user + 3.8% kernel / faults: 9150 minor 3 major
+10-24 15:31:29.978   551  6227 E ActivityManager:   1.7% 929/com.android.systemui: 1.2% user + 0.5% kernel / faults: 1384 minor 4 major
+10-24 15:31:29.978   551  6227 E ActivityManager:   1.2% 932/com.google.android.permissioncontroller: 0.5% user + 0.6% kernel / faults: 871 minor
+10-24 15:31:29.978   551  6227 E ActivityManager:   0.8% 427/surfaceflinger: 0.5% user + 0.3% kernel / faults: 2 minor
+10-24 15:31:29.978   551  6227 E ActivityManager:   0% 8/kworker/u8:0-loop11: 0% user + 0% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:   0% 1854/com.android.emulator.multidisplay: 0% user + 0% kernel / faults: 1418 minor
+10-24 15:31:29.978   551  6227 E ActivityManager:   0.5% 383/android.hardware.sensors-service.multihal: 0.2% user + 0.3% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:   0.5% 464/logcat: 0.1% user + 0.4% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager: 91% TOTAL: 34% user + 56% kernel + 0.3% iowait + 0.7% softirq
+10-24 15:31:29.978   551  6227 E ActivityManager: CPU usage from 31ms to 568ms later (2026-10-24 15:31:20.971 to 2026-10-24 15:31:21.507):
+10-24 15:31:29.978   551  6227 E ActivityManager:   73% 5086/com.google.android.gms.persistent: 48% user + 24% kernel / faults: 777 minor
+10-24 15:31:29.978   551  6227 E ActivityManager:     44% 5571/lowpool[11]: 44% user + 0% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:     28% 5534/highpool[5]: 4% user + 24% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:   54% 5295/com.crashverse.game: 21% user + 33% kernel / faults: 1216 minor
+10-24 15:31:29.978   551  6227 E ActivityManager:     25% 5304/Signal Catcher: 16% user + 8.4% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:     21% 5428/UnityGfxDeviceW: 4.2% user + 16% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:     8.4% 5434/UnityMain: 0% user + 8.4% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:     4.2% 5333/UnityMain: 4.2% user + 0% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:   21% 551/system_server: 7% user + 14% kernel / faults: 1277 minor
+10-24 15:31:29.978   551  6227 E ActivityManager:     16% 6228/AnrAuxiliaryTas: 4.6% user + 11% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:     4.6% 2323/binder:551_17: 2.3% user + 2.3% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:     2.3% 581/android.io: 2.3% user + 0% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:   2% 157/psimon: 0% user + 2% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:   2% 265/kworker/u8:3-ext4-rsv-conversion: 0% user + 2% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:   2% 361/netd: 2% user + 0% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager:   2.1% 367/android.hardware.audio.service: 2.1% user + 0% kernel
+10-24 15:31:29.978   551  6227 E ActivityManager: 92% TOTAL: 41% user + 50% kernel + 1.2% iowait
+10-24 15:31:29.995   551   580 W ActivityTaskManager:   Force finishing activity com.crashverse.game/com.unity3d.player.UnityPlayerActivity
+10-24 15:31:30.001   551   580 I ActivityManager: Killing 5295:com.crashverse.game/u0a192 (adj 0): user request after error
+10-24 15:31:30.014   929   971 V WindowManagerShell: Transition requested: android.os.BinderProxy@890af47 TransitionRequestInfo { type = CLOSE, triggerTask = null, remoteTransition = null, displayChange = null }
+10-24 15:31:30.014   551   592 I libprocessgroup: Successfully killed process cgroup uid 10192 pid 5295 in 5ms
+10-24 15:31:30.019   551  6278 I DropBoxManagerService: add tag=data_app_anr isTagEnabled=true flags=0x6
+10-24 15:31:30.021   551  6227 D ActivityManager: Completed ANR of com.crashverse.game in 9075ms, latency 2ms
+10-24 15:31:30.115   421   512 D AudioFlinger: mixer(0x7acc23b12930) throttle end: throttle time(5)
+10-24 15:31:30.121   362   362 I Zygote  : Process 5295 exited due to signal 9 (Killed)
+--------- beginning of kernel
+10-24 15:31:30.320     0     0 W binder_debug: 24 callbacks suppressed
+10-24 15:31:30.320     0     0 I binder  : undelivered transaction 544370, process died.
+10-24 15:31:30.331     0     0 I binder  : undelivered transaction 544373, process died.
+10-24 15:31:30.130   551   580 D DisplayManagerService: Drop pending events for gone uid 10192
+10-24 15:31:30.132   551   843 I WindowManager: WIN DEATH: Window{335c287 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity}
+10-24 15:31:30.132   551   843 W InputManager-JNI: Input channel object '335c287 com.crashverse.game/com.unity3d.player.UnityPlayerActivity (client)' was disposed without first being removed with the input manager!
+10-24 15:31:30.135   551  1933 I ImeTracker: com.crashverse.game:a879d0d3: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_REMOVE_CLIENT
+10-24 15:31:30.135   551  1933 I ImeTracker: com.crashverse.game:a879d0d3: onCancelled at PHASE_SERVER_SHOULD_HIDE
+10-24 15:31:30.165  1790  2215 I AiAiEcho: Predicting[0]: 
+10-24 15:31:30.165  1790  2215 I AiAiEcho: EchoTargets: 
+10-24 15:31:30.165  1790  2215 I AiAiEcho: Filtered by AiAi flag check: 
+10-24 15:31:30.165  1790  2215 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+10-24 15:31:30.173  1790  2215 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+10-24 15:31:30.179   551  1842 W AppSearchIcing: icing-search-engine.cc:283: Error: 5, Message: Document (com.google.android.googlequicksearchbox$OneSearchZeroStateGoogleSuggestions/default, zp) not found.
+10-24 15:31:30.194  2003  2003 I A       : onApplyWindowInsets: systemWindowInsets=Insets{left=0, top=63, right=0, bottom=0}
+10-24 15:31:30.194  2003  2003 I A       : onApplyWindowInsets: systemWindowInsets=Insets{left=0, top=63, right=0, bottom=0}
+10-24 15:31:30.204  1136  1469 D BtGatt.ScanManager: uid 10128 isForeground true scanMode -1
+10-24 15:31:30.204  1136  1469 D BtGatt.ScanManager: uid 10128 isForeground true scanMode -1
+10-24 15:31:30.206   929   929 D CentralSurfaces: Received new disable state: enaihbcrso.qingr (unchanged)
+10-24 15:31:30.210  1213  2774 D OneSearchSuggestProvider: Created the binder channel successfully for end point service =com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService , mChannel=z1{delegate=s1{logId=5, target=directaddress:///AndroidComponentAddress%5BIntent%20%7B%20act=grpc.io.action.BIND%20cmp=com.google.android.googlequicksearchbox/com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService%20%7D%5D}} , mOneSearchConnection=X1.T@71221b0
+10-24 15:31:30.211   551   583 W WindowManager: Failed to deliver inset control state change to w=Window{335c287 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity EXITING}
+10-24 15:31:30.211   551   583 W WindowManager: android.os.DeadObjectException
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.os.BinderProxy.transactNative(Native Method)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.view.IWindow$Stub$Proxy.insetsControlChanged(IWindow.java:479)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.WindowState.notifyInsetsControlChanged(WindowState.java:3802)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.InsetsStateController.lambda$notifyPendingInsetsControlChanged$3(InsetsStateController.java:343)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.InsetsStateController.$r8$lambda$8yykPRG1GyNq_J17QvL9d5xANMc(InsetsStateController.java:0)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.InsetsStateController$$ExternalSyntheticLambda2.run(R8$$SyntheticClass:0)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator.executeAfterPrepareSurfacesRunnables(WindowAnimator.java:294)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator.animate(WindowAnimator.java:202)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator.lambda$new$1(WindowAnimator.java:99)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator.$r8$lambda$aHNu1uhcqxihX5NZc4McDDQPAyw(WindowAnimator.java:0)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator$$ExternalSyntheticLambda1.doFrame(R8$$SyntheticClass:0)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1337)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1348)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.view.Choreographer.doCallbacks(Choreographer.java:952)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.view.Choreographer.doFrame(Choreographer.java:878)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1322)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:31:30.211   551   583 W WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:67)
+10-24 15:31:30.211   551   583 W WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+10-24 15:31:30.263   421   512 D audioserver: FGS Logger Transaction failed
+10-24 15:31:30.263   421   512 D audioserver: -129
+10-24 15:31:30.345   421   512 D audioserver: FGS Logger Transaction failed
+10-24 15:31:30.345   421   512 D audioserver: -129
+10-24 15:31:30.348  1779  2392 E WakeLock: IntentOp:.chimera.container.InitConfigOperation ** IS FORCE-RELEASED ON TIMEOUT **
+10-24 15:31:30.497   551   582 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{df55f52 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity t8 f} isExiting}
+10-24 15:31:30.567  1779  2392 E WakeLock: IntentOp:.chimera.container.InitConfigOperation ** IS FORCE-RELEASED ON TIMEOUT **
+10-24 15:31:30.640  1779  5492 I GmsDebugLogger: [52] 
+10-24 15:31:30.660  1779  5492 W ChimeraConfigService: Retry attempt was throttled. [CONTEXT service_id=264 ]
+10-24 15:31:30.678  1779  5484 W gle.android.gms: Long monitor contention with owner lowpool[16] (5492) at boolean zec.j(int, zdr, java.util.List, zeb)(:com.google.android.gms@231818047@23.18.18 (190800-535401451):283) waiters=0 in boolean zec.j(int, zdr, java.util.List, zeb) for 9.979s
+10-24 15:31:30.678  1779  5484 I ChimeraConfigurator: Starting update, reason: 4 urgentFeatures: tflite_dynamite:-1
+10-24 15:31:30.689  1779  5492 I ChimeraConfigService: Scheduling checkin every 43200 seconds, with flex of 1800 seconds [CONTEXT service_id=264 ]
+10-24 15:31:30.722   551   647 D ActivityManager: freezing 5910 com.android.settings
+10-24 15:31:30.728   551   647 D ActivityManager: freezing 3848 com.android.dynsystem:dynsystem
+10-24 15:31:30.733   551   647 D ActivityManager: freezing 3801 com.android.dynsystem
+10-24 15:31:30.736   551   647 D ActivityManager: freezing 2331 com.android.keychain
+10-24 15:31:30.761   551   647 D ActivityManager: freezing 2148 com.android.localtransport
+10-24 15:31:30.767  5086  5869 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.chimera.container.ConfigService finished executing. cause:5 result: 2 elapsed_millis: 17515 uptime_millis: 17515 exec_start_elapsed_seconds: 208 [CONTEXT service_id=218 ]
+10-24 15:31:31.202  2003  3233 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[NexusLauncherActivity]#2) as ready
+10-24 15:31:31.202  2003  3233 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[NexusLauncherActivity]#3) as ready
+10-24 15:31:31.261  1213  3182 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[NexusLauncherActivity]#2) as ready
+10-24 15:31:31.261  1213  3182 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[NexusLauncherActivity]#3) as ready
+10-24 15:31:31.692  5086  5869 W .gms.persistent: Long monitor contention with owner netscheduler-queue-handler (5320) at void bytb.o(int)(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4) waiters=0 in void bytb.u(byps, int) for 471ms
+10-24 15:31:31.711  1779  6283 I Pay     : Device does not support HCE. [CONTEXT service_id=198 ]
+10-24 15:31:31.730  1790  6259 I IPCThreadState: oneway function results for code 2 on binder at 0x7f5b6595e8e0 will be dropped but finished with status UNKNOWN_TRANSACTION
+10-24 15:31:32.014  5086  5869 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.pay.gcmtask.PayGcmTaskService started execution. cause:5 exec_start_elapsed_seconds: 226 [CONTEXT service_id=218 ]
+10-24 15:31:32.015  5086  5869 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.pay.gcmtask.PayGcmTaskService finished executing. cause:5 result: 2 elapsed_millis: 515 uptime_millis: 515 exec_start_elapsed_seconds: 226 [CONTEXT service_id=218 ]
+10-24 15:31:32.164  5086  5099 I .gms.persistent: Background young concurrent copying GC freed 168379(10132KB) AllocSpace objects, 2(104KB) LOS objects, 36% free, 17MB/27MB, paused 112us,38us total 128.769ms
+10-24 15:31:32.356  5086  5495 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.gcm.gmsproc.GcmInGmsTaskService started execution. cause:5 exec_start_elapsed_seconds: 227 [CONTEXT service_id=218 ]
+10-24 15:31:32.414  5086  5869 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.gcm.gmsproc.GcmInGmsTaskService finished executing. cause:5 result: 1 elapsed_millis: 137 uptime_millis: 137 exec_start_elapsed_seconds: 227 [CONTEXT service_id=218 ]
+10-24 15:31:33.031  2003  3200 E OpenGLRenderer: Unable to match the desired swap behavior.
+10-24 15:31:33.047   427   427 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+10-24 15:31:33.061   929   993 D EGL_emulation: app_time_stats: avg=84009.02ms min=84009.02ms max=84009.02ms count=1
+10-24 15:31:33.062  1213  2034 E OpenGLRenderer: Unable to match the desired swap behavior.
+10-24 15:31:33.065   929   929 I Choreographer: Skipped 162 frames!  The application may be doing too much work on its main thread.
+10-24 15:31:33.107   367  1813 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 4047360
+10-24 15:31:33.139  5086  5495 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.udc.service.UdcContextInitService started execution. cause:5 exec_start_elapsed_seconds: 227 [CONTEXT service_id=218 ]
+10-24 15:31:33.447  2003  2003 I Choreographer: Skipped 194 frames!  The application may be doing too much work on its main thread.
+10-24 15:31:33.466  2003  2003 I A       : Created gRPC endpoint to "search" for service class com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService
+10-24 15:31:33.476  5086  5869 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.udc.service.UdcContextInitService finished executing. cause:5 result: 1 elapsed_millis: 678 uptime_millis: 678 exec_start_elapsed_seconds: 227 [CONTEXT service_id=218 ]
+10-24 15:31:33.482  1835  1835 I GsaVoiceInteractionSrv: Handling ACTION_START_HOTWORD
+10-24 15:31:33.483  1835  2197 I GsaVoiceInteractionSrv: disregardVoiceMatch: false
+10-24 15:31:33.483  2003  2003 I A       : onApplyWindowInsets: systemWindowInsets=Insets{left=0, top=63, right=0, bottom=0}
+10-24 15:31:33.489  1835  2197 I GsaVoiceInteractionSrv: Cannot start hotword, hotword has been explicitly disabled.
+10-24 15:31:33.492  2003  2003 I A       : onApplyWindowInsets: systemWindowInsets=Insets{left=0, top=63, right=0, bottom=0}
+10-24 15:31:33.751   551   580 W Looper  : Slow delivery took 262ms android.ui h=com.android.server.am.ActivityManagerService$UiHandler c=com.android.server.am.UidObserverController$$ExternalSyntheticLambda0@c6baa4b m=0
+10-24 15:31:33.753  2003  2541 W NamedFutures: Timeout future task has been cancelled: 60000 milliseconds
+10-24 15:31:33.765   929  2688 I OpenGLRenderer: Davey! duration=3105ms; Flags=0, FrameTimelineVsyncId=36488, IntendedVsync=225387382909, Vsync=225420716241, InputEventId=0, HandleInputStart=225430180866, AnimationStart=225430181267, PerformTraversalsStart=225430181798, DrawStart=225430535598, FrameDeadline=225404049575, FrameInterval=225430173101, FrameStartTime=16666666, SyncQueued=225430966994, SyncStart=225430993113, IssueDrawCommandsStart=225431035131, SwapBuffers=228234551308, FrameCompleted=228493335858, DequeueBufferDuration=4188, QueueBufferDuration=258984, GpuCompleted=228493335858, SwapBuffersCompleted=228236194186, DisplayPresentTime=0, CommandSubmissionCompleted=228234551308, 
+10-24 15:31:33.772   551   579 V WindowManager: Sent Transition #7 createdAt=10-24 15:31:29.995 via request=TransitionRequestInfo { type = CLOSE, triggerTask = null, remoteTransition = null, displayChange = null }
+10-24 15:31:33.778   551   579 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+10-24 15:31:33.779   551   579 V WindowManager:     info={id=7 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{a906ad6 Task{da37890 #1 type=home}}} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x117885e sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{WCT{RemoteToken{912b698 Task{459d595 #8 type=standard A=10192:com.crashverse.game}}} m=CLOSE f=NONE leash=Surface(name=Task=8)/@0x974d80a sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{83b9dd1 token=android.os.Binder@fe4c4f8})/@0x418f99 sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0}]}
+10-24 15:31:33.779   929   971 V WindowManagerShell: onTransitionReady android.os.BinderProxy@890af47: {id=7 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@72502d1} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xb685655 sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@441136} m=CLOSE f=NONE leash=Surface(name=Task=8)/@0x78d86a sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{83b9dd1 token=android.os.Binder@fe4c4f8})/@0x160a15b sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0}]}
+10-24 15:31:33.786   929   971 V WindowManagerShell: Playing animation for (#7)android.os.BinderProxy@890af47@0
+10-24 15:31:33.786   929   971 V WindowManagerShell:  try handler com.android.wm.shell.transition.DefaultMixedHandler@4c56732
+10-24 15:31:33.787   929   971 V WindowManagerShell:  try handler com.android.wm.shell.keyguard.KeyguardTransitionHandler@2a5c83
+10-24 15:31:33.787   929   971 V WindowManagerShell:  try handler com.android.wm.shell.activityembedding.ActivityEmbeddingController@a8b7e00
+10-24 15:31:33.787   929   971 V WindowManagerShell:  try handler com.android.wm.shell.recents.RecentsTransitionHandler@1c8d639
+10-24 15:31:33.787   929   971 V ShellRecents: RecentsTransitionHandler.startAnimation: no controller found
+10-24 15:31:33.787   929   971 V WindowManagerShell:  try handler com.android.wm.shell.pip.PipTransition@cdec47e
+10-24 15:31:33.808  2003  5775 I BgTaskExecutorImpl: Starting NONEXCLUSIVE background task MDD_CELLULAR_CHARGING_TASK.
+10-24 15:31:33.818   929   971 V WindowManagerShell:  try handler com.android.wm.shell.splitscreen.StageCoordinator@22c3ddf
+10-24 15:31:33.818   929   971 V WindowManagerShell:  try handler com.android.wm.shell.transition.RemoteTransitionHandler@12a7a2c
+10-24 15:31:33.818   929   971 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=7 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@72502d1} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xb685655 sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@441136} m=CLOSE f=NONE leash=Surface(name=Task=8)/@0x78d86a sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{83b9dd1 token=android.os.Binder@fe4c4f8})/@0x160a15b sb=Rect(0, 0 - 1080, 2340) eb=Rect(0, 0 - 1080, 2340) d=0}]}
+10-24 15:31:33.818   929   971 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@f2b5025, appThread = android.app.IApplicationThread$Stub$Proxy@97a95fa, debugName = LauncherToDream }}
+10-24 15:31:33.818   929   971 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@c4037ab, appThread = android.app.IApplicationThread$Stub$Proxy@18ffe08, debugName = QuickstepLaunchHome }}
+10-24 15:31:33.818   929   971 D RemoteTransitionHandler: Found filterPair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@c4037ab, appThread = android.app.IApplicationThread$Stub$Proxy@18ffe08, debugName = QuickstepLaunchHome }}
+10-24 15:31:33.818   929   971 V WindowManagerShell:  Delegate animation for #7 to RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@c4037ab, appThread = android.app.IApplicationThread$Stub$Proxy@18ffe08, debugName = QuickstepLaunchHome }
+10-24 15:31:33.819   929   929 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 15:31:33.824   551   583 I Choreographer: Skipped 152 frames!  The application may be doing too much work on its main thread.
+10-24 15:31:33.825   929  3147 I OpenGLRenderer: Davey! duration=757ms; Flags=0, FrameTimelineVsyncId=36523, IntendedVsync=225520716237, Vsync=225520716237, InputEventId=0, HandleInputStart=225528030315, AnimationStart=225528031246, PerformTraversalsStart=225528124541, DrawStart=225528175376, FrameDeadline=228520716117, FrameInterval=225528025135, FrameStartTime=16666666, SyncQueued=225528282806, SyncStart=228236222288, IssueDrawCommandsStart=228240501359, SwapBuffers=228477189217, FrameCompleted=228986020572, DequeueBufferDuration=446673832, QueueBufferDuration=302625, GpuCompleted=228986020572, SwapBuffersCompleted=228940086726, DisplayPresentTime=0, CommandSubmissionCompleted=228477189217, 
+10-24 15:31:33.828   929   971 V WindowManagerShell:  animated by com.android.wm.shell.transition.RemoteTransitionHandler@12a7a2c
+10-24 15:31:33.828   929   971 W Looper  : Slow dispatch took 49ms wmshell.main h=android.os.Handler c=com.android.wm.shell.transition.Transitions$TransitionPlayerImpl$$ExternalSyntheticLambda0@24da1a4 m=0
+10-24 15:31:33.831  2003  3451 I OpenGLRenderer: Davey! duration=3625ms; Flags=1, FrameTimelineVsyncId=36474, IntendedVsync=225337382911, Vsync=225337382911, InputEventId=0, HandleInputStart=225340400255, AnimationStart=225340400545, PerformTraversalsStart=225340400736, DrawStart=228205819335, FrameDeadline=225354049577, FrameInterval=225340396988, FrameStartTime=16666666, SyncQueued=228210233709, SyncStart=228233259354, IssueDrawCommandsStart=228233408903, SwapBuffers=228270675322, FrameCompleted=228986007557, DequeueBufferDuration=3556, QueueBufferDuration=214430, GpuCompleted=228986007557, SwapBuffersCompleted=228609435646, DisplayPresentTime=0, CommandSubmissionCompleted=228270675322, 
+10-24 15:31:33.832   551   582 W system_server: Long monitor contention with owner android.anim (583) at void com.android.server.wm.WindowAnimator.lambda$new$1(long)(WindowAnimator.java:103) waiters=0 in void com.android.server.wm.WindowManagerService$H.handleMessage(android.os.Message) for 2.567s
+10-24 15:31:33.838   551   582 V WindowManager: Unknown focus tokens, dropping reportFocusChanged
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: PERIODIC background task MDD_CELLULAR_CHARGING_TASK was cancelled.
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: java.util.concurrent.CancellationException: Task was cancelled.
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.d.s(PG:3)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.d.get(PG:4)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.eb.a(PG:1)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.ci.r(PG:2)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.cb.run(PG:4)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.apps.gsa.shared.util.c.a.cf.b(PG:1)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.apps.gsa.shared.util.c.a.ci.run(PG:1)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.ae.run(PG:1)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.i.run(PG:2)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.p.run(PG:4)
+10-24 15:31:33.847  2003  5834 E BgTaskExecutorImpl: 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:31:33.937  2003  2003 E A       : Task 255 failed or timed out. Client 8811080017468967 disconnecting from SearchService!
+10-24 15:31:33.937  2003  2003 E A       : java.util.concurrent.CancellationException: Task was cancelled.
+10-24 15:31:33.937  2003  2003 E A       : 	at com.google.common.util.concurrent.d.s(PG:3)
+10-24 15:31:33.937  2003  2003 E A       : 	at com.google.common.util.concurrent.d.get(PG:4)
+10-24 15:31:33.937  2003  2003 E A       : 	at com.google.common.util.concurrent.eb.a(PG:1)
+10-24 15:31:33.937  2003  2003 E A       : 	at com.google.common.util.concurrent.ci.r(PG:2)
+10-24 15:31:33.937  2003  2003 E A       : 	at com.google.common.util.concurrent.cb.run(PG:4)
+10-24 15:31:33.937  2003  2003 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.ba.run(PG:1)
+10-24 15:31:33.937  2003  2003 E A       : 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:31:33.937  2003  2003 E A       : 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:31:33.937  2003  2003 E A       : 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:31:33.937  2003  2003 E A       : 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:31:33.937  2003  2003 E A       : 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+10-24 15:31:33.937  2003  2003 E A       : 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:31:33.937  2003  2003 E A       : 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:31:33.937  2003  2003 E A       : 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+10-24 15:31:33.942  2003  2620 W SearchServiceCore: Abort, client detached.
+10-24 15:31:33.944   551  2323 D OomAdjuster: Not killing cached processes
+10-24 15:31:33.948   551   580 W Looper  : Drained
+10-24 15:31:33.971  2003  2422 I A       : Starting batch sync for corpora: [1015]
+10-24 15:31:33.973  2003  2444 W A       : Corpus: GDD_APA_LIGHTWEIGHT_TOKENS is disabled
+10-24 15:31:33.994  2003  2408 I A       : Starting batch sync for corpora: [1004]
+10-24 15:31:34.004  2003  2445 I A       : Starting batch sync for corpora: [1014]
+10-24 15:31:34.024  5086  5495 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.clearcut.uploader.QosUploaderService started execution. cause:5 exec_start_elapsed_seconds: 228 [CONTEXT service_id=218 ]
+10-24 15:31:34.110   929   993 D EGL_emulation: app_time_stats: avg=301.20ms min=257.20ms max=345.19ms count=2
+10-24 15:31:34.243   929   929 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+10-24 15:31:34.249  2003  5775 I DeviceCapHelper: Adding surface identity to the device capabilities for surface OPA_AGSA.
+10-24 15:31:34.266  2003  2422 I A       : Setting isLegacySQLite mode to false.
+10-24 15:31:34.282  2003  3032 I DeviceCapHelper: Adding surface identity to the device capabilities for surface OPA_AGSA.
+10-24 15:31:34.305  1213  1213 I Choreographer: Skipped 241 frames!  The application may be doing too much work on its main thread.
+10-24 15:31:34.315  2003  5834 I DeviceCapHelper: Adding surface identity to the device capabilities for surface OPA_AGSA.
+10-24 15:31:34.346   551  2861 I ImeTracker: com.google.android.apps.nexuslauncher:d0662285: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+10-24 15:31:34.347   551  2861 I ImeTracker: com.google.android.apps.nexuslauncher:d0662285: onCancelled at PHASE_SERVER_SHOULD_HIDE
+10-24 15:31:34.379  1645  1645 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():3227 
+10-24 15:31:34.386  1645  1645 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 0, unlocked = true
+10-24 15:31:34.387  1645  1645 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=com.google.android.apps.nexuslauncher fieldId=0 fieldName=null extras=null}, false)
+10-24 15:31:34.387  1645  1645 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
+10-24 15:31:34.387  1645  1645 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+10-24 15:31:34.415   551   583 W WindowManager: Failed to deliver inset control state change to w=Window{335c287 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity EXITING}
+10-24 15:31:34.415   551   583 W WindowManager: android.os.DeadObjectException
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.os.BinderProxy.transactNative(Native Method)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.view.IWindow$Stub$Proxy.insetsControlChanged(IWindow.java:479)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.WindowState.notifyInsetsControlChanged(WindowState.java:3802)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.InsetsStateController.lambda$notifyPendingInsetsControlChanged$3(InsetsStateController.java:343)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.InsetsStateController.$r8$lambda$8yykPRG1GyNq_J17QvL9d5xANMc(InsetsStateController.java:0)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.InsetsStateController$$ExternalSyntheticLambda2.run(R8$$SyntheticClass:0)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator.executeAfterPrepareSurfacesRunnables(WindowAnimator.java:294)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator.animate(WindowAnimator.java:202)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator.lambda$new$1(WindowAnimator.java:99)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator.$r8$lambda$aHNu1uhcqxihX5NZc4McDDQPAyw(WindowAnimator.java:0)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.wm.WindowAnimator$$ExternalSyntheticLambda1.doFrame(R8$$SyntheticClass:0)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1337)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1348)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.view.Choreographer.doCallbacks(Choreographer.java:952)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.view.Choreographer.doFrame(Choreographer.java:878)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1322)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:31:34.415   551   583 W WindowManager: 	at android.os.HandlerThread.run(HandlerThread.java:67)
+10-24 15:31:34.415   551   583 W WindowManager: 	at com.android.server.ServiceThread.run(ServiceThread.java:46)
+10-24 15:31:34.493  2003  2445 W earchbox:search: Long monitor contention with owner BG Thread #1 (2422) at java.lang.String com.google.android.apps.gsa.search.core.i.a.a(java.lang.String)(PG:15) waiters=0 in java.lang.String com.google.android.apps.gsa.search.core.i.a.a(java.lang.String) for 183ms
+10-24 15:31:34.505  2003  3032 I A       : The GellerConfig is not present, defaulting isUploadEnabled for corpus GDD_APA_HEAD_SUGGEST to true.
+10-24 15:31:34.547  2003  2551 I A       : There are 0 elements to be updated on the server for corpus GDD_APA_HEAD_SUGGEST.
+10-24 15:31:34.550  2003  2551 I A       : There are 0 elements to delete from the server for corpus GDD_APA_HEAD_SUGGEST.
+10-24 15:31:34.551  2003  5775 I A       : No previous syncToken for corpus GDD_APA_HEAD_SUGGEST found.
+10-24 15:31:34.555  2003  3032 I A       : The GellerConfig is not present, defaulting isUploadEnabled for corpus GDD_APA_SMART_ACTION_MODELS to true.
+10-24 15:31:34.567  2003  2541 I A       : There are 0 elements to be updated on the server for corpus GDD_APA_SMART_ACTION_MODELS.
+10-24 15:31:34.572  2003  2541 I A       : There are 0 elements to delete from the server for corpus GDD_APA_SMART_ACTION_MODELS.
+10-24 15:31:34.576   929  3147 I OpenGLRenderer: Davey! duration=3115ms; Flags=0, FrameTimelineVsyncId=36530, IntendedVsync=225537382903, Vsync=228237382795, InputEventId=0, HandleInputStart=228240433562, AnimationStart=228240433953, PerformTraversalsStart=228240434144, DrawStart=228240465672, FrameDeadline=229004049431, FrameInterval=228240098357, FrameStartTime=16666666, SyncQueued=228240490028, SyncStart=228940181412, IssueDrawCommandsStart=228940216357, SwapBuffers=228997082738, FrameCompleted=229353047308, DequeueBufferDuration=868393, QueueBufferDuration=419303, GpuCompleted=229353047308, SwapBuffersCompleted=229286254342, DisplayPresentTime=0, CommandSubmissionCompleted=228997082738, 
+10-24 15:31:34.578   361  6294 I resolv  : GetAddrInfoHandler::run: {100 262244 100 983140 10132 0}
+10-24 15:31:34.593  2003  5775 I A       : No previous syncToken for corpus GDD_APA_SMART_ACTION_MODELS found.
+10-24 15:31:34.596   361  6296 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 15:31:34.605   361  6295 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 15:31:34.614   361  6298 I resolv  : GetAddrInfoHandler::run: {100 262244 100 983140 10132 0}
+10-24 15:31:34.629   361  6299 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 15:31:34.629   361  6299 I resolv  : resolv_cache_lookup: Waiting for previous request
+10-24 15:31:34.631   361  6295 I resolv  : res_nsend: used send_dg 266 terrno: 0
+10-24 15:31:34.631   361  6295 I resolv  : doQuery: rcode=0, ancount=8, return value=266
+10-24 15:31:34.632   361  6296 I resolv  : res_nsend: used send_dg 170 terrno: 0
+10-24 15:31:34.633   361  6296 I resolv  : doQuery: rcode=0, ancount=8, return value=170
+10-24 15:31:34.633   361  6299 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d41f26ead90
+10-24 15:31:34.633   361  6299 I resolv  : doQuery: rcode=0, ancount=8, return value=266
+10-24 15:31:34.648   361  6300 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 15:31:34.648   361  6300 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d42d26e8950
+10-24 15:31:34.648   361  6300 I resolv  : doQuery: rcode=0, ancount=8, return value=170
+10-24 15:31:34.650  2003  5775 D TrafficStats: tagSocket(136) with statsTag=0x0, statsUid=-1
+10-24 15:31:34.655  2003  3032 I A       : The GellerConfig is not present, defaulting isUploadEnabled for corpus GDD_APA_BISTO to true.
+10-24 15:31:34.665  2003  2551 I A       : There are 0 elements to be updated on the server for corpus GDD_APA_BISTO.
+10-24 15:31:34.671  2003  2551 I A       : There are 0 elements to delete from the server for corpus GDD_APA_BISTO.
+10-24 15:31:34.684  2003  5758 I A       : No previous syncToken for corpus GDD_APA_BISTO found.
+10-24 15:31:34.685  2003  5754 D TrafficStats: tagSocket(141) with statsTag=0x0, statsUid=-1
+10-24 15:31:34.697  2003  5758 D TrafficStats: tagSocket(143) with statsTag=0x0, statsUid=-1
+10-24 15:31:34.755  2003  2551 I A       : GMSCore Auth returned 0 accounts.
+10-24 15:31:34.755  2003  2551 I A       : GoogleOwnersProvider returned 0 accounts.
+10-24 15:31:34.864  1213  2689 I OpenGLRenderer: Davey! duration=4156ms; Flags=1, FrameTimelineVsyncId=36467, IntendedVsync=225337382911, Vsync=225337382911, InputEventId=0, HandleInputStart=225348285878, AnimationStart=225348286149, PerformTraversalsStart=225348286328, DrawStart=228237363049, FrameDeadline=225354049577, FrameInterval=225348283854, FrameStartTime=16666666, SyncQueued=228238277687, SyncStart=228488623116, IssueDrawCommandsStart=228994458686, SwapBuffers=229288433712, FrameCompleted=229744158267, DequeueBufferDuration=3286, QueueBufferDuration=131034, GpuCompleted=229744158267, SwapBuffersCompleted=229369639361, DisplayPresentTime=0, CommandSubmissionCompleted=229288433712, 
+10-24 15:31:34.903  1213  1213 I Choreographer: Skipped 31 frames!  The application may be doing too much work on its main thread.
+10-24 15:31:34.951  2003  2541 W NamedFutures: Timeout future task has been cancelled: 60000 milliseconds
+10-24 15:31:34.958  2003  2003 E A       : Task 255 failed or timed out. Client 8811080017468975 disconnecting from SearchService!
+10-24 15:31:34.958  2003  2003 E A       : java.util.concurrent.CancellationException: Task was cancelled.
+10-24 15:31:34.958  2003  2003 E A       : 	at com.google.common.util.concurrent.d.s(PG:3)
+10-24 15:31:34.958  2003  2003 E A       : 	at com.google.common.util.concurrent.d.get(PG:4)
+10-24 15:31:34.958  2003  2003 E A       : 	at com.google.common.util.concurrent.eb.a(PG:1)
+10-24 15:31:34.958  2003  2003 E A       : 	at com.google.common.util.concurrent.ci.r(PG:2)
+10-24 15:31:34.958  2003  2003 E A       : 	at com.google.common.util.concurrent.cb.run(PG:4)
+10-24 15:31:34.958  2003  2003 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.ba.run(PG:1)
+10-24 15:31:34.958  2003  2003 E A       : 	at android.os.Handler.handleCallback(Handler.java:958)
+10-24 15:31:34.958  2003  2003 E A       : 	at android.os.Handler.dispatchMessage(Handler.java:99)
+10-24 15:31:34.958  2003  2003 E A       : 	at android.os.Looper.loopOnce(Looper.java:205)
+10-24 15:31:34.958  2003  2003 E A       : 	at android.os.Looper.loop(Looper.java:294)
+10-24 15:31:34.958  2003  2003 E A       : 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+10-24 15:31:34.958  2003  2003 E A       : 	at java.lang.reflect.Method.invoke(Native Method)
+10-24 15:31:34.958  2003  2003 E A       : 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+10-24 15:31:34.958  2003  2003 E A       : 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+10-24 15:31:34.964  2003  2620 W SearchServiceCore: Abort, client detached.
+10-24 15:31:35.012  2003  2003 I BgTaskExecutorImpl: Starting EXCLUSIVE background task UPLOAD_ASSISTANT_DEVICE_SETTINGS.
+10-24 15:31:35.029  2003  2917 I NetworkRecognitionRnr: Using pair HTTP connection
+10-24 15:31:35.030  2003  4601 W LocationOracle: getBestLocation(): no location is available
+10-24 15:31:35.031  2003  4603 I A       : [Upload] Connected
+10-24 15:31:35.032   551   582 I ActivityManager: PendingStartActivityUids startActivity to updateOomAdj delay:4536ms, uid:10169
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: PERIODIC background task MDD_WIFI_CHARGING_TASK was cancelled.
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: java.util.concurrent.CancellationException: Task was cancelled.
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.d.s(PG:3)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.d.get(PG:4)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.eb.a(PG:1)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.ci.r(PG:2)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.cb.run(PG:4)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.apps.gsa.shared.util.c.a.cf.b(PG:1)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.apps.gsa.shared.util.c.a.ci.run(PG:1)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.ae.run(PG:1)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.i.run(PG:2)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.p.run(PG:4)
+10-24 15:31:35.197  2003  5834 E BgTaskExecutorImpl: 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:31:35.267  2003  2444 W CronetNetworkRqstWrppr: Upload request without a content type.
+10-24 15:31:35.305  2003  5834 I A       : Writing metadata key: _sync_timestamp_micros, corpus: GDD_APA_HEAD_SUGGEST
+10-24 15:31:35.315  2003  5834 I A       : Writing metadata key: _sync_token, corpus: GDD_APA_HEAD_SUGGEST
+10-24 15:31:35.337  2003  2445 W LocationOracle: No location returned by GMS core getLastLocation()
+10-24 15:31:35.349  2003  2003 E A       : onError
+10-24 15:31:35.349  2003  2003 E A       : com.google.android.apps.gsa.shared.speech.a.m: errorCode: 65561, engine: 2
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.staticplugins.dc.a.e.a(PG:3)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.s3.n.hh(PG:1)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.cd.g.a.f.e(PG:2)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:22)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.ks(PG:6)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.s3.o.e(PG:14)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.s3.p.run(PG:1)
+10-24 15:31:35.349  2003  2003 E A       : 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+10-24 15:31:35.349  2003  2003 E A       : 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.e.run(PG:2)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+10-24 15:31:35.349  2003  2003 E A       : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:31:35.349  2003  2003 E A       : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:31:35.349  2003  2003 E A       : 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.l.run(PG:5)
+10-24 15:31:35.349  2003  2003 E A       : Caused by: com.google.android.apps.gsa.shared.speech.a.o: errorCode: 65586, engine: 2
+10-24 15:31:35.349  2003  2003 E A       : 	... 15 more
+10-24 15:31:35.349  2003  2003 E A       : Caused by: com.google.android.apps.gsa.shared.speech.a.k: errorCode: 401, engine: 2
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.assistant.shared.n.h.a(PG:5)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.s3.producers.j.hE(PG:2)
+10-24 15:31:35.349  2003  2003 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:16)
+10-24 15:31:35.349  2003  2003 E A       : 	... 12 more
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: Exception in upload method
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: com.google.android.apps.gsa.shared.r.d: Error code: 262182
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.shared.ab.bk.d(PG:5)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.libraries.gsa.c.a.ar.d(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.libraries.gsa.c.a.bo.b(PG:5)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.libraries.gsa.c.a.e.a(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.libraries.gsa.c.a.a.run(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.bf.execute(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.i(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:12)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.m(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.j.a(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.m(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.j.a(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.m(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.j.a(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.m(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.j.a(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.m(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.c.a(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.bu.cancel(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:17)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.staticplugins.bk.b.h.run(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.bf.execute(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.i(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:12)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.m(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.j.a(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.shared.util.c.aj.a(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.m(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.c.a(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.l(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.common.util.concurrent.d.cancel(PG:8)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.s3.o.c(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.s3.r.a(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.staticplugins.dc.a.c.e(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.staticplugins.dc.a.c.c(PG:3)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.staticplugins.dc.a.e.a(PG:5)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.s3.n.hh(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.cd.g.a.f.e(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:22)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.speech.k.a.g.ks(PG:6)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.s3.o.e(PG:14)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.s3.p.run(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.shared.util.c.a.e.run(PG:2)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:31:35.359  2003  2551 E cr_CronetUrlRequestContext: 	at com.google.android.apps.gsa.shared.util.c.a.l.run(PG:5)
+10-24 15:31:35.367  2003  4603 I NetworkRecognitionRnr: Using pair HTTP connection
+10-24 15:31:35.377  2003  4601 I A       : [Upload] Connected
+10-24 15:31:35.406  2003  2003 W A       : Failed to sync device settings.
+10-24 15:31:35.406  2003  2003 I A       : Retrying to sync device settings.
+10-24 15:31:35.611     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6303 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 15:31:35.443   551  2685 W JobScheduler: Job didn't exist in JobStore: 3a7f908 #u0a132/-353 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
+10-24 15:31:35.447  5086  5099 I .gms.persistent: Background young concurrent copying GC freed 167369(9792KB) AllocSpace objects, 0(0B) LOS objects, 34% free, 18MB/27MB, paused 2.344ms,35us total 108.273ms
+10-24 15:31:35.448  2003  2620 W SearchServiceCore: Abort, client detached.
+10-24 15:31:35.487  2003  5834 I A       : Writing metadata key: _sync_timestamp_micros, corpus: GDD_APA_BISTO
+10-24 15:31:35.488  2003  5834 I A       : Writing metadata key: _sync_token, corpus: GDD_APA_BISTO
+10-24 15:31:35.628  2003  5840 I A       : Writing metadata key: _sync_timestamp_micros, corpus: GDD_APA_SMART_ACTION_MODELS
+10-24 15:31:35.628  2003  5840 I A       : Writing metadata key: _sync_token, corpus: GDD_APA_SMART_ACTION_MODELS
+10-24 15:31:35.637  2003  2551 W A       : onTaskDone() callback not found; batchId=1
+10-24 15:31:35.638  2003  5834 I BgTaskExecutorImpl: Starting NONEXCLUSIVE background task MDD_CELLULAR_CHARGING_TASK.
+10-24 15:31:35.642  1213  1232 I OpenGLRenderer: Davey! duration=1021ms; Flags=0, FrameTimelineVsyncId=36665, IntendedVsync=229504049411, Vsync=229520716077, InputEventId=0, HandleInputStart=229528071156, AnimationStart=229528072198, PerformTraversalsStart=229528909922, DrawStart=229583411686, FrameDeadline=229770716067, FrameInterval=229528062670, FrameStartTime=16666666, SyncQueued=229584117354, SyncStart=229585403758, IssueDrawCommandsStart=229585494808, SwapBuffers=230035703143, FrameCompleted=230526475616, DequeueBufferDuration=4319, QueueBufferDuration=2727352, GpuCompleted=230526475616, SwapBuffersCompleted=230075046671, DisplayPresentTime=72904454231491234, CommandSubmissionCompleted=230035703143, 
+10-24 15:31:35.652  2003  2444 I A       : Scheduling a pending sync for corpus: GDD_APA_SMART_ACTION_MODELS
+10-24 15:31:35.675  2003  2541 I A       : Starting batch sync for corpora: [1015]
+10-24 15:31:35.676  2003  2444 W A       : Corpus: GDD_APA_LIGHTWEIGHT_TOKENS is disabled
+10-24 15:31:35.687  2003  2444 I A       : Scheduling a pending sync for corpus: GDD_APA_HEAD_SUGGEST
+10-24 15:31:35.692  1213  1213 I Choreographer: Skipped 45 frames!  The application may be doing too much work on its main thread.
+10-24 15:31:35.697   427   438 D PermissionCache: checking android.permission.WAKEUP_SURFACE_FLINGER for uid=10169 => granted (1996 us)
+10-24 15:31:35.698   427   438 W VsyncModulator: setTransactionSchedule: Unexpected EarlyEnd
+10-24 15:31:35.716   929   971 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#7)android.os.BinderProxy@890af47@0
+10-24 15:31:35.718   551   579 V WindowManager: Finish Transition #7: created at 10-24 15:31:29.995 collect-started=0.035ms request-sent=0.064ms started=22.02ms ready=159.281ms sent=3765.193ms finished=5721.666ms
+10-24 15:31:35.720   551  2685 W WindowManager: Exception thrown during dispatchAppVisibility Window{335c287 u0 com.crashverse.game/com.unity3d.player.UnityPlayerActivity EXITING}
+10-24 15:31:35.720   551  2685 W WindowManager: android.os.DeadObjectException
+10-24 15:31:35.720   551  2685 W WindowManager: 	at android.os.BinderProxy.transactNative(Native Method)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at android.view.IWindow$Stub$Proxy.dispatchAppVisibility(IWindow.java:546)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.WindowState.sendAppVisibilityToClients(WindowState.java:3271)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.WindowContainer.sendAppVisibilityToClients(WindowContainer.java:1221)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.WindowToken.setClientVisible(WindowToken.java:409)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.ActivityRecord.setClientVisible(ActivityRecord.java:6946)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.ActivityRecord.postApplyAnimation(ActivityRecord.java:5637)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.ActivityRecord.commitVisibility(ActivityRecord.java:5580)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.Transition.finishTransition(Transition.java:1151)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.TransitionController.finishTransition(TransitionController.java:868)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.WindowOrganizerController.finishTransition(WindowOrganizerController.java:396)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at android.window.IWindowOrganizerController$Stub.onTransact(IWindowOrganizerController.java:286)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at com.android.server.wm.WindowOrganizerController.onTransact(WindowOrganizerController.java:181)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at android.os.Binder.execTransactInternal(Binder.java:1344)
+10-24 15:31:35.720   551  2685 W WindowManager: 	at android.os.Binder.execTransact(Binder.java:1275)
+10-24 15:31:35.720   551  2685 I Process : Sending signal. PID: 5295 SIG: 9
+10-24 15:31:35.723   551   582 W ActivityManager: setHasOverlayUi called on unknown pid: 5295
+10-24 15:31:35.729   412   412 I android.hardware.power-service.example: Power isModeSupported: 6
+10-24 15:31:35.729   929   971 V WindowManagerShell: Track 0 became idle
+10-24 15:31:35.729   929   971 V WindowManagerShell: All active transition animations finished
+10-24 15:31:35.730   929  2688 D KeyguardService: setOccluded(false)
+10-24 15:31:35.730   929  2688 D KeyguardViewMediator: setOccluded(false)
+10-24 15:31:35.734   929   929 D KeyguardViewMediator: handleSetOccluded(false)
+10-24 15:31:35.748   551   582 I DisplayDeviceRepository: Display device changed: DisplayDeviceInfo{"Built-in Screen": uniqueId="local:4619827259835644672", 1080 x 2340, modeId 1, renderFrameRate 60.000004, defaultModeId 1, supportedModes [{id=1, width=1080, height=2340, fps=60.000004, alternativeRefreshRates=[], supportedHdrTypes=[]}], colorMode 0, supportedColorModes [0], hdrCapabilities HdrCapabilities{mSupportedHdrTypes=[], mMaxLuminance=500.0, mMaxAverageLuminance=500.0, mMinLuminance=0.0}, allmSupported false, gameContentTypeSupported false, density 160, 160.0 x 160.0 dpi, appVsyncOff 1000000, presDeadline 16666666, touch INTERNAL, rotation 0, type INTERNAL, address {port=0, model=0x401cec6a7a2b7b}, deviceProductInfo DeviceProductInfo{name=EMU_display_0, manufacturerPnpId=GGL, productId=1, modelYear=null, manufactureDate=ManufactureDate{week=27, year=2006}, connectionToSinkType=0}, state ON, committedState ON, frameRateOverride , brightnessMinimum 0.0, brightnessMaximum 1.0, brightnessDefault 0.39763778, hdrSdrRatio NaN, FLAG_ALLOWED_TO_BE_DEFAULT_DISPLAY, FLAG_ROTATES_WITH_CONTENT, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS, FLAG_TRUSTED, installOrientation 0, displayShape DisplayShape{ spec=-1084927657 displayWidth=1080 displayHeight=2340 physicalPixelDisplaySizeRatio=1.0 rotation=0 offsetX=0 offsetY=0 scale=1.0}}
+10-24 15:31:35.781  2003  2408 I A       : Scheduling a pending sync for corpus: GDD_APA_BISTO
+10-24 15:31:35.819  2003  3040 I DeviceCapHelper: Adding surface identity to the device capabilities for surface OPA_AGSA.
+10-24 15:31:35.831   929   993 D EGL_emulation: app_time_stats: avg=1719.37ms min=1719.37ms max=1719.37ms count=1
+10-24 15:31:35.835  6308  6308 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+10-24 15:31:35.836  6308  6308 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+10-24 15:31:35.867  2003  2541 I A       : Starting batch sync for corpora: [1004]
+10-24 15:31:35.875  2003  2551 I A       : Starting batch sync for corpora: [1014]
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: Retrieving snapshot for com.google.android.gms.playlog.uploader failed
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: java.util.concurrent.TimeoutException: Timed out waiting for Task
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at cfsz.o(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at bwch.e(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at bwch.j(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at bwch.h(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at com.google.android.gms.clearcut.uploader.QosUploaderChimeraService.g(:com.google.android.gms@231818047@23.18.18 (190800-535401451):19)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at com.google.android.gms.clearcut.uploader.QosUploaderChimeraService.a(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at avzs.call(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 15:31:36.060  5086  5490 E PhenotypeFlagCommitter: 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:31:36.264   427   918 W ServiceManagerCppClient: Permission failure: android.permission.CAPTURE_BLACKOUT_CONTENT from uid=2000 pid=6308
+10-24 15:31:36.264   427   918 D PermissionCache: checking android.permission.CAPTURE_BLACKOUT_CONTENT for uid=2000 => denied (4343 us)
+10-24 15:31:36.263  2003  5840 I A       : The GellerConfig is not present, defaulting isUploadEnabled for corpus GDD_APA_SMART_ACTION_MODELS to true.
+10-24 15:31:36.286  2003  2551 I A       : There are 0 elements to be updated on the server for corpus GDD_APA_SMART_ACTION_MODELS.
+10-24 15:31:36.287  2003  2551 I A       : There are 0 elements to delete from the server for corpus GDD_APA_SMART_ACTION_MODELS.
+10-24 15:31:36.287  2003  5834 I A       : The syncToken for corpus GDD_APA_SMART_ACTION_MODELS is EgkI2LqT1vzSlwM=.
+10-24 15:31:36.298   551  6310 W OpenGLRenderer: Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+10-24 15:31:36.300   551  6310 W OpenGLRenderer: Failed to initialize 101010-2 format, error = EGL_SUCCESS
+10-24 15:31:36.304  1213  1232 I OpenGLRenderer: Davey! duration=1447ms; Flags=0, FrameTimelineVsyncId=36682, IntendedVsync=229554049409, Vsync=230070716055, InputEventId=0, HandleInputStart=230078182927, AnimationStart=230078240745, PerformTraversalsStart=230079595816, DrawStart=230079741448, FrameDeadline=230554049369, FrameInterval=230077852410, FrameStartTime=16666666, SyncQueued=230079923217, SyncStart=230079954686, IssueDrawCommandsStart=230080562851, SwapBuffers=230817071918, FrameCompleted=231001481965, DequeueBufferDuration=3967, QueueBufferDuration=257451, GpuCompleted=231001481965, SwapBuffersCompleted=230866689140, DisplayPresentTime=0, CommandSubmissionCompleted=230817071918, 
+10-24 15:31:36.321  5086  5869 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.clearcut.uploader.QosUploaderService finished executing. cause:5 result: 1 elapsed_millis: 2577 uptime_millis: 2577 exec_start_elapsed_seconds: 228 [CONTEXT service_id=218 ]
+10-24 15:31:36.331  2003  5834 D TrafficStats: tagSocket(136) with statsTag=0x0, statsUid=-1
+10-24 15:31:36.383   551   571 I system_server: Background young concurrent copying GC freed 914847(21MB) AllocSpace objects, 16(1900KB) LOS objects, 45% free, 27MB/50MB, paused 6.963ms,65us total 421.721ms
+10-24 15:31:36.460  5086  5490 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.clearcut.uploader.QosUploaderService started execution. cause:5 exec_start_elapsed_seconds: 231 [CONTEXT service_id=218 ]
+10-24 15:31:36.490  1108  1116 I rkstack.process: Background concurrent copying GC freed 36057(2289KB) AllocSpace objects, 8(160KB) LOS objects, 49% free, 2822KB/5645KB, paused 36us,18us total 153.420ms
+10-24 15:31:36.717  2003  5834 I A       : Writing metadata key: _sync_timestamp_micros, corpus: GDD_APA_SMART_ACTION_MODELS
+10-24 15:31:36.728  2003  5834 I A       : Writing metadata key: _sync_token, corpus: GDD_APA_SMART_ACTION_MODELS
+10-24 15:31:36.769  1213  2034 D EGL_emulation: app_time_stats: avg=858.06ms min=705.39ms max=1077.17ms count=3
+10-24 15:31:36.772  1213  1213 D SearchTargetUtil:  query= size=15
+10-24 15:31:36.772  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=google messages menu reorganization,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=google messages menu reorganization searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 24e05e49-2b3d-4644-9ae7-e9b5d5f77336
+10-24 15:31:36.772  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=pokémon delta reign card list,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=pokémon delta reign card list searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: e6a3de59-d3d2-4831-b20b-f1cc007ea5be
+10-24 15:31:36.772  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=clary sage painted oak cabinets,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=clary sage painted oak cabinets searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: a875e10b-1bdd-4511-ba21-8c01d12b35eb
+10-24 15:31:36.772  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=milwaukee brewers world series,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=milwaukee brewers world series searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 172409fd-8cb3-4d18-8a6f-c434a24b73a3
+10-24 15:31:36.772  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=blue bell christmas cookies ice cream,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=blue bell christmas cookies ice cream searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 28112106-dd03-48b1-9828-d8f8189de607
+10-24 15:31:36.772  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=elizabeth holmes documentary billy evans,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=elizabeth holmes documentary billy evans searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: f4046571-ae7e-497c-9c8b-3b33cfffa828
+10-24 15:31:36.775  1213  1213 D SearchTargetUtil: layoutType=extra_tall_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{bitmap_url=data:image/jpeg;base64,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,suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=true,is_personal=false,suggest_raw_text=anker solix c200 dc portable power station,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=Anker SOLIX C200 DC Portable Power Station searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 7312a6e4-bc29-413d-8ef4-b9640c054536
+10-24 15:31:36.775  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=lds missionary dies,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=lds missionary dies searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 775a758f-a7ae-420f-9deb-c4aa8118621b
+10-24 15:31:36.775  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=halley comet orionid meteor photo,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=halley comet orionid meteor photo searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: a4056ee0-ca89-4da9-b782-02f0efc77600
+10-24 15:31:36.775  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=brad keselowski rfk racing bid,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=brad keselowski rfk racing bid searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 410c7b53-8d67-468d-9dc2-858e97347592
+10-24 15:31:36.775  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=trader joe's,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=trader joe's searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: b0fc3e5b-bbf7-4a9f-b47d-552a124c6234
+10-24 15:31:36.775  1213  1213 D SearchTargetUtil: layoutType=extra_tall_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{bitmap_url=data:image/jpeg;base64,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
+10-24 15:31:36.775  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=coursey springs hatchery equipment failure,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=coursey springs hatchery equipment failure searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 2044129f-138c-4ce6-9b5a-a97c550effd5
+10-24 15:31:36.776  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=nyt connections hints,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=nyt connections hints searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 2d694dec-f24b-41e9-9ad5-f2c429d16ca8
+10-24 15:31:36.776  1213  1213 D SearchTargetUtil: layoutType=short_icon_row resultType=131072 packageName=com.google.android.googlequicksearchbox extras=Bundle{suggestion_type=33,suggest_truncate_start=false,is_answer=false,is_entity=false,is_personal=false,suggest_raw_text=volcano eruption,group_id=web64817,response_id=5d926d25-a385-443f-a145-c696575ae232,support_query_builder=false,} searchAction=volcano eruption searchActionExtras=Bundle{learn_more_url=https://support.google.com/websearch/answer/106230?hl=106230,suggestion_action_text=Report this,should_start_for_result=true,allow_pinning=true,skip_logging_in_target_handler=false,suggestion_action_rpc=2,}ParentID: null targetID: 24fb60b9-d115-4b41-959a-19be9bed4dfb
+10-24 15:31:36.779  1213  1213 I Choreographer: Skipped 62 frames!  The application may be doing too much work on its main thread.
+10-24 15:31:36.788   427   427 E BpTransactionCompletedListener: Failed to transact (-32)
+10-24 15:31:36.788   427   427 E BpTransactionCompletedListener: Failed to transact (-32)
+10-24 15:31:37.247   929   929 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+10-24 15:31:37.432  2003  3040 I DeviceCapHelper: Adding surface identity to the device capabilities for surface OPA_AGSA.
+10-24 15:31:37.603  2003  5840 I DeviceCapHelper: Adding surface identity to the device capabilities for surface OPA_AGSA.
+10-24 15:31:37.616   155   155 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+10-24 15:31:37.621  6308  6311 I Gralloc4: mapper 4.x is not supported
+10-24 15:31:37.813     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+10-24 15:31:37.623   551  2685 D ConnectivityService: requestNetwork for uid/pid:10132/2003 activeRequest: null callbackRequest: 158 [NetworkRequest [ REQUEST id=158, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED Uid: 10132 RequestorUid: 10132 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
+10-24 15:31:37.630   361   393 I netd    : networkSetPermissionForNetwork(101, 0) <6.35ms>
+10-24 15:31:37.642   551   858 D ConnectivityService: NetReassign [158 : null → 101] [c 0] [a 16] [i 3]
+10-24 15:31:37.662   551   858 D ConnectivityService: reportNetworkConnectivity(100, false) by 10132
+10-24 15:31:37.668  1108  2267 D NetworkMonitor/100: Forcing reevaluation for UID 10132. Dns signal count: 0
+10-24 15:31:37.702   915   915 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+10-24 15:31:37.715  2003  5840 I A       : The GellerConfig is not present, defaulting isUploadEnabled for corpus GDD_APA_HEAD_SUGGEST to true.
+10-24 15:31:37.761  1108  6313 D TrafficStats: tagSocket(68) with statsTag=0xffffff81, statsUid=-1
+10-24 15:31:37.773  1213  2689 I OpenGLRenderer: Davey! duration=1221ms; Flags=0, FrameTimelineVsyncId=36937, IntendedVsync=230087382721, Vsync=230087382721, InputEventId=0, HandleInputStart=230093449616, AnimationStart=230093450628, PerformTraversalsStart=230093862797, DrawStart=230093901009, FrameDeadline=231020716017, FrameInterval=230093445248, FrameStartTime=16666666, SyncQueued=230094003460, SyncStart=230866781843, IssueDrawCommandsStart=230867164317, SwapBuffers=231478186810, FrameCompleted=232081954923, DequeueBufferDuration=9338, QueueBufferDuration=256359, GpuCompleted=232081954923, SwapBuffersCompleted=231944021856, DisplayPresentTime=0, CommandSubmissionCompleted=231478186810, 
+10-24 15:31:37.775  1108  6313 D TrafficStats: tagSocket(68) with statsTag=0xffffff81, statsUid=-1
+10-24 15:31:37.787   361  6316 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+10-24 15:31:37.787  1108  6314 D TrafficStats: tagSocket(107) with statsTag=0xffffff81, statsUid=-1
+10-24 15:31:37.787   361  6316 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d41426e4370
+10-24 15:31:37.797  2003  2541 I A       : There are 0 elements to be updated on the server for corpus GDD_APA_HEAD_SUGGEST.
+10-24 15:31:37.802  2003  2541 I A       : There are 0 elements to delete from the server for corpus GDD_APA_HEAD_SUGGEST.
+10-24 15:31:37.808  2003  3040 I A       : The syncToken for corpus GDD_APA_HEAD_SUGGEST is EgkIw7uK1vzSlwM=.
+10-24 15:31:37.823  1108  6314 D TrafficStats: tagSocket(106) with statsTag=0xffffff81, statsUid=-1
+10-24 15:31:37.827   361  6315 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+10-24 15:31:37.827   361  6315 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d41f26e9190
+10-24 15:31:37.831  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.832  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.832  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.833  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.834  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.837  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.841   361  6318 I resolv  : GetAddrInfoHandler::run: {100 262244 100 983140 10132 0}
+10-24 15:31:37.844  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.845  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.848   361  6317 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+10-24 15:31:37.848   361  6317 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d42726d9010
+10-24 15:31:37.849   361  6320 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 15:31:37.849   361  6320 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d41f26ead90
+10-24 15:31:37.850   361  6320 I resolv  : doQuery: rcode=0, ancount=8, return value=266
+10-24 15:31:37.850  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.850  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.851  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.851  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.854  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.854  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.856  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.856  1108  1108 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.856  2003  5840 I A       : The GellerConfig is not present, defaulting isUploadEnabled for corpus GDD_APA_BISTO to true.
+10-24 15:31:37.857  2003  2551 I A       : There are 0 elements to be updated on the server for corpus GDD_APA_BISTO.
+10-24 15:31:37.857  2003  2551 I A       : There are 0 elements to delete from the server for corpus GDD_APA_BISTO.
+10-24 15:31:37.857  2003  5840 I A       : The syncToken for corpus GDD_APA_BISTO is Ei4IoMCY1vzSlwPiPiIKIGJjZjkwNDk4ZTNlMjI3Mjc2NTdhYWE3ODQ1YzQ4MmIw.
+10-24 15:31:37.861   361  6322 I resolv  : GetAddrInfoHandler::run: {100 262244 100 983140 10132 0}
+10-24 15:31:37.863   361  6321 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 15:31:37.863   361  6321 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d42d26e8950
+10-24 15:31:37.863   361  6321 I resolv  : doQuery: rcode=0, ancount=8, return value=170
+10-24 15:31:37.864   361  6319 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+10-24 15:31:37.864   361  6319 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d42726d9710
+10-24 15:31:37.864  1108  6313 D NetworkMonitor/100: PROBE_DNS www.google.com 105ms OK 142.251.154.119,142.251.157.119,142.251.151.119,142.251.152.119,142.251.153.119,142.251.150.119,142.251.156.119,142.251.155.119,2001:4860:482c:7700::,2001:4860:4826:7700::,2001:4860:482a:7700::,2001:4860:4829:7700::,2001:4860:4828:7700::,2001:4860:4827:7700::,2001:4860:482d:7700::,2001:4860:482b:7700::
+10-24 15:31:37.872  2003  5840 D TrafficStats: tagSocket(136) with statsTag=0x0, statsUid=-1
+10-24 15:31:37.876  1108  1108 D TrafficStats: tagSocket(106) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.877  1108  1108 D TrafficStats: tagSocket(106) with statsTag=0xffffffff, statsUid=-1
+10-24 15:31:37.880   361  6325 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
+10-24 15:31:37.882   361  6324 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 15:31:37.883   361  6324 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d42d26e8950
+10-24 15:31:37.883   361  6324 I resolv  : doQuery: rcode=0, ancount=8, return value=170
+10-24 15:31:37.893   361  6323 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 15:31:37.893   361  6323 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d41f26ead90
+10-24 15:31:37.893   361  6323 I resolv  : doQuery: rcode=0, ancount=8, return value=266
+10-24 15:31:37.893  1108  6314 D NetworkMonitor/100: PROBE_DNS connectivitycheck.gstatic.com 106ms OK 142.251.150.120,2001:4860:4826:7800::
+10-24 15:31:37.896   361  6326 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 15:31:37.896   361  6326 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d41f26e9190
+10-24 15:31:37.896   361  6326 I resolv  : doQuery: rcode=0, ancount=8, return value=256
+10-24 15:31:37.902  2003  3040 D TrafficStats: tagSocket(140) with statsTag=0x0, statsUid=-1
+10-24 15:31:37.919   361  6328 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
+10-24 15:31:37.921   361  6327 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 15:31:37.921   361  6327 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d41426e4370
+10-24 15:31:37.921   361  6327 I resolv  : doQuery: rcode=0, ancount=8, return value=160
+10-24 15:31:37.925  1108  6313 D TrafficStats: tagSocket(68) with statsTag=0xffffff81, statsUid=-1
+10-24 15:31:37.932   361  6329 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 15:31:37.932   361  6329 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d42726d9010
+10-24 15:31:37.932   361  6329 I resolv  : doQuery: rcode=0, ancount=1, return value=75
+10-24 15:31:37.932   361  6330 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 15:31:37.932   361  6330 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7d42726d9710
+10-24 15:31:37.932   361  6330 I resolv  : doQuery: rcode=0, ancount=1, return value=63
+10-24 15:31:37.934  1108  6314 D TrafficStats: tagSocket(106) with statsTag=0xffffff81, statsUid=-1
+10-24 15:31:37.959  1108  6314 D NetworkMonitor/100: PROBE_HTTP http://connectivitycheck.gstatic.com/generate_204 time=47ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Sat, 24 Oct 2026 15:31:38 GMT], X-Android-Received-Millis=[1792855897958], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1792855897941]}
+10-24 15:31:38.037  1108  6313 D NetworkMonitor/100: PROBE_HTTPS https://www.google.com/generate_204 time=166ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Alt-Svc=[h3=":443"; ma=2592000,h3-29=":443"; ma=2592000], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Sat, 24 Oct 2026 15:31:38 GMT], X-Android-Received-Millis=[1792855898037], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1792855898017]}
+10-24 15:31:38.048  1108  6312 D NetworkMonitor/100: isCaptivePortal: isSuccessful()=true isPortal()=false RedirectUrl=null isPartialConnectivity()=false Time=365ms
+10-24 15:31:38.058   551   858 D ConnectivityService: [100 WIFI] validation passed
+10-24 15:31:38.126  2003  5758 I A       : Writing metadata key: _sync_timestamp_micros, corpus: GDD_APA_BISTO
+10-24 15:31:38.131  2003  5758 I A       : Writing metadata key: _sync_token, corpus: GDD_APA_BISTO
+10-24 15:31:38.131  2003  5758 I A       : Writing metadata key: _sync_timestamp_micros, corpus: GDD_APA_HEAD_SUGGEST
+10-24 15:31:38.131  2003  5758 I A       : Writing metadata key: _sync_token, corpus: GDD_APA_HEAD_SUGGEST
+10-24 15:31:38.216  2003  2551 I A       : Batch succeeded; batchId=2 taskId=-1000009
+10-24 15:31:38.328  1213  2689 I OpenGLRenderer: Davey! duration=2327ms; Flags=0, FrameTimelineVsyncId=36945, IntendedVsync=230104049387, Vsync=230854049357, InputEventId=0, HandleInputStart=230879430102, AnimationStart=230879431134, PerformTraversalsStart=230880990997, DrawStart=230881126179, FrameDeadline=232104049307, FrameInterval=230866924219, FrameStartTime=16666666, SyncQueued=230883580442, SyncStart=231944084553, IssueDrawCommandsStart=231944244070, SwapBuffers=232767701020, FrameCompleted=233492462930, DequeueBufferDuration=172140655, QueueBufferDuration=159999, GpuCompleted=233492462930, SwapBuffersCompleted=232947386875, DisplayPresentTime=72057628414509967, CommandSubmissionCompleted=232767701020, 
+10-24 15:31:38.333   551  1933 W JobScheduler: Job didn't exist in JobStore: 8790621 #u0a132/-1000009 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
+10-24 15:31:38.427  2003  2026 I earchbox:search: Background young concurrent copying GC freed 182233(7976KB) AllocSpace objects, 102(8416KB) LOS objects, 43% free, 19MB/34MB, paused 52us,26us total 178.499ms
+10-24 15:31:38.460  2003  5775 D t       : Starting download: https://dl.google.com/mdi-serving/agsa-apa-bisto-hotword-models/20023/ed62ea940f5a5958c55577276e8511a01a19ea87
+10-24 15:31:38.466  2003  5775 V t       : Is http uri, downloading (uri: https://dl.google.com/mdi-serving/agsa-apa-bisto-hotword-models/20023/ed62ea940f5a5958c55577276e8511a01a19ea87)
+10-24 15:31:38.466  2003  3032 D t       : Starting download: https://dl.google.com/mdi-serving/agsa-apa-bisto-hotword-models/20023/9ddd15509ef1423e75c283efb4659f475c74ee60
+10-24 15:31:38.466  2003  3032 V t       : Is http uri, downloading (uri: https://dl.google.com/mdi-serving/agsa-apa-bisto-hotword-models/20023/9ddd15509ef1423e75c283efb4659f475c74ee60)
+10-24 15:31:38.509  2003  5775 E MDD     : DownloadProgressMonitor: Can't find file group for uri: android://com.google.android.googlequicksearchbox/files/datadownload/shared/public/datadownloadfile_1792855773473
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: Retrieving snapshot for com.google.android.gms.playlog.uploader failed
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: java.util.concurrent.TimeoutException: Timed out waiting for Task
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at cfsz.o(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at bwch.e(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at bwch.j(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at bwch.h(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at com.google.android.gms.clearcut.uploader.QosUploaderChimeraService.g(:com.google.android.gms@231818047@23.18.18 (190800-535401451):19)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at com.google.android.gms.clearcut.uploader.QosUploaderChimeraService.a(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at avzs.call(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-24 15:31:38.512  5086  5495 E PhenotypeFlagCommitter: 	at java.lang.Thread.run(Thread.java:1012)
+10-24 15:31:38.577  2003  3032 E MDD     : DownloadProgressMonitor: Can't find file group for uri: android://com.google.android.googlequicksearchbox/files/datadownload/shared/public/datadownloadfile_1792855773474
+10-24 15:31:38.630  2003  3040 D t       : Starting download: https://dl.google.com/mdi-serving/agsa-apa-head-suggest/13542/075551f3c3c51b6e4616d52eaebf3acc6dab4ba1
+10-24 15:31:38.630  2003  3040 V t       : Is http uri, downloading (uri: https://dl.google.com/mdi-serving/agsa-apa-head-suggest/13542/075551f3c3c51b6e4616d52eaebf3acc6dab4ba1)
+10-24 15:31:38.634   551  1308 W ProcessStats: Tracking association SourceState{f4c1a33 com.google.android.googlequicksearchbox:search/10132 BFgs #5908} whose proc state 4 is better than process ProcessState{c4c30d4 com.google.android.gms.persistent/10128 pkg=com.google.android.gms} proc state 9 (1392 skipped)
+10-24 15:31:38.648  2003  3032 D t       : Starting download: https://dl.google.com/mdi-serving/agsa-apa-smart-action-models/1129/093578cccafa7554c592b1756ecd6d0176942a9f
+10-24 15:31:38.649  2003  3032 V t       : Is http uri, downloading (uri: https://dl.google.com/mdi-serving/agsa-apa-smart-action-models/1129/093578cccafa7554c592b1756ecd6d0176942a9f)
+10-24 15:31:38.676  2003  3040 E MDD     : DownloadProgressMonitor: Can't find file group for uri: android://com.google.android.googlequicksearchbox/files/datadownload/shared/public/datadownloadfile_1792855773472
+10-24 15:31:38.694  1779  2392 E WakeLock: IntentOp:.chimera.container.InitConfigOperation ** IS FORCE-RELEASED ON TIMEOUT **
+10-24 15:31:38.704  2003  3032 E MDD     : DownloadProgressMonitor: Can't find file group for uri: android://com.google.android.googlequicksearchbox/files/datadownload/shared/public/datadownloadfile_1792855773475
+10-24 15:31:38.839   551  3614 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+10-24 15:31:39.069  2003  4605 W A       : [Download] response code: 400
+10-24 15:31:39.551  5086  5099 I .gms.persistent: Background young concurrent copying GC freed 150938(9076KB) AllocSpace objects, 6(312KB) LOS objects, 32% free, 18MB/27MB, paused 21.869ms,2.620ms total 345.292ms
+10-24 15:31:39.617  2003  5775 D t       : Starting download: https://dl.google.com/mdi-serving/agsa-apa-smart-action-models/1129/7c880c786013ae8631e40f5d800ff15a868d2929
+10-24 15:31:39.617  2003  5775 V t       : Is http uri, downloading (uri: https://dl.google.com/mdi-serving/agsa-apa-smart-action-models/1129/7c880c786013ae8631e40f5d800ff15a868d2929)
+10-24 15:31:39.655   361  6336 I resolv  : GetAddrInfoHandler::run: {100 786532 100 983140 10128 0}
+10-24 15:31:39.658   361  6338 I resolv  : res_nmkquery: (QUERY, IN, A)
+10-24 15:31:39.675   361  6337 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+10-24 15:31:39.702  2003  5775 E MDD     : DownloadProgressMonitor: Can't find file group for uri: android://com.google.android.googlequicksearchbox/files/datadownload/shared/public/datadownloadfile_1792855773476
+10-24 15:31:39.709   361  6337 I resolv  : res_nsend: used send_dg 261 terrno: 0
+10-24 15:31:39.709   361  6337 I resolv  : doQuery: rcode=0, ancount=8, return value=261
+10-24 15:31:39.711   361  6338 I resolv  : res_nsend: used send_dg 165 terrno: 0
+10-24 15:31:39.711   361  6338 I resolv  : doQuery: rcode=0, ancount=8, return value=165
+10-24 15:31:39.725  5086  5736 D TrafficStats: tagSocket(85) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:39.736  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:39.740  2003  2551 I A       : NGA Sync: MDD Task: MDD.CELLULAR.CHARGING.PERIODIC.TASK done.
+10-24 15:31:39.746  2003  2551 I A       : NGA Sync: isNgaSyncEnabled: false; enableFileGroupPopulator: false; requiresMddAssets: false
+10-24 15:31:39.747  2003  2445 I A       : Refresh account policy.
+10-24 15:31:39.762   551  1723 D OomAdjuster: Not killing cached processes
+10-24 15:31:39.773  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:39.798  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:39.834  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:39.876  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:39.920  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:39.969  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:40.012  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:40.055  5086  5736 D TrafficStats: tagSocket(162) with statsTag=0x1065fff, statsUid=-1
+10-24 15:31:40.224   551   647 D ActivityManager: freezing 1638 com.google.android.apps.wellbeing
+10-24 15:31:40.594   361   393 I netd    : tetherGetStats() -> {[]} <0.39ms>
+10-24 15:31:40.673   361   393 I netd    : bandwidthSetGlobalAlert(2097152) <0.23ms>
+10-24 15:31:40.689   361   393 I netd    : bandwidthRemoveInterfaceQuota(eth0) <4.96ms>
+10-24 15:31:40.690   361   393 I netd    : bandwidthSetInterfaceQuota(eth0, 9223372036854775807) <0.54ms>
+10-24 15:31:41.393  2003  3040 D t       : Starting download: https://dl.google.com/mdi-serving/agsa-apa-smart-action-models/1129/265b5ad4cc2df325212297efbc5c8dd52681b24a
+10-24 15:31:41.393  2003  3040 V t       : Is http uri, downloading (uri: https://dl.google.com/mdi-serving/agsa-apa-smart-action-models/1129/265b5ad4cc2df325212297efbc5c8dd52681b24a)
+10-24 15:31:41.462  2003  3040 E MDD     : DownloadProgressMonitor: Can't find file group for uri: android://com.google.android.googlequicksearchbox/files/datadownload/shared/public/datadownloadfile_1792855773477
+10-24 15:31:41.700     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6340 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

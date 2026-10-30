@@ -28,6 +28,11 @@ if [ "$PROFILE" = "release" ]; then
 fi
 # Release blocker (v2): target Android 15 (API 35), Google Play's requirement
 grep -qE 'targetSdkVersion\(0x[0-9a-f]+\)=35$' manifest_tree.txt || err "targetSdkVersion is not 35: $(grep -oE 'targetSdkVersion\(0x[0-9a-f]+\)=[0-9]+' manifest_tree.txt)"
+# QA V2-01 (release blocker): the Unity activity must handle CONFIG_ASSETS_PATHS (0x80000000) itself, or a Play services / package /
+# overlay update relaunches it and Unity kills its own process. AssetsPathsGradleHook adds android:configChanges "assetsPaths".
+cc=$(grep -oE 'configChanges\(0x0101001f\)=(\(type 0x11\))?0x[0-9a-f]+' manifest_tree.txt | grep -oE '0x[0-9a-f]+$' | head -1)
+echo "configChanges=${cc:-none}" | tee -a manifest_checks.txt
+if [ -z "$cc" ] || [ $(( cc & 0x80000000 )) -eq 0 ]; then err "activity configChanges ${cc:-missing} lacks assetsPaths (0x80000000): QA V2-01 relaunch -> SIG 9"; fi
 # QA R-2: 16 KB page size: every arm64 .so needs ELF LOAD segments aligned to >= 16 KB (Unity 2022.3.56f1+; project is on 2022.3.62f3).
 # Enforced; CV_REQUIRE_16K=0 only reports.
 echo "== 16 KB ELF alignment (arm64-v8a)"

@@ -1,0 +1,497 @@
+﻿2026-10-24T15:00:15.9994709Z Current runner version: '2.338.0'
+2026-10-24T15:00:16.0023808Z ##[group]Runner Image Provisioner
+2026-10-24T15:00:16.0024673Z Hosted Compute Agent
+2026-10-24T15:00:16.0025181Z Version: 20261021.618
+2026-10-24T15:00:16.0025832Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-24T15:00:16.0026473Z Build Date: 2026-10-21T00:45:21Z
+2026-10-24T15:00:16.0027122Z Worker ID: {30812045-db73-480f-b719-ca590b835cd4}
+2026-10-24T15:00:16.0027819Z Region: westus2
+2026-10-24T15:00:16.0028286Z Cloud: Azure
+2026-10-24T15:00:16.0028820Z ##[endgroup]
+2026-10-24T15:00:16.0030895Z ##[group]Operating System
+2026-10-24T15:00:16.0031437Z Ubuntu
+2026-10-24T15:00:16.0032039Z 24.04.5
+2026-10-24T15:00:16.0032483Z LTS
+2026-10-24T15:00:16.0033037Z ##[endgroup]
+2026-10-24T15:00:16.0033519Z ##[group]Runner Image
+2026-10-24T15:00:16.0034086Z Image: ubuntu-24.04
+2026-10-24T15:00:16.0034660Z Version: 20261012.334.1
+2026-10-24T15:00:16.0035858Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-24T15:00:16.0037367Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-24T15:00:16.0038277Z ##[endgroup]
+2026-10-24T15:00:16.0039349Z ##[group]GITHUB_TOKEN Permissions
+2026-10-24T15:00:16.0041582Z Contents: read
+2026-10-24T15:00:16.0042217Z Metadata: read
+2026-10-24T15:00:16.0042712Z ##[endgroup]
+2026-10-24T15:00:16.0045089Z Secret source: Actions
+2026-10-24T15:00:16.0046060Z Cache mode: write
+2026-10-24T15:00:16.0046764Z Prepare workflow directory
+2026-10-24T15:00:16.1037154Z Prepare all required actions
+2026-10-24T15:00:16.1097863Z Getting action download info
+2026-10-24T15:00:16.5538791Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-24T15:00:16.8750273Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-10-24T15:00:17.1820818Z Download action repository 'reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d' (SHA:a421e43855164a8197daf9d8d40fe71c6996bb0d)
+2026-10-24T15:00:17.4382297Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-24T15:00:17.7249466Z Complete job name: Emulator smoke API 34 x86_64 1080x2340
+2026-10-24T15:00:17.7880394Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-10-24T15:00:17.7881325Z with:
+2026-10-24T15:00:17.7881818Z   persist-credentials: false
+2026-10-24T15:00:17.7882411Z   sparse-checkout: Tools/ci
+qa/ci
+
+2026-10-24T15:00:17.7883017Z   repository: radhengle/crashverse
+2026-10-24T15:00:17.7887348Z   token: ***
+2026-10-24T15:00:17.7887840Z   ssh-strict: true
+2026-10-24T15:00:17.7888341Z   ssh-user: git
+2026-10-24T15:00:17.7888821Z   clean: true
+2026-10-24T15:00:17.7889328Z   sparse-checkout-cone-mode: true
+2026-10-24T15:00:17.7889990Z   fetch-depth: 1
+2026-10-24T15:00:17.7890519Z   fetch-tags: false
+2026-10-24T15:00:17.7891034Z   show-progress: true
+2026-10-24T15:00:17.7891545Z   lfs: false
+2026-10-24T15:00:17.7892013Z   submodules: false
+2026-10-24T15:00:17.7892531Z   set-safe-directory: true
+2026-10-24T15:00:17.7893106Z   allow-unsafe-pr-checkout: false
+2026-10-24T15:00:17.7893766Z ##[endgroup]
+2026-10-24T15:00:17.8888474Z Syncing repository: radhengle/crashverse
+2026-10-24T15:00:17.8892513Z ##[group]Getting Git version info
+2026-10-24T15:00:17.8894361Z Working directory is '/home/runner/work/crashverse/crashverse'
+2026-10-24T15:00:17.8897121Z [command]/usr/bin/git version
+2026-10-24T15:00:17.8898227Z git version 2.55.0
+2026-10-24T15:00:17.8902273Z ##[endgroup]
+2026-10-24T15:00:17.8910925Z Temporarily overriding HOME='/home/runner/work/_temp/912d5527-bc70-4e4e-be86-89a89cc6abdf' before making global git config changes
+2026-10-24T15:00:17.8913395Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T15:00:17.8917339Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crashverse/crashverse
+2026-10-24T15:00:17.9035068Z Deleting the contents of '/home/runner/work/crashverse/crashverse'
+2026-10-24T15:00:17.9037680Z ##[group]Initializing the repository
+2026-10-24T15:00:17.9039072Z [command]/usr/bin/git init /home/runner/work/crashverse/crashverse
+2026-10-24T15:00:17.9171655Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-24T15:00:17.9177372Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-24T15:00:17.9179108Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-24T15:00:17.9181085Z hint: call:
+2026-10-24T15:00:17.9181890Z hint:
+2026-10-24T15:00:17.9183122Z hint: 	git config --global init.defaultBranch <name>
+2026-10-24T15:00:17.9184228Z hint:
+2026-10-24T15:00:17.9185544Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-24T15:00:17.9187093Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-24T15:00:17.9188633Z hint:
+2026-10-24T15:00:17.9189407Z hint: 	git branch -m <name>
+2026-10-24T15:00:17.9190625Z hint:
+2026-10-24T15:00:17.9191731Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-24T15:00:17.9193679Z Initialized empty Git repository in /home/runner/work/crashverse/crashverse/.git/
+2026-10-24T15:00:17.9201582Z [command]/usr/bin/git remote add origin https://github.com/radhengle/crashverse
+2026-10-24T15:00:17.9324132Z ##[endgroup]
+2026-10-24T15:00:17.9326807Z ##[group]Disabling automatic garbage collection
+2026-10-24T15:00:17.9328290Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-24T15:00:17.9331579Z ##[endgroup]
+2026-10-24T15:00:17.9332893Z ##[group]Setting up auth
+2026-10-24T15:00:17.9350553Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T15:00:17.9392304Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T15:00:17.9836023Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T15:00:17.9855329Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T15:00:17.9993419Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T15:00:18.0017177Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T15:00:18.0268348Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-24T15:00:18.0272578Z ##[endgroup]
+2026-10-24T15:00:18.0274403Z ##[group]Fetching the repository
+2026-10-24T15:00:18.0280459Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +ee359ee8f0921cad7a1e52353c492b0128e25802:refs/remotes/pull/55/merge
+2026-10-24T15:00:18.6149743Z From https://github.com/radhengle/crashverse
+2026-10-24T15:00:18.6150477Z  * [new ref]         ee359ee8f0921cad7a1e52353c492b0128e25802 -> pull/55/merge
+2026-10-24T15:00:18.6151614Z ##[endgroup]
+2026-10-24T15:00:18.6151917Z ##[group]Determining the checkout info
+2026-10-24T15:00:18.6152216Z ##[endgroup]
+2026-10-24T15:00:18.6152513Z ##[group]Setting up sparse checkout
+2026-10-24T15:00:18.6152806Z [command]/usr/bin/git sparse-checkout set Tools/ci qa/ci
+2026-10-24T15:00:18.6153358Z ##[endgroup]
+2026-10-24T15:00:18.6153700Z ##[group]Checking out the ref
+2026-10-24T15:00:18.6154002Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/55/merge
+2026-10-24T15:00:18.8108348Z Note: switching to 'refs/remotes/pull/55/merge'.
+2026-10-24T15:00:18.8115782Z 
+2026-10-24T15:00:18.8120924Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-24T15:00:18.8122804Z changes and commit them, and you can discard any commits you make in this
+2026-10-24T15:00:18.8123467Z state without impacting any branches by switching back to a branch.
+2026-10-24T15:00:18.8125491Z 
+2026-10-24T15:00:18.8125754Z If you want to create a new branch to retain commits you create, you may
+2026-10-24T15:00:18.8126206Z do so (now or later) by using -c with the switch command. Example:
+2026-10-24T15:00:18.8126432Z 
+2026-10-24T15:00:18.8126565Z   git switch -c <new-branch-name>
+2026-10-24T15:00:18.8126737Z 
+2026-10-24T15:00:18.8126859Z Or undo this operation with:
+2026-10-24T15:00:18.8127022Z 
+2026-10-24T15:00:18.8127127Z   git switch -
+2026-10-24T15:00:18.8127261Z 
+2026-10-24T15:00:18.8127497Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-24T15:00:18.8127791Z 
+2026-10-24T15:00:18.8128123Z HEAD is now at ee359ee Merge 3b2ee95c875c7c32534631664230fc5bca4fefc7 into 7d359e6a2accb1a385b3210dba4d45ea29bb616b
+2026-10-24T15:00:18.8129298Z ##[endgroup]
+2026-10-24T15:00:18.8130142Z [command]/usr/bin/git log -1 --format=%H
+2026-10-24T15:00:18.8155972Z ee359ee8f0921cad7a1e52353c492b0128e25802
+2026-10-24T15:00:18.8163976Z ##[group]Removing auth
+2026-10-24T15:00:18.8167769Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T15:00:18.8201704Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T15:00:18.8394177Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T15:00:18.8423333Z http.https://github.com/.extraheader
+2026-10-24T15:00:18.8430951Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-24T15:00:18.8462217Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T15:00:18.8658496Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T15:00:18.8685731Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T15:00:18.8901211Z ##[endgroup]
+2026-10-24T15:00:18.9067348Z ##[group]Run echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+2026-10-24T15:00:18.9067922Z echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+2026-10-24T15:00:18.9068328Z sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+2026-10-24T15:00:18.9295542Z shell: /usr/bin/bash -e {0}
+2026-10-24T15:00:18.9295799Z ##[endgroup]
+2026-10-24T15:00:18.9446438Z KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"
+2026-10-24T15:00:18.9802253Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+2026-10-24T15:00:18.9802565Z with:
+2026-10-24T15:00:18.9802738Z   name: crashverse-android-apk
+2026-10-24T15:00:18.9802924Z   path: apk
+2026-10-24T15:00:18.9803098Z   merge-multiple: false
+2026-10-24T15:00:18.9803293Z   repository: radhengle/crashverse
+2026-10-24T15:00:18.9803490Z   run-id: 40102001893
+2026-10-24T15:00:18.9803666Z ##[endgroup]
+2026-10-24T15:00:19.1078328Z (node:2283) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-24T15:00:19.1100745Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-24T15:00:19.1101181Z Downloading single artifact
+2026-10-24T15:00:19.3638151Z Preparing to download the following artifacts:
+2026-10-24T15:00:19.3638839Z - crashverse-android-apk (ID: 12564018308, Size: 122079268, Expected Digest: sha256:79ff1081a1d6c07453398a3bc0fb209395a5f122fe4978ef8713fa095dc19a2a)
+2026-10-24T15:00:19.5867972Z Redirecting to blob download url: https://productionresultssa11.blob.core.windows.net/actions-results/9cf67518-14f3-8afb-83e3-7b4940ddd6d1/workflow-job-run-310656d6-74f2-57f3-a311-ac53818bff63/artifacts/72814419bd56d365a5ac4dd81b6b252289ca0c4a3bebfea8929a0b1ec786b2aa.zip
+2026-10-24T15:00:19.5868938Z Starting download of artifact to: /home/runner/work/crashverse/crashverse/apk
+2026-10-24T15:00:19.9001548Z (node:2283) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-10-24T15:01:00.9689222Z SHA256 digest of downloaded artifact is 79ff1081a1d6c07453398a3bc0fb209395a5f122fe4978ef8713fa095dc19a2a
+2026-10-24T15:01:00.9690174Z Artifact download completed successfully.
+2026-10-24T15:01:00.9710874Z Total of 1 artifact(s) downloaded
+2026-10-24T15:01:00.9711179Z Download artifact has finished successfully
+2026-10-24T15:01:00.9897688Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+2026-10-24T15:01:00.9897919Z with:
+2026-10-24T15:01:00.9898064Z   name: crashverse-android-apk-release-unsigned
+2026-10-24T15:01:00.9898227Z   path: rel
+2026-10-24T15:01:00.9898347Z   merge-multiple: false
+2026-10-24T15:01:00.9898489Z   repository: radhengle/crashverse
+2026-10-24T15:01:00.9898635Z   run-id: 40102001893
+2026-10-24T15:01:00.9898757Z ##[endgroup]
+2026-10-24T15:01:01.0866577Z Downloading single artifact
+2026-10-24T15:01:01.0983382Z (node:2307) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-24T15:01:01.0984218Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-24T15:01:01.3772868Z Preparing to download the following artifacts:
+2026-10-24T15:01:01.3773823Z - crashverse-android-apk-release-unsigned (ID: 12563683274, Size: 102670926, Expected Digest: sha256:3a2cdbc4b86f30cbe43579db8cc6ee6bf229056db69beb1e92d241221f10eb95)
+2026-10-24T15:01:01.6233646Z Redirecting to blob download url: https://productionresultssa11.blob.core.windows.net/actions-results/9cf67518-14f3-8afb-83e3-7b4940ddd6d1/workflow-job-run-32db19f3-cd46-5e15-8019-d52143cd143b/artifacts/5ee7aae60121eb387ded4688b9e4b2045998ae56bf64fd7ef5ae3212560bad4c.zip
+2026-10-24T15:01:01.6234685Z Starting download of artifact to: /home/runner/work/crashverse/crashverse/rel
+2026-10-24T15:01:01.9569722Z (node:2307) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-10-24T15:01:08.1528464Z SHA256 digest of downloaded artifact is 3a2cdbc4b86f30cbe43579db8cc6ee6bf229056db69beb1e92d241221f10eb95
+2026-10-24T15:01:08.1529282Z Artifact download completed successfully.
+2026-10-24T15:01:08.1530377Z Total of 1 artifact(s) downloaded
+2026-10-24T15:01:08.1541015Z Download artifact has finished successfully
+2026-10-24T15:01:08.1693618Z ##[group]Run reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+2026-10-24T15:01:08.1693895Z with:
+2026-10-24T15:01:08.1694011Z   api-level: 34
+2026-10-24T15:01:08.1694131Z   arch: x86_64
+2026-10-24T15:01:08.1694248Z   target: google_apis
+2026-10-24T15:01:08.1694385Z   disable-animations: true
+2026-10-24T15:01:08.1694521Z   cores: 4
+2026-10-24T15:01:08.1694629Z   ram-size: 4096M
+2026-10-24T15:01:08.1694888Z   emulator-options: -no-window -gpu swangle_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340
+2026-10-24T15:01:08.1695411Z   script: bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out && if [ -d rel ]; then bash Tools/ci/release_launch.sh "$(ls rel/*.apk | head -1)" smoke_out; fi
+2026-10-24T15:01:08.1695803Z   avd-name: test
+2026-10-24T15:01:08.1695934Z   force-avd-creation: true
+2026-10-24T15:01:08.1696084Z   emulator-boot-timeout: 600
+2026-10-24T15:01:08.1696234Z   emulator-port: 5554
+2026-10-24T15:01:08.1696399Z   disable-spellchecker: false
+2026-10-24T15:01:08.1696696Z   disable-linux-hw-accel: auto
+2026-10-24T15:01:08.1696849Z   enable-hw-keyboard: false
+2026-10-24T15:01:08.1696988Z   channel: stable
+2026-10-24T15:01:08.1697108Z ##[endgroup]
+2026-10-24T15:01:08.2105388Z ##[group]Configure emulator
+2026-10-24T15:01:08.2106080Z API level: 34
+2026-10-24T15:01:08.2106447Z System image API level: 34
+2026-10-24T15:01:08.2108991Z target: google_apis
+2026-10-24T15:01:08.2110542Z CPU architecture: x86_64
+2026-10-24T15:01:08.2110946Z Hardware profile: 
+2026-10-24T15:01:08.2111838Z Cores: 4
+2026-10-24T15:01:08.2112188Z RAM size: 4096M
+2026-10-24T15:01:08.2112558Z Heap size: 
+2026-10-24T15:01:08.2112876Z SD card path or size: 
+2026-10-24T15:01:08.2113186Z Disk size: 
+2026-10-24T15:01:08.2113481Z AVD name: test
+2026-10-24T15:01:08.2113792Z force avd creation: true
+2026-10-24T15:01:08.2114128Z Emulator boot timeout: 600
+2026-10-24T15:01:08.2114465Z emulator port: 5554
+2026-10-24T15:01:08.2115006Z emulator options: -no-window -gpu swangle_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340
+2026-10-24T15:01:08.2115540Z disable animations: true
+2026-10-24T15:01:08.2115866Z disable spellchecker: false
+2026-10-24T15:01:08.2116258Z disable Linux hardware acceleration: false
+2026-10-24T15:01:08.2116558Z enable hardware keyboard: false
+2026-10-24T15:01:08.2116998Z Channel: 0 (stable)
+2026-10-24T15:01:08.2117167Z Script:
+2026-10-24T15:01:08.2117655Z bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out && if [ -d rel ]; then bash Tools/ci/release_launch.sh "$(ls rel/*.apk | head -1)" smoke_out; fi
+2026-10-24T15:01:08.2118205Z Pre emulator launch script:
+2026-10-24T15:01:08.2118594Z ##[endgroup]
+2026-10-24T15:01:08.2118896Z ##[group]Install Android SDK
+2026-10-24T15:01:08.2163046Z [command]/usr/bin/sh -c \yes | sdkmanager --licenses > /dev/null
+2026-10-24T15:01:10.5536753Z Installing latest build tools, platform tools, and platform.
+2026-10-24T15:01:10.5545715Z [command]/usr/bin/sh -c \sdkmanager --install 'build-tools;37.0.0' platform-tools 'platforms;android-34'> /dev/null
+2026-10-24T15:01:11.7596728Z Installing latest emulator.
+2026-10-24T15:01:11.7603046Z [command]/usr/bin/sh -c \sdkmanager --install emulator --channel=0 > /dev/null
+2026-10-24T15:01:25.1799701Z Installing system images.
+2026-10-24T15:01:25.1805557Z [command]/usr/bin/sh -c \sdkmanager --install 'system-images;android-34;google_apis;x86_64' --channel=0 > /dev/null
+2026-10-24T15:02:28.6184544Z ##[endgroup]
+2026-10-24T15:02:28.6185729Z ##[group]Create AVD
+2026-10-24T15:02:28.6186377Z Creating AVD.
+2026-10-24T15:02:28.6197307Z [command]/usr/bin/sh -c \echo no | avdmanager create avd --force -n test --package 'system-images;android-34;google_apis;x86_64'
+2026-10-24T15:02:29.3951016Z Loading local repository...                                                     
+2026-10-24T15:02:29.3956314Z [=========                              ] 25% Loading local repository...       
+2026-10-24T15:02:29.3961489Z [=========                              ] 25% Fetch remote repository...        
+2026-10-24T15:02:29.3962024Z [=======================================] 100% Fetch remote repository...       
+2026-10-24T15:02:29.4499464Z Auto-selecting single ABI x86_64
+2026-10-24T15:02:29.5178531Z Do you wish to create a custom hardware profile? [no] [command]/usr/bin/sh -c \printf 'hw.cpu.ncore=4\nhw.ramSize=4096M\n' >> /home/runner/.android/avd/test.avd/config.ini
+2026-10-24T15:02:29.5191706Z ##[endgroup]
+2026-10-24T15:02:29.5193624Z ##[group]Launch Emulator
+2026-10-24T15:02:29.5194027Z Starting emulator.
+2026-10-24T15:02:29.5202239Z [command]/usr/bin/sh -c \/usr/local/lib/android/sdk/emulator/emulator -port 5554 -avd test -no-window -gpu swangle_indirect -no-snapshot -noaudio -no-boot-anim -skin 1080x2340 &
+2026-10-24T15:02:29.5684510Z INFO         | Android emulator version 37.2.12.0 (build_id 16428233) (CL:N/A)
+2026-10-24T15:02:29.5684896Z INFO         | Graphics backend: gfxstream
+2026-10-24T15:02:29.5685944Z INFO         | Found systemPath /usr/local/lib/android/sdk/system-images/android-34/google_apis/x86_64/
+2026-10-24T15:02:30.2627616Z INFO         | Saving last run QEMU version for the AVD to 2
+2026-10-24T15:02:30.2642714Z ##############################################################################
+2026-10-24T15:02:30.2643332Z ##                        WARNING - ACTION REQUIRED                         ##
+2026-10-24T15:02:30.2644125Z ##  Consider using the '-metrics-collection' flag to help improve the       ##
+2026-10-24T15:02:30.2644802Z ##  emulator by sending anonymized usage data. Or use the '-no-metrics'     ##
+2026-10-24T15:02:30.2646370Z ##  flag to bypass this warning and turn off the metrics collection.        ##
+2026-10-24T15:02:30.2647019Z ##  In a future release this warning will turn into a one-time blocking     ##
+2026-10-24T15:02:30.2647878Z ##  prompt to ask for explicit user input regarding metrics collection.     ##
+2026-10-24T15:02:30.2649213Z ##                                                                          ##
+2026-10-24T15:02:30.2650211Z ##  Please see '-help-metrics-collection' for more details. You can use     ##
+2026-10-24T15:02:30.2652841Z ##  '-metrics-to-file' or '-metrics-to-console' flags to see what type of   ##
+2026-10-24T15:02:30.2653728Z ##  data is being collected by emulator as part of usage statistics.        ##
+2026-10-24T15:02:30.2654926Z ##############################################################################
+2026-10-24T15:02:30.2655645Z INFO         | Guest GLES Driver: Auto (ext controls)
+2026-10-24T15:02:30.2656263Z INFO         | emuglConfig_init: vulkan_mode_selected:swiftshader gles_mode_selected:swangle
+2026-10-24T15:02:30.2657878Z INFO         | Checking system compatibility:
+2026-10-24T15:02:30.2658378Z INFO         |   Checking: hasSufficientDiskSpace
+2026-10-24T15:02:30.2659079Z INFO         |      Ok: Disk space requirements to run avd: `test` are met
+2026-10-24T15:02:30.2659588Z INFO         |   Checking: hasSufficientHwGpu
+2026-10-24T15:02:30.2660548Z INFO         |      Ok: Hardware GPU compatibility checks are not required
+2026-10-24T15:02:30.2663415Z INFO         |   Checking: hasSufficientSystem
+2026-10-24T15:02:30.2663864Z INFO         |      Warning: AVD 'test' will run more smoothly with 4 CPU cores (currently using 2)
+2026-10-24T15:02:30.2664343Z USER_WARNING | AVD 'test' will run more smoothly with 4 CPU cores (currently using 2).
+2026-10-24T15:02:30.2666062Z WARNING      | Feature QuickbootFileBacked is disabled due to stability issues, if you really want that, the environment variable ANDROID_EMU_FORCE_QUICKBOOT_FILE_BACKED need to set to 1
+2026-10-24T15:02:30.2666739Z ERROR        | Unable to connect to adb daemon on port: 5037
+2026-10-24T15:02:30.2667269Z INFO         | Storing crashdata in: /tmp/android-runner/emu-crash-37.2.12.db, detection is enabled for process: 2615
+2026-10-24T15:02:30.2667736Z INFO         | Initializing gfxstream backend
+2026-10-24T15:02:30.2752776Z INFO         | startOpenglesRendererImpl: gpu info
+2026-10-24T15:02:30.2756319Z INFO         | 
+2026-10-24T15:02:30.2765072Z INFO         | initIcdPaths: ICD set to 'swiftshader', using Swiftshader ICD
+2026-10-24T15:02:30.2767866Z INFO         | Setting ICD filenames for the loader = /usr/local/lib/android/sdk/emulator/lib64/vulkan/vk_swiftshader_icd.json
+2026-10-24T15:02:30.2773919Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so]
+2026-10-24T15:02:30.2774651Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/qemu/linux-x86_64/lib64/vulkan/libvulkan.so.1]
+2026-10-24T15:02:30.2775298Z INFO         | SharedLibrary::open for [/usr/local/lib/android/sdk/emulator/lib64/vulkan/libvulkan.so]
+2026-10-24T15:02:30.2791857Z INFO         | Added library: /usr/local/lib/android/sdk/emulator/lib64/vulkan/libvulkan.so
+2026-10-24T15:02:30.2917479Z INFO         | Selecting Vulkan device: SwiftShader Device (Subzero), Version: 1.3.0
+2026-10-24T15:02:30.2918049Z INFO         | Using Vulkan externalMemoryMode: OpaqueFd for VkEmulation
+2026-10-24T15:02:30.3025450Z INFO         | Format VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 does not support YCbCr sampler conversion
+2026-10-24T15:02:30.3231592Z INFO         | SharedLibrary::open for [libX11]
+2026-10-24T15:02:30.3236955Z WARNING      | Could not open libX11.so, try libX11.so.6
+2026-10-24T15:02:30.3237330Z INFO         | SharedLibrary::open for [libX11.so.6]
+2026-10-24T15:02:30.3237843Z INFO         | SharedLibrary::open for [libX11-xcb]
+2026-10-24T15:02:30.3238363Z WARNING      | Could not open libX11-xcb.so, try libX11-xcb.so.1
+2026-10-24T15:02:30.3238774Z INFO         | SharedLibrary::open for [libX11-xcb.so.1]
+2026-10-24T15:02:30.3471575Z INFO         | Initializing VkEmulation features:
+2026-10-24T15:02:30.3472427Z INFO         |     glInteropSupported: false
+2026-10-24T15:02:30.3474216Z INFO         |     useDeferredCommands: true
+2026-10-24T15:02:30.3474588Z INFO         |     createResourceWithRequirements: true
+2026-10-24T15:02:30.3475010Z INFO         |     useVulkanComposition: false
+2026-10-24T15:02:30.3475369Z INFO         |     useVulkanNativeSwapchain: false
+2026-10-24T15:02:30.3475715Z INFO         |     enable guestRenderDoc: false
+2026-10-24T15:02:30.3476029Z INFO         |     ASTC LDR emulation mode: Gpu
+2026-10-24T15:02:30.3476353Z INFO         |     enable ETC2 emulation: true
+2026-10-24T15:02:30.3476711Z INFO         |     enable Ycbcr emulation: false
+2026-10-24T15:02:30.3477099Z INFO         |     guestVulkanOnly: false
+2026-10-24T15:02:30.3477493Z INFO         |     useDedicatedAllocations: false
+2026-10-24T15:02:30.3477896Z INFO         |     guestVulkanMaxApiVersion: 1.3.0
+2026-10-24T15:02:30.3478258Z INFO         |     enableProtectedMemoryEmulation: false
+2026-10-24T15:02:30.3485133Z INFO         | Graphics Adapter Vendor Google (Google Inc. (Google))
+2026-10-24T15:02:30.3485844Z INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver-5.0.0))
+2026-10-24T15:02:30.3487280Z INFO         | Graphics API Version OpenGL ES 3.0 (OpenGL ES 3.1.0 (ANGLE 2.1.17841 git hash: 5fa2e61da947))
+2026-10-24T15:02:30.3489206Z INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_packed_depth_stencil GL_OES_vertex_half_float GL_OES_standard_derivatives GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_OVR_multiview2 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 GL_EXT_draw_buffers_indexed GL_EXT_clip_cull_distance 
+2026-10-24T15:02:30.3491555Z INFO         | Graphics Device Extensions N/A
+2026-10-24T15:02:30.3493426Z INFO         | Disabling sparse binding feature support
+2026-10-24T15:02:30.3506301Z ERROR        | Setting read-only feature 'GLAsyncSwap' to '0'
+2026-10-24T15:02:30.3521798Z INFO         | Feature 'GLAsyncSwap' (50) is overridden to 'disabled'
+2026-10-24T15:02:30.3525916Z INFO         | Sending adb public key [QAAAAGeJOg6pfRypSLaIlhkCv6GUH7XuoTArcxqCIqFqWz9Xl8fygYnGHAb6S5sclNfja92ZJYyYQ8zKuNBuZEx7eRpUudSd8DFnc36G6SdvKtFGSbHD2gVkA+ob43LXp8o2kL+NgplALnaFcJpaZ4Rv1zNmAwWooi4v8fKx/K76BKzBtBS9lKUad2X7BV5jL2ccOMrOlS9UqEOvOLP56XrlS/kOnsSVnp14UwZZOjPx0SxCD/ezi7PGt+p2t/SOQ22rOMhE51lHmn8/EyyypbMIhglrAAafDz4xIYctw406W12UYcVSpH/zfdC6wQIOLG27o4Bh0Zd+Ss2uwszSdWJOsBfcw8+3w4BEFXtAKMF++6PV9+3Fw2V6MrHPKs0XiKFTmubdWrL2PoByKujyFiR+GOxMY7xtNc4TjQXtU1kpPPYPpLO4KhcpT55EWuiFGGGI1ArG+m7utMpBSC3FUWAKQO16T1ru06NkYaHiPh3zBVwO87LIeyy0edG62ppOJe2JKuhFwBV4AD2WulpPUBt2Ofps5uVqbhzABRFSRCoMfuPHhIvZTPG+NM/oXvyRFcikIMmSCSfIzQBWhwWHRMjdMzixtSHqvkRTCzqG/7J732O977mDbdkPsrdAP8X99DybA6WsZW7DjFVs5SOPusnzGpAsMHIYNF4GgBBOZ3OLGlG6OBBKZwEAAQA= runner@unknown]
+2026-10-24T15:02:30.3529309Z INFO         | Userspace boot properties:
+2026-10-24T15:02:30.3530433Z INFO         |   androidboot.boot_devices=pci0000:00/0000:00:03.0 pci0000:00/0000:00:06.0
+2026-10-24T15:02:30.3531030Z INFO         |   androidboot.dalvik.vm.heapsize=576m
+2026-10-24T15:02:30.3531706Z INFO         |   androidboot.debug.hwui.renderer=skiagl
+2026-10-24T15:02:30.3533192Z INFO         |   androidboot.debug.sf.nobootanimation=1
+2026-10-24T15:02:30.3533707Z INFO         |   androidboot.hardware=ranchu
+2026-10-24T15:02:30.3534357Z INFO         |   androidboot.hardware.gltransport=pipe
+2026-10-24T15:02:30.3534787Z INFO         |   androidboot.hardware.vulkan=ranchu
+2026-10-24T15:02:30.3535630Z INFO         |   androidboot.logcat=*:V
+2026-10-24T15:02:30.3536022Z INFO         |   androidboot.opengles.version=196609
+2026-10-24T15:02:30.3536696Z INFO         |   androidboot.qemu=1
+2026-10-24T15:02:30.3539034Z INFO         |   androidboot.qemu.adb.pubkey=QAAAAGeJOg6pfRypSLaIlhkCv6GUH7XuoTArcxqCIqFqWz9Xl8fygYnGHAb6S5sclNfja92ZJYyYQ8zKuNBuZEx7eRpUudSd8DFnc36G6SdvKtFGSbHD2gVkA+ob43LXp8o2kL+NgplALnaFcJpaZ4Rv1zNmAwWooi4v8fKx/K76BKzBtBS9lKUad2X7BV5jL2ccOMrOlS9UqEOvOLP56XrlS/kOnsSVnp14UwZZOjPx0SxCD/ezi7PGt+p2t/SOQ22rOMhE51lHmn8/EyyypbMIhglrAAafDz4xIYctw406W12UYcVSpH/zfdC6wQIOLG27o4Bh0Zd+Ss2uwszSdWJOsBfcw8+3w4BEFXtAKMF++6PV9+3Fw2V6MrHPKs0XiKFTmubdWrL2PoByKujyFiR+GOxMY7xtNc4TjQXtU1kpPPYPpLO4KhcpT55EWuiFGGGI1ArG+m7utMpBSC3FUWAKQO16T1ru06NkYaHiPh3zBVwO87LIeyy0edG62ppOJe2JKuhFwBV4AD2WulpPUBt2Ofps5uVqbhzABRFSRCoMfuPHhIvZTPG+NM/oXvyRFcikIMmSCSfIzQBWhwWHRMjdMzixtSHqvkRTCzqG/7J732O977mDbdkPsrdAP8X99DybA6WsZW7DjFVs5SOPusnzGpAsMHIYNF4GgBBOZ3OLGlG6OBBKZwEAAQA= runner@unknown
+2026-10-24T15:02:30.3542654Z INFO         |   androidboot.qemu.avd_name=test
+2026-10-24T15:02:30.3543259Z INFO         |   androidboot.qemu.camera_hq_edge_processing=0
+2026-10-24T15:02:30.3544519Z INFO         |   androidboot.qemu.camera_protocol_ver=1
+2026-10-24T15:02:30.3544932Z INFO         |   androidboot.qemu.cpuvulkan.version=4206592
+2026-10-24T15:02:30.3545389Z INFO         |   androidboot.qemu.gltransport.drawFlushInterval=800
+2026-10-24T15:02:30.3545846Z INFO         |   androidboot.qemu.gltransport.name=pipe
+2026-10-24T15:02:30.3546237Z INFO         |   androidboot.qemu.hwcodec.avcdec=2
+2026-10-24T15:02:30.3546629Z INFO         |   androidboot.qemu.hwcodec.hevcdec=2
+2026-10-24T15:02:30.3547009Z INFO         |   androidboot.qemu.hwcodec.vpxdec=2
+2026-10-24T15:02:30.3547467Z INFO         |   androidboot.qemu.settings.system.screen_off_timeout=2147483647
+2026-10-24T15:02:30.3547929Z INFO         |   androidboot.qemu.skin=320x640
+2026-10-24T15:02:30.3548331Z INFO         |   androidboot.qemu.virtiowifi=1
+2026-10-24T15:02:30.3548691Z INFO         |   androidboot.qemu.vsync=60
+2026-10-24T15:02:30.3549063Z INFO         |   androidboot.serialno=EMULATOR37X2X12X0
+2026-10-24T15:02:30.3549613Z INFO         |   androidboot.vbmeta.digest=451e57ed688ff746d2c636d52169ade253e2bc5bb30a5c3ff23679ca15d3bcd3
+2026-10-24T15:02:30.3550295Z INFO         |   androidboot.vbmeta.hash_alg=sha256
+2026-10-24T15:02:30.3550894Z INFO         |   androidboot.vbmeta.size=6656
+2026-10-24T15:02:30.3551256Z INFO         |   androidboot.veritymode=enforcing
+2026-10-24T15:02:30.3621149Z qemu-system-x86_64-headless: warning: Number of SMP cpus requested (4) exceeds the recommended cpus supported by KVM (2)
+2026-10-24T15:02:30.3622338Z qemu-system-x86_64-headless: warning: Number of hotpluggable cpus requested (4) exceeds the recommended cpus supported by KVM (2)
+2026-10-24T15:02:30.3801844Z WARNING: cannnot unmap ptr 0x7ff369601000 as it is in the protected range from 0x7ff269600000 to 0x7ff369800000
+2026-10-24T15:02:30.3802446Z pc_memory_init: above 4g size: 40000000
+2026-10-24T15:02:30.4212012Z INFO         | Monitoring duration of emulator setup.
+2026-10-24T15:02:31.4001235Z INFO         | Successfully initialized netsim WiFi
+2026-10-24T15:02:31.4001874Z INFO         | Activated packet streamer for bluetooth emulation
+2026-10-24T15:02:31.4030900Z INFO         | Setting display: 0 configuration to: 1080x2340, dpi: 160x160 
+2026-10-24T15:02:31.4035034Z INFO         | setDisplayActiveConfig: id:0, 1080x2340
+2026-10-24T15:02:31.4039739Z INFO         | emulatorSetupEnvironment: Environment scene is not required
+2026-10-24T15:02:31.4120897Z USER_INFO    | Emulator is performing a full startup. This may take upto two minutes, or more.
+2026-10-24T15:02:31.4122042Z WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
+2026-10-24T15:02:31.5342831Z WARNING      | Failed to process .ini file /home/runner/.android/emu-update-last-check.ini for reading.
+2026-10-24T15:02:39.5269551Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:39.5311324Z * daemon not running; starting now at tcp:5037
+2026-10-24T15:02:39.6326625Z * daemon started successfully
+2026-10-24T15:02:39.6342986Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+2026-10-24T15:02:39.6343399Z adb: device offline
+2026-10-24T15:02:41.6425713Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:41.6497227Z adb: device offline
+2026-10-24T15:02:41.6504610Z The process '/usr/local/lib/android/sdk/platform-tools/adb' failed with exit code 1
+2026-10-24T15:02:43.6584202Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:43.7152257Z 
+2026-10-24T15:02:45.7249680Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:45.7641162Z 
+2026-10-24T15:02:47.7765867Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:47.7994674Z 
+2026-10-24T15:02:49.8041307Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:49.8245347Z 
+2026-10-24T15:02:51.8289073Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:51.8558281Z 
+2026-10-24T15:02:53.8589716Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:53.8782875Z 
+2026-10-24T15:02:55.8828754Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:55.9006881Z 
+2026-10-24T15:02:57.9076725Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:57.9360660Z 
+2026-10-24T15:02:59.9447551Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:02:59.9893580Z 
+2026-10-24T15:03:01.9983945Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:03:02.0268677Z 
+2026-10-24T15:03:04.0381322Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:03:04.0670763Z 
+2026-10-24T15:03:06.0732219Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:03:06.0990478Z 
+2026-10-24T15:03:08.1152968Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:03:08.1650353Z 
+2026-10-24T15:03:10.1668173Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:03:10.2020750Z 
+2026-10-24T15:03:12.2161269Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:03:12.2991445Z 
+2026-10-24T15:03:14.3073084Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:03:14.3491320Z 
+2026-10-24T15:03:16.0607463Z INFO         | Boot completed in 46426 ms
+2026-10-24T15:03:16.0652206Z INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+2026-10-24T15:03:16.3581220Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell getprop sys.boot_completed
+2026-10-24T15:03:16.4810757Z 1
+2026-10-24T15:03:16.4830601Z Emulator booted.
+2026-10-24T15:03:16.4927479Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell input keyevent 82
+2026-10-24T15:03:25.2781247Z Disabling animations.
+2026-10-24T15:03:25.2849487Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global window_animation_scale 0.0
+2026-10-24T15:03:25.6135382Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global transition_animation_scale 0.0
+2026-10-24T15:03:25.7422099Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 shell settings put global animator_duration_scale 0.0
+2026-10-24T15:03:26.0989307Z ##[endgroup]
+2026-10-24T15:03:26.1492338Z [command]/usr/bin/sh -c bash Tools/ci/emulator_smoke.sh "$(ls apk/*.apk | grep -v arm-only | head -1)" smoke_out && if [ -d rel ]; then bash Tools/ci/release_launch.sh "$(ls rel/*.apk | head -1)" smoke_out; fi
+2026-10-24T15:03:29.8691716Z ERROR        | Failed to find ColorBuffer: 70
+2026-10-24T15:03:29.8692535Z ERROR        | Failed to bind to texture: invalid color buffer.
+2026-10-24T15:04:05.5846791Z Performing Streamed Install
+2026-10-24T15:04:05.5880475Z Success
+2026-10-24T15:04:07.7462978Z args: [-p, com.crashverse.game, -c, android.intent.category.LAUNCHER, 1]
+2026-10-24T15:04:07.7505994Z  arg: "-p"
+2026-10-24T15:04:07.7506532Z  arg: "com.crashverse.game"
+2026-10-24T15:04:07.7553407Z  arg: "-c"
+2026-10-24T15:04:07.7581079Z  arg: "android.intent.category.LAUNCHER"
+2026-10-24T15:04:07.7650765Z  arg: "1"
+2026-10-24T15:04:07.7688294Z data="com.crashverse.game"
+2026-10-24T15:04:07.7750982Z data="android.intent.category.LAUNCHER"
+2026-10-24T15:04:12.5681222Z INFO         | Created VkInstance:0x55ce3f8ee000 for application:'CRASHVERSE' engine:'Unity'.
+2026-10-24T15:04:12.5949789Z INFO         | Destroyed VkInstance:0x55ce3f8ee000 for application:'CRASHVERSE' engine:'Unity'.
+2026-10-24T15:04:18.9411042Z MONTH=540,938
+2026-10-24T15:04:20.3667941Z ERROR        | Failed to find ColorBuffer: 186
+2026-10-24T15:04:20.3712689Z ERROR        | Failed to bind to texture: invalid color buffer.
+2026-10-24T15:04:23.0694875Z FAIL (discovery): app died at after_tap_540_938
+2026-10-24T15:04:23.3922514Z ##[error]The process '/usr/bin/sh' failed with exit code 1
+2026-10-24T15:04:23.3948949Z ##[group]Terminate Emulator
+2026-10-24T15:04:23.3964772Z [command]/usr/local/lib/android/sdk/platform-tools/adb -s emulator-5554 emu kill
+2026-10-24T15:04:23.4131059Z OK: killing emulator, bye bye
+2026-10-24T15:04:23.4160970Z OK
+2026-10-24T15:04:23.4171100Z INFO         | Wait for emulator (pid 2615) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+2026-10-24T15:04:23.4200353Z 
+2026-10-24T15:04:23.4210875Z ##[endgroup]
+2026-10-24T15:04:23.4437881Z USER_INFO    | Snapshots have been disabled by the user, save request is ignored.
+2026-10-24T15:04:23.4456629Z INFO         | Saving snapshot 'default_boot' took 0 ms
+2026-10-24T15:04:23.4791020Z ERROR        | stop: Not implemented
+2026-10-24T15:04:23.4830808Z WARNING      | Emulator client has not yet been configured.. Call configure me first!
+2026-10-24T15:04:23.5998319Z INFO         | removeAll
+2026-10-24T15:04:23.6340957Z WARNING      | Netsim Wifi dns:///localhost:39483 is gone due to Stream removed (CANCELLED)
+2026-10-24T15:04:23.9675162Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-24T15:04:23.9675401Z with:
+2026-10-24T15:04:23.9675529Z   name: emulator-smoke-api34-2
+2026-10-24T15:04:23.9675676Z   path: smoke_out
+2026-10-24T15:04:23.9675805Z   if-no-files-found: error
+2026-10-24T15:04:23.9675942Z   retention-days: 14
+2026-10-24T15:04:23.9676074Z   compression-level: 6
+2026-10-24T15:04:23.9676202Z   overwrite: false
+2026-10-24T15:04:23.9676332Z   include-hidden-files: false
+2026-10-24T15:04:23.9676624Z env:
+2026-10-24T15:04:23.9676753Z   ANDROID_AVD_HOME: /home/runner/.android/avd
+2026-10-24T15:04:23.9676916Z ##[endgroup]
+2026-10-24T15:04:24.0973183Z (node:3038) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-24T15:04:24.0973986Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-24T15:04:24.1059838Z With the provided path, there will be 8 files uploaded
+2026-10-24T15:04:24.1063818Z Artifact name is valid!
+2026-10-24T15:04:24.1064164Z Root directory input is valid!
+2026-10-24T15:04:24.4943818Z Beginning upload of artifact content to blob storage
+2026-10-24T15:04:24.5397081Z (node:3038) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-24T15:04:25.1059630Z Uploaded bytes 310848
+2026-10-24T15:04:25.1857386Z Finished uploading artifact content to blob storage!
+2026-10-24T15:04:25.1858323Z SHA256 digest of uploaded artifact zip is 26bc58514434f1c6e9f7917b10de65310729600c3336134a75d13f10051e92e6
+2026-10-24T15:04:25.1860175Z Finalizing artifact upload
+2026-10-24T15:04:25.6545763Z Artifact emulator-smoke-api34-2.zip successfully finalized. Artifact ID 12564780275
+2026-10-24T15:04:25.6546531Z Artifact emulator-smoke-api34-2 has been successfully uploaded! Final size is 310848 bytes. Artifact ID is 12564780275
+2026-10-24T15:04:25.6552073Z Artifact download URL: https://github.com/radhengle/crashverse/actions/runs/40102001893/artifacts/12564780275
+2026-10-24T15:04:25.6721781Z Post job cleanup.
+2026-10-24T15:04:25.7320813Z [command]/usr/bin/git version
+2026-10-24T15:04:25.7380947Z git version 2.55.0
+2026-10-24T15:04:25.7408718Z Temporarily overriding HOME='/home/runner/work/_temp/29e79907-2712-4d00-b39a-59390990f06c' before making global git config changes
+2026-10-24T15:04:25.7430603Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T15:04:25.7431452Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crashverse/crashverse
+2026-10-24T15:04:25.7485562Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T15:04:25.7560747Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T15:04:25.7834748Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T15:04:25.7887104Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T15:04:25.8174108Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T15:04:25.8206394Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T15:04:25.8514332Z Cleaning up orphan processes
+2026-10-24T15:04:25.8840398Z Terminate orphan process: pid (2681) (netsimd)
+2026-10-24T15:04:25.8909106Z Terminate orphan process: pid (2714) (adb)
+2026-10-24T15:04:25.8961768Z Terminate orphan process: pid (2978) (sh)
+2026-10-24T15:04:25.9005982Z Terminate orphan process: pid (2985) (sh)
+2026-10-24T15:04:25.9051862Z Terminate orphan process: pid (2992) (sh)
+2026-10-24T15:04:25.9095758Z Terminate orphan process: pid (3004) (sh)
+2026-10-24T15:04:25.9139434Z Terminate orphan process: pid (3012) (sh)
+2026-10-24T15:04:25.9191164Z Terminate orphan process: pid (3015) (sh)
+2026-10-24T15:04:25.9235619Z Terminate orphan process: pid (3018) (sh)
+2026-10-24T15:04:25.9284640Z Terminate orphan process: pid (3029) (sh)
+2026-10-24T15:04:25.9382532Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

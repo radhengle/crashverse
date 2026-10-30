@@ -1,0 +1,218 @@
+--------- beginning of main
+10-24 12:30:54.538   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:54.538   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:54.651   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:54.652   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:54.684  1366  1366 D TaskbarManager: dispatchTouchEvent:  displayId=0 isDefaultDisplay=true
+10-24 12:30:54.758   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:54.758   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:54.860   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:54.860   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:54.966   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:54.967   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:54.978  4025  4072 I Unity   : CVTAP|BEGIN|ResultsScreen
+10-24 12:30:54.978  4025  4072 I Unity   : CVTAP|RESULT|win
+10-24 12:30:54.978  4025  4072 I Unity   : CVTAP|ResultsScreen|Button_II|110|2209|1
+10-24 12:30:54.978  4025  4072 I Unity   : CVTAP|ResultsScreen|Button_FIRE|922|2162|0
+10-24 12:30:54.978  4025  4072 I Unity   : CVTAP|ResultsScreen|Button_DevAimHint|681|2193|1
+10-24 12:30:54.978  4025  4072 I Unity   : CVTAP|ResultsScreen|Button_Map|346|1532|1
+10-24 12:30:54.978  4025  4072 I Unity   : CVTAP|ResultsScreen|Button_Retry|734|1532|1
+10-24 12:30:54.978  4025  4072 I Unity   : CVTAP|ResultsScreen|Button_NextLevel|540|1690|1
+10-24 12:30:55.076   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.076   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.180   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.180   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.287   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.287   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.308   680  1018 D WifiClientModeImpl[30127:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=1 freq=2437 RxLinkSpeed=2
+10-24 12:30:55.313   680  1018 D WifiDataStall: tx tput in kbps: 37000
+10-24 12:30:55.313   680  1018 D WifiDataStall: rx tput in kbps: 37000
+10-24 12:30:55.313   680  1018 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-24 12:30:55.314   680  1018 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 12:30:55.314   680  1018 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 12:30:55.314   680  1018 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 12:30:55.314   680  1018 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 12:30:55.314   680  1018 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 12:30:55.314   680  1018 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 12:30:55.314   680  1018 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 12:30:55.314   680  1018 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 12:30:55.314   680  1018 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 1693833706 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 1Mbps, Tx Link speed: 1Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-24 12:30:55.314   680  1018 D WifiScoreCard: txRate: 2 txSpeed: 1
+10-24 12:30:55.314   680  1018 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 1481787326 RSSI -50 txSpeed -1
+10-24 12:30:55.314   680  1018 D WifiClientModeImpl[30127:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=1 tx=1.3, 0.0, 0.0 rx=0.1 bcn=0 [on:0 tx:0 rx:0 period:3007] from screen [on:0 period:1843692882] score=60
+10-24 12:30:55.392   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.392   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.495   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.495   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.604   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.604   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.706   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.707   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.810   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.810   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.918   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:55.918   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 12:30:55.983  4025  4072 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+10-24 12:30:56.027   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.027   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.133   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.133   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.238   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.238   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.346   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.347   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.451   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.451   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.555   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.555   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.628   680  1018 D WifiNetworkSelector: Current connected network: 0
+10-24 12:30:56.628   680  1018 V WifiConnectivityManager: No full band scan because current network is sufficient
+10-24 12:30:56.628   680  1018 V WifiConnectivityManager: schedulePeriodicScanTimer intervalMs 160000
+10-24 12:30:56.628   680  1022 I WifiScanningService: Registering listener= com.android.server.wifi.scanner.WifiScannerInternal$ScanListener@862af72 uid=1000 packageName=null workSource=WorkSource{1000}
+10-24 12:30:56.628   680  1022 I WifiScanningService: start scan: ClientInfo[uid=1000, package=null, attributionTag=null, com.android.server.wifi.scanner.WifiScannerInternal$ScanListener@862af72] package null AttributionTag null
+10-24 12:30:56.628   680  1022 I WifiScanningService: addSingleScanRequest: ClientInfo[uid=1000, package=null, attributionTag=null, com.android.server.wifi.scanner.WifiScannerInternal$ScanListener@862af72],WorkSource{1010}, ScanSettings {  type:HIGH ACCURACY band:unspecified ignoreLocationSettings:false period:0 reportEvents:3 numBssidsPerScan:0 maxScansToCache:0 rnrSetting:2 6GhzPscOnlyEnabled:false channels:[ 2437  ]  } 
+10-24 12:30:56.628   680  1022 D WifiScanningService: replySucceeded onSuccess
+10-24 12:30:56.633  1339  1339 D wpa_supplicant: nl80211: Drv Event 33 (NL80211_CMD_TRIGGER_SCAN) received for wlan0
+10-24 12:30:56.633  1339  1339 D wpa_supplicant: wlan0: nl80211: Scan trigger
+10-24 12:30:56.633  1339  1339 D wpa_supplicant: wlan0: Event SCAN_STARTED (47) received
+10-24 12:30:56.633  1339  1339 D wpa_supplicant: wlan0: External program started a scan
+10-24 12:30:56.658   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.658   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.686  1339  1339 D wpa_supplicant: nl80211: Drv Event 34 (NL80211_CMD_NEW_SCAN_RESULTS) received for wlan0
+10-24 12:30:56.686  1339  1339 D wpa_supplicant: wlan0: nl80211: New scan results available
+10-24 12:30:56.686  1339  1339 D wpa_supplicant: nl80211: Scan probed for SSID ''
+10-24 12:30:56.686  1339  1339 D wpa_supplicant: nl80211: Scan included frequencies: 2437
+10-24 12:30:56.686  1339  1339 D wpa_supplicant: wlan0: Event SCAN_RESULTS (3) received
+10-24 12:30:56.686  1339  1339 D wpa_supplicant: nl80211: Received scan results (1 BSSes)
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: nl80211: Scan results indicate BSS status with 02:15:b2:00:00:01 as associated
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: wlan0: BSS: Start scan result update 10
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: BSS: last_scan_res_used=1/32
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: wlan0: New scan results available (own=0 ext=1)
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: wlan0: Do not use results from externally requested scan operation for network selection
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: p2p-dev-wlan0: Updating scan results from sibling
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: nl80211: Received scan results (1 BSSes)
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: p2p-dev-wlan0: BSS: Start scan result update 10
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: BSS: last_scan_res_used=1/32
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: p2p-dev-wlan0: New scan results available (own=0 ext=1)
+10-24 12:30:56.687  1339  1339 D wpa_supplicant: p2p-dev-wlan0: Do not use results from externally requested scan operation for network selection
+10-24 12:30:56.687   680  1552 D WifiNl80211Manager: Scan result ready event
+10-24 12:30:56.687   680  1552 D WifiNative: Scan result ready event
+10-24 12:30:56.687   680  1022 D WifiNl80211Manager: get 1 scan results from wificond
+10-24 12:30:56.688   680  1022 D WifiNative: get 1 scan results from wificond
+10-24 12:30:56.688  1433  1881 I WifiScanner: onFullResults
+10-24 12:30:56.688   680  1022 I WifiScanningService: singleScanResults: ClientInfo[uid=1000, package=null, attributionTag=null, com.android.server.wifi.scanner.WifiScannerInternal$ScanListener@862af72],results=1
+10-24 12:30:56.688   680  1022 I WifiScanningService: singleScanResults listener: ClientInfo[uid=1000, package=android, attributionTag=null, com.android.server.wifi.scanner.WifiScannerInternal$ScanListener@53ea83a],results=1
+10-24 12:30:56.688   680  1022 I WifiScanningService: singleScanResults listener: ClientInfo[uid=1000, package=android, attributionTag=null, com.android.server.wifi.scanner.WifiScannerInternal$ScanListener@78de653],results=1
+10-24 12:30:56.688   680  1022 I WifiScanningService: singleScanResults listener: ClientInfo[uid=1000, package=android, attributionTag=null, com.android.server.wifi.scanner.WifiScannerInternal$ScanListener@5599ab5],results=1
+10-24 12:30:56.688   680  1022 I WifiScanningService: singleScanResults listener: ClientInfo[uid=10146, package=com.google.android.gms, attributionTag=network_location_provider, android.net.wifi.IWifiScannerListener$Stub$Proxy@5fcb99a],results=1
+10-24 12:30:56.689   680  1018 D WifiScanRequestProxy: Scan results received
+10-24 12:30:56.689   680  1018 D WifiScanRequestProxy: Received 1 scan results
+10-24 12:30:56.694   680  1022 I WifiScanningService: Unregistering listener= com.android.server.wifi.scanner.WifiScannerInternal$ScanListener@862af72 uid=1000 packageName=null workSource=WorkSource{1000}
+10-24 12:30:56.695   680  1018 I HalDevMgr: bestIfaceCreationProposal is null, requestIface=STA, existingIface=[name=wlan0 type=STA]
+10-24 12:30:56.695   680  1018 V WifiConnectivityManager: AllSingleScanListener onResults: start network selection
+10-24 12:30:56.695   680  1018 V WifiConfigManager: getSavedNetworkFromScanResult Found "AndroidWifi"NONE for AndroidWifi[[ESS]]
+10-24 12:30:56.695   680  1018 D WifiNetworkSelector: Current connected network: 0
+10-24 12:30:56.696   680  1018 D WifiNetworkSelector: wlan0: Current connected network already sufficient. Skip network selection.
+10-24 12:30:56.696   680  1018 V WifiLastResortWatchdog: updateAvailableNetworks: size = 0
+10-24 12:30:56.696   680  1018 V WifiLastResortWatchdog: mWatchdogFeatureEnabled: true
+10-24 12:30:56.696   680  1018 V WifiLastResortWatchdog: mWatchdogAllowedToTrigger: true
+10-24 12:30:56.696   680  1018 V WifiLastResortWatchdog: mRecentAvailableNetworks: 1
+10-24 12:30:56.696   680  1018 V WifiLastResortWatchdog:  02:15:b2:00:00:01: "AndroidWifi" HasEverConnected: false, Failures: {Assoc: 0, Auth: 0, Dhcp: 0}, Age: 9
+10-24 12:30:56.696   680  1018 V WifiLastResortWatchdog: mSsidFailureCount:
+10-24 12:30:56.696   680  1018 V WifiLastResortWatchdog: "AndroidWifi": 1, HasEverConnected: false, Failures: {Assoc: 0, Auth: 0, Dhcp: 0}
+10-24 12:30:56.696   680  1018 V WifiConnectivityManager: AllSingleScanListener:  No candidates
+10-24 12:30:56.762   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.762   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.869   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.869   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:56.970   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:56.970   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:57.080   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.080   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:57.182   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.182   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:57.286   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.286   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:57.394   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.394   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+--------- beginning of kernel
+10-24 12:30:57.624     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
+10-24 12:30:57.503   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+10-24 12:30:57.503   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.503   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:57.503   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+10-24 12:30:57.503   680  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10193} in 1ms
+10-24 12:30:57.504   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+10-24 12:30:57.504   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+10-24 12:30:57.504   680  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={20193} in 0ms
+10-24 12:30:57.611   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.611   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:57.710   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.710   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+--------- beginning of system
+10-24 12:30:57.747   680   727 D OomAdjuster: Not killing cached processes
+10-24 12:30:57.780   467   501 I netd    : tetherGetStats() -> {[]} <5.86ms>
+10-24 12:30:57.815   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.815   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:57.919   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:57.919   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.026   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:58.026   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.129   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:58.129   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.232   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:58.232   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.317   680  1018 D WifiClientModeImpl[30127:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=1 freq=2437 RxLinkSpeed=2
+10-24 12:30:58.317   680  1018 D WifiDataStall: tx tput in kbps: 37000
+10-24 12:30:58.317   680  1018 D WifiDataStall: rx tput in kbps: 37000
+10-24 12:30:58.317   680  1018 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-24 12:30:58.317   680  1018 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 12:30:58.317   680  1018 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 12:30:58.317   680  1018 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 12:30:58.317   680  1018 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 12:30:58.317   680  1018 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 12:30:58.317   680  1018 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 12:30:58.317   680  1018 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-24 12:30:58.317   680  1018 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-24 12:30:58.318   680  1018 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 1693833706 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 1Mbps, Tx Link speed: 1Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-24 12:30:58.318   680  1018 D WifiScoreCard: txRate: 2 txSpeed: 1
+10-24 12:30:58.318   680  1018 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 1481787326 RSSI -50 txSpeed -1
+10-24 12:30:58.318   680  1018 D WifiClientModeImpl[30127:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=1 tx=1.8, 0.0, 0.0 rx=0.0 bcn=0 [on:0 tx:0 rx:0 period:3004] from screen [on:0 period:1843695886] score=60
+10-24 12:30:58.327   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+10-24 12:30:58.329   680  1024 D InetDiagMessage: Destroyed 1 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+10-24 12:30:58.329   680  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10142} in 2ms
+10-24 12:30:58.332   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+10-24 12:30:58.332   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+10-24 12:30:58.335   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:58.335   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.337   680  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={20142} in 0ms
+10-24 12:30:58.442   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:58.442   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.492  1608  1608 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS xflg=0x4 pkg=com.google.android.gms }
+10-24 12:30:58.546   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:58.546   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.565   540   644 D AudioFlinger: mixer(0x77bc0e117770) throttle end: throttle time(8)
+10-24 12:30:58.656   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:58.656   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.696   680   797 D ActivityManager: freezing 1629 android.process.acore
+10-24 12:30:58.703   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
+10-24 12:30:58.705   680  1024 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
+10-24 12:30:58.712   680  1024 D InetDiagMessage: Destroyed live tcp sockets for uids={10096} in 9ms
+10-24 12:30:58.894     0     0 I logd    : logdr: UID=2000 GID=2000 PID=5847 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 12:30:58.760   481  4160 W android.hardware.audio@7.1-impl.ranchu: pcmWrite:259 pcm_writei failed with 'cannot read/write stream data: I/O error' (-1)
+10-24 12:30:58.760   481  4160 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+10-24 12:30:58.952     0     0 I logd    : logdr: UID=2000 GID=2000 PID=5852 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

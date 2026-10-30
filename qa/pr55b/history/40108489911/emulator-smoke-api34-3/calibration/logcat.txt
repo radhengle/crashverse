@@ -1,0 +1,38 @@
+--------- beginning of main
+10-24 17:01:08.735  1171  1171 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=167915, downTime=167915, deviceId=-1, source=0x1002, displayId=0, eventId=-902977928 }
+10-24 17:01:08.738  1171  1171 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=167915, downTime=167915, deviceId=-1, source=0x1002, displayId=0, eventId=-534808492 }
+10-24 17:01:08.837  1944  2379 I A       : NGA Sync: MDD Task: MDD.WIFI.CHARGING.PERIODIC.TASK done.
+10-24 17:01:08.837  1944  2379 I A       : NGA Sync: isNgaSyncEnabled: false; enableFileGroupPopulator: false; requiresMddAssets: false
+10-24 17:01:08.838  1944  2318 I A       : Refresh account policy.
+10-24 17:01:09.012  5878  5971 D EGL_emulation: app_time_stats: avg=1197.51ms min=1197.51ms max=1197.51ms count=1
+10-24 17:01:09.195   357   357 I netd    : tetherGetStats() -> {[]} <0.33ms>
+10-24 17:01:09.203   357   385 I netd    : bandwidthRemoveInterfaceQuota(eth0) <0.77ms>
+10-24 17:01:09.204   357   357 I netd    : bandwidthSetGlobalAlert(2097152) <0.07ms>
+10-24 17:01:09.204   357   357 I netd    : bandwidthSetInterfaceQuota(eth0, 9223372036854775807) <0.30ms>
+--------- beginning of system
+10-24 17:01:09.328   544  2488 D OomAdjuster: Not killing cached processes
+10-24 17:01:09.356   906   906 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 17:01:09.467  5273  6343 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.icing.indexapi.OneoffRebuildIndexService started execution. cause:4 exec_start_elapsed_seconds: 168 [CONTEXT service_id=218 ]
+10-24 17:01:09.475  1944  1944 I A       : Received index update request from Icing
+10-24 17:01:09.481  5273  6629 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.icing.indexapi.OneoffRebuildIndexService finished executing. cause:4 result: 1 elapsed_millis: 25 uptime_millis: 25 exec_start_elapsed_seconds: 168 [CONTEXT service_id=218 ]
+10-24 17:01:09.809  5878  5903 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 17:01:09.811  5878  5903 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+10-24 17:01:10.285  5878  5971 D EGL_emulation: app_time_stats: avg=250.14ms min=141.02ms max=460.60ms count=3
+10-24 17:01:11.373  5878  5971 D EGL_emulation: app_time_stats: avg=96.42ms min=30.16ms max=239.52ms count=4
+10-24 17:01:12.397  5878  5971 D EGL_emulation: app_time_stats: avg=117.85ms min=33.31ms max=240.92ms count=3
+--------- beginning of kernel
+10-24 17:01:12.941     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6693 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:01:13.168     0     0 I logd    : logdr: UID=2000 GID=2000 PID=6698 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

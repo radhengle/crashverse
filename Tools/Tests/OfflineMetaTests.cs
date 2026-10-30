@@ -9,7 +9,7 @@ using Crashverse.Meta;
 static class OfflineMetaTests
 {
     static ContentDatabase _db;
-    static ContentDatabase Db => _db ??= ContentDatabase.LoadBundled();
+    static ContentDatabase Db => _db ??= ContentDatabase.LoadBundled(true); // all seasons: content integrity incl. flagged-off S2-4
     static string Tmp() => Path.Combine(Path.GetTempPath(), "cv_off_" + Guid.NewGuid().ToString("N") + ".json");
     static void With(Action<PlayerProgress, CampaignSave> f)
     {
@@ -118,7 +118,7 @@ static class OfflineMetaTests
                 T.True(l.shots >= 4 && l.star2Pct < l.star3Pct, "bands " + l.id);
             }
             T.Eq("20,30,40", string.Join(",", ch.levels.Where(HardLevelRules.IsHard).Select(l => l.number)), "placeholder finales tagged hard");
-            var again = ContentDatabase.LoadBundled().Chapter1;
+            var again = ContentDatabase.LoadBundled(true).Chapter1;
             T.Eq(string.Join(",", ch.levels.Select(l => l.id + l.shots)), string.Join(",", again.levels.Select(l => l.id + l.shots)), "deterministic");
         });
         T.Add("off_seasons_delivered_chapter_preferred", () =>

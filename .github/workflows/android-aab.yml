@@ -72,6 +72,13 @@ jobs:
           persist-credentials: false
       - name: Release guards (source)
         run: python3 Tools/ci/check_release_guards.py
+      - name: Fetch pinned aapt2 8.7.3 (QA V2-01; read by AssetsPathsGradleHook as android.aapt2FromMavenOverride)
+        run: |
+          set -e
+          mkdir -p .aapt2-override
+          curl -sSfL https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2/8.7.3-12006047/aapt2-8.7.3-12006047-linux.jar -o .aapt2-override/aapt2.jar
+          echo "028916a040b58f34c9c89984e1bc48f8da6581662014f2b66391860def8b9c36  .aapt2-override/aapt2.jar" | sha256sum -c -
+          unzip -o -q .aapt2-override/aapt2.jar aapt2 -d .aapt2-override && chmod 755 .aapt2-override/aapt2 && .aapt2-override/aapt2 version
       - name: Build AAB (unsigned; Unity never sees the upload key)
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4 (v4.8.2)
         env:

@@ -85,6 +85,7 @@ namespace Crashverse.EditorTools
                 target = BuildTarget.Android,
                 options = release ? BuildOptions.None : BuildOptions.Development,
             };
+            RealKitManifestBuilder.Write(); // realistic v1 pieces into Resources (generated)
             var report = BuildPipeline.BuildPlayer(opts);
             if (report.summary.result != BuildResult.Succeeded) { EditorApplication.Exit(1); }
         }

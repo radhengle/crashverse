@@ -1,0 +1,88 @@
+{
+ "building": "RealProps",
+ "source": "BuildingKit v3.1 geometry + fracture, re-surfaced with graded CC0 (realistic v1)",
+ "modules": {
+  "Crate": {
+   "LOD0": 172,
+   "LOD1": 83,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    0.845,
+    0.8,
+    0.845
+   ],
+   "aabb": [
+    [
+     -0.4225,
+     -0.4225,
+     -0.0
+    ],
+    [
+     0.4225,
+     0.4225,
+     0.8
+    ]
+   ],
+   "frags": 12,
+   "frag_max": 70,
+   "Fractured": 670,
+   "mass": "15.9-42.8",
+   "min_axis_m": 0.28,
+   "joints": 36,
+   "anchors": 9,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Wood",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx"
+  },
+  "Barrel": {
+   "LOD0": 354,
+   "LOD1": 177,
+   "LOD2": 70,
+   "ucx": 8,
+   "size_m": [
+    0.704,
+    1.007,
+    0.704
+   ],
+   "aabb": [
+    [
+     -0.352,
+     -0.352,
+     -0.0559
+    ],
+    [
+     0.352,
+     0.352,
+     0.9506
+    ]
+   ],
+   "frags": 12,
+   "frag_max": 147,
+   "Fractured": 1434,
+   "mass": "9.5-28.2",
+   "min_axis_m": 0.259,
+   "joints": 35,
+   "anchors": 4,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Wood",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx"
+  }
+ },
+ "tile_m": 1.0,
+ "uv": "UV0 metric box projection, uv = pos_m / tile_m (rebuild from scaled positions after per-block scaling)",
+ "materials": [
+  "M_RealProps",
+  "M_RealProps_Inner"
+ ],
+ "textures": [
+  "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Textures/T_RealProps_A/_N/_ORM",
+  "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Textures/T_RealProps_Inner_A/_N/_ORM"
+ ]
+}

@@ -19,7 +19,26 @@ namespace Crashverse.Meta
             return h;
         }
 
-        public static LevelEntry ForDate(string dateKey, DailyBossData d)
+        public static LevelEntry ForDate(string dateKey, DailyBossData d) => ForDate(dateKey, d, null);
+
+        /// <summary>The day's boss, with its arena hint from dailyBoss.hints[layout] or else the titan arena using that layout.</summary>
+        public static LevelEntry ForDate(string dateKey, DailyBossData d, TitanTemplates titan)
+        {
+            var e = Build(dateKey, d); if (e == null) return null;
+            var h = HintFor(e.layout, d, titan);
+            if (h != null) { e.hintTarget = h.hintTarget; e.hintYaw = h.hintYaw; e.hintPitch = h.hintPitch; }
+            return e;
+        }
+
+        public static DailyBossHint HintFor(string layout, DailyBossData d, TitanTemplates titan)
+        {
+            if (d?.hints != null) foreach (var h in d.hints) if (h != null && h.layout == layout && !string.IsNullOrEmpty(h.hintTarget)) return h;
+            if (titan?.arenas != null) foreach (var a in titan.arenas)
+                if (a != null && a.layout == layout && !string.IsNullOrEmpty(a.hintTarget)) return new DailyBossHint { layout = layout, hintTarget = a.hintTarget, hintYaw = a.hintYaw, hintPitch = a.hintPitch };
+            return null;
+        }
+
+        static LevelEntry Build(string dateKey, DailyBossData d)
         {
             if (d == null || d.layouts == null || d.layouts.Length == 0) return null;
             uint s = Seed("dailyboss:" + dateKey);
@@ -32,6 +51,7 @@ namespace Crashverse.Meta
                 objective = "DESTROY_STRUCTURE", shots = shots, winThreshold = d.winThreshold > 0 ? d.winThreshold : 0.85f,
                 materials = new[] { "wood", "brick", "steel" }, forced = new SlotRule[0], lockedSlots = new string[0], requires = "", bossId = "",
                 reward = new Reward[0], mastery = null,
+                heroSlot = d.heroSlot,
             };
         }
 

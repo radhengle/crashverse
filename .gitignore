@@ -65,3 +65,14 @@ Assets/_Project/Resources/Audio/sfx_routing.json.meta
 *.blend
 *.blend1
 .aapt2/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# V2-01: pinned aapt2 fetched by CI
+.aapt2-override/
+
+# RealKit manifest is generated before every build (RealKitManifestBuilder)
+Assets/_Project/Resources/RealKit/
+Assets/_Project/Resources/RealKit.meta
