@@ -64,7 +64,7 @@ namespace Crashverse.Backend.Tests
         [Test]
         public void Seasons_2_to_4_are_playable_with_valid_layouts()
         {
-            var all = ContentDatabase.LoadBundled(true); // flagged off for players (FeatureFlags.Seasons2to4); the code path stays tested
+            var all = ContentDatabase.LoadBundled(true); // flagged off for players (Crashverse.Meta.FeatureFlags.Seasons2to4); the code path stays tested
             var ch = all.Chapter1;
             Assert.AreEqual(40, ch.levels.Length);
             foreach (var l in ch.levels.Where(x => x.number > 10))
@@ -80,8 +80,8 @@ namespace Crashverse.Backend.Tests
         [Test]
         public void Shipped_scope_is_chapter1_levels_1_to_10_and_season_1_only()
         {
-            Assert.False(FeatureFlags.Seasons2to4 || FeatureFlags.SeasonPass || FeatureFlags.Leaderboard || FeatureFlags.Achievements || FeatureFlags.DailyLogin
-                         || FeatureFlags.OnlineTitan || FeatureFlags.Store, "unfinished features stay hidden (user scope 2026-10-30)");
+            Assert.False(Crashverse.Meta.FeatureFlags.Seasons2to4 || Crashverse.Meta.FeatureFlags.SeasonPass || Crashverse.Meta.FeatureFlags.Leaderboard || Crashverse.Meta.FeatureFlags.Achievements || Crashverse.Meta.FeatureFlags.DailyLogin
+                         || Crashverse.Meta.FeatureFlags.OnlineTitan || Crashverse.Meta.FeatureFlags.Store, "unfinished features stay hidden (user scope 2026-10-30)");
             var db = ContentDatabase.LoadBundled();
             CollectionAssert.AreEqual(Enumerable.Range(1, 10).ToArray(), db.Chapter1.levels.Select(l => l.number).ToArray());
             Assert.False(db.Chapter1.levels.Any(SeasonContent.IsPlaceholder), "no procedural placeholder levels");
