@@ -42,6 +42,7 @@ Sources: models/Model_Spec_v1.md (3D Modeler: rules 3 and 7, colliders), the Phy
 | `COL_<Target>` | child collider object (created by the pipeline when the hull pivot ≠ target pivot; also accepted when authored) | kept | none |
 | `<Target>_COL[_##]` | **legacy alias** of `UCX_<Target>` | as `UCX_` | none |
 | `JNT_<FragA>__<FragB>[_##]` | joint / break point between two adjacent fragments (empty at the contact); the optional `_##` handles several joints between one pair | kept; ordinal sort after fragments; validator checks both fragments exist | `break_force_N` → `breakForce` (N), `break_torque_Nm` → `breakTorque` (N·m). Blank `""` = not authored (Physics material defaults apply) |
+| module root or `<Piece>_frag_##` of a hero kit | fracture class | written from the stats sidecar (see *Hero buildings*) | `fracture_class` → `fractureClass` (string), overrides the JSON |
 | `ANCHOR_<Frag>` | anchor / support mark where a fragment touches the ground (Physics: a piece collapses when all `FixedJoint` + `ANCHOR_` supports are gone) | kept; validator checks the fragment exists | `anchor_to` → `anchorTo` (`"Ground"`, or set at level assembly) |
 | `Socket_Muzzle/Core/Module/Booster/WheelDust` (`Muzzle_Spawn` = v1 Muzzle) | gameplay/VFX attach points | kept; all 5 required on the Wrecker | none |
 | `Spawn_*`, `*_Hint`, `VFX_*` | helpers | kept | none |
@@ -65,7 +66,7 @@ Sources: models/Model_Spec_v1.md (3D Modeler: rules 3 and 7, colliders), the Phy
 | Off | blend shapes, cameras, lights, visibility, auto collider |
 | Materials | ImportStandard, External, BasedOnMaterialName, Local search |
 | `attach_to` user property | the object is reparented under the named object, keeping its world pose (models README) |
-| `mass_kg`, `break_force_N`, `break_torque_Nm`, `anchor_to` | stored on `ImportedPhysicsHints` (`mass`, `breakForce`, `breakTorque`, `anchorTo`) as **authoring defaults**. A property missing from the FBX never overwrites an existing value. See *Physics hints* below |
+| `mass_kg`, `break_force_N`, `break_torque_Nm`, `anchor_to`, `fracture_class` | stored on `ImportedPhysicsHints` (`mass`, `breakForce`, `breakTorque`, `anchorTo`, `fractureClass`) as **authoring defaults**. A property missing from the FBX never overwrites an existing value. See *Physics hints* below |
 
 ## 2 · Materials and textures
 - Every `M_*` gets `Crashverse/GlossyPBR` with these maps: `T_<Asset>_A` to `_BaseMap`, `_N` to `_BumpMap`, `_ORM` to `_ORMMap`, `_E` to `_EmissionMap`, and `_Crack` to `_CrackMap` if present. `M_X_Emissive` and `M_X_Inner` read `T_X_*`.
@@ -76,11 +77,13 @@ Sources: models/Model_Spec_v1.md (3D Modeler: rules 3 and 7, colliders), the Phy
 
 | Map | Type | sRGB | Max (default) | Android override | ASTC |
 |---|---|---|---|---|---|
-| `_A` | Default | on | 2048 | Hero/Env 1024, Kit 512, Inner 256 | 6×6 |
+| `_A` | Default | on | 2048 | Hero/Env 1024, Kit 512, **hero building 1024**, Inner 256 | 6×6 |
 | `_N` | **NormalMap** | off | 2048 | same as `_A` | 5×5 |
 | `_ORM` | Default | **off** | 2048 | same as `_A` | 6×6 |
 | `_E` | Default | on | 1024 | ≤512 | 8×8 |
 | `_Crack` | Default | off | 1024 | ≤512 | 8×8 |
+
+**Texture groups (Android max)** are decided by folder or asset prefix, never by the file's map name alone: any `_Inner` map is 256. A **hero building** texture is 1024: asset prefix `T_Bld_*`, any folder under `Models/` named `Bld_*`, or a hero building kit folder `BuildingKit/Kit_Keep|Kit_Tower|Kit_Gate|Kit_House/`. **Shared props (`Kit_Props`) stay at the 512 kit cap** (PM), and a stats sidecar alone never makes a kit a hero building. Every other texture under `BuildingKit/` is kit (512); the rest go by the model folder's class (Hero/Environment 1024). `_E` and `_Crack` stay at ≤512. ASTC blocks are the same for every group. The hero kits name their atlases `T_<B>_A/_N/_ORM` (e.g. `T_House_A`), not `T_Bld_*`, which is why the folder rule exists (PM-approved via 3D Modeler).
 
 Mipmaps and mip streaming are on, Read/Write is off, alpha is none, and aniso is 2 on A/N and 1 elsewhere.
 **Tiers:** Unity has one texture import per platform, so High and Mid share the Android override above (spec §4). **Low** gets half resolution through `QualitySettings.globalTextureMipmapLimit = 1` on the Low quality level (Developer-owned; requested). Low also skips N and ORM sampling through the shader's LOD 150 SubShader.
@@ -134,8 +137,25 @@ Checks per model group:
 
 Texel density hint = sqrt(UV area × albedo w × h / world area) over the LOD0 meshes. Targets: Hero 180–360 px/m (≈256), Kit 128–256, Environment 16–256 (macro map). The check warns below 0.75× min or above 1.5× max.
 
+## Hero buildings (fracture class sidecar)
+Hero building kits (`Assets/_Project/Models/BuildingKit/Kit_<B>/Kit_<B>_<Module>[_Fractured][_LODn].fbx`, 3D Modeler hero buildings v1) keep their per-module numbers in **`models/HeroBuildings/Kit_<B>_stats.json`** (repo root, outside Assets). Schema as shipped by 3D Modeler:
+```json
+{ "building": "House", "texel_px_per_m": 77.1, "atlas": 2048,
+  "modules": { "GroundDoor": { "frac": "Stone", "LOD0": 640, "LOD1": 319, "LOD2": 126, "ucx": 8, "aabb": [[..],[..]],
+                               "anchor": "bottom", "anchor_to": "Ground", "note": "...", "frags": 7, "frag_max": 213,
+                               "Fractured": 1057, "mass": "686.8-1774.3", "joints": 10, "anchors": 4, "trims_dropped": 0 }, ... } }
+```
+- The importer uses only `modules.<Module>.frac` (`fracture_class` is accepted as an alias key). Current values: `Stone`, `Wood`, `Steel`, `Roof`. `modules` is a keyed object, so it is read with a small built-in JSON reader (`ImportConventions.MiniJson`; no package, JsonUtility can't read keyed objects).
+- Kits that read a sidecar: the hero building kits (Keep, Tower, Gate, House), the shared `Kit_Props`, and any other `BuildingKit/Kit_<B>` with a sidecar. (Only the four hero building kits get the 1024 texture cap.)
+- The module is taken from the **folder** `Kit_<B>` and the file name `Kit_<B>_<Module>` (minus `_Fractured` and `_LODn`).
+- On import (`OnPostprocessModel`), `fractureClass` is written to `ImportedPhysicsHints` on the module root and on every LOD0 `<Piece>_frag_##`. **Precedence per object:** its own FBX `fracture_class` > the root's FBX `fracture_class` > the JSON entry.
+- **Missing sidecar, missing module entry, or an entry without `frac`:** nothing is written or cleared (no component is added), and the validator warns.
+- Each sidecar is an AssetDatabase custom dependency (`crashverse/hero-stats/Kit_<B>`, content hash) of that kit's FBX files, so they reimport when it changes; menu **Crashverse/Import/Reimport Hero Building Kits** forces it.
+- **Validator (warnings only):** no readable sidecar; module not in the JSON or without `frac`; root/fragment without `fractureClass`; an FBX `fracture_class` that differs from the JSON; and the cross-check that every module in the JSON has a `Kit_<B>_<Module>[_Fractured].fbx` and every hero kit FBX module has a JSON entry.
+- Hero kits are still class `Kit`/`KitFractured` for budgets, LODs and colliders. Hero building kit textures get the 1024 Android cap (section 2); `Kit_Props` keeps 512.
+
 ## Physics hints (`ImportedPhysicsHints`)
-- Values are **float SI units**: `mass` in kg, `breakForce` in N, `breakTorque` in N·m, plus `anchorTo` as a name. They are authoring defaults only.
+- Values are **float SI units**: `mass` in kg, `breakForce` in N, `breakTorque` in N·m, plus `anchorTo` as a name and `fractureClass` as a string (hero buildings). They are authoring defaults only; Physics maps `fractureClass` onto its materials.
 - **Physics** converts them to its integer units and maps them onto `MaterialDefinition`; the pipeline adds no physics logic.
 - Steel `mass_kg` uses an **effective density of 800 kg/m³** (hollow sections), not solid steel.
 
@@ -144,10 +164,11 @@ Texel density hint = sqrt(UV area × albedo w × h / world area) over the LOD0 m
   - **Naming:** hull targets, fragment, joint, socket and kit-path rules.
   - **Hints:** `ImportedPhysicsHints` (SI values, blank and missing never overwrite).
   - **Prefab build:** builds a procedural fractured piece at test time under `BuildingKit/__ImportTest`, then deletes it. It checks one convex collider per fragment, the `COL_` child, no root fallback, the error on a missing target, the LODGroup, kept sockets, joints and anchors, ordinal order, and that no physics components are added. **Gate:** over-budget kit and Wrecker are rejected with no prefab, a kit at exactly 1,500 builds, and a missing LOD on intact kit, island or Wrecker is rejected. A fractured kit builds with LOD0 only and no LODGroup, ignores LOD objects with a warning, and is rejected when its total is over 1,500.
+  - **Hero buildings:** Android cap (`T_Bld_X_A` → 1024, Kit_Keep/Tower/Gate/House folders → 1024, `Kit_Props` and sidecar-only kits → 512, `_Inner` 256, kit still 512, file name alone doesn't make a kit texture hero), ASTC formats unchanged, a real `T_Bld_*` texture import at 1024 next to a kit one at 512, module resolution, the sidecar schema, JSON → root + fragments, FBX `fracture_class` override (root and fragment), missing JSON/entry never overwrites, and the module cross-check.
   - **Material wiring:** checks GlossyPBR maps, `_InnerFace`, no keywords, and texture import (NormalMap, sRGB, Android ASTC and size).
 - Assemblies: `Crashverse.Import` (runtime marker) and `Crashverse.Import.Editor` (Editor-only pipeline).
 
 ## Compile check
 `cd vfx/compile_check/import && dotnet build` type-checks the pipeline against API-shaped UnityEngine/UnityEditor stubs. It is **not** a Unity compile; the first real Unity import is still pending (licence).
 
-`cd vfx/compile_check/import_tests && dotnet run` runs the stub test harness on the naming rules (including `UCX_Wall_frag_03` mapping to `Wall_frag_03`). It exits non-zero on failure.
+`cd vfx/compile_check/import_tests && dotnet run` runs the stub test harness on the naming rules (including `UCX_Wall_frag_03` mapping to `Wall_frag_03`), the texture caps and the hero sidecar parser (it also parses any real `models/HeroBuildings/*.json` present). It exits non-zero on failure.

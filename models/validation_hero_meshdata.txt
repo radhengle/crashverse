@@ -1,0 +1,77 @@
+Kit_Props_Barrel.fbx: meshes=3 materials=['M_Props'] -> PASS
+Kit_Props_Barrel_Fractured.fbx: meshes=12 materials=['M_Props', 'M_Props_Inner'] -> PASS
+Kit_Props_Crate.fbx: meshes=3 materials=['M_Props'] -> PASS
+Kit_Props_CrateSmall.fbx: meshes=3 materials=['M_Props'] -> PASS
+Kit_Props_CrateSmall_Fractured.fbx: meshes=10 materials=['M_Props', 'M_Props_Inner'] -> PASS
+Kit_Props_Crate_Fractured.fbx: meshes=12 materials=['M_Props', 'M_Props_Inner'] -> PASS
+Kit_Props_Shed.fbx: meshes=3 materials=['M_Props'] -> PASS
+Kit_Props_Shed_Fractured.fbx: meshes=7 materials=['M_Props', 'M_Props_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Kit_Keep_Crown.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_Crown_Fractured.fbx: meshes=7 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_Floor.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_Floor_Fractured.fbx: meshes=12 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_Turret.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_TurretCrown.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_TurretCrown_Fractured.fbx: meshes=7 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_TurretRoof.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_TurretRoof_Fractured.fbx: meshes=12 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_Turret_Fractured.fbx: meshes=7 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_Wall.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_WallBalcony.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_WallBalcony_Fractured.fbx: meshes=7 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_WallBanner.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_WallBanner_Fractured.fbx: meshes=7 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_WallDoor.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_WallDoor_Fractured.fbx: meshes=7 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_WallSlit.fbx: meshes=3 materials=['M_Keep'] -> PASS
+Kit_Keep_WallSlit_Fractured.fbx: meshes=7 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+Kit_Keep_Wall_Fractured.fbx: meshes=7 materials=['M_Keep', 'M_Keep_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Kit_Tower_Crown.fbx: meshes=3 materials=['M_Tower'] -> PASS
+Kit_Tower_Crown_Fractured.fbx: meshes=7 materials=['M_Tower', 'M_Tower_Inner'] -> PASS
+Kit_Tower_Floor.fbx: meshes=3 materials=['M_Tower'] -> PASS
+Kit_Tower_Floor_Fractured.fbx: meshes=12 materials=['M_Tower', 'M_Tower_Inner'] -> PASS
+Kit_Tower_RingDoor.fbx: meshes=3 materials=['M_Tower'] -> PASS
+Kit_Tower_RingDoor_Fractured.fbx: meshes=7 materials=['M_Tower', 'M_Tower_Inner'] -> PASS
+Kit_Tower_RingSlit.fbx: meshes=3 materials=['M_Tower'] -> PASS
+Kit_Tower_RingSlit_Fractured.fbx: meshes=7 materials=['M_Tower', 'M_Tower_Inner'] -> PASS
+Kit_Tower_RingWindow.fbx: meshes=3 materials=['M_Tower'] -> PASS
+Kit_Tower_RingWindow_Fractured.fbx: meshes=7 materials=['M_Tower', 'M_Tower_Inner'] -> PASS
+Kit_Tower_Roof.fbx: meshes=3 materials=['M_Tower'] -> PASS
+Kit_Tower_Roof_Fractured.fbx: meshes=9 materials=['M_Tower', 'M_Tower_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Kit_Gate_Arch.fbx: meshes=3 materials=['M_Gate'] -> PASS
+Kit_Gate_Arch_Fractured.fbx: meshes=7 materials=['M_Gate', 'M_Gate_Inner'] -> PASS
+Kit_Gate_Crown.fbx: meshes=3 materials=['M_Gate'] -> PASS
+Kit_Gate_Crown_Fractured.fbx: meshes=7 materials=['M_Gate', 'M_Gate_Inner'] -> PASS
+Kit_Gate_Portcullis.fbx: meshes=3 materials=['M_Gate'] -> PASS
+Kit_Gate_Portcullis_Fractured.fbx: meshes=7 materials=['M_Gate', 'M_Gate_Inner'] -> PASS
+Kit_Gate_Tower.fbx: meshes=3 materials=['M_Gate'] -> PASS
+Kit_Gate_TowerCrown.fbx: meshes=3 materials=['M_Gate'] -> PASS
+Kit_Gate_TowerCrown_Fractured.fbx: meshes=7 materials=['M_Gate', 'M_Gate_Inner'] -> PASS
+Kit_Gate_TowerRoof.fbx: meshes=3 materials=['M_Gate'] -> PASS
+Kit_Gate_TowerRoof_Fractured.fbx: meshes=12 materials=['M_Gate', 'M_Gate_Inner'] -> PASS
+Kit_Gate_TowerWindow.fbx: meshes=3 materials=['M_Gate'] -> PASS
+Kit_Gate_TowerWindow_Fractured.fbx: meshes=7 materials=['M_Gate', 'M_Gate_Inner'] -> PASS
+Kit_Gate_Tower_Fractured.fbx: meshes=7 materials=['M_Gate', 'M_Gate_Inner'] -> PASS
+Kit_Gate_Wall.fbx: meshes=3 materials=['M_Gate'] -> PASS
+Kit_Gate_Wall_Fractured.fbx: meshes=7 materials=['M_Gate', 'M_Gate_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Kit_House_Chimney.fbx: meshes=3 materials=['M_House'] -> PASS
+Kit_House_Chimney_Fractured.fbx: meshes=7 materials=['M_House', 'M_House_Inner'] -> PASS
+Kit_House_Floor.fbx: meshes=3 materials=['M_House'] -> PASS
+Kit_House_Floor_Fractured.fbx: meshes=12 materials=['M_House', 'M_House_Inner'] -> PASS
+Kit_House_Gable.fbx: meshes=3 materials=['M_House'] -> PASS
+Kit_House_Gable_Fractured.fbx: meshes=12 materials=['M_House', 'M_House_Inner'] -> PASS
+Kit_House_GroundDoor.fbx: meshes=3 materials=['M_House'] -> PASS
+Kit_House_GroundDoor_Fractured.fbx: meshes=7 materials=['M_House', 'M_House_Inner'] -> PASS
+Kit_House_GroundWin.fbx: meshes=3 materials=['M_House'] -> PASS
+Kit_House_GroundWin_Fractured.fbx: meshes=7 materials=['M_House', 'M_House_Inner'] -> PASS
+Kit_House_Roof.fbx: meshes=3 materials=['M_House'] -> PASS
+Kit_House_Roof_Fractured.fbx: meshes=8 materials=['M_House', 'M_House_Inner'] -> PASS
+Kit_House_Upper1.fbx: meshes=3 materials=['M_House'] -> PASS
+Kit_House_Upper1_Fractured.fbx: meshes=12 materials=['M_House', 'M_House_Inner'] -> PASS
+Kit_House_Upper2.fbx: meshes=3 materials=['M_House'] -> PASS
+Kit_House_Upper2_Fractured.fbx: meshes=12 materials=['M_House', 'M_House_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS

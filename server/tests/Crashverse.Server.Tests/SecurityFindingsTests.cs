@@ -364,10 +364,10 @@ public class H1_CampaignTests
     {
         await using var h = await Harness.Start();
         var s = await h.Guest();
-        Assert.Equal("INVALID_ATTEMPT", (await h.Post("/v1/events/magnetic_mayhem_e1/stars", new { stars = 3, simVersion = "dev", inputs = Harness.In(200) }, s)).Code);
+        Assert.Equal("INVALID_ATTEMPT", (await h.Post("/v1/events/magnetic_mayhem_e1/stars", new { stars = 3, simVersion = SimVersions.Current, inputs = Harness.In(200) }, s)).Code);
         var tok = await h.Attempt(s, "magnetic_mayhem_e1", "event");
         var inputs = Enumerable.Range(1, 5).SelectMany(i => Harness.In(i * 200)).ToList(); // used all 5 shots → 0 left → 1 star max
-        var st = await h.Post("/v1/events/magnetic_mayhem_e1/stars", new EventStarsRequest { attemptToken = tok, stars = 3, simVersion = "dev", inputs = inputs }, s);
+        var st = await h.Post("/v1/events/magnetic_mayhem_e1/stars", new EventStarsRequest { attemptToken = tok, stars = 3, simVersion = SimVersions.Current, inputs = inputs }, s);
         Assert.Equal(10, st["xp"].GetInt32());
     }
 }

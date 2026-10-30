@@ -8,16 +8,41 @@ Rules mirrored from Contract v0.2 §3-5, SG-01/05/08, and Developer code (Destru
 - Shockwave: +40 splash (no joint bonus) to pieces 1 link deep (supports+dependents) of the hit piece.
 - Splitstrike: 3 sub-hits of 30 (x2 on joints) on up to 3 hittable blocks within 3.5m of each other.
 - Hittable: not indestructible, not broken/collapsed, and not hidden behind an intact block that is in front
-  (-x = Wrecker side; it fires along +x) and overlaps it in y and z. Falling-debris impact damage is IGNORED (conservative).
+  (-x = Wrecker side; it fires along +x) and overlaps it in y and z.
+- Debris (ruling 7a): a collapsing piece that lands on the highest intact piece under it deals
+  min(60, 0.5*m*(v-2)) x the struck material factor, through HP (can break it and chain). Not counted as a joint break.
 - Win: destroyed objective mass / total >= winThreshold after the shot. Boss (L10): SG-05 model.
 Stars: ratio = shotsLeft/shots >= star3Pct / star2Pct (exact).
+JointBreakPolicy (physics/joint-break-policy @ 3806245, physics/Joint_Break_Policy.md), mirrored exactly:
+- Structural joints never break from force/torque (breakForce = breakTorque = Infinity): no force snap, no 50%-HP
+  OnJointBreak splash. A joint goes away only by (1) HP damage (steel joint x2 on direct hits) or (2) its support
+  stopping to support: broken, collapsed, or out of bounds. The sim treats all three alike (State.gone): a collapsed
+  (falling) support is gone exactly like a destroyed one; out of bounds only happens to pieces already falling.
+- SupportRule: a piece collapses only when ALL its supports are gone; a falling support never drags a dependent that
+  still has another support, and a dependent never holds a falling support up (support state ignores dependents).
+- Indestructible + non-objective pieces (bases, islands) never collapse (DestructibleBlock.ForceCollapse early return).
+- Not modelled (game is at least as generous): StructuralIntegrity collapse delay (timing only) and CollapseRules
+  land-break (a collapsed non-steel piece landing at >= 4 m/s breaks). The sim only counts a collapsed piece when its
+  bottom started >= 1 m up, so it never credits more than the game does.
+Self-test of these rules: python3 sim.py --policy-selftest
 """
 import json, sys, itertools, random, os
 HP={'wood':30,'brick':60,'steel':120}; MASS={'wood':1.0,'brick':2.5,'steel':4.0}
-DMG=60; SHOCK=40; SPLIT=0.5; G=9.81*1.2;  # PR #15 gravity x1.2
+DMG=60; SHOCK=40; SPLIT=0.5; GSCALE=float(os.environ.get('SIM_GSCALE','1.2')); G=9.81*GSCALE  # PR #15 gravity x1.2 (SIM_GSCALE=1.0 = live build)
 MATF={'wood':1.0,'brick':1.1,'steel':0.8}; CAPLOG={'hits':0,'capped':0}; DEBRIS_MIN_V=2.0; DEBRIS_CAP=60
 DEBRIS=True
 HERE=os.path.dirname(os.path.abspath(__file__))
+DATA=os.path.join(HERE,'../../Assets/_Project/Resources/Data')
+def _effects():
+    """powerups.json v2 ids -> sim effect (earthquake = SHOCKWAVE, multi_shot = SPLIT). v1 ids still accepted."""
+    m={'shockwave':'shockwave','splitstrike':'splitstrike'}
+    try:
+        for p in json.load(open(os.path.join(DATA,'powerups.json')))['powerups']:
+            e={'SHOCKWAVE':'shockwave','SPLIT':'splitstrike'}.get(p.get('effect'))
+            if e: m[p['id']]=e
+    except Exception: pass
+    return m
+EFFECT=_effects()
 
 class State:
     def __init__(s,blocks):
@@ -120,6 +145,20 @@ def min_shots(blocks,win,budget,powerups=(),boss=False):
         if len(frontier)>60000: frontier=frontier[:60000]
     return None,None
 
+def min_shots_from(st0,win,budget,pw=frozenset()):
+    frontier=[(st0,frozenset(pw),())]; seen=set()
+    for depth in range(1,budget+1):
+        nxt=[]
+        for st,p,seq in frontier:
+            for a in actions(st,p):
+                n=apply(st,a); np_=p-{a[0]} if a[0] else p
+                if n.ratio()>=win: return depth,seq+(a,)
+                k=(n.key(),np_)
+                if k in seen: continue
+                seen.add(k); nxt.append((n,np_,seq+(a,)))
+        frontier=nxt[:60000]
+    return None,None
+
 def boss_min(blocks,budget,toggle_on_phase_shot):
     """SG-05: phase1 break both steel shoulders (joint 2x). Phase2 shutter OPEN, toggles after every shot.
     Core needs 2 direct hits while open. toggle_on_phase_shot=True mirrors GameSession (shutter closes right
@@ -138,15 +177,18 @@ def stars(budget,used,s3,s2):
     r=(budget-used)/budget
     return 3 if r>=s3 else 2 if r>=s2 else 1
 
-def random_play(blocks,win,budget,trials=4000,seed=1):
-    """Naive player: random hittable target each shot. Returns (win rate, 3-star-capable rate by shots used)."""
+def random_play(blocks,win,budget,trials=4000,seed=1,pw=()):
+    """Naive player: random hittable target each shot. With pw (a forced power-up), it fires the power-up on its
+    first shot at a random valid target (what a new player with an equipped tile does). Returns shots used per run."""
     rnd=random.Random(seed); res=[]
     for _ in range(trials):
-        st=State(blocks); used=None
+        st=State(blocks); used=None; left=set(pw)
         for k in range(1,budget+1):
             h=st.hittable()
             if not h: break
-            st=apply(st,(None,rnd.choice(h)))
+            pa=[a for a in actions(st,left) if a[0]] if left else []
+            if pa: a=rnd.choice(pa); left-={a[0]}; st=apply(st,a)
+            else: st=apply(st,(None,rnd.choice(h)))
             if st.ratio()>=win: used=k;break
         res.append(used)
     return res
@@ -168,14 +210,24 @@ def main():
             rows.append(dict(id=L['id'],shots=B,min=a,min_code=b,need3=need3,stars=stars(B,a,s3,s2) if a<=B else 0,
                  stars_code=stars(B,b,s3,s2) if b<=B else 0,margin=B-a,rand3=None,seq='shoulderL, shoulderR, core(open), any(closed), core(open)'))
             continue
-        pw=[f['powerup'] for f in L.get('forced',[])]
+        pw=[EFFECT[f['powerup']] for f in L.get('forced',[]) if f['powerup'] in EFFECT]
         n,seq=min_shots(lay,L['winThreshold'],B)
         npw,seqp=min_shots(lay,L['winThreshold'],B,pw) if pw else (n,seq)
+        if pw and npw is not None and npw<(n or 99) and seqp and not seqp[0][0]:
+            # rev 6: show the power-up line power-up FIRST (the hint/CI open with the Multi Shot / Earthquake moment)
+            # when an equally short line exists; prefer the one whose split centres on a lower-numbered piece.
+            s0=State(lay)
+            for a in sorted((x for x in actions(s0,set(pw)) if x[0]),key=lambda x:str(x[1])):
+                s1=apply(s0,a)
+                if s1.ratio()>=L['winThreshold'] and npw==1: seqp=(a,); break
+                m,rest=min_shots_from(s1,L['winThreshold'],npw-1,set(pw)-{a[0]})
+                if m is not None and m==npw-1: seqp=(a,)+rest; break
         CAPLOG['hits']=CAPLOG['capped']=0
-        rp=random_play(lay,L['winThreshold'],B)
+        rp=random_play(lay,L['winThreshold'],B,pw=pw)
         cap=(CAPLOG['hits'],CAPLOG['capped'])
         r3=sum(1 for u in rp if u is not None and u<=need3)/len(rp); rw=sum(1 for u in rp if u)/len(rp)
-        fmt=lambda q:', '.join((f'{a}:' if a else '')+(t if isinstance(t,str) else '+'.join(t)) for a,t in q) if q else '-'
+        PUID={EFFECT[f['powerup']]:f['powerup'] for f in L.get('forced',[]) if f['powerup'] in EFFECT}  # show v2 ids (multi_shot)
+        fmt=lambda q:', '.join((f'{PUID.get(a,a)}:' if a else '')+(t if isinstance(t,str) else '+'.join(t)) for a,t in q) if q else '-'
         fin=State(lay)
         for a in (seqp if npw<=n else seq): fin=apply(fin,a)
         crown=[i for i,x in fin.b.items() if x.get('role')=='crown']
@@ -193,4 +245,31 @@ def main():
         r['pass']=ok
     json.dump(rows,open(os.path.join(HERE,'sim_results.json'),'w'),indent=1)
     for r in rows: print(r)
-if __name__=='__main__': main()
+def policy_selftest():
+    """JointBreakPolicy rules on tiny layouts (asserts; prints OK)."""
+    def blk(i,mat,p,s,sup=(),**k): return dict(id=i,mat=mat,p=list(p),s=list(s),sup=list(sup),**k)
+    base=blk('base','brick',(0,.5,0),(6,1,4),nonObj=True,indestructible=True)
+    # 1 no drag-along: 'deck' on postA + postB; postA breaks -> deck stays, no damage to it (no force snap)
+    lay=[base,blk('postA','wood',(-2,2,0),(.4,2,.4),['base']),blk('postB','wood',(2,2,0),(.4,2,.4),['base']),
+         blk('deck','brick',(0,3.2,0),(5,.4,2),['postA','postB'],joint=True),blk('roof','wood',(0,4,0),(2,1,2),['deck'])]
+    st=apply(State(lay),(None,'postA'))
+    assert 'postA' in st.broken and not st.gone('deck') and st.hp['deck']==HP['brick'], 'drag-along / force snap'
+    st=apply(st,(None,'postB'))
+    assert st.gone('deck') and 'deck' in st.coll and 'roof' in st.coll, 'all supports gone -> collapse (chain)'
+    # 2 a COLLAPSED support counts as gone exactly like a broken one: 'hang' on deck (falls) + wall (stays)
+    lay2=lay[:4]+[blk('wall','brick',(2.6,3.2,0),(.4,2.4,.4),['base']),blk('hang','wood',(2.3,4.2,0),(1,.4,1),['deck','wall'])]
+    st=apply(apply(State(lay2),(None,'postA')),(None,'postB'))
+    assert 'deck' in st.coll and not st.gone('hang'), 'falling support must not drag a still-supported piece'
+    st=apply(st,(None,'wall'))
+    assert 'hang' in st.coll, 'collapsed + broken supports -> collapse'
+    # 3 joints only lose HP through damage: steel joint x2 direct, splash/debris x1
+    st=State([base,blk('j','steel',(0,2,0),(1,1,1),['base'],joint=True)]); st.damage('j',60,True); assert st.hp['j']==0
+    st=State([base,blk('j','steel',(0,2,0),(1,1,1),['base'],joint=True)]); st.damage('j',60,False); assert st.hp['j']==60
+    # 4 held base never collapses, even on a broken support
+    st=State([blk('p','wood',(0,1,0),(.4,2,.4)),dict(base,p=[0,2.5,0],sup=['p'])]); st=apply(st,(None,'p'))
+    assert not st.gone('base'), 'indestructible non-objective piece must stay'
+    print('JointBreakPolicy self-test OK')
+
+if __name__=='__main__':
+    if '--policy-selftest' in sys.argv: policy_selftest()
+    else: main()

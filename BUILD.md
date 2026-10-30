@@ -1,6 +1,6 @@
 # CRASHVERSE — Build guide (M1)
 
-**Engine:** Unity **2022.3.50f1** LTS (pinned in `ProjectSettings/ProjectVersion.txt`)  
+**Engine:** Unity **2022.3.62f3** LTS (pinned in `ProjectSettings/ProjectVersion.txt`)  
 **Render:** URP (`com.unity.render-pipelines.universal` in `Packages/manifest.json`)  
 **Target:** Android (IL2CPP, ARM64+ARMv7 in PlayerSettings stub)
 
@@ -33,7 +33,7 @@ Personal access: artifact download works in the mobile GitHub site or via email 
 
 ## Desktop: local Unity build
 
-1. Install **Unity Hub** + Editor **2022.3.50f1** (Android Build Support + OpenJDK + Android SDK & NDK).
+1. Install **Unity Hub** + Editor **2022.3.62f3** (Android Build Support + OpenJDK + Android SDK & NDK).
 2. Open `/workspace/crashverse` (or your clone) in that Editor. Let URP packages restore.
 3. Menu **Crashverse → Create Default Material & Level Assets** (optional; runtime defaults also work).
 4. Open scene `Assets/_Project/Scenes/Bootstrap.unity` (AutoBootstrap also spawns systems if the component GUID remaps).

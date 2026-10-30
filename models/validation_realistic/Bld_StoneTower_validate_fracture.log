@@ -1,0 +1,18 @@
+Kit_RealTower_CrBk_Fractured.fbx: frags=6 (Stone 4-10) tris max=144 total=572 mass 455.4-694.8 kg UCX=6 JNT=6 ANCHOR=6 -> PASS
+Kit_RealTower_CrFl_Fractured.fbx: frags=10 (Stone 4-10) tris max=284 total=1140 mass 27.6-2547.4 kg UCX=10 JNT=11 ANCHOR=10 -> PASS
+Kit_RealTower_CrRfA_Fractured.fbx: frags=16 (Roof 8-16) tris max=116 total=757 mass 12.3-1150.2 kg UCX=16 JNT=62 ANCHOR=3 -> PASS
+Kit_RealTower_CrRfB_Fractured.fbx: frags=16 (Roof 8-16) tris max=116 total=786 mass 12.3-1150.2 kg UCX=16 JNT=57 ANCHOR=2 -> PASS
+Kit_RealTower_CrWdA_Fractured.fbx: frags=11 (Wood 8-16) tris max=224 total=1088 mass 32.3-98.5 kg UCX=11 JNT=29 ANCHOR=10 -> PASS
+Kit_RealTower_CrWdB_Fractured.fbx: frags=11 (Wood 8-16) tris max=184 total=996 mass 33.2-96.4 kg UCX=11 JNT=27 ANCHOR=8 -> PASS
+Kit_RealTower_R0_Fractured.fbx: frags=16 (Wood 8-16) tris max=148 total=1064 mass 37.9-103.6 kg UCX=16 JNT=43 ANCHOR=10 -> PASS
+Kit_RealTower_R1_Fractured.fbx: frags=16 (Wood 8-16) tris max=210 total=1068 mass 37.9-141.5 kg UCX=16 JNT=43 ANCHOR=10 -> PASS
+Kit_RealTower_R2_Fractured.fbx: frags=16 (Wood 8-16) tris max=148 total=984 mass 37.9-119.3 kg UCX=16 JNT=43 ANCHOR=10 -> PASS
+Kit_RealTower_W1B_Fractured.fbx: frags=10 (Stone 4-10) tris max=172 total=708 mass 91.8-1667.8 kg UCX=10 JNT=14 ANCHOR=3 -> PASS
+Kit_RealTower_W1F_Fractured.fbx: frags=10 (Stone 4-10) tris max=184 total=836 mass 91.8-1300.2 kg UCX=10 JNT=14 ANCHOR=4 -> PASS
+Kit_RealTower_W1L_Fractured.fbx: frags=4 (Stone 4-10) tris max=124 total=308 mass 536.3-1087.5 kg UCX=4 JNT=5 ANCHOR=2 -> PASS
+Kit_RealTower_W1R_Fractured.fbx: frags=4 (Stone 4-10) tris max=122 total=352 mass 537.3-1102.9 kg UCX=4 JNT=5 ANCHOR=2 -> PASS
+Kit_RealTower_W2B_Fractured.fbx: frags=10 (Stone 4-10) tris max=144 total=616 mass 91.8-1642.3 kg UCX=10 JNT=14 ANCHOR=3 -> PASS
+Kit_RealTower_W2F_Fractured.fbx: frags=10 (Stone 4-10) tris max=184 total=776 mass 91.8-1585.5 kg UCX=10 JNT=15 ANCHOR=4 -> PASS
+Kit_RealTower_W2L_Fractured.fbx: frags=4 (Stone 4-10) tris max=168 total=428 mass 537.3-1105.3 kg UCX=4 JNT=5 ANCHOR=2 -> PASS
+Kit_RealTower_W2R_Fractured.fbx: frags=4 (Stone 4-10) tris max=156 total=432 mass 536.8-1096.8 kg UCX=4 JNT=5 ANCHOR=2 -> PASS
+RESULT: ALL PASS

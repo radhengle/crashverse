@@ -1,0 +1,1143 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Bld_Townhouse",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); positions/rotations local to the building root",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  },
+  "note": "suggested placement on Island_Sunnyville"
+ },
+ "tris_total": {
+  "LOD0": 6961,
+  "LOD1": 3461,
+  "LOD2": 1317,
+  "Fractured": 22767
+ },
+ "piece_count": 19,
+ "pieces": [
+  {
+   "id": "G_F",
+   "kit": "Kit_House_GroundDoor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor_Fractured.fbx",
+   "position": {
+    "x": 0.2,
+    "y": 0.0,
+    "z": 2.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 640,
+    "LOD1": 319,
+    "LOD2": 126,
+    "Fractured": 1351
+   }
+  },
+  {
+   "id": "G_R",
+   "kit": "Kit_House_GroundWin",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx",
+   "position": {
+    "x": -2.0,
+    "y": 0.0,
+    "z": 0.2
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 503,
+    "LOD1": 250,
+    "LOD2": 100,
+    "Fractured": 996
+   }
+  },
+  {
+   "id": "G_B",
+   "kit": "Kit_House_GroundWin",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx",
+   "position": {
+    "x": -0.2,
+    "y": 0.0,
+    "z": -2.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 503,
+    "LOD1": 250,
+    "LOD2": 100,
+    "Fractured": 996
+   }
+  },
+  {
+   "id": "G_L",
+   "kit": "Kit_House_GroundWin",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx",
+   "position": {
+    "x": 2.0,
+    "y": 0.0,
+    "z": -0.2
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 503,
+    "LOD1": 250,
+    "LOD2": 100,
+    "Fractured": 996
+   }
+  },
+  {
+   "id": "Floor1",
+   "kit": "Kit_House_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 2.8,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "G_F",
+    "G_R",
+    "G_B",
+    "G_L"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 92,
+    "LOD1": 46,
+    "LOD2": 11,
+    "Fractured": 1171
+   }
+  },
+  {
+   "id": "U_F",
+   "kit": "Kit_House_Upper2",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2_Fractured.fbx",
+   "position": {
+    "x": 0.15,
+    "y": 3.12,
+    "z": 2.3
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor1"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 532,
+    "LOD1": 266,
+    "LOD2": 106,
+    "Fractured": 1485
+   }
+  },
+  {
+   "id": "U_R",
+   "kit": "Kit_House_Upper1",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1_Fractured.fbx",
+   "position": {
+    "x": -2.3,
+    "y": 3.12,
+    "z": 0.15
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor1"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 286,
+    "LOD1": 143,
+    "LOD2": 57,
+    "Fractured": 1428
+   }
+  },
+  {
+   "id": "U_B",
+   "kit": "Kit_House_Upper2",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2_Fractured.fbx",
+   "position": {
+    "x": -0.15,
+    "y": 3.12,
+    "z": -2.3
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor1"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 532,
+    "LOD1": 266,
+    "LOD2": 106,
+    "Fractured": 1485
+   }
+  },
+  {
+   "id": "U_L",
+   "kit": "Kit_House_Upper1",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1_Fractured.fbx",
+   "position": {
+    "x": 2.3,
+    "y": 3.12,
+    "z": -0.15
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor1"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 286,
+    "LOD1": 143,
+    "LOD2": 57,
+    "Fractured": 1428
+   }
+  },
+  {
+   "id": "Gable_F",
+   "kit": "Kit_House_Gable",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 5.9,
+    "z": 2.3
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "U_F",
+    "U_L",
+    "U_R"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 126,
+    "LOD1": 61,
+    "LOD2": 23,
+    "Fractured": 1095
+   }
+  },
+  {
+   "id": "Gable_B",
+   "kit": "Kit_House_Gable",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 5.9,
+    "z": -2.3
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "U_B",
+    "U_L",
+    "U_R"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 126,
+    "LOD1": 61,
+    "LOD2": 23,
+    "Fractured": 1095
+   }
+  },
+  {
+   "id": "Roof_E",
+   "kit": "Kit_House_Roof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 5.9,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Gable_F",
+    "Gable_B",
+    "U_R"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 252,
+    "LOD1": 124,
+    "LOD2": 46,
+    "Fractured": 1484
+   }
+  },
+  {
+   "id": "Roof_W",
+   "kit": "Kit_House_Roof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 5.9,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Gable_F",
+    "Gable_B",
+    "U_L"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 252,
+    "LOD1": 124,
+    "LOD2": 46,
+    "Fractured": 1484
+   }
+  },
+  {
+   "id": "Chimney",
+   "kit": "Kit_House_Chimney",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney_Fractured.fbx",
+   "position": {
+    "x": 1.25,
+    "y": 3.12,
+    "z": -1.45
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor1"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 218,
+    "LOD1": 109,
+    "LOD2": 42,
+    "Fractured": 740
+   }
+  },
+  {
+   "id": "Annex_R",
+   "kit": "Kit_Props_Shed",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx",
+   "position": {
+    "x": -3.1,
+    "y": 0.0,
+    "z": -0.6
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 1058,
+    "LOD1": 529,
+    "LOD2": 210,
+    "Fractured": 1416
+   }
+  },
+  {
+   "id": "Barrel_0",
+   "kit": "Kit_Props_Barrel",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+   "position": {
+    "x": -1.55,
+    "y": 0.0,
+    "z": 2.75
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.1305,
+    "z": 0.0,
+    "w": 0.9914
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -15.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 354,
+    "LOD1": 177,
+    "LOD2": 70,
+    "Fractured": 1434
+   }
+  },
+  {
+   "id": "Barrel_1",
+   "kit": "Kit_Props_Barrel",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+   "position": {
+    "x": -2.05,
+    "y": 0.0,
+    "z": 2.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.5,
+    "z": 0.0,
+    "w": 0.866
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -60.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 354,
+    "LOD1": 177,
+    "LOD2": 70,
+    "Fractured": 1434
+   }
+  },
+  {
+   "id": "Crate_0",
+   "kit": "Kit_Props_Crate",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx",
+   "position": {
+    "x": 2.5,
+    "y": 0.0,
+    "z": 2.75
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.0698,
+    "z": 0.0,
+    "w": 0.9976
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -8.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 172,
+    "LOD1": 83,
+    "LOD2": 12,
+    "Fractured": 670
+   }
+  },
+  {
+   "id": "Crate_1",
+   "kit": "Kit_Props_CrateSmall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx",
+   "position": {
+    "x": 2.45,
+    "y": 0.8,
+    "z": 2.7
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.2164,
+    "z": 0.0,
+    "w": 0.9763
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 25.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Crate_0"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 172,
+    "LOD1": 83,
+    "LOD2": 12,
+    "Fractured": 579
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "G_F",
+   "b": "G_R",
+   "point": {
+    "x": -1.8,
+    "y": 1.4,
+    "z": 2.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F",
+   "b": "G_L",
+   "point": {
+    "x": 2.0,
+    "y": 1.4,
+    "z": 1.8
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F",
+   "b": "Floor1",
+   "point": {
+    "x": 0.2,
+    "y": 2.8,
+    "z": 2.195
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F",
+   "b": "Barrel_0",
+   "point": {
+    "x": -1.4594,
+    "y": 0.466,
+    "z": 2.6844
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F",
+   "b": "Barrel_1",
+   "point": {
+    "x": -1.6846,
+    "y": 0.466,
+    "z": 2.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F",
+   "b": "Crate_0",
+   "point": {
+    "x": 2.1114,
+    "y": 0.4,
+    "z": 2.6614
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F",
+   "b": "Crate_1",
+   "point": {
+    "x": 2.1273,
+    "y": 1.075,
+    "z": 2.6773
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R",
+   "b": "G_B",
+   "point": {
+    "x": -2.0,
+    "y": 1.4,
+    "z": -1.8
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R",
+   "b": "Floor1",
+   "point": {
+    "x": -2.15,
+    "y": 2.8,
+    "z": 0.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R",
+   "b": "Annex_R",
+   "point": {
+    "x": -2.338,
+    "y": 1.4,
+    "z": -0.475
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R",
+   "b": "Barrel_1",
+   "point": {
+    "x": -2.1654,
+    "y": 0.466,
+    "z": 2.1096
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B",
+   "b": "G_L",
+   "point": {
+    "x": 1.8,
+    "y": 1.4,
+    "z": -2.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B",
+   "b": "Floor1",
+   "point": {
+    "x": -0.2,
+    "y": 2.8,
+    "z": -2.17
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B",
+   "b": "Annex_R",
+   "point": {
+    "x": -2.168,
+    "y": 1.4,
+    "z": -1.925
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L",
+   "b": "Floor1",
+   "point": {
+    "x": 2.15,
+    "y": 2.8,
+    "z": -0.2
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor1",
+   "b": "U_F",
+   "point": {
+    "x": 0.15,
+    "y": 3.13,
+    "z": 2.37
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor1",
+   "b": "U_R",
+   "point": {
+    "x": -2.325,
+    "y": 3.13,
+    "z": 0.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor1",
+   "b": "U_B",
+   "point": {
+    "x": -0.15,
+    "y": 3.13,
+    "z": -2.37
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor1",
+   "b": "U_L",
+   "point": {
+    "x": 2.325,
+    "y": 3.13,
+    "z": -0.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor1",
+   "b": "Chimney",
+   "point": {
+    "x": 1.25,
+    "y": 3.13,
+    "z": -1.45
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor1",
+   "b": "Annex_R",
+   "point": {
+    "x": -2.318,
+    "y": 2.97,
+    "z": -0.6
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_F",
+   "b": "U_R",
+   "point": {
+    "x": -2.15,
+    "y": 4.51,
+    "z": 2.3
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_F",
+   "b": "U_L",
+   "point": {
+    "x": 2.3,
+    "y": 4.51,
+    "z": 2.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_F",
+   "b": "Gable_F",
+   "point": {
+    "x": 0.15,
+    "y": 5.9,
+    "z": 2.33
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_F",
+   "b": "Roof_E",
+   "point": {
+    "x": -1.0241,
+    "y": 5.6632,
+    "z": 2.495
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_F",
+   "b": "Roof_W",
+   "point": {
+    "x": 1.1741,
+    "y": 5.6632,
+    "z": 2.495
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_R",
+   "b": "U_B",
+   "point": {
+    "x": -2.3,
+    "y": 4.51,
+    "z": -2.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_R",
+   "b": "Gable_F",
+   "point": {
+    "x": -2.3035,
+    "y": 5.9,
+    "z": 2.3
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_R",
+   "b": "Gable_B",
+   "point": {
+    "x": -2.3035,
+    "y": 5.9,
+    "z": -2.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_R",
+   "b": "Roof_E",
+   "point": {
+    "x": -2.47,
+    "y": 5.6632,
+    "z": 0.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_R",
+   "b": "Annex_R",
+   "point": {
+    "x": -2.47,
+    "y": 3.5,
+    "z": -0.6
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_B",
+   "b": "U_L",
+   "point": {
+    "x": 2.15,
+    "y": 4.51,
+    "z": -2.3
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_B",
+   "b": "Gable_B",
+   "point": {
+    "x": -0.15,
+    "y": 5.9,
+    "z": -2.33
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_B",
+   "b": "Roof_E",
+   "point": {
+    "x": -1.1741,
+    "y": 5.6632,
+    "z": -2.495
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_B",
+   "b": "Roof_W",
+   "point": {
+    "x": 1.0241,
+    "y": 5.6632,
+    "z": -2.495
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_L",
+   "b": "Gable_F",
+   "point": {
+    "x": 2.3035,
+    "y": 5.9,
+    "z": 2.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_L",
+   "b": "Gable_B",
+   "point": {
+    "x": 2.3035,
+    "y": 5.9,
+    "z": -2.3
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "U_L",
+   "b": "Roof_W",
+   "point": {
+    "x": 2.47,
+    "y": 5.6632,
+    "z": -0.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Gable_F",
+   "b": "Roof_E",
+   "point": {
+    "x": -1.1776,
+    "y": 7.2,
+    "z": 2.33
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Gable_F",
+   "b": "Roof_W",
+   "point": {
+    "x": 1.1776,
+    "y": 7.2,
+    "z": 2.33
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Gable_B",
+   "b": "Roof_E",
+   "point": {
+    "x": -1.1776,
+    "y": 7.2,
+    "z": -2.33
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Gable_B",
+   "b": "Roof_W",
+   "point": {
+    "x": 1.1776,
+    "y": 7.2,
+    "z": -2.33
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Roof_E",
+   "b": "Roof_W",
+   "point": {
+    "x": -0.0,
+    "y": 7.1132,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Roof_W",
+   "b": "Chimney",
+   "point": {
+    "x": 1.25,
+    "y": 6.9432,
+    "z": -1.45
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Barrel_0",
+   "b": "Barrel_1",
+   "point": {
+    "x": -1.7751,
+    "y": 0.466,
+    "z": 2.6499
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Crate_0",
+   "b": "Crate_1",
+   "point": {
+    "x": 2.45,
+    "y": 0.8,
+    "z": 2.7
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this instance's anchor_to list"
+}

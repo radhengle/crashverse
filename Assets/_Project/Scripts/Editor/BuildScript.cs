@@ -31,7 +31,8 @@ namespace Crashverse.EditorTools
 
         public static void BuildAndroid()
         {
-            bool release = string.Equals(Environment.GetEnvironmentVariable("CRASHVERSE_BUILD_PROFILE"), "release", StringComparison.OrdinalIgnoreCase);
+            bool release = string.Equals(Profile(), "release", StringComparison.OrdinalIgnoreCase);
+            Debug.Log("[BuildScript] profile " + (release ? "release" : "dev"));
             SetDevDefine(!release);
             UrpSetup.Ensure(); LightingSetup.Ensure(); // BUG-23: URP pipeline assigned in Graphics + every Quality level before building
             SetFrameTimingStats(!release);
@@ -42,14 +43,20 @@ namespace Crashverse.EditorTools
             PlayerSettings.allowedAutorotateToPortrait = false; PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
             PlayerSettings.allowedAutorotateToLandscapeLeft = false; PlayerSettings.allowedAutorotateToLandscapeRight = false;
             // Release: arm64 + v7a. Dev: also x86_64 so QA can run it on emulators/Chromebooks.
-            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64 | (release ? 0 : AndroidArchitecture.X86_64);
+            // QA V2-08: the PR-only release check APK adds x86_64 (-crashverseEmulatorAbi) so the release variant can be launched on
+            // the x86_64 CI emulator. Never used for the AAB (refused below) or anything published.
+            bool emuAbi = release && HasArg("-crashverseEmulatorAbi");
+            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARMv7 | AndroidArchitecture.ARM64 | (release && !emuAbi ? 0 : AndroidArchitecture.X86_64);
+            // Security #55 M-1: -crashverseSignAfter = Unity never sees a keystore or password (GameCI would put them on Unity's argv);
+            // the workflow signs afterwards on the runner (apksigner/jarsigner with passwords from env) and pins the certificate.
+            bool signAfter = HasArg("-crashverseSignAfter");
             // BUG-21: every dev build must be signed with the same persistent dev key (GameCI otherwise makes a fresh debug
             // keystore per runner, so a new build can't update the old one) and carry an increasing versionCode.
             // GameCI's docker only forwards its own variables (ANDROID_*), so read those first, then ours.
             string Env(params string[] names) { foreach (var n in names) { var v = Environment.GetEnvironmentVariable(n); if (!string.IsNullOrEmpty(v)) return v; } return null; }
             var vc = Env("ANDROID_VERSION_CODE", "CRASHVERSE_VERSION_CODE");
             if (int.TryParse(vc, out var code) && code > 0) PlayerSettings.Android.bundleVersionCode = code;
-            else if (Environment.GetEnvironmentVariable("CI") != null) { Debug.LogError("CRASHVERSE_VERSION_CODE missing in CI"); EditorApplication.Exit(1); }
+            else if (Environment.GetEnvironmentVariable("CI") != null && !signAfter) { Debug.LogError("CRASHVERSE_VERSION_CODE missing in CI"); EditorApplication.Exit(1); }
             var ks = Env("ANDROID_KEYSTORE_NAME", "CRASHVERSE_KEYSTORE_PATH");
             if (!string.IsNullOrEmpty(ks))
             {
@@ -65,16 +72,42 @@ namespace Crashverse.EditorTools
             if (release && PlayerSettings.Android.useCustomKeystore &&
                 (PlayerSettings.Android.keyaliasName == "crashverse-dev" || (PlayerSettings.Android.keystoreName ?? "").EndsWith("dev.keystore", StringComparison.OrdinalIgnoreCase)))
             { Debug.LogError("Refusing a release build signed with the dev key"); EditorApplication.Exit(1); return; }
+            // PR #8 (folded): signed release AAB for Play, upload key from the release environment's secrets (never the dev key, see above)
+            bool aab = WantsAab();
+            if (aab && (!release || (!PlayerSettings.Android.useCustomKeystore && !signAfter))) { Debug.LogError("AAB builds are release-only and need the upload keystore or -crashverseSignAfter"); EditorApplication.Exit(1); return; }
+            if (aab && emuAbi) { Debug.LogError("-crashverseEmulatorAbi is for the PR check APK only, never an AAB"); EditorApplication.Exit(1); return; }
+            if (signAfter && PlayerSettings.Android.useCustomKeystore) { Debug.LogError("-crashverseSignAfter with a keystore passed to Unity: remove the androidKeystore* inputs"); EditorApplication.Exit(1); return; }
+            EditorUserBuildSettings.buildAppBundle = aab;
             var opts = new BuildPlayerOptions
             {
                 scenes = ScenesFor(release),
-                locationPathName = "build/Android/CRASHVERSE" + (release ? "" : "-dev") + ".apk",
+                locationPathName = "build/Android/CRASHVERSE" + (release ? "" : "-dev") + (aab ? ".aab" : ".apk"),
                 target = BuildTarget.Android,
                 options = release ? BuildOptions.None : BuildOptions.Development,
             };
+            RealKitManifestBuilder.Write(); // realistic v1 pieces into Resources (generated)
             var report = BuildPipeline.BuildPlayer(opts);
             if (report.summary.result != BuildResult.Succeeded) { EditorApplication.Exit(1); }
         }
+
+        /// <summary>
+        /// Build profile. GameCI's docker forwards only its own variables (not CRASHVERSE_BUILD_PROFILE), so CI passes it as a Unity
+        /// argument (customParameters: -crashverseProfile release); the env var still works for local builds. QA R-3: before this the
+        /// "release" profile silently built a dev (debuggable, CRASHVERSE_DEV) player.
+        /// </summary>
+        public static string Profile()
+        {
+            var args = Environment.GetCommandLineArgs();
+            for (int i = 0; i + 1 < args.Length; i++) if (args[i] == "-crashverseProfile") return args[i + 1];
+            return Environment.GetEnvironmentVariable("CRASHVERSE_BUILD_PROFILE") ?? "dev";
+        }
+
+        public static bool HasArg(string a) => Environment.GetCommandLineArgs().Contains(a);
+
+        /// <summary>Android App Bundle when GameCI is asked for one (androidExportType: androidAppBundle → ANDROID_EXPORT_TYPE).</summary>
+        public static bool WantsAab() =>
+            string.Equals(Environment.GetEnvironmentVariable("ANDROID_EXPORT_TYPE"), "androidAppBundle", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(Environment.GetEnvironmentVariable("CRASHVERSE_ANDROID_EXPORT"), "aab", StringComparison.OrdinalIgnoreCase);
 
         public static void SetDevDefine(bool on)
         {
@@ -100,7 +133,7 @@ namespace Crashverse.EditorTools
             if (PlayerSettings.enableFrameTimingStats) throw new BuildFailedException("Release build has Frame Timing Stats on (dev-only).");
             var iface = typeof(Crashverse.Backend.IBackendService);
             var real = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => { try { return a.GetTypes(); } catch { return Type.EmptyTypes; } })
-                .Where(t => iface.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract && t.Name != "LocalBackendService").ToList();
+                .Where(t => iface.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract && t.Name != "LocalBackendService").ToList(); // v2: OfflineBackendService qualifies (fails every call, grants nothing)
             if (real.Count == 0)
                 throw new BuildFailedException("Release build has no server IBackendService implementation; it would fall back to LocalBackendService (dev-only). Build a DEV profile or add the real backend.");
         }

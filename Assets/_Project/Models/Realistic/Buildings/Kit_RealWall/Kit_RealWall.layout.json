@@ -1,0 +1,524 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Kit_RealWall",
+ "style": "realistic v1",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); wall face (slit, merlons) faces +Z; length along X; positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  }
+ },
+ "tris_total": {
+  "LOD0": 2018,
+  "LOD1": 1248,
+  "LOD2": 424,
+  "Fractured": 1708
+ },
+ "footprint_m": {
+  "x": 1.506,
+  "z": 1.203
+ },
+ "height_m": 1.506,
+ "module_count": 5,
+ "modules": [
+  {
+   "id": "Seg",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "pivot": {
+    "x": 0.0014,
+    "y": -0.0052,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.506,
+    "z": 1.12
+   },
+   "height_m": 1.512,
+   "top_y_m": 1.506,
+   "pieces": [
+    "Seg"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92
+   }
+  },
+  {
+   "id": "SegSl",
+   "label": "Straight wall segment with a cross arrow slit",
+   "pivot": {
+    "x": 0.0014,
+    "y": -0.0052,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.506,
+    "z": 1.12
+   },
+   "height_m": 1.512,
+   "top_y_m": 1.506,
+   "pieces": [
+    "SegSl"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 464,
+    "LOD1": 272,
+    "LOD2": 92
+   }
+  },
+  {
+   "id": "Corner",
+   "label": "Corner pier 1.0 x 1.0 x 1.5 with quoins (joins two runs at 90 deg)",
+   "pivot": {
+    "x": -0.0,
+    "y": -0.0052,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.12,
+    "z": 1.12
+   },
+   "height_m": 1.509,
+   "top_y_m": 1.504,
+   "pieces": [
+    "Corner"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 580,
+    "LOD1": 436,
+    "LOD2": 76
+   }
+  },
+  {
+   "id": "Cren",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "pivot": {
+    "x": 0.0003,
+    "y": 0.0,
+    "z": 0.0017
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.501,
+    "z": 1.203
+   },
+   "height_m": 0.704,
+   "top_y_m": 0.704,
+   "pieces": [
+    "Cren"
+   ],
+   "anchor_to": [
+    "Seg"
+   ],
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80
+   }
+  },
+  {
+   "id": "CrenC",
+   "label": "Corner crenellation 1.2 x 1.2 x 0.7 (L-shaped merlon), sits on Corner",
+   "pivot": {
+    "x": 0.0008,
+    "y": 0.0,
+    "z": 0.0013
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.204,
+    "z": 1.203
+   },
+   "height_m": 0.704,
+   "top_y_m": 0.704,
+   "pieces": [
+    "CrenC"
+   ],
+   "anchor_to": [
+    "Corner"
+   ],
+   "tris": {
+    "LOD0": 368,
+    "LOD1": 208,
+    "LOD2": 84
+   }
+  }
+ ],
+ "piece_count": 5,
+ "pieces": [
+  {
+   "id": "Seg",
+   "label": "Straight wall segment 1.5 x 1.0 x 1.5 (tiles on a 1.5 m pitch)",
+   "module": "Seg",
+   "kit": "Kit_RealWall_Seg",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg_Fractured.fbx",
+   "position": {
+    "x": 0.0014,
+    "y": -0.0052,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 314,
+    "LOD1": 148,
+    "LOD2": 92,
+    "Fractured": 268
+   }
+  },
+  {
+   "id": "SegSl",
+   "label": "Straight wall segment with a cross arrow slit",
+   "module": "SegSl",
+   "kit": "Kit_RealWall_SegSl",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl_Fractured.fbx",
+   "position": {
+    "x": 0.0014,
+    "y": -0.0052,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 464,
+    "LOD1": 272,
+    "LOD2": 92,
+    "Fractured": 444
+   }
+  },
+  {
+   "id": "Corner",
+   "label": "Corner pier 1.0 x 1.0 x 1.5 with quoins (joins two runs at 90 deg)",
+   "module": "Corner",
+   "kit": "Kit_RealWall_Corner",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Corner.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Corner_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": -0.0052,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 580,
+    "LOD1": 436,
+    "LOD2": 76,
+    "Fractured": 436
+   }
+  },
+  {
+   "id": "Cren",
+   "label": "Crenellation 1.5 x 1.2 x 0.7 (coping + front merlon/crenel), sits on Seg/SegSl",
+   "module": "Cren",
+   "kit": "Kit_RealWall_Cren",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx",
+   "position": {
+    "x": 0.0003,
+    "y": 0.0,
+    "z": 0.0017
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Seg"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 292,
+    "LOD1": 184,
+    "LOD2": 80,
+    "Fractured": 248
+   }
+  },
+  {
+   "id": "CrenC",
+   "label": "Corner crenellation 1.2 x 1.2 x 0.7 (L-shaped merlon), sits on Corner",
+   "module": "CrenC",
+   "kit": "Kit_RealWall_CrenC",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_CrenC.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_CrenC_Fractured.fbx",
+   "position": {
+    "x": 0.0008,
+    "y": 0.0,
+    "z": 0.0013
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Corner"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 368,
+    "LOD1": 208,
+    "LOD2": 84,
+    "Fractured": 312
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "Seg",
+   "b": "SegSl",
+   "point": {
+    "x": 0.0014,
+    "y": 0.7506,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Seg",
+   "b": "Corner",
+   "point": {
+    "x": -0.0,
+    "y": 0.7494,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Seg",
+   "b": "Cren",
+   "point": {
+    "x": 0.0003,
+    "y": 0.3519,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Seg",
+   "b": "CrenC",
+   "point": {
+    "x": 0.0008,
+    "y": 0.3518,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "SegSl",
+   "b": "Corner",
+   "point": {
+    "x": -0.0,
+    "y": 0.7494,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "SegSl",
+   "b": "Cren",
+   "point": {
+    "x": 0.0003,
+    "y": 0.3519,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "SegSl",
+   "b": "CrenC",
+   "point": {
+    "x": 0.0008,
+    "y": 0.3518,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Corner",
+   "b": "Cren",
+   "point": {
+    "x": -0.0,
+    "y": 0.3519,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Corner",
+   "b": "CrenC",
+   "point": {
+    "x": -0.0,
+    "y": 0.3518,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Cren",
+   "b": "CrenC",
+   "point": {
+    "x": 0.0008,
+    "y": 0.3518,
+    "z": 0.0013
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+ "kit_note": "all pieces are authored at the origin (each its own module): place Seg/SegSl every 1.5 m along local X, Corner at run ends, Cren/CrenC on top (y = 1.5)",
+ "texture_set": "Assets/_Project/Models/Realistic/Buildings/RealCastle/Textures/T_RealCastle",
+ "level_fit": {
+  "c1_l09_lighthouse_gauntlet": {
+   "yaw_deg": 90,
+   "pieces": {
+    "sea0": {
+     "piece": "Seg",
+     "position": {
+      "x": -0.6,
+      "y": 3.25,
+      "z": 1.5
+     }
+    },
+    "sea1": {
+     "piece": "SegSl",
+     "position": {
+      "x": -0.6,
+      "y": 3.25,
+      "z": 3.0
+     }
+    },
+    "sea2": {
+     "piece": "Seg",
+     "position": {
+      "x": -0.6,
+      "y": 3.25,
+      "z": 4.5
+     }
+    },
+    "seaCrest": {
+     "piece": "3 x Cren",
+     "positions_z": [
+      1.5,
+      3.0,
+      4.5
+     ],
+     "y": 4.75
+    }
+   },
+   "note": "segments are 1.5 m long (the level blocks are 1.4 m on a 1.5 m pitch): the kit closes the 0.1 m gaps; crest pieces are 0.7 m tall (block 0.5) because of the merlons"
+  }
+ }
+}

@@ -1,0 +1,20 @@
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Corner.fbx [Kit] LOD0 tris=580 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Corner_Fractured.fbx [KitFractured] LOD0 tris=436 LODs=[0] hulls=10 frags=10 -> PASS
+    warn  LOD0 436 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren.fbx [Kit] LOD0 tris=292 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 292 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_CrenC.fbx [Kit] LOD0 tris=368 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 368 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_CrenC_Fractured.fbx [KitFractured] LOD0 tris=312 LODs=[0] hulls=7 frags=7 -> PASS
+    warn  LOD0 312 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Cren_Fractured.fbx [KitFractured] LOD0 tris=248 LODs=[0] hulls=4 frags=4 -> PASS
+    warn  LOD0 248 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg.fbx [Kit] LOD0 tris=314 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 314 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl.fbx [Kit] LOD0 tris=464 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 464 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_SegSl_Fractured.fbx [KitFractured] LOD0 tris=444 LODs=[0] hulls=6 frags=6 -> PASS
+    warn  LOD0 444 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWall/Kit_RealWall_Seg_Fractured.fbx [KitFractured] LOD0 tris=268 LODs=[0] hulls=6 frags=6 -> PASS
+    warn  LOD0 268 < 500
+RESULT: ALL PASS (10 groups, 10 files)

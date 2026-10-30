@@ -1,0 +1,247 @@
+{
+ "building": "Gate",
+ "texel_px_per_m": 50.0,
+ "atlas": 2048,
+ "modules": {
+  "Arch": {
+   "LOD0": 1085,
+   "LOD1": 537,
+   "LOD2": 217,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.5,
+     -2.0299999713897705,
+     0.0
+    ],
+    [
+     2.5,
+     1.690000057220459,
+     6.0
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "gate passage, coat of arms, banners, lanterns, portcullis grooves",
+   "frags": 7,
+   "frag_max": 292,
+   "Fractured": 1472,
+   "mass": "14580.6-34967.0",
+   "joints": 16,
+   "anchors": 3,
+   "trims_dropped": 9,
+   "cut_edges_bevelled": "0/7"
+  },
+  "Portcullis": {
+   "LOD0": 468,
+   "LOD1": 168,
+   "LOD2": 92,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.2000000476837158,
+     -0.1599999964237213,
+     0.0
+    ],
+    [
+     1.2000000476837158,
+     0.07999999821186066,
+     3.700000047683716
+    ]
+   ],
+   "frac": "Steel",
+   "anchor": "top",
+   "anchor_to": "Support",
+   "note": "iron-shod oak portcullis, hangs from the arch",
+   "frags": 7,
+   "frag_max": 242,
+   "Fractured": 1190,
+   "mass": "33.8-150.2",
+   "joints": 11,
+   "anchors": 2,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "7/7"
+  },
+  "Crown": {
+   "LOD0": 540,
+   "LOD1": 270,
+   "LOD2": 107,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.5399999618530273,
+     -0.699999988079071,
+     0.0
+    ],
+    [
+     2.5399999618530273,
+     0.30000001192092896,
+     1.6399999856948853
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "machicolated battlement, 5 m",
+   "frags": 7,
+   "frag_max": 266,
+   "Fractured": 1366,
+   "mass": "508.5-2307.5",
+   "joints": 10,
+   "anchors": 7,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "5/7"
+  },
+  "Tower": {
+   "LOD0": 528,
+   "LOD1": 263,
+   "LOD2": 95,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.559999942779541,
+     -1.559999942779541,
+     0.0
+    ],
+    [
+     1.559999942779541,
+     1.5399999618530273,
+     3.0
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "square flanking tower storey, quoins, slit",
+   "frags": 7,
+   "frag_max": 268,
+   "Fractured": 1270,
+   "mass": "1784.9-11411.5",
+   "joints": 14,
+   "anchors": 5,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "6/7"
+  },
+  "TowerWindow": {
+   "LOD0": 764,
+   "LOD1": 382,
+   "LOD2": 151,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.559999942779541,
+     -1.6649686098098755,
+     0.0
+    ],
+    [
+     1.559999942779541,
+     1.5399999618530273,
+     3.0
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "square tower storey, arched window + shutters",
+   "frags": 7,
+   "frag_max": 272,
+   "Fractured": 1299,
+   "mass": "3221.4-8719.5",
+   "joints": 16,
+   "anchors": 4,
+   "trims_dropped": 6,
+   "cut_edges_bevelled": "5/7"
+  },
+  "TowerCrown": {
+   "LOD0": 578,
+   "LOD1": 288,
+   "LOD2": 115,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.8000000715255737,
+     -1.8000000715255737,
+     0.0
+    ],
+    [
+     1.8000000715255737,
+     1.8000000715255737,
+     1.75
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "corbelled square crown, merlons",
+   "frags": 7,
+   "frag_max": 282,
+   "Fractured": 1336,
+   "mass": "1823.8-5214.8",
+   "joints": 13,
+   "anchors": 6,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "7/7"
+  },
+  "TowerRoof": {
+   "LOD0": 290,
+   "LOD1": 145,
+   "LOD2": 51,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.5,
+     -1.5,
+     0.0
+    ],
+    [
+     1.5,
+     1.5,
+     5.800000190734863
+    ]
+   ],
+   "frac": "Roof",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "stepped red pyramid roof, finial, flag",
+   "frags": 12,
+   "frag_max": 230,
+   "Fractured": 1469,
+   "mass": "1109.5-3730.2",
+   "joints": 35,
+   "anchors": 6,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "11/12"
+  },
+  "Wall": {
+   "LOD0": 966,
+   "LOD1": 482,
+   "LOD2": 192,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.0,
+     -1.1299999952316284,
+     0.0
+    ],
+    [
+     2.0,
+     0.699999988079071,
+     5.980000019073486
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "curtain wall 4 m, battered plinth, battlements, lantern",
+   "frags": 7,
+   "frag_max": 280,
+   "Fractured": 1338,
+   "mass": "3075.8-16723.7",
+   "joints": 12,
+   "anchors": 2,
+   "trims_dropped": 2,
+   "cut_edges_bevelled": "4/7"
+  }
+ }
+}

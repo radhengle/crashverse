@@ -1,0 +1,28 @@
+--------- beginning of main
+10-24 17:06:55.398   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(18)
+10-24 17:06:55.484  2597  2663 D EGL_emulation: app_time_stats: avg=993.22ms min=973.79ms max=1012.65ms count=2
+10-24 17:06:55.746   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(6)
+10-24 17:06:56.078   412   506 D AudioFlinger: mixer(0x73add2509930) throttle end: throttle time(3)
+10-24 17:06:56.545  2597  2663 D EGL_emulation: app_time_stats: avg=530.60ms min=176.69ms max=884.52ms count=2
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 17:06:56.556  2597  2620 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+10-24 17:06:57.776  2597  2663 D EGL_emulation: app_time_stats: avg=449.46ms min=67.02ms max=831.91ms count=2
+10-24 17:06:58.255   868   868 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 17:06:58.800  2597  2663 D EGL_emulation: app_time_stats: avg=272.01ms min=100.04ms max=443.98ms count=2
+--------- beginning of kernel
+10-24 17:06:59.652     0     0 I logd    : logdr: UID=2000 GID=2000 PID=3257 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:06:59.769     0     0 I logd    : logdr: UID=2000 GID=2000 PID=3262 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:06:59.830     0     0 I logd    : logdr: UID=2000 GID=2000 PID=3265 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

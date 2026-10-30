@@ -1,0 +1,11 @@
+Kit_RealBread_Crate.fbx: meshes=3 materials=['M_RealBread'] -> PASS
+Kit_RealBread_Crate_Fractured.fbx: meshes=8 materials=['M_RealBread', 'M_RealBread_Inner'] -> PASS
+Prop_Barrel.fbx: meshes=2 materials=['M_Props_Village'] -> PASS
+Prop_Bench.fbx: meshes=2 materials=['M_Props_Village'] -> PASS
+Prop_BreadCrate.fbx: meshes=2 materials=['M_Props_Village'] -> PASS
+Prop_Cart.fbx: meshes=2 materials=['M_Props_Village'] -> PASS
+Prop_Crate.fbx: meshes=2 materials=['M_Props_Village'] -> PASS
+Prop_Rock_A.fbx: meshes=2 materials=['M_Props_Village'] -> PASS
+Prop_Rock_B.fbx: meshes=2 materials=['M_Props_Village'] -> PASS
+Prop_Rock_C.fbx: meshes=2 materials=['M_Props_Village'] -> PASS
+MESHDATA RESULT: ALL PASS

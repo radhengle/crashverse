@@ -5,7 +5,7 @@ name: Unity EditMode tests
 on:
   pull_request:
   push:
-    branches: [ main, 'integration/**' ]
+    branches: [ main ] # integration/** is tested through its PR (pull_request); a push run as well only doubled the minutes
   workflow_dispatch:
 
 permissions:
@@ -18,6 +18,8 @@ concurrency:
 jobs:
   editmode:
     name: Unity compile + EditMode tests
+    # Security #55 L-55-6: fork PRs get no Unity secrets; skip instead of failing noisily (the gate below still blocks them)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -43,6 +45,7 @@ jobs:
         run: |
           python3 Tools/ci/check_release_guards.py
           python3 Tools/ci/test_check_release_guards.py
+          python3 Tools/ci/check_joint_break_policy.py
           dotnet build Tools/CompileCheck
           dotnet build Tools/CompileCheck -p:CrashverseDev=true
           dotnet run --project Tools/Tests
@@ -67,7 +70,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          unityVersion: 2022.3.50f1
+          unityVersion: 2022.3.62f3
           testMode: all
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -86,7 +89,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          unityVersion: 2022.3.50f1
+          unityVersion: 2022.3.62f3
           testMode: all
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -132,8 +135,10 @@ jobs:
       - name: Require all Unity test jobs = success
         env:
           RESULTS: ${{ toJSON(needs) }}
+          FORK: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
         run: |
           echo "$RESULTS"
+          [ "$FORK" != true ] || { echo "::error::fork PR: Unity tests need repo secrets; a maintainer must push the branch to this repo to test it"; exit 1; }
           python3 - <<'PY'
           import json, os, sys
           needs = json.loads(os.environ["RESULTS"]); bad = {k: v["result"] for k, v in needs.items() if v["result"] != "success"}

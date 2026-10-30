@@ -1,0 +1,4 @@
+Kit_RealStall_Keystn.fbx: LOD0=720t/1m LOD1=288t/1m LOD2=196t/1m hulls=1 materials=['M_RealStall'] -> PASS
+Kit_RealStall_StallA.fbx: LOD0=1124t/1m LOD1=528t/1m LOD2=376t/1m hulls=1 materials=['M_RealStall'] -> PASS
+Kit_RealStall_StallB.fbx: LOD0=1124t/1m LOD1=528t/1m LOD2=376t/1m hulls=1 materials=['M_RealStall'] -> PASS
+REALISM RESULT: ALL PASS

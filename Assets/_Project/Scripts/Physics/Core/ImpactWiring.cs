@@ -8,7 +8,7 @@ namespace Crashverse.Sim
     /// <summary>Design table ids (Design Pack v1 §2) carried in ImpactEvent.sourceId when source == PowerUp.</summary>
     public static class PowerUpIds
     {
-        public const int None = 0, Shockwave = 1, Splitstrike = 2, GravityWell = 3, ChainReactor = 4, PhasePiercer = 5, TimeFracture = 6;
+        public const int None = 0, Shockwave = 1, Splitstrike = 2, GravityWell = 3, MegaBomb = 4, PhasePiercer = 5, TimeFracture = 6, Shield = 7, GuidedRocket = 8; // v2: Earthquake=1, Multi Shot=2, Black Hole=3, Mega Bomb=4 (took Chain Reactor's id), Laser Beam=5, Time Freeze=6
     }
 
     /// <summary>Crack steps at 33/66/90% damage taken (step 1..3). Returns 0 when undamaged.</summary>

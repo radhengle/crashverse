@@ -1,0 +1,40 @@
+Kit_RealSteel_Block_Fractured.fbx: frags=7 (Steel 4-10) tris max=88 total=430 mass 78.0-154.8 kg UCX=7 JNT=15 ANCHOR=4 -> PASS
+Kit_RealSteel_Floor_Fractured.fbx: frags=7 (Steel 4-10) tris max=64 total=376 mass 90.5-280.6 kg UCX=7 JNT=12 ANCHOR=6 -> PASS
+Kit_RealSteel_Joint_Fractured.fbx: frags=7 (Steel 4-10) tris max=44 total=308 mass 28.0-32.7 kg UCX=7 JNT=6 ANCHOR=1 -> PASS
+Kit_RealSteel_Wall_Fractured.fbx: frags=7 (Steel 4-10) tris max=68 total=380 mass 122.2-201.7 kg UCX=7 JNT=12 ANCHOR=3 -> PASS
+RESULT: ALL PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx [Kit] LOD0 tris=716 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx [KitFractured] LOD0 tris=430 LODs=[0] hulls=7 frags=7 -> PASS
+    warn  LOD0 430 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx [Kit] LOD0 tris=804 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx [KitFractured] LOD0 tris=376 LODs=[0] hulls=7 frags=7 -> PASS
+    warn  LOD0 376 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Joint.fbx [Kit] LOD0 tris=892 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Joint_Fractured.fbx [KitFractured] LOD0 tris=308 LODs=[0] hulls=7 frags=7 -> PASS
+    warn  LOD0 308 < 500
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Wall.fbx [Kit] LOD0 tris=804 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Wall_Fractured.fbx [KitFractured] LOD0 tris=380 LODs=[0] hulls=7 frags=7 -> PASS
+    warn  LOD0 380 < 500
+RESULT: ALL PASS (8 groups, 8 files)
+Kit_RealSteel_Block.fbx: meshes=3 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+Kit_RealSteel_Block_Fractured.fbx: meshes=7 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+Kit_RealSteel_Floor.fbx: meshes=3 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+Kit_RealSteel_Floor_Fractured.fbx: meshes=7 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+Kit_RealSteel_Joint.fbx: meshes=3 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+Kit_RealSteel_Joint_Fractured.fbx: meshes=7 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+Kit_RealSteel_Wall.fbx: meshes=3 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+Kit_RealSteel_Wall_Fractured.fbx: meshes=7 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx: LOD0=716t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+FBX version: 7400
+Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx: LOD0=804t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+FBX version: 7400
+Buildings/Kit_RealSteel/Kit_RealSteel_Joint.fbx: LOD0=892t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+FBX version: 7400
+Buildings/Kit_RealSteel/Kit_RealSteel_Wall.fbx: LOD0=804t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+FBX version: 7400
+Buildings/Kit_RealWood/Kit_RealWood_Block.fbx: LOD0=716t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
+--
+REALISM RESULT: ALL PASS
+Blender 4.2.3 LTS (hash 0e22e4fcea03 built 2024-10-14 23:31:34)
+

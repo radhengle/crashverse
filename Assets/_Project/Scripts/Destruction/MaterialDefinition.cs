@@ -32,7 +32,7 @@ namespace Crashverse.Destruction
         [Range(0f, 1f)] public float restitution = 0.1f;
         [Range(0f, 1.5f)] public float friction = 0.6f;
 
-        [Header("Joints")]
+        [Header("Joints (legacy data, NOT applied: Crashverse.Sim.JointBreakPolicy makes every structural joint unbreakable by force)")]
         public float jointBreakForce = 800f;
         public float jointBreakTorque = 800f;
 
@@ -135,6 +135,26 @@ namespace Crashverse.Destruction
             switch (s) { case "wood": return MaterialKind.Wood; case "brick": return MaterialKind.Brick; case "steel": return MaterialKind.Steel;
                        case "glass": return MaterialKind.Glass; case "stone": return MaterialKind.Stone; }
             return null;
+        }
+
+        /// <summary>Physics material family (Crashverse.Sim.MaterialType) to MaterialKind. Terrain has no kind: <paramref name="fallback"/>.</summary>
+        public static MaterialKind KindOf(Crashverse.Sim.MaterialType t, MaterialKind fallback = MaterialKind.Wood) => t switch
+        {
+            Crashverse.Sim.MaterialType.Wood => MaterialKind.Wood, Crashverse.Sim.MaterialType.Brick => MaterialKind.Brick,
+            Crashverse.Sim.MaterialType.Steel => MaterialKind.Steel, Crashverse.Sim.MaterialType.Glass => MaterialKind.Glass,
+            Crashverse.Sim.MaterialType.Stone => MaterialKind.Stone, _ => fallback
+        };
+
+        /// <summary>
+        /// ImportedPhysicsHints.fractureClass (hero buildings) to MaterialKind via Crashverse.Sim.FractureClassRules:
+        /// trimmed, case-insensitive, ordinal (no culture). Wood/Brick/Steel/Glass/Stone map to themselves; Roof (terracotta
+        /// tile) maps to Stone (physics/FractureClass_Mapping.md). Empty = not authored: <paramref name="fallback"/>, silent.
+        /// Unknown: <paramref name="fallback"/> plus one Debug.LogWarning per distinct value.
+        /// </summary>
+        public static MaterialKind FromFractureClass(string fractureClass, MaterialKind fallback = MaterialKind.Wood)
+        {
+            var status = Crashverse.Sim.FractureClassRules.ResolveWarnOnce(fractureClass, out var t, m => Debug.LogWarning($"{m} MaterialKind fallback: {fallback}."));
+            return status == Crashverse.Sim.FractureClassStatus.Mapped ? KindOf(t, fallback) : fallback;
         }
 
         /// <summary>Lower-case content key ("wood", "glass", ...) used by level JSON and DebrisBudget.</summary>

@@ -1,6 +1,6 @@
 # CRASHVERSE
 
-Android 3D destruction puzzle game (Unity 2022.3.50f1 LTS + URP 14). Chapter 1 "Sunnyville Isles" (L1–10, Tidewarden boss),
+Android 3D destruction puzzle game (Unity 2022.3.62f3 LTS + URP 14). Chapter 1 "Sunnyville Isles" (L1–10, Tidewarden boss),
 6 power-ups (Core/Module/Booster), Emberforge Daily Titan, 7-day rewards, 4-week season, leaderboards, cosmetic store.
 
 - Build: see BUILD.md (GameCI APK from GitHub Actions, or local Unity).

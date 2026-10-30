@@ -32,6 +32,8 @@ namespace Crashverse.Core
         {
             AppServices.Content = ContentDatabase.LoadBundled();
             AppServices.Save = new CampaignSave();
+            AppServices.Progress = new PlayerProgress();
+            Crashverse.Meta.DailyLoginRules.Observe(AppServices.Progress.Data, Crashverse.Meta.DailyLoginRules.Key(System.DateTime.Now)); // rollback guard
             AppServices.Theme = UITheme.Load();
             AppServices.Router = UIRouter.Create(AppServices.Theme);
             if (Camera.main == null) { var c = new GameObject("Main Camera"); c.tag = "MainCamera"; c.AddComponent<Camera>(); }
@@ -49,9 +51,9 @@ namespace Crashverse.Core
 #if CRASHVERSE_DEV
             AppServices.Backend = BackendLocator.Current ?? new LocalBackendService(AppServices.Content);
 #else
-            // Security Review §1: release builds never fall back to the local stub.
-            if (BackendLocator.Current == null) throw new System.InvalidOperationException("Release build has no server backend (BackendLocator.Current unset); local fallback is dev-only.");
-            AppServices.Backend = BackendLocator.Current;
+            // Security Review §1: release builds never fall back to the local stub. integration/v2: the server stays offline, so without a
+            // server client the release build uses OfflineBackendService (every call fails "offline"; grants and stores nothing).
+            AppServices.Backend = BackendLocator.Current ?? new OfflineBackendService();
 #endif
             BackendLocator.Current = AppServices.Backend;
             AppServices.StoreErrors = StoreValidator.Validate(AppServices.Content.Store, out AppServices.StoreItems);
@@ -91,33 +93,84 @@ namespace Crashverse.Core
             _mapRoot = null; Map = null;
         }
 
+        /// <summary>
+        /// Target UI v2: the world map is a 2D scrolling path (MapScreen) over the art pack backgrounds, so no 3D map world is built.
+        /// First run (no local guest profile yet) goes through Login → Create Profile first.
+        /// </summary>
+        /// <summary>QA V2-01 second line of defence: if the process dies mid-run (any relaunch Unity can't survive), the next launch
+        /// reopens that level's Level Select (or the Daily Boss card) instead of dropping the player on the map. Cleared on every
+        /// normal end of a run; only honoured on the first map after a launch.</summary>
+        public const string ResumeKey = "cv_resume_run";
+        static bool _resumeChecked;
+
         public static void ShowMap()
         {
+            string resume = _resumeChecked ? "" : PlayerPrefs.GetString(ResumeKey, "");
             EndRun();
-            if (_mapRoot == null)
-            {
-                _mapRoot = new GameObject("MapWorld");
-                Map = _mapRoot.AddComponent<WorldMapBuilder>();
-                Map.Build(AppServices.Content.Chapter1);
-                int f = RenderMaterials.FixAll(_mapRoot); if (f > 0) Debug.LogWarning($"[BUG-23] map: {f} renderers had no usable material");
-            }
-            _mapRoot.SetActive(true);
             Crashverse.Audio.MusicPlayer.Ensure().PlayBase("sunnyville_map_loop");
-            Map.FocusLevel(AppServices.Save.Data.lastPlayedLevel);
             var r = AppServices.Router;
+            if (AppServices.Progress != null && !AppServices.Progress.Data.profile.created)
+            {
+                if (resume.Length > 0) PlayerPrefs.SetString(ResumeKey, resume); // keep it for the map after login
+                if (!(r.Top is LoginScreen) && !(r.Top is ProfileScreen)) r.PopAllAndPush(new LoginScreen());
+                return;
+            }
             if (r.Top is MapScreen) return;
             r.PopAllAndPush(new MapScreen());
+            if (!_resumeChecked) { _resumeChecked = true; TryResume(resume); }
+#if CRASHVERSE_DEV
+            DevOpenLevel();
+#endif
+        }
+
+#if CRASHVERSE_DEV
+        static bool _devLevelDone;
+        /// <summary>Dev builds only (emulator smoke screenshots of L3/L8 models): launched with --es cv_dev_level c1_l03, the first map
+        /// opens that level's Level Select regardless of unlocks. Release builds don't compile this.</summary>
+        static void DevOpenLevel()
+        {
+            if (_devLevelDone) return; _devLevelDone = true;
+            string id = null;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            try
+            {
+                using (var up = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                using (var act = up.GetStatic<AndroidJavaObject>("currentActivity"))
+                using (var intent = act.Call<AndroidJavaObject>("getIntent"))
+                    id = intent.Call<string>("getStringExtra", "cv_dev_level");
+            }
+            catch (System.Exception) { }
+#endif
+            var lvl = string.IsNullOrEmpty(id) ? null : AppServices.Content?.GetLevel(id);
+            if (lvl == null) return;
+            AppServices.Router.Push(new LevelSelectScreen(lvl));
+            Debug.Log("[DEV] cv_dev_level opened " + id);
+        }
+#endif
+
+        static void TryResume(string resume)
+        {
+            if (string.IsNullOrEmpty(resume)) return;
+            var r = AppServices.Router; var db = AppServices.Content;
+            if (resume == "dailyboss") { r.Push(new DailyBossScreen()); r.Toast("Back to the Daily Boss"); Debug.Log("[V2-01] resumed Daily Boss after restart"); return; }
+            var lvl = db?.GetLevel(resume);
+            if (lvl != null && Crashverse.Meta.UnlockRules.IsLevelUnlocked(lvl, AppServices.Save))
+            { r.Push(new LevelSelectScreen(lvl)); r.Toast("Back to Level " + lvl.number); Debug.Log("[V2-01] resumed " + resume + " after restart"); }
         }
 
         public static void StartRun(RunContext ctx)
         {
             EndRun();
-            if (_mapRoot != null) _mapRoot.SetActive(false);
+            _resumeChecked = true; // a run started normally: nothing to resume this launch
+            var rk = ctx.mode == RunMode.DailyBoss ? "dailyboss" : ctx.mode == RunMode.Campaign && ctx.level != null ? ctx.level.id : "";
+            if (rk.Length > 0) { PlayerPrefs.SetString(ResumeKey, rk); PlayerPrefs.Save(); }
             _runRoot = new GameObject("Run");
             var arena = new GameObject("Arena").AddComponent<ArenaBuilder>();
             arena.transform.SetParent(_runRoot.transform);
             arena.Build();
+            if (ctx.IsHard || ctx.mode == RunMode.DailyBoss) ArenaBuilder.DarkTheme(0.55f); // v2: hard level / Daily Boss dark theme
             new GameObject("DebrisPool").AddComponent<DebrisPool>().transform.SetParent(_runRoot.transform);
+            new GameObject("GlassShardFx").AddComponent<GlassShardFx>().transform.SetParent(_runRoot.transform); // presentation-only glass shards
 
             var wreckerGo = new GameObject("Wrecker");
             wreckerGo.transform.SetParent(_runRoot.transform);
@@ -146,6 +199,8 @@ namespace Crashverse.Core
             RunCamera.enabled = true;
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
+            // User 2026-10-30 / Target UI §5: locked camera behind the cannon, framing the cannon (bottom centre) + the whole building
+            RunCamera.FrameBehindCannon(wreckerGo.transform.position, StructureBounds(s, s.structureBase), HintArcPoints(s));
             int fx = RenderMaterials.FixAll(_runRoot); if (fx > 0) Debug.LogWarning($"[BUG-23] run: {fx} renderers had no usable material");
             // #18/#20: PHYS_* ImpactEvents (Impact/Crack/Break/JointSnap/CollapseStart/End with pieceIds) on AnimEventBus.
             // Added after Begin so it binds to the SimRunner that Begin created. Presentation only; never read by the sim.
@@ -166,8 +221,43 @@ namespace Crashverse.Core
 #endif
         }
 
+        /// <summary>World bounds of the level's pieces as built (before any shot), or a 6 m box at the base if there are none.</summary>
+        /// <summary>Samples of the level's hint arc (ghost) from the muzzle to the structure, so the locked camera keeps it below the HUD
+        /// (L10's arc used to run under it). Same launch model as AimController (yaw +z = left, elevation about the barrel).</summary>
+        public static Vector3[] HintArcPoints(GameSession s)
+        {
+            var lvl = s?.Ctx?.level; if (lvl == null || !lvl.HasHint || s.aim == null) return null;
+            var start = s.aim.projectileSpawn != null ? s.aim.projectileSpawn.position : s.aim.transform.position + Vector3.up * 2f;
+            float yaw = lvl.hintYaw * Mathf.Deg2Rad, el = lvl.hintPitch * Mathf.Deg2Rad, v = s.aim.launchSpeed;
+            var vel = new Vector3(Mathf.Cos(el) * Mathf.Cos(yaw), Mathf.Sin(el), Mathf.Cos(el) * Mathf.Sin(yaw)) * v;
+            var g = Physics.gravity; float endX = s.structureBase.x + 2f;
+            var pts = new System.Collections.Generic.List<Vector3>();
+            for (int i = 1; i <= 60; i++)
+            {
+                float t = i * 0.05f; var p = start + vel * t + g * (0.5f * t * t);
+                pts.Add(p); if (p.x > endX || p.y < 0f) break;
+            }
+            return pts.ToArray();
+        }
+
+        public static Bounds StructureBounds(GameSession s, Vector3 fallbackBase)
+        {
+            bool any = false; var b = new Bounds(fallbackBase + Vector3.up * 3f, new Vector3(6f, 6f, 6f));
+            if (s != null && s.builder != null)
+                foreach (var blk in s.builder.Blocks)
+                {
+                    if (blk == null) continue;
+                    // collider bounds: the box is the block (its cube renderer is disabled when RealKit dresses it)
+                    var c = blk.GetComponent<Collider>(); var r = blk.GetComponent<Renderer>();
+                    Bounds bb; if (c != null && c.enabled) bb = c.bounds; else if (r != null) bb = r.bounds; else continue;
+                    if (!any) { b = bb; any = true; } else b.Encapsulate(bb);
+                }
+            return b;
+        }
+
         public static void EndRun()
         {
+            if (PlayerPrefs.HasKey(ResumeKey)) { PlayerPrefs.DeleteKey(ResumeKey); PlayerPrefs.Save(); }
             if (_runRoot != null) Object.Destroy(_runRoot);
             Time.timeScale = 1f;
             _runRoot = null; Session = null;

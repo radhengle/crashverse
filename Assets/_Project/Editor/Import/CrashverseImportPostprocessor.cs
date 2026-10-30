@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using C = Crashverse.EditorTools.Import.ImportConventions;
+using RT = Crashverse.Rendering.RenderTiers;
 
 namespace Crashverse.EditorTools.Import
 {
@@ -20,7 +21,7 @@ namespace Crashverse.EditorTools.Import
     {
         // Run after any generic project postprocessors so these settings win.
         public override int GetPostprocessOrder() => 100;
-        public override uint GetVersion() => 2;
+        public override uint GetVersion() => 6;   // 3: hero building fractureClass + T_Bld/hero kit 1024 Android cap; 4: Models/Realistic/** texture branch (RenderTiers); 5: intact kit modules readable (RealKit fit + UV rebuild); 6: foliage materials GPU instancing
 
         // ---------------- FBX ----------------
         void OnPreprocessModel()
@@ -28,6 +29,8 @@ namespace Crashverse.EditorTools.Import
             if (!C.InScope(assetPath)) return;
             var mi = (ModelImporter)assetImporter;
             var cls = C.Classify(assetPath);
+            // Hero building modules read models/HeroBuildings/Kit_<B>_stats.json (outside Assets): reimport when its hash changes.
+            if (C.TryHeroModule(assetPath, out var heroKit, out _, out _)) context.DependsOnCustomDependency(C.HeroStatsDependency(heroKit));
 
             // Scale: FBX exported with Apply Transform, 1 unit = 1 m (models README).
             mi.globalScale = 1f;
@@ -37,6 +40,9 @@ namespace Crashverse.EditorTools.Import
             // Mesh
             mi.meshCompression = cls == C.AssetClass.Hero || cls == C.AssetClass.KitFractured ? ModelImporterMeshCompression.Low : ModelImporterMeshCompression.Medium;
             mi.isReadable = false;                       // colliders are cooked in-editor on the prefab; runtime never reads vertices
+            // Realistic v1 pieces: RealKit fits each piece to its block and rebuilds UV0 from the scaled positions at load (small meshes)
+            // (and any intact kit module a layout names in BlockData.model, Level Designer prefab map)
+            if (C.KitPathOk(assetPath) && !C.FileStem(assetPath).EndsWith("_Fractured", System.StringComparison.Ordinal)) mi.isReadable = true;
             mi.optimizeMeshPolygons = true;
             mi.optimizeMeshVertices = true;
             mi.weldVertices = true;
@@ -69,6 +75,37 @@ namespace Crashverse.EditorTools.Import
             }
         }
 
+        /// <summary>Runs after OnPostprocessGameObjectWithUserProperties, so any FBX fracture_class is already on the hints.</summary>
+        void OnPostprocessModel(GameObject root)
+        {
+            if (!C.InScope(assetPath) || !C.TryHeroModule(assetPath, out var kit, out var module, out _)) return;
+            var stats = HeroStatsCache.Load(kit, out _);
+            ApplyFractureClass(root, stats?.ClassFor(module), assetPath);
+        }
+
+        /// <summary>Testable core of the fracture-class step. Precedence per object: its own FBX fracture_class, then the module value
+        /// (the root's FBX fracture_class, else <paramref name="jsonClass"/> from the stats sidecar). Writes the module root and every
+        /// LOD0 fragment. With no value at all (missing JSON or entry) nothing is written or cleared; the validator warns instead.
+        /// Returns the number of objects written.</summary>
+        public static int ApplyFractureClass(GameObject root, string jsonClass, string assetPath)
+        {
+            var rh = root.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
+            string moduleClass = rh != null && !string.IsNullOrEmpty(rh.fractureClass) ? rh.fractureClass : jsonClass;
+            if (string.IsNullOrEmpty(moduleClass)) return 0;
+            int n = 0;
+            if (rh == null) rh = root.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
+            if (string.IsNullOrEmpty(rh.fractureClass)) { rh.fractureClass = moduleClass; n++; }
+            foreach (var t in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (t == root.transform || !C.IsFragment(t.name) || C.LodLevel(t.name, out _) > 0) continue;
+                var h = t.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
+                if (h != null && !string.IsNullOrEmpty(h.fractureClass)) continue;   // FBX fracture_class on the fragment wins
+                if (h == null) h = t.gameObject.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
+                h.fractureClass = moduleClass; n++;
+            }
+            return n;
+        }
+
         Material OnAssignMaterialModel(Material source, Renderer renderer)
         {
             if (!C.InScope(assetPath)) return null;
@@ -77,7 +114,7 @@ namespace Crashverse.EditorTools.Import
         }
 
         /// <summary>FBX user properties. attach_to=&lt;Object&gt; reparents keeping world pose (models README).
-        /// mass_kg, break_force_N, break_torque_Nm, anchor_to are stored as SI authoring defaults on ImportedPhysicsHints
+        /// mass_kg, break_force_N, break_torque_Nm, anchor_to, fracture_class are stored as SI authoring defaults on ImportedPhysicsHints
         /// (data only; Physics owns conversion and use). A property that is missing never overwrites an existing value.</summary>
         void OnPostprocessGameObjectWithUserProperties(GameObject go, string[] names, object[] values)
         {
@@ -89,8 +126,8 @@ namespace Crashverse.EditorTools.Import
         public static void ApplyUserProperties(GameObject go, string[] names, object[] values, string assetPath)
         {
             float? mass = Num(names, values, "mass_kg"), brk = Num(names, values, "break_force_N"), tq = Num(names, values, "break_torque_Nm");
-            string anchor = Str(names, values, "anchor_to");
-            if (mass.HasValue || brk.HasValue || tq.HasValue || anchor != null)
+            string anchor = Str(names, values, "anchor_to"), frac = Str(names, values, "fracture_class");
+            if (mass.HasValue || brk.HasValue || tq.HasValue || anchor != null || frac != null)
             {
                 var h = go.GetComponent<Crashverse.Import.ImportedPhysicsHints>();
                 if (h == null) h = go.AddComponent<Crashverse.Import.ImportedPhysicsHints>();
@@ -98,6 +135,7 @@ namespace Crashverse.EditorTools.Import
                 if (brk.HasValue) h.breakForce = brk.Value;
                 if (tq.HasValue) h.breakTorque = tq.Value;
                 if (anchor != null) h.anchorTo = anchor;
+                if (frac != null) h.fractureClass = frac;      // overrides the hero stats JSON (ApplyFractureClass keeps it)
             }
             string target = Str(names, values, "attach_to");
             if (string.IsNullOrEmpty(target)) return;
@@ -140,6 +178,7 @@ namespace Crashverse.EditorTools.Import
         void OnPreprocessTexture()
         {
             if (!C.InScope(assetPath)) return;
+            if (RT.InRealisticScope(assetPath) && PreprocessRealisticTexture()) return;   // Models/Realistic/** (not v2): RenderTiers policy
             string stem = C.FileStem(assetPath);
             if (C.MapSuffix(stem) == null) return;            // not a T_<Asset>_<Map>: leave alone (palettes, previews)
             var ti = (TextureImporter)assetImporter;
@@ -163,6 +202,51 @@ namespace Crashverse.EditorTools.Import
             android.format = Astc(p.astc);
             android.compressionQuality = 50;
             ti.SetPlatformTextureSettings(android);
+        }
+
+        /// <summary>
+        /// Realistic PBR branch (Graphics, PM: one importer) for Assets/_Project/Models/Realistic/** except v2 folders. All numbers come
+        /// from Crashverse.Rendering.RenderTiers.TexturePolicy (single source of truth, unit-tested):
+        ///   T_&lt;X&gt;_A   albedo, sRGB, ASTC 6x6; Foliage/** _A = leaf atlas 1024, alpha kept for clipping, coverage-preserving mips
+        ///   T_&lt;X&gt;_N   NormalMap type, linear, ASTC 5x5
+        ///   T_&lt;X&gt;_ORM  R=AO G=roughness B=metallic, linear, ASTC 6x6 (CrashverseGlossyPBR._ORMMap, not Unity's mask-map layout)
+        /// Size caps: sources 2048, Android 1024 (PM cap; tiling materials 1024), Realistic/Props/** 512 everywhere, leaf atlas 1024.
+        /// Unity mask-map style names (_MaskMap, _Metallic, _AO, ...) only get a warning. Returns false for maps the policy does not
+        /// cover (e.g. _E, _Crack) so they keep the standard path below. Every other Models/** path is unchanged.
+        /// </summary>
+        bool PreprocessRealisticTexture()
+        {
+            string stem = Path.GetFileNameWithoutExtension(assetPath);
+            if (RT.IsUnpackedMaskName(stem))
+            {
+                Debug.LogWarning($"[CrashverseImport] {assetPath}: pack metallic/AO/roughness into T_<X>_ORM (R=AO, G=roughness, B=metallic, linear) for CrashverseGlossyPBR._ORMMap.");
+                return true;
+            }
+            var pol = RT.TexturePolicy(assetPath);
+            if (pol == null) return false;
+            var p = pol.Value;
+            var ti = (TextureImporter)assetImporter;
+
+            ti.textureType = p.normalMap ? TextureImporterType.NormalMap : TextureImporterType.Default;
+            ti.sRGBTexture = p.sRGB;
+            ti.mipmapEnabled = true;
+            ti.streamingMipmaps = true;
+            ti.isReadable = false;
+            ti.alphaSource = p.keepAlpha ? TextureImporterAlphaSource.FromInput : TextureImporterAlphaSource.None;
+            ti.alphaIsTransparency = p.keepAlpha;
+            ti.mipMapsPreserveCoverage = p.keepAlpha;   // leaf cards stay full in distant mips
+            if (p.keepAlpha) ti.alphaTestReferenceValue = 0.5f;
+            ti.anisoLevel = p.normalMap || p.map == "_A" ? 2 : 1;
+            ti.maxTextureSize = p.maxSize;
+            ti.textureCompression = TextureImporterCompression.Compressed;
+
+            var android = ti.GetPlatformTextureSettings("Android");
+            android.overridden = true;
+            android.maxTextureSize = p.androidMax;
+            android.format = Astc(p.astc);
+            android.compressionQuality = 50;
+            ti.SetPlatformTextureSettings(android);
+            return true;
         }
 
         static TextureImporterFormat Astc(string block)

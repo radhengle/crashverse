@@ -1,0 +1,1 @@
+swipe right -> yaw -25.0; swipe left -> yaw 25.0

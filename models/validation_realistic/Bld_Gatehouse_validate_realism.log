@@ -1,0 +1,4 @@
+Kit_RealGate_ArchL.fbx: LOD0=610t/1m LOD1=426t/1m LOD2=140t/1m hulls=1 materials=['M_RealGate'] -> PASS
+Kit_RealGate_ArchR.fbx: LOD0=624t/1m LOD1=424t/1m LOD2=138t/1m hulls=1 materials=['M_RealGate'] -> PASS
+Kit_RealGate_Portc.fbx: LOD0=1296t/1m LOD1=736t/1m LOD2=216t/1m hulls=1 materials=['M_RealGate'] -> PASS
+REALISM RESULT: ALL PASS

@@ -202,6 +202,22 @@ namespace Crashverse.Core
             if (Camera.main != null) { Camera.main.clearFlags = CameraClearFlags.SolidColor; Camera.main.backgroundColor = VisualConfig.C(vc.skyClearHex); }
         }
 
+        /// <summary>
+        /// Target UI §7/§8: hard levels (every 10th) and the Daily Boss use a darker, ember-red theme. Applied after Lighting();
+        /// the next Lighting() call (map/run) restores the normal look. Presentation only (never read by the sim).
+        /// </summary>
+        public static void DarkTheme(float k)
+        {
+            var ember = new Color(1f, 0.42f, 0.3f, 1f);
+            if (_key != null) { _key.intensity *= k + 0.15f; _key.color = Color.Lerp(_key.color, ember, 0.45f); }
+            if (_rim != null) { _rim.color = new Color(1f, 0.35f, 0.25f, 1f); _rim.intensity *= 1.2f; }
+            RenderSettings.ambientSkyColor = Color.Lerp(RenderSettings.ambientSkyColor * k, new Color(0.35f, 0.12f, 0.2f, 1f), 0.4f);
+            RenderSettings.ambientEquatorColor = RenderSettings.ambientEquatorColor * k;
+            RenderSettings.ambientGroundColor = RenderSettings.ambientGroundColor * k;
+            RenderSettings.fogColor = new Color(0.22f, 0.1f, 0.14f, 1f);
+            if (Camera.main != null) Camera.main.backgroundColor = new Color(0.16f, 0.07f, 0.12f, 1f);
+        }
+
         static void Paint(Renderer r, string hex, float smooth)
         {
             RenderMaterials.Apply(r);

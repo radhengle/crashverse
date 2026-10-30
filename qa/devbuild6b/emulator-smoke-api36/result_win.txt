@@ -1,0 +1,2 @@
+scripted win line result: win
+CVTAP|RESULTDONE|win|score=3550|stars=3|pct=100

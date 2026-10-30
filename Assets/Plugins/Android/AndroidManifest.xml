@@ -14,7 +14,10 @@
               android:theme="@style/UnityThemeSelector"
               android:exported="true"
               android:screenOrientation="portrait"
-              tools:replace="android:screenOrientation">
+              android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density|colorMode|fontWeightAdjustment|grammaticalGender"
+              tools:replace="android:screenOrientation,android:configChanges">
+      <!-- QA V2-01: Unity's own list (0x40003fff) lacks colorMode, fontWeightAdjustment and grammaticalGender (Android 14). A change
+           in one of those makes Android recreate the activity, which Unity turns into onDestroy + a self SIGKILL. Handle them all. -->
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

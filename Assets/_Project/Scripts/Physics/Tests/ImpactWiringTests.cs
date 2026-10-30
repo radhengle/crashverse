@@ -61,11 +61,11 @@ namespace Crashverse.Sim.Tests
         {
             ImpactSourceScope.ResetForTests();
             Assert.AreEqual(ImpactSourceKind.Debris, ImpactSourceScope.Kind);
-            using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.ChainReactor))
+            using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.MegaBomb))
             {
                 Assert.AreEqual(ImpactSourceKind.PowerUp, ImpactSourceScope.Kind);
                 using (ImpactSourceScope.Push(ImpactSourceKind.Explosion)) Assert.AreEqual(ImpactSourceKind.Explosion, ImpactSourceScope.Kind);
-                Assert.AreEqual(PowerUpIds.ChainReactor, ImpactSourceScope.Id);
+                Assert.AreEqual(PowerUpIds.MegaBomb, ImpactSourceScope.Id);
             }
             Assert.AreEqual(ImpactSourceKind.Debris, ImpactSourceScope.Kind);
         }

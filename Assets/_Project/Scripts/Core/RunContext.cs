@@ -4,7 +4,7 @@ using Crashverse.Meta;
 
 namespace Crashverse.Core
 {
-    public enum RunMode { Campaign, Event, TitanRanked, TitanPractice }
+    public enum RunMode { Campaign, Event, TitanRanked, TitanPractice, DailyBoss }
 
     /// <summary>Everything one attempt needs. Retry re-uses it (same loadout, full shots and charges).</summary>
     public class RunContext
@@ -20,7 +20,11 @@ namespace Crashverse.Core
         public RankedTicket ticket;
         /// <summary>Sim seed for this attempt (AttemptToken.seed for scored runs). Same seed + same tick-ordered inputs = same run.</summary>
         public long seed;
-        public int ShotBudget => System.Math.Max(1, level.shots + (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? 0 : mod.shotDelta));
+        /// <summary>Local Daily Boss (seeded by the device's local date; no server).</summary>
+        public bool dailyBoss;
+        /// <summary>Every 10th campaign level is hard: tighter steps (HardLevelRules) and the dark theme.</summary>
+        public bool IsHard => mode == RunMode.Campaign && Crashverse.Meta.HardLevelRules.IsHard(level);
+        public int ShotBudget => System.Math.Max(1, (IsHard ? Crashverse.Meta.HardLevelRules.Shots(level) : level.shots) + (mode == RunMode.TitanRanked || mode == RunMode.TitanPractice ? 0 : mod.shotDelta));
         public bool IsTitan => mode == RunMode.TitanRanked || mode == RunMode.TitanPractice;
 
         /// <summary>Daily Titan uses the normal pipeline with a synthetic level entry built from the server config.</summary>
@@ -37,5 +41,7 @@ namespace Crashverse.Core
     {
         public bool won; public int stars; public bool mastery; public int score; public int bestCombo; public float ratio;
         public int shotsLeft; public bool firstClear; public int titanScore; public SubmitResponse titanSubmit; public string note;
+        /// <summary>v2 local rewards granted for this run (coins, gems, chest); empty when nothing was earned.</summary>
+        public Crashverse.Data.RewardBundle rewards = new Crashverse.Data.RewardBundle();
     }
 }

@@ -1,8 +1,8 @@
 {
  "powerups": [
   {
-   "id": "shockwave",
-   "name": "Shockwave Core",
+   "id": "earthquake",
+   "name": "Earthquake",
    "slot": "Core",
    "effect": "SHOCKWAVE",
    "charges": 1,
@@ -14,16 +14,20 @@
     "linkDepth": 1,
     "count": 0,
     "damageMult": 1,
-    "radius": 0,
+    "radius": 4,
     "duration": 0,
     "burstDamage": 0,
     "passCount": 0,
-    "slowFactor": 1
+    "slowFactor": 1,
+    "durationTicks": 0,
+    "threshold": 0,
+    "turnRate": 0,
+    "steerTicks": 0
    }
   },
   {
-   "id": "splitstrike",
-   "name": "Splitstrike",
+   "id": "multi_shot",
+   "name": "Multi Shot",
    "slot": "Module",
    "effect": "SPLIT",
    "charges": 1,
@@ -39,12 +43,16 @@
     "duration": 0,
     "burstDamage": 0,
     "passCount": 0,
-    "slowFactor": 1
+    "slowFactor": 1,
+    "durationTicks": 0,
+    "threshold": 0,
+    "turnRate": 0,
+    "steerTicks": 0
    }
   },
   {
-   "id": "gravity_well",
-   "name": "Gravity Well",
+   "id": "black_hole",
+   "name": "Black Hole",
    "slot": "Module",
    "effect": "GRAVITY_WELL",
    "charges": 1,
@@ -60,15 +68,19 @@
     "duration": 1.5,
     "burstDamage": 60,
     "passCount": 0,
-    "slowFactor": 1
+    "slowFactor": 1,
+    "durationTicks": 75,
+    "threshold": 0,
+    "turnRate": 0,
+    "steerTicks": 0
    }
   },
   {
-   "id": "chain_reactor",
-   "name": "Chain Reactor",
+   "id": "mega_bomb",
+   "name": "Mega Bomb",
    "slot": "Core",
-   "effect": "CHAIN_REACTOR",
-   "charges": 2,
+   "effect": "MEGA_BOMB",
+   "charges": 1,
    "unlockType": "level_reached",
    "unlockLevelId": "c2_l03",
    "unlockText": "Unlocks at Gearstorm City L3",
@@ -77,16 +89,45 @@
     "linkDepth": 0,
     "count": 0,
     "damageMult": 1,
-    "radius": 3,
+    "radius": 3.5,
     "duration": 0,
-    "burstDamage": 80,
+    "burstDamage": 70,
     "passCount": 0,
-    "slowFactor": 1
+    "slowFactor": 1,
+    "durationTicks": 0,
+    "threshold": 0,
+    "turnRate": 0,
+    "steerTicks": 0
    }
   },
   {
-   "id": "phase_piercer",
-   "name": "Phase Piercer",
+   "id": "shield",
+   "name": "Shield",
+   "slot": "Booster",
+   "effect": "SHIELD",
+   "charges": 1,
+   "unlockType": "level_reached",
+   "unlockLevelId": "c2_l05",
+   "unlockText": "Unlocks at Gearstorm City L5",
+   "p": {
+    "damage": 0,
+    "linkDepth": 0,
+    "count": 0,
+    "damageMult": 1,
+    "radius": 0,
+    "duration": 0,
+    "burstDamage": 0,
+    "passCount": 0,
+    "slowFactor": 1,
+    "durationTicks": 0,
+    "threshold": 0.1,
+    "turnRate": 0,
+    "steerTicks": 0
+   }
+  },
+  {
+   "id": "laser_beam",
+   "name": "Laser Beam",
    "slot": "Booster",
    "effect": "PHASE_PIERCE",
    "charges": 1,
@@ -102,14 +143,18 @@
     "duration": 0,
     "burstDamage": 0,
     "passCount": 2,
-    "slowFactor": 1
+    "slowFactor": 1,
+    "durationTicks": 0,
+    "threshold": 0,
+    "turnRate": 0,
+    "steerTicks": 0
    }
   },
   {
-   "id": "time_fracture",
-   "name": "Time Fracture",
+   "id": "guided_rocket",
+   "name": "Guided Rocket",
    "slot": "Booster",
-   "effect": "TIME_FRACTURE",
+   "effect": "GUIDED",
    "charges": 1,
    "unlockType": "level_reached",
    "unlockLevelId": "c3_l03",
@@ -120,10 +165,39 @@
     "count": 0,
     "damageMult": 1,
     "radius": 0,
+    "duration": 0,
+    "burstDamage": 0,
+    "passCount": 0,
+    "slowFactor": 1,
+    "durationTicks": 0,
+    "threshold": 0,
+    "turnRate": 90,
+    "steerTicks": 60
+   }
+  },
+  {
+   "id": "time_freeze",
+   "name": "Time Freeze",
+   "slot": "Booster",
+   "effect": "TIME_FRACTURE",
+   "charges": 1,
+   "unlockType": "level_reached",
+   "unlockLevelId": "c3_l07",
+   "unlockText": "Unlocks at Neon District L7",
+   "p": {
+    "damage": 0,
+    "linkDepth": 0,
+    "count": 0,
+    "damageMult": 1,
+    "radius": 0,
     "duration": 4,
     "burstDamage": 0,
     "passCount": 0,
-    "slowFactor": 0.25
+    "slowFactor": 0.25,
+    "durationTicks": 200,
+    "threshold": 0,
+    "turnRate": 0,
+    "steerTicks": 0
    }
   }
  ]

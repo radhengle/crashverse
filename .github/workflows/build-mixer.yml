@@ -1,7 +1,7 @@
 name: Build AudioMixer asset
 
 # Generates Assets/_Project/Resources/Audio/CrashverseMixer.mixer from audio/mixer_spec.md via
-# CrashverseMixerBuilder.BuildMixer (Unity 2022.3.50f1) and uploads it as an artifact. It never commits.
+# CrashverseMixerBuilder.BuildMixer (Unity 2022.3.62f3) and uploads it as an artifact. It never commits.
 # workflow_dispatch only works once this file is on the default branch, so it also runs on pushes to
 # audio/library-v1 that touch the builder or this workflow (SFX-only pushes don't trigger it).
 on:
@@ -26,7 +26,7 @@ concurrency:
 
 jobs:
   mixer:
-    name: Unity 2022.3.50f1 -executeMethod CrashverseMixerBuilder.BuildMixer
+    name: Unity 2022.3.62f3 -executeMethod CrashverseMixerBuilder.BuildMixer
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     permissions:
@@ -51,7 +51,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: StandaloneLinux64
-          unityVersion: 2022.3.50f1
+          unityVersion: 2022.3.62f3
           buildMethod: CrashverseMixerBuilder.BuildMixer
           customParameters: ${{ github.event.inputs.force == 'true' && '-cvForceRebuild' || '' }}
           versioning: None

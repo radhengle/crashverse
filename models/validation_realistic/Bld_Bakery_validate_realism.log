@@ -1,0 +1,22 @@
+Kit_RealBakery_BackD.fbx: LOD0=558t/1m LOD1=342t/1m LOD2=186t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_BackW.fbx: LOD0=544t/1m LOD1=312t/1m LOD2=146t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_Base.fbx: LOD0=408t/1m LOD1=184t/1m LOD2=136t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_Chim.fbx: LOD0=288t/1m LOD1=184t/1m LOD2=128t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_Floor.fbx: LOD0=1376t/1m LOD1=596t/1m LOD2=324t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_GabL.fbx: LOD0=334t/1m LOD1=182t/1m LOD2=130t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_GabR.fbx: LOD0=332t/1m LOD1=128t/1m LOD2=116t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_RfLB.fbx: LOD0=1016t/1m LOD1=584t/1m LOD2=308t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_RfLF.fbx: LOD0=1268t/1m LOD1=628t/1m LOD2=260t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_RfRB.fbx: LOD0=1252t/1m LOD1=696t/1m LOD2=216t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_RfRF.fbx: LOD0=1248t/1m LOD1=648t/1m LOD2=172t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_ShopD.fbx: LOD0=1456t/1m LOD1=588t/1m LOD2=318t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_ShopW.fbx: LOD0=988t/1m LOD1=712t/1m LOD2=432t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpB.fbx: LOD0=1192t/1m LOD1=832t/1m LOD2=436t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpFC.fbx: LOD0=782t/1m LOD1=398t/1m LOD2=172t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpFL.fbx: LOD0=1122t/1m LOD1=558t/1m LOD2=316t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpFR.fbx: LOD0=1084t/1m LOD1=568t/1m LOD2=278t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpL.fbx: LOD0=900t/1m LOD1=620t/1m LOD2=282t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_UpR.fbx: LOD0=936t/1m LOD1=516t/1m LOD2=298t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_WallL.fbx: LOD0=566t/1m LOD1=354t/1m LOD2=168t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+Kit_RealBakery_WallR.fbx: LOD0=566t/1m LOD1=334t/1m LOD2=168t/1m hulls=1 materials=['M_RealBakery'] -> PASS
+REALISM RESULT: ALL PASS

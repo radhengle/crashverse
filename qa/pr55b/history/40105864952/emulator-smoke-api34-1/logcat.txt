@@ -1,0 +1,111 @@
+--------- beginning of main
+10-24 15:41:59.800  1209  1209 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=821.0, y[0]=1416.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=831485, downTime=831485, deviceId=-1, source=0x1002, displayId=0, eventId=-440330525 }
+10-24 15:41:59.808   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(16)
+10-24 15:41:59.811  1209  1209 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=821.0, y[0]=1416.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=831485, downTime=831485, deviceId=-1, source=0x1002, displayId=0, eventId=-570034789 }
+10-24 15:41:59.853   549  2304 D WifiNl80211Manager: Scan result ready event
+10-24 15:41:59.856   549  2304 D WifiNative: Scan result ready event
+--------- beginning of system
+10-24 15:41:59.859   480   480 I wificond: Unexpected empty scan result!
+10-24 15:42:00.118  7438  7510 D EGL_emulation: app_time_stats: avg=737.68ms min=641.19ms max=834.17ms count=2
+10-24 15:42:00.120  1826  2227 I AiAiEcho: Predicting[0]: 
+10-24 15:42:00.120  1826  2227 I AiAiEcho: EchoTargets: 
+10-24 15:42:00.120  1826  2227 I AiAiEcho: Filtered by AiAi flag check: 
+10-24 15:42:00.120  1826  2227 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+10-24 15:42:00.127  1826  2227 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+10-24 15:42:00.128   926   926 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+10-24 15:42:00.496   926   926 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 15:42:01.390  7438  7510 D EGL_emulation: app_time_stats: avg=278.14ms min=109.98ms max=446.30ms count=2
+10-24 15:42:01.426  7438  7461 I Unity   : CVTAP|BEGIN|LevelSelectScreen
+10-24 15:42:01.426  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.426  7438  7461 I Unity   : 
+10-24 15:42:01.427  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_◀|203|136|1
+10-24 15:42:01.427  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.427  7438  7461 I Unity   : 
+10-24 15:42:01.427  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_▶|877|136|0
+10-24 15:42:01.427  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.427  7438  7461 I Unity   : 
+10-24 15:42:01.427  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PUPrev|86|1270|1
+10-24 15:42:01.427  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.427  7438  7461 I Unity   : 
+10-24 15:42:01.432  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PU_earthquake|249|1270|1
+10-24 15:42:01.432  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.432  7438  7461 I Unity   : 
+10-24 15:42:01.437  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PU_multi_shot|443|1270|1
+10-24 15:42:01.437  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.437  7438  7461 I Unity   : 
+10-24 15:42:01.437  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PU_black_hole|637|1270|1
+10-24 15:42:01.437  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.437  7438  7461 I Unity   : 
+10-24 15:42:01.438  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PU_mega_bomb|831|1270|1
+10-24 15:42:01.438  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.438  7438  7461 I Unity   : 
+10-24 15:42:01.438  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PUNext|994|1270|1
+10-24 15:42:01.438  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.438  7438  7461 I Unity   : 
+10-24 15:42:01.445  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_Play|540|2067|1
+10-24 15:42:01.445  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.445  7438  7461 I Unity   : 
+10-24 15:42:01.447  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_Back|540|2224|1
+10-24 15:42:01.447  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:01.447  7438  7461 I Unity   : 
+10-24 15:42:01.484   926   926 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 15:42:01.535  5883  5883 W rules.WifiRx: FenceState currentState is not true
+10-24 15:42:01.599   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(1)
+10-24 15:42:02.120   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(11)
+10-24 15:42:02.138  7438  7461 I Unity   : CVTAP|BEGIN|LevelSelectScreen
+10-24 15:42:02.138  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.138  7438  7461 I Unity   : 
+10-24 15:42:02.143  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_◀|203|136|1
+10-24 15:42:02.143  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.143  7438  7461 I Unity   : 
+10-24 15:42:02.143  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_▶|877|136|0
+10-24 15:42:02.143  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.143  7438  7461 I Unity   : 
+10-24 15:42:02.144  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PUPrev|86|1270|1
+10-24 15:42:02.144  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.144  7438  7461 I Unity   : 
+10-24 15:42:02.144   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(7)
+10-24 15:42:02.144  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PU_earthquake|249|1270|1
+10-24 15:42:02.144  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.144  7438  7461 I Unity   : 
+10-24 15:42:02.144  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PU_multi_shot|443|1270|1
+10-24 15:42:02.144  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.144  7438  7461 I Unity   : 
+10-24 15:42:02.149  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PU_black_hole|637|1270|1
+10-24 15:42:02.149  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.149  7438  7461 I Unity   : 
+10-24 15:42:02.149  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PU_mega_bomb|831|1270|1
+10-24 15:42:02.149  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.149  7438  7461 I Unity   : 
+10-24 15:42:02.149  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_PUNext|994|1270|1
+10-24 15:42:02.149  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.149  7438  7461 I Unity   : 
+10-24 15:42:02.151  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_Play|540|2067|1
+10-24 15:42:02.151  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.151  7438  7461 I Unity   : 
+10-24 15:42:02.155  7438  7461 I Unity   : CVTAP|LevelSelectScreen|Button_Back|540|2224|1
+10-24 15:42:02.155  7438  7461 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 15:42:02.155  7438  7461 I Unity   : 
+10-24 15:42:02.757   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(3)
+--------- beginning of kernel
+10-24 15:42:03.042     0     0 I logd    : logdr: UID=2000 GID=2000 PID=9490 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 15:42:03.096     0     0 I logd    : logdr: UID=2000 GID=2000 PID=9493 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 15:42:03.239  9500  9500 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+10-24 15:42:03.239  9500  9500 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+10-24 15:42:03.321  7438  7510 D EGL_emulation: app_time_stats: avg=161.31ms min=128.70ms max=193.91ms count=2
+10-24 15:42:03.799   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(5)
+10-24 15:42:04.147   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(2)
+10-24 15:42:04.454   155   155 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+10-24 15:42:04.454  9500  9501 I Gralloc4: mapper 4.x is not supported
+10-24 15:42:04.607     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+10-24 15:42:04.494  7438  7510 D EGL_emulation: app_time_stats: avg=1168.26ms min=1168.26ms max=1168.26ms count=1
+10-24 15:42:04.504   926   926 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 15:42:04.526   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(1)
+10-24 15:42:05.525   926   926 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 15:42:05.663  7438  7510 D EGL_emulation: app_time_stats: avg=1118.00ms min=1118.00ms max=1118.00ms count=1
+10-24 15:42:06.712   926   926 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 15:42:07.545  7438  7510 D EGL_emulation: app_time_stats: avg=1881.96ms min=1881.96ms max=1881.96ms count=1
+10-24 15:42:08.594  7438  7510 D EGL_emulation: app_time_stats: avg=1048.15ms min=1048.15ms max=1048.15ms count=1
+10-24 15:42:09.511   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(3)
+10-24 15:42:09.751     0     0 I logd    : logdr: UID=2000 GID=2000 PID=9503 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 15:42:09.607  6560  6711 I PhenotypeProcessReaper: Memory state is: 125

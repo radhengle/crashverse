@@ -11,6 +11,13 @@ adb shell wm size 1080x2340; adb shell wm density 420
 adb shell settings put secure immersive_mode_confirmations confirmed || true
 adb shell settings put global hide_error_dialogs 1 || true
 sleep 20 # let System UI settle on the software GPU
+# Run 40102001893 (API 34): late post-boot overlay commits (GMS/setup) changed the app's asset paths (config 0x80000000, which a
+# manifest can't declare), so Android relaunched the activity mid-calibration and Unity killed itself. No Play Store updates, and
+# wait until two quiet 15 s windows pass with no new overlay commit / configuration change (max ~3 min) before installing.
+adb shell pm disable-user --user 0 com.android.vending >/dev/null 2>&1 || true
+evc(){ adb logcat -b events -d 2>/dev/null | grep -cE "commit_sys_config_file: \[overlays|configuration_changed" || true; }
+quiet=0; last=$(evc); for i in $(seq 1 12); do sleep 15; now=$(evc); if [ "$now" = "$last" ]; then quiet=$((quiet+1)); [ $quiet -ge 2 ] && break; else quiet=0; fi; last=$now; done
+echo "settle: quiet=$quiet after $((i*15)) s"
 # API 34 run 40067356429: adb-install verification finished late, re-broadcast the package and force-stopped the app mid-calibration.
 adb shell settings put global verifier_verify_adb_installs 0 >/dev/null 2>&1 || true
 adb shell settings put global package_verifier_enable 0 >/dev/null 2>&1 || true
@@ -18,6 +25,11 @@ if ! adb install -r -g "$APK" > "$OUT/install.txt" 2>&1; then
   code=$(grep -o "INSTALL_[A-Z_]*" "$OUT/install.txt" | head -1); cat "$OUT/install.txt"
   echo "::error::adb install failed on API $(adb shell getprop ro.build.version.sdk | tr -d '\r'): ${code:-unknown}"; exit 1; fi
 cat "$OUT/install.txt"; adb shell pm clear $PKG >/dev/null; adb logcat -c
+# QA V2-01: one continuous capture of EVERY buffer (main/system/crash/events incl. am_finish_activity, am_destroy_activity,
+# configuration_changed) for the whole run. The per-tap `logcat -c` below only resets what the coordinate lookups read; this
+# stream keeps everything. On exit: Android's own record of why the process ended (ApplicationExitInfo).
+adb logcat -b all -v threadtime > "$OUT/logcat_all.txt" 2>&1 & LCPID=$!
+trap 'adb shell dumpsys activity exit-info $PKG > "$OUT/exit_info.txt" 2>&1 || true; adb shell dumpsys activity activities > "$OUT/activities.txt" 2>&1 || true; kill $LCPID 2>/dev/null || true' EXIT
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null
 
 # coord <Screen> <Button> -> "x y" from the newest probe dump of that screen (waits up to 40 s)
@@ -41,13 +53,17 @@ export BIRTH_YEAR=$YR
 put MONTH AgeGateScreen "$(coord AgeGateScreen Button_Month)"; ctap $MONTH_X $MONTH_Y
 put MONTH_OPT AgeGateScreen "$(coord ListModal Button_$M)";   ctap $MONTH_OPT_X $MONTH_OPT_Y
 put YEAR AgeGateScreen "$(coord AgeGateScreen Button_Year)";  ctap $YEAR_X $YEAR_Y
+put YEAR_MID x "$(coord ListModal Button_$(( $(date -u +%Y) - 50 )))"   # the item the list opens on (release launch check taps it; adult)
 pick_year "$YR" || { adb logcat -d > "$OUT/calibration/logcat.txt"; adb exec-out screencap -p > "$OUT/calibration/missing_year.png"; echo "::error::calibration: year $YR not reachable"; exit 1; }
 put YEAR_OPT x "$PICKED_X $PICKED_Y"; ctap $YEAR_OPT_X $YEAR_OPT_Y
 put CONTINUE x "$(coord AgeGateScreen Button_Continue)"; ctap $CONTINUE_X $CONTINUE_Y 5
-# First run has no login screen yet (guest sign-in is automatic in AccountLifecycle): GUEST taps the status bar, a no-op.
-export GUEST_X=30 GUEST_Y=1170; echo "GUEST=30,1170 (no login screen in first run: a no-op tap on the map pan surface; 540,20 hit the Store button)" >> "$OUT/coords.txt"
+# v2 target UI: Login (social sign-in disabled, "Coming soon") -> Play as Guest -> Create Profile (avatar, badge) -> World Map -> Level Select
+put GUEST x "$(coord LoginScreen Button_Guest)"; ctap $GUEST_X $GUEST_Y 3
+# all three from the one probe dump: selecting an avatar/badge only recolours, so the probe doesn't re-dump after ctap clears the log
+put AVATAR x "$(coord ProfileScreen Button_Avatar2)"; put BADGE x "$(coord ProfileScreen Button_Badge2)"; put PCONT x "$(coord ProfileScreen Button_Continue)"
+ctap $AVATAR_X $AVATAR_Y 2; ctap $BADGE_X $BADGE_Y 2; ctap $PCONT_X $PCONT_Y 4
 put NODE1 x "$(coord MapScreen Button_1)"; ctap $NODE1_X $NODE1_Y 3
-put PLAY x "$(coord BriefingScreen Button_Play)"; ctap $PLAY_X $PLAY_Y 8
+put PLAY x "$(coord LevelSelectScreen Button_Play)"; ctap $PLAY_X $PLAY_Y 8
 put FIRE x "$(coord HudScreen Button_FIRE)"
 put HINT x "$(coord HudScreen Button_DevAimHint)"   # BUG-24: dev-only, aims at the level's practice hint (known winning line)
 # Aim lines from L1's data hint (yaw 4°, pitch 22° from rest 25°): yaw 0.25°/dp, pitch 0.15°/dp; drag up raises the arc.
@@ -61,6 +77,9 @@ for s in $(seq 1 $SHOTS); do ctap $HINT_X $HINT_Y 1; ctap $FIRE_X $FIRE_Y 6
   adb logcat -d -s Unity | grep -q "CVTAP|RESULT|" && break; done
 adb exec-out screencap -p > "$OUT/calibration/result.png"
 put RETRY x "$(coord ResultsScreen Button_Retry)"
+put NEXT x "$(coord ResultsScreen Button_NextLevel)"   # Level Complete: Next Level
+put MAP x "$(coord ResultsScreen Button_Map)"; ctap $MAP_X $MAP_Y 4
+put NODE2 x "$(coord MapScreen Button_2)"               # unlocked by the L1 win; the flow opens its Level Select at the end
 adb logcat -d > "$OUT/calibration/logcat.txt"
 
 # Pass 2: QA's flow from a clean install.
@@ -68,4 +87,4 @@ adb shell am force-stop $PKG
 bash "$(dirname "$0")/emulator_smoke_flow.sh" "$APK" "$OUT"
 
 # BUG-23 gate: no magenta (missing shader/material) on map, L1 HUD or results.
-python3 "$(dirname "$0")/no_magenta.py" 0.03 "$OUT"/0[4-8]_*.png
+python3 "$(dirname "$0")/no_magenta.py" 0.03 "$OUT"/0[4-9]_*.png

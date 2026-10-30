@@ -27,7 +27,7 @@ PlayerSettings:
   bundleVersion: 0.1.0
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 24
-  AndroidTargetSdkVersion: 34
+  AndroidTargetSdkVersion: 35
   applicationIdentifier:
     Android: com.crashverse.game
   scriptingBackend:

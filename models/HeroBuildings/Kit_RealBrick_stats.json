@@ -1,0 +1,124 @@
+{
+ "building": "RealBrick",
+ "source": "BuildingKit v3.1 geometry + fracture, re-surfaced with graded CC0 (realistic v1)",
+ "modules": {
+  "Block": {
+   "LOD0": 452,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    1.02,
+    1.0,
+    1.0
+   ],
+   "aabb": [
+    [
+     -0.51,
+     -0.5,
+     -0.0
+    ],
+    [
+     0.51,
+     0.5,
+     1.0
+    ]
+   ],
+   "frags": 16,
+   "frag_max": 104,
+   "Fractured": 1268,
+   "mass": "76.3-179.1",
+   "min_axis_m": 0.235,
+   "joints": 54,
+   "anchors": 8,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Brick",
+   "source": "Tools/Blender/build_kit2.py Block (kit v3.1 recipe)"
+  },
+  "Wall": {
+   "LOD0": 948,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    3.0,
+    3.0,
+    0.27
+   ],
+   "aabb": [
+    [
+     -1.5,
+     -0.135,
+     -0.0
+    ],
+    [
+     1.5,
+     0.135,
+     3.0
+    ]
+   ],
+   "frags": 18,
+   "frag_max": 76,
+   "Fractured": 1060,
+   "mass": "143.7-408.9",
+   "min_axis_m": 0.25,
+   "joints": 37,
+   "anchors": 5,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Brick",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx"
+  },
+  "Floor": {
+   "LOD0": 876,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    3.0,
+    0.27,
+    3.0
+   ],
+   "aabb": [
+    [
+     -1.5,
+     -1.5,
+     -0.01
+    ],
+    [
+     1.5,
+     1.5,
+     0.26
+    ]
+   ],
+   "frags": 18,
+   "frag_max": 80,
+   "Fractured": 1032,
+   "mass": "162.7-309.4",
+   "min_axis_m": 0.25,
+   "joints": 38,
+   "anchors": 13,
+   "anchor_to": [
+    "Support"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Brick",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Floor.fbx"
+  }
+ },
+ "tile_m": 1.75,
+ "uv": "UV0 metric box projection, uv = pos_m / tile_m (rebuild from scaled positions after per-block scaling)",
+ "materials": [
+  "M_RealBrick",
+  "M_RealBrick_Inner"
+ ],
+ "textures": [
+  "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Textures/T_RealBrick_A/_N/_ORM",
+  "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Textures/T_RealBrick_Inner_A/_N/_ORM"
+ ]
+}

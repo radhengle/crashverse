@@ -13,7 +13,7 @@ public sealed class ServerOptions
     public string ContentRoot;                       // Assets/_Project/Resources/Data
     public string PackageName = "com.crashverse.game";
     public string[] CertDigests = { "dev-cert-sha256" };
-    public string SimVersion = "dev";
+    public string SimVersion = SimVersions.Current; // was "dev"; bumped for chunked destruction
     public int PhysicsHz = 50;                       // P9 / D3
     /// <summary>"enforce" (default) or "logOnly" (closed testing: verdicts are logged and fed to riskScore, never downgrade runs).</summary>
     public string IntegrityMode = "enforce";

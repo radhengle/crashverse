@@ -1,0 +1,127 @@
+--------- beginning of system
+10-24 12:45:30.422   542   597 I AppsFilter: interaction: PackageSetting{5bf664b com.crashverse.game/10192} -> PackageSetting{cbc567b com.google.android.contacts/10154} BLOCKED
+--------- beginning of main
+10-24 12:45:30.425  1128  1128 D CarrierSvcBindHelper: onPackageModified: com.google.android.contacts
+10-24 12:45:30.429  1100  1100 V MediaPlayerList: mPackageChangedBroadcastReceiver: action: android.intent.action.PACKAGE_CHANGED
+10-24 12:45:30.429  1100  1100 V MediaPlayerList: mPackageChangedBroadcastReceiver: action: android.intent.action.PACKAGE_CHANGED
+10-24 12:45:30.434  1128  1128 D CarrierSvcBindHelper: No carrier app for: 0
+10-24 12:45:30.439   903  4601 I PermissionControllerServiceImpl: Updating user sensitive for uid 10154
+10-24 12:45:30.444   542   572 E system_server: No package ID 7f found for resource ID 0x7f080107.
+10-24 12:45:30.444   542   572 E system_server: No package ID 7f found for resource ID 0x7f150560.
+10-24 12:45:30.449   542   646 I InputReader: Reconfiguring input devices, changes=KEYBOARD_LAYOUTS
+10-24 12:45:30.475   902   902 D ControlsListingControllerImpl: ServiceConfig reloaded, count: 0
+10-24 12:45:30.479  1128  1418 D ImsResolver: maybeAddedImsService, packageName: com.google.android.contacts
+10-24 12:45:30.486   902   993 D StylusManager: Stylus InputDevice changed: 14 virtio_input_multi_touch_11
+10-24 12:45:30.490   902   993 D StylusManager: Stylus InputDevice changed: 13 virtio_input_multi_touch_10
+10-24 12:45:30.490   902   993 D StylusManager: Stylus InputDevice changed: 12 virtio_input_multi_touch_9
+10-24 12:45:30.490   902   993 D StylusManager: Stylus InputDevice changed: 4 virtio_input_multi_touch_1
+10-24 12:45:30.490   902   993 D StylusManager: Stylus InputDevice changed: 11 virtio_input_multi_touch_8
+10-24 12:45:30.490   902   993 D StylusManager: Stylus InputDevice changed: 7 virtio_input_multi_touch_4
+10-24 12:45:30.490   902   993 D StylusManager: Stylus InputDevice changed: 6 virtio_input_multi_touch_3
+10-24 12:45:30.491   902   993 D StylusManager: Stylus InputDevice changed: 9 virtio_input_multi_touch_6
+10-24 12:45:30.491   902   993 D StylusManager: Stylus InputDevice changed: 8 virtio_input_multi_touch_5
+10-24 12:45:30.491   902   993 D StylusManager: Stylus InputDevice changed: 5 virtio_input_multi_touch_2
+10-24 12:45:30.491   902   993 D StylusManager: Stylus InputDevice changed: 10 virtio_input_multi_touch_7
+10-24 12:45:30.510  1807  1807 I AiAiEcho: AppFetcherImpl onPackageChanged com.google.android.contacts.
+10-24 12:45:30.513  1807  8040 I AiAiEcho: AppIndexer Package:[com.google.android.contacts] UserProfile:[0] Enabled:[true].
+10-24 12:45:30.514  1807  8040 I AiAiEcho: AppFetcherImplV2 updateApps package:[com.google.android.contacts], userId:[0], reason:[package is updated.].
+10-24 12:45:30.612  1168  1168 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=821.0, y[0]=1416.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=430758, downTime=430758, deviceId=-1, source=0x1002, displayId=0, eventId=-65177422 }
+10-24 12:45:30.612  1168  1168 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=821.0, y[0]=1416.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=430758, downTime=430758, deviceId=-1, source=0x1002, displayId=0, eventId=-168851498 }
+10-24 12:45:30.928  4399  4526 I Bugle   : BroadcastReceiverAsyncWorkTracker: Acknowledging broadcast of bdxy@3ae52a5
+10-24 12:45:30.948  5693  8078 I Fitness : OnPackageChangedOperation got intent: Intent { act=android.intent.action.PACKAGE_CHANGED dat=package: flg=0x45000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) } [CONTEXT service_id=17 ]
+10-24 12:45:30.950  5693  8078 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_CHANGED [CONTEXT service_id=17 ]
+10-24 12:45:31.027  5689  5823 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=AppsCorpus serviceId=36
+10-24 12:45:31.030  5693  5757 W ChimeraUtils: Module com.google.android.gms.nearby_en missing resource null(0)
+10-24 12:45:31.031  5693  5757 W ChimeraUtils: Module com.google.android.gms.nearby_en missing resource null(0)
+10-24 12:45:31.044  5689  5823 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=null serviceId=30
+10-24 12:45:31.058  5689  6138 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+10-24 12:45:31.064  5689  6138 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+10-24 12:45:31.064  5689  6138 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms
+10-24 12:45:31.070  5689  6138 I Icing   : Indexing done com.google.android.gms-apps
+10-24 12:45:31.422  6966  6989 I Unity   : CVTAP|BEGIN|LevelSelectScreen
+10-24 12:45:31.422  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.422  6966  6989 I Unity   : 
+10-24 12:45:31.426  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_◀|203|136|1
+10-24 12:45:31.426  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.426  6966  6989 I Unity   : 
+10-24 12:45:31.426  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_▶|877|136|0
+10-24 12:45:31.426  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.426  6966  6989 I Unity   : 
+10-24 12:45:31.426  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PUPrev|86|1270|1
+10-24 12:45:31.426  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.426  6966  6989 I Unity   : 
+10-24 12:45:31.427  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PU_earthquake|249|1270|1
+10-24 12:45:31.427  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.427  6966  6989 I Unity   : 
+10-24 12:45:31.427  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PU_multi_shot|443|1270|1
+10-24 12:45:31.427  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.427  6966  6989 I Unity   : 
+10-24 12:45:31.427  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PU_black_hole|637|1270|1
+10-24 12:45:31.427  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.427  6966  6989 I Unity   : 
+10-24 12:45:31.427  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PU_mega_bomb|831|1270|1
+10-24 12:45:31.427  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.427  6966  6989 I Unity   : 
+10-24 12:45:31.427  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PUNext|994|1270|1
+10-24 12:45:31.427  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.427  6966  6989 I Unity   : 
+10-24 12:45:31.428  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_Play|540|2067|1
+10-24 12:45:31.428  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.428  6966  6989 I Unity   : 
+10-24 12:45:31.428  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_Back|540|2224|1
+10-24 12:45:31.428  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:31.428  6966  6989 I Unity   : 
+10-24 12:45:31.441  6966  7029 D EGL_emulation: app_time_stats: avg=51.45ms min=49.88ms max=53.20ms count=4
+10-24 12:45:32.240  6966  6989 I Unity   : CVTAP|BEGIN|LevelSelectScreen
+10-24 12:45:32.240  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.240  6966  6989 I Unity   : 
+10-24 12:45:32.241  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_◀|203|136|1
+10-24 12:45:32.241  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.241  6966  6989 I Unity   : 
+10-24 12:45:32.241  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_▶|877|136|0
+10-24 12:45:32.241  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.241  6966  6989 I Unity   : 
+10-24 12:45:32.241  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PUPrev|86|1270|1
+10-24 12:45:32.241  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.241  6966  6989 I Unity   : 
+10-24 12:45:32.241  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PU_earthquake|249|1270|1
+10-24 12:45:32.241  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.241  6966  6989 I Unity   : 
+10-24 12:45:32.241  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PU_multi_shot|443|1270|1
+10-24 12:45:32.241  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.241  6966  6989 I Unity   : 
+10-24 12:45:32.242  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PU_black_hole|637|1270|1
+10-24 12:45:32.242  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.242  6966  6989 I Unity   : 
+10-24 12:45:32.242  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PU_mega_bomb|831|1270|1
+10-24 12:45:32.242  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.242  6966  6989 I Unity   : 
+10-24 12:45:32.242  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_PUNext|994|1270|1
+10-24 12:45:32.242  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.242  6966  6989 I Unity   : 
+10-24 12:45:32.242  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_Play|540|2067|1
+10-24 12:45:32.242  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.242  6966  6989 I Unity   : 
+10-24 12:45:32.243  6966  6989 I Unity   : CVTAP|LevelSelectScreen|Button_Back|540|2224|1
+10-24 12:45:32.243  6966  6989 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 12:45:32.243  6966  6989 I Unity   : 
+10-24 12:45:32.694  6966  7029 D EGL_emulation: app_time_stats: avg=252.75ms min=50.20ms max=455.31ms count=2
+10-24 12:45:32.756  5689  5689 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.chimera.container.moduleinstall.ModuleInstallService.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.GmsApiService }
+10-24 12:45:32.756  5689  5689 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.ocr.service.internal.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.GmsInternalApiService }
+10-24 12:45:33.061  5689  5689 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.pay.service.BIND dat=chimera-action:/... cmp=com.google.android.gms/.chimera.GmsApiService }
+10-24 12:45:33.177   420   516 D AudioFlinger: mixer(0x70bc1831a930) throttle end: throttle time(21)
+--------- beginning of kernel
+10-24 12:45:34.022     0     0 I logd    : logdr: UID=2000 GID=2000 PID=8085 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 12:45:33.869  6966  7029 D EGL_emulation: app_time_stats: avg=117.13ms min=31.81ms max=344.52ms count=4
+10-24 12:45:34.045     0     0 I logd    : logdr: UID=2000 GID=2000 PID=8088 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 12:45:34.384  8095  8095 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+10-24 12:45:34.384  8095  8095 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+10-24 12:45:34.405   542   572 D OomAdjuster: Not killing cached processes
+10-24 12:45:34.405   542   572 W ProcessStats: Tracking association SourceState{5dc94b5 android.process.acore/10084 BFgs #13412} whose proc state 4 is better than process ProcessState{abe02c2 com.google.android.contacts/10154 pkg=com.google.android.contacts} proc state 14 (441 skipped)
+10-24 12:45:35.115   156   156 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+10-24 12:45:35.115  8095  8096 I Gralloc4: mapper 4.x is not supported
+10-24 12:45:35.283     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+10-24 12:45:35.144  6966  7029 D EGL_emulation: app_time_stats: avg=436.54ms min=422.55ms max=450.53ms count=2
+10-24 12:45:35.253   420   516 D AudioFlinger: mixer(0x70bc1831a930) throttle end: throttle time(4)
+10-24 12:45:35.744  2046  2744 I WorkerManager: dispose()
+10-24 12:45:36.276     0     0 I logd    : logdr: UID=2000 GID=2000 PID=8097 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

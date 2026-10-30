@@ -1,0 +1,29 @@
+--------- beginning of main
+10-24 15:33:30.681  1209  1209 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=322367, downTime=322367, deviceId=-1, source=0x1002, displayId=0, eventId=-821664472 }
+10-24 15:33:30.685  1209  1209 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=346.0, y[0]=1532.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=322367, downTime=322367, deviceId=-1, source=0x1002, displayId=0, eventId=-1006078296 }
+10-24 15:33:31.010  5056  5254 D EGL_emulation: app_time_stats: avg=1735.53ms min=1735.53ms max=1735.53ms count=1
+10-24 15:33:31.895   926   926 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+10-24 15:33:34.111   402   518 D AudioFlinger: mixer(0x74671127a930) throttle end: throttle time(1)
+10-24 15:33:34.607  5056  5254 D EGL_emulation: app_time_stats: avg=1798.42ms min=241.36ms max=3355.48ms count=2
+10-24 15:33:34.635  5056  5095 I Unity   : CVTAP|BEGIN|MapScreen
+10-24 15:33:34.635  5056  5095 I Unity   : CVTAP|MapScreen|Button_1|540|1762|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_2|821|1416|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_3|820|1070|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_4|537|723|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_5|258|376|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_6|262|30|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_DailyBoss|216|1416|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_Profile|74|74|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_Settings|877|74|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_⚙|1018|74|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_PowerUps|147|2246|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_Seasons|409|2246|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_Rewards|671|2246|1
+10-24 15:33:34.641  5056  5095 I Unity   : CVTAP|MapScreen|Button_More|933|2246|1
+--------- beginning of kernel
+10-24 15:33:34.914     0     0 I logd    : logdr: UID=2000 GID=2000 PID=7249 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+--------- beginning of system
+10-24 15:33:34.796   549   646 D ActivityManager: freezing 1595 android.process.acore
+10-24 15:33:34.799   549   646 D ActivityManager: freezing 1829 com.google.process.gservices
+10-24 15:33:34.800   549   646 D ActivityManager: freezing 2262 com.google.process.gapps
+10-24 15:33:35.071     0     0 I logd    : logdr: UID=2000 GID=2000 PID=7254 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns

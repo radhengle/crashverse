@@ -28,10 +28,25 @@ namespace Crashverse.Destruction
         readonly List<DestructibleBlock> _dependents = new List<DestructibleBlock>();
         Rigidbody _rb;
         Renderer _renderer;
+        /// <summary>Realistic v1 visual child (RealKit), hidden with the block when it breaks or falls out.</summary>
+        public GameObject visual;
         Color _baseColor;
         bool _broken, _collapsed, _outOfBounds;
         int _damageStep;
         int _crackStep; // 0..3, ImpactEvent Crack steps at 33/66/90% damage
+        Color _currentColor;
+        // Chunked destruction (physics/Chunked_Destruction.md): layout precomputed at level build, never at break time.
+        ChunkSpec[] _chunks;
+        int _chunkCount;
+        Vector3 _lastImpact; Vector3 _lastImpactNormal = Vector3.up; bool _hasImpact; int _impactTick = int.MinValue; float _impactWeight;
+        /// <summary>Layout role "roof" or fractureClass "Roof": breaks into roof tiles.</summary>
+        public bool isRoof;
+        public ChunkKind ChunkKind { get; private set; }
+        public int ChunkCount => _chunkCount;
+        /// <summary>The precomputed layout (shared buffer; DebrisPool rewrites order/delay on break).</summary>
+        public ChunkSpec[] ChunkLayoutBuffer => _chunks;
+        public int PieceId => Crashverse.Gameplay.PieceIds.Of(blockId);
+        public Color CurrentColor => _currentColor;
 
         public bool IsBroken => _broken;
         public bool IsCollapsed => _collapsed;
@@ -68,6 +83,36 @@ namespace Crashverse.Destruction
             gameObject.tag = isObjectivePiece ? "ObjectivePiece" : "NonObjective";
             InitialY = transform.position.y;
             Height = d.s != null && d.s.Length > 1 ? d.s[1] : 1f;
+            isRoof = ChunkKindRules.IsRoofRole(role);
+        }
+
+        /// <summary>
+        /// Precomputes this piece's chunk layout (level build / Retry, not the hot path). Kind from the material family and the
+        /// roof flag, or from an imported fractureClass (FractureClassRules: Roof → Stone + roof tiles). Seed = block id only.
+        /// </summary>
+        public void PrepareChunks(int tier, string fractureClass = null)
+        {
+            var type = ImpactReport.TypeOf(this);
+            ChunkKind = string.IsNullOrEmpty(fractureClass) ? ChunkKindRules.For(type, isRoof)
+                                                            : ChunkKindRules.ForFractureClass(fractureClass, type, out _);
+            int max = indestructible ? 0 : ChunkBudget.ChunksFor(ChunkKind, tier);
+            if (max <= 0) { _chunkCount = 0; return; }
+            if (_chunks == null || _chunks.Length < max) _chunks = new ChunkSpec[max];
+            var s = transform.localScale;
+            _chunkCount = ChunkLayout.Generate(ChunkKind, ChunkLayout.ToMm(s.x), ChunkLayout.ToMm(s.y), ChunkLayout.ToMm(s.z),
+                                               ChunkLayout.SeedFor(PieceId), max, _chunks);
+        }
+
+        /// <summary>
+        /// Where this piece was last hit; chunks release outward from here. Deterministic within a tick: a later tick replaces,
+        /// inside one tick the heaviest hit wins (script hits — projectile, explosion — pass float.MaxValue and win over contacts),
+        /// so PhysX callback order never changes the result.
+        /// </summary>
+        public void NoteImpact(Vector3 point, Vector3 normal, float weight = float.MaxValue)
+        {
+            int now = SimRunner.NowTick;
+            if (_hasImpact && now == _impactTick && weight <= _impactWeight) return;
+            _lastImpact = point; _lastImpactNormal = normal; _hasImpact = true; _impactTick = now; _impactWeight = weight;
         }
 
         public void AddSupport(DestructibleBlock s, bool withJoint)
@@ -78,9 +123,24 @@ namespace Crashverse.Destruction
             if (!withJoint) return;
             var j = gameObject.AddComponent<FixedJoint>();
             j.connectedBody = s.Body;
-            float f = material != null ? material.jointBreakForce : 800f;
-            j.breakForce = f; j.breakTorque = f;
+            // JointBreakPolicy: never breaks from force/torque (resting load, debris). Only the damage path removes it.
+            j.breakForce = Crashverse.Sim.JointBreakPolicy.BreakForce;
+            j.breakTorque = Crashverse.Sim.JointBreakPolicy.BreakTorque;
         }
+
+        /// <summary>
+        /// Drops this piece's joints to <paramref name="support"/> once it stops supporting (broken, collapsed, out of bounds).
+        /// With unbreakable joints this is what keeps SupportRule exact: a falling support must not drag a dependent that
+        /// still has other supports, and a dependent must not hold a falling support up. Immediate, so removal is tick-exact.
+        /// </summary>
+        void DetachJointsTo(DestructibleBlock support)
+        {
+            if (support == null) return;
+            var body = support.Body;
+            foreach (var j in GetComponents<Joint>()) if (j != null && j.connectedBody == body) DestroyJoint(j);
+        }
+
+        static void DestroyJoint(Joint j) => JointRemoval.Remove(j); // tick-exact, callback-safe
 
         /// <summary>Applies damage. Returns HP actually removed (for Titan damage scoring).</summary>
         public float ApplyDamage(float amount, bool directHit, bool splash = false)
@@ -114,12 +174,23 @@ namespace Crashverse.Destruction
             currentHp = 0f;
             ImpactReport.Break(this);
             DestroyOwnJoints();
-            if (DebrisPool.Instance != null && material != null)
-                {
+            Vector3 hit = _hasImpact ? _lastImpact : transform.position;
+            var tierOfHit = _hasImpact ? ImpactTier.Medium : ImpactTier.Light;
+            if (_chunkCount > 0 && ChunkKindRules.PresentationOnly(ChunkKind))
+            {
+                if (GlassShardFx.Instance != null) GlassShardFx.Instance.Shatter(this, hit, _lastImpactNormal, tierOfHit); // presentation only
+            }
+            else if (_chunkCount > 0 && DebrisPool.Instance != null)
+            {
+                DebrisPool.Instance.SpawnChunks(this, hit, ImpactReport.TypeOf(this), tierOfHit); // mass still counted on this piece
+            }
+            else if (DebrisPool.Instance != null && material != null)
+            {
                 int chunks = Crashverse.Feel.DebrisBudget.Chunks(MaterialDefinition.KeyOf(material.kind), DebrisPool.ChunkTier); // ranked: tier-independent
-                if (chunks > 0) DebrisPool.Instance.SpawnBurst(transform.position, transform.localScale, material, Mathf.Min(chunks, material.maxDebrisChunks), Crashverse.Gameplay.PieceIds.Of(blockId)); // visual only; mass counted on this piece
+                if (chunks > 0) DebrisPool.Instance.SpawnBurst(transform.position, transform.localScale, material, Mathf.Min(chunks, material.maxDebrisChunks), Crashverse.Gameplay.PieceIds.Of(blockId)); // legacy: no layout
             }
             if (_renderer != null) _renderer.enabled = false;
+            if (visual != null) visual.SetActive(false);
             var col = GetComponent<Collider>();
             if (col != null) col.enabled = false;
             Body.isKinematic = true;
@@ -151,18 +222,20 @@ namespace Crashverse.Destruction
             Body.isKinematic = true;
             Body.detectCollisions = false;
             if (_renderer != null) _renderer.enabled = false;
+            if (visual != null) visual.SetActive(false);
             WentOutOfBounds?.Invoke(this);
             NotifyDependents();
         }
 
         void DestroyOwnJoints()
         {
-            foreach (var j in GetComponents<Joint>()) if (j != null) Destroy(j);
+            foreach (var j in GetComponents<Joint>()) if (j != null) DestroyJoint(j);
         }
 
         void NotifyDependents()
         {
             var deps = _dependents.ToArray();
+            foreach (var d in deps) if (d != null) d.DetachJointsTo(this);
             foreach (var d in deps) if (d != null) d.EvaluateSupport();
         }
 
@@ -176,10 +249,17 @@ namespace Crashverse.Destruction
             }
         }
 
+        /// <summary>
+        /// SupportRule: collapses only when ALL supports are gone. Progressive: the drop is scheduled CollapseRules.DelayTicks
+        /// later (StructuralIntegrity), so a building comes down level by level instead of in one tick.
+        /// </summary>
         public void EvaluateSupport()
         {
             if (_broken || _collapsed || _outOfBounds) return;
-            if (SupportLost) ForceCollapse();
+            if (!SupportLost) return;
+            var si = StructuralIntegrity.Current;
+            if (si != null && si.ScheduleCollapse(this, 0)) return;
+            ForceCollapse();
         }
 
         /// <summary>
@@ -189,7 +269,13 @@ namespace Crashverse.Destruction
         /// </summary>
         void OnCollisionEnter(Collision c)
         {
-            if (_broken || c.rigidbody == null || c.rigidbody.isKinematic) return;
+            if (_broken) return;
+            if (c.contactCount > 0) NoteImpact(c.GetContact(0).point, c.GetContact(0).normal, c.impulse.magnitude);
+            // A piece that lost its supports breaks into chunks when it lands hard (queued: stable per-tick order).
+            if (_collapsed && !indestructible && !isSteelJoint &&
+                CollapseRules.BreaksOnLanding(ImpactReport.TypeOf(this), DebrisDamage.ToMmPerS(c.relativeVelocity.magnitude)))
+                DebrisDamageQueue.Enqueue(this, "~land", Mathf.CeilToInt(Mathf.Max(currentHp, 0f) * 1000f) + 1);
+            if (c.rigidbody == null || c.rigidbody.isKinematic) return;
             if (c.gameObject.GetComponent<Crashverse.Weapons.Projectile>() != null) return; // projectile applies its own damage
             var hitBlock = c.gameObject.GetComponent<DestructibleBlock>();
             Vector3 cp = c.contactCount > 0 ? c.GetContact(0).point : transform.position, cn = c.contactCount > 0 ? c.GetContact(0).normal : Vector3.up;
@@ -202,6 +288,7 @@ namespace Crashverse.Destruction
             DebrisDamageQueue.Enqueue(this, other != null ? other.blockId : "~" + c.gameObject.name, milli);
         }
 
+        /// <summary>Unreachable under JointBreakPolicy (thresholds are infinite); kept so a non-policy joint still reports.</summary>
         void OnJointBreak(float breakForce)
         {
             if (_broken) return;
@@ -224,6 +311,7 @@ namespace Crashverse.Destruction
             if (_renderer == null) return;
             var block = new MaterialPropertyBlock();
             _renderer.GetPropertyBlock(block);
+            _currentColor = c;
             block.SetColor("_BaseColor", c);
             block.SetColor("_Color", c);
             if (material != null) block.SetFloat("_Smoothness", material.smoothness);
@@ -243,6 +331,7 @@ namespace Crashverse.Destruction
                 var b = c.GetComponentInParent<DestructibleBlock>();
                 if (b == null || b == source || b.IsBroken) continue;
                 if ((b.transform.position - at).magnitude > radius + 1e-3f) continue;
+                b.NoteImpact(at, (b.transform.position - at).normalized);
                 b.ApplyDamage(damage, false, splash: true);
                 if (!b.IsBroken && b.Body != null && !b.Body.isKinematic) b.Body.AddExplosionForce(600f, at, radius * 1.5f);
             }

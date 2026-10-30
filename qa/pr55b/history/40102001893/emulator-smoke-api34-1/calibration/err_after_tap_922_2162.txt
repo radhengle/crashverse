@@ -1,0 +1,1 @@
+10-24 15:05:29.355   551  6639 E ActivityManager: ANR in com.crashverse.game

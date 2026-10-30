@@ -1,0 +1,87 @@
+--------- beginning of main
+10-24 17:06:07.131  1193  1193 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=821.0, y[0]=1416.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=464291, downTime=464291, deviceId=-1, source=0x1002, displayId=0, eventId=-516840682 }
+10-24 17:06:07.137  1193  1193 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=821.0, y[0]=1416.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=464291, downTime=464291, deviceId=-1, source=0x1002, displayId=0, eventId=-636953186 }
+10-24 17:06:07.396  7100  7122 I Unity   : CVTAP|BEGIN|LevelSelectScreen
+10-24 17:06:07.396  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.396  7100  7122 I Unity   : 
+10-24 17:06:07.396  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_◀|203|136|1
+10-24 17:06:07.396  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.396  7100  7122 I Unity   : 
+10-24 17:06:07.401  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_▶|877|136|0
+10-24 17:06:07.401  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.401  7100  7122 I Unity   : 
+10-24 17:06:07.402  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PUPrev|86|1270|1
+10-24 17:06:07.402  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.402  7100  7122 I Unity   : 
+10-24 17:06:07.402  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PU_earthquake|249|1270|1
+10-24 17:06:07.402  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.402  7100  7122 I Unity   : 
+10-24 17:06:07.402  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PU_multi_shot|443|1270|1
+10-24 17:06:07.402  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.402  7100  7122 I Unity   : 
+10-24 17:06:07.402  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PU_black_hole|637|1270|1
+10-24 17:06:07.402  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.402  7100  7122 I Unity   : 
+10-24 17:06:07.402  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PU_mega_bomb|831|1270|1
+10-24 17:06:07.402  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.402  7100  7122 I Unity   : 
+10-24 17:06:07.402  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PUNext|994|1270|1
+10-24 17:06:07.402  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.402  7100  7122 I Unity   : 
+10-24 17:06:07.403  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_Play|540|2067|1
+10-24 17:06:07.403  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.403  7100  7122 I Unity   : 
+10-24 17:06:07.403  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_Back|540|2224|1
+10-24 17:06:07.403  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.403  7100  7122 I Unity   : 
+10-24 17:06:07.922  7100  7122 I Unity   : CVTAP|BEGIN|LevelSelectScreen
+10-24 17:06:07.922  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.922  7100  7122 I Unity   : 
+10-24 17:06:07.922  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_◀|203|136|1
+10-24 17:06:07.922  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.922  7100  7122 I Unity   : 
+10-24 17:06:07.922  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_▶|877|136|0
+10-24 17:06:07.922  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.922  7100  7122 I Unity   : 
+10-24 17:06:07.922  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PUPrev|86|1270|1
+10-24 17:06:07.922  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.922  7100  7122 I Unity   : 
+10-24 17:06:07.923  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PU_earthquake|249|1270|1
+10-24 17:06:07.923  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.923  7100  7122 I Unity   : 
+10-24 17:06:07.923  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PU_multi_shot|443|1270|1
+10-24 17:06:07.923  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.923  7100  7122 I Unity   : 
+10-24 17:06:07.923  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PU_black_hole|637|1270|1
+10-24 17:06:07.923  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.923  7100  7122 I Unity   : 
+10-24 17:06:07.923  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PU_mega_bomb|831|1270|1
+10-24 17:06:07.923  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.923  7100  7122 I Unity   : 
+10-24 17:06:07.923  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_PUNext|994|1270|1
+10-24 17:06:07.923  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.923  7100  7122 I Unity   : 
+10-24 17:06:07.924  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_Play|540|2067|1
+10-24 17:06:07.924  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.924  7100  7122 I Unity   : 
+10-24 17:06:07.924  7100  7122 I Unity   : CVTAP|LevelSelectScreen|Button_Back|540|2224|1
+10-24 17:06:07.924  7100  7122 I Unity   : Crashverse.UI.UITapProbe:LateUpdate()
+10-24 17:06:07.924  7100  7122 I Unity   : 
+10-24 17:06:08.079  7100  7164 D EGL_emulation: app_time_stats: avg=160.65ms min=100.27ms max=220.37ms count=3
+10-24 17:06:09.247  7100  7164 D EGL_emulation: app_time_stats: avg=133.93ms min=43.95ms max=265.45ms count=3
+10-24 17:06:09.670   410   517 D AudioFlinger: mixer(0x73573fb97930) throttle end: throttle time(27)
+--------- beginning of kernel
+10-24 17:06:10.379     0     0 I logd    : logdr: UID=2000 GID=2000 PID=8204 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:06:10.432     0     0 I logd    : logdr: UID=2000 GID=2000 PID=8207 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:06:10.411  8214  8214 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+10-24 17:06:10.411  8214  8214 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+10-24 17:06:10.579   410   517 D AudioFlinger: mixer(0x73573fb97930) throttle end: throttle time(48)
+10-24 17:06:10.838  7100  7164 D EGL_emulation: app_time_stats: avg=401.59ms min=42.74ms max=844.86ms count=3
+10-24 17:06:11.031     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+10-24 17:06:10.840   160   160 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+10-24 17:06:10.843  8214  8215 I Gralloc4: mapper 4.x is not supported
+10-24 17:06:11.025   410   517 D AudioFlinger: mixer(0x73573fb97930) throttle end: throttle time(34)
+10-24 17:06:11.028   906   906 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+10-24 17:06:11.390   410   517 D AudioFlinger: mixer(0x73573fb97930) throttle end: throttle time(9)
+10-24 17:06:12.035     0     0 I logd    : logdr: UID=2000 GID=2000 PID=8216 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+10-24 17:06:11.854  7100  7164 D EGL_emulation: app_time_stats: avg=48.90ms min=34.43ms max=64.23ms count=3

@@ -1,0 +1,354 @@
+{
+ "levelRewards": {
+  "coinsFirstClear": 50,
+  "coinsPerStar": 25,
+  "replayCoins": 10,
+  "gemsFirst3Star": 5,
+  "chestEveryLevels": 5,
+  "hardBonusCoins": 100,
+  "hardBonusGems": 5
+ },
+ "dailyBoss": {
+  "layouts": [
+   "titan_ash_bridge",
+   "titan_caldera_rim",
+   "titan_forge_floor",
+   "titan_slag_foundry"
+  ],
+  "names": [
+   "Ironjaw Golem",
+   "Magma Brute",
+   "Storm Colossus",
+   "Cinder Warlord"
+  ],
+  "baseShots": 5,
+  "shotSpread": 1,
+  "winThreshold": 0.85,
+  "reward": {
+   "coins": 300,
+   "gems": 5,
+   "chests": 1
+  }
+ },
+ "seasons": [
+  {
+   "id": "s1_sunny_shores",
+   "number": 1,
+   "name": "Sunny Shores",
+   "bg": "bg_season_sunny_shores",
+   "accent": "22D3EE",
+   "dark": "0E3B5C",
+   "firstLevel": 1,
+   "lastLevel": 10,
+   "comingSoon": false
+  },
+  {
+   "id": "s2_frozen_peaks",
+   "number": 2,
+   "name": "Frozen Peaks",
+   "bg": "bg_season_frozen_peaks",
+   "accent": "9BE7FF",
+   "dark": "1B2F5E",
+   "firstLevel": 11,
+   "lastLevel": 20,
+   "comingSoon": true
+  },
+  {
+   "id": "s3_neon_city",
+   "number": 3,
+   "name": "Neon City",
+   "bg": "bg_season_neon_city",
+   "accent": "E879F9",
+   "dark": "2A1450",
+   "firstLevel": 21,
+   "lastLevel": 30,
+   "comingSoon": true
+  },
+  {
+   "id": "s4_primeval_peaks",
+   "number": 4,
+   "name": "Primeval Peaks",
+   "bg": "bg_season_primeval_peaks",
+   "accent": "84CC16",
+   "dark": "23361A",
+   "firstLevel": 31,
+   "lastLevel": 40,
+   "comingSoon": true
+  }
+ ],
+ "achievements": [
+  {
+   "id": "first_smash",
+   "name": "First Smash",
+   "text": "Clear Level 1",
+   "type": "levels_cleared",
+   "target": 1,
+   "icon": "star_on",
+   "reward": {
+    "coins": 50,
+    "gems": 0,
+    "chests": 0
+   }
+  },
+  {
+   "id": "island_hopper",
+   "name": "Island Hopper",
+   "text": "Clear 5 levels",
+   "type": "levels_cleared",
+   "target": 5,
+   "icon": "coin",
+   "reward": {
+    "coins": 100,
+    "gems": 0,
+    "chests": 0
+   }
+  },
+  {
+   "id": "star_collector",
+   "name": "Star Collector",
+   "text": "Collect 15 stars",
+   "type": "total_stars",
+   "target": 15,
+   "icon": "star_on",
+   "reward": {
+    "coins": 150,
+    "gems": 2,
+    "chests": 0
+   }
+  },
+  {
+   "id": "perfectionist",
+   "name": "Perfectionist",
+   "text": "Get 3 stars on 5 levels",
+   "type": "three_star_levels",
+   "target": 5,
+   "icon": "badge_03_gold",
+   "reward": {
+    "coins": 200,
+    "gems": 5,
+    "chests": 0
+   }
+  },
+  {
+   "id": "skull_crusher",
+   "name": "Skull Crusher",
+   "text": "Beat a hard level",
+   "type": "hard_cleared",
+   "target": 1,
+   "icon": "skull_hard_level",
+   "reward": {
+    "coins": 150,
+    "gems": 3,
+    "chests": 0
+   }
+  },
+  {
+   "id": "boss_hunter",
+   "name": "Boss Hunter",
+   "text": "Defeat 3 Daily Bosses",
+   "type": "daily_boss_wins",
+   "target": 3,
+   "icon": "badge_daily_boss",
+   "reward": {
+    "coins": 200,
+    "gems": 5,
+    "chests": 0
+   }
+  },
+  {
+   "id": "gadgeteer",
+   "name": "Gadgeteer",
+   "text": "Use 10 power-ups",
+   "type": "powerups_used",
+   "target": 10,
+   "icon": "mega_bomb",
+   "reward": {
+    "coins": 100,
+    "gems": 0,
+    "chests": 1
+   }
+  },
+  {
+   "id": "treasure_hunter",
+   "name": "Treasure Hunter",
+   "text": "Open 3 chests",
+   "type": "chests_opened",
+   "target": 3,
+   "icon": "chest",
+   "reward": {
+    "coins": 100,
+    "gems": 2,
+    "chests": 0
+   }
+  },
+  {
+   "id": "loyal_wrecker",
+   "name": "Loyal Wrecker",
+   "text": "Claim 7 daily logins",
+   "type": "login_days",
+   "target": 7,
+   "icon": "gem",
+   "reward": {
+    "coins": 150,
+    "gems": 3,
+    "chests": 0
+   }
+  },
+  {
+   "id": "pass_climber",
+   "name": "Pass Climber",
+   "text": "Claim 5 season pass tiers",
+   "type": "pass_tiers",
+   "target": 5,
+   "icon": "badge_02_silver",
+   "reward": {
+    "coins": 200,
+    "gems": 3,
+    "chests": 0
+   }
+  },
+  {
+   "id": "globetrotter",
+   "name": "Globetrotter",
+   "text": "Clear 20 levels",
+   "type": "levels_cleared",
+   "target": 20,
+   "icon": "badge_01_bronze",
+   "reward": {
+    "coins": 300,
+    "gems": 5,
+    "chests": 1
+   }
+  }
+ ],
+ "chest": {
+  "coinsMin": 50,
+  "coinsMax": 150,
+  "gemsChancePct": 25,
+  "gems": 2
+ },
+ "avatars": [
+  "avatar_01",
+  "avatar_02",
+  "avatar_03",
+  "avatar_04"
+ ],
+ "badges": [
+  "badge_01_bronze",
+  "badge_02_silver",
+  "badge_03_gold"
+ ],
+ "badgeNames": [
+  "Bronze Blaster",
+  "Silver Smasher",
+  "Gold Wrecker"
+ ],
+ "dailyLogin": [
+  {
+   "coins": 50,
+   "gems": 0,
+   "chests": 0
+  },
+  {
+   "coins": 75,
+   "gems": 0,
+   "chests": 0
+  },
+  {
+   "coins": 100,
+   "gems": 1,
+   "chests": 0
+  },
+  {
+   "coins": 125,
+   "gems": 0,
+   "chests": 0
+  },
+  {
+   "coins": 150,
+   "gems": 2,
+   "chests": 0
+  },
+  {
+   "coins": 200,
+   "gems": 0,
+   "chests": 0
+  },
+  {
+   "coins": 250,
+   "gems": 3,
+   "chests": 1
+  }
+ ],
+ "seasonPass": {
+  "xpPerTier": 100,
+  "xpWin": 20,
+  "xpPerStar": 10,
+  "xpFirstClear": 30,
+  "xpDailyBoss": 40,
+  "xpDailyLogin": 15,
+  "tiers": [
+   {
+    "coins": 60,
+    "gems": 0,
+    "chests": 0
+   },
+   {
+    "coins": 80,
+    "gems": 0,
+    "chests": 0
+   },
+   {
+    "coins": 100,
+    "gems": 2,
+    "chests": 0
+   },
+   {
+    "coins": 120,
+    "gems": 0,
+    "chests": 0
+   },
+   {
+    "coins": 140,
+    "gems": 0,
+    "chests": 1
+   },
+   {
+    "coins": 160,
+    "gems": 2,
+    "chests": 0
+   },
+   {
+    "coins": 180,
+    "gems": 0,
+    "chests": 0
+   },
+   {
+    "coins": 200,
+    "gems": 0,
+    "chests": 0
+   },
+   {
+    "coins": 220,
+    "gems": 2,
+    "chests": 0
+   },
+   {
+    "coins": 240,
+    "gems": 3,
+    "chests": 1
+   }
+  ]
+ },
+ "rivalNames": [
+  "Rubble Rex",
+  "Brick Bea",
+  "Captain Crash",
+  "Tilt Tom",
+  "Wobble Wen",
+  "Demo Dana",
+  "Kaboom Kai",
+  "Pillar Pip",
+  "Slab Sam"
+ ]
+}

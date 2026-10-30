@@ -1,0 +1,97 @@
+{
+ "set": "Kit_RealGate",
+ "building": "Bld_Gatehouse",
+ "modules": {
+  "ArchL": {
+   "frac": "Stone",
+   "module": "Arch",
+   "label": "Gate arch, left half: round arch with voussoirs both faces, portcullis slot, string course, banner (left half)",
+   "tris": {
+    "LOD0": 610,
+    "LOD1": 426,
+    "LOD2": 140
+   },
+   "bounds_m": [
+    1.506,
+    2.145,
+    5.509
+   ],
+   "fragments": 9,
+   "frag_source_lod": 1,
+   "frag_tris_max": 102,
+   "frag_tris_total": 670,
+   "mass_kg_total": 19794.8,
+   "mass_kg_range": [
+    35.89,
+    6458.23
+   ],
+   "density_kg_m3": 2300,
+   "joints": 15,
+   "anchors": 2,
+   "min_axis_m": 0.159
+  },
+  "ArchR": {
+   "frac": "Stone",
+   "module": "Arch",
+   "label": "Gate arch, right half",
+   "tris": {
+    "LOD0": 624,
+    "LOD1": 424,
+    "LOD2": 138
+   },
+   "bounds_m": [
+    1.504,
+    2.143,
+    5.507
+   ],
+   "fragments": 9,
+   "frag_source_lod": 1,
+   "frag_tris_max": 120,
+   "frag_tris_total": 656,
+   "mass_kg_total": 19794.8,
+   "mass_kg_range": [
+    35.89,
+    6458.23
+   ],
+   "density_kg_m3": 2300,
+   "joints": 15,
+   "anchors": 2,
+   "min_axis_m": 0.155
+  },
+  "Portc": {
+   "frac": "Steel",
+   "module": "Portcullis",
+   "label": "Portcullis: oak lattice, iron straps and iron-shod points (half raised)",
+   "tris": {
+    "LOD0": 1296,
+    "LOD1": 736,
+    "LOD2": 216
+   },
+   "bounds_m": [
+    2.56,
+    0.181,
+    3.46
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 216,
+   "frag_tris_total": 1344,
+   "mass_kg_total": 2793.1,
+   "mass_kg_range": [
+    203.66,
+    456.68
+   ],
+   "density_kg_m3": 7850,
+   "joints": 22,
+   "anchors": 3,
+   "min_axis_m": 0.181
+  }
+ },
+ "tris_total": {
+  "LOD0": 2530,
+  "LOD1": 1586,
+  "LOD2": 494,
+  "Fractured": 2670
+ },
+ "texture_set": "RealCastle"
+}

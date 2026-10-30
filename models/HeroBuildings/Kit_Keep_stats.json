@@ -1,0 +1,307 @@
+{
+ "building": "Keep",
+ "texel_px_per_m": 66.9,
+ "atlas": 2048,
+ "modules": {
+  "WallDoor": {
+   "LOD0": 702,
+   "LOD1": 350,
+   "LOD2": 140,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.0999999046325684,
+     -0.75,
+     0.0
+    ],
+    [
+     2.0999999046325684,
+     0.30000001192092896,
+     3.009999990463257
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "ground storey front, studded double gate + lanterns",
+   "frags": 7,
+   "frag_max": 283,
+   "Fractured": 1372,
+   "mass": "1431.2-3936.4",
+   "joints": 9,
+   "anchors": 3,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "7/7"
+  },
+  "WallSlit": {
+   "LOD0": 617,
+   "LOD1": 308,
+   "LOD2": 123,
+   "ucx": 6,
+   "aabb": [
+    [
+     -2.0999999046325684,
+     -0.7300000190734863,
+     0.0
+    ],
+    [
+     2.0999999046325684,
+     0.30000001192092896,
+     3.0
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Ground",
+   "note": "ground storey side, arrow slit, battered plinth, lanterns",
+   "frags": 7,
+   "frag_max": 290,
+   "Fractured": 1215,
+   "mass": "2215.4-3900.5",
+   "joints": 12,
+   "anchors": 3,
+   "trims_dropped": 6,
+   "cut_edges_bevelled": "6/7"
+  },
+  "Wall": {
+   "LOD0": 422,
+   "LOD1": 211,
+   "LOD2": 83,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.0999999046325684,
+     -0.6600000262260437,
+     0.0
+    ],
+    [
+     2.0999999046325684,
+     0.30000001192092896,
+     3.0
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "upper storey, arched window + shutters",
+   "frags": 7,
+   "frag_max": 264,
+   "Fractured": 1021,
+   "mass": "1975.9-4672.0",
+   "joints": 11,
+   "anchors": 3,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "7/7"
+  },
+  "WallBanner": {
+   "LOD0": 888,
+   "LOD1": 444,
+   "LOD2": 176,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.0999999046325684,
+     -0.48964470624923706,
+     0.0
+    ],
+    [
+     2.0999999046325684,
+     0.30000001192092896,
+     3.0
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "upper storey front, window + two banners",
+   "frags": 7,
+   "frag_max": 296,
+   "Fractured": 1499,
+   "mass": "1440.6-4778.0",
+   "joints": 13,
+   "anchors": 3,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "5/7"
+  },
+  "WallBalcony": {
+   "LOD0": 790,
+   "LOD1": 395,
+   "LOD2": 157,
+   "ucx": 8,
+   "aabb": [
+    [
+     -2.0999999046325684,
+     -1.0,
+     -0.07096107304096222
+    ],
+    [
+     2.0999999046325684,
+     0.30000001192092896,
+     3.0
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "upper storey, window onto a timber balcony, beam ends, ivy",
+   "frags": 7,
+   "frag_max": 296,
+   "Fractured": 1260,
+   "mass": "871.1-4164.1",
+   "joints": 13,
+   "anchors": 1,
+   "trims_dropped": 7,
+   "cut_edges_bevelled": "5/7"
+  },
+  "Turret": {
+   "LOD0": 282,
+   "LOD1": 141,
+   "LOD2": 56,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.2799999713897705,
+     -1.2799999713897705,
+     0.0
+    ],
+    [
+     1.2799999713897705,
+     1.2799999713897705,
+     3.0
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "corner turret ring (stack x4), slit faces outwards",
+   "frags": 7,
+   "frag_max": 244,
+   "Fractured": 1377,
+   "mass": "1416.3-5906.6",
+   "joints": 16,
+   "anchors": 3,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "7/7"
+  },
+  "TurretCrown": {
+   "LOD0": 372,
+   "LOD1": 186,
+   "LOD2": 73,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.5800000429153442,
+     -1.5800000429153442,
+     0.0
+    ],
+    [
+     1.5800000429153442,
+     1.5800000429153442,
+     1.2999999523162842
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "corbelled turret crown",
+   "frags": 7,
+   "frag_max": 172,
+   "Fractured": 936,
+   "mass": "547.3-2342.7",
+   "joints": 11,
+   "anchors": 5,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "7/7"
+  },
+  "TurretRoof": {
+   "LOD0": 571,
+   "LOD1": 284,
+   "LOD2": 114,
+   "ucx": 8,
+   "aabb": [
+    [
+     -1.7580852508544922,
+     -1.7580852508544922,
+     0.0
+    ],
+    [
+     1.7580852508544922,
+     1.7580852508544922,
+     5.0
+    ]
+   ],
+   "frac": "Roof",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "red conical roof, finial, flag",
+   "frags": 12,
+   "frag_max": 290,
+   "Fractured": 1465,
+   "mass": "293.9-3168.0",
+   "joints": 31,
+   "anchors": 9,
+   "trims_dropped": 3,
+   "cut_edges_bevelled": "2/12"
+  },
+  "Crown": {
+   "LOD0": 448,
+   "LOD1": 224,
+   "LOD2": 89,
+   "ucx": 7,
+   "aabb": [
+    [
+     -2.0999999046325684,
+     -0.699999988079071,
+     0.0
+    ],
+    [
+     2.0999999046325684,
+     0.30000001192092896,
+     1.6399999856948853
+    ]
+   ],
+   "frac": "Stone",
+   "anchor": "bottom",
+   "anchor_to": "Support",
+   "note": "machicolated battlement on a wall top",
+   "frags": 7,
+   "frag_max": 298,
+   "Fractured": 1309,
+   "mass": "479.2-2255.8",
+   "joints": 12,
+   "anchors": 6,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "6/7"
+  },
+  "Floor": {
+   "LOD0": 62,
+   "LOD1": 30,
+   "LOD2": 12,
+   "ucx": 5,
+   "aabb": [
+    [
+     -2.799999952316284,
+     -2.799999952316284,
+     -0.3799999952316284
+    ],
+    [
+     2.799999952316284,
+     2.799999952316284,
+     0.029999999329447746
+    ]
+   ],
+   "frac": "Wood",
+   "anchor": "perimeter",
+   "anchor_to": "Support",
+   "note": "storey floor, anchors on the walls",
+   "frags": 12,
+   "frag_max": 96,
+   "Fractured": 827,
+   "mass": "128.7-512.5",
+   "joints": 23,
+   "anchors": 10,
+   "trims_dropped": 0,
+   "cut_edges_bevelled": "12/12"
+  }
+ }
+}

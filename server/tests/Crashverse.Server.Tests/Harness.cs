@@ -1,3 +1,4 @@
+using Crashverse.Backend;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -125,7 +126,7 @@ public sealed class Harness : IAsyncDisposable
         return await Post("/v1/titan/ranked/checkpoint", new RankedCheckpointEx { token = token, shotIndex = idx, damageScore = damage, shotsLeft = budget - idx, killed = killed, inputs = inputs ? In(idx * 200) : null }, s);
     }
 
-    public Task<Resp> Finalize(Session s, string token, List<RankedCheckpointEx> cps = null, bool final = true, string sim = "dev") =>
+    public Task<Resp> Finalize(Session s, string token, List<RankedCheckpointEx> cps = null, bool final = true, string sim = SimVersions.Current) =>
         Post("/v1/titan/ranked/finalize", new RankedJournalEx { token = token, final = final, simVersion = sim, checkpoints = cps ?? new() }, s);
 
     /// <summary>Plays one complete ranked run: n shots of `per` damage.</summary>
@@ -147,7 +148,7 @@ public sealed class Harness : IAsyncDisposable
     public static CampaignRunReportEx Win(string level, string token, int shotsLeft, int shots, float ratio = 0.9f, int combo = 3) => new()
     {
         reportId = Guid.NewGuid().ToString("N"), levelId = level, won = true, destroyedRatio = ratio, shotsLeft = shotsLeft, bestCombo = combo, mastery = false,
-        attemptToken = token, simVersion = "dev", inputs = Enumerable.Range(1, shots - shotsLeft).SelectMany(i => In(i * 200)).ToList()
+        attemptToken = token, simVersion = SimVersions.Current, inputs = Enumerable.Range(1, shots - shotsLeft).SelectMany(i => In(i * 200)).ToList()
     };
 
     public async Task ClearPrereqs(Session s, string upTo)
