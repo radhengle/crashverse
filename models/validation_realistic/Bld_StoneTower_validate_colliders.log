@@ -1,0 +1,45 @@
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrBk.fbx [Kit] LOD0 tris=912 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrBk_Fractured.fbx [KitFractured] LOD0 tris=572 LODs=[0] hulls=6 frags=6 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrFl.fbx [Kit] LOD0 tris=1164 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrFl_Fractured.fbx [KitFractured] LOD0 tris=1140 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfA.fbx [Kit] LOD0 tris=1417 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfA_Fractured.fbx [KitFractured] LOD0 tris=757 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfB.fbx [Kit] LOD0 tris=1430 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfB_Fractured.fbx [KitFractured] LOD0 tris=786 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdA.fbx [Kit] LOD0 tris=1148 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdA_Fractured.fbx [KitFractured] LOD0 tris=1088 LODs=[0] hulls=11 frags=11 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdB.fbx [Kit] LOD0 tris=1216 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdB_Fractured.fbx [KitFractured] LOD0 tris=996 LODs=[0] hulls=11 frags=11 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R0.fbx [Kit] LOD0 tris=1068 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R0_Fractured.fbx [KitFractured] LOD0 tris=1064 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R1.fbx [Kit] LOD0 tris=1088 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R1_Fractured.fbx [KitFractured] LOD0 tris=1068 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R2.fbx [Kit] LOD0 tris=988 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R2_Fractured.fbx [KitFractured] LOD0 tris=984 LODs=[0] hulls=16 frags=16 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_Steps.fbx [Kit] LOD0 tris=88 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 88 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1B.fbx [Kit] LOD0 tris=784 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1B_Fractured.fbx [KitFractured] LOD0 tris=708 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1F.fbx [Kit] LOD0 tris=1114 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1F_Fractured.fbx [KitFractured] LOD0 tris=836 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1L.fbx [Kit] LOD0 tris=344 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 344 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1L_Fractured.fbx [KitFractured] LOD0 tris=308 LODs=[0] hulls=4 frags=4 -> PASS
+    warn  LOD0 308 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1R.fbx [Kit] LOD0 tris=388 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 388 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1R_Fractured.fbx [KitFractured] LOD0 tris=352 LODs=[0] hulls=4 frags=4 -> PASS
+    warn  LOD0 352 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2B.fbx [Kit] LOD0 tris=634 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2B_Fractured.fbx [KitFractured] LOD0 tris=616 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2F.fbx [Kit] LOD0 tris=872 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2F_Fractured.fbx [KitFractured] LOD0 tris=776 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2L.fbx [Kit] LOD0 tris=406 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 406 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2L_Fractured.fbx [KitFractured] LOD0 tris=428 LODs=[0] hulls=4 frags=4 -> PASS
+    warn  LOD0 428 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2R.fbx [Kit] LOD0 tris=414 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 414 < 500
+Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2R_Fractured.fbx [KitFractured] LOD0 tris=432 LODs=[0] hulls=4 frags=4 -> PASS
+    warn  LOD0 432 < 500
+RESULT: ALL PASS (35 groups, 35 files)

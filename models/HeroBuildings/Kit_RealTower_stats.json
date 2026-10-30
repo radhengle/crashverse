@@ -1,0 +1,504 @@
+{
+ "set": "Kit_RealTower",
+ "building": "Bld_StoneTower",
+ "modules": {
+  "Steps": {
+   "frac": null,
+   "module": "doorSteps",
+   "label": "doorSteps: granite steps up to the door sill (indestructible, not a level block)",
+   "tris": {
+    "LOD0": 88,
+    "LOD1": 24,
+    "LOD2": 24
+   },
+   "bounds_m": [
+    0.43,
+    1.2,
+    0.5
+   ]
+  },
+  "R0": {
+   "frac": "Wood",
+   "module": "ring0",
+   "label": "ring0: iron-bound oak ring beam on the plinth",
+   "tris": {
+    "LOD0": 1068,
+    "LOD1": 684,
+    "LOD2": 316
+   },
+   "bounds_m": [
+    2.63,
+    2.63,
+    0.497
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 148,
+   "frag_tris_total": 1064,
+   "mass_kg_total": 951.5,
+   "mass_kg_range": [
+    37.88,
+    103.61
+   ],
+   "density_kg_m3": 600,
+   "joints": 43,
+   "anchors": 10,
+   "min_axis_m": 0.241
+  },
+  "W1F": {
+   "frac": "Stone",
+   "module": "wallF1",
+   "label": "wallF1: storey 1 stone wall, front (door side): round-arched oak door, dressed voussoirs, iron straps, quoins",
+   "tris": {
+    "LOD0": 1114,
+    "LOD1": 756,
+    "LOD2": 132
+   },
+   "bounds_m": [
+    0.445,
+    2.624,
+    2.296
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 184,
+   "frag_tris_total": 836,
+   "mass_kg_total": 5058.0,
+   "mass_kg_range": [
+    91.77,
+    1300.16
+   ],
+   "density_kg_m3": 2300,
+   "joints": 14,
+   "anchors": 4,
+   "min_axis_m": 0.25
+  },
+  "W1B": {
+   "frac": "Stone",
+   "module": "wallB1",
+   "label": "wallB1: storey 1 stone wall, back: cross arrow slit, quoins",
+   "tris": {
+    "LOD0": 784,
+    "LOD1": 580,
+    "LOD2": 60
+   },
+   "bounds_m": [
+    0.385,
+    2.624,
+    2.259
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 172,
+   "frag_tris_total": 708,
+   "mass_kg_total": 5771.7,
+   "mass_kg_range": [
+    91.77,
+    1667.85
+   ],
+   "density_kg_m3": 2300,
+   "joints": 14,
+   "anchors": 3,
+   "min_axis_m": 0.25
+  },
+  "W1L": {
+   "frac": "Stone",
+   "module": "wallL1",
+   "label": "wallL1: storey 1 stone wall, left: cross arrow slit",
+   "tris": {
+    "LOD0": 344,
+    "LOD1": 180,
+    "LOD2": 48
+   },
+   "bounds_m": [
+    1.905,
+    0.376,
+    2.257
+   ],
+   "fragments": 4,
+   "frag_source_lod": 1,
+   "frag_tris_max": 124,
+   "frag_tris_total": 308,
+   "mass_kg_total": 3318.1,
+   "mass_kg_range": [
+    536.26,
+    1087.53
+   ],
+   "density_kg_m3": 2300,
+   "joints": 5,
+   "anchors": 2,
+   "min_axis_m": 0.35
+  },
+  "W1R": {
+   "frac": "Stone",
+   "module": "wallR1",
+   "label": "wallR1: storey 1 stone wall, right: cross arrow slit",
+   "tris": {
+    "LOD0": 388,
+    "LOD1": 216,
+    "LOD2": 44
+   },
+   "bounds_m": [
+    1.907,
+    0.379,
+    2.256
+   ],
+   "fragments": 4,
+   "frag_source_lod": 1,
+   "frag_tris_max": 122,
+   "frag_tris_total": 352,
+   "mass_kg_total": 3318.1,
+   "mass_kg_range": [
+    537.29,
+    1102.88
+   ],
+   "density_kg_m3": 2300,
+   "joints": 5,
+   "anchors": 2,
+   "min_axis_m": 0.35
+  },
+  "R1": {
+   "frac": "Wood",
+   "module": "ring1",
+   "label": "ring1: iron-bound oak ring beam + floor",
+   "tris": {
+    "LOD0": 1088,
+    "LOD1": 696,
+    "LOD2": 264
+   },
+   "bounds_m": [
+    2.63,
+    2.63,
+    0.496
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 210,
+   "frag_tris_total": 1068,
+   "mass_kg_total": 951.5,
+   "mass_kg_range": [
+    37.88,
+    141.48
+   ],
+   "density_kg_m3": 600,
+   "joints": 43,
+   "anchors": 10,
+   "min_axis_m": 0.241
+  },
+  "W2F": {
+   "frac": "Stone",
+   "module": "wallF2",
+   "label": "wallF2: storey 2 stone wall, front (door side): cross arrow slit, 2 red/gold banners on iron hooks, quoins",
+   "tris": {
+    "LOD0": 872,
+    "LOD1": 632,
+    "LOD2": 56
+   },
+   "bounds_m": [
+    0.485,
+    2.624,
+    2.255
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 184,
+   "frag_tris_total": 776,
+   "mass_kg_total": 5732.3,
+   "mass_kg_range": [
+    91.77,
+    1585.46
+   ],
+   "density_kg_m3": 2300,
+   "joints": 15,
+   "anchors": 4,
+   "min_axis_m": 0.25
+  },
+  "W2B": {
+   "frac": "Stone",
+   "module": "wallB2",
+   "label": "wallB2: storey 2 stone wall, back: cross arrow slit, quoins",
+   "tris": {
+    "LOD0": 634,
+    "LOD1": 480,
+    "LOD2": 84
+   },
+   "bounds_m": [
+    0.385,
+    2.624,
+    2.255
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 144,
+   "frag_tris_total": 616,
+   "mass_kg_total": 5645.1,
+   "mass_kg_range": [
+    91.77,
+    1642.27
+   ],
+   "density_kg_m3": 2300,
+   "joints": 14,
+   "anchors": 3,
+   "min_axis_m": 0.25
+  },
+  "W2L": {
+   "frac": "Stone",
+   "module": "wallL2",
+   "label": "wallL2: storey 2 stone wall, left: cross arrow slit",
+   "tris": {
+    "LOD0": 406,
+    "LOD1": 276,
+    "LOD2": 44
+   },
+   "bounds_m": [
+    1.907,
+    0.375,
+    2.261
+   ],
+   "fragments": 4,
+   "frag_source_lod": 1,
+   "frag_tris_max": 168,
+   "frag_tris_total": 428,
+   "mass_kg_total": 3305.1,
+   "mass_kg_range": [
+    537.29,
+    1105.31
+   ],
+   "density_kg_m3": 2300,
+   "joints": 5,
+   "anchors": 2,
+   "min_axis_m": 0.35
+  },
+  "W2R": {
+   "frac": "Stone",
+   "module": "wallR2",
+   "label": "wallR2: storey 2 stone wall, right: cross arrow slit",
+   "tris": {
+    "LOD0": 414,
+    "LOD1": 244,
+    "LOD2": 64
+   },
+   "bounds_m": [
+    1.9,
+    0.377,
+    2.261
+   ],
+   "fragments": 4,
+   "frag_source_lod": 1,
+   "frag_tris_max": 156,
+   "frag_tris_total": 432,
+   "mass_kg_total": 3305.1,
+   "mass_kg_range": [
+    536.75,
+    1096.79
+   ],
+   "density_kg_m3": 2300,
+   "joints": 5,
+   "anchors": 2,
+   "min_axis_m": 0.35
+  },
+  "R2": {
+   "frac": "Wood",
+   "module": "ring2",
+   "label": "ring2: iron-bound oak ring beam + floor",
+   "tris": {
+    "LOD0": 988,
+    "LOD1": 636,
+    "LOD2": 312
+   },
+   "bounds_m": [
+    2.63,
+    2.63,
+    0.497
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 148,
+   "frag_tris_total": 984,
+   "mass_kg_total": 951.6,
+   "mass_kg_range": [
+    37.88,
+    119.32
+   ],
+   "density_kg_m3": 600,
+   "joints": 43,
+   "anchors": 10,
+   "min_axis_m": 0.24
+  },
+  "CrFl": {
+   "frac": "Stone",
+   "module": "crownFloor",
+   "label": "crownFloor: corbelled stone course + coping",
+   "tris": {
+    "LOD0": 1164,
+    "LOD1": 964,
+    "LOD2": 624
+   },
+   "bounds_m": [
+    3.2,
+    3.2,
+    0.403
+   ],
+   "fragments": 10,
+   "frag_source_lod": 1,
+   "frag_tris_max": 284,
+   "frag_tris_total": 1140,
+   "mass_kg_total": 7869.5,
+   "mass_kg_range": [
+    27.6,
+    2547.43
+   ],
+   "density_kg_m3": 2300,
+   "joints": 11,
+   "anchors": 10,
+   "min_axis_m": 0.2
+  },
+  "CrWdA": {
+   "frac": "Wood",
+   "module": "crownWood",
+   "label": "crownWood: timber hoarding with loopholes, front half",
+   "tris": {
+    "LOD0": 1148,
+    "LOD1": 848,
+    "LOD2": 520
+   },
+   "bounds_m": [
+    1.477,
+    2.835,
+    1.4
+   ],
+   "fragments": 11,
+   "frag_source_lod": 1,
+   "frag_tris_max": 224,
+   "frag_tris_total": 1088,
+   "mass_kg_total": 530.6,
+   "mass_kg_range": [
+    32.3,
+    98.51
+   ],
+   "density_kg_m3": 600,
+   "joints": 29,
+   "anchors": 10,
+   "min_axis_m": 0.17
+  },
+  "CrWdB": {
+   "frac": "Wood",
+   "module": "crownWood",
+   "label": "crownWood: timber hoarding with loopholes, back half",
+   "tris": {
+    "LOD0": 1216,
+    "LOD1": 740,
+    "LOD2": 528
+   },
+   "bounds_m": [
+    1.477,
+    2.835,
+    1.4
+   ],
+   "fragments": 11,
+   "frag_source_lod": 1,
+   "frag_tris_max": 184,
+   "frag_tris_total": 996,
+   "mass_kg_total": 530.6,
+   "mass_kg_range": [
+    33.16,
+    96.36
+   ],
+   "density_kg_m3": 600,
+   "joints": 27,
+   "anchors": 8,
+   "min_axis_m": 0.512
+  },
+  "CrBk": {
+   "frac": "Stone",
+   "module": "crownBrick",
+   "label": "crownBrick: crenellated stone parapet",
+   "tris": {
+    "LOD0": 912,
+    "LOD1": 516,
+    "LOD2": 300
+   },
+   "bounds_m": [
+    2.411,
+    2.411,
+    0.81
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 144,
+   "frag_tris_total": 572,
+   "mass_kg_total": 3235.1,
+   "mass_kg_range": [
+    455.44,
+    694.81
+   ],
+   "density_kg_m3": 2300,
+   "joints": 6,
+   "anchors": 6,
+   "min_axis_m": 0.25
+  },
+  "CrRfA": {
+   "frac": "Roof",
+   "module": "crownRoof",
+   "label": "crownRoof: terracotta pyramid roof, front half (+finial)",
+   "tris": {
+    "LOD0": 1418,
+    "LOD1": 662,
+    "LOD2": 90
+   },
+   "bounds_m": [
+    1.417,
+    2.709,
+    2.18
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 116,
+   "frag_tris_total": 758,
+   "mass_kg_total": 2970.9,
+   "mass_kg_range": [
+    12.29,
+    1150.19
+   ],
+   "density_kg_m3": 1500,
+   "joints": 62,
+   "anchors": 3,
+   "min_axis_m": 0.325
+  },
+  "CrRfB": {
+   "frac": "Roof",
+   "module": "crownRoof",
+   "label": "crownRoof: terracotta pyramid roof, back half",
+   "tris": {
+    "LOD0": 1430,
+    "LOD1": 674,
+    "LOD2": 66
+   },
+   "bounds_m": [
+    1.417,
+    2.709,
+    2.18
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 116,
+   "frag_tris_total": 786,
+   "mass_kg_total": 2970.8,
+   "mass_kg_range": [
+    12.29,
+    1150.19
+   ],
+   "density_kg_m3": 1500,
+   "joints": 57,
+   "anchors": 2,
+   "min_axis_m": 0.325
+  }
+ },
+ "tris_total": {
+  "LOD0": 15476,
+  "LOD1": 9808,
+  "LOD2": 3576,
+  "Fractured": 12912
+ },
+ "texture_set": "RealCastle"
+}

@@ -118,3 +118,32 @@ Built by `Tools/Blender/realistic/market.py`. One material `M_RealStall` (`Kit_R
   - LOD0 1,324 tris.
 - **Stats:** `models/HeroBuildings/Kit_RealStall_stats.json`, shared by both.
 - **Pending:** the vertex colour (Col) tint vs damage-mask question is unchanged (Graphics), and KitPathOk is with Developer.
+
+## Bld_StoneTower (realistic v1, L7 `m1_clockwork_tower` / L9 lighthouse)
+
+- **Folder:** `Buildings/Bld_StoneTower/` (`Kit_RealTower_<piece>.fbx` + `_Fractured.fbx`, `Bld_StoneTower.layout.json`). Builder: `Tools/Blender/realistic/tower.py` on the shared castle library `castle_lib.py`.
+- **Look:** square sandstone watchtower, 2 stone storeys with quoins, putlog holes, cross arrow slits and a round-arched oak door (dressed voussoirs, iron straps and studs, granite steps, own indestructible piece), iron-bound oak ring beams between storeys, 2 red/gold banners on iron hooks over storey 2, a corbelled stone crown, timber hoarding with loopholes, a crenellated parapet and a terracotta pyramid roof on a plank deck with hip caps, eaves plate and finial.
+- **Atlas:** shared castle atlas `Buildings/RealCastle/Textures/T_RealCastle_A/N/ORM` (1024, `cells.json` beside it; graded CC0 sandstone, wood, terracotta, rock + procedural granite, steel, gold and a Banner cell). Material `M_RealTower` / `M_RealTower_Inner`; `models/HeroBuildings/Kit_RealTower_stats.json` carries `"texture_set":"RealCastle"`, which `validate_realism.py` now reads. The keep, gate and wall kits use the same atlas.
+- **Level fit:** module ids = the level block ids, sizes = block sizes. Place the root at the plinth top (Unity 0, 1.2, 0) with no rotation and every module lands on its block (door = wallF1 at Unity -X). Total height 10.2 m above the root = crownRoof top 11.4. For L9 use the same modules with scale (0.85, 0.89, 0.85) on lhBase (see `level_fit` in the layout).
+- **Topple:** each storey rests on the module below (fragment ANCHOR `Support`), so a hit on storey 1 or a ring brings down everything above.
+- **Tris:** LOD0 15,476 (hero budget 15-20k), LOD1 9,808, LOD2 3,576, fractured 12,912. Every FBX ≤ 1,500 LOD0.
+- **Breakage:** stone walls, crown and parapet → Stone chunks (4-10); rings and hoarding → Wood (8-16); roof → Roof (tiles and deck/timber, 16 each half).
+
+| Module (level id) | Pieces | Footprint m | Height m | Top m | LOD0 | Fracture | Rests on |
+|---|---|---|---|---|---|---|---|
+| doorSteps | Steps | 0.43 × 1.20 | 0.50 | 0.50 | 88 | Indestructible  | Ground |
+| ring0 | R0 | 2.63 × 2.63 | 0.50 | 0.50 | 1,068 | Wood 16 | Ground |
+| wallF1 | W1F | 0.45 × 2.62 | 2.30 | 2.76 | 1,114 | Stone 10 | ring0 |
+| wallB1 | W1B | 0.39 × 2.62 | 2.26 | 2.75 | 784 | Stone 10 | ring0 |
+| wallL1 | W1L | 1.91 × 0.38 | 2.26 | 2.75 | 344 | Stone 4 | ring0 |
+| wallR1 | W1R | 1.91 × 0.38 | 2.26 | 2.75 | 388 | Stone 4 | ring0 |
+| ring1 | R1 | 2.63 × 2.63 | 0.50 | 3.25 | 1,088 | Wood 16 | wallB1, wallF1, wallL1, wallR1 |
+| wallF2 | W2F | 0.48 × 2.62 | 2.25 | 5.50 | 872 | Stone 10 | ring1 |
+| wallB2 | W2B | 0.39 × 2.62 | 2.25 | 5.50 | 634 | Stone 10 | ring1 |
+| wallL2 | W2L | 1.91 × 0.38 | 2.26 | 5.51 | 406 | Stone 4 | ring1 |
+| wallR2 | W2R | 1.90 × 0.38 | 2.26 | 5.50 | 414 | Stone 4 | ring1 |
+| ring2 | R2 | 2.63 × 2.63 | 0.50 | 6.00 | 988 | Wood 16 | wallB2, wallF2, wallL2, wallR2 |
+| crownFloor | CrFl | 3.20 × 3.20 | 0.40 | 6.40 | 1,164 | Stone 10 | ring2 |
+| crownWood | CrWdA, CrWdB | 2.83 × 2.83 | 1.40 | 7.80 | 2,364 | Wood 11+11 | crownFloor |
+| crownBrick | CrBk | 2.41 × 2.41 | 0.81 | 8.61 | 912 | Stone 6 | crownWood |
+| crownRoof | CrRfA, CrRfB | 2.71 × 2.71 | 2.18 | 10.65 | 2,848 | Roof 16+16 | crownBrick |

@@ -50,6 +50,22 @@ def proc(kind,w,h):
         A=np.asarray(im).astype(np.float32)/255; A=np.clip(A,50/255,240/255)
         n=noise(h,w,[(16,.5),(4,.5)]); N=flatN.copy(); N[...,0]+=.06*(n-.5); N[...,1]+=.06*(np.roll(n,3,0)-.5)
         ORM=np.stack([np.ones((h,w))*.95,np.full((h,w),rough),np.zeros((h,w))],-1); return A,N,ORM
+    if kind in ("Banner","Ember"):   # realistic v1 castle banner cloth / golem core seam (procedural)
+        n=noise(h,w,[(32,.5),(8,.3),(2,.2)])
+        if kind=="Banner":   # deep red wool with a gold border and a gold tower emblem (no text)
+            from PIL import Image as _I, ImageDraw as _D
+            im=_I.new("RGB",(w,h),(150,32,36)); d=_D.Draw(im); b=int(w*.07)
+            d.rectangle((b,b,w-b,h-b),outline=(222,170,70),width=max(3,int(w*.035)))
+            cx=w//2; tw=int(w*.22); ty=int(h*.32)
+            d.rectangle((cx-tw//2,ty,cx+tw//2,ty+int(h*.3)),fill=(222,170,70))
+            for k in (-1,0,1): d.rectangle((cx+k*tw//3-tw//10,ty-int(h*.05),cx+k*tw//3+tw//10,ty),fill=(222,170,70))
+            d.polygon([(b,h-b),(cx,h-int(h*.12)),(w-b,h-b)],fill=(120,24,28))
+            A=np.asarray(im).astype(np.float32)/255*(1+.12*(n[...,None]-.5)); rough=.92
+        else:                # hot core seam: orange-yellow, bright centre line (paired with the emissive mask T_RealGolem_E)
+            y=np.linspace(-1,1,h)[:,None]*np.ones((1,w)); core=np.exp(-(y*2.2)**2)
+            A=np.stack([.95+0*core,.35+.5*core,.08+.3*core],-1)*(0.85+.3*n[...,None]); rough=.7
+        A=np.clip(A,30/255,1); N=flatN.copy(); N[...,0]+=.08*(n-.5); N[...,1]+=.08*(np.roll(n,5,1)-.5)
+        ORM=np.stack([np.ones((h,w))*.96,np.full((h,w),rough),np.zeros((h,w))],-1); return A,N,ORM
     if kind=="Granite":   # fine speckle, ±6% value, polished
         base=np.array([0x4A,0x4F,0x5C])/255; sp=rng.random((h,w)); n=noise(h,w,[(64,.5),(16,.5)])
         v=1+.05*(n-n.mean())/n.std()*.5+np.where(sp>.97,.12,0)-np.where(sp<.03,.10,0)
@@ -78,9 +94,12 @@ def proc(kind,w,h):
         A*=1+.03*(noise(h,w,[(32,1)])-.5)[...,None]
         return A,flatN,np.stack([np.ones((h,w)),np.full((h,w),.04),np.zeros((h,w))],-1)
     raise KeyError(kind)
+ALIAS={"SteelPlate":("Steel",1.0)}   # graded CC0 metal_plate (T_Steel master) used directly, 1 m per repeat
 def cell(kind,wi,hi,S,rot=False,nflat=1.0):
+    if kind in ALIAS: src,D=ALIAS[kind]; SRC_M[kind]=D
+    else: src=kind
     if kind in SRC_M:
-        A,N,O=ld(kind,"A"),ld(kind,"N"),ld(kind,"ORM")
+        A,N,O=ld(src,"A"),ld(src,"N"),ld(src,"ORM")
         if rot: A,N,O=rot90(A),rot90(N,True),rot90(O)
         D=SRC_M[kind]; Dx,Dy=(D,D)
         kx=max(1,round(S[0]/Dx)); ky=max(1,round(S[1]/Dy))
@@ -119,6 +138,17 @@ TOWN={ # slot px (authored 2048 = 512px/m nominal), world metres per cell
 # realistic v1 modular townhouse (Kit_RealHouse_*): same cells, chimney stone shares a smaller slot, + flowers and sign board
 HOUSE={**TOWN,"Sandstone2":("Sandstone",(1536,1536,256,256),(.75,.75)),
  "Flowers":("Flowers",(1792,1536,256,256),(.5,.5)),"SignBoard":("SignBoard",(1536,1792,512,256),(.6,.3))}
+# realistic v1 castle set (Bld_StoneTower, Bld_CastleKeep, Bld_Gatehouse, Kit_RealWall): one shared atlas T_RealCastle (2048 -> 1024)
+CASTLE={"Sandstone":("Sandstone",(0,0,1024,1024),(1.5,1.5)),"WoodPlank":("WoodPlank",(1024,0,512,512),(1.0,1.0)),
+ "Terracotta":("Terracotta",(1536,0,512,512),(1.0,1.0)),"WoodBeam":("WoodBeam",(1024,512,1024,512),(2.0,1.0),{"rot":True}),
+ "Granite":("Granite",(0,1024,512,512),(2.0,2.0)),"SandDressed":("SandDressed",(512,1024,512,512),(1.0,1.0)),
+ "Steel":("Steel",(1024,1024,256,256),(.5,.5)),"Gold":("Gold",(1280,1024,256,256),(.5,.5)),"EndGrain":("EndGrain",(1024,1280,256,256),(.5,.5)),
+ "Glass":("WinGlass",(1280,1280,256,256),(.5,.5)),"Banner":("Banner",(1536,1024,512,1024),(1.0,2.0)),"Rock":("Rock",(1024,1536,512,512),(1.5,1.5)),
+ "Sandstone2":("Sandstone",(0,1536,512,512),(.75,.75)),"Plaster":("Plaster",(512,1536,512,512),(1.0,1.0),{"nflat":.45})}
+# Ironjaw Golem (Daily Boss): rough carved CC0 rock, granite, CC0 steel (iron bands, rivets, jaw), hot core seam (1024)
+GOLEM={"Rock":("Rock",(0,0,512,512),(1.5,1.5)),"Granite":("Granite",(512,0,512,512),(1.0,1.0)),"Steel":("Steel",(0,512,512,512),(1.0,1.0)),
+ "Ember":("Ember",(512,512,256,256),(.5,.5)),"SandDressed":("SandDressed",(768,512,256,256),(.5,.5)),"EndGrain":("EndGrain",(512,768,256,256),(.5,.5)),
+ "Gold":("Gold",(768,768,256,256),(.5,.5))}
 PROPS={ # authored 1024 -> 512 on Android (props cap)
  "WoodPlank":("WoodPlank",(0,0,512,512),(1.0,1.0)),
  "WoodBeam":("WoodBeam",(512,0,512,256),(1.0,.5),{"rot":True}),
@@ -140,4 +170,6 @@ if __name__=="__main__":
     if "town" in w: build("Bld_Townhouse","Buildings/Hero",2048,TOWN)
     if "house" in w: build("RealHouse","Buildings",2048,HOUSE)   # -> Buildings/RealHouse/Textures; house_modular.py moves it to Bld_Townhouse at 1024
     if "props" in w: build("Props_Village","Props",1024,PROPS)
+    if "castle" in w: build("RealCastle","Buildings",2048,CASTLE)   # -> Buildings/RealCastle (castle.py moves it into Bld_StoneTower at 1024)
+    if "golem" in w: build("RealGolem","Bosses",1024,GOLEM)
     if "ground" in w: build("Ground_Patch","Props",2048,GROUND)

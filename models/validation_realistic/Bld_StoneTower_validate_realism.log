@@ -1,0 +1,19 @@
+Kit_RealTower_CrBk.fbx: LOD0=912t/1m LOD1=516t/1m LOD2=300t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrFl.fbx: LOD0=1164t/1m LOD1=964t/1m LOD2=624t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrRfA.fbx: LOD0=1417t/1m LOD1=661t/1m LOD2=89t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrRfB.fbx: LOD0=1430t/1m LOD1=674t/1m LOD2=66t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrWdA.fbx: LOD0=1148t/1m LOD1=848t/1m LOD2=520t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrWdB.fbx: LOD0=1216t/1m LOD1=740t/1m LOD2=528t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_R0.fbx: LOD0=1068t/1m LOD1=684t/1m LOD2=316t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_R1.fbx: LOD0=1088t/1m LOD1=696t/1m LOD2=264t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_R2.fbx: LOD0=988t/1m LOD1=636t/1m LOD2=312t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_Steps.fbx: LOD0=88t/1m LOD1=24t/1m LOD2=24t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1B.fbx: LOD0=784t/1m LOD1=580t/1m LOD2=60t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1F.fbx: LOD0=1114t/1m LOD1=756t/1m LOD2=132t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1L.fbx: LOD0=344t/1m LOD1=180t/1m LOD2=48t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1R.fbx: LOD0=388t/1m LOD1=216t/1m LOD2=44t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W2B.fbx: LOD0=634t/1m LOD1=480t/1m LOD2=84t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W2F.fbx: LOD0=872t/1m LOD1=632t/1m LOD2=56t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W2L.fbx: LOD0=406t/1m LOD1=276t/1m LOD2=44t/1m hulls=1 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W2R.fbx: LOD0=414t/1m LOD1=244t/1m LOD2=64t/1m hulls=1 materials=['M_RealTower'] -> PASS
+REALISM RESULT: ALL PASS

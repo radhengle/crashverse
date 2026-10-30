@@ -1,0 +1,36 @@
+Kit_RealTower_CrBk.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrBk_Fractured.fbx: meshes=6 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_CrFl.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrFl_Fractured.fbx: meshes=10 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_CrRfA.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrRfA_Fractured.fbx: meshes=16 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_CrRfB.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrRfB_Fractured.fbx: meshes=16 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_CrWdA.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrWdA_Fractured.fbx: meshes=11 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_CrWdB.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_CrWdB_Fractured.fbx: meshes=11 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_R0.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_R0_Fractured.fbx: meshes=16 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_R1.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_R1_Fractured.fbx: meshes=16 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_R2.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_R2_Fractured.fbx: meshes=16 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_Steps.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1B.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1B_Fractured.fbx: meshes=10 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_W1F.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1F_Fractured.fbx: meshes=10 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_W1L.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1L_Fractured.fbx: meshes=4 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_W1R.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W1R_Fractured.fbx: meshes=4 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_W2B.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W2B_Fractured.fbx: meshes=10 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_W2F.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W2F_Fractured.fbx: meshes=10 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_W2L.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W2L_Fractured.fbx: meshes=4 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+Kit_RealTower_W2R.fbx: meshes=3 materials=['M_RealTower'] -> PASS
+Kit_RealTower_W2R_Fractured.fbx: meshes=4 materials=['M_RealTower', 'M_RealTower_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
