@@ -12,7 +12,10 @@ Per level and aspect it reports FOV, pitch (deg down), whether the building / ca
 (px to the nearest left/right/top screen edge) and the CannonCameraEditModeTests assertions (centred / bottom / big cannon,
 building above and filling the view). It also traces each stored hint aim (hintYaw/hintPitch, derive_hints geometry, g x1.0)
 from the muzzle to its hintTarget and checks the whole arc and the target are on screen.
-Usage: frame_check.py [--json]"""
+HUD mode (rev 9.2): --hud [--top-margin X] flags any building or hint-arc pixel above the run-HUD line
+(safeInsetTop + 104 dp x dpi/160, worst-case inset 130 px; dpi per screen in HUD_DPI) and searches the smallest topMargin
+(0.005 steps) that clears it on every layout and screen.
+Usage: frame_check.py [--json] | frame_check.py --hud [--top-margin X] [--json]"""
 import json, math, os, sys
 HERE=os.path.dirname(os.path.abspath(__file__)); DATA=os.path.join(HERE,'../../Assets/_Project/Resources/Data')
 BASE=(10.0,0.0,0.0); CANNON_ROOT=(-20.0,0.0,0.0)
@@ -103,6 +106,56 @@ def hint_arc(pose,aspect,yaw,el,target,g=9.81,v0=28.0):
     return dict(target_vp=[round(tv[0],3),round(tv[1],3)],target_on=on(tv),arc_on=all(on(q) for q in vs),
                 arc_top_vp=round(max(q[1] for q in vs),3),arc_end=[round(p[0]-BASE[0],2),round(p[1],2),round(p[2],2)])
 
+# ---- HUD-aware mode (rev 9.2). UI Developer: HudScreen (Screens.cs:276-287 on main) is anchored to the safe-area top; the opaque
+# progress bar ends at 74 dp and the status text at 104 dp; canvas scale = dpi/160. HUD line (px from the screen top) =
+# safeInsetTop + 104 dp * dpi/160. Calculated, not measured on a device. Per screen: (dpi, inset px), worst-case inset 130 px.
+HUD_DP=104.0; HUD_INSET=130.0
+HUD_DPI={'1080x2340':400,'1080x1920':400,'1440x2560':560,'1536x2048 (4:3)':320}
+def hud_line_px(name,W,H,inset=HUD_INSET,dpi=None): return inset+HUD_DP*(dpi or HUD_DPI[name])/160.0
+def hud_check(bl,tb,hint,settings,v0=28.0):
+    """Per screen: px of the building top / hint arc top below the HUD line (negative = under the HUD)."""
+    bmin,bmax=bounds(bl); out={}
+    tgt=tuple(BASE[i]+tb['p'][i] for i in range(3)) if tb else None
+    for nm,W,H in SCREENS:
+        a=W/H; pose=solve(CANNON_ROOT,bmin,bmax,a,settings); fails,c,s=test_asserts(pose,a,bmin,bmax)
+        line=hud_line_px(nm,W,H); btop=(1-s[3])*H
+        e=dict(fov=round(pose['fov'],2),clamped=pose['clamped'],pitch_down=round(pose['pitch'],2),hud_line_px=round(line),
+               building_top_px=round(btop),clear_px=round(btop-line),side_slack_px=round(min(s[0],1-s[2])*W),fails=fails)
+        if tgt and hint[0] is not None:
+            h=hint_arc(pose,a,hint[0],hint[1],tgt,v0=v0); e['hint_on']=h['arc_on'] and h['target_on']
+            e['hint_arc_clear_px']=round((1-h['arc_top_vp'])*H-line)
+        out[nm]=e
+    return out
+def hud_report(tm,v0):
+    st=dict(SETTINGS,topMargin=tm); rows=[]
+    for lid,name,ht,hy,hp in layouts():
+        bl=json.load(open(os.path.join(DATA,'Layouts',name+'.json')))['blocks']
+        rows.append(dict(id=lid,layout=name,screens=hud_check(bl,next((b for b in bl if b['id']==ht),None),(hy,hp),st,v0)))
+    under=[(r['layout'],n) for r in rows for n,e in r['screens'].items() if e['clear_px']<0 or e.get('hint_arc_clear_px',0)<0]
+    return rows,under
+def hud_main():
+    v0=json.load(open(os.path.join(DATA,'wrecker.json'))).get('launchSpeed',28.0)
+    tm=float(sys.argv[sys.argv.index('--top-margin')+1]) if '--top-margin' in sys.argv else SETTINGS['topMargin']
+    rows,under=hud_report(tm,v0)
+    # smallest topMargin (0.005 steps) that clears the HUD on every layout and screen
+    best=None
+    for k in range(12,61):
+        t=k*0.005; r2,u2=hud_report(t,v0)
+        if not u2: best=(t,r2); break
+    res=dict(hud=dict(dp=HUD_DP,inset_px=HUD_INSET,dpi=HUD_DPI,line_px={n:round(hud_line_px(n,W,H)) for n,W,H in SCREENS},
+                      line_pct={n:round(hud_line_px(n,W,H)/H*100,1) for n,W,H in SCREENS}),
+             top_margin=tm,rows=rows,under_hud=under,smallest_clear_top_margin=best[0] if best else None,
+             at_smallest=best[1] if best else None)
+    if '--json' in sys.argv: print(json.dumps(res,indent=1)); return res
+    print('HUD line px (inset %d + %d dp x dpi/160):'%(HUD_INSET,HUD_DP),res['hud']['line_px'],res['hud']['line_pct'],'%')
+    for title,rr,t in ((f'topMargin {tm}',rows,tm),)+(((f'smallest clear topMargin {best[0]}',best[1],best[0]),) if best else ()):
+        print(f'\n== {title}: layout | per screen: building-top clear px / hint-arc clear px / FOV / side slack')
+        for r in rr:
+            print(f"{r['layout']:27} "+' | '.join(f"{e['clear_px']:5d} {e.get('hint_arc_clear_px','-'):>5} {e['fov']:5.1f}{'*' if e['clamped']=='max' else ' '} {e['side_slack_px']:4d}{' !' if e['fails'] or not e.get('hint_on',True) else ''}" for e in r['screens'].values()))
+    print('\nunder the HUD at topMargin',tm,':',len(under),'layout/screen pairs;',sorted(set(x[0] for x in under if x[1]=='1080x2340')))
+    print('smallest clear topMargin:',best[0] if best else 'none <= 0.30')
+    return res
+
 def layouts():
     ch=json.load(open(os.path.join(DATA,'chapter1.json')))['levels']
     out=[(L['id'],L['layout'],L.get('hintTarget'),L.get('hintYaw'),L.get('hintPitch')) for L in ch]
@@ -150,4 +203,4 @@ def main():
     print('FLAGS:' if flags else 'FLAGS: none (no 68 deg clamp, nothing clipped, every EditMode-test assertion holds on all 6 test aspects, every hint arc on screen)')
     for f in flags: print('  '+f)
     return rows
-if __name__=='__main__': main()
+if __name__=='__main__': hud_main() if '--hud' in sys.argv else main()

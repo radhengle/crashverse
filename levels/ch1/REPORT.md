@@ -301,3 +301,27 @@ the MarketArch sign (2.66 × 0.30 × 0.82, bolted to the beam cap). L8 uses that
   - L3 at 1080×2340 is height-bound at FOV 32.5° with 79 px side slack (chimney stub top 11.97 m).
 - **Pending, no action yet:** 3D Modeler is re-pitching stall_slots to ±0.8/±2.4 (our 1.6 m spacing) and making the crates fractured and
   destructible. L8 and L3 already match. Re-check when that commit lands.
+
+## Rev 9.2: HUD-aware frame check (2026-10-30)
+- **Change:** `frame_check.py --hud [--top-margin X]` (output in `frame_check_hud.json`). UI Developer's figures, calculated rather than
+  measured: the HUD line is safeInsetTop (worst case 130 px) + 104 dp × dpi/160. The assumed dpi is 400 for 1080×2340 and 1080×1920, 560 for
+  1440×2560 and 320 for 4:3, which puts the line at 390 / 390 / 494 / 338 px (16.7 / 20.3 / 19.3 / 16.5% of screen height). The check flags any
+  building or hint-arc pixel above the line and searches for the smallest topMargin (0.005 steps) that clears it on every layout and screen.
+  The default mode is unchanged.
+- **Current camera (topMargin 0.06), 1080×2340:** 10 of 14 layouts reach above the HUD line by about 245 px: L1, L3, L4, L6, L7, L10 and all
+  four titans. L10's hint arc also passes under it, at every resolution. L2, L5, L8 and L9 clear it, because their FOV is set by width.
+  Across the four resolutions, 48 layout/screen pairs are under the HUD.
+- **Smallest top margin that clears the HUD:**
+  - **0.20** clears it on every layout at all four resolutions (tightest: L1/L2 at 1080×1920, 2–3 px). **0.22** leaves at least 41 px.
+  - At 0.22: no 68° clamp (max FOV 39.5°), side slack never drops (minimum 39 px, the width-bound levels, unchanged), and every hint is on screen.
+  - **But on 4:3** the larger FOV shrinks the cannon below the EditMode test's "cannon ≥ 35% of the width". At 0.22 that fails on L3, L6, L7,
+    L9 and the four titans (0.30–0.34). Phones pass every assertion.
+  - **A per-device margin** (HUD line ÷ screen height, i.e. inset + 104 dp × dpi/160) clears the HUD everywhere. On 4:3 it fails the
+    cannon-width assertion only on L3 (0.327) and L7 (0.343).
+- **Proposed, not applied (needed only if Developer keeps the 4:3 cannon-width assertion with the per-device margin):**
+  - **L3:** drop the Chimney stub block. The top falls from 11.96 to 10.46 m and the cannon width is 0.353.
+    - Line is still propL, propR (2 shots, 3★); final 92.3%; mastery props + crate 96.2% ≥ 95%.
+    - Random 3★ 6.0% and win 56.7% (Medium band kept). 5 shots and bands unchanged.
+    - The real chimney comes back only with a visual offset field, and would be just as tall.
+  - **L7:** shorten crownRoof (the spire) by 0.5 m, from 1.6 to 1.1 m tall. A 0.4 m cut already passes, at exactly 0.350.
+    - Line ring0, annex; final 87.8%; random 3★ 2.7%, win 30.2%, all unchanged.
