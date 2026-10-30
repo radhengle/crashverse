@@ -109,6 +109,22 @@ namespace Crashverse.Meta
             float topEdge = -pitchDown + fovV * (0.5f - s.topMargin);   // the HUD band starts here
             if (topEdge < aTop) pitchDown -= aTop - topEdge;
             var rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(pitchDown, 0f, 0f);
+            // the angle maths above is linear in degrees while the projection is linear in tan: refine on the real corners so the
+            // building top never pokes into the HUD band (a few 1e-4 of the screen on tall-and-wide layouts)
+            float limit = 1f - s.topMargin;
+            for (int it = 0; it < 6; it++)
+            {
+                var pose = new CannonCameraPose { position = cam, rotation = rot, fov = fovV };
+                float yMax = float.MinValue;
+                for (int ci = 0; ci < 8; ci++)
+                {
+                    var w = new Vector3((ci & 1) == 0 ? structure.min.x : structure.max.x, (ci & 2) == 0 ? structure.min.y : structure.max.y, (ci & 4) == 0 ? structure.min.z : structure.max.z);
+                    yMax = Mathf.Max(yMax, ToViewport(pose, aspect, w).y);
+                }
+                if (yMax <= limit - 0.0005f) break;
+                pitchDown -= (yMax - limit + 0.001f) * fovV;
+                rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(pitchDown, 0f, 0f);
+            }
             return new CannonCameraPose { position = cam, rotation = rot, fov = fovV };
         }
 
