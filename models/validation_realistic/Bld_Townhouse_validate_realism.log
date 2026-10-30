@@ -1,0 +1,24 @@
+Kit_RealHouse_AnnexB.fbx: LOD0=708t/1m LOD1=356t/1m LOD2=204t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_AnnexF.fbx: LOD0=1032t/1m LOD1=524t/1m LOD2=320t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_BackD.fbx: LOD0=524t/1m LOD1=320t/1m LOD2=178t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_BackW.fbx: LOD0=482t/1m LOD1=354t/1m LOD2=172t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_Balc.fbx: LOD0=1044t/1m LOD1=428t/1m LOD2=280t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_Base.fbx: LOD0=336t/1m LOD1=144t/1m LOD2=96t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_Chim.fbx: LOD0=284t/1m LOD1=136t/1m LOD2=100t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_Floor.fbx: LOD0=1164t/1m LOD1=488t/1m LOD2=288t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_GabL.fbx: LOD0=340t/1m LOD1=136t/1m LOD2=104t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_GabR.fbx: LOD0=364t/1m LOD1=152t/1m LOD2=152t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_RoofLB.fbx: LOD0=1408t/1m LOD1=752t/1m LOD2=184t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_RoofLF.fbx: LOD0=1380t/1m LOD1=704t/1m LOD2=148t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_RoofRB.fbx: LOD0=1032t/1m LOD1=572t/1m LOD2=276t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_RoofRF.fbx: LOD0=1308t/1m LOD1=628t/1m LOD2=232t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_ShopD.fbx: LOD0=1360t/1m LOD1=516t/1m LOD2=254t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_ShopW.fbx: LOD0=1310t/1m LOD1=546t/1m LOD2=212t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpB.fbx: LOD0=892t/1m LOD1=516t/1m LOD2=334t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpFL.fbx: LOD0=1076t/1m LOD1=544t/1m LOD2=282t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpFR.fbx: LOD0=960t/1m LOD1=456t/1m LOD2=246t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpL.fbx: LOD0=752t/1m LOD1=464t/1m LOD2=314t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpR.fbx: LOD0=864t/1m LOD1=528t/1m LOD2=270t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_WallL.fbx: LOD0=506t/1m LOD1=358t/1m LOD2=156t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_WallR.fbx: LOD0=566t/1m LOD1=358t/1m LOD2=180t/1m hulls=1 materials=['M_RealHouse'] -> PASS
+REALISM RESULT: ALL PASS

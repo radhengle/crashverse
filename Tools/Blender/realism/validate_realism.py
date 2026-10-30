@@ -45,6 +45,7 @@ for f in sorted(glob.glob(R+"/**/*.fbx",recursive=True)):
     # textures referenced by the materials must exist; enforce naming/size
     texdir=os.path.join(os.path.dirname(f),"Textures"); asset=os.path.basename(os.path.dirname(f))
     if asset.startswith("Kit_Real"): asset=asset[4:]                             # one shared tiling set per realistic kit: T_Real<M>_*
+    elif base.startswith("Kit_Real"): asset=base.split("_")[1]                   # modular building (Bld_<X>/Kit_Real<X>_<Module>): T_Real<X>_*
     need=[f"T_{asset}_{k}.png" for k in ("A","N","ORM")]
     for n in need:
         p=os.path.join(texdir,n)

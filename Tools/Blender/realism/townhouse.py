@@ -234,7 +234,7 @@ class House:
                     q=L.vert.co-p0; u=(q.dot(e_u)%1.0); v=q.dot(e_s)/Ls
                     L[uvl].uv=(r[0]+(r[2]-r[0])*((q.dot(e_u)+U/2)/U), r[1]+(r[3]-r[1])*v)
             R.orient(bm,lambda f:n); s.B.add(bm,(.97,.95,.93)); return
-        seg=3 if s.lod==0 else 2; lip=s.lod==0
+        seg=getattr(s,"tile_seg0",3) if s.lod==0 else 2; lip=s.lod==0
         bm=bmesh.new(); uvl=bm.loops.layers.uv.new("UV0"); cl=bm.loops.layers.float_color.new("Col"); r=A.rect("Terracotta")
         cx0=getattr(s,"chim_box",None)
         for j in range(nrow):

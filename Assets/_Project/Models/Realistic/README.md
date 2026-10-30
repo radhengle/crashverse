@@ -52,3 +52,32 @@ The pieces are re-surfaced with graded CC0 tiling sets (`Tools/Blender/realistic
 * `fracture_class` is on every `_Fractured` root and fragment. The stats are in `models/HeroBuildings/Kit_Real<M>_stats.json`. Validator logs are in `models/validation_realistic/`.
 * Importer note (VFX): `ImportConventions.KitPathOk` only allows `Kit_*` under `Models/BuildingKit/`. It needs to also accept `Kit_Real*` under `Models/Realistic/`,
   as the local `validate_colliders.py` now does. Until then the Unity validator reports a path error for these files.
+
+## Bld_Townhouse, modular + destructible (realistic v1, 2026-10-30)
+Folder: `Buildings/Bld_Townhouse/`. Built by `Tools/Blender/realistic/house_modular.py` from the approved realism-test townhouse
+(`Tools/Blender/realism/townhouse.py`) and its graded CC0 atlas, with added balcony, flower boxes, lantern and hanging shop sign (icon only, no text).
+- **Intact:** 19,692 LOD0 tris (LOD1 9,980, LOD2 4,982). Materials: `M_RealHouse` (T_RealHouse_A/N/ORM, 1024) on the intact pieces, plus `M_RealHouse_Inner` (T_RealHouse_Inner_*, 1024, fresh stone or splintered wood) on fracture faces.
+- **Front:** the street front (shop door) faces Unity **+Z**. Left and right are as seen from the street; Annex and Roof_Left are on Unity +X.
+- **Level Designer modules** (11). Pivot = centre of the module's base footprint, +Z = front. Every piece in a module shares that pivot, so placing all of a module's pieces at the module position assembles it.
+
+| Module | Pieces (`Kit_RealHouse_<code>.fbx` + `_Fractured.fbx`) | Footprint X × Z (m) | Height (m) | Anchor |
+|---|---|---|---|---|
+| ShopFront | ShopW (window, flower box), ShopD (door, lantern, sign) | 6.41 × 1.28 | 2.86 | Base |
+| Wall_Left | WallL | 0.57 × 4.31 | 2.86 | Base |
+| Wall_Right | WallR | 0.57 × 4.31 | 2.86 | Base |
+| Wall_Back | BackD, BackW | 6.41 × 0.57 | 2.86 | Base |
+| Floor | Floor (slab, jetty boards, joists, brackets) | 6.42 × 5.08 | 1.01 | ground walls |
+| UpperStorey | UpFL, UpFR, Balc, UpB, UpL, UpR, GabL, GabR | 6.66 × 6.44 | 4.98 | Floor |
+| Roof_Left | RoofLF (street slope), RoofLB (back slope + ridge) | 3.80 × 6.54 | 3.33 | UpperStorey |
+| Roof_Right | RoofRF, RoofRB | 3.87 × 6.54 | 3.33 | UpperStorey |
+| Chimney | Chim | 0.87 × 0.72 | 4.00 | Roof_Right, UpperStorey |
+| Base | Base (granite plinth, indestructible, no fractured set) | 7.04 × 6.04 | 0.35 | Ground |
+| Annex (optional) | AnnexF, AnnexB | 2.25 × 3.81 | 3.14 | Ground |
+
+Whole building footprint: 9.49 × 6.84 m with the annex (7.04 × 6.04 m plinth).
+
+- **Layout:** `Bld_Townhouse.layout.json` (`crashverse.building_layout` v1). `modules[]` gives id, label, pivot, footprint_m, height_m, pieces, anchor_to and tris. `pieces[]` gives intact/fractured paths, position (= module pivot), rotation, anchor_to, fracture_class and tris. `connections[]` gives piece contacts, with break_force_N/break_torque_Nm left blank for Physics.
+- **Prefab assembly:** create an empty `Bld_Townhouse` root, then one child empty per module at `modules[i].pivot`, with that module's piece FBXs at local (0,0,0) under it. At runtime, swap a piece for its `_Fractured` prefab, keeping the transform. For fragments, `ANCHOR_` with anchor_to=Support means "held while the module's `anchor_to` modules stand".
+- **Fracture (#28/#52):** classes are Stone for ground walls and chimney (4–10 fragments), Wood for floor, upper walls, gables, balcony and annex (8–16), and Roof (8–16). Fragments are `<piece>_frag_##`, each with an exact convex `UCX_`, plus `JNT_<a>__<b>` (force/torque blank), `ANCHOR_` (Ground/Support), `mass_kg`, `density_kg_m3` and `fracture_class`. Pivot = volume centre of mass. Fragments are at least 0.15 m on every axis, under 300 tris each and at most 1,500 tris per set. Stats: `models/HeroBuildings/Kit_RealHouse_stats.json`.
+- **Why a module has several pieces:** the #28 Kit budget is 1,500 LOD0 tris per FBX, and Blender/FBX names are capped at 63 characters, so `JNT_<fragA>__<fragB>` forces piece codes of 6 characters or fewer.
+- **Pending:** the KitPathOk path exception (Models/Realistic) is owned by Developer. `CrashverseGlossyPBR` reads vertex colour R as the damage mask, but these meshes carry Col as a tint (as the realism test did), so a shader decision is needed.

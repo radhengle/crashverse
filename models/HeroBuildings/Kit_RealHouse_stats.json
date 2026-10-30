@@ -1,0 +1,597 @@
+{
+ "set": "Kit_RealHouse",
+ "building": "Bld_Townhouse",
+ "modules": {
+  "Base": {
+   "frac": null,
+   "tris": {
+    "LOD0": 336,
+    "LOD1": 144,
+    "LOD2": 96
+   },
+   "bounds_m": [
+    7.04,
+    6.04,
+    0.35
+   ]
+  },
+  "ShopW": {
+   "frac": "Stone",
+   "tris": {
+    "LOD0": 1310,
+    "LOD1": 546,
+    "LOD2": 212
+   },
+   "bounds_m": [
+    2.769,
+    0.721,
+    2.855
+   ],
+   "fragments": 7,
+   "frag_source_lod": 1,
+   "frag_tris_max": 170,
+   "frag_tris_total": 686,
+   "mass_kg_total": 7445.3,
+   "mass_kg_range": [
+    30.57,
+    2362.28
+   ],
+   "density_kg_m3": 2300,
+   "joints": 20,
+   "anchors": 2,
+   "min_axis_m": 0.241
+  },
+  "ShopD": {
+   "frac": "Stone",
+   "tris": {
+    "LOD0": 1360,
+    "LOD1": 516,
+    "LOD2": 254
+   },
+   "bounds_m": [
+    3.804,
+    1.276,
+    2.859
+   ],
+   "fragments": 7,
+   "frag_source_lod": 1,
+   "frag_tris_max": 192,
+   "frag_tris_total": 734,
+   "mass_kg_total": 10402.6,
+   "mass_kg_range": [
+    25.62,
+    1915.26
+   ],
+   "density_kg_m3": 2300,
+   "joints": 13,
+   "anchors": 3,
+   "min_axis_m": 0.22
+  },
+  "BackD": {
+   "frac": "Stone",
+   "tris": {
+    "LOD0": 524,
+    "LOD1": 320,
+    "LOD2": 178
+   },
+   "bounds_m": [
+    3.207,
+    0.516,
+    2.856
+   ],
+   "fragments": 4,
+   "frag_source_lod": 1,
+   "frag_tris_max": 196,
+   "frag_tris_total": 468,
+   "mass_kg_total": 8681.3,
+   "mass_kg_range": [
+    1470.44,
+    2989.45
+   ],
+   "density_kg_m3": 2300,
+   "joints": 5,
+   "anchors": 2,
+   "min_axis_m": 0.45
+  },
+  "BackW": {
+   "frac": "Stone",
+   "tris": {
+    "LOD0": 482,
+    "LOD1": 354,
+    "LOD2": 172
+   },
+   "bounds_m": [
+    3.208,
+    0.566,
+    2.854
+   ],
+   "fragments": 4,
+   "frag_source_lod": 1,
+   "frag_tris_max": 228,
+   "frag_tris_total": 478,
+   "mass_kg_total": 9035.0,
+   "mass_kg_range": [
+    1413.6,
+    2881.63
+   ],
+   "density_kg_m3": 2300,
+   "joints": 5,
+   "anchors": 2,
+   "min_axis_m": 0.45
+  },
+  "WallL": {
+   "frac": "Stone",
+   "tris": {
+    "LOD0": 506,
+    "LOD1": 358,
+    "LOD2": 156
+   },
+   "bounds_m": [
+    0.565,
+    4.305,
+    2.857
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 216,
+   "frag_tris_total": 562,
+   "mass_kg_total": 12274.0,
+   "mass_kg_range": [
+    1308.43,
+    2762.88
+   ],
+   "density_kg_m3": 2300,
+   "joints": 9,
+   "anchors": 3,
+   "min_axis_m": 0.45
+  },
+  "WallR": {
+   "frac": "Stone",
+   "tris": {
+    "LOD0": 566,
+    "LOD1": 358,
+    "LOD2": 180
+   },
+   "bounds_m": [
+    0.566,
+    4.309,
+    2.859
+   ],
+   "fragments": 6,
+   "frag_source_lod": 1,
+   "frag_tris_max": 210,
+   "frag_tris_total": 554,
+   "mass_kg_total": 12273.8,
+   "mass_kg_range": [
+    1255.11,
+    2596.95
+   ],
+   "density_kg_m3": 2300,
+   "joints": 9,
+   "anchors": 3,
+   "min_axis_m": 0.45
+  },
+  "Floor": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 1164,
+    "LOD1": 488,
+    "LOD2": 288
+   },
+   "bounds_m": [
+    6.42,
+    5.076,
+    1.005
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 240,
+   "frag_tris_total": 1316,
+   "mass_kg_total": 3068.3,
+   "mass_kg_range": [
+    155.0,
+    306.33
+   ],
+   "density_kg_m3": 600,
+   "joints": 37,
+   "anchors": 9,
+   "min_axis_m": 0.2
+  },
+  "UpFL": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 1076,
+    "LOD1": 544,
+    "LOD2": 282
+   },
+   "bounds_m": [
+    3.075,
+    0.436,
+    2.557
+   ],
+   "fragments": 14,
+   "frag_source_lod": 1,
+   "frag_tris_max": 164,
+   "frag_tris_total": 844,
+   "mass_kg_total": 881.4,
+   "mass_kg_range": [
+    7.52,
+    112.02
+   ],
+   "density_kg_m3": 600,
+   "joints": 43,
+   "anchors": 3,
+   "min_axis_m": 0.17
+  },
+  "UpFR": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 960,
+    "LOD1": 456,
+    "LOD2": 246
+   },
+   "bounds_m": [
+    3.373,
+    0.284,
+    2.557
+   ],
+   "fragments": 12,
+   "frag_source_lod": 1,
+   "frag_tris_max": 128,
+   "frag_tris_total": 852,
+   "mass_kg_total": 936.2,
+   "mass_kg_range": [
+    26.36,
+    114.68
+   ],
+   "density_kg_m3": 600,
+   "joints": 29,
+   "anchors": 4,
+   "min_axis_m": 0.17
+  },
+  "Balc": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 1044,
+    "LOD1": 428,
+    "LOD2": 280
+   },
+   "bounds_m": [
+    1.57,
+    0.812,
+    1.838
+   ],
+   "fragments": 9,
+   "frag_source_lod": 1,
+   "frag_tris_max": 188,
+   "frag_tris_total": 724,
+   "mass_kg_total": 103.2,
+   "mass_kg_range": [
+    2.94,
+    32.13
+   ],
+   "density_kg_m3": 600,
+   "joints": 18,
+   "anchors": 2,
+   "min_axis_m": 0.2
+  },
+  "UpB": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 516,
+    "LOD2": 334
+   },
+   "bounds_m": [
+    6.44,
+    0.284,
+    2.558
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 184,
+   "frag_tris_total": 1264,
+   "mass_kg_total": 1804.9,
+   "mass_kg_range": [
+    80.57,
+    170.34
+   ],
+   "density_kg_m3": 600,
+   "joints": 34,
+   "anchors": 7,
+   "min_axis_m": 0.17
+  },
+  "UpL": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 752,
+    "LOD1": 464,
+    "LOD2": 314
+   },
+   "bounds_m": [
+    0.284,
+    5.546,
+    2.557
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 192,
+   "frag_tris_total": 1080,
+   "mass_kg_total": 1455.7,
+   "mass_kg_range": [
+    54.17,
+    140.34
+   ],
+   "density_kg_m3": 600,
+   "joints": 41,
+   "anchors": 6,
+   "min_axis_m": 0.17
+  },
+  "UpR": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 864,
+    "LOD1": 528,
+    "LOD2": 270
+   },
+   "bounds_m": [
+    0.283,
+    5.545,
+    2.555
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 156,
+   "frag_tris_total": 1216,
+   "mass_kg_total": 1457.4,
+   "mass_kg_range": [
+    54.17,
+    145.15
+   ],
+   "density_kg_m3": 600,
+   "joints": 35,
+   "anchors": 6,
+   "min_axis_m": 0.17
+  },
+  "GabL": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 340,
+    "LOD1": 136,
+    "LOD2": 104
+   },
+   "bounds_m": [
+    0.273,
+    5.5,
+    2.426
+   ],
+   "fragments": 12,
+   "frag_source_lod": 1,
+   "frag_tris_max": 96,
+   "frag_tris_total": 408,
+   "mass_kg_total": 862.1,
+   "mass_kg_range": [
+    17.08,
+    145.4
+   ],
+   "density_kg_m3": 600,
+   "joints": 25,
+   "anchors": 6,
+   "min_axis_m": 0.2
+  },
+  "GabR": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 364,
+    "LOD1": 152,
+    "LOD2": 152
+   },
+   "bounds_m": [
+    0.268,
+    5.5,
+    2.428
+   ],
+   "fragments": 12,
+   "frag_source_lod": 1,
+   "frag_tris_max": 92,
+   "frag_tris_total": 464,
+   "mass_kg_total": 862.1,
+   "mass_kg_range": [
+    17.08,
+    139.25
+   ],
+   "density_kg_m3": 600,
+   "joints": 24,
+   "anchors": 6,
+   "min_axis_m": 0.2
+  },
+  "RoofLF": {
+   "frac": "Roof",
+   "tris": {
+    "LOD0": 1380,
+    "LOD1": 704,
+    "LOD2": 148
+   },
+   "bounds_m": [
+    3.794,
+    3.393,
+    3.197
+   ],
+   "fragments": 9,
+   "frag_source_lod": 1,
+   "frag_tris_max": 276,
+   "frag_tris_total": 1392,
+   "mass_kg_total": 3680.2,
+   "mass_kg_range": [
+    49.01,
+    1062.69
+   ],
+   "density_kg_m3": 1500,
+   "joints": 21,
+   "anchors": 2,
+   "min_axis_m": 0.385
+  },
+  "RoofLB": {
+   "frac": "Roof",
+   "tris": {
+    "LOD0": 1408,
+    "LOD1": 752,
+    "LOD2": 184
+   },
+   "bounds_m": [
+    3.798,
+    3.418,
+    3.329
+   ],
+   "fragments": 16,
+   "frag_source_lod": 2,
+   "frag_tris_max": 88,
+   "frag_tris_total": 580,
+   "mass_kg_total": 3087.1,
+   "mass_kg_range": [
+    42.58,
+    315.87
+   ],
+   "density_kg_m3": 1500,
+   "joints": 41,
+   "anchors": 2,
+   "min_axis_m": 0.16
+  },
+  "RoofRF": {
+   "frac": "Roof",
+   "tris": {
+    "LOD0": 1308,
+    "LOD1": 628,
+    "LOD2": 232
+   },
+   "bounds_m": [
+    3.717,
+    3.391,
+    3.202
+   ],
+   "fragments": 14,
+   "frag_source_lod": 1,
+   "frag_tris_max": 152,
+   "frag_tris_total": 1472,
+   "mass_kg_total": 3610.6,
+   "mass_kg_range": [
+    58.4,
+    374.74
+   ],
+   "density_kg_m3": 1500,
+   "joints": 35,
+   "anchors": 2,
+   "min_axis_m": 0.68
+  },
+  "RoofRB": {
+   "frac": "Roof",
+   "tris": {
+    "LOD0": 1032,
+    "LOD1": 572,
+    "LOD2": 276
+   },
+   "bounds_m": [
+    3.8,
+    3.418,
+    3.327
+   ],
+   "fragments": 12,
+   "frag_source_lod": 1,
+   "frag_tris_max": 248,
+   "frag_tris_total": 1364,
+   "mass_kg_total": 3482.6,
+   "mass_kg_range": [
+    207.45,
+    459.78
+   ],
+   "density_kg_m3": 1500,
+   "joints": 27,
+   "anchors": 4,
+   "min_axis_m": 0.9
+  },
+  "Chim": {
+   "frac": "Stone",
+   "tris": {
+    "LOD0": 284,
+    "LOD1": 136,
+    "LOD2": 100
+   },
+   "bounds_m": [
+    0.871,
+    0.721,
+    3.999
+   ],
+   "fragments": 5,
+   "frag_source_lod": 1,
+   "frag_tris_max": 52,
+   "frag_tris_total": 192,
+   "mass_kg_total": 3865.4,
+   "mass_kg_range": [
+    10.69,
+    1247.21
+   ],
+   "density_kg_m3": 2300,
+   "joints": 4,
+   "anchors": 1,
+   "min_axis_m": 0.156
+  },
+  "AnnexF": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 1032,
+    "LOD1": 524,
+    "LOD2": 320
+   },
+   "bounds_m": [
+    2.249,
+    2.052,
+    3.136
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 148,
+   "frag_tris_total": 1028,
+   "mass_kg_total": 1268.3,
+   "mass_kg_range": [
+    19.3,
+    139.39
+   ],
+   "density_kg_m3": 600,
+   "joints": 43,
+   "anchors": 5,
+   "min_axis_m": 0.16
+  },
+  "AnnexB": {
+   "frac": "Wood",
+   "tris": {
+    "LOD0": 708,
+    "LOD1": 356,
+    "LOD2": 204
+   },
+   "bounds_m": [
+    2.247,
+    1.9,
+    3.128
+   ],
+   "fragments": 16,
+   "frag_source_lod": 1,
+   "frag_tris_max": 132,
+   "frag_tris_total": 764,
+   "mass_kg_total": 1193.4,
+   "mass_kg_range": [
+    19.3,
+    117.89
+   ],
+   "density_kg_m3": 600,
+   "joints": 39,
+   "anchors": 5,
+   "min_axis_m": 0.16
+  }
+ },
+ "tris_total": {
+  "LOD0": 19692,
+  "LOD1": 9980,
+  "LOD2": 4982,
+  "Fractured": 18442
+ }
+}

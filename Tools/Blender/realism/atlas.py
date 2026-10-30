@@ -28,6 +28,28 @@ def noise(h,w,scales):
     return out
 def proc(kind,w,h):
     flatN=np.stack([np.full((h,w),.5),np.full((h,w),.5),np.ones((h,w))],-1).astype(np.float32)
+    if kind in ("Flowers","SignBoard"):   # realistic v1 townhouse charm cells (procedural, Art v3: lush greens, warm accents, no cyan)
+        from PIL import Image as _I, ImageDraw as _D
+        im=_I.new("RGB",(w,h)); d=_D.Draw(im); r2=np.random.default_rng(5 if kind=="Flowers" else 6)
+        if kind=="Flowers":   # geranium box planting: leaf mass + red/pink/white florets
+            im.paste((70,150,52),(0,0,w,h))
+            for _ in range(int(w*h/90)):
+                x,y=r2.integers(0,w),r2.integers(0,h); rr=int(r2.integers(3,9)*w/256); g=r2.integers(-25,30)
+                d.ellipse((x-rr,y-rr,x+rr,y+rr),fill=(int(64+g*.6),int(150+g),int(48+g*.5)))
+            for _ in range(int(w*h/900)):
+                x,y=r2.integers(0,w),r2.integers(0,h); c=[(232,58,62),(240,96,120),(250,238,226),(232,58,62)][r2.integers(4)]; rr=int(r2.integers(4,8)*w/256)
+                for k in range(5): a=k*1.256; d.ellipse((x+rr*.6*np.cos(a)-rr*.5,y+rr*.6*np.sin(a)-rr*.5,x+rr*.6*np.cos(a)+rr*.5,y+rr*.6*np.sin(a)+rr*.5),fill=c)
+                d.ellipse((x-rr*.3,y-rr*.3,x+rr*.3,y+rr*.3),fill=(245,196,81))
+            rough=.85
+        else:                 # painted hanging sign: deep green board, gold border, gold loaf + pretzel icon (no text: localisation)
+            im.paste((38,86,64),(0,0,w,h)); b=int(w*.06); d.rectangle((b,b,w-b,h-b),outline=(232,176,75),width=max(2,int(w*.03)))
+            cx,cy=w*.5,h*.5; R_=w*.2
+            d.ellipse((cx-R_*1.3,cy-R_*.6,cx+R_*1.3,cy+R_*.7),fill=(214,150,80),outline=(232,176,75),width=max(2,int(w*.015)))
+            for k in (-1,0,1): d.line((cx+k*R_*.6-R_*.2,cy-R_*.4,cx+k*R_*.6+R_*.2,cy+R_*.4),fill=(150,92,44),width=max(2,int(w*.02)))
+            rough=.6
+        A=np.asarray(im).astype(np.float32)/255; A=np.clip(A,50/255,240/255)
+        n=noise(h,w,[(16,.5),(4,.5)]); N=flatN.copy(); N[...,0]+=.06*(n-.5); N[...,1]+=.06*(np.roll(n,3,0)-.5)
+        ORM=np.stack([np.ones((h,w))*.95,np.full((h,w),rough),np.zeros((h,w))],-1); return A,N,ORM
     if kind=="Granite":   # fine speckle, ±6% value, polished
         base=np.array([0x4A,0x4F,0x5C])/255; sp=rng.random((h,w)); n=noise(h,w,[(64,.5),(16,.5)])
         v=1+.05*(n-n.mean())/n.std()*.5+np.where(sp>.97,.12,0)-np.where(sp<.03,.10,0)
@@ -94,6 +116,9 @@ TOWN={ # slot px (authored 2048 = 512px/m nominal), world metres per cell
  "SandDressed":("SandDressed",(1024,1536,512,512),(1.0,1.0)),
  "Sandstone2":("Sandstone",(1536,1536,512,512),(.75,.75)),
 }
+# realistic v1 modular townhouse (Kit_RealHouse_*): same cells, chimney stone shares a smaller slot, + flowers and sign board
+HOUSE={**TOWN,"Sandstone2":("Sandstone",(1536,1536,256,256),(.75,.75)),
+ "Flowers":("Flowers",(1792,1536,256,256),(.5,.5)),"SignBoard":("SignBoard",(1536,1792,512,256),(.6,.3))}
 PROPS={ # authored 1024 -> 512 on Android (props cap)
  "WoodPlank":("WoodPlank",(0,0,512,512),(1.0,1.0)),
  "WoodBeam":("WoodBeam",(512,0,512,256),(1.0,.5),{"rot":True}),
@@ -113,5 +138,6 @@ GROUND={
 if __name__=="__main__":
     w=sys.argv[1:] or ["town","props","ground"]
     if "town" in w: build("Bld_Townhouse","Buildings/Hero",2048,TOWN)
+    if "house" in w: build("RealHouse","Buildings",2048,HOUSE)   # -> Buildings/RealHouse/Textures; house_modular.py moves it to Bld_Townhouse at 1024
     if "props" in w: build("Props_Village","Props",1024,PROPS)
     if "ground" in w: build("Ground_Patch","Props",2048,GROUND)
