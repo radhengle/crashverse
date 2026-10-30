@@ -29,3 +29,26 @@ CC0 sources are listed in `CREDITS.md`.
 ## Not done in this test
 - The townhouse is a single intact mesh. It is not yet split into #28 breakable modules or fractured sets.
 - Moss, damp at the base and dirt streaks were left out because Art v3 §4 bans them on gameplay buildings. Weathering is limited to soft AO, tile and stone tone variation, and dressed-stone edges.
+
+## Realistic v1: L1-10 + Daily Boss pieces (branch 3d-modeler/realistic-v1)
+
+Scope: `models/Realistic_Scope_L1-10.md`. LevelBuilder builds every level from scaled cubes by `mat`, and no hero building is referenced. So the set is
+14 break-apart pieces, built most-used first. Each one reuses BuildingKit v3.1 geometry (LOD0-2 + UCX) and its fracture set (fragments with exact
+`UCX_<frag>`, `JNT_A__B` with blank break_force_N/torque, `ANCHOR_<frag>` anchor_to Ground/Support, `mass_kg`, pivot = centre of mass).
+The pieces are re-surfaced with graded CC0 tiling sets (`Tools/Blender/realistic/resurf.py`). The new `Block` module (1 m solid) uses the same `build_kit2.py` recipe.
+
+| Folder | Material | Tiling set (1024, ORM) | tile_m |
+|---|---|---|---|
+| Buildings/Kit_RealBrick | M_RealBrick / _Inner | T_RealBrick (brick_wall_001), T_RealBrick_Inner (#E9997C) | 1.75 |
+| Buildings/Kit_RealWood | M_RealWood / _Inner | T_RealWood (worn_planks), T_RealWood_Inner (#EBC28E) | 1.4 |
+| Buildings/Kit_RealSteel | M_RealSteel / _Inner | T_RealSteel (metal_plate, metal 1, rough 0.25-0.35) | 1.5 |
+| Buildings/Kit_RealRoof | M_RealRoof / _Inner | T_RealRoof (clay_roof_tiles) | 2.0 |
+| Props/Kit_RealProps | M_RealProps / _Inner | T_RealProps 512 atlas (wood half, steel half for hoops) | 1.0 |
+
+* One material per piece, plus `_Inner` on cut faces (kit convention). There is one shared material per kit, so all pieces of a kit batch together.
+* UV0 is a metric box projection. After non-uniform per-block scaling, rebuild UV0 from the scaled positions (`uv = pos / tile_m` on the dominant axis),
+  so texel density stays constant. `render_sheet.py` `assemble()` does exactly this for L3 and the Daily Boss.
+* Vertex colour `Col` is unchanged from the kit (GlossyPBR: R = damage mask, A = flex).
+* `fracture_class` is on every `_Fractured` root and fragment. The stats are in `models/HeroBuildings/Kit_Real<M>_stats.json`. Validator logs are in `models/validation_realistic/`.
+* Importer note (VFX): `ImportConventions.KitPathOk` only allows `Kit_*` under `Models/BuildingKit/`. It needs to also accept `Kit_Real*` under `Models/Realistic/`,
+  as the local `validate_colliders.py` now does. Until then the Unity validator reports a path error for these files.

@@ -4,7 +4,7 @@ import bpy,math,os,sys,random,glob,subprocess
 from mathutils import Vector
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 import rlib as R, rscene as S, ground as GR
-REAL=R.REAL; OUT="/workspace/crashverse_previews/realism_test_v1"
+REAL=R.REAL; OUT=os.environ.get("RT_OUT","/workspace/crashverse_previews/realism_test_v1")
 SH=sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv and sys.argv[-1]!="--" else ["hero","closeup","tree","gameplay","neutral"]
 SAMPLES=int(os.environ.get("RT_SAMPLES","128"))
 MAT={"M_Bld_Townhouse":(f"{REAL}/Buildings/Hero/Bld_Townhouse/Textures/T_Bld_Townhouse",False),
@@ -67,7 +67,7 @@ for k,(x,y,rz,s) in (("Rock_A",(1.9,-7.9,.4,1)),("Rock_B",(-.9,-6.0,1.2,1)),("Ro
     else: place(root,(x,y,H(x,y)-.06),rz,s); root["_used"]=1
 # grass clumps (instanced; in Unity: GPU-instanced detail mesh, 1 material)
 g0=[o for o in gobj if o.name.endswith("_LOD0")][0]
-GR.scatter(g0,int(os.environ.get("RT_GRASS","14000")))
+GR.scatter(g0,int(os.environ.get("RT_GRASS","9000")))
 g0.hide_render=True
 # backdrop (render only): far meadow + distant trees so the horizon isn't empty
 import bmesh
@@ -82,7 +82,7 @@ for i in range(70):
     a=rng.uniform(0,6.283); r=rng.uniform(30,70); x,y=math.cos(a)*r,math.sin(a)*r
     sp=rng.choice(["Pine","Pine","Oak"]); inst(trees[sp][1],(x,y,-.1),rng.uniform(0,6),rng.uniform(.8,1.3))
 S.cap_textures()
-def shot(name,loc,tg,lens,res=(1600,1067),view="AgX",look="Medium High Contrast",samples=None):
+def shot(name,loc,tg,lens,res=(int(os.environ.get("RT_W","1600")),int(int(os.environ.get("RT_W","1600"))*2/3)),view="AgX",look="Medium High Contrast",samples=None):
     S.setup(res=res,samples=samples or SAMPLES,view=view,look=look,sun_el=57,sun_az=-35,sun_str=4.0,hdri_str=1.0,hdri_rot=60) if not bpy.context.scene.world or bpy.context.scene.world.name!="Sky" else None
     sc=bpy.context.scene; sc.render.resolution_x,sc.render.resolution_y=res; sc.view_settings.view_transform=view
     try: sc.view_settings.look=look

@@ -1,0 +1,15 @@
+Kit_RealRoof_Roof_Fractured.fbx: frags=12 (Roof 8-16) tris max=80 total=664 mass 158.8-234.3 kg UCX=12 JNT=23 ANCHOR=4 -> PASS
+RESULT: ALL PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof.fbx [Kit] LOD0 tris=1112 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof_Fractured.fbx [KitFractured] LOD0 tris=664 LODs=[0] hulls=12 frags=12 -> PASS
+RESULT: ALL PASS (2 groups, 2 files)
+Kit_RealRoof_Roof.fbx: meshes=3 materials=['M_RealRoof', 'M_RealRoof_Inner'] -> PASS
+Kit_RealRoof_Roof_Fractured.fbx: meshes=12 materials=['M_RealRoof', 'M_RealRoof_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Buildings/Kit_RealRoof/Kit_RealRoof_Roof.fbx: LOD0=1112t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealRoof', 'M_RealRoof_Inner'] -> PASS
+FBX version: 7400
+Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx: LOD0=716t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealSteel', 'M_RealSteel_Inner'] -> PASS
+--
+REALISM RESULT: ALL PASS
+Blender 4.2.3 LTS (hash 0e22e4fcea03 built 2024-10-14 23:31:34)
+

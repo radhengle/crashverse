@@ -2,7 +2,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import os, glob
 O="/workspace/crashverse_previews/realism_test_v1"; V2="/workspace/crashverse_previews/hero_buildings_v2"
-REAL="/workspace/wt/3d-modeler-v3/Assets/_Project/Models/Realistic"
+REAL=os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","..","..","Assets","_Project","Models","Realistic")
 def font(s):
     for p in ("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf","/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf"):
         if os.path.exists(p): return ImageFont.truetype(p,s)

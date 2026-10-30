@@ -1,0 +1,456 @@
+{
+ "ref": "origin/integration/v2",
+ "order": [
+  "Kit_RealBrick_Block",
+  "Kit_RealSteel_Block",
+  "Kit_RealWood_Block",
+  "Kit_RealWood_Joint",
+  "Kit_RealWood_Floor",
+  "Kit_RealBrick_Wall",
+  "Kit_RealBrick_Floor",
+  "Kit_RealWood_Wall",
+  "Kit_RealRoof_Roof",
+  "Kit_RealSteel_Floor",
+  "Kit_RealProps_Crate",
+  "Kit_RealProps_Barrel",
+  "Kit_RealSteel_Joint",
+  "Kit_RealSteel_Wall"
+ ],
+ "assets": {
+  "HELD": {
+   "kind": "Island rock / plinth (island held)",
+   "src": "Kit_Base_Indestructible",
+   "count": 23,
+   "blocks": [
+    "L1:rock",
+    "L2:rock",
+    "L3:rock",
+    "L4:rock",
+    "L4:drum0",
+    "L5:rockL",
+    "L5:rockR",
+    "L5:pierL",
+    "L5:pierR",
+    "L6:rock",
+    "L6:colL",
+    "L6:colR",
+    "L7:plinth",
+    "L8:rock",
+    "L8:pier0",
+    "L8:pier1",
+    "L8:pier2",
+    "L8:pier3",
+    "L8:pier4",
+    "L9:rock",
+    "L9:lhBase",
+    "L9:breakwater",
+    "L10:stack"
+   ],
+   "indestructible": 23,
+   "levels": {
+    "L1": 1,
+    "L2": 1,
+    "L3": 1,
+    "L4": 2,
+    "L5": 4,
+    "L6": 3,
+    "L7": 1,
+    "L8": 6,
+    "L9": 3,
+    "L10": 1
+   }
+  },
+  "Kit_RealWood_Joint": {
+   "kind": "post / beam / pillar",
+   "src": "Kit_Wood_Joint",
+   "count": 23,
+   "blocks": [
+    "L1:post",
+    "L1:flag",
+    "L2:stilt0",
+    "L2:stilt1",
+    "L2:stilt2",
+    "L2:stilt3",
+    "L2:shedPost",
+    "L3:propL",
+    "L3:propR",
+    "L3:awningPost",
+    "L4:cap",
+    "L4:sail0",
+    "L4:sail1",
+    "L4:sail2",
+    "L4:sail3",
+    "L5:wheelAxle",
+    "L5:lanterns",
+    "L7:wingL",
+    "L7:wingR",
+    "L8:archL",
+    "L8:archR",
+    "L9:propA",
+    "L9:propB"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L1": 2,
+    "L2": 5,
+    "L3": 3,
+    "L4": 5,
+    "L5": 2,
+    "L7": 2,
+    "L8": 2,
+    "L9": 2
+   }
+  },
+  "Kit_RealWood_Floor": {
+   "kind": "slab / deck",
+   "src": "Kit_Wood_Floor",
+   "count": 19,
+   "blocks": [
+    "L1:deck",
+    "L2:sill",
+    "L2:frame",
+    "L2:tankLid",
+    "L2:catwalk",
+    "L2:shedRoof",
+    "L3:balcony",
+    "L3:awning",
+    "L4:annexBeam",
+    "L4:annexRoof",
+    "L5:bridge",
+    "L5:floorL",
+    "L5:floorR",
+    "L8:awning0",
+    "L8:awning1",
+    "L8:awning2",
+    "L8:awning3",
+    "L9:lhGallery",
+    "L9:catwalk"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L1": 1,
+    "L2": 5,
+    "L3": 2,
+    "L4": 2,
+    "L5": 3,
+    "L8": 4,
+    "L9": 2
+   }
+  },
+  "Kit_RealWood_Block": {
+   "kind": "solid block (box)",
+   "src": "new Block module, kit v3.1 fracture setup (build_kit2.py)",
+   "count": 23,
+   "blocks": [
+    "L1:cabinL",
+    "L1:cabinR",
+    "L1:hut",
+    "L1:bell",
+    "L2:tankLo",
+    "L2:tankHi",
+    "L2:shed",
+    "L4:beamL",
+    "L4:beamR",
+    "L4:hub",
+    "L7:crownWood",
+    "L8:key0",
+    "L8:key1",
+    "L8:key2",
+    "L8:key3",
+    "L9:lhLantern",
+    "L9:bellTower",
+    "L10:head",
+    "L10:lamp",
+    "DB1:head",
+    "DB2:head",
+    "DB3:head",
+    "DB4:head"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L1": 4,
+    "L2": 3,
+    "L4": 3,
+    "L7": 1,
+    "L8": 4,
+    "L9": 2,
+    "L10": 2,
+    "DB1": 1,
+    "DB2": 1,
+    "DB3": 1,
+    "DB4": 1
+   }
+  },
+  "Kit_RealRoof_Roof": {
+   "kind": "roof slab",
+   "src": "Kit_Roof_Roof",
+   "count": 4,
+   "blocks": [
+    "L1:roof",
+    "L3:roof",
+    "L5:roofL",
+    "L5:roofR"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L1": 1,
+    "L3": 1,
+    "L5": 2
+   }
+  },
+  "Kit_RealWood_Wall": {
+   "kind": "wall panel",
+   "src": "Kit_Wood_Wall",
+   "count": 6,
+   "blocks": [
+    "L1:bellFrame",
+    "L5:wheel",
+    "L7:scaffold",
+    "L8:clock",
+    "L10:armorTop",
+    "L10:armorBot"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L1": 1,
+    "L5": 1,
+    "L7": 1,
+    "L8": 1,
+    "L10": 2
+   }
+  },
+  "Kit_RealBrick_Floor": {
+   "kind": "slab / deck",
+   "src": "Kit_Brick_Floor",
+   "count": 10,
+   "blocks": [
+    "L3:slabL",
+    "L3:slabR",
+    "L3:floor2",
+    "L6:deck",
+    "L7:crownFloor",
+    "L8:bay0",
+    "L8:bay1",
+    "L8:bay2",
+    "L8:bay3",
+    "L9:seaDeck"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L3": 3,
+    "L6": 1,
+    "L7": 1,
+    "L8": 4,
+    "L9": 1
+   }
+  },
+  "Kit_RealBrick_Wall": {
+   "kind": "wall panel",
+   "src": "Kit_Brick_Wall",
+   "count": 15,
+   "blocks": [
+    "L3:wallF",
+    "L3:wallB",
+    "L5:wallFL",
+    "L5:wallBL",
+    "L5:wallFR",
+    "L5:wallBR",
+    "L7:wallF1",
+    "L7:wallB1",
+    "L7:wallL1",
+    "L7:wallR1",
+    "L7:wallF2",
+    "L7:wallB2",
+    "L7:wallL2",
+    "L7:wallR2",
+    "L10:shutter"
+   ],
+   "indestructible": 1,
+   "levels": {
+    "L3": 2,
+    "L5": 4,
+    "L7": 8,
+    "L10": 1
+   }
+  },
+  "Kit_RealBrick_Block": {
+   "kind": "solid block (box)",
+   "src": "new Block module, kit v3.1 fracture setup (build_kit2.py)",
+   "count": 50,
+   "blocks": [
+    "L3:oven",
+    "L3:flat",
+    "L3:chimney",
+    "L4:drum1F",
+    "L4:drum1B",
+    "L4:drum2",
+    "L4:roof",
+    "L4:annex",
+    "L6:drum0",
+    "L6:drum1",
+    "L6:drum2",
+    "L6:chute",
+    "L6:hopper",
+    "L7:crownBrick",
+    "L7:crownRoof",
+    "L8:stall0",
+    "L8:stall1",
+    "L8:stall2",
+    "L8:stall3",
+    "L9:lhShaft0",
+    "L9:lhShaft1",
+    "L9:lhCap",
+    "L9:sea0",
+    "L9:sea1",
+    "L9:sea2",
+    "L9:seaCrest",
+    "L10:hips",
+    "L10:torso",
+    "L10:armL",
+    "L10:armR",
+    "DB1:legL",
+    "DB1:legR",
+    "DB1:belly",
+    "DB1:chest",
+    "DB1:armL",
+    "DB1:armR",
+    "DB2:legL",
+    "DB2:legR",
+    "DB2:belly",
+    "DB2:chest",
+    "DB2:armL",
+    "DB2:armR",
+    "DB3:belly",
+    "DB3:chest",
+    "DB3:armL",
+    "DB3:armR",
+    "DB4:belly",
+    "DB4:chest",
+    "DB4:armL",
+    "DB4:armR"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L3": 3,
+    "L4": 5,
+    "L6": 5,
+    "L7": 2,
+    "L8": 4,
+    "L9": 7,
+    "L10": 4,
+    "DB1": 6,
+    "DB2": 6,
+    "DB3": 4,
+    "DB4": 4
+   }
+  },
+  "Kit_RealSteel_Block": {
+   "kind": "solid block (box)",
+   "src": "new Block module, kit v3.1 fracture setup (build_kit2.py)",
+   "count": 26,
+   "blocks": [
+    "L6:braceL",
+    "L6:braceR",
+    "L6:braceM",
+    "L6:dome",
+    "L10:shoulderL",
+    "L10:shoulderR",
+    "DB1:pelvis",
+    "DB1:neck",
+    "DB1:shL",
+    "DB1:shR",
+    "DB2:pelvis",
+    "DB2:neck",
+    "DB2:shL",
+    "DB2:shR",
+    "DB3:legL",
+    "DB3:legR",
+    "DB3:pelvis",
+    "DB3:neck",
+    "DB3:shL",
+    "DB3:shR",
+    "DB4:legL",
+    "DB4:legR",
+    "DB4:pelvis",
+    "DB4:neck",
+    "DB4:shL",
+    "DB4:shR"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L6": 4,
+    "L10": 2,
+    "DB1": 4,
+    "DB2": 4,
+    "DB3": 6,
+    "DB4": 6
+   }
+  },
+  "Kit_RealSteel_Floor": {
+   "kind": "slab / deck",
+   "src": "Kit_Steel_Floor",
+   "count": 4,
+   "blocks": [
+    "L7:ring0",
+    "L7:ring1",
+    "L7:ring2",
+    "L9:lhRing"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L7": 3,
+    "L9": 1
+   }
+  },
+  "Kit_RealProps_Barrel": {
+   "kind": "barrel decor",
+   "src": "Kit_Props_Barrel (+ realism Prop_Barrel)",
+   "count": 1,
+   "blocks": [
+    "L7:barrelDecor"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L7": 1
+   }
+  },
+  "Kit_RealSteel_Joint": {
+   "kind": "post / beam / pillar",
+   "src": "Kit_Steel_Joint",
+   "count": 1,
+   "blocks": [
+    "L8:sign"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "L8": 1
+   }
+  },
+  "Kit_RealSteel_Wall": {
+   "kind": "wall panel",
+   "src": "Kit_Steel_Wall",
+   "count": 1,
+   "blocks": [
+    "L10:core"
+   ],
+   "indestructible": 1,
+   "levels": {
+    "L10": 1
+   }
+  },
+  "Kit_RealProps_Crate": {
+   "kind": "explosive crate",
+   "src": "Kit_Props_Crate (+ realism Prop_Crate)",
+   "count": 2,
+   "blocks": [
+    "DB1:crate",
+    "DB2:crate"
+   ],
+   "indestructible": 0,
+   "levels": {
+    "DB1": 1,
+    "DB2": 1
+   }
+  }
+ }
+}

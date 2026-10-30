@@ -32,7 +32,10 @@ for (dirn,base),fl in sorted(groups.items()):
     if -1 in fl and any(k>=0 for k in fl): warn.append("plain FBX next to _LODn files (plain ignored by #28)")
     lod0=fl.get(0,fl.get(-1))
     if lod0 is None: print(f"{base}: FAIL\n    LOD1/LOD2 without LOD0"); bad+=1; continue
-    if C.startswith("Kit") and "/Assets/_Project/Models/BuildingKit/" not in os.path.abspath(lod0)+"/": errs.append("kit file outside Assets/_Project/Models/BuildingKit/")
+    # realistic v1 (PM folders): Kit_Real* break-apart kits live under Models/Realistic/{Buildings,Props}/Kit_Real<M>/.
+    # NOTE for VFX: ImportConventions.KitPathOk needs the same exception, or the Unity validator reports an error.
+    _ap=os.path.abspath(lod0)+"/"; _real=os.path.basename(lod0).startswith("Kit_Real") and "/Assets/_Project/Models/Realistic/" in _ap
+    if C.startswith("Kit") and "/Assets/_Project/Models/BuildingKit/" not in _ap and not _real: errs.append("kit file outside Assets/_Project/Models/BuildingKit/")
     if C=="Unknown": warn.append("unknown class prefix")
     levels={k for k in fl if k>=0}
     bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.fbx(filepath=lod0)
