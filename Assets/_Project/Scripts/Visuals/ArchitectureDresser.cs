@@ -179,7 +179,7 @@ namespace Crashverse.Visuals
 
         static bool Roof(Builder k, Vector3 s)
         {
-            float w = s.z + 0.5f, d = s.x + 0.6f, h = Mathf.Max(s.y, Mathf.Clamp(d * 0.42f, 0.6f, 2.2f)), y0 = -s.y * 0.5f;
+            float w = s.z + 0.9f, d = s.x + 1.0f, h = Mathf.Max(s.y, Mathf.Clamp(d * 0.42f, 0.6f, 2.2f)), y0 = -s.y * 0.5f;
             k.Add(Shingle, CvMesh.WithBoxUv(Prism(w, d, h), 0.9f, Vector3.one), Matrix4x4.Translate(new Vector3(0f, y0, 0f)));
             // shingle courses (stepped strips) on the cannon-facing slope for relief
             float slope = Mathf.Atan2(h, d * 0.5f) * Mathf.Rad2Deg; int rows = Mathf.Max(3, Mathf.RoundToInt(Mathf.Sqrt(h * h + d * d * 0.25f) / 0.28f));
@@ -189,6 +189,13 @@ namespace Crashverse.Visuals
                 k.Box(Shingle, p, new Vector3(0.05f, Mathf.Sqrt(h * h + d * d * 0.25f) / rows * 0.5f, w * 0.99f), 0.9f, Quaternion.Euler(0f, 0f, -(90f - slope)));
             }
             k.Log(Timber, new Vector3(0f, y0 + h + 0.02f, -w * 0.5f - 0.1f), new Vector3(0f, y0 + h + 0.02f, w * 0.5f + 0.1f), 0.09f); // ridge
+            // exposed rafter tails under the deep eaves (concept: chunky overhang with visible timber ends)
+            for (float z = -w * 0.5f + 0.2f; z <= w * 0.5f - 0.15f; z += 0.45f)
+                foreach (float sg in new[] { -1f, 1f })
+                    k.Box(Timber, new Vector3(sg * (d * 0.5f - 0.25f), y0 - 0.06f, z), new Vector3(0.55f, 0.1f, 0.09f), 1f, Quaternion.Euler(0f, 0f, sg * Mathf.Atan2(h, d * 0.5f) * Mathf.Rad2Deg * 0.6f));
+            // ridge cap boards + a weathered crown beam over each gable end
+            foreach (float z in new[] { -w * 0.5f - 0.12f, w * 0.5f + 0.12f })
+                k.Box(Timber, new Vector3(0f, y0 + h + 0.12f, z), new Vector3(0.12f, 0.3f, 0.12f), 1f);
             // fascia boards along the eaves + gable bargeboards
             k.Box(Timber, new Vector3(-d * 0.5f, y0 - 0.02f, 0f), new Vector3(0.08f, 0.12f, w + 0.05f), 1f);
             k.Box(Timber, new Vector3(d * 0.5f, y0 - 0.02f, 0f), new Vector3(0.08f, 0.12f, w + 0.05f), 1f);

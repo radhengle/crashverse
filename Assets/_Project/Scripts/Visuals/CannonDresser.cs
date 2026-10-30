@@ -22,13 +22,13 @@ namespace Crashverse.Visuals
 
             var bRoot = new GameObject("Kingdom_Barrel").transform; bRoot.SetParent(wb.pitchPivot, false);
             bRoot.localScale = Vector3.one * VisualScale;
-            foreach (var kv in barrel) Part(kv.Key, kv.Value, bRoot, 0f);
+            foreach (var kv in barrel) Part(kv.Key, kv.Value, bRoot, KingdomMaterials.TileFor(kv.Key));
 
             var cRoot = new GameObject("Kingdom_Carriage").transform; cRoot.SetParent(wb.yawPivot, false);
             cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y, 0f) * VisualScale; // ground under the pivot
             cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y * VisualScale, 0f);
             cRoot.localScale = Vector3.one * VisualScale;
-            foreach (var kv in carriage) Part(kv.Key, kv.Value, cRoot, kv.Key.EndsWith("_Wood") ? 0.9f : 0f);
+            foreach (var kv in carriage) Part(kv.Key, kv.Value, cRoot, kv.Key.EndsWith("_Wood") ? 0.9f : KingdomMaterials.TileFor(kv.Key));
             return true;
         }
 
