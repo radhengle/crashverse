@@ -63,6 +63,8 @@ namespace Crashverse.Data
         /// pivot = the block's base-footprint centre (bottom-centre of s), yawed by rotY, at modelScale (default 1:1), not stretched to s.</summary>
         public string[] parts;
         public float[] modelScale;
+        /// <summary>Optional offset (block-local metres) of the module pivot from the block's base-footprint centre (LD gap 9).</summary>
+        public float[] modelOffset;
     }
 
     [Serializable] public class LayoutData { public string id; public BlockData[] blocks; }

@@ -89,6 +89,7 @@ namespace Crashverse.Level
             var scale = bd.modelScale != null && bd.modelScale.Length == 3 ? new Vector3(bd.modelScale[0], bd.modelScale[1], bd.modelScale[2]) : Vector3.one;
             var yaw = Quaternion.Euler(0f, bd.rotY, 0f);
             var pivot = new Vector3(0f, -0.5f * size.y, 0f);                       // block-local metres: base-footprint centre
+            if (bd.modelOffset != null && bd.modelOffset.Length == 3) pivot += new Vector3(bd.modelOffset[0], bd.modelOffset[1], bd.modelOffset[2]);
             var perLod = new List<Renderer>[3]; for (int i = 0; i < 3; i++) perLod[i] = new List<Renderer>();
             var root = new GameObject("Real_Module_" + bd.id);
             root.transform.SetParent(block.transform, false);
@@ -105,7 +106,7 @@ namespace Crashverse.Level
                 var kmats = real ? MaterialsFor(man, kit) : null;
                 for (int i = 0; i < src.Length && i < 3; i++)
                 {
-                    string key = "P|" + name + "|" + i + "|" + size + "|" + scale + "|" + bd.rotY;
+                    string key = "P|" + name + "|" + i + "|" + size + "|" + scale + "|" + bd.rotY + "|" + pivot;
                     if (!_partCache.TryGetValue(key, out var mesh))
                         _partCache[key] = mesh = Place(src[i].mesh, src[i].m, scale, yaw, pivot, size, name + "_LOD" + i);
                     if (mesh == null) continue;
