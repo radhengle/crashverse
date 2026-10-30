@@ -144,6 +144,7 @@ namespace Crashverse.Visuals
                 if (sh == null || !sh.isSupported) return null;
                 _water = new Material(sh) { name = "MK_Water" };
                 _water.SetColor("_HorizonColor", HorizonColor);
+                var sky = Tex("T_K_Sky"); if (sky != null) { sky.wrapModeV = TextureWrapMode.Clamp; _water.SetTexture("_SkyTex", sky); _water.SetFloat("_SkyRot", 200f); }
                 return _water;
             }
         }

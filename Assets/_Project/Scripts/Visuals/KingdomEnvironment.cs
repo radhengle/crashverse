@@ -26,6 +26,7 @@ namespace Crashverse.Visuals
             Horizon(root.transform, palaceLevel);
             Yard(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
             Harbour(root.transform, structureBase);
+            Foliage(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
             return root;
         }
 
@@ -307,6 +308,61 @@ namespace Crashverse.Visuals
                 if (p.x < cannon.x + 6f) continue; // next to / behind the camera: fronds would fill the screen corners
                 Palm(shore, palms, p, i);
             }
+        }
+
+        /// <summary>Concept L1: ferns, round bushes and small rocks hugging the building's footprint and the beach. Merged into one
+        /// mesh per material (3 draw calls), no colliders, never inside the cannon's sight line to the building's front.</summary>
+        static void Foliage(Transform root, Vector3 cannon, Bounds sb)
+        {
+            var rng = new System.Random(4242); float R(float a, float b) => a + (float)rng.NextDouble() * (b - a);
+            var sph = GameObject.CreatePrimitive(PrimitiveType.Sphere); var sphere = sph.GetComponent<MeshFilter>().sharedMesh; Object.Destroy(sph);
+            var cub = GameObject.CreatePrimitive(PrimitiveType.Cube); var cube = cub.GetComponent<MeshFilter>().sharedMesh; Object.Destroy(cub);
+            var rocks = CvMesh.Load("Kingdom/Meshes/Rocks");
+            var dark = new List<CombineInstance>(); var light = new List<CombineInstance>(); var stone = new List<CombineInstance>();
+            Vector3 c = sb.center; float ex = sb.extents.x + 0.6f, ez = sb.extents.z + 0.6f;
+            for (int i = 0; i < 46; i++)
+            {
+                float a = R(0f, Mathf.PI * 2f), d = R(1.0f, 1.9f);
+                var p = new Vector3(c.x + Mathf.Cos(a) * ex * d, 0f, c.z + Mathf.Sin(a) * ez * d);
+                if (p.x < c.x - ex * 0.9f && Mathf.Abs(p.z - c.z) < 1.4f) continue; // keep the front door / sight line clear
+                if (Mathf.Abs(p.x) > Rx * 0.92f || Mathf.Abs(p.z) > Rz * 0.92f || p.x < cannon.x + 7f) continue;
+                int kind = i % 3;
+                if (kind == 0)
+                {   // round bush: 3-4 squashed blobs
+                    for (int k = 0; k < 4; k++)
+                    {
+                        float s = R(0.45f, 0.85f);
+                        var m = Matrix4x4.TRS(p + new Vector3(R(-0.35f, 0.35f), s * 0.35f, R(-0.35f, 0.35f)), Quaternion.Euler(0f, R(0f, 360f), 0f), new Vector3(s, s * 0.75f, s));
+                        (k % 2 == 0 ? dark : light).Add(new CombineInstance { mesh = sphere, transform = m });
+                    }
+                }
+                else if (kind == 1)
+                {   // fern: a rosette of arched fronds (thin tilted slabs)
+                    int fr = 7; float len = R(0.6f, 1.0f), yaw0 = R(0f, 360f);
+                    for (int k = 0; k < fr; k++)
+                    {
+                        var q = Quaternion.Euler(0f, yaw0 + k * 360f / fr, 0f) * Quaternion.Euler(0f, 0f, R(28f, 48f));
+                        var m = Matrix4x4.TRS(p + q * new Vector3(len * 0.5f, 0f, 0f) + Vector3.up * 0.05f, q, new Vector3(len, 0.025f, 0.16f));
+                        (k % 2 == 0 ? light : dark).Add(new CombineInstance { mesh = cube, transform = m });
+                    }
+                }
+                else if (rocks.TryGetValue(i % 2 == 0 ? "Rock_A" : "Rock_C", out var rm))
+                {
+                    float s = R(0.18f, 0.4f);
+                    stone.Add(new CombineInstance { mesh = rm, transform = Matrix4x4.TRS(p + Vector3.down * 0.05f, Quaternion.Euler(0f, R(0f, 360f), 0f), new Vector3(s, s * R(0.6f, 1f), s)) });
+                }
+            }
+            var t = new GameObject("Foliage").transform; t.SetParent(root, false);
+            void Merge(string n, List<CombineInstance> l, Material mat, float tile)
+            {
+                if (l.Count == 0) return;
+                var mesh = new Mesh { name = n, indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 }; mesh.CombineMeshes(l.ToArray(), true, true); mesh.RecalculateBounds();
+                if (tile > 0f) mesh = CvMesh.WithBoxUv(mesh, tile, Vector3.one);
+                Obj(n, t, mesh, mat, true, true);
+            }
+            Merge("Foliage_Dark", dark, KingdomMaterials.Make("LeafDark", "T_K_Grass", new Color(0.30f, 0.62f, 0.22f), 0f, 0.7f, Vector2.one), 1.2f);
+            Merge("Foliage_Light", light, KingdomMaterials.Make("LeafLight", "T_K_Grass", new Color(0.55f, 0.85f, 0.30f), 0f, 0.65f, Vector2.one), 1.2f);
+            Merge("Foliage_Rock", stone, KingdomMaterials.Rock, 1.5f);
         }
 
         static readonly Dictionary<Mesh, Mesh> _boxUv = new Dictionary<Mesh, Mesh>();

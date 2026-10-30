@@ -17,6 +17,10 @@ Shader "Crashverse/Water"
         _WaveLen ("Wave length (m)", Float) = 7
         _WaveSpeed ("Wave speed", Float) = 1.2
         _Glint ("Sun glint", Float) = 2.5
+        _SkyTex ("Sky panorama for fake reflections (same as Crashverse/SkyPano)", 2D) = "black" {}
+        _SkyRot ("Sky rotation (deg)", Float) = 200
+        _Reflect ("Reflection strength", Range(0, 1)) = 0.55
+        _Caustics ("Lagoon caustics", Range(0, 1)) = 0.35
     }
     SubShader
     {
@@ -35,7 +39,9 @@ Shader "Crashverse/Water"
             CBUFFER_START(UnityPerMaterial)
                 half4 _ShallowColor, _MidColor, _DeepColor, _HorizonColor, _FoamColor;
                 float4 _Island; float _ShoreFade, _FoamWidth, _WaveAmp, _WaveLen, _WaveSpeed, _Glint;
+                float4 _SkyTex_ST; float _SkyRot, _Reflect, _Caustics;
             CBUFFER_END
+            TEXTURE2D(_SkyTex); SAMPLER(sampler_SkyTex);
             struct A { float4 positionOS : POSITION; };
             struct V { float4 positionCS : SV_POSITION; float3 posWS : TEXCOORD0; float3 nWS : TEXCOORD1; half fog : TEXCOORD2; };
 
@@ -71,15 +77,27 @@ Shader "Crashverse/Water"
                 float shallow = saturate(1.0 - (e - 1.0) / max(0.05, _ShoreFade));
                 half3 col = lerp(_DeepColor.rgb, _MidColor.rgb, saturate(1.0 - (e - 1.0) / max(0.05, _ShoreFade * 3.0)));
                 col = lerp(col, _ShallowColor.rgb, shallow * shallow);
+                // lagoon caustics: two drifting interference patterns, brightest in the shallows
+                float c1 = sin(p.x * 1.7 + sin(p.z * 1.3 + t * 0.9) * 1.4 + t * 0.7) * sin(p.z * 1.9 + sin(p.x * 1.1 - t * 0.8) * 1.4 - t * 0.6);
+                col += _Caustics * shallow * pow(saturate(c1), 3.0) * half3(0.55, 0.95, 0.85);
                 float fres = pow(1.0 - saturate(dot(n, v)), 4.0);
-                col = lerp(col, _HorizonColor.rgb, saturate(fres * 0.85));
+                // fake sky reflection: reflect the view ray and sample the sky panorama (upper hemisphere, like SkyPano)
+                float3 r = reflect(-v, n); r.y = abs(r.y);
+                float elev = degrees(asin(clamp(r.y, 0.0, 1.0)));
+                float2 suv = float2(atan2(r.x, r.z) / (2.0 * PI) + 0.5 + _SkyRot / 360.0, saturate((elev + 3.6) / 93.6));
+                half3 sky = SAMPLE_TEXTURE2D_LOD(_SkyTex, sampler_SkyTex, suv, 0).rgb;
+                float refl = _Reflect * saturate(0.15 + fres * 1.2) * (1.0 - shallow * 0.6);
+                col = lerp(col, lerp(_HorizonColor.rgb, sky, step(0.001, dot(sky, 1))), saturate(refl));
+                col = lerp(col, _HorizonColor.rgb, saturate(fres * 0.35));
                 Light L = GetMainLight();
                 float3 h = normalize(L.direction + v);
                 col += L.color * pow(saturate(dot(n, h)), 220.0) * _Glint;
                 float wob = 0.012 * sin(ang * 23.0 + t * 1.5) + 0.01 * sin(ang * 7.0 - t * 0.9);
                 float foam = saturate(1.0 - abs(e - 1.0 - _FoamWidth - wob) / max(0.005, _FoamWidth));
                 float foam2 = saturate(1.0 - abs(e - 1.0 - _FoamWidth * 3.2 - wob * 1.7 - 0.01 * sin(t * 0.8)) / max(0.005, _FoamWidth * 0.6)) * 0.5;
-                col = lerp(col, _FoamColor.rgb, saturate(foam + foam2) * 0.9);
+                // white-cap flecks a little further out
+                float caps = saturate(sin(p.x * 0.9 + t * 1.1 + sin(p.z * 0.7)) * sin(p.z * 1.1 - t * 0.9 + sin(p.x * 0.5)) - 0.82) * 4.0 * saturate((e - 1.2) * 0.5);
+                col = lerp(col, _FoamColor.rgb, saturate(foam + foam2 + caps * 0.6) * 0.9);
                 col = MixFog(col, i.fog);
                 return half4(col, 1);
             }
