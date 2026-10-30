@@ -2,17 +2,17 @@
  "id": "c1_l03_bakery",
  "blocks": [
   {
-   "id": "rock",
+   "id": "Base",
    "mat": "brick",
    "p": [
-    0,
-    0.6,
+    -0.15,
+    0.175,
     0
    ],
    "s": [
-    4,
-    1.2,
-    7
+    6.84,
+    0.35,
+    8.64
    ],
    "sup": [],
    "joint": false,
@@ -23,23 +23,32 @@
    "indestructible": true,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Base.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
   },
   {
    "id": "propL",
    "mat": "wood",
    "p": [
-    -1.4,
-    1.9,
-    -1.6
+    -2.6,
+    1.045,
+    2.0
    ],
    "s": [
-    0.4,
-    1.4,
-    0.4
+    0.45,
+    1.39,
+    0.45
    ],
    "sup": [
-    "rock"
+    "Base"
    ],
    "joint": false,
    "role": "prop",
@@ -55,17 +64,17 @@
    "id": "propR",
    "mat": "wood",
    "p": [
-    -1.4,
-    1.9,
-    1.6
+    -2.6,
+    1.045,
+    -2.0
    ],
    "s": [
-    0.4,
-    1.4,
-    0.4
+    0.45,
+    1.39,
+    0.45
    ],
    "sup": [
-    "rock"
+    "Base"
    ],
    "joint": false,
    "role": "prop",
@@ -81,14 +90,14 @@
    "id": "slabL",
    "mat": "brick",
    "p": [
-    0,
-    2.8,
-    -1
+    -0.182,
+    1.9415,
+    2.0555
    ],
    "s": [
-    3.4,
+    6.586,
     0.4,
-    2
+    4.111
    ],
    "sup": [
     "propL"
@@ -107,14 +116,14 @@
    "id": "slabR",
    "mat": "brick",
    "p": [
-    0,
-    2.8,
-    1
+    -0.182,
+    1.9415,
+    -2.0555
    ],
    "s": [
-    3.4,
+    6.586,
     0.4,
-    2
+    4.111
    ],
    "sup": [
     "propR"
@@ -130,17 +139,17 @@
    "spinDps": 0.0
   },
   {
-   "id": "wallF",
+   "id": "ShopFront",
    "mat": "brick",
    "p": [
-    -1.5,
-    3.8,
-    0
+    -3.1747,
+    3.2379,
+    0.0007
    ],
    "s": [
-    0.3,
-    1.6,
-    3.6
+    0.6,
+    2.1924,
+    8.0
    ],
    "sup": [
     "slabL",
@@ -154,20 +163,30 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
   },
   {
-   "id": "wallB",
+   "id": "Wall_Left",
    "mat": "brick",
    "p": [
-    1.5,
-    3.8,
-    0
+    -0.0017,
+    3.2389,
+    3.8271
    ],
    "s": [
-    0.3,
-    1.6,
-    3.6
+    5.08,
+    2.1863,
+    0.34
    ],
    "sup": [
     "slabL",
@@ -181,77 +200,33 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
   },
   {
-   "id": "oven",
+   "id": "Wall_Right",
    "mat": "brick",
    "p": [
-    0,
-    3.6,
-    0
+    0.0012,
+    3.2379,
+    -3.828
    ],
    "s": [
-    1.2,
-    1.2,
-    1.2
+    5.08,
+    2.1883,
+    0.34
    ],
    "sup": [
     "slabL",
     "slabR"
-   ],
-   "joint": false,
-   "role": "",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "floor2",
-   "mat": "brick",
-   "p": [
-    0,
-    4.8,
-    0
-   ],
-   "s": [
-    3.4,
-    0.4,
-    4
-   ],
-   "sup": [
-    "wallF",
-    "wallB"
-   ],
-   "joint": false,
-   "role": "",
-   "nonObj": false,
-   "color": "",
-   "explosive": false,
-   "indestructible": false,
-   "spinAxis": [],
-   "pivot": [],
-   "spinDps": 0.0
-  },
-  {
-   "id": "flat",
-   "mat": "brick",
-   "p": [
-    0,
-    5.6,
-    -0.6
-   ],
-   "s": [
-    2.6,
-    1.2,
-    2.6
-   ],
-   "sup": [
-    "floor2"
    ],
    "joint": false,
    "role": "wall",
@@ -261,23 +236,72 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
   },
   {
-   "id": "balcony",
+   "id": "Wall_Back",
+   "mat": "brick",
+   "p": [
+    2.828,
+    3.2369,
+    0.0008
+   ],
+   "s": [
+    0.566,
+    2.1904,
+    7.998
+   ],
+   "sup": [
+    "slabL",
+    "slabR"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "Floor",
    "mat": "wood",
    "p": [
-    0,
-    5.2,
-    1.6
+    -0.368,
+    4.8148,
+    0
    ],
    "s": [
-    2.0,
-    0.3,
-    1.0
+    5.876,
+    0.9593,
+    8.02
    ],
    "sup": [
-    "floor2"
+    "ShopFront",
+    "Wall_Back",
+    "Wall_Left",
+    "Wall_Right"
    ],
    "joint": false,
    "role": "",
@@ -287,49 +311,148 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
   },
   {
-   "id": "roof",
-   "mat": "brick",
+   "id": "UpperStorey",
+   "mat": "wood",
    "p": [
-    0,
-    6.5,
-    -0.6
+    -0.2269,
+    6.4385,
+    -0.0005
    ],
    "s": [
-    3.0,
-    0.6,
-    3.0
+    6.696,
+    2.2861,
+    8.262
    ],
    "sup": [
-    "flat"
+    "Floor"
+   ],
+   "joint": false,
+   "role": "wall",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "Roof_Left",
+   "mat": "brick",
+   "p": [
+    -0.1498,
+    9.0213,
+    2.205
+   ],
+   "s": [
+    7.316,
+    2.8775,
+    4.41
+   ],
+   "sup": [
+    "UpperStorey"
    ],
    "joint": false,
    "role": "roof",
    "nonObj": false,
-   "color": "",
+   "color": "B5523B",
    "explosive": false,
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
   },
   {
-   "id": "chimney",
+   "id": "Roof_Right",
    "mat": "brick",
    "p": [
-    0.8,
-    7.3,
-    -1.4
+    -0.1501,
+    9.0213,
+    -2.235
    ],
    "s": [
-    0.6,
-    1.0,
-    0.6
+    7.315,
+    2.8775,
+    4.47
    ],
    "sup": [
-    "roof"
+    "UpperStorey"
+   ],
+   "joint": false,
+   "role": "roof",
+   "nonObj": false,
+   "color": "B5523B",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "Chimney",
+   "mat": "brick",
+   "p": [
+    1.5496,
+    11.213,
+    1.4005
+   ],
+   "s": [
+    0.8,
+    1.504,
+    1.0
+   ],
+   "sup": [
+    "Floor",
+    "Roof_Left",
+    "UpperStorey"
    ],
    "joint": false,
    "role": "",
@@ -342,20 +465,87 @@
    "spinDps": 0.0
   },
   {
-   "id": "awningPost",
+   "id": "crateL",
    "mat": "wood",
    "p": [
-    -1.6,
-    2.2,
-    3.0
+    -4.35,
+    0.21,
+    2.9
    ],
    "s": [
-    0.3,
-    2.0,
-    0.3
+    0.5,
+    0.42,
+    0.7
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "prop",
+   "nonObj": false,
+   "color": "",
+   "explosive": false,
+   "indestructible": false,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+   ],
+   "rotY": -94.6,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "crateR",
+   "mat": "wood",
+   "p": [
+    -4.4,
+    0.21,
+    2.05
+   ],
+   "s": [
+    0.5,
+    0.42,
+    0.7
+   ],
+   "sup": [],
+   "joint": false,
+   "role": "",
+   "nonObj": true,
+   "color": "8B6B4A",
+   "explosive": false,
+   "indestructible": true,
+   "spinAxis": [],
+   "pivot": [],
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+   ],
+   "rotY": -83.1,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "id": "crateTop",
+   "mat": "wood",
+   "p": [
+    -4.38,
+    0.63,
+    2.5
+   ],
+   "s": [
+    0.5,
+    0.42,
+    0.7
    ],
    "sup": [
-    "rock"
+    "crateL",
+    "crateR"
    ],
    "joint": false,
    "role": "prop",
@@ -365,33 +555,49 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+   ],
+   "rotY": -107.2,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
   },
   {
-   "id": "awning",
+   "id": "bench",
    "mat": "wood",
    "p": [
-    -1.6,
-    3.4,
-    2.6
+    -4.15,
+    0.225,
+    0.75
    ],
    "s": [
-    1.0,
-    0.3,
+    0.45,
+    0.45,
     1.4
    ],
-   "sup": [
-    "awningPost"
-   ],
+   "sup": [],
    "joint": false,
    "role": "",
-   "nonObj": false,
-   "color": "",
+   "nonObj": true,
+   "color": "8B6B4A",
    "explosive": false,
-   "indestructible": false,
+   "indestructible": true,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_Bench.fbx"
+   ],
+   "rotY": -90.0,
+   "modelScale": [
+    1.0,
+    1.0,
+    1.0
+   ]
   }
  ]
 }

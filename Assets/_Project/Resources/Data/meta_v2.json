@@ -21,8 +21,8 @@
    "Storm Colossus",
    "Cinder Warlord"
   ],
-  "baseShots": 6,
-  "shotSpread": 2,
+  "baseShots": 5,
+  "shotSpread": 1,
   "winThreshold": 0.85,
   "reward": {
    "coins": 300,

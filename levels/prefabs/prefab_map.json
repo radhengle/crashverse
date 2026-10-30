@@ -1,0 +1,5891 @@
+{
+ "inventory_ref": "8c99d49",
+ "levels": {
+  "c1_l01": {
+   "layout": "c1_l01_lookout_hut",
+   "building": "generic Kit_Real* modules",
+   "waiting_on": [],
+   "pieces": [
+    {
+     "id": "rock",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      4,
+      1.2,
+      4
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "post",
+     "mat": "wood",
+     "role": "support",
+     "size": [
+      0.5,
+      2.0,
+      0.5
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.56,
+      0.67,
+      1.67
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "deck",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      6,
+      0.4,
+      2.4
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      2.0,
+      1.82,
+      0.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "cabinL",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      1.6,
+      1.2,
+      1.8
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      1.2,
+      1.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "cabinR",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      1.6,
+      1.2,
+      1.8
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      1.2,
+      1.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "hut",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      2.0,
+      1.6,
+      2.0
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.96,
+      1.6,
+      2.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "roof",
+     "mat": "wood",
+     "role": "roof",
+     "size": [
+      2.6,
+      0.6,
+      2.6
+     ],
+     "module": "Kit_RealRoof_Roof",
+     "stands_for": "roof",
+     "yaw_deg": 0,
+     "scale": [
+      0.72,
+      3.33,
+      1.13
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof_Fractured.fbx",
+     "frags": 12,
+     "joints": 23,
+     "fracture_class": "Roof",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "bellFrame",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.8,
+      1.2,
+      0.3
+     ],
+     "module": "Kit_RealWood_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      0.27,
+      0.4,
+      1.36
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall_Fractured.fbx",
+     "frags": 12,
+     "joints": 23,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "bell",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.4,
+      0.5,
+      0.4
+     ],
+     "module": "Kit_RealProps_Crate",
+     "stands_for": "small timber prop",
+     "yaw_deg": 0,
+     "scale": [
+      0.47,
+      0.62,
+      0.47
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate_Fractured.fbx",
+     "frags": 12,
+     "joints": 36,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "flag",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.1,
+      1.0,
+      0.1
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.33,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "c1_l02": {
+   "layout": "c1_l02_stilt_tower",
+   "building": "generic Kit_Real* modules",
+   "waiting_on": [],
+   "pieces": [
+    {
+     "id": "rock",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      9,
+      1.2,
+      4
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "sillL",
+     "mat": "wood",
+     "role": "support",
+     "size": [
+      1.1,
+      0.4,
+      2.8
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.37,
+      1.82,
+      0.93
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sillR",
+     "mat": "wood",
+     "role": "support",
+     "size": [
+      1.1,
+      0.4,
+      2.8
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.37,
+      1.82,
+      0.93
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "stilt0",
+     "mat": "wood",
+     "role": "stilt",
+     "size": [
+      0.35,
+      2.8,
+      0.35
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.09,
+      0.93,
+      1.17
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "stilt1",
+     "mat": "wood",
+     "role": "stilt",
+     "size": [
+      0.35,
+      2.8,
+      0.35
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.09,
+      0.93,
+      1.17
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "stilt2",
+     "mat": "wood",
+     "role": "stilt",
+     "size": [
+      0.35,
+      2.8,
+      0.35
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.09,
+      0.93,
+      1.17
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "stilt3",
+     "mat": "wood",
+     "role": "stilt",
+     "size": [
+      0.35,
+      2.8,
+      0.35
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.09,
+      0.93,
+      1.17
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "frame",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      3,
+      0.4,
+      2.6
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      1.0,
+      1.82,
+      0.87
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "tankLo",
+     "mat": "wood",
+     "role": "tank",
+     "size": [
+      2.4,
+      1.2,
+      2.4
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.35,
+      1.2,
+      2.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "tankHi",
+     "mat": "wood",
+     "role": "tank",
+     "size": [
+      2.4,
+      1.2,
+      2.4
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.35,
+      1.2,
+      2.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "tankLid",
+     "mat": "wood",
+     "role": "tank",
+     "size": [
+      2.6,
+      0.4,
+      2.6
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.87,
+      1.82,
+      0.87
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "catwalk",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      2.8,
+      0.3,
+      1.0
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.93,
+      1.36,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shedPost",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.3,
+      3.2,
+      0.3
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      0.94,
+      1.07,
+      1.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shed",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      1.4,
+      1.4
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      1.4,
+      1.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shedRoof",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.8,
+      0.4,
+      1.6
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.6,
+      1.82,
+      0.53
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "c1_l03": {
+   "layout": "c1_l03_bakery",
+   "building": "Bld_Bakery (realistic, modular, a24f5ec) - parts wired",
+   "waiting_on": [
+    "realistic-v1 FBX (Kit_RealBakery_*, Props_Village) merged into integration/v2: until then the parts log not-found and the cubes stay"
+   ],
+   "pieces": [
+    {
+     "id": "Base",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      8.64,
+      0.35,
+      6.84
+     ],
+     "module": "Bld_Bakery module Base",
+     "stands_for": "Granite plinth (indestructible)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Base.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0,
+      0.0,
+      0.15
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      0.0,
+      0.15
+     ],
+     "anchor_to": [
+      "Ground"
+     ],
+     "pieces": [
+      "Kit_RealBakery_Base"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Base.fbx"
+     ],
+     "fractured_fbx": [],
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Indestructible",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "propL",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.45,
+      1.39,
+      0.45
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "cellar prop (level scaffolding, not in the model)",
+     "yaw_deg": 0,
+     "scale": [
+      1.41,
+      0.46,
+      1.5
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "propR",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.45,
+      1.39,
+      0.45
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "cellar prop (level scaffolding, not in the model)",
+     "yaw_deg": 0,
+     "scale": [
+      1.41,
+      0.46,
+      1.5
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "slabL",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      4.111,
+      0.4,
+      6.586
+     ],
+     "module": "Kit_RealBrick_Floor",
+     "stands_for": "cellar deck (level scaffolding, not in the model)",
+     "yaw_deg": 0,
+     "scale": [
+      1.37,
+      1.48,
+      2.2
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
+     "frags": 18,
+     "joints": 38,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "slabR",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      4.111,
+      0.4,
+      6.586
+     ],
+     "module": "Kit_RealBrick_Floor",
+     "stands_for": "cellar deck (level scaffolding, not in the model)",
+     "yaw_deg": 0,
+     "scale": [
+      1.37,
+      1.48,
+      2.2
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
+     "frags": 18,
+     "joints": 38,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "ShopFront",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      8.0,
+      2.1924,
+      0.6
+     ],
+     "module": "Bld_Bakery module ShopFront",
+     "stands_for": "Shop front: stone street wall with wide display window, striped awning, door, lantern, hanging loaf sign",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0.0007,
+      2.1417,
+      3.1747
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      0.0007,
+      0.3419,
+      3.1747
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "Kit_RealBakery_ShopW",
+      "Kit_RealBakery_ShopD"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD_Fractured.fbx"
+     ],
+     "frags": 17,
+     "joints": 44,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Wall_Left",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      0.34,
+      2.1863,
+      5.08
+     ],
+     "module": "Bld_Bakery module Wall_Left",
+     "stands_for": "Ground-floor stone side wall, left (window)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      3.8271,
+      2.1458,
+      0.0017
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      3.8271,
+      0.3458,
+      0.0017
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "Kit_RealBakery_WallL"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL_Fractured.fbx"
+     ],
+     "frags": 8,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Wall_Right",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      0.34,
+      2.1883,
+      5.08
+     ],
+     "module": "Bld_Bakery module Wall_Right",
+     "stands_for": "Ground-floor stone side wall, right (window)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      -3.828,
+      2.1437,
+      -0.0012
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -3.828,
+      0.3438,
+      -0.0012
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "Kit_RealBakery_WallR"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR_Fractured.fbx"
+     ],
+     "frags": 8,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Wall_Back",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      7.998,
+      2.1904,
+      0.566
+     ],
+     "module": "Bld_Bakery module Wall_Back",
+     "stands_for": "Ground-floor stone back wall (back door + window)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0.0008,
+      2.1417,
+      -2.828
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      0.0008,
+      0.3417,
+      -2.828
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "Kit_RealBakery_BackD",
+      "Kit_RealBakery_BackW"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW_Fractured.fbx"
+     ],
+     "frags": 12,
+     "joints": 18,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Floor",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      8.02,
+      0.9593,
+      5.876
+     ],
+     "module": "Bld_Bakery module Floor",
+     "stands_for": "First-floor slab / beam with jetty joists (rests on the ground walls)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0,
+      4.3351,
+      0.368
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      2.5351,
+      0.368
+     ],
+     "anchor_to": [
+      "ShopFront",
+      "Wall_Back",
+      "Wall_Left",
+      "Wall_Right"
+     ],
+     "pieces": [
+      "Kit_RealBakery_Floor"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor_Fractured.fbx"
+     ],
+     "frags": 16,
+     "joints": 33,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "UpperStorey",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      8.262,
+      2.2861,
+      6.696
+     ],
+     "module": "Bld_Bakery module UpperStorey",
+     "stands_for": "Timber-frame upper storey resting on the Floor slab: 4 walls, 2 gables, flower boxes",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      -0.0005,
+      5.2955,
+      0.2269
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0005,
+      3.4954,
+      0.2269
+     ],
+     "anchor_to": [
+      "Floor"
+     ],
+     "pieces": [
+      "Kit_RealBakery_UpFL",
+      "Kit_RealBakery_UpFC",
+      "Kit_RealBakery_UpFR",
+      "Kit_RealBakery_UpB",
+      "Kit_RealBakery_UpL",
+      "Kit_RealBakery_UpR",
+      "Kit_RealBakery_GabL",
+      "Kit_RealBakery_GabR"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR_Fractured.fbx"
+     ],
+     "frags": 95,
+     "joints": 237,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Roof_Left",
+     "mat": "brick",
+     "role": "roof",
+     "size": [
+      4.41,
+      2.8775,
+      7.316
+     ],
+     "module": "Bld_Bakery module Roof_Left",
+     "stands_for": "Clay-tile roof, left half (both slopes), seen from the street",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      2.205,
+      7.5826,
+      0.1498
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      2.205,
+      5.7825,
+      0.1498
+     ],
+     "anchor_to": [
+      "UpperStorey"
+     ],
+     "pieces": [
+      "Kit_RealBakery_RfLF",
+      "Kit_RealBakery_RfLB"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB_Fractured.fbx"
+     ],
+     "frags": 26,
+     "joints": 62,
+     "fracture_class": "Roof",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Roof_Right",
+     "mat": "brick",
+     "role": "roof",
+     "size": [
+      4.47,
+      2.8775,
+      7.315
+     ],
+     "module": "Bld_Bakery module Roof_Right",
+     "stands_for": "Clay-tile roof, right half",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      -2.235,
+      7.5826,
+      0.1501
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -2.235,
+      5.7825,
+      0.1501
+     ],
+     "anchor_to": [
+      "UpperStorey"
+     ],
+     "pieces": [
+      "Kit_RealBakery_RfRF",
+      "Kit_RealBakery_RfRB"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF_Fractured.fbx",
+      "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB_Fractured.fbx"
+     ],
+     "frags": 21,
+     "joints": 45,
+     "fracture_class": "Roof",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "Chimney",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.0,
+      1.504,
+      0.8
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "chimney stub above the roof (Kit_RealBakery_Chim not wired: its pivot is inside Floor/UpperStorey/roof and parts spawn at the box base)",
+     "yaw_deg": 0,
+     "scale": [
+      0.98,
+      1.5,
+      0.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "crateL",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.7,
+      0.42,
+      0.5
+     ],
+     "module": "Prop_BreadCrate",
+     "stands_for": "street prop (props[])",
+     "yaw_deg": -94.6,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      2.9,
+      0.0,
+      4.35
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": null,
+     "anchor_to": null,
+     "pieces": [
+      "Prop_BreadCrate"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+     ],
+     "fractured_fbx": [],
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Indestructible prop",
+     "material_match": null,
+     "breakable": false
+    },
+    {
+     "id": "crateR",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.7,
+      0.42,
+      0.5
+     ],
+     "module": "Prop_BreadCrate",
+     "stands_for": "street prop (props[])",
+     "yaw_deg": -83.1,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      2.05,
+      0.0,
+      4.4
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": null,
+     "anchor_to": null,
+     "pieces": [
+      "Prop_BreadCrate"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+     ],
+     "fractured_fbx": [],
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Indestructible prop",
+     "material_match": null,
+     "breakable": false
+    },
+    {
+     "id": "crateTop",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.7,
+      0.42,
+      0.5
+     ],
+     "module": "Prop_BreadCrate",
+     "stands_for": "street prop (props[])",
+     "yaw_deg": -107.2,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      2.5,
+      0.42,
+      4.38
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": null,
+     "anchor_to": null,
+     "pieces": [
+      "Prop_BreadCrate"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx"
+     ],
+     "fractured_fbx": [],
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Indestructible prop",
+     "material_match": null,
+     "breakable": false
+    },
+    {
+     "id": "bench",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.4,
+      0.45,
+      0.45
+     ],
+     "module": "Prop_Bench",
+     "stands_for": "street prop (props[])",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_Bench.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0.75,
+      0.0,
+      4.15
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": null,
+     "anchor_to": null,
+     "pieces": [
+      "Prop_Bench"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_Bench.fbx"
+     ],
+     "fractured_fbx": [],
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Indestructible prop",
+     "material_match": null,
+     "breakable": false
+    }
+   ]
+  },
+  "c1_l04": {
+   "layout": "c1_l04_windmill",
+   "building": "generic Kit_Real* modules",
+   "waiting_on": [],
+   "pieces": [
+    {
+     "id": "rock",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      5,
+      1.2,
+      5
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "drum0",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      2.8,
+      2.0,
+      2.8
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "beamL",
+     "mat": "wood",
+     "role": "support",
+     "size": [
+      1.0,
+      0.4,
+      0.6
+     ],
+     "module": "Kit_RealProps_Crate",
+     "stands_for": "small timber prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.18,
+      0.5,
+      0.71
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate_Fractured.fbx",
+     "frags": 12,
+     "joints": 36,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "beamR",
+     "mat": "wood",
+     "role": "support",
+     "size": [
+      1.0,
+      0.4,
+      0.6
+     ],
+     "module": "Kit_RealProps_Crate",
+     "stands_for": "small timber prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.18,
+      0.5,
+      0.71
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate_Fractured.fbx",
+     "frags": 12,
+     "joints": 36,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "drum1F",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.4,
+      2.0,
+      1.2
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.35,
+      2.0,
+      1.2
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "drum1B",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.4,
+      2.0,
+      1.2
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.35,
+      2.0,
+      1.2
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "cap",
+     "mat": "wood",
+     "role": "support",
+     "size": [
+      2.4,
+      0.4,
+      0.4
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.35,
+      0.4,
+      0.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "drum2",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.0,
+      2.0,
+      2.0
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.96,
+      2.0,
+      2.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "hub",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.8,
+      0.8,
+      0.6
+     ],
+     "module": "Kit_RealProps_Crate",
+     "stands_for": "small timber prop",
+     "yaw_deg": 0,
+     "scale": [
+      0.95,
+      1.0,
+      0.71
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate_Fractured.fbx",
+     "frags": 12,
+     "joints": 36,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "roof",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      2.4,
+      0.8,
+      2.4
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.35,
+      0.8,
+      2.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "annexBeam",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      2.2,
+      0.4,
+      1.2
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.73,
+      1.82,
+      0.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "annex",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.4,
+      1.2,
+      1.4
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.37,
+      1.2,
+      1.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "annexRoof",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      0.4,
+      1.6
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.53,
+      1.82,
+      0.53
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sail0",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.5,
+      1.6,
+      0.1
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.56,
+      0.53,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sail1",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.5,
+      1.6,
+      0.1
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "post / stilt / prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.56,
+      0.53,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sail2",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      0.5,
+      0.1
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      0.5,
+      0.1
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sail3",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      0.5,
+      0.1
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      0.5,
+      0.1
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "c1_l05": {
+   "layout": "c1_l05_twin_cottages",
+   "building": "generic Kit_Real* modules",
+   "waiting_on": [],
+   "pieces": [
+    {
+     "id": "rockL",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      2.4,
+      1.2,
+      3
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "rockR",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      2.4,
+      1.2,
+      3
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "pierL",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.8,
+      1.6,
+      0.8
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "pierR",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.8,
+      1.6,
+      0.8
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "bridge",
+     "mat": "wood",
+     "role": "bridge",
+     "size": [
+      6.6,
+      0.4,
+      2.0
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      2.2,
+      1.82,
+      0.67
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "floorL",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      2.2,
+      0.4,
+      2
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.73,
+      1.82,
+      0.67
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallFL",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.0,
+      1.2,
+      0.3
+     ],
+     "module": "Kit_RealBrick_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      0.67,
+      0.4,
+      1.11
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall_Fractured.fbx",
+     "frags": 18,
+     "joints": 37,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallBL",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.0,
+      1.2,
+      0.3
+     ],
+     "module": "Kit_RealBrick_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      0.67,
+      0.4,
+      1.11
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall_Fractured.fbx",
+     "frags": 18,
+     "joints": 37,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "roofL",
+     "mat": "wood",
+     "role": "roof",
+     "size": [
+      2.4,
+      0.6,
+      2.2
+     ],
+     "module": "Kit_RealRoof_Roof",
+     "stands_for": "roof",
+     "yaw_deg": 0,
+     "scale": [
+      0.67,
+      3.33,
+      0.96
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof_Fractured.fbx",
+     "frags": 12,
+     "joints": 23,
+     "fracture_class": "Roof",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "floorR",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      2.2,
+      0.4,
+      2
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.73,
+      1.82,
+      0.67
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallFR",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.0,
+      1.2,
+      0.3
+     ],
+     "module": "Kit_RealBrick_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      0.67,
+      0.4,
+      1.11
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall_Fractured.fbx",
+     "frags": 18,
+     "joints": 37,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallBR",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.0,
+      1.2,
+      0.3
+     ],
+     "module": "Kit_RealBrick_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      0.67,
+      0.4,
+      1.11
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Wall_Fractured.fbx",
+     "frags": 18,
+     "joints": 37,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "roofR",
+     "mat": "wood",
+     "role": "roof",
+     "size": [
+      2.4,
+      0.6,
+      2.2
+     ],
+     "module": "Kit_RealRoof_Roof",
+     "stands_for": "roof",
+     "yaw_deg": 0,
+     "scale": [
+      0.67,
+      3.33,
+      0.96
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealRoof/Kit_RealRoof_Roof_Fractured.fbx",
+     "frags": 12,
+     "joints": 23,
+     "fracture_class": "Roof",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "wheelAxle",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.4,
+      0.8,
+      0.4
+     ],
+     "module": "Kit_RealWood_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      0.13,
+      0.27,
+      1.82
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall_Fractured.fbx",
+     "frags": 12,
+     "joints": 23,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wheel",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.8,
+      1.8,
+      0.3
+     ],
+     "module": "Kit_RealWood_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      0.6,
+      0.6,
+      1.36
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall_Fractured.fbx",
+     "frags": 12,
+     "joints": 23,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "lanterns",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.2,
+      0.2,
+      0.2
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.18,
+      0.2,
+      0.2
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "c1_l06": {
+   "layout": "c1_l06_granary",
+   "building": "generic Kit_Real* modules",
+   "waiting_on": [],
+   "pieces": [
+    {
+     "id": "rock",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      7,
+      1.2,
+      4
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "colL",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.6,
+      2.4,
+      0.6
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "braceL",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.5,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.3,
+      2.78,
+      0.3
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "colR",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.6,
+      2.4,
+      0.6
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "braceR",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.5,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.3,
+      2.78,
+      0.3
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "braceM",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.5,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.3,
+      2.78,
+      0.3
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "deck",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      3.6,
+      0.4,
+      3
+     ],
+     "module": "Kit_RealBrick_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      1.2,
+      1.48,
+      1.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
+     "frags": 18,
+     "joints": 38,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "drum0",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.6,
+      2.0,
+      2.6
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.55,
+      2.0,
+      2.6
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "drum1",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.4,
+      2.0,
+      2.4
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.35,
+      2.0,
+      2.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "drum2",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.2,
+      1.6,
+      2.2
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.16,
+      1.6,
+      2.2
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "dome",
+     "mat": "steel",
+     "role": "",
+     "size": [
+      1.8,
+      0.6,
+      1.8
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.6,
+      3.33,
+      0.6
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "chute",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.0,
+      1.4,
+      1.0
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      0.98,
+      1.4,
+      1.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "hopper",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.4,
+      0.8,
+      1.4
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.37,
+      0.8,
+      1.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "c1_l07": {
+   "layout": "m1_clockwork_tower",
+   "building": "Bld_Watchtower",
+   "waiting_on": [
+    "realistic Watchtower (only the stylized Kit_Tower set exists)"
+   ],
+   "pieces": [
+    {
+     "id": "plinth",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      6.8,
+      1.2,
+      4.5
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "base",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "ring0",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      2.6,
+      0.5,
+      2.6
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "gold clockwork ring between storeys (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.87,
+      2.78,
+      0.87
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallF1",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.6,
+      2.25,
+      0.35
+     ],
+     "module": "Kit_Tower_RingDoor",
+     "stands_for": "S0_RingDoor (front quarter)",
+     "yaw_deg": 0,
+     "scale": [
+      0.62,
+      0.75,
+      0.07
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallB1",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.6,
+      2.25,
+      0.35
+     ],
+     "module": "Kit_Tower_RingDoor",
+     "stands_for": "S0_RingDoor (quarter)",
+     "yaw_deg": 0,
+     "scale": [
+      0.62,
+      0.75,
+      0.07
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallL1",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      0.35,
+      2.25,
+      1.85
+     ],
+     "module": "Kit_Tower_RingDoor",
+     "stands_for": "S0_RingDoor (quarter)",
+     "yaw_deg": 0,
+     "scale": [
+      0.08,
+      0.75,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallR1",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      0.35,
+      2.25,
+      1.85
+     ],
+     "module": "Kit_Tower_RingDoor",
+     "stands_for": "S0_RingDoor (quarter)",
+     "yaw_deg": 0,
+     "scale": [
+      0.08,
+      0.75,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "ring1",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      2.6,
+      0.5,
+      2.6
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "gold clockwork ring between storeys (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.87,
+      2.78,
+      0.87
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallF2",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.6,
+      2.25,
+      0.35
+     ],
+     "module": "Kit_Tower_RingSlit",
+     "stands_for": "S1_RingSlit (quarter)",
+     "yaw_deg": 0,
+     "scale": [
+      0.62,
+      0.72,
+      0.08
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 14,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallB2",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      2.6,
+      2.25,
+      0.35
+     ],
+     "module": "Kit_Tower_RingSlit",
+     "stands_for": "S1_RingSlit (quarter)",
+     "yaw_deg": 0,
+     "scale": [
+      0.62,
+      0.72,
+      0.08
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 14,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallL2",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      0.35,
+      2.25,
+      1.85
+     ],
+     "module": "Kit_Tower_RingSlit",
+     "stands_for": "S1_RingSlit (quarter)",
+     "yaw_deg": 0,
+     "scale": [
+      0.08,
+      0.72,
+      0.44
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 14,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wallR2",
+     "mat": "brick",
+     "role": "wall",
+     "size": [
+      0.35,
+      2.25,
+      1.85
+     ],
+     "module": "Kit_Tower_RingSlit",
+     "stands_for": "S1_RingSlit (quarter)",
+     "yaw_deg": 0,
+     "scale": [
+      0.08,
+      0.72,
+      0.44
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 14,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "ring2",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      2.6,
+      0.5,
+      2.6
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "gold clockwork ring between storeys (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.87,
+      2.78,
+      0.87
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "crownFloor",
+     "mat": "brick",
+     "role": "crown",
+     "size": [
+      3.2,
+      0.4,
+      3.2
+     ],
+     "module": "Kit_RealBrick_Floor",
+     "stands_for": "Floor_4 (brick deck under the crown)",
+     "yaw_deg": 0,
+     "scale": [
+      1.07,
+      1.48,
+      1.07
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
+     "frags": 18,
+     "joints": 38,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "crownWood",
+     "mat": "wood",
+     "role": "crown",
+     "size": [
+      2.8,
+      1.4,
+      2.8
+     ],
+     "module": "Kit_Tower_RingWindow",
+     "stands_for": "S3_RingWindow (clock room)",
+     "yaw_deg": 0,
+     "scale": [
+      0.7,
+      0.47,
+      0.59
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow_Fractured.fbx",
+     "frags": 7,
+     "joints": 14,
+     "fracture_class": "Stone",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "crownBrick",
+     "mat": "brick",
+     "role": "crown",
+     "size": [
+      2.4,
+      0.8,
+      2.4
+     ],
+     "module": "Kit_Tower_Crown",
+     "stands_for": "Crown",
+     "yaw_deg": 0,
+     "scale": [
+      0.5,
+      0.56,
+      0.5
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown_Fractured.fbx",
+     "frags": 7,
+     "joints": 7,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "crownRoof",
+     "mat": "brick",
+     "role": "crown",
+     "size": [
+      2.6,
+      1.6,
+      2.6
+     ],
+     "module": "Kit_Tower_Roof",
+     "stands_for": "Roof (spire)",
+     "yaw_deg": 0,
+     "scale": [
+      0.48,
+      0.24,
+      0.48
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof_Fractured.fbx",
+     "frags": 9,
+     "joints": 17,
+     "fracture_class": "Roof",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "annex",
+     "mat": "brick",
+     "role": "annex",
+     "size": [
+      1.6,
+      1.6,
+      1.8
+     ],
+     "module": "Kit_Props_Shed",
+     "stands_for": "Annex",
+     "yaw_deg": 0,
+     "scale": [
+      0.55,
+      0.41,
+      0.78
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wingL",
+     "mat": "wood",
+     "role": "wing",
+     "size": [
+      0.3,
+      2.8,
+      0.3
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "hoist pole",
+     "yaw_deg": 0,
+     "scale": [
+      0.94,
+      0.93,
+      1.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "wingR",
+     "mat": "wood",
+     "role": "wing",
+     "size": [
+      0.3,
+      2.8,
+      0.3
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "hoist pole",
+     "yaw_deg": 0,
+     "scale": [
+      0.94,
+      0.93,
+      1.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "crate",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.8,
+      0.8,
+      0.8
+     ],
+     "module": "Kit_Props_Crate",
+     "stands_for": "Crate_0",
+     "yaw_deg": 0,
+     "scale": [
+      0.95,
+      1.0,
+      0.95
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx",
+     "frags": 12,
+     "joints": 36,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "crateTop",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "module": "Kit_Props_CrateSmall",
+     "stands_for": "Crate_1",
+     "yaw_deg": 0,
+     "scale": [
+      1.01,
+      1.09,
+      1.01
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx",
+     "frags": 10,
+     "joints": 23,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "barrel",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.7,
+      1.2,
+      0.7
+     ],
+     "module": "Kit_Props_Barrel",
+     "stands_for": "Barrel_*",
+     "yaw_deg": 0,
+     "scale": [
+      0.99,
+      1.29,
+      0.99
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx",
+     "frags": 12,
+     "joints": 35,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "barrel2",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.7,
+      1.2,
+      0.7
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      0.69,
+      1.2,
+      0.7
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "barrelDecor",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.8,
+      1.2,
+      0.8
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      0.78,
+      1.2,
+      0.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "c1_l08": {
+   "layout": "c1_l08_market_arcade",
+   "building": "4 x Kit_RealStall + Bld_MarketArch (realistic, a24f5ec/8c99d49) - parts wired",
+   "waiting_on": [
+    "realistic-v1 FBX (Kit_RealStall_*) merged into integration/v2",
+    "stall_slots re-pitched to 1.6 m (or sim split window decision): see REPORT rev 9"
+   ],
+   "pieces": [
+    {
+     "id": "rock",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      10.4,
+      1.2,
+      4
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "pads",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      10.7,
+      0.2,
+      0.7
+     ],
+     "module": "Bld_MarketArch module Base",
+     "stands_for": "Granite post pads (indestructible)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Pads.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0,
+      1.2,
+      0
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      0.0,
+      -0.0
+     ],
+     "anchor_to": [
+      "Ground"
+     ],
+     "pieces": [
+      "Kit_RealStall_Pads"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Pads.fbx"
+     ],
+     "fractured_fbx": [],
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Indestructible",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "pier0",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.4,
+      0.84,
+      1.0
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "pier1",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.4,
+      0.84,
+      1.0
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "pier2",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.4,
+      0.84,
+      1.0
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "pier3",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.4,
+      0.84,
+      1.0
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "pier4",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      0.4,
+      0.84,
+      1.0
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "key0",
+     "mat": "wood",
+     "role": "keystone",
+     "size": [
+      1.6,
+      0.22,
+      1.8
+     ],
+     "module": "Kit_RealStall module Keystone",
+     "stands_for": "Wooden keystone skid under the stall",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      -2.4,
+      2.24,
+      0
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      -0.0098,
+      -0.0
+     ],
+     "anchor_to": [
+      "Ground"
+     ],
+     "pieces": [
+      "Kit_RealStall_Keystn"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx"
+     ],
+     "frags": 9,
+     "joints": 20,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "stall0",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      1.6,
+      2.18,
+      1.325
+     ],
+     "module": "Kit_RealStall module Stall",
+     "stands_for": "Market stall: counter, corner posts, rails, striped cloth awning (choose StallA or StallB)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      -2.4,
+      2.46,
+      0.1873
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      0.22,
+      0.1873
+     ],
+     "anchor_to": [
+      "Keystone"
+     ],
+     "pieces": [
+      "Kit_RealStall_StallA"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA_Fractured.fbx"
+     ],
+     "frags": 10,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "key1",
+     "mat": "wood",
+     "role": "keystone",
+     "size": [
+      1.6,
+      0.22,
+      1.8
+     ],
+     "module": "Kit_RealStall module Keystone",
+     "stands_for": "Wooden keystone skid under the stall",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      -0.8,
+      2.24,
+      0
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      -0.0098,
+      -0.0
+     ],
+     "anchor_to": [
+      "Ground"
+     ],
+     "pieces": [
+      "Kit_RealStall_Keystn"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx"
+     ],
+     "frags": 9,
+     "joints": 20,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "stall1",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      1.6,
+      2.18,
+      1.325
+     ],
+     "module": "Kit_RealStall module Stall",
+     "stands_for": "Market stall: counter, corner posts, rails, striped cloth awning (choose StallA or StallB)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      -0.8,
+      2.46,
+      0.1873
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      0.22,
+      0.1873
+     ],
+     "anchor_to": [
+      "Keystone"
+     ],
+     "pieces": [
+      "Kit_RealStall_StallB"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB_Fractured.fbx"
+     ],
+     "frags": 10,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "key2",
+     "mat": "wood",
+     "role": "keystone",
+     "size": [
+      1.6,
+      0.22,
+      1.8
+     ],
+     "module": "Kit_RealStall module Keystone",
+     "stands_for": "Wooden keystone skid under the stall",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0.8,
+      2.24,
+      0
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      -0.0098,
+      -0.0
+     ],
+     "anchor_to": [
+      "Ground"
+     ],
+     "pieces": [
+      "Kit_RealStall_Keystn"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx"
+     ],
+     "frags": 9,
+     "joints": 20,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "stall2",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      1.6,
+      2.18,
+      1.325
+     ],
+     "module": "Kit_RealStall module Stall",
+     "stands_for": "Market stall: counter, corner posts, rails, striped cloth awning (choose StallA or StallB)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0.8,
+      2.46,
+      0.1873
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      0.22,
+      0.1873
+     ],
+     "anchor_to": [
+      "Keystone"
+     ],
+     "pieces": [
+      "Kit_RealStall_StallA"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA_Fractured.fbx"
+     ],
+     "frags": 10,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "key3",
+     "mat": "wood",
+     "role": "keystone",
+     "size": [
+      1.6,
+      0.22,
+      1.8
+     ],
+     "module": "Kit_RealStall module Keystone",
+     "stands_for": "Wooden keystone skid under the stall",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      2.4,
+      2.24,
+      0
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      -0.0098,
+      -0.0
+     ],
+     "anchor_to": [
+      "Ground"
+     ],
+     "pieces": [
+      "Kit_RealStall_Keystn"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx"
+     ],
+     "frags": 9,
+     "joints": 20,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "stall3",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      1.6,
+      2.18,
+      1.325
+     ],
+     "module": "Kit_RealStall module Stall",
+     "stands_for": "Market stall: counter, corner posts, rails, striped cloth awning (choose StallA or StallB)",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      2.4,
+      2.46,
+      0.1873
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      0.22,
+      0.1873
+     ],
+     "anchor_to": [
+      "Keystone"
+     ],
+     "pieces": [
+      "Kit_RealStall_StallB"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB_Fractured.fbx"
+     ],
+     "frags": 10,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "postL",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      0.4,
+      3.26,
+      0.44
+     ],
+     "module": "Bld_MarketArch module Post_Left",
+     "stands_for": "Timber post, left",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      4.4923,
+      1.4,
+      0
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      4.4923,
+      0.2,
+      -0.0
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "Kit_RealStall_PostL"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL_Fractured.fbx"
+     ],
+     "frags": 9,
+     "joints": 9,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "postR",
+     "mat": "wood",
+     "role": "wall",
+     "size": [
+      0.4,
+      3.26,
+      0.44
+     ],
+     "module": "Bld_MarketArch module Post_Right",
+     "stands_for": "Timber post, right",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      -4.4904,
+      1.4,
+      0
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -4.4904,
+      0.2,
+      -0.0
+     ],
+     "anchor_to": [
+      "Base"
+     ],
+     "pieces": [
+      "Kit_RealStall_PostR"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR_Fractured.fbx"
+     ],
+     "frags": 8,
+     "joints": 8,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "beam",
+     "mat": "wood",
+     "role": "roof",
+     "size": [
+      11.1,
+      0.524,
+      0.422
+     ],
+     "module": "Bld_MarketArch module Beam",
+     "stands_for": "Timber beam spanning 10.4 m, 3.5 m clear",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0,
+      4.66,
+      0.0009
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      3.46,
+      0.0009
+     ],
+     "anchor_to": [
+      "Post_Left",
+      "Post_Right"
+     ],
+     "pieces": [
+      "Kit_RealStall_Beam"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam_Fractured.fbx"
+     ],
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sign",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      2.655,
+      0.816,
+      0.3
+     ],
+     "module": "Bld_MarketArch module Sign",
+     "stands_for": "Steel sign, no text",
+     "yaw_deg": -90.0,
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "parts": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign.fbx"
+     ],
+     "placed_at_block_bottom_centre": [
+      0,
+      5.184,
+      0
+     ],
+     "placement_note": "authored +z-front frame before face_wrecker; rotY is the world yaw written to the layout",
+     "module_pivot": [
+      -0.0,
+      3.9762,
+      -0.0
+     ],
+     "anchor_to": [
+      "Beam"
+     ],
+     "pieces": [
+      "Kit_RealStall_Sign"
+     ],
+     "intact_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign.fbx"
+     ],
+     "fractured_fbx": [
+      "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign_Fractured.fbx"
+     ],
+     "frags": 5,
+     "joints": 4,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "c1_l09": {
+   "layout": "c1_l09_lighthouse_gauntlet",
+   "building": "Bld_Watchtower + Bld_Gatehouse wall",
+   "waiting_on": [
+    "realistic Watchtower and Gatehouse wall (only stylized sets exist)"
+   ],
+   "pieces": [
+    {
+     "id": "rock",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      10.6,
+      1.2,
+      6
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "lhBase",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      2.6,
+      2.0,
+      2.6
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "base",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "lhRing",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      2.8,
+      0.5,
+      2.8
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel ring (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.93,
+      2.78,
+      0.93
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "lhShaft0",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      2.2,
+      2.0,
+      2.2
+     ],
+     "module": "Kit_Tower_RingSlit",
+     "stands_for": "S1_RingSlit",
+     "yaw_deg": 0,
+     "scale": [
+      0.53,
+      0.64,
+      0.52
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 14,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "lhShaft1",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      2.0,
+      2.0,
+      2.0
+     ],
+     "module": "Kit_Tower_RingSlit",
+     "stands_for": "S2_RingSlit",
+     "yaw_deg": 0,
+     "scale": [
+      0.48,
+      0.64,
+      0.47
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 14,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "lhGallery",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      2.8,
+      0.4,
+      2.8
+     ],
+     "module": "Kit_Tower_Floor",
+     "stands_for": "Floor_4 gallery",
+     "yaw_deg": 0,
+     "scale": [
+      0.94,
+      1.11,
+      0.94
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 25,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "lhLantern",
+     "mat": "wood",
+     "role": "lantern",
+     "size": [
+      1.6,
+      1.4,
+      1.6
+     ],
+     "module": "Kit_Tower_RingWindow",
+     "stands_for": "S3_RingWindow (lantern)",
+     "yaw_deg": 0,
+     "scale": [
+      0.4,
+      0.47,
+      0.34
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow_Fractured.fbx",
+     "frags": 7,
+     "joints": 14,
+     "fracture_class": "Stone",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "lhCap",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.9,
+      0.6,
+      1.9
+     ],
+     "module": "Kit_Tower_Roof",
+     "stands_for": "Roof",
+     "yaw_deg": 0,
+     "scale": [
+      0.35,
+      0.09,
+      0.35
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof_Fractured.fbx",
+     "frags": 9,
+     "joints": 17,
+     "fracture_class": "Roof",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "breakwater",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      5.0,
+      1.6,
+      0.6
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "base",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "propA",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.4,
+      1.4,
+      0.4
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "seawall prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.25,
+      0.47,
+      1.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "propB",
+     "mat": "wood",
+     "role": "prop",
+     "size": [
+      0.4,
+      1.4,
+      0.4
+     ],
+     "module": "Kit_RealWood_Joint",
+     "stands_for": "seawall prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.25,
+      0.47,
+      1.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Joint_Fractured.fbx",
+     "frags": 12,
+     "joints": 11,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "seaDeck",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      4.4,
+      0.5,
+      1.6
+     ],
+     "module": "Kit_RealBrick_Floor",
+     "stands_for": "seawall deck",
+     "yaw_deg": 0,
+     "scale": [
+      1.47,
+      1.85,
+      0.53
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Floor_Fractured.fbx",
+     "frags": 18,
+     "joints": 38,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sea0",
+     "mat": "brick",
+     "role": "seawall",
+     "size": [
+      1.4,
+      1.5,
+      1.0
+     ],
+     "module": "Kit_Gate_Wall",
+     "stands_for": "Gatehouse Wall_* segment",
+     "yaw_deg": 0,
+     "scale": [
+      0.35,
+      0.25,
+      0.55
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sea1",
+     "mat": "brick",
+     "role": "seawall",
+     "size": [
+      1.4,
+      1.5,
+      1.0
+     ],
+     "module": "Kit_Gate_Wall",
+     "stands_for": "Gatehouse Wall_* segment",
+     "yaw_deg": 0,
+     "scale": [
+      0.35,
+      0.25,
+      0.55
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "sea2",
+     "mat": "brick",
+     "role": "seawall",
+     "size": [
+      1.4,
+      1.5,
+      1.0
+     ],
+     "module": "Kit_Gate_Wall",
+     "stands_for": "Gatehouse Wall_* segment",
+     "yaw_deg": 0,
+     "scale": [
+      0.35,
+      0.25,
+      0.55
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "seaCrest",
+     "mat": "brick",
+     "role": "seawall",
+     "size": [
+      4.6,
+      0.5,
+      1.2
+     ],
+     "module": "Kit_Gate_Crown",
+     "stands_for": "Gatehouse Crown (battlement)",
+     "yaw_deg": 0,
+     "scale": [
+      0.91,
+      0.3,
+      1.2
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown_Fractured.fbx",
+     "frags": 7,
+     "joints": 10,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "bellTower",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.0,
+      1.5,
+      1.0
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "bell house",
+     "yaw_deg": 0,
+     "scale": [
+      0.98,
+      1.5,
+      1.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "catwalk",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      4.6,
+      0.3,
+      0.8
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "catwalk",
+     "yaw_deg": 0,
+     "scale": [
+      1.53,
+      1.36,
+      0.27
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "c1_l10": {
+   "layout": "c1_l10_tidewarden",
+   "building": "generic Kit_Real* modules",
+   "waiting_on": [
+    "none planned: Tidewarden boss body is Developer/3D Modeler boss art, not a building prefab"
+   ],
+   "pieces": [
+    {
+     "id": "stack",
+     "mat": "brick",
+     "role": "island",
+     "size": [
+      5,
+      3,
+      4
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "hips",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      3,
+      1.2,
+      2.2
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      2.94,
+      1.2,
+      2.2
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "torso",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      3.4,
+      2.8,
+      2.4
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      3.33,
+      2.8,
+      2.4
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shoulderL",
+     "mat": "steel",
+     "role": "shoulder",
+     "size": [
+      1,
+      1,
+      1
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      0.98,
+      1.0,
+      1.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shoulderR",
+     "mat": "steel",
+     "role": "shoulder",
+     "size": [
+      1,
+      1,
+      1
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      0.98,
+      1.0,
+      1.0
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armL",
+     "mat": "brick",
+     "role": "arm",
+     "size": [
+      0.8,
+      2.4,
+      0.8
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      0.78,
+      2.4,
+      0.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armR",
+     "mat": "brick",
+     "role": "arm",
+     "size": [
+      0.8,
+      2.4,
+      0.8
+     ],
+     "module": "Kit_RealBrick_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      0.78,
+      2.4,
+      0.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealBrick/Kit_RealBrick_Block_Fractured.fbx",
+     "frags": 16,
+     "joints": 54,
+     "fracture_class": "Brick",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armorTop",
+     "mat": "wood",
+     "role": "armor",
+     "size": [
+      3.2,
+      0.9,
+      0.3
+     ],
+     "module": "Kit_RealWood_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      1.07,
+      0.3,
+      1.36
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall_Fractured.fbx",
+     "frags": 12,
+     "joints": 23,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armorBot",
+     "mat": "wood",
+     "role": "armor",
+     "size": [
+      3.2,
+      0.9,
+      0.3
+     ],
+     "module": "Kit_RealWood_Wall",
+     "stands_for": "wall panel",
+     "yaw_deg": 0,
+     "scale": [
+      1.07,
+      0.3,
+      1.36
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Wall_Fractured.fbx",
+     "frags": 12,
+     "joints": 23,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "core",
+     "mat": "steel",
+     "role": "core",
+     "size": [
+      1,
+      1,
+      0.4
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": false,
+     "breakable": false
+    },
+    {
+     "id": "shutter",
+     "mat": "brick",
+     "role": "shutter",
+     "size": [
+      1.4,
+      1.4,
+      0.25
+     ],
+     "module": "Kit_Base_Indestructible",
+     "stands_for": "held base / island",
+     "yaw_deg": 0,
+     "scale": null,
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Base/Kit_Base_Indestructible.fbx",
+     "fractured_fbx": null,
+     "frags": null,
+     "joints": null,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": false
+    },
+    {
+     "id": "head",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      1.2,
+      1.6
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "block",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      1.2,
+      1.6
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "lamp",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1,
+      0.6,
+      1
+     ],
+     "module": "Kit_RealWood_Floor",
+     "stands_for": "deck / slab / beam",
+     "yaw_deg": 0,
+     "scale": [
+      0.33,
+      2.73,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Floor_Fractured.fbx",
+     "frags": 12,
+     "joints": 22,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "titan_ash_bridge": {
+   "layout": "titan_ash_bridge",
+   "building": "Bld_CastleKeep modules",
+   "waiting_on": [
+    "realistic castle keep/wall (only the stylized Kit_Keep set exists)"
+   ],
+   "frame": "already rotated (BUG-24)",
+   "pieces": [
+    {
+     "id": "legL",
+     "mat": "brick",
+     "role": "leg",
+     "size": [
+      1,
+      4,
+      1
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.39,
+      1.33,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "legR",
+     "mat": "brick",
+     "role": "leg",
+     "size": [
+      1,
+      4,
+      1
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.39,
+      1.33,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "pelvis",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      1.4,
+      0.6,
+      4.0
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel collar (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.47,
+      3.33,
+      1.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "belly",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.8,
+      2,
+      3.5
+     ],
+     "module": "Kit_Keep_WallBanner",
+     "stands_for": "keep wall (banner)",
+     "yaw_deg": 90,
+     "scale": [
+      2.28,
+      0.67,
+      0.83
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "chest",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      2,
+      2,
+      4.25
+     ],
+     "module": "Kit_Keep_WallSlit",
+     "stands_for": "keep wall (slits)",
+     "yaw_deg": 90,
+     "scale": [
+      1.94,
+      0.67,
+      1.01
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "neck",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      1,
+      0.6,
+      1
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel collar (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.33,
+      3.33,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "head",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      1.2,
+      1.8
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "head (timber)",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      1.2,
+      1.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shL",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "steel shoulder",
+     "yaw_deg": 0,
+     "scale": [
+      0.88,
+      0.9,
+      0.9
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shR",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "steel shoulder",
+     "yaw_deg": 0,
+     "scale": [
+      0.88,
+      0.9,
+      0.9
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armL",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      0.8,
+      2.6,
+      0.8
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.87,
+      0.31
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armR",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      0.8,
+      2.6,
+      0.8
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.87,
+      0.31
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "crate",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealProps_Crate",
+     "stands_for": "prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.07,
+      1.12,
+      1.07
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate_Fractured.fbx",
+     "frags": 12,
+     "joints": 36,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "titan_caldera_rim": {
+   "layout": "titan_caldera_rim",
+   "building": "Bld_CastleKeep modules",
+   "waiting_on": [
+    "realistic castle keep/wall (only the stylized Kit_Keep set exists)"
+   ],
+   "frame": "already rotated (BUG-24)",
+   "pieces": [
+    {
+     "id": "legL",
+     "mat": "brick",
+     "role": "leg",
+     "size": [
+      1,
+      4,
+      1
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.39,
+      1.33,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "legR",
+     "mat": "brick",
+     "role": "leg",
+     "size": [
+      1,
+      4,
+      1
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.39,
+      1.33,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "pelvis",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      1.4,
+      0.6,
+      3.6799999999999997
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel collar (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.47,
+      3.33,
+      1.23
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "belly",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.8,
+      2,
+      3.2199999999999998
+     ],
+     "module": "Kit_Keep_WallBanner",
+     "stands_for": "keep wall (banner)",
+     "yaw_deg": 90,
+     "scale": [
+      2.28,
+      0.67,
+      0.77
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "chest",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      2,
+      2,
+      3.9099999999999997
+     ],
+     "module": "Kit_Keep_WallSlit",
+     "stands_for": "keep wall (slits)",
+     "yaw_deg": 90,
+     "scale": [
+      1.94,
+      0.67,
+      0.93
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "neck",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      1,
+      0.6,
+      1
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel collar (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.33,
+      3.33,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "head",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      1.2,
+      1.8
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "head (timber)",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      1.2,
+      1.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shL",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "steel shoulder",
+     "yaw_deg": 0,
+     "scale": [
+      0.88,
+      0.9,
+      0.9
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shR",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "steel shoulder",
+     "yaw_deg": 0,
+     "scale": [
+      0.88,
+      0.9,
+      0.9
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armL",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      0.8,
+      2.6,
+      0.8
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.87,
+      0.31
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armR",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      0.8,
+      2.6,
+      0.8
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.87,
+      0.31
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "crate",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealProps_Crate",
+     "stands_for": "prop",
+     "yaw_deg": 0,
+     "scale": [
+      1.07,
+      1.12,
+      1.07
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Props/Kit_RealProps/Kit_RealProps_Crate_Fractured.fbx",
+     "frags": 12,
+     "joints": 36,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "titan_forge_floor": {
+   "layout": "titan_forge_floor",
+   "building": "Bld_CastleKeep modules",
+   "waiting_on": [
+    "realistic castle keep/wall (only the stylized Kit_Keep set exists)"
+   ],
+   "frame": "already rotated (BUG-24)",
+   "pieces": [
+    {
+     "id": "legL",
+     "mat": "steel",
+     "role": "leg",
+     "size": [
+      1,
+      4,
+      1
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.39,
+      1.33,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "legR",
+     "mat": "steel",
+     "role": "leg",
+     "size": [
+      1,
+      4,
+      1
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.39,
+      1.33,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "pelvis",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      1.4,
+      0.6,
+      3.2
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel collar (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.47,
+      3.33,
+      1.07
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "belly",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.8,
+      2,
+      2.8
+     ],
+     "module": "Kit_Keep_WallBanner",
+     "stands_for": "keep wall (banner)",
+     "yaw_deg": 90,
+     "scale": [
+      2.28,
+      0.67,
+      0.67
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "chest",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      2,
+      2,
+      3.4
+     ],
+     "module": "Kit_Keep_WallSlit",
+     "stands_for": "keep wall (slits)",
+     "yaw_deg": 90,
+     "scale": [
+      1.94,
+      0.67,
+      0.81
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "neck",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      1,
+      0.6,
+      1
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel collar (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.33,
+      3.33,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "head",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      1.2,
+      1.8
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "head (timber)",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      1.2,
+      1.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shL",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "steel shoulder",
+     "yaw_deg": 0,
+     "scale": [
+      0.88,
+      0.9,
+      0.9
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shR",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "steel shoulder",
+     "yaw_deg": 0,
+     "scale": [
+      0.88,
+      0.9,
+      0.9
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armL",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      0.8,
+      2.6,
+      0.8
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.87,
+      0.31
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armR",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      0.8,
+      2.6,
+      0.8
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.87,
+      0.31
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  },
+  "titan_slag_foundry": {
+   "layout": "titan_slag_foundry",
+   "building": "Bld_CastleKeep modules",
+   "waiting_on": [
+    "realistic castle keep/wall (only the stylized Kit_Keep set exists)"
+   ],
+   "frame": "already rotated (BUG-24)",
+   "pieces": [
+    {
+     "id": "legL",
+     "mat": "steel",
+     "role": "leg",
+     "size": [
+      1,
+      4,
+      1
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.39,
+      1.33,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "legR",
+     "mat": "steel",
+     "role": "leg",
+     "size": [
+      1,
+      4,
+      1
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.39,
+      1.33,
+      0.39
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": false,
+     "breakable": true
+    },
+    {
+     "id": "pelvis",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      1.4,
+      0.6,
+      2.8800000000000003
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel collar (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.47,
+      3.33,
+      0.96
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "belly",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      1.8,
+      2,
+      2.52
+     ],
+     "module": "Kit_Keep_WallBanner",
+     "stands_for": "keep wall (banner)",
+     "yaw_deg": 90,
+     "scale": [
+      2.28,
+      0.67,
+      0.6
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner_Fractured.fbx",
+     "frags": 7,
+     "joints": 13,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "chest",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      2,
+      2,
+      3.06
+     ],
+     "module": "Kit_Keep_WallSlit",
+     "stands_for": "keep wall (slits)",
+     "yaw_deg": 90,
+     "scale": [
+      1.94,
+      0.67,
+      0.73
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "neck",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      1,
+      0.6,
+      1
+     ],
+     "module": "Kit_RealSteel_Floor",
+     "stands_for": "steel collar (JNT seam)",
+     "yaw_deg": 0,
+     "scale": [
+      0.33,
+      3.33,
+      0.33
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Floor_Fractured.fbx",
+     "frags": 7,
+     "joints": 12,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "head",
+     "mat": "wood",
+     "role": "",
+     "size": [
+      1.6,
+      1.2,
+      1.8
+     ],
+     "module": "Kit_RealWood_Block",
+     "stands_for": "head (timber)",
+     "yaw_deg": 0,
+     "scale": [
+      1.57,
+      1.2,
+      1.8
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx",
+     "frags": 12,
+     "joints": 34,
+     "fracture_class": "Wood",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shL",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "steel shoulder",
+     "yaw_deg": 0,
+     "scale": [
+      0.88,
+      0.9,
+      0.9
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "shR",
+     "mat": "steel",
+     "role": "steel_joint",
+     "size": [
+      0.9,
+      0.9,
+      0.9
+     ],
+     "module": "Kit_RealSteel_Block",
+     "stands_for": "steel shoulder",
+     "yaw_deg": 0,
+     "scale": [
+      0.88,
+      0.9,
+      0.9
+     ],
+     "intact_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block.fbx",
+     "fractured_fbx": "Assets/_Project/Models/Realistic/Buildings/Kit_RealSteel/Kit_RealSteel_Block_Fractured.fbx",
+     "frags": 7,
+     "joints": 15,
+     "fracture_class": "Steel",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armL",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      0.8,
+      2.6,
+      0.8
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.87,
+      0.31
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    },
+    {
+     "id": "armR",
+     "mat": "brick",
+     "role": "",
+     "size": [
+      0.8,
+      2.6,
+      0.8
+     ],
+     "module": "Kit_Keep_Turret",
+     "stands_for": "keep turret column",
+     "yaw_deg": 0,
+     "scale": [
+      0.31,
+      0.87,
+      0.31
+     ],
+     "intact_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx",
+     "fractured_fbx": "Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx",
+     "frags": 7,
+     "joints": 16,
+     "fracture_class": "Stone",
+     "material_match": true,
+     "breakable": true
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,549 @@
+{
+ "config": {
+  "layouts": [
+   "titan_ash_bridge",
+   "titan_caldera_rim",
+   "titan_forge_floor",
+   "titan_slag_foundry"
+  ],
+  "names": [
+   "Ironjaw Golem",
+   "Magma Brute",
+   "Storm Colossus",
+   "Cinder Warlord"
+  ],
+  "baseShots": 5,
+  "shotSpread": 1,
+  "winThreshold": 0.85,
+  "reward": {
+   "coins": 300,
+   "gems": 5,
+   "chests": 1
+  }
+ },
+ "arenas": [
+  {
+   "layout": "titan_ash_bridge",
+   "min": 2,
+   "seq": "legL, legR",
+   "pelvis_only": 0.844,
+   "by_shots": {
+    "5": {
+     "randwin": 0.863,
+     "rand3": 0.133,
+     "need3": 2,
+     "three_star_possible": true,
+     "margin": 3
+    },
+    "6": {
+     "randwin": 0.951,
+     "rand3": 0.13,
+     "need3": 2,
+     "three_star_possible": true,
+     "margin": 4
+    }
+   }
+  },
+  {
+   "layout": "titan_caldera_rim",
+   "min": 2,
+   "seq": "legL, legR",
+   "pelvis_only": 0.844,
+   "by_shots": {
+    "5": {
+     "randwin": 0.863,
+     "rand3": 0.133,
+     "need3": 2,
+     "three_star_possible": true,
+     "margin": 3
+    },
+    "6": {
+     "randwin": 0.951,
+     "rand3": 0.13,
+     "need3": 2,
+     "three_star_possible": true,
+     "margin": 4
+    }
+   }
+  },
+  {
+   "layout": "titan_forge_floor",
+   "min": 2,
+   "seq": "legL, legR",
+   "pelvis_only": 0.771,
+   "by_shots": {
+    "5": {
+     "randwin": 0.863,
+     "rand3": 0.133,
+     "need3": 2,
+     "three_star_possible": true,
+     "margin": 3
+    },
+    "6": {
+     "randwin": 0.951,
+     "rand3": 0.13,
+     "need3": 2,
+     "three_star_possible": true,
+     "margin": 4
+    }
+   }
+  },
+  {
+   "layout": "titan_slag_foundry",
+   "min": 2,
+   "seq": "legL, legR",
+   "pelvis_only": 0.771,
+   "by_shots": {
+    "5": {
+     "randwin": 0.863,
+     "rand3": 0.133,
+     "need3": 2,
+     "three_star_possible": true,
+     "margin": 3
+    },
+    "6": {
+     "randwin": 0.951,
+     "rand3": 0.13,
+     "need3": 2,
+     "three_star_possible": true,
+     "margin": 4
+    }
+   }
+  }
+ ],
+ "next60": {
+  "all_three_star_possible": true,
+  "shots_hist": {
+   "5": 24,
+   "6": 36
+  },
+  "layout_hist": {
+   "titan_ash_bridge": 17,
+   "titan_caldera_rim": 15,
+   "titan_forge_floor": 14,
+   "titan_slag_foundry": 14
+  },
+  "days": [
+   {
+    "date": "20261030",
+    "layout": "titan_slag_foundry",
+    "name": "Storm Colossus",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261031",
+    "layout": "titan_ash_bridge",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261101",
+    "layout": "titan_ash_bridge",
+    "name": "Storm Colossus",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261102",
+    "layout": "titan_caldera_rim",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261103",
+    "layout": "titan_forge_floor",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261104",
+    "layout": "titan_slag_foundry",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261105",
+    "layout": "titan_ash_bridge",
+    "name": "Magma Brute",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261106",
+    "layout": "titan_caldera_rim",
+    "name": "Magma Brute",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261107",
+    "layout": "titan_forge_floor",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261108",
+    "layout": "titan_slag_foundry",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261109",
+    "layout": "titan_ash_bridge",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261110",
+    "layout": "titan_forge_floor",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261111",
+    "layout": "titan_caldera_rim",
+    "name": "Storm Colossus",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261112",
+    "layout": "titan_ash_bridge",
+    "name": "Storm Colossus",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261113",
+    "layout": "titan_slag_foundry",
+    "name": "Magma Brute",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261114",
+    "layout": "titan_forge_floor",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261115",
+    "layout": "titan_caldera_rim",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261116",
+    "layout": "titan_ash_bridge",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261117",
+    "layout": "titan_slag_foundry",
+    "name": "Storm Colossus",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261118",
+    "layout": "titan_forge_floor",
+    "name": "Storm Colossus",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261119",
+    "layout": "titan_caldera_rim",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261120",
+    "layout": "titan_caldera_rim",
+    "name": "Magma Brute",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261121",
+    "layout": "titan_forge_floor",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261122",
+    "layout": "titan_slag_foundry",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261123",
+    "layout": "titan_ash_bridge",
+    "name": "Magma Brute",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261124",
+    "layout": "titan_caldera_rim",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261125",
+    "layout": "titan_forge_floor",
+    "name": "Storm Colossus",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261126",
+    "layout": "titan_slag_foundry",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261127",
+    "layout": "titan_ash_bridge",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261128",
+    "layout": "titan_caldera_rim",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261129",
+    "layout": "titan_forge_floor",
+    "name": "Magma Brute",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261130",
+    "layout": "titan_ash_bridge",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261201",
+    "layout": "titan_caldera_rim",
+    "name": "Magma Brute",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261202",
+    "layout": "titan_ash_bridge",
+    "name": "Magma Brute",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261203",
+    "layout": "titan_slag_foundry",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261204",
+    "layout": "titan_forge_floor",
+    "name": "Storm Colossus",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261205",
+    "layout": "titan_caldera_rim",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261206",
+    "layout": "titan_ash_bridge",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261207",
+    "layout": "titan_slag_foundry",
+    "name": "Cinder Warlord",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261208",
+    "layout": "titan_forge_floor",
+    "name": "Magma Brute",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261209",
+    "layout": "titan_caldera_rim",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261210",
+    "layout": "titan_slag_foundry",
+    "name": "Magma Brute",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261211",
+    "layout": "titan_ash_bridge",
+    "name": "Storm Colossus",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261212",
+    "layout": "titan_caldera_rim",
+    "name": "Storm Colossus",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261213",
+    "layout": "titan_forge_floor",
+    "name": "Cinder Warlord",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261214",
+    "layout": "titan_slag_foundry",
+    "name": "Storm Colossus",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261215",
+    "layout": "titan_ash_bridge",
+    "name": "Cinder Warlord",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261216",
+    "layout": "titan_caldera_rim",
+    "name": "Cinder Warlord",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261217",
+    "layout": "titan_forge_floor",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261218",
+    "layout": "titan_slag_foundry",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261219",
+    "layout": "titan_ash_bridge",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261220",
+    "layout": "titan_ash_bridge",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261221",
+    "layout": "titan_slag_foundry",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261222",
+    "layout": "titan_forge_floor",
+    "name": "Storm Colossus",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261223",
+    "layout": "titan_caldera_rim",
+    "name": "Ironjaw Golem",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261224",
+    "layout": "titan_ash_bridge",
+    "name": "Magma Brute",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261225",
+    "layout": "titan_slag_foundry",
+    "name": "Ironjaw Golem",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261226",
+    "layout": "titan_forge_floor",
+    "name": "Cinder Warlord",
+    "shots": 6,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261227",
+    "layout": "titan_caldera_rim",
+    "name": "Magma Brute",
+    "shots": 5,
+    "three_star_possible": true
+   },
+   {
+    "date": "20261228",
+    "layout": "titan_ash_bridge",
+    "name": "Magma Brute",
+    "shots": 6,
+    "three_star_possible": true
+   }
+  ]
+ }
+}

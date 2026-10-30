@@ -12,33 +12,33 @@
    "id": "forge_floor",
    "name": "Forge Floor",
    "layout": "titan_forge_floor",
-   "hintTarget": "pelvis",
-   "hintYaw": 0,
-   "hintPitch": 22
+   "hintTarget": "legL",
+   "hintYaw": -2.5,
+   "hintPitch": 10.5
   },
   {
    "id": "caldera_rim",
    "name": "Caldera Rim",
    "layout": "titan_caldera_rim",
-   "hintTarget": "pelvis",
-   "hintYaw": 0,
-   "hintPitch": 22
+   "hintTarget": "legL",
+   "hintYaw": -2.5,
+   "hintPitch": 10.5
   },
   {
    "id": "slag_foundry",
    "name": "Slag Foundry",
    "layout": "titan_slag_foundry",
-   "hintTarget": "pelvis",
-   "hintYaw": 0,
-   "hintPitch": 22
+   "hintTarget": "legL",
+   "hintYaw": -2.0,
+   "hintPitch": 10.5
   },
   {
    "id": "ash_bridge",
    "name": "Ash Bridge",
    "layout": "titan_ash_bridge",
-   "hintTarget": "pelvis",
-   "hintYaw": 0,
-   "hintPitch": 22
+   "hintTarget": "legL",
+   "hintYaw": -3.0,
+   "hintPitch": 10.5
   }
  ],
  "rules": [

@@ -26,9 +26,16 @@ def B(id, mat, p, s, sup=(), joint=False, role="", nonObj=False, color="", explo
         b["spinAxis"], b["pivot"], b["spinDps"] = spin
     return b
 
+def face_wrecker(b):
+    """BUG-24 (same transform as levels/ch1/gen_levels.py): the Wrecker fires along +x, so a layout authored with its
+    front on +z is turned to face -x: (x,y,z) -> (-z,y,x), sizes swap x/z."""
+    x, y, z = b["p"]; sx, sy, sz = b["s"]; b = dict(b); b["p"] = [round(-z, 4), y, x]; b["s"] = [sz, sy, sx]; return b
+
 def save_layout(id, blocks):
     if LD_OWNS_CH1 and (id in LD_LAYOUTS or id.startswith("c1_") or id == "m1_clockwork_tower"):
         return  # Level Designer's file: never overwritten
+    if id.startswith("titan_"):
+        blocks = [face_wrecker(b) for b in blocks]  # Daily Boss / Titan arenas face the cannon (fixed behind-cannon camera)
     ids = {b["id"] for b in blocks}
     for b in blocks:
         for s in b["sup"]:
@@ -172,8 +179,10 @@ def L10():
 def TITAN(variant):
     # Emberforge Titan colossus, 4 handcrafted arena variants
     w = [1.0, 1.15, .9, 1.25][variant]; leg = ["steel", "brick", "steel", "brick"][variant]
-    b = [B("legL", leg, (-1.2 * w, 2, 0), (1, 4, 1), [], role="leg"),
-         B("legR", leg, (1.2 * w, 2, 0), (1, 4, 1), [], role="leg"),
+    # Level Designer tuning 2026-10-30: steel legs are gold joints (2x direct) so every arena's best line is the same
+    # 2-shot leg topple (steel non-joint legs made forge/slag a 3-shot titan that could only 3-star on 8-shot days).
+    b = [B("legL", leg, (-1.2 * w, 2, 0), (1, 4, 1), [], joint=leg == "steel", role="leg"),
+         B("legR", leg, (1.2 * w, 2, 0), (1, 4, 1), [], joint=leg == "steel", role="leg"),
          B("pelvis", "steel", (0, 4.3, 0), (3.2 * w, .6, 1.4), ["legL", "legR"], joint=True, role="steel_joint"),
          B("belly", "brick", (0, 5.6, 0), (2.8 * w, 2, 1.8), ["pelvis"]),
          B("chest", "brick", (0, 7.6, 0), (3.4 * w, 2, 2), ["belly"]),
@@ -253,7 +262,7 @@ def MOD(**k):
 titan = {"archetype": "emberforge_titan", "name": "Emberforge Titan", "resetUtcHour": 0, "rankedGraceMinutes": 15,
          "maxDamageScore": 10000, "perShotLeftBonus": 500, "baseShots": 6,
          "offlineShotDamageCap": 5000,  # SEC-01: max damage gain per unsigned (offline) shot accepted on flush
-         "arenas": [{"id": a, "name": n, "layout": "titan_" + a, "hintTarget": "pelvis", "hintYaw": 0, "hintPitch": 22} for a, n in TITAN_ARENAS],
+         "arenas": [{"id": a, "name": n, "layout": "titan_" + a, "hintTarget": "legL", "hintYaw": 0, "hintPitch": 22} for a, n in TITAN_ARENAS],
          "rules": [
             {"id": "heated_steel", "text": "Steel is heated: joints take 3x damage", "mod": MOD(steelJointMult=3)},
             {"id": "brittle_brick", "text": "Cracked kilns: brick HP x0.6", "mod": MOD(brickHpMult=.6)},
