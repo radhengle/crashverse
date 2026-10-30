@@ -55,6 +55,8 @@ namespace Crashverse.VFX
         {
             if (ps == null) return;
             int count = VfxRules.ParticleCount(l.Count, tier);
+            // A freshly added ParticleSystem auto-plays in Play mode (playOnAwake defaults on); duration can't change while playing.
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             var main = ps.main;
             main.duration = Mathf.Max(0.05f, duration); main.loop = false; main.playOnAwake = false;
             main.startDelay = l.Delay;
