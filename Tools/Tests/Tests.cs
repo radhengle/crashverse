@@ -1180,12 +1180,12 @@ static class Tests
         {
             var mt = Crashverse.Audio.MusicTracks.Get("main_theme"); T.True(mt.HasIntro && mt.loopStart == 378000, "main_theme intro split at 378000");
             T.Eq(377999L, mt.SampleAt(377999 / 44100.0)); T.Eq(378000L + 10, mt.SampleAt((3402000 + 10) / 44100.0), "wraps into loop region");
-            var p1 = Crashverse.Audio.MusicTracks.Get("tidewarden_p1"); T.Eq(330750, p1.loopStart); T.True(Math.Abs(p1.BarSeconds - 1.875) < 1e-9, "128 BPM bar");
+            var p1 = Crashverse.Audio.MusicTracks.Get("tidewarden_p1"); T.Eq(294000, p1.loopStart); T.Eq(2646000, p1.totalSamples, "matches tidewarden_p1.ogg"); T.True(Math.Abs(p1.BarSeconds - 240.0 / 144) < 1e-9, "144 BPM bar");
             T.True(!Crashverse.Audio.MusicTracks.All.ContainsKey("season2_stormfront_hub") && !Crashverse.Audio.MusicTracks.All.ContainsKey("titan_preview_obsidian_full"), "excluded tracks");
             T.Eq("titan_int25", Crashverse.Audio.MusicTracks.TitanLayer(1)); T.Eq("titan_int75", Crashverse.Audio.MusicTracks.TitanLayer(3)); T.Eq(null, Crashverse.Audio.MusicTracks.TitanLayer(0));
             T.True(Math.Abs(Crashverse.Audio.BarClock.NextBar(10, 11.0, 1.875) - 11.875) < 1e-9, "next bar line");
             var plan = Crashverse.Audio.TidewardenMusic.Plan(100.0, 101.0);
-            T.True(Math.Abs(plan.stingerDsp - 101.875) < 1e-9 && Math.Abs(plan.p2StartDsp - 103.75) < 1e-9 && plan.p1StopDsp == plan.stingerDsp, "stinger at P1 bar end, P2 next bar");
+            T.True(Math.Abs(plan.stingerDsp - (100 + 240.0 / 144)) < 1e-9 && Math.Abs(plan.p2StartDsp - (100 + 480.0 / 144)) < 1e-9 && plan.p1StopDsp == plan.stingerDsp, "stinger at P1 bar end, P2 next bar");
         });
         T.Add("AUDIO_voice_rule_and_crossfade", () =>
         {

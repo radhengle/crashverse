@@ -29,18 +29,19 @@ namespace Crashverse.Audio
         public static readonly Dictionary<string, MusicTrack> All = new Dictionary<string, MusicTrack>();
         static MusicTracks()
         {
+            // Sample counts = the shipped Resources/Music/*.ogg (sound_workspace/music/loop_points.md); Tidewarden 144 BPM, Titan 150 BPM (from PR #3 ed45734).
             foreach (var t in new[] {
                 L("main_theme", 3402000, 378000, 3402000, 112), L("sunnyville_map_loop", 3256615, 0, 3256615, 104), L("gameplay_loop", 2822400, 0, 2822400, 120),
                 L("season1_wrecking_frontier_hub", 2919724, 0, 2919724, 116),
-                L("tidewarden_p1", 2976750, 330750, 2976750, 128), L("tidewarden_p2", 2646000, 0, 2646000, 128),
+                L("tidewarden_p1", 2646000, 294000, 2646000, 144), L("tidewarden_p2", 2352000, 0, 2352000, 144),
                 L("gameplay_harbor_isle", 3271418, 192436, 3271418, 110), L("gameplay_mill_isle", 3102207, 182483, 3102207, 0),
                 L("gameplay_clocktower_isle", 2998800, 176400, 2998800, 0), L("gameplay_storm_isle", 2205000, 441000, 2205000, 0),
                 L("results_loop", 846720, 0, 846720, 100),
-                L("titan_foundry_crater", 2646000, 0, 2646000, 128), L("titan_cinder_bridge", 2646000, 0, 2646000, 128),
-                L("titan_ash_citadel", 2646000, 0, 2646000, 128), L("titan_obsidian_forge", 2646000, 0, 2646000, 128),
-                L("titan_int25", 2646000, 0, 2646000, 128), L("titan_int50", 2646000, 0, 2646000, 128), L("titan_int75", 2646000, 0, 2646000, 128),
-                S("stinger_win", 166778), S("stinger_fail", 132300), S("stinger_win_3star", 186824), S("stinger_boss_defeat", 274522),
-                S("stinger_boss_phase2", 109148), S("stinger_chapter_clear", 224910) })
+                L("titan_foundry_crater", 2257920, 0, 2257920, 150), L("titan_cinder_bridge", 2257920, 0, 2257920, 150),
+                L("titan_ash_citadel", 2257920, 0, 2257920, 150), L("titan_obsidian_forge", 2257920, 0, 2257920, 150),
+                L("titan_int25", 2257920, 0, 2257920, 150), L("titan_int50", 2257920, 0, 2257920, 150), L("titan_int75", 2257920, 0, 2257920, 150),
+                S("stinger_win", 176400), S("stinger_fail", 132300), S("stinger_win_3star", 211680), S("stinger_boss_defeat", 245858),
+                S("stinger_boss_phase2", 122744), S("stinger_chapter_clear", 229320) })
                 All[t.id] = t;
             // Excluded from the base APK (DLC / not shipped): season2_stormfront_hub, titan_preview_obsidian_full.
         }
