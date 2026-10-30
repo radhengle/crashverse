@@ -17,6 +17,20 @@ namespace Crashverse.EditorTools
         {
             var m = Crashverse.Level.RealKitManifest.FromAssetDatabase();
             if (m == null) { Debug.LogWarning("[RealKit] no Kit_Real* models found: player keeps procedural cubes"); return false; }
+            // Level Designer prefab map: every BlockData.model used by a bundled layout ships too
+            var list = new System.Collections.Generic.List<Crashverse.Level.RealKitManifest.Piece>(m.pieces);
+            foreach (var f in Directory.GetFiles("Assets/_Project/Resources/Data/Layouts", "*.json"))
+            {
+                var lay = JsonUtility.FromJson<Crashverse.Data.LayoutData>(File.ReadAllText(f));
+                if (lay?.blocks == null) continue;
+                foreach (var b in lay.blocks)
+                {
+                    if (string.IsNullOrEmpty(b.model) || m.Find(Crashverse.Level.RealKit.ModuleName(b.model)) != null || list.Exists(x => x.name == Crashverse.Level.RealKit.ModuleName(b.model))) continue;
+                    var e = Crashverse.Level.RealKitManifest.ResolveEditor(b.model);
+                    if (e != null) list.Add(e); else Debug.LogError($"[RealKit] {Path.GetFileName(f)}:{b.id} model '{b.model}' not found under Assets/_Project/Models");
+                }
+            }
+            m.pieces = list.ToArray();
             Directory.CreateDirectory(Dir);
             AssetDatabase.DeleteAsset(AssetPath);
             AssetDatabase.CreateAsset(m, AssetPath);

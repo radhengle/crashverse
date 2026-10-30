@@ -44,12 +44,19 @@ namespace Crashverse.Level
         public static GameObject Dress(GameObject block, BlockData bd)
         {
             if (!Enabled || block == null || bd == null) return null;
-            var piece = RealPieceRules.Classify(bd); if (piece == null) return null;
+            if (bd.s == null || bd.s.Length != 3) return null;
+            bool authored = !string.IsNullOrEmpty(bd.model);                    // Level Designer prefab map: explicit kit module
+            var piece = authored ? ModuleName(bd.model) : RealPieceRules.Classify(bd); if (piece == null) return null;
             var man = Manifest; if (man == null) return null;
-            var entry = man.Find(piece); if (entry == null || entry.model == null) return null;
-            var mats = MaterialsFor(man, RealPieceRules.KitOf(piece)); if (mats == null) return null;
+            var entry = man.Find(piece);
+#if UNITY_EDITOR
+            if ((entry == null || entry.model == null) && authored) entry = RealKitManifest.ResolveEditor(bd.model);
+#endif
+            if (entry == null || entry.model == null) { if (authored) Debug.LogWarning("[RealKit] module not in manifest: " + bd.model); return null; }
+            bool real = piece.StartsWith("Kit_Real");
+            var mats = real ? MaterialsFor(man, RealPieceRules.KitOf(piece)) : null; if (real && mats == null) return null;
             var size = new Vector3(bd.s[0], bd.s[1], bd.s[2]);
-            var meshes = MeshesFor(entry, piece, size); if (meshes == null || meshes.Length == 0) return null;
+            var meshes = MeshesFor(entry, piece, size, bd.rotY, real); if (meshes == null || meshes.Length == 0) return null;
 
             var root = new GameObject("Real_" + piece);
             root.transform.SetParent(block.transform, false);
@@ -61,7 +68,8 @@ namespace Crashverse.Level
                 go.transform.SetParent(root.transform, false);
                 go.AddComponent<MeshFilter>().sharedMesh = meshes[i];
                 var r = go.AddComponent<MeshRenderer>();
-                r.sharedMaterials = meshes[i].subMeshCount > 1 ? mats : new[] { mats[0] };
+                var ms = real ? mats : SourceMaterials(piece, i);
+                r.sharedMaterials = meshes[i].subMeshCount > 1 || ms.Length < 2 ? ms : new[] { ms[0] };
                 r.shadowCastingMode = i == 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
                 lods[i] = new LOD(cut[Mathf.Min(i, cut.Length - 1)], new Renderer[] { r });
             }
@@ -103,11 +111,30 @@ namespace Crashverse.Level
             };
         }
 
+        public static string ModuleName(string model)
+        {
+            if (string.IsNullOrEmpty(model)) return null;
+            var n = model.Replace('\\', '/'); int i = n.LastIndexOf('/'); if (i >= 0) n = n.Substring(i + 1);
+            return n.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase) ? n.Substring(0, n.Length - 4) : n;
+        }
+
+        static readonly Dictionary<string, Material[][]> _srcMats = new Dictionary<string, Material[][]>();
+        /// <summary>Authored kit modules (stylized BuildingKit etc.) keep their importer-wired GlossyPBR materials.</summary>
+        static Material[] SourceMaterials(string piece, int lod)
+        {
+            if (_srcMats.TryGetValue(piece, out var all) && lod < all.Length && all[lod] != null && all[lod].Length > 0)
+            {
+                var ok = true; foreach (var m in all[lod]) if (m == null || m.shader == null || !m.shader.isSupported) ok = false;
+                if (ok) return all[lod];
+            }
+            return new[] { Crashverse.Core.RenderMaterials.Lit };
+        }
+
         /// <summary>LOD meshes of the piece and their transform relative to the model root (incl. FBX axis conversion).</summary>
         static (Mesh mesh, Matrix4x4 m)[] Source(RealKitManifest.Piece e, string piece)
         {
             if (_src.TryGetValue(piece, out var s)) return s;
-            var list = new List<(Mesh, Matrix4x4)>();
+            var list = new List<(Mesh, Matrix4x4)>(); var mats = new List<Material[]>();
             var rootT = e.model.transform;
             Matrix4x4 rootInv = Matrix4x4.TRS(Vector3.zero, rootT.localRotation, Vector3.one).inverse * Matrix4x4.Translate(-rootT.localPosition);
             for (int lod = 0; lod < 3; lod++)
@@ -117,27 +144,34 @@ namespace Crashverse.Level
                     if (mf.sharedMesh == null || !mf.name.EndsWith("_LOD" + lod) || mf.name.StartsWith("UCX_")) continue;
                     // root at identity, keep the root's own axis-conversion rotation: matrix = rootRot * (root^-1 * child)
                     var m = Matrix4x4.Rotate(rootT.localRotation) * rootInv * mf.transform.localToWorldMatrix;
-                    list.Add((mf.sharedMesh, m)); break;
+                    list.Add((mf.sharedMesh, m)); mats.Add(mf.GetComponent<MeshRenderer>() != null ? mf.GetComponent<MeshRenderer>().sharedMaterials : null); break;
                 }
             }
             if (list.Count == 0) // no _LODn naming: take the first non-collider mesh
                 foreach (var mf in e.model.GetComponentsInChildren<MeshFilter>(true))
-                    if (mf.sharedMesh != null && !mf.name.StartsWith("UCX_")) { list.Add((mf.sharedMesh, Matrix4x4.Rotate(rootT.localRotation) * rootInv * mf.transform.localToWorldMatrix)); break; }
+                    if (mf.sharedMesh != null && !mf.name.StartsWith("UCX_")) { list.Add((mf.sharedMesh, Matrix4x4.Rotate(rootT.localRotation) * rootInv * mf.transform.localToWorldMatrix)); mats.Add(mf.GetComponent<MeshRenderer>() != null ? mf.GetComponent<MeshRenderer>().sharedMaterials : null); break; }
+            _srcMats[piece] = mats.ToArray();
             return _src[piece] = list.ToArray();
         }
 
-        static Mesh[] MeshesFor(RealKitManifest.Piece e, string piece, Vector3 size)
+        static Mesh[] MeshesFor(RealKitManifest.Piece e, string piece, Vector3 size, float rotY, bool real)
         {
-            string key = piece + "|" + size.x.ToString("F3") + "|" + size.y.ToString("F3") + "|" + size.z.ToString("F3");
+            string key = piece + "|" + size.x.ToString("F3") + "|" + size.y.ToString("F3") + "|" + size.z.ToString("F3") + "|" + rotY.ToString("F1");
             if (_meshCache.TryGetValue(key, out var c)) return c;
             var src = Source(e, piece);
             if (src.Length == 0 || !src[0].mesh.isReadable) { if (src.Length > 0) Debug.LogWarning("[RealKit] " + piece + " mesh not readable"); return _meshCache[key] = null; }
             // fit frame from LOD0 bounds (all LODs share it so they don't pop)
             var b0 = TransformedBounds(src[0].mesh, src[0].m);
-            int[] map = RealPieceRules.AxisMap(b0.size, size);
-            string kitName = RealPieceRules.KitOf(piece); float tile = kitName == "Props" ? -1f : RealPieceRules.TileM(kitName); // Props use a 512 atlas: keep authored UVs
+            // rotY (prefab map side walls): fit in the module's own frame, then yaw the metric shape into the block
+            bool quarter = Mathf.Abs(Mathf.DeltaAngle(rotY, 90f)) < 1f || Mathf.Abs(Mathf.DeltaAngle(rotY, -90f)) < 1f;
+            var fitSize = quarter ? new Vector3(size.z, size.y, size.x) : size;
+            // authored modules keep their axes (Level Designer's yaw/scale), only generic pieces are auto-oriented
+            int[] map = real ? RealPieceRules.AxisMap(b0.size, fitSize) : new[] { 0, 1, 2 };
+            string kitName = real ? RealPieceRules.KitOf(piece) : null;
+            float tile = !real || kitName == "Props" ? -1f : RealPieceRules.TileM(kitName); // Props atlas / stylized kit: keep authored UVs
+            var yaw = Quaternion.Euler(0f, rotY, 0f);
             var outM = new Mesh[src.Length];
-            for (int i = 0; i < src.Length; i++) outM[i] = Fit(src[i].mesh, src[i].m, b0, map, size, tile, piece + "_LOD" + i);
+            for (int i = 0; i < src.Length; i++) outM[i] = Fit(src[i].mesh, src[i].m, b0, map, fitSize, size, yaw, tile, piece + "_LOD" + i);
             return _meshCache[key] = outM;
         }
 
@@ -149,7 +183,7 @@ namespace Crashverse.Level
         }
 
         /// <summary>Bake the piece into the block's unit cube: permute axes (map), normalise to [-0.5,0.5], rebuild UV0 = scaled pos / tile_m.</summary>
-        static Mesh Fit(Mesh src, Matrix4x4 m, Bounds b0, int[] map, Vector3 size, float tile, string name)
+        static Mesh Fit(Mesh src, Matrix4x4 m, Bounds b0, int[] map, Vector3 fitSize, Vector3 size, Quaternion yaw, float tile, string name)
         {
             var v = src.vertices; var n = src.normals; var srcUv = src.uv;
             var vo = new Vector3[v.Length]; var no = new Vector3[v.Length]; var uv = new Vector2[v.Length];
@@ -160,14 +194,13 @@ namespace Crashverse.Level
             {
                 var p = m.MultiplyPoint3x4(v[i]) - c;
                 var pp = new Vector3(p[map[0]], p[map[1]], p[map[2]]);                // permute
-                var u = new Vector3(pp.x / d.x, pp.y / d.y, pp.z / d.z);              // unit cube
-                vo[i] = u;
-                var w = Vector3.Scale(u, size);                                        // metres in the block
+                var u = new Vector3(pp.x / d.x, pp.y / d.y, pp.z / d.z);              // unit cube of fitSize
+                var w = yaw * Vector3.Scale(u, fitSize);                               // metres in the block (after rotY)
+                vo[i] = new Vector3(w.x / size.x, w.y / size.y, w.z / size.z);         // block unit cube (parent scale = s)
                 Vector3 nn = n != null && n.Length == v.Length ? nm.MultiplyVector(n[i]) : Vector3.up;
                 var pn = new Vector3(nn[map[0]], nn[map[1]], nn[map[2]]);
-                var nUnit = new Vector3(pn.x * d.x, pn.y * d.y, pn.z * d.z).normalized;  // inverse-transpose of the unit scale
-                no[i] = nUnit;
-                var nWorld = new Vector3(nUnit.x / size.x, nUnit.y / size.y, nUnit.z / size.z).normalized;
+                var nWorld = (yaw * new Vector3(pn.x * d.x / fitSize.x, pn.y * d.y / fitSize.y, pn.z * d.z / fitSize.z)).normalized; // inverse-transpose
+                no[i] = new Vector3(nWorld.x * size.x, nWorld.y * size.y, nWorld.z * size.z).normalized;
                 uv[i] = tile > 0f || srcUv == null || srcUv.Length != v.Length ? RealPieceRules.BoxUv(w, nWorld, tile > 0f ? tile : 1f) : srcUv[i];
             }
             bool flip = Parity(map) < 0;                                               // odd permutation mirrors: flip winding
@@ -190,6 +223,6 @@ namespace Crashverse.Level
         static int Parity(int[] p) { int inv = 0; for (int i = 0; i < 3; i++) for (int j = i + 1; j < 3; j++) if (p[i] > p[j]) inv++; return inv % 2 == 0 ? 1 : -1; }
 
         /// <summary>Tests / level reloads: drop cached meshes and materials.</summary>
-        public static void ResetCaches() { _meshCache.Clear(); _src.Clear(); _mats.Clear(); _loaded = false; _m = null; Dressed = 0; }
+        public static void ResetCaches() { _meshCache.Clear(); _src.Clear(); _mats.Clear(); _srcMats.Clear(); _loaded = false; _m = null; Dressed = 0; }
     }
 }
