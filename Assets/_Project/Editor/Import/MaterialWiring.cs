@@ -22,6 +22,8 @@ namespace Crashverse.EditorTools.Import
             }
             else if (shader != null && mat.shader != shader) mat.shader = shader;
             Wire(mat, modelDir);
+            // Rendering (RealisticPbrTests): foliage materials need GPU instancing as the fallback when SRP batching breaks
+            if (matPath.Replace('\\', '/').Contains("/Foliage/")) mat.enableInstancing = true;
             EditorUtility.SetDirty(mat);
             return mat;
         }

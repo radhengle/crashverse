@@ -11,7 +11,7 @@ namespace Crashverse.Backend.Tests
     public class MetaRulesEditModeTests
     {
         static ContentDatabase _db;
-        static ContentDatabase Db => _db ??= ContentDatabase.LoadBundled();
+        static ContentDatabase Db => _db ??= ContentDatabase.LoadBundled(true); // all seasons: content integrity incl. flagged-off S2-4
         string _dir;
         [SetUp] public void SetUp() { _dir = Path.Combine(Path.GetTempPath(), "cv_meta_" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(_dir); }
         [TearDown] public void TearDown() { if (Directory.Exists(_dir)) Directory.Delete(_dir, true); }
