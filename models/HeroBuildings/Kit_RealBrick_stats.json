@@ -73,6 +73,42 @@
    "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
    "frac": "Brick",
    "source": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Wall.fbx"
+  },
+  "Floor": {
+   "LOD0": 876,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    3.0,
+    0.27,
+    3.0
+   ],
+   "aabb": [
+    [
+     -1.5,
+     -1.5,
+     -0.01
+    ],
+    [
+     1.5,
+     1.5,
+     0.26
+    ]
+   ],
+   "frags": 18,
+   "frag_max": 80,
+   "Fractured": 1032,
+   "mass": "162.7-309.4",
+   "min_axis_m": 0.25,
+   "joints": 38,
+   "anchors": 13,
+   "anchor_to": [
+    "Support"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Brick",
+   "source": "Assets/_Project/Models/BuildingKit/Kit_Brick/Kit_Brick_Floor.fbx"
   }
  },
  "tile_m": 1.75,
