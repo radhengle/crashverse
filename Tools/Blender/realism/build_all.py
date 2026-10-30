@@ -139,6 +139,15 @@ def build_tree(sp):
     export(objs,sp,f"{REAL}/Foliage/{sp}/{sp}.fbx",{"asset_class":"Tree" if sp!="Bush" else "Bush","wind_uv2":"x=sway weight,y=phase"})
     info(sp,objs,1,{**tex_info(P),**tex_info(tex)})
     bpy.ops.wm.save_as_mainfile(filepath=f"/tmp/rt_{sp}.blend")
+def build_props2():
+    """bakery street props only (does not touch the existing Prop_* exports)"""
+    clean(); P=PR.TEX+"/Textures/T_Props_Village"; m=R.lit_material("M_Props_Village",P)
+    for k,f in PR.PROPS2.items():
+        objs=[f(l).to_object(f"Prop_{k}_LOD{l}",m) for l in (0,1)]
+        for o in objs: R.add_uv2(o); strip_attrs(o)
+        export(objs,f"Prop_{k}",f"{REAL}/Props/Props_Village/Prop_{k}.fbx",{"asset_class":"Prop"})
+        info(f"Prop_{k}",objs,1,tex_info(P))
+        for o in objs: o.parent=None
 def build_props():
     clean(); P=PR.TEX+"/Textures/T_Props_Village"; m=R.lit_material("M_Props_Village",P)
     for k,f in PR.PROPS.items():
@@ -162,6 +171,7 @@ if __name__=="__main__":
     for sp in ("Oak","Pine","Bush"):
         if sp in W: build_tree(sp)
     if "props" in W: build_props()
+    if "props2" in W: build_props2()
     if "ground" in W: build_ground()
     p=REAL+"/realism_stats.json"; old=json.load(open(p)) if os.path.exists(p) else {}
     old.update(STATS); json.dump(old,open(p,"w"),indent=1); print("STATS",json.dumps(STATS)[:3000])

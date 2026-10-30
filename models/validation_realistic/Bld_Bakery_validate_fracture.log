@@ -1,0 +1,21 @@
+Kit_RealBakery_BackD_Fractured.fbx: frags=6 (Stone 4-10) tris max=222 total=554 mass 1440.0-2204.0 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
+Kit_RealBakery_BackW_Fractured.fbx: frags=6 (Stone 4-10) tris max=164 total=500 mass 1404.2-2567.3 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
+Kit_RealBakery_Chim_Fractured.fbx: frags=7 (Stone 4-10) tris max=84 total=312 mass 16.5-2627.0 kg UCX=7 JNT=6 ANCHOR=1 -> PASS
+Kit_RealBakery_Floor_Fractured.fbx: frags=16 (Wood 8-16) tris max=180 total=1284 mass 218.2-577.1 kg UCX=16 JNT=33 ANCHOR=8 -> PASS
+Kit_RealBakery_GabL_Fractured.fbx: frags=10 (Wood 8-16) tris max=84 total=458 mass 37.0-159.0 kg UCX=10 JNT=18 ANCHOR=7 -> PASS
+Kit_RealBakery_GabR_Fractured.fbx: frags=10 (Wood 8-16) tris max=52 total=340 mass 37.0-159.0 kg UCX=10 JNT=18 ANCHOR=7 -> PASS
+Kit_RealBakery_RfLB_Fractured.fbx: frags=16 (Roof 8-16) tris max=168 total=1452 mass 182.3-386.3 kg UCX=16 JNT=38 ANCHOR=4 -> PASS
+Kit_RealBakery_RfLF_Fractured.fbx: frags=10 (Roof 8-16) tris max=240 total=1288 mass 40.3-881.2 kg UCX=10 JNT=24 ANCHOR=5 -> PASS
+Kit_RealBakery_RfRB_Fractured.fbx: frags=10 (Roof 8-16) tris max=288 total=1412 mass 57.8-942.5 kg UCX=10 JNT=20 ANCHOR=5 -> PASS
+Kit_RealBakery_RfRF_Fractured.fbx: frags=11 (Roof 8-16) tris max=260 total=1324 mass 40.3-865.9 kg UCX=11 JNT=25 ANCHOR=6 -> PASS
+Kit_RealBakery_ShopD_Fractured.fbx: frags=7 (Stone 4-10) tris max=200 total=854 mass 25.6-2511.9 kg UCX=7 JNT=11 ANCHOR=3 -> PASS
+Kit_RealBakery_ShopW_Fractured.fbx: frags=10 (Stone 4-10) tris max=238 total=1168 mass 93.3-2241.1 kg UCX=10 JNT=33 ANCHOR=3 -> PASS
+Kit_RealBakery_UpB_Fractured.fbx: frags=13 (Wood 8-16) tris max=264 total=1468 mass 17.4-286.7 kg UCX=13 JNT=30 ANCHOR=6 -> PASS
+Kit_RealBakery_UpFC_Fractured.fbx: frags=9 (Wood 8-16) tris max=164 total=658 mass 52.4-100.6 kg UCX=9 JNT=18 ANCHOR=3 -> PASS
+Kit_RealBakery_UpFL_Fractured.fbx: frags=14 (Wood 8-16) tris max=168 total=902 mass 5.4-117.8 kg UCX=14 JNT=49 ANCHOR=3 -> PASS
+Kit_RealBakery_UpFR_Fractured.fbx: frags=14 (Wood 8-16) tris max=98 total=876 mass 5.8-101.4 kg UCX=14 JNT=49 ANCHOR=3 -> PASS
+Kit_RealBakery_UpL_Fractured.fbx: frags=9 (Wood 8-16) tris max=264 total=1088 mass 31.0-316.8 kg UCX=9 JNT=20 ANCHOR=5 -> PASS
+Kit_RealBakery_UpR_Fractured.fbx: frags=16 (Wood 8-16) tris max=164 total=1376 mass 85.8-166.7 kg UCX=16 JNT=35 ANCHOR=7 -> PASS
+Kit_RealBakery_WallL_Fractured.fbx: frags=8 (Stone 4-10) tris max=174 total=622 mass 1313.3-2784.1 kg UCX=8 JNT=13 ANCHOR=4 -> PASS
+Kit_RealBakery_WallR_Fractured.fbx: frags=8 (Stone 4-10) tris max=182 total=602 mass 1313.3-2784.1 kg UCX=8 JNT=13 ANCHOR=4 -> PASS
+RESULT: ALL PASS

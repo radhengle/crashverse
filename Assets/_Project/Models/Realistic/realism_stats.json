@@ -239,5 +239,41 @@
    "T_GrassClump_N.png": "2048x2048 authored -> 1024 Android",
    "T_GrassClump_ORM.png": "2048x2048 authored -> 1024 Android"
   }
+ },
+ "Prop_BreadCrate": {
+  "tris": {
+   "Prop_BreadCrate_LOD0": 356,
+   "Prop_BreadCrate_LOD1": 276
+  },
+  "materials": [
+   "M_Props_Village"
+  ],
+  "submeshes_per_lod": {
+   "Prop_BreadCrate_LOD0": 1,
+   "Prop_BreadCrate_LOD1": 1
+  },
+  "textures": {
+   "T_Props_Village_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
+ },
+ "Prop_Bench": {
+  "tris": {
+   "Prop_Bench_LOD0": 552,
+   "Prop_Bench_LOD1": 196
+  },
+  "materials": [
+   "M_Props_Village"
+  ],
+  "submeshes_per_lod": {
+   "Prop_Bench_LOD0": 1,
+   "Prop_Bench_LOD1": 1
+  },
+  "textures": {
+   "T_Props_Village_A.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_N.png": "1024x1024 authored -> 1024 Android",
+   "T_Props_Village_ORM.png": "1024x1024 authored -> 1024 Android"
+  }
  }
 }

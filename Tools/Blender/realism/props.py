@@ -106,6 +106,38 @@ def rock(lod,seed,scale):
         v.co=Vector((v.co.x*scale[0],v.co.y*scale[1],max(-.15,v.co.z)*scale[2]))
     bm.normal_update(); R.uv_cells(bm,at,"Rock",None,(seed*.37,seed*.11,.05),cut=False); R.tint(bm,lambda L:((.92+.08*min(1,L.vert.co.z/scale[2]+.3),)*3+(1,)))
     B.add(bm); return B
+def bread_crate(lod,seed=5,size=(.62,.42,.3)):
+    """open-top bakery crate (plank sides, battens) heaped with loaves (SandDressed cell tinted to crust)"""
+    at=A(); B=R.Builder(at); rng=random.Random(seed); sx,sy,sz=size; t=.02
+    for ax,sgn in ((0,1),(0,-1),(1,1),(1,-1)):
+        L=sy if ax==0 else sx
+        for k in range(2):
+            h=(sz-.02)/2; z=.01+h*(k+.5); c=[0,0,z]; c[ax]=sgn*((sx if ax==0 else sy)/2-t/2)
+            dims=(L-.04,t,h-.012) if ax==1 else (t,L-.04,h-.012); tn=.9+.12*rng.random()
+            B.part(dims,Mt(c),"WoodPlank",1 if ax==0 else 0,0,1,col=(tn,tn,tn*.97),seed=rng.randint(0,9999))
+    B.part((sx-.02,sy-.02,t),Mt((0,0,.012)),"WoodPlank",1,0,1,seed=rng.randint(0,9999))
+    for (x,y) in ((1,1),(1,-1),(-1,1),(-1,-1)): B.part((sz,.04,.04),Mt((x*(sx/2-.02),y*(sy/2-.02),sz/2),ry=math.pi/2),"WoodBeam",0,0,1,seed=rng.randint(0,9999))
+    n=8 if lod==0 else 4
+    for i in range(n):
+        bm=bmesh.new(); bmesh.ops.create_icosphere(bm,subdivisions=1 if lod==0 else 1,radius=1)
+        cx=(rng.random()-.5)*(sx-.2); cy=(rng.random()-.5)*(sy-.16); cz=sz-.06+.05*(i%3); rz=rng.random()*3
+        Mr=Matrix.Rotation(rz,3,'Z')
+        for v in bm.verts:
+            q=Vector((v.co.x*.13,v.co.y*.075,max(v.co.z,-.5)*.065)); v.co=Mr@q+Vector((cx,cy,cz))
+        R.uv_cells(bm,at,"SandDressed",None,(i*.3,0,0),cut=False); R.tint(bm,(1.0,.62,.32)); B.add(bm)
+    return B
+def bench(lod,seed=6,L=1.6):
+    """plank bench: two-plank seat, back rail, splayed legs with stretcher"""
+    at=A(); B=R.Builder(at); rng=random.Random(seed); bev=.006 if lod==0 else 0
+    for k,y in enumerate((-.08,.08)): B.part((L,.15,.045),Mt((0,y,.45)),"WoodPlank",1,bev,1,seed=rng.randint(0,9999))
+    for x in (-L/2+.18,L/2-.18):
+        for y in (-.12,.12): B.part((.06,.06,.45),Mt((x,y,.215),rx=(.12 if y>0 else -.12)),"WoodBeam",0,bev,1,seed=rng.randint(0,9999))
+        B.part((.06,.34,.06),Mt((x,0,.4)),"WoodBeam",0,0,1,seed=rng.randint(0,9999))
+        if lod==0: B.part((.05,.05,.5),Mt((x,.17,.68),rx=-.2),"WoodBeam",0,0,1,seed=rng.randint(0,9999))
+    B.part((L-.3,.04,.06),Mt((0,0,.14)),"WoodBeam",0,0,1,seed=rng.randint(0,9999))
+    if lod==0: B.part((L,.04,.12),Mt((0,.22,.88),rx=-.2),"WoodPlank",1,bev,1,seed=rng.randint(0,9999))
+    return B
+PROPS2={"BreadCrate":lambda l:bread_crate(l),"Bench":lambda l:bench(l)}
 PROPS={"Barrel":lambda l:barrel(l),"Crate":lambda l:crate(l),"Cart":lambda l:cart(l),
        "Rock_A":lambda l:rock(l,1,(.55,.45,.4)),"Rock_B":lambda l:rock(l,2,(.35,.3,.25)),"Rock_C":lambda l:rock(l,3,(.9,.6,.45))}
 if __name__=="__main__":

@@ -215,7 +215,7 @@ class House:
         else: s.beam((-vx,yc,zr+.06),(vx,yc,zr+.06),.16,.2,(0,0,1),cell="Terracotta",ends=False)
         s.chimney(yc,zr)
     def tiles(s,p0,e_s,n,U,Ls,sy,chim=True):
-        tw,tl,ex=.34,.46,.38; ncol=int(U/tw); nrow=int((Ls-.05)/ex)+1; th=.045
+        tw,tl,ex=getattr(s,"TILE",(.34,.46,.38)); ncol=int(U/tw); nrow=int((Ls-.05)/ex)+1; th=.045
         e_u=Vector((1,0,0)); A=s.A
         if s.lod==2:   # corrugated sheet: valleys/ridges only, no per-tile geometry
             bm=bmesh.new(); seg=2; cols=ncol*seg; rows=[]
@@ -234,7 +234,7 @@ class House:
                     q=L.vert.co-p0; u=(q.dot(e_u)%1.0); v=q.dot(e_s)/Ls
                     L[uvl].uv=(r[0]+(r[2]-r[0])*((q.dot(e_u)+U/2)/U), r[1]+(r[3]-r[1])*v)
             R.orient(bm,lambda f:n); s.B.add(bm,(.97,.95,.93)); return
-        seg=3 if s.lod==0 else 2; lip=s.lod==0
+        seg=getattr(s,"tile_seg0",3) if s.lod==0 else 2; lip=s.lod==0
         bm=bmesh.new(); uvl=bm.loops.layers.uv.new("UV0"); cl=bm.loops.layers.float_color.new("Col"); r=A.rect("Terracotta")
         cx0=getattr(s,"chim_box",None)
         for j in range(nrow):
@@ -348,7 +348,7 @@ class House:
     # ---------- lantern by the door
     def lantern(s):
         if s.lod==2: return
-        x,y,z=.95+.85,YF-.02,Z0+2.05
+        x,y,z=getattr(s,"LANTERN_X",.95+.85),YF-.02,Z0+2.05
         s.B.part((.04,.35,.04),Mt((x,y-.17,z+.25)),"Steel",1,.008*s.bev,1,seed=6)
         s.B.part((.2,.2,.04),Mt((x,y-.32,z+.18)),"Steel",0,.01*s.bev,1,seed=7)
         s.B.part((.22,.22,.05),Mt((x,y-.32,z-.12)),"Steel",0,.01*s.bev,1,seed=8)

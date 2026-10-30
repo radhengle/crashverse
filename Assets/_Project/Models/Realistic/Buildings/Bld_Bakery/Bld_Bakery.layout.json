@@ -1,0 +1,1939 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Bld_Bakery",
+ "style": "realistic v1",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); shop front faces +Z (Level Designer rotates the root to face -X); positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  }
+ },
+ "tris_total": {
+  "LOD0": 18216,
+  "LOD1": 9964,
+  "LOD2": 4990,
+  "Fractured": 18538
+ },
+ "footprint_m": {
+  "x": 8.93,
+  "z": 7.483
+ },
+ "height_m": 10.165,
+ "module_count": 10,
+ "modules": [
+  {
+   "id": "ShopFront",
+   "label": "Shop front: stone street wall with wide display window, striped awning, door, lantern, hanging loaf sign",
+   "pivot": {
+    "x": 0.0007,
+    "y": 0.3419,
+    "z": 3.1747
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 8.004,
+    "z": 1.599
+   },
+   "height_m": 3.162,
+   "top_y_m": 3.504,
+   "pieces": [
+    "ShopW",
+    "ShopD"
+   ],
+   "anchor_to": [
+    "Base"
+   ],
+   "tris": {
+    "LOD0": 2444,
+    "LOD1": 1300,
+    "LOD2": 750
+   }
+  },
+  {
+   "id": "Wall_Left",
+   "label": "Ground-floor stone side wall, left (window)",
+   "pivot": {
+    "x": 3.8271,
+    "y": 0.3458,
+    "z": 0.0017
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 0.568,
+    "z": 5.113
+   },
+   "height_m": 3.159,
+   "top_y_m": 3.505,
+   "pieces": [
+    "WallL"
+   ],
+   "anchor_to": [
+    "Base"
+   ],
+   "tris": {
+    "LOD0": 566,
+    "LOD1": 354,
+    "LOD2": 168
+   }
+  },
+  {
+   "id": "Wall_Right",
+   "label": "Ground-floor stone side wall, right (window)",
+   "pivot": {
+    "x": -3.828,
+    "y": 0.3438,
+    "z": -0.0012
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 0.566,
+    "z": 5.11
+   },
+   "height_m": 3.16,
+   "top_y_m": 3.504,
+   "pieces": [
+    "WallR"
+   ],
+   "anchor_to": [
+    "Base"
+   ],
+   "tris": {
+    "LOD0": 566,
+    "LOD1": 334,
+    "LOD2": 168
+   }
+  },
+  {
+   "id": "Wall_Back",
+   "label": "Ground-floor stone back wall (back door + window)",
+   "pivot": {
+    "x": 0.0008,
+    "y": 0.3417,
+    "z": -2.828
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 8.009,
+    "z": 0.566
+   },
+   "height_m": 3.162,
+   "top_y_m": 3.504,
+   "pieces": [
+    "BackD",
+    "BackW"
+   ],
+   "anchor_to": [
+    "Base"
+   ],
+   "tris": {
+    "LOD0": 1102,
+    "LOD1": 654,
+    "LOD2": 332
+   }
+  },
+  {
+   "id": "Floor",
+   "label": "First-floor slab / beam with jetty joists (rests on the ground walls)",
+   "pivot": {
+    "x": -0.0,
+    "y": 2.5351,
+    "z": 0.368
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 8.02,
+    "z": 5.876
+   },
+   "height_m": 1.005,
+   "top_y_m": 3.54,
+   "pieces": [
+    "Floor"
+   ],
+   "anchor_to": [
+    "ShopFront",
+    "Wall_Back",
+    "Wall_Left",
+    "Wall_Right"
+   ],
+   "tris": {
+    "LOD0": 1376,
+    "LOD1": 596,
+    "LOD2": 324
+   }
+  },
+  {
+   "id": "UpperStorey",
+   "label": "Timber-frame upper storey resting on the Floor slab: 4 walls, 2 gables, flower boxes",
+   "pivot": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 8.262,
+    "z": 6.696
+   },
+   "height_m": 4.879,
+   "top_y_m": 8.375,
+   "pieces": [
+    "UpFL",
+    "UpFC",
+    "UpFR",
+    "UpB",
+    "UpL",
+    "UpR",
+    "GabL",
+    "GabR"
+   ],
+   "anchor_to": [
+    "Floor"
+   ],
+   "tris": {
+    "LOD0": 6682,
+    "LOD1": 3802,
+    "LOD2": 2028
+   }
+  },
+  {
+   "id": "Roof_Left",
+   "label": "Clay-tile roof, left half (both slopes), seen from the street",
+   "pivot": {
+    "x": 2.205,
+    "y": 5.7825,
+    "z": 0.1498
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 4.49,
+    "z": 7.316
+   },
+   "height_m": 2.875,
+   "top_y_m": 8.658,
+   "pieces": [
+    "RfLF",
+    "RfLB"
+   ],
+   "anchor_to": [
+    "UpperStorey"
+   ],
+   "tris": {
+    "LOD0": 2284,
+    "LOD1": 1212,
+    "LOD2": 568
+   }
+  },
+  {
+   "id": "Roof_Right",
+   "label": "Clay-tile roof, right half",
+   "pivot": {
+    "x": -2.235,
+    "y": 5.7825,
+    "z": 0.1501
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 4.49,
+    "z": 7.315
+   },
+   "height_m": 2.874,
+   "top_y_m": 8.656,
+   "pieces": [
+    "RfRF",
+    "RfRB"
+   ],
+   "anchor_to": [
+    "UpperStorey"
+   ],
+   "tris": {
+    "LOD0": 2500,
+    "LOD1": 1344,
+    "LOD2": 388
+   }
+  },
+  {
+   "id": "Chimney",
+   "label": "Oven chimney at the back (stone, two pots)",
+   "pivot": {
+    "x": 1.4005,
+    "y": 3.2957,
+    "z": -1.5496
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.242,
+    "z": 0.942
+   },
+   "height_m": 6.869,
+   "top_y_m": 10.165,
+   "pieces": [
+    "Chim"
+   ],
+   "anchor_to": [
+    "Floor",
+    "Roof_Left",
+    "UpperStorey"
+   ],
+   "tris": {
+    "LOD0": 288,
+    "LOD1": 184,
+    "LOD2": 128
+   }
+  },
+  {
+   "id": "Base",
+   "label": "Granite plinth (indestructible)",
+   "pivot": {
+    "x": -0.0,
+    "y": 0.0,
+    "z": 0.15
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 8.64,
+    "z": 6.84
+   },
+   "height_m": 0.35,
+   "top_y_m": 0.35,
+   "pieces": [
+    "Base"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 408,
+    "LOD1": 184,
+    "LOD2": 136
+   }
+  }
+ ],
+ "piece_count": 21,
+ "pieces": [
+  {
+   "id": "Base",
+   "label": "Granite plinth",
+   "module": "Base",
+   "kit": "Kit_RealBakery_Base",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Base.fbx",
+   "fractured": null,
+   "position": {
+    "x": -0.0,
+    "y": 0.0,
+    "z": 0.15
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Indestructible",
+   "tris": {
+    "LOD0": 408,
+    "LOD1": 184,
+    "LOD2": 136
+   }
+  },
+  {
+   "id": "ShopW",
+   "label": "Shop front, display window + awning",
+   "module": "ShopFront",
+   "kit": "Kit_RealBakery_ShopW",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopW_Fractured.fbx",
+   "position": {
+    "x": 0.0007,
+    "y": 0.3419,
+    "z": 3.1747
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Base"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 988,
+    "LOD1": 712,
+    "LOD2": 432,
+    "Fractured": 1168
+   }
+  },
+  {
+   "id": "ShopD",
+   "label": "Shop front, door + lantern + sign",
+   "module": "ShopFront",
+   "kit": "Kit_RealBakery_ShopD",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_ShopD_Fractured.fbx",
+   "position": {
+    "x": 0.0007,
+    "y": 0.3419,
+    "z": 3.1747
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Base"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 1456,
+    "LOD1": 588,
+    "LOD2": 318,
+    "Fractured": 854
+   }
+  },
+  {
+   "id": "WallL",
+   "label": "Side wall left",
+   "module": "Wall_Left",
+   "kit": "Kit_RealBakery_WallL",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallL_Fractured.fbx",
+   "position": {
+    "x": 3.8271,
+    "y": 0.3458,
+    "z": 0.0017
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Base"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 566,
+    "LOD1": 354,
+    "LOD2": 168,
+    "Fractured": 622
+   }
+  },
+  {
+   "id": "WallR",
+   "label": "Side wall right",
+   "module": "Wall_Right",
+   "kit": "Kit_RealBakery_WallR",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_WallR_Fractured.fbx",
+   "position": {
+    "x": -3.828,
+    "y": 0.3438,
+    "z": -0.0012
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Base"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 566,
+    "LOD1": 334,
+    "LOD2": 168,
+    "Fractured": 602
+   }
+  },
+  {
+   "id": "BackD",
+   "label": "Back wall, door part",
+   "module": "Wall_Back",
+   "kit": "Kit_RealBakery_BackD",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackD_Fractured.fbx",
+   "position": {
+    "x": 0.0008,
+    "y": 0.3417,
+    "z": -2.828
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Base"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 558,
+    "LOD1": 342,
+    "LOD2": 186,
+    "Fractured": 554
+   }
+  },
+  {
+   "id": "BackW",
+   "label": "Back wall, window part",
+   "module": "Wall_Back",
+   "kit": "Kit_RealBakery_BackW",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_BackW_Fractured.fbx",
+   "position": {
+    "x": 0.0008,
+    "y": 0.3417,
+    "z": -2.828
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Base"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 544,
+    "LOD1": 312,
+    "LOD2": 146,
+    "Fractured": 500
+   }
+  },
+  {
+   "id": "Floor",
+   "label": "First-floor slab",
+   "module": "Floor",
+   "kit": "Kit_RealBakery_Floor",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Floor_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 2.5351,
+    "z": 0.368
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "ShopW",
+    "ShopD",
+    "BackD",
+    "BackW",
+    "WallL",
+    "WallR"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1376,
+    "LOD1": 596,
+    "LOD2": 324,
+    "Fractured": 1284
+   }
+  },
+  {
+   "id": "UpFL",
+   "label": "Upper front wall, left bay",
+   "module": "UpperStorey",
+   "kit": "Kit_RealBakery_UpFL",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFL_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1122,
+    "LOD1": 558,
+    "LOD2": 316,
+    "Fractured": 902
+   }
+  },
+  {
+   "id": "UpFC",
+   "label": "Upper front wall, centre bay",
+   "module": "UpperStorey",
+   "kit": "Kit_RealBakery_UpFC",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFC_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 782,
+    "LOD1": 398,
+    "LOD2": 172,
+    "Fractured": 658
+   }
+  },
+  {
+   "id": "UpFR",
+   "label": "Upper front wall, right bay",
+   "module": "UpperStorey",
+   "kit": "Kit_RealBakery_UpFR",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpFR_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1084,
+    "LOD1": 568,
+    "LOD2": 278,
+    "Fractured": 876
+   }
+  },
+  {
+   "id": "UpB",
+   "label": "Upper back wall",
+   "module": "UpperStorey",
+   "kit": "Kit_RealBakery_UpB",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpB_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1192,
+    "LOD1": 832,
+    "LOD2": 436,
+    "Fractured": 1468
+   }
+  },
+  {
+   "id": "UpL",
+   "label": "Upper side wall left",
+   "module": "UpperStorey",
+   "kit": "Kit_RealBakery_UpL",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpL_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 900,
+    "LOD1": 620,
+    "LOD2": 282,
+    "Fractured": 1088
+   }
+  },
+  {
+   "id": "UpR",
+   "label": "Upper side wall right",
+   "module": "UpperStorey",
+   "kit": "Kit_RealBakery_UpR",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_UpR_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Floor"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 936,
+    "LOD1": 516,
+    "LOD2": 298,
+    "Fractured": 1376
+   }
+  },
+  {
+   "id": "GabL",
+   "label": "Gable left",
+   "module": "UpperStorey",
+   "kit": "Kit_RealBakery_GabL",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabL_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "UpL"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 334,
+    "LOD1": 182,
+    "LOD2": 130,
+    "Fractured": 458
+   }
+  },
+  {
+   "id": "GabR",
+   "label": "Gable right",
+   "module": "UpperStorey",
+   "kit": "Kit_RealBakery_GabR",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_GabR_Fractured.fbx",
+   "position": {
+    "x": -0.0005,
+    "y": 3.4954,
+    "z": 0.2269
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "UpR"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 332,
+    "LOD1": 128,
+    "LOD2": 116,
+    "Fractured": 340
+   }
+  },
+  {
+   "id": "RfLF",
+   "label": "Roof left half, street slope",
+   "module": "Roof_Left",
+   "kit": "Kit_RealBakery_RfLF",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLF_Fractured.fbx",
+   "position": {
+    "x": 2.205,
+    "y": 5.7825,
+    "z": 0.1498
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "UpFL",
+    "UpFC",
+    "GabL"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 1268,
+    "LOD1": 628,
+    "LOD2": 260,
+    "Fractured": 1288
+   }
+  },
+  {
+   "id": "RfLB",
+   "label": "Roof left half, back slope + ridge",
+   "module": "Roof_Left",
+   "kit": "Kit_RealBakery_RfLB",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfLB_Fractured.fbx",
+   "position": {
+    "x": 2.205,
+    "y": 5.7825,
+    "z": 0.1498
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "UpB",
+    "GabL"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 1016,
+    "LOD1": 584,
+    "LOD2": 308,
+    "Fractured": 1452
+   }
+  },
+  {
+   "id": "RfRF",
+   "label": "Roof right half, street slope",
+   "module": "Roof_Right",
+   "kit": "Kit_RealBakery_RfRF",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRF_Fractured.fbx",
+   "position": {
+    "x": -2.235,
+    "y": 5.7825,
+    "z": 0.1501
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "UpFC",
+    "UpFR",
+    "GabR"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 1248,
+    "LOD1": 648,
+    "LOD2": 172,
+    "Fractured": 1324
+   }
+  },
+  {
+   "id": "RfRB",
+   "label": "Roof right half, back slope + ridge",
+   "module": "Roof_Right",
+   "kit": "Kit_RealBakery_RfRB",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_RfRB_Fractured.fbx",
+   "position": {
+    "x": -2.235,
+    "y": 5.7825,
+    "z": 0.1501
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "UpB",
+    "GabR"
+   ],
+   "fracture_class": "Roof",
+   "tris": {
+    "LOD0": 1252,
+    "LOD1": 696,
+    "LOD2": 216,
+    "Fractured": 1412
+   }
+  },
+  {
+   "id": "Chim",
+   "label": "Oven chimney",
+   "module": "Chimney",
+   "kit": "Kit_RealBakery_Chim",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Chim.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_Bakery/Kit_RealBakery_Chim_Fractured.fbx",
+   "position": {
+    "x": 1.4005,
+    "y": 3.2957,
+    "z": -1.5496
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "RfLB",
+    "UpB",
+    "Floor"
+   ],
+   "fracture_class": "Stone",
+   "tris": {
+    "LOD0": 288,
+    "LOD1": 184,
+    "LOD2": 128,
+    "Fractured": 312
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "Base",
+   "b": "ShopW",
+   "point": {
+    "x": 1.8984,
+    "y": 0.3459,
+    "z": 2.9725
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Base",
+   "b": "ShopD",
+   "point": {
+    "x": -2.0978,
+    "y": 0.3485,
+    "z": 3.0572
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Base",
+   "b": "WallL",
+   "point": {
+    "x": 3.8271,
+    "y": 0.3479,
+    "z": 0.0017
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Base",
+   "b": "WallR",
+   "point": {
+    "x": -3.828,
+    "y": 0.3469,
+    "z": -0.0012
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Base",
+   "b": "BackD",
+   "point": {
+    "x": -1.9981,
+    "y": 0.3459,
+    "z": -2.8033
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Base",
+   "b": "BackW",
+   "point": {
+    "x": 2.002,
+    "y": 0.3476,
+    "z": -2.828
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopW",
+   "b": "ShopD",
+   "point": {
+    "x": -0.2,
+    "y": 1.9244,
+    "z": 3.1822
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopW",
+   "b": "WallL",
+   "point": {
+    "x": 3.7729,
+    "y": 1.9237,
+    "z": 2.4665
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopW",
+   "b": "Floor",
+   "point": {
+    "x": 1.8984,
+    "y": 3.0184,
+    "z": 2.8405
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopW",
+   "b": "UpFL",
+   "point": {
+    "x": 2.6514,
+    "y": 3.5001,
+    "z": 3.3565
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopW",
+   "b": "UpFC",
+   "point": {
+    "x": 0.5471,
+    "y": 3.4988,
+    "z": 3.2793
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopW",
+   "b": "UpL",
+   "point": {
+    "x": 3.9241,
+    "y": 3.4985,
+    "z": 2.8496
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopD",
+   "b": "WallR",
+   "point": {
+    "x": -3.7731,
+    "y": 1.9256,
+    "z": 2.5492
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopD",
+   "b": "Floor",
+   "point": {
+    "x": -2.0978,
+    "y": 3.0196,
+    "z": 2.9252
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopD",
+   "b": "UpFC",
+   "point": {
+    "x": -0.747,
+    "y": 3.5,
+    "z": 3.2793
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopD",
+   "b": "UpFR",
+   "point": {
+    "x": -2.6507,
+    "y": 3.5003,
+    "z": 3.3556
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "ShopD",
+   "b": "UpR",
+   "point": {
+    "x": -3.924,
+    "y": 3.5,
+    "z": 2.9339
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "WallL",
+   "b": "BackW",
+   "point": {
+    "x": 3.7742,
+    "y": 1.9249,
+    "z": -2.5498
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "WallL",
+   "b": "Floor",
+   "point": {
+    "x": 3.7765,
+    "y": 3.0199,
+    "z": 0.0017
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "WallL",
+   "b": "UpL",
+   "point": {
+    "x": 3.9784,
+    "y": 3.5,
+    "z": 0.0017
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "WallR",
+   "b": "BackD",
+   "point": {
+    "x": -3.7743,
+    "y": 1.9232,
+    "z": -2.5508
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "WallR",
+   "b": "Floor",
+   "point": {
+    "x": -3.7774,
+    "y": 3.0196,
+    "z": -0.0012
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "WallR",
+   "b": "UpR",
+   "point": {
+    "x": -3.9788,
+    "y": 3.5,
+    "z": -0.0012
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "BackD",
+   "b": "BackW",
+   "point": {
+    "x": 0.0031,
+    "y": 1.9238,
+    "z": -2.8033
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "BackD",
+   "b": "Floor",
+   "point": {
+    "x": -1.9981,
+    "y": 3.0188,
+    "z": -2.5577
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "BackD",
+   "b": "UpB",
+   "point": {
+    "x": -1.9981,
+    "y": 3.4996,
+    "z": -2.9485
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "BackD",
+   "b": "UpR",
+   "point": {
+    "x": -3.9251,
+    "y": 3.4993,
+    "z": -2.7827
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "BackW",
+   "b": "Floor",
+   "point": {
+    "x": 2.002,
+    "y": 3.0196,
+    "z": -2.5575
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "BackW",
+   "b": "UpB",
+   "point": {
+    "x": 2.002,
+    "y": 3.5004,
+    "z": -2.9734
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "BackW",
+   "b": "UpL",
+   "point": {
+    "x": 3.9254,
+    "y": 3.4997,
+    "z": -2.7846
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor",
+   "b": "UpFL",
+   "point": {
+    "x": 2.655,
+    "y": 3.5192,
+    "z": 3.2219
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor",
+   "b": "UpFC",
+   "point": {
+    "x": -0.0,
+    "y": 3.518,
+    "z": 3.222
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor",
+   "b": "UpFR",
+   "point": {
+    "x": -2.655,
+    "y": 3.5183,
+    "z": 3.2219
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor",
+   "b": "UpL",
+   "point": {
+    "x": 3.9277,
+    "y": 3.5177,
+    "z": 0.368
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor",
+   "b": "UpR",
+   "point": {
+    "x": -3.9282,
+    "y": 3.518,
+    "z": 0.368
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Floor",
+   "b": "Chim",
+   "point": {
+    "x": 1.4005,
+    "y": 3.4178,
+    "z": -1.5496
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFL",
+   "b": "UpFC",
+   "point": {
+    "x": 1.3,
+    "y": 4.9,
+    "z": 3.2793
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFL",
+   "b": "UpL",
+   "point": {
+    "x": 3.9333,
+    "y": 4.9012,
+    "z": 3.2311
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFL",
+   "b": "GabL",
+   "point": {
+    "x": 3.9106,
+    "y": 6.2994,
+    "z": 3.2189
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFL",
+   "b": "RfLF",
+   "point": {
+    "x": 2.6606,
+    "y": 6.0432,
+    "z": 3.3565
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFC",
+   "b": "UpFR",
+   "point": {
+    "x": -1.3,
+    "y": 4.8991,
+    "z": 3.2793
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFC",
+   "b": "RfLF",
+   "point": {
+    "x": 0.647,
+    "y": 6.0421,
+    "z": 3.2793
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFC",
+   "b": "RfRF",
+   "point": {
+    "x": -0.6455,
+    "y": 6.0421,
+    "z": 3.2793
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFR",
+   "b": "UpR",
+   "point": {
+    "x": -3.9344,
+    "y": 4.8995,
+    "z": 3.2306
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFR",
+   "b": "GabR",
+   "point": {
+    "x": -3.9112,
+    "y": 6.2987,
+    "z": 3.2189
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpFR",
+   "b": "RfRF",
+   "point": {
+    "x": -2.6612,
+    "y": 6.0428,
+    "z": 3.3556
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpB",
+   "b": "UpL",
+   "point": {
+    "x": 3.9337,
+    "y": 4.8998,
+    "z": -2.9299
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpB",
+   "b": "UpR",
+   "point": {
+    "x": -3.9343,
+    "y": 4.8995,
+    "z": -2.9279
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpB",
+   "b": "GabL",
+   "point": {
+    "x": 3.9109,
+    "y": 6.2989,
+    "z": -2.9179
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpB",
+   "b": "GabR",
+   "point": {
+    "x": -3.911,
+    "y": 6.2986,
+    "z": -2.9179
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpB",
+   "b": "RfLB",
+   "point": {
+    "x": 1.9909,
+    "y": 6.0434,
+    "z": -2.9784
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpB",
+   "b": "RfRB",
+   "point": {
+    "x": -2.006,
+    "y": 6.043,
+    "z": -2.9784
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpL",
+   "b": "GabL",
+   "point": {
+    "x": 3.9588,
+    "y": 6.2994,
+    "z": 0.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpL",
+   "b": "RfLF",
+   "point": {
+    "x": 3.9879,
+    "y": 6.0433,
+    "z": 1.6787
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpL",
+   "b": "RfLB",
+   "point": {
+    "x": 3.9879,
+    "y": 6.0439,
+    "z": -1.3623
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpR",
+   "b": "GabR",
+   "point": {
+    "x": -3.9592,
+    "y": 6.2983,
+    "z": 0.15
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpR",
+   "b": "RfRF",
+   "point": {
+    "x": -3.9889,
+    "y": 6.0425,
+    "z": 1.6782
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "UpR",
+   "b": "RfRB",
+   "point": {
+    "x": -3.9889,
+    "y": 6.0427,
+    "z": -1.3602
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "GabL",
+   "b": "RfLF",
+   "point": {
+    "x": 3.936,
+    "y": 7.3347,
+    "z": 1.6665
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "GabL",
+   "b": "RfLB",
+   "point": {
+    "x": 3.936,
+    "y": 7.3347,
+    "z": -1.3503
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "GabR",
+   "b": "RfRF",
+   "point": {
+    "x": -3.9359,
+    "y": 7.3344,
+    "z": 1.6665
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "GabR",
+   "b": "RfRB",
+   "point": {
+    "x": -3.9359,
+    "y": 7.3344,
+    "z": -1.3503
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "RfLF",
+   "b": "RfLB",
+   "point": {
+    "x": 2.2217,
+    "y": 7.1575,
+    "z": 0.1663
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "RfLF",
+   "b": "RfRF",
+   "point": {
+    "x": 0.0015,
+    "y": 7.1569,
+    "z": 1.9203
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "RfLF",
+   "b": "RfRB",
+   "point": {
+    "x": 0.002,
+    "y": 7.1571,
+    "z": 0.1663
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "RfLB",
+   "b": "RfRF",
+   "point": {
+    "x": -0.0155,
+    "y": 7.1576,
+    "z": 0.1663
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "RfLB",
+   "b": "RfRB",
+   "point": {
+    "x": -0.015,
+    "y": 7.22,
+    "z": -1.6039
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "RfLB",
+   "b": "Chim",
+   "point": {
+    "x": 1.4005,
+    "y": 7.2206,
+    "z": -1.5496
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "RfRF",
+   "b": "RfRB",
+   "point": {
+    "x": -2.2182,
+    "y": 7.1572,
+    "z": 0.1663
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+ "props": [
+  {
+   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+   "position": {
+    "x": 2.9,
+    "y": 0.0,
+    "z": 4.35
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.04,
+    "z": 0.0,
+    "w": 0.9992
+   },
+   "note": "street side, indestructible prop (shared Props_Village atlas)"
+  },
+  {
+   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+   "position": {
+    "x": 2.05,
+    "y": 0.0,
+    "z": 4.4
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.06,
+    "z": 0.0,
+    "w": 0.9982
+   },
+   "note": "street side, indestructible prop (shared Props_Village atlas)"
+  },
+  {
+   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_BreadCrate.fbx",
+   "position": {
+    "x": 2.5,
+    "y": 0.42,
+    "z": 4.38
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.1494,
+    "z": 0.0,
+    "w": 0.9888
+   },
+   "note": "street side, indestructible prop (shared Props_Village atlas)"
+  },
+  {
+   "asset": "Assets/_Project/Models/Realistic/Props/Props_Village/Prop_Bench.fbx",
+   "position": {
+    "x": 0.75,
+    "y": 0.0,
+    "z": 4.15
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "note": "street side, indestructible prop (shared Props_Village atlas)"
+  }
+ ],
+ "dimensions_m": {
+  "walls_x": 8.0,
+  "walls_z": 6.0,
+  "eaves": 6.3,
+  "ridge": 8.52
+ }
+}

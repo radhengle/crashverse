@@ -1,0 +1,4 @@
+Kit_RealStall_Keystn_Fractured.fbx: frags=9 (Wood 8-16) tris max=98 total=596 mass 12.4-21.8 kg UCX=9 JNT=20 ANCHOR=9 -> PASS
+Kit_RealStall_StallA_Fractured.fbx: frags=10 (Wood 8-16) tris max=132 total=784 mass 13.2-40.4 kg UCX=10 JNT=22 ANCHOR=4 -> PASS
+Kit_RealStall_StallB_Fractured.fbx: frags=10 (Wood 8-16) tris max=132 total=784 mass 13.2-40.4 kg UCX=10 JNT=22 ANCHOR=4 -> PASS
+RESULT: ALL PASS

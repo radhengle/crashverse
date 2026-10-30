@@ -1,0 +1,56 @@
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexB.fbx [Kit] LOD0 tris=708 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexB_Fractured.fbx [KitFractured] LOD0 tris=764 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexF.fbx [Kit] LOD0 tris=1032 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_AnnexF_Fractured.fbx [KitFractured] LOD0 tris=1028 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackD.fbx [Kit] LOD0 tris=524 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackD_Fractured.fbx [KitFractured] LOD0 tris=468 LODs=[0] hulls=4 frags=4 -> PASS
+    warn  LOD0 468 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackW.fbx [Kit] LOD0 tris=482 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 482 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_BackW_Fractured.fbx [KitFractured] LOD0 tris=478 LODs=[0] hulls=4 frags=4 -> PASS
+    warn  LOD0 478 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Balc.fbx [Kit] LOD0 tris=1044 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Balc_Fractured.fbx [KitFractured] LOD0 tris=724 LODs=[0] hulls=9 frags=9 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Base.fbx [Kit] LOD0 tris=336 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 336 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Chim.fbx [Kit] LOD0 tris=284 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 284 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Chim_Fractured.fbx [KitFractured] LOD0 tris=192 LODs=[0] hulls=5 frags=5 -> PASS
+    warn  LOD0 192 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Floor.fbx [Kit] LOD0 tris=1164 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_Floor_Fractured.fbx [KitFractured] LOD0 tris=1316 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabL.fbx [Kit] LOD0 tris=340 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 340 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabL_Fractured.fbx [KitFractured] LOD0 tris=408 LODs=[0] hulls=12 frags=12 -> PASS
+    warn  LOD0 408 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabR.fbx [Kit] LOD0 tris=364 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 364 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_GabR_Fractured.fbx [KitFractured] LOD0 tris=464 LODs=[0] hulls=12 frags=12 -> PASS
+    warn  LOD0 464 < 500
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLB.fbx [Kit] LOD0 tris=1408 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLB_Fractured.fbx [KitFractured] LOD0 tris=580 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLF.fbx [Kit] LOD0 tris=1380 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofLF_Fractured.fbx [KitFractured] LOD0 tris=1392 LODs=[0] hulls=9 frags=9 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRB.fbx [Kit] LOD0 tris=1032 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRB_Fractured.fbx [KitFractured] LOD0 tris=1364 LODs=[0] hulls=12 frags=12 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRF.fbx [Kit] LOD0 tris=1308 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_RoofRF_Fractured.fbx [KitFractured] LOD0 tris=1472 LODs=[0] hulls=14 frags=14 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopD.fbx [Kit] LOD0 tris=1360 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopD_Fractured.fbx [KitFractured] LOD0 tris=734 LODs=[0] hulls=7 frags=7 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopW.fbx [Kit] LOD0 tris=1310 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_ShopW_Fractured.fbx [KitFractured] LOD0 tris=686 LODs=[0] hulls=7 frags=7 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpB.fbx [Kit] LOD0 tris=892 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpB_Fractured.fbx [KitFractured] LOD0 tris=1264 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFL.fbx [Kit] LOD0 tris=1076 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFL_Fractured.fbx [KitFractured] LOD0 tris=844 LODs=[0] hulls=14 frags=14 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFR.fbx [Kit] LOD0 tris=960 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpFR_Fractured.fbx [KitFractured] LOD0 tris=852 LODs=[0] hulls=12 frags=12 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpL.fbx [Kit] LOD0 tris=752 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpL_Fractured.fbx [KitFractured] LOD0 tris=1080 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpR.fbx [Kit] LOD0 tris=864 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_UpR_Fractured.fbx [KitFractured] LOD0 tris=1216 LODs=[0] hulls=16 frags=16 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallL.fbx [Kit] LOD0 tris=506 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallL_Fractured.fbx [KitFractured] LOD0 tris=562 LODs=[0] hulls=6 frags=6 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallR.fbx [Kit] LOD0 tris=566 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+wt/realistic-v1/Assets/_Project/Models/Realistic/Buildings/Bld_Townhouse/Kit_RealHouse_WallR_Fractured.fbx [KitFractured] LOD0 tris=554 LODs=[0] hulls=6 frags=6 -> PASS
+RESULT: ALL PASS (45 groups, 45 files)

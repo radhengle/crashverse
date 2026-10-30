@@ -1,0 +1,46 @@
+Kit_RealHouse_AnnexB.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_AnnexB_Fractured.fbx: meshes=16 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_AnnexF.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_AnnexF_Fractured.fbx: meshes=16 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_BackD.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_BackD_Fractured.fbx: meshes=4 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_BackW.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_BackW_Fractured.fbx: meshes=4 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_Balc.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_Balc_Fractured.fbx: meshes=9 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_Base.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_Chim.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_Chim_Fractured.fbx: meshes=5 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_Floor.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_Floor_Fractured.fbx: meshes=16 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_GabL.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_GabL_Fractured.fbx: meshes=12 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_GabR.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_GabR_Fractured.fbx: meshes=12 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_RoofLB.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_RoofLB_Fractured.fbx: meshes=16 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_RoofLF.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_RoofLF_Fractured.fbx: meshes=9 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_RoofRB.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_RoofRB_Fractured.fbx: meshes=12 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_RoofRF.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_RoofRF_Fractured.fbx: meshes=14 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_ShopD.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_ShopD_Fractured.fbx: meshes=7 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_ShopW.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_ShopW_Fractured.fbx: meshes=7 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_UpB.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpB_Fractured.fbx: meshes=16 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_UpFL.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpFL_Fractured.fbx: meshes=14 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_UpFR.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpFR_Fractured.fbx: meshes=12 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_UpL.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpL_Fractured.fbx: meshes=16 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_UpR.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_UpR_Fractured.fbx: meshes=16 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_WallL.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_WallL_Fractured.fbx: meshes=6 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+Kit_RealHouse_WallR.fbx: meshes=3 materials=['M_RealHouse'] -> PASS
+Kit_RealHouse_WallR_Fractured.fbx: meshes=6 materials=['M_RealHouse', 'M_RealHouse_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS

@@ -1,0 +1,497 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Bld_MarketArch",
+ "style": "realistic v1",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); arch plane is X/Y; +Z = market front; positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  }
+ },
+ "tris_total": {
+  "LOD0": 1564,
+  "LOD1": 1060,
+  "LOD2": 648,
+  "Fractured": 1824
+ },
+ "footprint_m": {
+  "x": 11.1,
+  "z": 0.7
+ },
+ "height_m": 4.8,
+ "module_count": 5,
+ "modules": [
+  {
+   "id": "Base",
+   "label": "Granite post pads (indestructible)",
+   "pivot": {
+    "x": -0.0,
+    "y": 0.0,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 10.7,
+    "z": 0.7
+   },
+   "height_m": 0.2,
+   "top_y_m": 0.2,
+   "pieces": [
+    "Pads"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 88,
+    "LOD1": 24,
+    "LOD2": 24
+   }
+  },
+  {
+   "id": "Post_Left",
+   "label": "Timber post, left",
+   "pivot": {
+    "x": 4.4923,
+    "y": 0.2,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.455,
+    "z": 0.44
+   },
+   "height_m": 3.76,
+   "top_y_m": 3.96,
+   "pieces": [
+    "PostL"
+   ],
+   "anchor_to": [
+    "Base"
+   ],
+   "tris": {
+    "LOD0": 204,
+    "LOD1": 108,
+    "LOD2": 64
+   }
+  },
+  {
+   "id": "Post_Right",
+   "label": "Timber post, right",
+   "pivot": {
+    "x": -4.4904,
+    "y": 0.2,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.459,
+    "z": 0.44
+   },
+   "height_m": 3.76,
+   "top_y_m": 3.96,
+   "pieces": [
+    "PostR"
+   ],
+   "anchor_to": [
+    "Base"
+   ],
+   "tris": {
+    "LOD0": 220,
+    "LOD1": 116,
+    "LOD2": 28
+   }
+  },
+  {
+   "id": "Beam",
+   "label": "Timber beam spanning 10.4 m, 3.5 m clear",
+   "pivot": {
+    "x": -0.0,
+    "y": 3.46,
+    "z": 0.0009
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 11.1,
+    "z": 0.422
+   },
+   "height_m": 0.524,
+   "top_y_m": 3.984,
+   "pieces": [
+    "Beam"
+   ],
+   "anchor_to": [
+    "Post_Left",
+    "Post_Right"
+   ],
+   "tris": {
+    "LOD0": 448,
+    "LOD1": 240,
+    "LOD2": 236
+   }
+  },
+  {
+   "id": "Sign",
+   "label": "Steel sign, no text",
+   "pivot": {
+    "x": -0.0,
+    "y": 3.9762,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 2.655,
+    "z": 0.3
+   },
+   "height_m": 0.824,
+   "top_y_m": 4.8,
+   "pieces": [
+    "Sign"
+   ],
+   "anchor_to": [
+    "Beam"
+   ],
+   "tris": {
+    "LOD0": 604,
+    "LOD1": 572,
+    "LOD2": 296
+   }
+  }
+ ],
+ "piece_count": 5,
+ "pieces": [
+  {
+   "id": "Pads",
+   "label": "Granite post pads (indestructible)",
+   "module": "Base",
+   "kit": "Kit_RealStall_Pads",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Pads.fbx",
+   "fractured": null,
+   "position": {
+    "x": -0.0,
+    "y": 0.0,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Indestructible",
+   "tris": {
+    "LOD0": 88,
+    "LOD1": 24,
+    "LOD2": 24
+   }
+  },
+  {
+   "id": "PostL",
+   "label": "Arch post left + knee brace + steel shoe",
+   "module": "Post_Left",
+   "kit": "Kit_RealStall_PostL",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostL_Fractured.fbx",
+   "position": {
+    "x": 4.4923,
+    "y": 0.2,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Pads"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 204,
+    "LOD1": 108,
+    "LOD2": 64,
+    "Fractured": 272
+   }
+  },
+  {
+   "id": "PostR",
+   "label": "Arch post right + knee brace + steel shoe",
+   "module": "Post_Right",
+   "kit": "Kit_RealStall_PostR",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_PostR_Fractured.fbx",
+   "position": {
+    "x": -4.4904,
+    "y": 0.2,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Pads"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 220,
+    "LOD1": 116,
+    "LOD2": 28,
+    "Fractured": 268
+   }
+  },
+  {
+   "id": "Beam",
+   "label": "Arch beam (10.4 m) + cap board + lantern hooks",
+   "module": "Beam",
+   "kit": "Kit_RealStall_Beam",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Beam_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 3.46,
+    "z": 0.0009
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "PostL",
+    "PostR"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 448,
+    "LOD1": 240,
+    "LOD2": 236,
+    "Fractured": 592
+   }
+  },
+  {
+   "id": "Sign",
+   "label": "Steel sign box (no text) bolted to the beam cap on two steel bracket frames",
+   "module": "Sign",
+   "kit": "Kit_RealStall_Sign",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Bld_MarketArch/Kit_RealStall_Sign_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 3.9762,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Beam"
+   ],
+   "fracture_class": "Steel",
+   "tris": {
+    "LOD0": 604,
+    "LOD1": 572,
+    "LOD2": 296,
+    "Fractured": 692
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "Pads",
+   "b": "PostL",
+   "point": {
+    "x": 4.4923,
+    "y": 0.2,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Pads",
+   "b": "PostR",
+   "point": {
+    "x": -4.4904,
+    "y": 0.2,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "PostL",
+   "b": "Beam",
+   "point": {
+    "x": 4.4923,
+    "y": 3.71,
+    "z": 0.0009
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "PostR",
+   "b": "Beam",
+   "point": {
+    "x": -4.4904,
+    "y": 3.71,
+    "z": 0.0009
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Beam",
+   "b": "Sign",
+   "point": {
+    "x": -0.0,
+    "y": 3.9801,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+ "stall_slots": [
+  {
+   "slot": 1,
+   "position": {
+    "x": 3.3,
+    "y": 0.0,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "piece": "Kit_RealStall (Keystn + StallA/StallB)"
+  },
+  {
+   "slot": 2,
+   "position": {
+    "x": 1.1,
+    "y": 0.0,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "piece": "Kit_RealStall (Keystn + StallA/StallB)"
+  },
+  {
+   "slot": 3,
+   "position": {
+    "x": -1.1,
+    "y": 0.0,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "piece": "Kit_RealStall (Keystn + StallA/StallB)"
+  },
+  {
+   "slot": 4,
+   "position": {
+    "x": -3.3,
+    "y": 0.0,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "piece": "Kit_RealStall (Keystn + StallA/StallB)"
+  }
+ ],
+ "clear_span_m": 9.6,
+ "clear_height_m": 3.5,
+ "pitch_m": 2.2,
+ "overall_span_m": 10.4
+}

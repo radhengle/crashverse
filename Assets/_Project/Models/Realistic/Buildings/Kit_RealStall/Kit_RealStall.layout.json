@@ -1,0 +1,238 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Kit_RealStall",
+ "style": "realistic v1",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); counter front faces +Z; positions local to the building root. Every piece pivot = its module pivot (centre of the module base footprint), so all pieces of a module drop in at the module position",
+ "root": {
+  "position": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": 0.0,
+   "z": 0.0,
+   "w": 1.0
+  }
+ },
+ "tris_total": {
+  "LOD0": 2988,
+  "LOD1": 1356,
+  "LOD2": 948,
+  "Fractured": 2164
+ },
+ "footprint_m": {
+  "x": 1.7,
+  "z": 2.174
+ },
+ "height_m": 2.4,
+ "module_count": 2,
+ "modules": [
+  {
+   "id": "Stall",
+   "label": "Market stall: counter, corner posts, rails, striped cloth awning (choose StallA or StallB)",
+   "pivot": {
+    "x": -0.0,
+    "y": 0.22,
+    "z": 0.1873
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.7,
+    "z": 2.174
+   },
+   "height_m": 2.18,
+   "top_y_m": 2.4,
+   "pieces": [
+    "StallA",
+    "StallB"
+   ],
+   "anchor_to": [
+    "Keystone"
+   ],
+   "tris": {
+    "LOD0": 2248,
+    "LOD1": 1056,
+    "LOD2": 752
+   }
+  },
+  {
+   "id": "Keystone",
+   "label": "Wooden keystone skid under the stall",
+   "pivot": {
+    "x": -0.0,
+    "y": -0.0098,
+    "z": -0.0
+   },
+   "pivot_rule": "centre of the base footprint, +Z = front",
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "footprint_m": {
+    "x": 1.6,
+    "z": 1.8
+   },
+   "height_m": 0.225,
+   "top_y_m": 0.215,
+   "pieces": [
+    "Keystn"
+   ],
+   "anchor_to": [
+    "Ground"
+   ],
+   "tris": {
+    "LOD0": 740,
+    "LOD1": 300,
+    "LOD2": 196
+   }
+  }
+ ],
+ "piece_count": 3,
+ "pieces": [
+  {
+   "id": "Keystn",
+   "label": "Keystone: wooden skid the stall rests on (separate prop piece)",
+   "module": "Keystone",
+   "kit": "Kit_RealStall_Keystn",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_Keystn_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": -0.0098,
+    "z": -0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 740,
+    "LOD1": 300,
+    "LOD2": 196,
+    "Fractured": 596
+   }
+  },
+  {
+   "id": "StallA",
+   "label": "Market stall, red/cream awning (variant A)",
+   "module": "Stall",
+   "kit": "Kit_RealStall_StallA",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallA_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 0.22,
+    "z": 0.1873
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Keystn"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1124,
+    "LOD1": 528,
+    "LOD2": 376,
+    "Fractured": 784
+   },
+   "default": true,
+   "variants": [
+    "StallB"
+   ]
+  },
+  {
+   "id": "StallB",
+   "label": "Market stall, blue/cream awning (variant B: same mesh, UV offset to the StripeB cell)",
+   "module": "Stall",
+   "kit": "Kit_RealStall_StallB",
+   "intact": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB.fbx",
+   "fractured": "Assets/_Project/Models/Realistic/Buildings/Kit_RealStall/Kit_RealStall_StallB_Fractured.fbx",
+   "position": {
+    "x": -0.0,
+    "y": 0.22,
+    "z": 0.1873
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Keystn"
+   ],
+   "fracture_class": "Wood",
+   "tris": {
+    "LOD0": 1124,
+    "LOD1": 528,
+    "LOD2": 376,
+    "Fractured": 784
+   },
+   "variant_of": "StallA",
+   "default": false
+  }
+ ],
+ "connections": [
+  {
+   "a": "Keystn",
+   "b": "StallA",
+   "point": {
+    "x": -0.0,
+    "y": 0.2175,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Keystn",
+   "b": "StallB",
+   "point": {
+    "x": -0.0,
+    "y": 0.2175,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": [],
+ "anchor_note": "fragment ANCHOR_ empties carry anchor_to 'Ground' or 'Support'; for 'Support' use this piece's anchor_to list. Pieces without 'fractured' are indestructible.",
+ "variant_note": "StallA/StallB: identical geometry and tris, one material M_RealStall; the awning UVs sit in the Stripe (red) or StripeB (blue) atlas cell. Place exactly one of them on the Keystone."
+}

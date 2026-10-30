@@ -1,0 +1,23 @@
+Kit_RealHouse_AnnexB_Fractured.fbx: frags=16 (Wood 8-16) tris max=132 total=764 mass 19.3-117.9 kg UCX=16 JNT=39 ANCHOR=5 -> PASS
+Kit_RealHouse_AnnexF_Fractured.fbx: frags=16 (Wood 8-16) tris max=148 total=1028 mass 19.3-139.4 kg UCX=16 JNT=43 ANCHOR=5 -> PASS
+Kit_RealHouse_BackD_Fractured.fbx: frags=4 (Stone 4-10) tris max=196 total=468 mass 1470.4-2989.4 kg UCX=4 JNT=5 ANCHOR=2 -> PASS
+Kit_RealHouse_BackW_Fractured.fbx: frags=4 (Stone 4-10) tris max=228 total=478 mass 1413.6-2881.6 kg UCX=4 JNT=5 ANCHOR=2 -> PASS
+Kit_RealHouse_Balc_Fractured.fbx: frags=9 (Wood 8-16) tris max=188 total=724 mass 2.9-32.1 kg UCX=9 JNT=18 ANCHOR=2 -> PASS
+Kit_RealHouse_Chim_Fractured.fbx: frags=5 (Stone 4-10) tris max=52 total=192 mass 10.7-1247.2 kg UCX=5 JNT=4 ANCHOR=1 -> PASS
+Kit_RealHouse_Floor_Fractured.fbx: frags=16 (Wood 8-16) tris max=240 total=1316 mass 155.0-306.3 kg UCX=16 JNT=37 ANCHOR=9 -> PASS
+Kit_RealHouse_GabL_Fractured.fbx: frags=12 (Wood 8-16) tris max=96 total=408 mass 17.1-145.4 kg UCX=12 JNT=25 ANCHOR=6 -> PASS
+Kit_RealHouse_GabR_Fractured.fbx: frags=12 (Wood 8-16) tris max=92 total=464 mass 17.1-139.2 kg UCX=12 JNT=24 ANCHOR=6 -> PASS
+Kit_RealHouse_RoofLB_Fractured.fbx: frags=16 (Roof 8-16) tris max=88 total=580 mass 42.6-315.9 kg UCX=16 JNT=41 ANCHOR=2 -> PASS
+Kit_RealHouse_RoofLF_Fractured.fbx: frags=9 (Roof 8-16) tris max=276 total=1392 mass 49.0-1062.7 kg UCX=9 JNT=21 ANCHOR=2 -> PASS
+Kit_RealHouse_RoofRB_Fractured.fbx: frags=12 (Roof 8-16) tris max=248 total=1364 mass 207.4-459.8 kg UCX=12 JNT=27 ANCHOR=4 -> PASS
+Kit_RealHouse_RoofRF_Fractured.fbx: frags=14 (Roof 8-16) tris max=152 total=1472 mass 58.4-374.7 kg UCX=14 JNT=35 ANCHOR=2 -> PASS
+Kit_RealHouse_ShopD_Fractured.fbx: frags=7 (Stone 4-10) tris max=192 total=734 mass 25.6-1915.3 kg UCX=7 JNT=13 ANCHOR=3 -> PASS
+Kit_RealHouse_ShopW_Fractured.fbx: frags=7 (Stone 4-10) tris max=170 total=686 mass 30.6-2362.3 kg UCX=7 JNT=20 ANCHOR=2 -> PASS
+Kit_RealHouse_UpB_Fractured.fbx: frags=16 (Wood 8-16) tris max=184 total=1264 mass 80.6-170.3 kg UCX=16 JNT=34 ANCHOR=7 -> PASS
+Kit_RealHouse_UpFL_Fractured.fbx: frags=14 (Wood 8-16) tris max=164 total=844 mass 7.5-112.0 kg UCX=14 JNT=43 ANCHOR=3 -> PASS
+Kit_RealHouse_UpFR_Fractured.fbx: frags=12 (Wood 8-16) tris max=128 total=852 mass 26.4-114.7 kg UCX=12 JNT=29 ANCHOR=4 -> PASS
+Kit_RealHouse_UpL_Fractured.fbx: frags=16 (Wood 8-16) tris max=192 total=1080 mass 54.2-140.3 kg UCX=16 JNT=41 ANCHOR=6 -> PASS
+Kit_RealHouse_UpR_Fractured.fbx: frags=16 (Wood 8-16) tris max=156 total=1216 mass 54.2-145.2 kg UCX=16 JNT=35 ANCHOR=6 -> PASS
+Kit_RealHouse_WallL_Fractured.fbx: frags=6 (Stone 4-10) tris max=216 total=562 mass 1308.4-2762.9 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
+Kit_RealHouse_WallR_Fractured.fbx: frags=6 (Stone 4-10) tris max=210 total=554 mass 1255.1-2596.9 kg UCX=6 JNT=9 ANCHOR=3 -> PASS
+RESULT: ALL PASS

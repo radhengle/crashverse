@@ -1,0 +1,5 @@
+Kit_RealStall_Beam_Fractured.fbx: frags=12 (Wood 8-16) tris max=64 total=592 mass 89.5-92.5 kg UCX=12 JNT=11 ANCHOR=12 -> PASS
+Kit_RealStall_PostL_Fractured.fbx: frags=9 (Wood 8-16) tris max=62 total=272 mass 4.5-70.7 kg UCX=9 JNT=9 ANCHOR=1 -> PASS
+Kit_RealStall_PostR_Fractured.fbx: frags=8 (Wood 8-16) tris max=78 total=268 mass 10.6-70.7 kg UCX=8 JNT=8 ANCHOR=1 -> PASS
+Kit_RealStall_Sign_Fractured.fbx: frags=5 (Steel 4-10) tris max=228 total=692 mass 49.1-798.2 kg UCX=5 JNT=4 ANCHOR=2 -> PASS
+RESULT: ALL PASS
