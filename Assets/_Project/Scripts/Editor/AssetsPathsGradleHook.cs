@@ -55,14 +55,21 @@ namespace Crashverse.EditorTools
 
             // 2. aapt2 able to read the API 36 resource table
             var props = Path.Combine(root, "gradle.properties");
-            var p = SafeRead(props);
-            if (!p.Contains("android.aapt2FromMavenOverride"))
+            // Unity sometimes writes its own override (build-tools/34 aapt2, which can't read API 36 / symbolic assetsPaths) with no trailing
+            // newline (run 41085758678: our line got glued onto it). Always drop it and pin ours, one key per line.
+            var aapt2 = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), ".aapt2-override", "aapt2"));
+            if (!File.Exists(aapt2)) throw new BuildFailedException("[V2-01] " + aapt2 + " missing: the workflow must fetch the pinned aapt2 8.7.3 first");
+            var keep = new System.Collections.Generic.List<string>();
+            foreach (var line in SafeRead(props).Replace("\r\n", "\n").Split('\n'))
             {
-                var aapt2 = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), ".aapt2-override", "aapt2"));
-                if (!File.Exists(aapt2)) throw new BuildFailedException("[V2-01] " + aapt2 + " missing: the workflow must fetch the pinned aapt2 8.7.3 first");
-                p += $"\nandroid.aapt2FromMavenOverride={aapt2}\n";
+                var t = line.Trim();
+                if (t.Length == 0 || t.StartsWith("android.aapt2FromMavenOverride") || t.StartsWith("android.suppressUnsupportedCompileSdk")) continue;
+                keep.Add(line);
             }
-            if (!p.Contains("android.suppressUnsupportedCompileSdk")) p += $"android.suppressUnsupportedCompileSdk={CompileSdk}\n";
+            keep.Add("android.aapt2FromMavenOverride=" + aapt2);
+            keep.Add("android.suppressUnsupportedCompileSdk=" + CompileSdk);
+            var p = string.Join("\n", keep) + "\n";
+            Debug.Log("[V2-01] gradle.properties: aapt2FromMavenOverride=" + aapt2);
             File.WriteAllText(props, p);
 
             // 3. manifest token
