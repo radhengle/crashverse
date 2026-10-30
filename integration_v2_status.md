@@ -1,5 +1,5 @@
 # integration/v2 status (Dev lead running checklist; resume from here)
-Updated: 2026-10-30 23:25 IST.
+Updated: 2026-10-30 23:50 IST.
 
 ## Merges
 - [x] wip/graphics a11b6b3, wip/vfx 453fba5, wip/anim 7ed1a90, wip/sound 30b01eb
@@ -22,3 +22,11 @@ Updated: 2026-10-30 23:25 IST.
 ## CI
 - 097cf3a: APK (dev+release+11 emulator), AAB, EditMode, server-ci all green (run 41090876169)
 - 6f25553+: smoke [CAM] gate fix; PR run pending
+
+## Old draft PRs (2026-10-30 night)
+- #3 dev/developer-wip: folded music loop data only (76673af: loop table = shipped .ogg, Tidewarden 144 BPM, Titan 150 BPM). Age bands already in (f3fc100). Skipped: InstallId / ageToken / /v1 routes (online backend; offline v1 uses OfflineBackendService; its InstallId used security-crypto, which Security rejected), 2.4 Hz shutter (superseded by the 2 Hz tell spec).
+- #10 dev/gem-pack-flag: already folded (03d6001).
+- #21 release/apk-hardening: already folded (b7702a7 backup/dataExtractionRules, 9444737 check_apk asserts + portrait); root txt dumps not taken.
+- #24 art/age-gate-v2 and #38 ui-dev/age-gate-final: not folded. Age gate restyle is outside the L1-10/boss scope for dev-build-8. PrivacyUrlBuildGuard would fail every release build until Security supplies the privacy URL. #38's year picker anchor (current-18) conflicts with Security's neutral anchor (#52).
+- [ ] close comments on #3 #10 #21 #24 #38 (branches kept)
+- [ ] CI green on the final head
