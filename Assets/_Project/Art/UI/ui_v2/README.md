@@ -40,7 +40,7 @@ All 8 power-ups share one tile: a gold bevel frame around a navy panel with roun
 Safe areas: the top 158px is sky only and the bottom 72px is calm water, sand, snow, plaza or grass. Canny edge density measured 0.000–0.002 in the top band and 0.000–0.001 in the bottom band, against 0.08–0.14 in the middle. contact_sheet.png shows the bands as cyan guides.
 
 ### Season rename
-The target's "Jurassic World" season is **Primeval Peaks** here, renamed earlier for trademark reasons. The file is `bg_season_primeval_peaks.png`. Nothing in this pack uses the old name.
+The target mockup's dinosaur-themed season is **Primeval Peaks** here (renamed earlier for trademark reasons). The file is `bg_season_primeval_peaks.png`. Nothing in this pack uses the old name.
 
 ## Pipeline (scripts in this folder; re-run order: key.py cuts → fix_avatars_badges.py → fix_chest.py → make_star_off.py → make_bg.py → fix_primeval_top.py → build_contact.py)
 - `key.py`: green-screen key for Canva sheets on flat #00FF00. Alpha comes from the colour distance to the sampled background, edges are un-premultiplied (despill), the eroded interior is forced opaque, and per-cell specks are removed. Each item is cut to a 256px canvas.
