@@ -1,0 +1,15 @@
+Kit_RealWood_Block_Fractured.fbx: frags=12 (Wood 8-16) tris max=116 total=902 mass 38.0-102.5 kg UCX=12 JNT=34 ANCHOR=8 -> PASS
+RESULT: ALL PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block.fbx [Kit] LOD0 tris=716 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Kit_RealWood_Block_Fractured.fbx [KitFractured] LOD0 tris=902 LODs=[0] hulls=12 frags=12 -> PASS
+RESULT: ALL PASS (2 groups, 2 files)
+Kit_RealWood_Block.fbx: meshes=3 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
+Kit_RealWood_Block_Fractured.fbx: meshes=12 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
+MESHDATA RESULT: ALL PASS
+Buildings/Kit_RealWood/Kit_RealWood_Block.fbx: LOD0=716t/2m LOD1=44t/2m LOD2=12t/2m hulls=1 materials=['M_RealWood', 'M_RealWood_Inner'] -> PASS
+FBX version: 7400
+Foliage/Bush/Bush.fbx: LOD0=1150t/1m LOD1=288t/1m LOD2=92t/1m LOD3=4t/1m hulls=0 materials=['M_Bush', 'M_Bush_Billboard'] -> PASS
+--
+REALISM RESULT: ALL PASS
+Blender 4.2.3 LTS (hash 0e22e4fcea03 built 2024-10-14 23:31:34)
+

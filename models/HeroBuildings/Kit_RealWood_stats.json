@@ -1,0 +1,52 @@
+{
+ "building": "RealWood",
+ "source": "BuildingKit v3.1 geometry + fracture, re-surfaced with graded CC0 (realistic v1)",
+ "modules": {
+  "Block": {
+   "LOD0": 716,
+   "LOD1": 44,
+   "LOD2": 12,
+   "ucx": 1,
+   "size_m": [
+    1.02,
+    1.0,
+    1.0
+   ],
+   "aabb": [
+    [
+     -0.51,
+     -0.5,
+     -0.0
+    ],
+    [
+     0.51,
+     0.5,
+     1.0
+    ]
+   ],
+   "frags": 12,
+   "frag_max": 116,
+   "Fractured": 902,
+   "mass": "38.0-102.5",
+   "min_axis_m": 0.291,
+   "joints": 34,
+   "anchors": 8,
+   "anchor_to": [
+    "Ground"
+   ],
+   "pivot_com": "kit v3.1: each fragment origin = closed-volume centre of mass",
+   "frac": "Wood",
+   "source": "Tools/Blender/build_kit2.py Block (kit v3.1 recipe)"
+  }
+ },
+ "tile_m": 1.4,
+ "uv": "UV0 metric box projection, uv = pos_m / tile_m (rebuild from scaled positions after per-block scaling)",
+ "materials": [
+  "M_RealWood",
+  "M_RealWood_Inner"
+ ],
+ "textures": [
+  "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Textures/T_RealWood_A/_N/_ORM",
+  "Assets/_Project/Models/Realistic/Buildings/Kit_RealWood/Textures/T_RealWood_Inner_A/_N/_ORM"
+ ]
+}
