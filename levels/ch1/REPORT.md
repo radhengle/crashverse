@@ -341,4 +341,4 @@ the MarketArch sign (2.66 × 0.30 × 0.82, bolted to the beam cap). L8 uses that
   - **Side slack kept:** minimum 39 px, the same width-bound levels (L5/L8 at 1080×1920) as before; everywhere else it grew.
   - **Every EditMode-test assertion passes on all six aspects**, including the phone cannon-width check (the phone aspects are all < 0.7).
   - **Every hint arc and target is on screen.**
-  - The default-mode table is in `frame_check.json`; Ch1_Levels_v1.md was not regenerated in this rev.
+  - The default-mode table is in `frame_check.json`, and Ch1_Levels_v1.md was regenerated with the new per-level frame numbers.
