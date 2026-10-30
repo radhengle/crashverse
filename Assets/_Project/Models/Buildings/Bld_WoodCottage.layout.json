@@ -1,0 +1,1682 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Bld_WoodCottage",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); positions/rotations local to the building root",
+ "root": {
+  "position": {
+   "x": 9.0,
+   "y": 0.0,
+   "z": -1.0
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": -1.0,
+   "z": 0.0,
+   "w": 0.0
+  },
+  "note": "suggested village placement on Island_Sunnyville"
+ },
+ "tris_total": {
+  "LOD0": 22636,
+  "LOD1": 2016,
+  "LOD2": 544,
+  "Fractured": 13752
+ },
+ "piece_count": 24,
+ "pieces": [
+  {
+   "id": "G_F1_WallDoor",
+   "kit": "Kit_Wood_WallDoor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallDoor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallDoor_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 916,
+    "LOD1": 132,
+    "LOD2": 36,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_F1_WallDoor_Frame",
+   "kit": "Kit_Wood_DoorFrame",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 740,
+    "LOD1": 132,
+    "LOD2": 36,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_F2_WallWindow",
+   "kit": "Kit_Wood_WallWindow",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1016,
+    "LOD1": 176,
+    "LOD2": 48,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_F2_WallWindow_Frame",
+   "kit": "Kit_Wood_WindowFrame",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 0.85,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "G_F2_WallWindow"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 796,
+    "LOD1": 176,
+    "LOD2": 48,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_B1_WallWindow",
+   "kit": "Kit_Wood_WallWindow",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 0.0,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1016,
+    "LOD1": 176,
+    "LOD2": 48,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_B1_WallWindow_Frame",
+   "kit": "Kit_Wood_WindowFrame",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 0.85,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "G_B1_WallWindow"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 796,
+    "LOD1": 176,
+    "LOD2": 48,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_B2_Wall",
+   "kit": "Kit_Wood_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 0.0,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1068,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 668
+   }
+  },
+  {
+   "id": "G_L1_Wall",
+   "kit": "Kit_Wood_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Wall_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1068,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 668
+   }
+  },
+  {
+   "id": "G_R1_WallWindow",
+   "kit": "Kit_Wood_WallWindow",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallWindow_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1016,
+    "LOD1": 176,
+    "LOD2": 48,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_R1_WallWindow_Frame",
+   "kit": "Kit_Wood_WindowFrame",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WindowFrame_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 0.85,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "G_R1_WallWindow"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 796,
+    "LOD1": 176,
+    "LOD2": 48,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_J_-3_-2",
+   "kit": "Kit_Wood_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_J_-3_+2",
+   "kit": "Kit_Wood_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 0.0,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_J_+0_-2",
+   "kit": "Kit_Wood_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_J_+0_+2",
+   "kit": "Kit_Wood_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_J_+3_-2",
+   "kit": "Kit_Wood_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_J_+3_+2",
+   "kit": "Kit_Wood_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Joint_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 0.0,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "Attic_00",
+   "kit": "Kit_Wood_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "G_F1_WallDoor",
+    "G_F2_WallWindow",
+    "G_B1_WallWindow",
+    "G_B2_Wall",
+    "G_L1_Wall"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1068,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 684
+   }
+  },
+  {
+   "id": "Attic_10",
+   "kit": "Kit_Wood_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Floor_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "G_F1_WallDoor",
+    "G_F2_WallWindow",
+    "G_B1_WallWindow",
+    "G_B2_Wall",
+    "G_R1_WallWindow"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1068,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 684
+   }
+  },
+  {
+   "id": "Top_Gable_-1",
+   "kit": "Kit_Wood_Gable",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Gable.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Gable_Fractured.fbx",
+   "position": {
+    "x": 3.0,
+    "y": 3.2,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Attic_00"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 736,
+    "LOD1": 40,
+    "LOD2": 8,
+    "Fractured": 500
+   }
+  },
+  {
+   "id": "Top_Gable_1",
+   "kit": "Kit_Wood_Gable",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Gable.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_Gable_Fractured.fbx",
+   "position": {
+    "x": -3.0,
+    "y": 3.2,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Attic_10"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 736,
+    "LOD1": 40,
+    "LOD2": 8,
+    "Fractured": 500
+   }
+  },
+  {
+   "id": "Top_Roof_S1",
+   "kit": "Kit_Roof_Roof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 3.5905,
+    "z": 0.9421
+   },
+   "rotation": {
+    "x": 0.3006,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 0.9537
+   },
+   "euler_zxy_deg": {
+    "x": 34.992,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Top_Gable_-1",
+    "Attic_00",
+    "Attic_10"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1112,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 664
+   }
+  },
+  {
+   "id": "Top_Roof_S2",
+   "kit": "Kit_Roof_Roof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 3.6003,
+    "z": 0.949
+   },
+   "rotation": {
+    "x": 0.3006,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 0.9537
+   },
+   "euler_zxy_deg": {
+    "x": 34.992,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Top_Gable_1",
+    "Attic_00",
+    "Attic_10"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1112,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 664
+   }
+  },
+  {
+   "id": "Top_Roof_N1",
+   "kit": "Kit_Roof_Roof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 3.5905,
+    "z": -0.9421
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.9537,
+    "z": -0.3006,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 34.992,
+    "y": 180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Top_Gable_-1",
+    "Attic_00",
+    "Attic_10"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1112,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 664
+   }
+  },
+  {
+   "id": "Top_Roof_N2",
+   "kit": "Kit_Roof_Roof",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Roof/Kit_Roof_Roof_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 3.6003,
+    "z": -0.949
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.9537,
+    "z": -0.3006,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 34.992,
+    "y": 180.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "Top_Gable_1",
+    "Attic_00",
+    "Attic_10"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1112,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 664
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_F1_WallDoor_Frame",
+   "point": {
+    "x": 1.5,
+    "y": 1.08,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_F2_WallWindow",
+   "point": {
+    "x": -0.0,
+    "y": 1.5,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_L1_Wall",
+   "point": {
+    "x": 2.945,
+    "y": 1.5,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_J_-3_-2",
+   "point": {
+    "x": 2.92,
+    "y": 1.5,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_J_+0_-2",
+   "point": {
+    "x": 0.08,
+    "y": 1.5,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "Attic_00",
+   "point": {
+    "x": 1.5,
+    "y": 2.995,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "Attic_10",
+   "point": {
+    "x": -0.0,
+    "y": 2.995,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "Top_Roof_S1",
+   "point": {
+    "x": 1.5,
+    "y": 2.9614,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": 0.15,
+    "y": 2.9663,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F2_WallWindow",
+   "b": "G_F2_WallWindow_Frame",
+   "point": {
+    "x": -1.5,
+    "y": 1.5,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F2_WallWindow",
+   "b": "G_R1_WallWindow",
+   "point": {
+    "x": -2.945,
+    "y": 1.5,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F2_WallWindow",
+   "b": "G_J_+0_-2",
+   "point": {
+    "x": -0.08,
+    "y": 1.5,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F2_WallWindow",
+   "b": "G_J_+3_-2",
+   "point": {
+    "x": -2.92,
+    "y": 1.5,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F2_WallWindow",
+   "b": "Attic_00",
+   "point": {
+    "x": -0.0,
+    "y": 2.995,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F2_WallWindow",
+   "b": "Attic_10",
+   "point": {
+    "x": -1.5,
+    "y": 2.995,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F2_WallWindow",
+   "b": "Top_Roof_S1",
+   "point": {
+    "x": -0.15,
+    "y": 2.9614,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F2_WallWindow",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": -1.5,
+    "y": 2.9663,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "G_B1_WallWindow_Frame",
+   "point": {
+    "x": 1.5,
+    "y": 1.5,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "G_B2_Wall",
+   "point": {
+    "x": 0.0,
+    "y": 1.5,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "G_L1_Wall",
+   "point": {
+    "x": 2.945,
+    "y": 1.5,
+    "z": -1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "G_J_-3_+2",
+   "point": {
+    "x": 2.92,
+    "y": 1.5,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "G_J_+0_+2",
+   "point": {
+    "x": 0.08,
+    "y": 1.5,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "Attic_00",
+   "point": {
+    "x": 1.5,
+    "y": 2.995,
+    "z": -1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "Attic_10",
+   "point": {
+    "x": 0.0,
+    "y": 2.995,
+    "z": -1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": 1.5,
+    "y": 2.9614,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_WallWindow",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": 0.15,
+    "y": 2.9663,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B2_Wall",
+   "b": "G_R1_WallWindow",
+   "point": {
+    "x": -2.945,
+    "y": 1.5,
+    "z": -1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B2_Wall",
+   "b": "G_J_+0_+2",
+   "point": {
+    "x": -0.08,
+    "y": 1.5,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B2_Wall",
+   "b": "G_J_+3_+2",
+   "point": {
+    "x": -2.92,
+    "y": 1.5,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B2_Wall",
+   "b": "Attic_00",
+   "point": {
+    "x": 0.0,
+    "y": 2.995,
+    "z": -1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B2_Wall",
+   "b": "Attic_10",
+   "point": {
+    "x": -1.5,
+    "y": 2.995,
+    "z": -1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B2_Wall",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": -0.15,
+    "y": 2.9614,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B2_Wall",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": -1.5,
+    "y": 2.9663,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L1_Wall",
+   "b": "G_J_-3_-2",
+   "point": {
+    "x": 3.0,
+    "y": 1.5,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L1_Wall",
+   "b": "G_J_-3_+2",
+   "point": {
+    "x": 3.0,
+    "y": 1.5,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L1_Wall",
+   "b": "Attic_00",
+   "point": {
+    "x": 2.945,
+    "y": 2.995,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L1_Wall",
+   "b": "Top_Roof_S1",
+   "point": {
+    "x": 3.0,
+    "y": 2.9614,
+    "z": 0.7471
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L1_Wall",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": 3.0,
+    "y": 2.9614,
+    "z": -0.7471
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_WallWindow",
+   "b": "G_R1_WallWindow_Frame",
+   "point": {
+    "x": -3.0,
+    "y": 1.5,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_WallWindow",
+   "b": "G_J_+3_-2",
+   "point": {
+    "x": -3.0,
+    "y": 1.5,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_WallWindow",
+   "b": "G_J_+3_+2",
+   "point": {
+    "x": -3.0,
+    "y": 1.5,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_WallWindow",
+   "b": "Attic_10",
+   "point": {
+    "x": -2.945,
+    "y": 2.995,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_WallWindow",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": -3.0,
+    "y": 2.9663,
+    "z": 0.7506
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_WallWindow",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": -3.0,
+    "y": 2.9663,
+    "z": -0.7506
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_-3_-2",
+   "b": "Attic_00",
+   "point": {
+    "x": 2.92,
+    "y": 2.995,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_-3_-2",
+   "b": "Top_Roof_S1",
+   "point": {
+    "x": 3.0,
+    "y": 2.9614,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_-3_+2",
+   "b": "Attic_00",
+   "point": {
+    "x": 2.92,
+    "y": 2.995,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_-3_+2",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": 3.0,
+    "y": 2.9614,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+0_-2",
+   "b": "Attic_00",
+   "point": {
+    "x": 0.08,
+    "y": 2.995,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+0_-2",
+   "b": "Attic_10",
+   "point": {
+    "x": -0.08,
+    "y": 2.995,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+0_-2",
+   "b": "Top_Roof_S1",
+   "point": {
+    "x": -0.0,
+    "y": 2.9614,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+0_-2",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": -0.0,
+    "y": 2.9663,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+0_+2",
+   "b": "Attic_00",
+   "point": {
+    "x": 0.08,
+    "y": 2.995,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+0_+2",
+   "b": "Attic_10",
+   "point": {
+    "x": -0.08,
+    "y": 2.995,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+0_+2",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": 0.0,
+    "y": 2.9614,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+0_+2",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": 0.0,
+    "y": 2.9663,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+3_-2",
+   "b": "Attic_10",
+   "point": {
+    "x": -2.92,
+    "y": 2.995,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+3_-2",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": -3.0,
+    "y": 2.9663,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+3_+2",
+   "b": "Attic_10",
+   "point": {
+    "x": -2.92,
+    "y": 2.995,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+3_+2",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": -3.0,
+    "y": 2.9663,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_00",
+   "b": "Attic_10",
+   "point": {
+    "x": -0.0,
+    "y": 3.1,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_00",
+   "b": "Top_Gable_-1",
+   "point": {
+    "x": 2.945,
+    "y": 3.205,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_00",
+   "b": "Top_Roof_S1",
+   "point": {
+    "x": 1.5,
+    "y": 3.1,
+    "z": 0.7471
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_00",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": 0.15,
+    "y": 3.1,
+    "z": 0.7506
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_00",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": 1.5,
+    "y": 3.1,
+    "z": -0.7471
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_00",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": 0.15,
+    "y": 3.1,
+    "z": -0.7506
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_10",
+   "b": "Top_Gable_1",
+   "point": {
+    "x": -2.945,
+    "y": 3.205,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_10",
+   "b": "Top_Roof_S1",
+   "point": {
+    "x": -0.15,
+    "y": 3.1,
+    "z": 0.7471
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_10",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": -1.5,
+    "y": 3.1,
+    "z": 0.7506
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_10",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": -0.15,
+    "y": 3.1,
+    "z": -0.7471
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Attic_10",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": -1.5,
+    "y": 3.1,
+    "z": -0.7506
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Gable_-1",
+   "b": "Top_Roof_S1",
+   "point": {
+    "x": 3.0,
+    "y": 3.725,
+    "z": 0.7471
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Gable_-1",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": 3.0,
+    "y": 3.725,
+    "z": -0.7471
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Gable_1",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": -3.0,
+    "y": 3.725,
+    "z": 0.7506
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Gable_1",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": -3.0,
+    "y": 3.725,
+    "z": -0.7506
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Roof_S1",
+   "b": "Top_Roof_S2",
+   "point": {
+    "x": -0.0,
+    "y": 3.661,
+    "z": 0.9914
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Roof_S1",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": 1.5,
+    "y": 3.6561,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Roof_S1",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": -0.0,
+    "y": 3.661,
+    "z": -0.0034
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Roof_S2",
+   "b": "Top_Roof_N1",
+   "point": {
+    "x": -0.0,
+    "y": 3.661,
+    "z": 0.0034
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Roof_S2",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": -1.5,
+    "y": 3.6659,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "Top_Roof_N1",
+   "b": "Top_Roof_N2",
+   "point": {
+    "x": -0.0,
+    "y": 3.661,
+    "z": -0.9914
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": []
+}

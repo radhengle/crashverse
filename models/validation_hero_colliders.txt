@@ -1,0 +1,90 @@
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Arch.fbx [Kit] LOD0 tris=1085 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Arch_Fractured.fbx [KitFractured] LOD0 tris=1472 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown.fbx [Kit] LOD0 tris=540 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Crown_Fractured.fbx [KitFractured] LOD0 tris=1366 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Portcullis.fbx [Kit] LOD0 tris=468 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 468 < 500
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Portcullis_Fractured.fbx [KitFractured] LOD0 tris=1190 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower.fbx [Kit] LOD0 tris=528 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerCrown.fbx [Kit] LOD0 tris=578 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerCrown_Fractured.fbx [KitFractured] LOD0 tris=1336 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerRoof.fbx [Kit] LOD0 tris=290 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 290 < 500
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerRoof_Fractured.fbx [KitFractured] LOD0 tris=1469 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerWindow.fbx [Kit] LOD0 tris=764 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_TowerWindow_Fractured.fbx [KitFractured] LOD0 tris=1299 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Tower_Fractured.fbx [KitFractured] LOD0 tris=1270 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall.fbx [Kit] LOD0 tris=966 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Gate/Kit_Gate_Wall_Fractured.fbx [KitFractured] LOD0 tris=1338 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney.fbx [Kit] LOD0 tris=218 LODs=[0, 1, 2] hulls=3 frags=0 -> PASS
+    warn  LOD0 218 < 500
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Chimney_Fractured.fbx [KitFractured] LOD0 tris=740 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor.fbx [Kit] LOD0 tris=92 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 92 < 500
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Floor_Fractured.fbx [KitFractured] LOD0 tris=1171 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable.fbx [Kit] LOD0 tris=126 LODs=[0, 1, 2] hulls=6 frags=0 -> PASS
+    warn  LOD0 126 < 500
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Gable_Fractured.fbx [KitFractured] LOD0 tris=1095 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor.fbx [Kit] LOD0 tris=640 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundDoor_Fractured.fbx [KitFractured] LOD0 tris=1351 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin.fbx [Kit] LOD0 tris=503 LODs=[0, 1, 2] hulls=5 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_GroundWin_Fractured.fbx [KitFractured] LOD0 tris=996 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof.fbx [Kit] LOD0 tris=252 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 252 < 500
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Roof_Fractured.fbx [KitFractured] LOD0 tris=1484 LODs=[0] hulls=8 frags=8 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1.fbx [Kit] LOD0 tris=286 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 286 < 500
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper1_Fractured.fbx [KitFractured] LOD0 tris=1428 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2.fbx [Kit] LOD0 tris=532 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_House/Kit_House_Upper2_Fractured.fbx [KitFractured] LOD0 tris=1485 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown.fbx [Kit] LOD0 tris=448 LODs=[0, 1, 2] hulls=7 frags=0 -> PASS
+    warn  LOD0 448 < 500
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Crown_Fractured.fbx [KitFractured] LOD0 tris=1309 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor.fbx [Kit] LOD0 tris=62 LODs=[0, 1, 2] hulls=5 frags=0 -> PASS
+    warn  LOD0 62 < 500
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Floor_Fractured.fbx [KitFractured] LOD0 tris=827 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret.fbx [Kit] LOD0 tris=282 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 282 < 500
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown.fbx [Kit] LOD0 tris=372 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 372 < 500
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretCrown_Fractured.fbx [KitFractured] LOD0 tris=936 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof.fbx [Kit] LOD0 tris=571 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_TurretRoof_Fractured.fbx [KitFractured] LOD0 tris=1465 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Turret_Fractured.fbx [KitFractured] LOD0 tris=1377 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall.fbx [Kit] LOD0 tris=422 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 422 < 500
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony.fbx [Kit] LOD0 tris=790 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBalcony_Fractured.fbx [KitFractured] LOD0 tris=1260 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner.fbx [Kit] LOD0 tris=888 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallBanner_Fractured.fbx [KitFractured] LOD0 tris=1499 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallDoor.fbx [Kit] LOD0 tris=702 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallDoor_Fractured.fbx [KitFractured] LOD0 tris=1372 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit.fbx [Kit] LOD0 tris=617 LODs=[0, 1, 2] hulls=6 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_WallSlit_Fractured.fbx [KitFractured] LOD0 tris=1215 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Keep/Kit_Keep_Wall_Fractured.fbx [KitFractured] LOD0 tris=1021 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel.fbx [Kit] LOD0 tris=354 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 354 < 500
+Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Barrel_Fractured.fbx [KitFractured] LOD0 tris=1434 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate.fbx [Kit] LOD0 tris=172 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 172 < 500
+Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall.fbx [Kit] LOD0 tris=172 LODs=[0, 1, 2] hulls=1 frags=0 -> PASS
+    warn  LOD0 172 < 500
+Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_CrateSmall_Fractured.fbx [KitFractured] LOD0 tris=579 LODs=[0] hulls=10 frags=10 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Crate_Fractured.fbx [KitFractured] LOD0 tris=670 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed.fbx [Kit] LOD0 tris=1058 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Props/Kit_Props_Shed_Fractured.fbx [KitFractured] LOD0 tris=1416 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown.fbx [Kit] LOD0 tris=496 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+    warn  LOD0 496 < 500
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Crown_Fractured.fbx [KitFractured] LOD0 tris=1056 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor.fbx [Kit] LOD0 tris=80 LODs=[0, 1, 2] hulls=2 frags=0 -> PASS
+    warn  LOD0 80 < 500
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Floor_Fractured.fbx [KitFractured] LOD0 tris=723 LODs=[0] hulls=12 frags=12 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor.fbx [Kit] LOD0 tris=829 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingDoor_Fractured.fbx [KitFractured] LOD0 tris=1438 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit.fbx [Kit] LOD0 tris=928 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingSlit_Fractured.fbx [KitFractured] LOD0 tris=1497 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow.fbx [Kit] LOD0 tris=982 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_RingWindow_Fractured.fbx [KitFractured] LOD0 tris=1496 LODs=[0] hulls=7 frags=7 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof.fbx [Kit] LOD0 tris=782 LODs=[0, 1, 2] hulls=8 frags=0 -> PASS
+Assets/_Project/Models/BuildingKit/Kit_Tower/Kit_Tower_Roof_Fractured.fbx [KitFractured] LOD0 tris=1500 LODs=[0] hulls=9 frags=9 -> PASS
+RESULT: ALL PASS (72 groups, 72 files)

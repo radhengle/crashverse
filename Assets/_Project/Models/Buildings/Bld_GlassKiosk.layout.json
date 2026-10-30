@@ -1,0 +1,573 @@
+{
+ "format": "crashverse.building_layout",
+ "version": 1,
+ "building": "Bld_GlassKiosk",
+ "units": "m",
+ "space": "Unity (Y up, left-handed); positions/rotations local to the building root",
+ "root": {
+  "position": {
+   "x": -5.0,
+   "y": 0.0,
+   "z": -3.2
+  },
+  "rotation": {
+   "x": 0.0,
+   "y": -1.0,
+   "z": 0.0,
+   "w": 0.0
+  },
+  "note": "suggested village placement on Island_Sunnyville"
+ },
+ "tris_total": {
+  "LOD0": 9568,
+  "LOD1": 1144,
+  "LOD2": 312,
+  "Fractured": 4320
+ },
+ "piece_count": 10,
+ "pieces": [
+  {
+   "id": "G_F1_WallDoor",
+   "kit": "Kit_Wood_WallDoor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallDoor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_WallDoor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 916,
+    "LOD1": 132,
+    "LOD2": 36,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_F1_WallDoor_Frame",
+   "kit": "Kit_Wood_DoorFrame",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Wood/Kit_Wood_DoorFrame_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 740,
+    "LOD1": 132,
+    "LOD2": 36,
+    "Fractured": 528
+   }
+  },
+  {
+   "id": "G_B1_Glass",
+   "kit": "Kit_Glass_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -1.0,
+    "z": 0.0,
+    "w": 0.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -180.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1180,
+    "LOD1": 220,
+    "LOD2": 60,
+    "Fractured": 552
+   }
+  },
+  {
+   "id": "G_L1_Glass",
+   "kit": "Kit_Glass_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1180,
+    "LOD1": 220,
+    "LOD2": 60,
+    "Fractured": 552
+   }
+  },
+  {
+   "id": "G_R1_Glass",
+   "kit": "Kit_Glass_Wall",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Glass/Kit_Glass_Wall_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": -0.7071,
+    "z": 0.0,
+    "w": 0.7071
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": -90.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 1180,
+    "LOD1": 220,
+    "LOD2": 60,
+    "Fractured": 552
+   }
+  },
+  {
+   "id": "G_J_-2_-2",
+   "kit": "Kit_Steel_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 308
+   }
+  },
+  {
+   "id": "G_J_-2_+2",
+   "kit": "Kit_Steel_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx",
+   "position": {
+    "x": 1.5,
+    "y": 0.0,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 308
+   }
+  },
+  {
+   "id": "G_J_+2_-2",
+   "kit": "Kit_Steel_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 0.0,
+    "z": 1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 308
+   }
+  },
+  {
+   "id": "G_J_+2_+2",
+   "kit": "Kit_Steel_Joint",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Joint_Fractured.fbx",
+   "position": {
+    "x": -1.5,
+    "y": 0.0,
+    "z": -1.5
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": "Ground",
+   "indestructible": false,
+   "tris": {
+    "LOD0": 892,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 308
+   }
+  },
+  {
+   "id": "Deck_00",
+   "kit": "Kit_Steel_Floor",
+   "intact": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor.fbx",
+   "fractured": "Assets/_Project/Models/BuildingKit/Kit_Steel/Kit_Steel_Floor_Fractured.fbx",
+   "position": {
+    "x": 0.0,
+    "y": 3.0,
+    "z": 0.0
+   },
+   "rotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0,
+    "w": 1.0
+   },
+   "euler_zxy_deg": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+   },
+   "anchor_to": [
+    "G_F1_WallDoor",
+    "G_B1_Glass",
+    "G_L1_Glass",
+    "G_R1_Glass",
+    "G_J_-2_-2",
+    "G_J_-2_+2",
+    "G_J_+2_-2",
+    "G_J_+2_+2"
+   ],
+   "indestructible": false,
+   "tris": {
+    "LOD0": 804,
+    "LOD1": 44,
+    "LOD2": 12,
+    "Fractured": 376
+   }
+  }
+ ],
+ "connections": [
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_F1_WallDoor_Frame",
+   "point": {
+    "x": 0.0,
+    "y": 1.08,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_L1_Glass",
+   "point": {
+    "x": 1.465,
+    "y": 1.5,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_R1_Glass",
+   "point": {
+    "x": -1.465,
+    "y": 1.5,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_J_-2_-2",
+   "point": {
+    "x": 1.42,
+    "y": 1.5,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "G_J_+2_-2",
+   "point": {
+    "x": -1.42,
+    "y": 1.5,
+    "z": 1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_F1_WallDoor",
+   "b": "Deck_00",
+   "point": {
+    "x": 0.0,
+    "y": 2.995,
+    "z": 1.445
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_Glass",
+   "b": "G_L1_Glass",
+   "point": {
+    "x": 1.465,
+    "y": 1.5,
+    "z": -1.465
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_Glass",
+   "b": "G_R1_Glass",
+   "point": {
+    "x": -1.465,
+    "y": 1.5,
+    "z": -1.465
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_Glass",
+   "b": "G_J_-2_+2",
+   "point": {
+    "x": 1.42,
+    "y": 1.5,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_Glass",
+   "b": "G_J_+2_+2",
+   "point": {
+    "x": -1.42,
+    "y": 1.5,
+    "z": -1.5
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_B1_Glass",
+   "b": "Deck_00",
+   "point": {
+    "x": 0.0,
+    "y": 2.995,
+    "z": -1.465
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L1_Glass",
+   "b": "G_J_-2_-2",
+   "point": {
+    "x": 1.5,
+    "y": 1.5,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L1_Glass",
+   "b": "G_J_-2_+2",
+   "point": {
+    "x": 1.5,
+    "y": 1.5,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_L1_Glass",
+   "b": "Deck_00",
+   "point": {
+    "x": 1.465,
+    "y": 2.995,
+    "z": -0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_Glass",
+   "b": "G_J_+2_-2",
+   "point": {
+    "x": -1.5,
+    "y": 1.5,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_Glass",
+   "b": "G_J_+2_+2",
+   "point": {
+    "x": -1.5,
+    "y": 1.5,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_R1_Glass",
+   "b": "Deck_00",
+   "point": {
+    "x": -1.465,
+    "y": 2.995,
+    "z": 0.0
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_-2_-2",
+   "b": "Deck_00",
+   "point": {
+    "x": 1.42,
+    "y": 2.995,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_-2_+2",
+   "b": "Deck_00",
+   "point": {
+    "x": 1.42,
+    "y": 2.995,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+2_-2",
+   "b": "Deck_00",
+   "point": {
+    "x": -1.42,
+    "y": 2.995,
+    "z": 1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  },
+  {
+   "a": "G_J_+2_+2",
+   "b": "Deck_00",
+   "point": {
+    "x": -1.42,
+    "y": 2.995,
+    "z": -1.425
+   },
+   "break_force_N": "",
+   "break_torque_Nm": ""
+  }
+ ],
+ "unsupported_contacts": []
+}
