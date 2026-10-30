@@ -25,6 +25,14 @@ namespace Crashverse.EditorTools
                 if (lay?.blocks == null) continue;
                 foreach (var b in lay.blocks)
                 {
+                    if (b.parts != null)
+                        foreach (var part in b.parts)
+                        {
+                            var pn = Crashverse.Level.RealKit.ModuleName(part);
+                            if (string.IsNullOrEmpty(pn) || m.Find(pn) != null || list.Exists(x => x.name == pn)) continue;
+                            var pe = Crashverse.Level.RealKitManifest.ResolveEditor(part);
+                            if (pe != null) list.Add(pe); else Debug.LogError($"[RealKit] {Path.GetFileName(f)}:{b.id} part '{part}' not found under Assets/_Project/Models");
+                        }
                     if (string.IsNullOrEmpty(b.model) || m.Find(Crashverse.Level.RealKit.ModuleName(b.model)) != null || list.Exists(x => x.name == Crashverse.Level.RealKit.ModuleName(b.model))) continue;
                     var e = Crashverse.Level.RealKitManifest.ResolveEditor(b.model);
                     if (e != null) list.Add(e); else Debug.LogError($"[RealKit] {Path.GetFileName(f)}:{b.id} model '{b.model}' not found under Assets/_Project/Models");

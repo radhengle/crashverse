@@ -59,6 +59,10 @@ namespace Crashverse.Data
         public string model;
         /// <summary>Optional visual yaw of the module in degrees (side walls 90). The collider is never rotated.</summary>
         public float rotY;
+        /// <summary>Optional multi-FBX module (Level Designer gap 6, e.g. UpperStorey = 8 piece FBX): every part is spawned at the module
+        /// pivot = the block's base-footprint centre (bottom-centre of s), yawed by rotY, at modelScale (default 1:1), not stretched to s.</summary>
+        public string[] parts;
+        public float[] modelScale;
     }
 
     [Serializable] public class LayoutData { public string id; public BlockData[] blocks; }

@@ -128,5 +128,22 @@ namespace Crashverse.Backend.Tests
             var db = ContentDatabase.LoadBundled();
             foreach (var l in db.Meta.dailyBoss.layouts) Assert.IsNotNull(DailyBossRules.HintFor(l, db.Meta.dailyBoss, db.Titan), l);
         }
+    
+        [Test]
+        public void Held_indestructible_pieces_never_block_a_win()
+        {
+            // Level Designer gap 7: an indestructible piece never falls (DestructibleBlock.ForceCollapse). It must be non-objective
+            // (a Base / island under a breakable layer), except a boss's scripted core (bossId levels handle it themselves).
+            var db = ContentDatabase.LoadBundled();
+            foreach (var l in db.Chapter1.levels)
+            {
+                if (!string.IsNullOrEmpty(l.bossId)) continue;
+                var lay = db.GetLayout(l.layout); Assert.NotNull(lay, l.layout);
+                foreach (var b in lay.blocks) Assert.False(b.indestructible && !b.nonObj, $"{l.id}:{b.id} is indestructible but counts for the win");
+            }
+            foreach (var name in db.Meta.dailyBoss.layouts)
+                foreach (var b in db.GetLayout(name).blocks) Assert.False(b.indestructible && !b.nonObj, $"{name}:{b.id} is indestructible but counts for the win");
+        }
     }
+
 }

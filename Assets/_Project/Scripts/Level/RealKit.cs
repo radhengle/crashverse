@@ -45,6 +45,7 @@ namespace Crashverse.Level
         {
             if (!Enabled || block == null || bd == null) return null;
             if (bd.s == null || bd.s.Length != 3) return null;
+            if (bd.parts != null && bd.parts.Length > 0) return DressParts(block, bd);
             bool authored = !string.IsNullOrEmpty(bd.model);                    // Level Designer prefab map: explicit kit module
             var piece = authored ? ModuleName(bd.model) : RealPieceRules.Classify(bd); if (piece == null) return null;
             var man = Manifest; if (man == null) return null;
@@ -78,6 +79,78 @@ namespace Crashverse.Level
             var own = block.GetComponent<MeshRenderer>(); if (own != null) own.enabled = false;
             Dressed++;
             return root;
+        }
+
+        /// <summary>Gap 6: all part FBX of a module at the module pivot (block bottom-centre), 1:1 or modelScale, yaw rotY; LODs merged per level.</summary>
+        static GameObject DressParts(GameObject block, BlockData bd)
+        {
+            var man = Manifest; if (man == null) return null;
+            var size = new Vector3(bd.s[0], bd.s[1], bd.s[2]);
+            var scale = bd.modelScale != null && bd.modelScale.Length == 3 ? new Vector3(bd.modelScale[0], bd.modelScale[1], bd.modelScale[2]) : Vector3.one;
+            var yaw = Quaternion.Euler(0f, bd.rotY, 0f);
+            var pivot = new Vector3(0f, -0.5f * size.y, 0f);                       // block-local metres: base-footprint centre
+            var perLod = new List<Renderer>[3]; for (int i = 0; i < 3; i++) perLod[i] = new List<Renderer>();
+            var root = new GameObject("Real_Module_" + bd.id);
+            root.transform.SetParent(block.transform, false);
+            int placed = 0;
+            foreach (var part in bd.parts)
+            {
+                var name = ModuleName(part); var e = man.Find(name);
+#if UNITY_EDITOR
+                if (e == null || e.model == null) e = RealKitManifest.ResolveEditor(part);
+#endif
+                if (e == null || e.model == null) { Debug.LogWarning($"[RealKit] {bd.id}: part not in manifest: {part}"); continue; }
+                var src = Source(e, name);
+                bool real = name.StartsWith("Kit_Real"); var kit = real ? RealPieceRules.KitOf(name) : null;
+                var kmats = real ? MaterialsFor(man, kit) : null;
+                for (int i = 0; i < src.Length && i < 3; i++)
+                {
+                    string key = "P|" + name + "|" + i + "|" + size + "|" + scale + "|" + bd.rotY;
+                    if (!_partCache.TryGetValue(key, out var mesh))
+                        _partCache[key] = mesh = Place(src[i].mesh, src[i].m, scale, yaw, pivot, size, name + "_LOD" + i);
+                    if (mesh == null) continue;
+                    var go = new GameObject(name + "_LOD" + i); go.transform.SetParent(root.transform, false);
+                    go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                    var r = go.AddComponent<MeshRenderer>();
+                    r.sharedMaterials = real && kmats != null ? kmats : SourceMaterials(name, i);
+                    r.shadowCastingMode = i == 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                    perLod[i].Add(r);
+                }
+                placed++;
+            }
+            if (placed == 0) { Object.Destroy(root); return null; }
+            float[] cut = { 0.045f, 0.015f, 0.002f };
+            var lods = new List<LOD>();
+            for (int i = 0; i < 3; i++) if (perLod[i].Count > 0) lods.Add(new LOD(cut[i], perLod[i].ToArray()));
+            var lg = root.AddComponent<LODGroup>(); lg.SetLODs(lods.ToArray()); lg.RecalculateBounds();
+            var own = block.GetComponent<MeshRenderer>(); if (own != null) own.enabled = false;
+            Dressed++;
+            return root;
+        }
+
+        static readonly Dictionary<string, Mesh> _partCache = new Dictionary<string, Mesh>();
+
+        /// <summary>Part mesh in the block's unit cube: (yaw * (scale ⊙ M·v) + pivot) ⊘ s; authored UVs and materials kept.</summary>
+        static Mesh Place(Mesh src, Matrix4x4 m, Vector3 scale, Quaternion yaw, Vector3 pivot, Vector3 size, string name)
+        {
+            if (src == null || !src.isReadable) { Debug.LogWarning("[RealKit] part mesh not readable: " + name); return null; }
+            var v = src.vertices; var n = src.normals; var vo = new Vector3[v.Length]; var no = new Vector3[v.Length];
+            var nm = m.inverse.transpose; bool hasN = n != null && n.Length == v.Length;
+            for (int i = 0; i < v.Length; i++)
+            {
+                var w = yaw * Vector3.Scale(m.MultiplyPoint3x4(v[i]), scale) + pivot;
+                vo[i] = new Vector3(w.x / size.x, w.y / size.y, w.z / size.z);
+                var nn = hasN ? nm.MultiplyVector(n[i]) : Vector3.up;
+                var nw = (yaw * new Vector3(nn.x / scale.x, nn.y / scale.y, nn.z / scale.z)).normalized;
+                no[i] = new Vector3(nw.x * size.x, nw.y * size.y, nw.z * size.z).normalized;
+            }
+            var mesh = new Mesh { name = name, indexFormat = v.Length > 65000 ? IndexFormat.UInt32 : IndexFormat.UInt16 };
+            mesh.vertices = vo; mesh.normals = no; mesh.uv = src.uv;
+            if (src.colors32 != null && src.colors32.Length == v.Length) mesh.colors32 = src.colors32;
+            mesh.subMeshCount = src.subMeshCount;
+            for (int s = 0; s < src.subMeshCount; s++) mesh.SetTriangles(src.GetTriangles(s), s);
+            mesh.RecalculateTangents(); mesh.RecalculateBounds(); mesh.UploadMeshData(true);
+            return mesh;
         }
 
         static Material[] MaterialsFor(RealKitManifest man, string kit)
@@ -223,6 +296,6 @@ namespace Crashverse.Level
         static int Parity(int[] p) { int inv = 0; for (int i = 0; i < 3; i++) for (int j = i + 1; j < 3; j++) if (p[i] > p[j]) inv++; return inv % 2 == 0 ? 1 : -1; }
 
         /// <summary>Tests / level reloads: drop cached meshes and materials.</summary>
-        public static void ResetCaches() { _meshCache.Clear(); _src.Clear(); _mats.Clear(); _srcMats.Clear(); _loaded = false; _m = null; Dressed = 0; }
+        public static void ResetCaches() { _meshCache.Clear(); _src.Clear(); _mats.Clear(); _srcMats.Clear(); _partCache.Clear(); _loaded = false; _m = null; Dressed = 0; }
     }
 }
