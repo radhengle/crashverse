@@ -1,0 +1,850 @@
+{
+ "events": {
+  "sfx_wrecker_fidget": {
+   "cat": "weapon",
+   "desc": "idle fidget: wheel creak + gold glint ting",
+   "trigger": "ANIM_WRECKER_IDLE_FIDGET",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_fidget_01",
+    "sfx_wrecker_fidget_02"
+   ]
+  },
+  "sfx_wrecker_aim_hum": {
+   "cat": "weapon",
+   "desc": "servo hum loop while aiming (layer with aim_stretch)",
+   "trigger": "ANIM_WRECKER_AIM_START..END",
+   "loop": true,
+   "files": [
+    "sfx_wrecker_aim_hum_loop"
+   ]
+  },
+  "sfx_wrecker_aim_tick": {
+   "cat": "weapon",
+   "desc": "ratchet tick per 5 deg (throttle 60 ms)",
+   "trigger": "ANIM_WRECKER_AIM_TICK",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_aim_tick_01",
+    "sfx_wrecker_aim_tick_02",
+    "sfx_wrecker_aim_tick_03"
+   ]
+  },
+  "sfx_wrecker_aim_clamp": {
+   "cat": "weapon",
+   "desc": "soft stop clunk at aim limit",
+   "trigger": "ANIM_WRECKER_AIM_CLAMP",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_aim_clamp"
+   ]
+  },
+  "sfx_aim_stretch": {
+   "cat": "weapon",
+   "desc": "rubbery aim-drag creak loop (pitch follows power in code)",
+   "trigger": "ANIM_WRECKER_AIM_START..END",
+   "loop": true,
+   "files": [
+    "sfx_aim_stretch_loop"
+   ]
+  },
+  "sfx_wrecker_smoke_tail": {
+   "cat": "weapon",
+   "desc": "air whoosh tail after muzzle",
+   "trigger": "ANIM_WRECKER_MUZZLE_SMOKE",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_smoke_tail_01",
+    "sfx_wrecker_smoke_tail_02"
+   ]
+  },
+  "sfx_wrecker_recoil_land": {
+   "cat": "weapon",
+   "desc": "carriage thud + wheel roll",
+   "trigger": "ANIM_WRECKER_RECOIL_LAND",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_recoil_land_01",
+    "sfx_wrecker_recoil_land_02"
+   ]
+  },
+  "sfx_wrecker_slot_in": {
+   "cat": "weapon",
+   "desc": "slot click-in + chime (01 Core C, 02 Module E, 03 Booster G)",
+   "trigger": "ANIM_WRECKER_SLOT_IN",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_slot_in_01",
+    "sfx_wrecker_slot_in_02",
+    "sfx_wrecker_slot_in_03"
+   ]
+  },
+  "sfx_wrecker_slot_out": {
+   "cat": "weapon",
+   "desc": "slot pop-out",
+   "trigger": "ANIM_WRECKER_SLOT_OUT",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_slot_out"
+   ]
+  },
+  "sfx_projectile_whoosh": {
+   "cat": "weapon",
+   "desc": "soft round in-flight whoosh loop (stop on impact/despawn)",
+   "trigger": "ANIM_PROJ_LAUNCH..projectile_despawn",
+   "loop": true,
+   "files": [
+    "sfx_projectile_whoosh_loop_01",
+    "sfx_projectile_whoosh_loop_02"
+   ]
+  },
+  "sfx_wrecker_win_hop": {
+   "cat": "results",
+   "desc": "Wrecker hop boings + nylon fifth",
+   "trigger": "ANIM_WRECKER_WIN",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_win_hop"
+   ]
+  },
+  "sfx_wrecker_fail_droop": {
+   "cat": "results",
+   "desc": "Wrecker droop: toy slide-whistle sigh (non-vocal)",
+   "trigger": "ANIM_WRECKER_FAIL",
+   "loop": false,
+   "files": [
+    "sfx_wrecker_fail_droop"
+   ]
+  },
+  "sfx_ui_panel_out": {
+   "cat": "ui",
+   "desc": "panel swoosh down",
+   "trigger": "UI_PANEL_OUT",
+   "loop": false,
+   "files": [
+    "sfx_ui_panel_out"
+   ]
+  },
+  "sfx_ui_score_tick": {
+   "cat": "ui",
+   "desc": "score count-up tick (code: every 50 ms, max 12)",
+   "trigger": "UI_SCORE_TICK",
+   "loop": false,
+   "files": [
+    "sfx_ui_score_tick_01",
+    "sfx_ui_score_tick_02"
+   ]
+  },
+  "sfx_ui_claim_stamp": {
+   "cat": "ui",
+   "desc": "daily claim stamp thunk",
+   "trigger": "UI_CLAIM",
+   "loop": false,
+   "files": [
+    "sfx_ui_claim_stamp"
+   ]
+  },
+  "sfx_ui_gate_open": {
+   "cat": "ui",
+   "desc": "bridge gate: padlock click + wood creak + thud",
+   "trigger": "UI_GATE_OPEN",
+   "loop": false,
+   "files": [
+    "sfx_ui_gate_open"
+   ]
+  },
+  "sfx_ui_marker_hop": {
+   "cat": "ui",
+   "desc": "map marker hop boing",
+   "trigger": "UI_MARKER_HOP",
+   "loop": false,
+   "files": [
+    "sfx_ui_marker_hop_01",
+    "sfx_ui_marker_hop_02"
+   ]
+  },
+  "sfx_ui_shot_spend": {
+   "cat": "ui",
+   "desc": "HUD shot pip spend soft tick",
+   "trigger": "UI_SHOT_SPEND",
+   "loop": false,
+   "files": [
+    "sfx_ui_shot_spend"
+   ]
+  },
+  "sfx_hint_button": {
+   "cat": "ui",
+   "desc": "hint offered: soft vibraphone ding",
+   "trigger": "UI_HINT_BUTTON_APPEAR",
+   "loop": false,
+   "files": [
+    "sfx_hint_button"
+   ]
+  },
+  "sfx_map_node_unlock": {
+   "cat": "ui",
+   "desc": "map node unlock pop + marimba + bridge creak",
+   "trigger": "UI_NODE_UNLOCK",
+   "loop": false,
+   "files": [
+    "sfx_map_node_unlock"
+   ]
+  },
+  "sfx_hint_pulse": {
+   "cat": "ui",
+   "desc": "hint target pulse + ghost arc shimmer loop (1 Hz)",
+   "trigger": "UI_HINT_SHOW..hide",
+   "loop": true,
+   "files": [
+    "sfx_hint_pulse_loop"
+   ]
+  },
+  "sfx_ui_mastery_tick": {
+   "cat": "results",
+   "desc": "mastery gold ping (vib + piano)",
+   "trigger": "UI_MASTERY_TICK",
+   "loop": false,
+   "files": [
+    "sfx_ui_mastery_tick"
+   ]
+  },
+  "sfx_ui_threshold_hit": {
+   "cat": "results",
+   "desc": "85% win threshold crossed: nylon run + piano third",
+   "trigger": "UI_THRESHOLD_HIT",
+   "loop": false,
+   "files": [
+    "sfx_ui_threshold_hit"
+   ]
+  },
+  "sfx_win_stinger_sfx": {
+   "cat": "results",
+   "desc": "win accent: confetti pop + nylon C triad (layer under stinger_win, -6 dB vs music)",
+   "trigger": "UI_WIN",
+   "loop": false,
+   "files": [
+    "sfx_win_stinger_sfx"
+   ]
+  },
+  "sfx_fail_sfx": {
+   "cat": "results",
+   "desc": "cheeky deflate wah (layer under stinger_fail)",
+   "trigger": "UI_FAIL",
+   "loop": false,
+   "files": [
+    "sfx_fail_sfx_01",
+    "sfx_fail_sfx_02"
+   ]
+  },
+  "sfx_reward_shard": {
+   "cat": "reward",
+   "desc": "cosmetic shard crystal chime (vib + soft bell)",
+   "trigger": "UI_SHARD_GAIN",
+   "loop": false,
+   "files": [
+    "sfx_reward_shard"
+   ]
+  },
+  "sfx_reward_extra_charge": {
+   "cat": "reward",
+   "desc": "power-up charge granted: kalimba up + air",
+   "trigger": "UI_EXTRA_CHARGE",
+   "loop": false,
+   "files": [
+    "sfx_reward_extra_charge"
+   ]
+  },
+  "sfx_reward_season_tier_up": {
+   "cat": "reward",
+   "desc": "season tier up whoosh-chime",
+   "trigger": "UI_SEASON_TIER_UP",
+   "loop": false,
+   "files": [
+    "sfx_reward_season_tier_up"
+   ]
+  },
+  "sfx_reward_daily_claim": {
+   "cat": "reward",
+   "desc": "daily reward claim: nylon Cadd9 run + piano",
+   "trigger": "UI_CLAIM",
+   "loop": false,
+   "files": [
+    "sfx_reward_daily_claim"
+   ]
+  },
+  "sfx_explosive_crate": {
+   "cat": "destruction",
+   "desc": "explosive crate: wood pop + cartoon boom + debris",
+   "trigger": "EXPLODE_CRATE (alias EXPLODE_BARREL)",
+   "loop": false,
+   "files": [
+    "sfx_explosive_crate_01",
+    "sfx_explosive_crate_02",
+    "sfx_explosive_crate_03"
+   ]
+  },
+  "sfx_kill_plane_fall": {
+   "cat": "destruction",
+   "desc": "piece falls off island: descending whistle + distant poof",
+   "trigger": "DEBRIS_FALL_OFF",
+   "loop": false,
+   "files": [
+    "sfx_kill_plane_fall_01",
+    "sfx_kill_plane_fall_02",
+    "sfx_kill_plane_fall_03"
+   ]
+  },
+  "sfx_impact_terrain": {
+   "cat": "destruction",
+   "desc": "ball hits ground/rock: dull thump + dirt (ImpactAudioProfile Terrain, bank SFX/Destruction/Impacts, S/M/L x3)",
+   "trigger": "PHYS ImpactEvent kind=Impact material=Terrain",
+   "loop": false,
+   "files": [
+    "sfx_terrain_impact_s_01",
+    "sfx_terrain_impact_s_02",
+    "sfx_terrain_impact_s_03",
+    "sfx_terrain_impact_m_01",
+    "sfx_terrain_impact_m_02",
+    "sfx_terrain_impact_m_03",
+    "sfx_terrain_impact_l_01",
+    "sfx_terrain_impact_l_02",
+    "sfx_terrain_impact_l_03"
+   ]
+  },
+  "sfx_titan_damage_tick": {
+   "cat": "boss",
+   "desc": "Titan score/damage counter tick",
+   "trigger": "UI_DAMAGE_TICK",
+   "loop": false,
+   "files": [
+    "sfx_titan_damage_tick_01",
+    "sfx_titan_damage_tick_02"
+   ]
+  }
+ },
+ "files": {
+  "sfx_wrecker_fidget_01": {
+   "id": "sfx_wrecker_fidget",
+   "cat": "weapon",
+   "dur_s": 0.8,
+   "target_LUFS": -22,
+   "LUFS": -22.3,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_wrecker_fidget_02": {
+   "id": "sfx_wrecker_fidget",
+   "cat": "weapon",
+   "dur_s": 0.8,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -3.7,
+   "loop": false
+  },
+  "sfx_wrecker_aim_hum_loop": {
+   "id": "sfx_wrecker_aim_hum",
+   "cat": "weapon",
+   "dur_s": 1.0,
+   "target_LUFS": -26,
+   "LUFS": -26.0,
+   "TP": -16.9,
+   "loop": true,
+   "seam_jump": 0.0,
+   "p99_step": 0.00335
+  },
+  "sfx_wrecker_aim_tick_01": {
+   "id": "sfx_wrecker_aim_tick",
+   "cat": "weapon",
+   "dur_s": 0.08,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.3,
+   "loop": false
+  },
+  "sfx_wrecker_aim_tick_02": {
+   "id": "sfx_wrecker_aim_tick",
+   "cat": "weapon",
+   "dur_s": 0.08,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -3.9,
+   "loop": false
+  },
+  "sfx_wrecker_aim_tick_03": {
+   "id": "sfx_wrecker_aim_tick",
+   "cat": "weapon",
+   "dur_s": 0.08,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -5.2,
+   "loop": false
+  },
+  "sfx_wrecker_aim_clamp": {
+   "id": "sfx_wrecker_aim_clamp",
+   "cat": "weapon",
+   "dur_s": 0.2,
+   "target_LUFS": -21,
+   "LUFS": -21.0,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_aim_stretch_loop": {
+   "id": "sfx_aim_stretch",
+   "cat": "weapon",
+   "dur_s": 1.0,
+   "target_LUFS": -25,
+   "LUFS": -25.0,
+   "TP": -15.6,
+   "loop": true,
+   "seam_jump": 0.0,
+   "p99_step": 0.00623
+  },
+  "sfx_wrecker_smoke_tail_01": {
+   "id": "sfx_wrecker_smoke_tail",
+   "cat": "weapon",
+   "dur_s": 0.6,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -4.0,
+   "loop": false
+  },
+  "sfx_wrecker_smoke_tail_02": {
+   "id": "sfx_wrecker_smoke_tail",
+   "cat": "weapon",
+   "dur_s": 0.6,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_wrecker_recoil_land_01": {
+   "id": "sfx_wrecker_recoil_land",
+   "cat": "weapon",
+   "dur_s": 0.5,
+   "target_LUFS": -20,
+   "LUFS": -20.0,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_wrecker_recoil_land_02": {
+   "id": "sfx_wrecker_recoil_land",
+   "cat": "weapon",
+   "dur_s": 0.5,
+   "target_LUFS": -20,
+   "LUFS": -20.1,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_wrecker_slot_in_01": {
+   "id": "sfx_wrecker_slot_in",
+   "cat": "weapon",
+   "dur_s": 0.4,
+   "target_LUFS": -20,
+   "LUFS": -20.3,
+   "TP": -1.5,
+   "loop": false
+  },
+  "sfx_wrecker_slot_in_02": {
+   "id": "sfx_wrecker_slot_in",
+   "cat": "weapon",
+   "dur_s": 0.4,
+   "target_LUFS": -20,
+   "LUFS": -20.3,
+   "TP": -1.8,
+   "loop": false
+  },
+  "sfx_wrecker_slot_in_03": {
+   "id": "sfx_wrecker_slot_in",
+   "cat": "weapon",
+   "dur_s": 0.4,
+   "target_LUFS": -20,
+   "LUFS": -20.3,
+   "TP": -2.1,
+   "loop": false
+  },
+  "sfx_wrecker_slot_out": {
+   "id": "sfx_wrecker_slot_out",
+   "cat": "weapon",
+   "dur_s": 0.2,
+   "target_LUFS": -22,
+   "LUFS": -22.1,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_projectile_whoosh_loop_01": {
+   "id": "sfx_projectile_whoosh",
+   "cat": "weapon",
+   "dur_s": 1.5,
+   "target_LUFS": -24,
+   "LUFS": -23.6,
+   "TP": -10.3,
+   "loop": true,
+   "seam_jump": 0.0,
+   "p99_step": 0.02933
+  },
+  "sfx_projectile_whoosh_loop_02": {
+   "id": "sfx_projectile_whoosh",
+   "cat": "weapon",
+   "dur_s": 1.5,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -8.7,
+   "loop": true,
+   "seam_jump": 0.0,
+   "p99_step": 0.0264
+  },
+  "sfx_wrecker_win_hop": {
+   "id": "sfx_wrecker_win_hop",
+   "cat": "results",
+   "dur_s": 0.8,
+   "target_LUFS": -19,
+   "LUFS": -19.6,
+   "TP": -5.6,
+   "loop": false
+  },
+  "sfx_wrecker_fail_droop": {
+   "id": "sfx_wrecker_fail_droop",
+   "cat": "results",
+   "dur_s": 0.8,
+   "target_LUFS": -20,
+   "LUFS": -20.1,
+   "TP": -10.2,
+   "loop": false
+  },
+  "sfx_ui_panel_out": {
+   "id": "sfx_ui_panel_out",
+   "cat": "ui",
+   "dur_s": 0.3,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -3.7,
+   "loop": false
+  },
+  "sfx_ui_score_tick_01": {
+   "id": "sfx_ui_score_tick",
+   "cat": "ui",
+   "dur_s": 0.06,
+   "target_LUFS": -26,
+   "LUFS": -26.0,
+   "TP": -7.9,
+   "loop": false
+  },
+  "sfx_ui_score_tick_02": {
+   "id": "sfx_ui_score_tick",
+   "cat": "ui",
+   "dur_s": 0.06,
+   "target_LUFS": -26,
+   "LUFS": -26.0,
+   "TP": -7.7,
+   "loop": false
+  },
+  "sfx_ui_claim_stamp": {
+   "id": "sfx_ui_claim_stamp",
+   "cat": "ui",
+   "dur_s": 0.4,
+   "target_LUFS": -20,
+   "LUFS": -20.0,
+   "TP": -4.9,
+   "loop": false
+  },
+  "sfx_ui_gate_open": {
+   "id": "sfx_ui_gate_open",
+   "cat": "ui",
+   "dur_s": 1.2,
+   "target_LUFS": -20,
+   "LUFS": -20.0,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_ui_marker_hop_01": {
+   "id": "sfx_ui_marker_hop",
+   "cat": "ui",
+   "dur_s": 0.4,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -5.4,
+   "loop": false
+  },
+  "sfx_ui_marker_hop_02": {
+   "id": "sfx_ui_marker_hop",
+   "cat": "ui",
+   "dur_s": 0.4,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -5.3,
+   "loop": false
+  },
+  "sfx_ui_shot_spend": {
+   "id": "sfx_ui_shot_spend",
+   "cat": "ui",
+   "dur_s": 0.1,
+   "target_LUFS": -24,
+   "LUFS": -24.1,
+   "TP": -2.7,
+   "loop": false
+  },
+  "sfx_hint_button": {
+   "id": "sfx_hint_button",
+   "cat": "ui",
+   "dur_s": 0.6,
+   "target_LUFS": -22,
+   "LUFS": -22.7,
+   "TP": -13.2,
+   "loop": false
+  },
+  "sfx_map_node_unlock": {
+   "id": "sfx_map_node_unlock",
+   "cat": "ui",
+   "dur_s": 1.0,
+   "target_LUFS": -20,
+   "LUFS": -20.5,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_hint_pulse_loop": {
+   "id": "sfx_hint_pulse",
+   "cat": "ui",
+   "dur_s": 1.0,
+   "target_LUFS": -27,
+   "LUFS": -27.0,
+   "TP": -13.2,
+   "loop": true,
+   "seam_jump": 0.0,
+   "p99_step": 0.06379
+  },
+  "sfx_ui_mastery_tick": {
+   "id": "sfx_ui_mastery_tick",
+   "cat": "results",
+   "dur_s": 0.5,
+   "target_LUFS": -20,
+   "LUFS": -20.7,
+   "TP": -6.7,
+   "loop": false
+  },
+  "sfx_ui_threshold_hit": {
+   "id": "sfx_ui_threshold_hit",
+   "cat": "results",
+   "dur_s": 0.8,
+   "target_LUFS": -18,
+   "LUFS": -18.1,
+   "TP": -2.9,
+   "loop": false
+  },
+  "sfx_win_stinger_sfx": {
+   "id": "sfx_win_stinger_sfx",
+   "cat": "results",
+   "dur_s": 1.5,
+   "target_LUFS": -21,
+   "LUFS": -21.3,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_fail_sfx_01": {
+   "id": "sfx_fail_sfx",
+   "cat": "results",
+   "dur_s": 1.2,
+   "target_LUFS": -22,
+   "LUFS": -22.5,
+   "TP": -10.3,
+   "loop": false
+  },
+  "sfx_fail_sfx_02": {
+   "id": "sfx_fail_sfx",
+   "cat": "results",
+   "dur_s": 1.2,
+   "target_LUFS": -22,
+   "LUFS": -22.0,
+   "TP": -10.2,
+   "loop": false
+  },
+  "sfx_reward_shard": {
+   "id": "sfx_reward_shard",
+   "cat": "reward",
+   "dur_s": 0.5,
+   "target_LUFS": -19,
+   "LUFS": -18.8,
+   "TP": -5.9,
+   "loop": false
+  },
+  "sfx_reward_extra_charge": {
+   "id": "sfx_reward_extra_charge",
+   "cat": "reward",
+   "dur_s": 0.5,
+   "target_LUFS": -19,
+   "LUFS": -19.3,
+   "TP": -3.5,
+   "loop": false
+  },
+  "sfx_reward_season_tier_up": {
+   "id": "sfx_reward_season_tier_up",
+   "cat": "reward",
+   "dur_s": 0.5,
+   "target_LUFS": -18,
+   "LUFS": -18.0,
+   "TP": -6.7,
+   "loop": false
+  },
+  "sfx_reward_daily_claim": {
+   "id": "sfx_reward_daily_claim",
+   "cat": "reward",
+   "dur_s": 1.5,
+   "target_LUFS": -17,
+   "LUFS": -16.6,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_explosive_crate_01": {
+   "id": "sfx_explosive_crate",
+   "cat": "destruction",
+   "dur_s": 1.2,
+   "target_LUFS": -14,
+   "LUFS": -14.4,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_explosive_crate_02": {
+   "id": "sfx_explosive_crate",
+   "cat": "destruction",
+   "dur_s": 1.2,
+   "target_LUFS": -14,
+   "LUFS": -14.6,
+   "TP": -2.0,
+   "loop": false
+  },
+  "sfx_explosive_crate_03": {
+   "id": "sfx_explosive_crate",
+   "cat": "destruction",
+   "dur_s": 1.2,
+   "target_LUFS": -14,
+   "LUFS": -14.6,
+   "TP": -1.9,
+   "loop": false
+  },
+  "sfx_kill_plane_fall_01": {
+   "id": "sfx_kill_plane_fall",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -22,
+   "LUFS": -21.6,
+   "TP": -9.6,
+   "loop": false
+  },
+  "sfx_kill_plane_fall_02": {
+   "id": "sfx_kill_plane_fall",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -22,
+   "LUFS": -21.6,
+   "TP": -8.9,
+   "loop": false
+  },
+  "sfx_kill_plane_fall_03": {
+   "id": "sfx_kill_plane_fall",
+   "cat": "destruction",
+   "dur_s": 1.0,
+   "target_LUFS": -22,
+   "LUFS": -21.5,
+   "TP": -9.5,
+   "loop": false
+  },
+  "sfx_terrain_impact_s_01": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.26,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -5.3,
+   "loop": false
+  },
+  "sfx_terrain_impact_s_02": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.26,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -6.0,
+   "loop": false
+  },
+  "sfx_terrain_impact_s_03": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.26,
+   "target_LUFS": -23,
+   "LUFS": -23.0,
+   "TP": -4.9,
+   "loop": false
+  },
+  "sfx_terrain_impact_m_01": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -19.5,
+   "LUFS": -20.0,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_terrain_impact_m_02": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -19.5,
+   "LUFS": -19.5,
+   "TP": -2.5,
+   "loop": false
+  },
+  "sfx_terrain_impact_m_03": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.35,
+   "target_LUFS": -19.5,
+   "LUFS": -19.5,
+   "TP": -2.8,
+   "loop": false
+  },
+  "sfx_terrain_impact_l_01": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.485,
+   "target_LUFS": -16.5,
+   "LUFS": -17.1,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_terrain_impact_l_02": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.485,
+   "target_LUFS": -16.5,
+   "LUFS": -16.9,
+   "TP": -2.2,
+   "loop": false
+  },
+  "sfx_terrain_impact_l_03": {
+   "id": "sfx_impact_terrain",
+   "cat": "destruction",
+   "dur_s": 0.485,
+   "target_LUFS": -16.5,
+   "LUFS": -16.8,
+   "TP": -2.3,
+   "loop": false
+  },
+  "sfx_titan_damage_tick_01": {
+   "id": "sfx_titan_damage_tick",
+   "cat": "boss",
+   "dur_s": 0.12,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -4.0,
+   "loop": false
+  },
+  "sfx_titan_damage_tick_02": {
+   "id": "sfx_titan_damage_tick",
+   "cat": "boss",
+   "dur_s": 0.12,
+   "target_LUFS": -24,
+   "LUFS": -24.0,
+   "TP": -3.9,
+   "loop": false
+  }
+ }
+}
