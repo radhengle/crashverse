@@ -246,7 +246,7 @@ def face_wrecker(b):
 
 LAYOUTS={1:("c1_l01_lookout_hut",L1),2:("c1_l02_stilt_tower",L2),3:("c1_l03_bakery",L3),4:("c1_l04_windmill",L4),
  5:("c1_l05_twin_cottages",L5),6:("c1_l06_granary",L6),7:("m1_clockwork_tower",L7),8:("c1_l08_market_arcade",L8),
- 9:("c1_l09_lighthouse_gauntlet",L9),10:("c1_l10_tidewarden",L10)}
+ 9:("c1_l09_lighthouse_gauntlet",L9),10:("c1_l10_kings_palace",L10)}
 M=lambda t,txt,v=0,role="": dict(type=t,value=v,role=role,text=txt)
 # rev 6 tuning: readable mastery text (type/value/role unchanged except where noted), hint = first shot of the sim's best line
 OVR={1:dict(hintTarget="post",mastery=M("DESTROYED_AT_LEAST","Destroy at least 95% of the lookout",0.95)),
@@ -259,11 +259,11 @@ OVR={1:dict(hintTarget="post",mastery=M("DESTROYED_AT_LEAST","Destroy at least 9
  7:dict(hintTarget="ring0",mastery=M("ROLE_INTACT","Topple the tower without breaking the crown",0.8,"crown")),
  8:dict(shots=6,hintTarget="key1",mastery=M("STARS","Earn 3 stars",3)),
  9:dict(shots=5,hintTarget="lhRing",mastery=M("NO_POWERUP","Win without using a power-up")),
- 10:dict(shots=8,star3Pct=0.375,star2Pct=0.25,hintTarget="shoulderL",mastery=M("NO_CLOSED_SHUTTER_HIT","Storm the King's Palace without hitting the closed shutter",0,"shutter"))}
+ 10:dict(shots=7,star3Pct=0.42,star2Pct=0.28,hintTarget="gateLintel",mastery=M("SHOTS_LEFT_AT_LEAST","Take the King's Palace with 2 shots to spare",2))}
 if __name__=="__main__":
     os.makedirs(os.path.join(HERE,"layouts"),exist_ok=True)
     for n,(lid,f) in LAYOUTS.items():
-        blocks=[face_wrecker(b) for b in f()]
+        blocks=(json.load(open(os.path.join(HERE,"../../Assets/_Project/Resources/Data/Layouts/c1_l10_kings_palace.json")))["blocks"] if n==10 else [face_wrecker(b) for b in f()])
         json.dump({"id":lid,"blocks":blocks},open(os.path.join(HERE,"layouts",lid+".json"),"w"),indent=1)
     src=os.path.join(HERE,"../../Assets/_Project/Resources/Data/chapter1.json")
     ch=json.load(open(src))
