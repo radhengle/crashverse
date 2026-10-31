@@ -166,7 +166,7 @@ namespace Crashverse.Visuals
             Vector3 at = _crate != null ? _crate.position : Host.transform.position;
             if (_crate != null) _crate.gameObject.SetActive(false);
             if (!Host.IsBroken) Host.Break();
-            // huge radial blast: 400 at the centre falling to 40 % at 6 m (HiddenCoreRules.BlastDamage)
+            // huge radial blast: 400 at the centre falling to 50 % at 6 m (HiddenCoreRules.BlastDamage)
             using (ImpactSourceScope.Push(ImpactSourceKind.Explosion))
                 foreach (var c in Physics.OverlapSphere(at, Radius))
                 {
