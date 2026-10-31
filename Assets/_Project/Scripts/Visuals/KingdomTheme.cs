@@ -65,6 +65,7 @@ namespace Crashverse.Visuals
             Decorate(blocks, castle, clocktower);
             if (clocktower) AddClockFace(blocks);
             if (levelId != null && levelId.Contains("l09")) AddBeaconLantern(blocks);
+            if (levelId != null && levelId.EndsWith("l10")) AddIronFistCrest(blocks);
         }
 
         /// <summary>L1 "Royal Watch Post": a pitched shingle roof over the top piece, a ladder up the cannon-facing side and rope
@@ -226,6 +227,51 @@ namespace Crashverse.Visuals
         static Mesh _sphere;
         static Mesh Sphere() { if (_sphere == null) { var t = GameObject.CreatePrimitive(PrimitiveType.Sphere); _sphere = t.GetComponent<MeshFilter>().sharedMesh; Object.Destroy(t); } return _sphere; }
 
+
+        /// <summary>Ironvale's crimson-and-gold faction crest, mounted off-centre on the Palace gate lintel.</summary>
+        static void AddIronFistCrest(IReadOnlyList<DestructibleBlock> blocks)
+        {
+            DestructibleBlock host = null;
+            foreach (var b in blocks) if (b != null && b.blockId == "gateLintel") { host = b; break; }
+            if (host == null) return;
+            var root = MetricChild(host, "Kingdom_IronFistCrest");
+            var cube = CvMesh.BoxCube(Vector3.one, 0.25f);
+            float front = -host.transform.localScale.x * 0.5f - 0.045f;
+            float z = 0.92f; // right side of the lintel: keep the central face readable for hidden-core exposure
+            var plate = R("IronFistCrest_Plate", root, cube, KingdomMaterials.FlagRed);
+            plate.transform.localPosition = new Vector3(front, 0f, z);
+            plate.transform.localScale = new Vector3(0.08f, 1.05f, 1.05f);
+
+            var gold = new List<CombineInstance>();
+            void Add(Vector3 position, Vector3 size, Quaternion rotation = default)
+            {
+                if (rotation == default) rotation = Quaternion.identity;
+                gold.Add(new CombineInstance { mesh = cube, transform = Matrix4x4.TRS(position, rotation, size) });
+            }
+
+            // Four-piece frame.
+            float x = front - 0.055f;
+            Add(new Vector3(x, 0.52f, z), new Vector3(0.07f, 0.07f, 1.14f));
+            Add(new Vector3(x, -0.52f, z), new Vector3(0.07f, 0.07f, 1.14f));
+            Add(new Vector3(x, 0f, z - 0.54f), new Vector3(0.07f, 1.0f, 0.07f));
+            Add(new Vector3(x, 0f, z + 0.54f), new Vector3(0.07f, 1.0f, 0.07f));
+
+            // Stylised fist silhouette: cuff, palm, four raised knuckles and a turned thumb.
+            Add(new Vector3(x, -0.36f, z), new Vector3(0.08f, 0.18f, 0.34f));
+            Add(new Vector3(x, -0.08f, z - 0.02f), new Vector3(0.08f, 0.34f, 0.38f));
+            for (int i = 0; i < 4; i++)
+                Add(new Vector3(x, 0.17f, z - 0.15f + i * 0.10f), new Vector3(0.08f, 0.13f, 0.085f));
+            Add(new Vector3(x, -0.08f, z + 0.25f), new Vector3(0.08f, 0.15f, 0.22f), Quaternion.Euler(0f, 0f, -24f));
+
+            var emblem = new Mesh { name = "IronFistCrest_Gold", indexFormat = IndexFormat.UInt32 };
+            emblem.CombineMeshes(gold.ToArray(), true, true);
+            emblem.RecalculateBounds();
+            var sigil = new GameObject("IronFistCrest_Sigil");
+            sigil.transform.SetParent(root, false);
+            sigil.AddComponent<MeshFilter>().sharedMesh = emblem;
+            sigil.AddComponent<MeshRenderer>().sharedMaterial = KingdomMaterials.CannonBronze;
+            RuntimeMeshCleanup.Own(root, emblem);
+        }
 
         /// <summary>Bright, gold-framed beacon lens attached to the existing Level 9 lantern block.</summary>
         static void AddBeaconLantern(IReadOnlyList<DestructibleBlock> blocks)
