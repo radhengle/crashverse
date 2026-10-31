@@ -61,6 +61,7 @@ namespace Crashverse.Visuals
         {
             var m = new Mesh { name = "KCube" };
             var v = new List<Vector3>(); var nn = new List<Vector3>(); var uv = new List<Vector2>(); var t = new List<int>();
+            var edge = new List<Vector4>(); // per-face metres (u, v) + face size (w, h) for the GlossyPBR edge wear
             void Face(Vector3 n, Vector3 a, Vector3 b)
             {
                 int s = v.Count; var c = n * 0.5f;
@@ -70,13 +71,15 @@ namespace Crashverse.Visuals
                     v.Add(p); nn.Add(n);
                     var w = Vector3.Scale(p, size);
                     uv.Add(new Vector2(Vector3.Dot(w, a), Vector3.Dot(w, b)) / Mathf.Max(0.01f, tile) + new Vector2(0.37f, 0.11f));
+                    float fw = Mathf.Abs(Vector3.Dot(size, a)), fh = Mathf.Abs(Vector3.Dot(size, b));
+                    edge.Add(new Vector4((Vector3.Dot(p, a) + 0.5f) * fw, (Vector3.Dot(p, b) + 0.5f) * fh, fw, fh));
                 }
                 t.Add(s); t.Add(s + 2); t.Add(s + 1); t.Add(s); t.Add(s + 3); t.Add(s + 2);
             }
             Face(Vector3.right, Vector3.forward, Vector3.up); Face(Vector3.left, Vector3.back, Vector3.up);
             Face(Vector3.up, Vector3.right, Vector3.forward); Face(Vector3.down, Vector3.right, Vector3.back);
             Face(Vector3.forward, Vector3.left, Vector3.up); Face(Vector3.back, Vector3.right, Vector3.up);
-            m.SetVertices(v); m.SetNormals(nn); m.SetUVs(0, uv); m.SetTriangles(t, 0); m.RecalculateBounds(); m.RecalculateTangents();
+            m.SetVertices(v); m.SetNormals(nn); m.SetUVs(0, uv); m.SetUVs(2, edge); m.SetTriangles(t, 0); m.RecalculateBounds(); m.RecalculateTangents();
             return m;
         }
 

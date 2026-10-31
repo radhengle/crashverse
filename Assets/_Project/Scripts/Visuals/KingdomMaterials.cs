@@ -70,6 +70,16 @@ namespace Crashverse.Visuals
             }
             m.SetColor("_BaseColor", tint); if (m.HasProperty("_Color")) m.SetColor("_Color", tint);
             m.enableInstancing = false;
+            if (m.HasProperty("_EdgeWear"))
+            {   // rubbed timber edges / chipped masonry arrises (box-built architecture carries per-face edge data)
+                bool wood = key == "Planks" || key == "Wood" || key == "Bark";
+                bool stone = key == "Stone" || key == "Brick" || key == "Rock" || key == "Roof";
+                if (wood || stone)
+                {
+                    m.SetFloat("_EdgeWear", wood ? 0.85f : 0.75f); m.SetFloat("_EdgeWidth", wood ? 0.045f : 0.07f);
+                    m.SetColor("_EdgeWearColor", wood ? new Color(0.80f, 0.68f, 0.52f) : new Color(0.78f, 0.74f, 0.68f));
+                }
+            }
             return _m[key] = m;
         }
 
