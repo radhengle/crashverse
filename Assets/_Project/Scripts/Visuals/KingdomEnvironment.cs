@@ -483,6 +483,12 @@ namespace Crashverse.Visuals
         void Start() { _base = transform.localRotation; _phase = (transform.position.x * 0.37f + transform.position.z * 0.21f) % 6.28f; }
         void Update()
         {
+            // Respect the system-wide Reduce Motion preference for decorative wind motion as well as HUD animation.
+            if (Crashverse.Feel.MotionSettings.Current != null && Crashverse.Feel.MotionSettings.Current.ReduceMotion)
+            {
+                if (transform.localRotation != _base) transform.localRotation = _base;
+                return;
+            }
             if (amp <= 0f) { enabled = false; return; }
             float t = Time.unscaledTime * speed + _phase;
             transform.localRotation = _base * Quaternion.Euler(Mathf.Sin(t) * amp, 0f, Mathf.Sin(t * 1.3f + 1f) * amp * 0.7f);
