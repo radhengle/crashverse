@@ -61,6 +61,8 @@ namespace Crashverse.Visuals
         static Material Rope => KingdomMaterials.Make("Rope", "T_K_Bark", new Color(0.95f, 0.85f, 0.62f), 0f, 0.9f, new Vector2(0.3f, 3f));
         static Material Bronze => KingdomMaterials.Make("Bronze", null, new Color(0.62f, 0.42f, 0.18f), 0.8f, 0.35f, Vector2.one);
         static Material Iron => KingdomMaterials.Iron;
+        static Material Gap => KingdomMaterials.Make("BoardGap", "T_K_Wood", new Color(0.16f, 0.12f, 0.09f), 0f, 0.95f, Vector2.one);
+        static Material PlanksWorn => KingdomMaterials.Make("PlanksWorn", "T_K_Planks", new Color(0.78f, 0.74f, 0.70f), 0f, 0.9f, Vector2.one); // sun-bleached boards
 
         public static HashSet<DestructibleBlock> Dressed = new HashSet<DestructibleBlock>();
 
@@ -128,17 +130,33 @@ namespace Crashverse.Visuals
         // ---------------- recipes (metres, origin = the piece's centre; -x faces the cannon) ----------------
         static bool Cabin(Builder k, Vector3 s, bool main)
         {
-            float hx = s.x * 0.5f, hy = s.y * 0.5f, hz = s.z * 0.5f, t = 0.06f;
-            k.Box(Planks, Vector3.zero, s - Vector3.one * 0.12f, 1.2f); // inner core: no see-through gaps
-            // horizontal clapboards on all four sides (slight overlap relief)
-            int rows = Mathf.Max(3, Mathf.RoundToInt(s.y / 0.24f)); float ph = s.y / rows;
-            for (int i = 0; i < rows; i++)
+            float hx = s.x * 0.5f, hy = s.y * 0.5f, hz = s.z * 0.5f;
+            // L01.jpg: weathered VERTICAL boards with dark gaps between them, each a little crooked / uneven at the ends,
+            // over a dark inner core (the gaps read as shadow, never see-through)
+            k.Box(Gap, Vector3.zero, s - Vector3.one * 0.1f, 1.2f);
+            float bw = 0.19f, gap = 0.028f; int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
+            void Boards(Vector3 normal, Vector3 along, float width, float outAt)
             {
-                float y = -hy + ph * (i + 0.5f), o = (i % 2) * 0.012f;
-                k.Box(Planks, new Vector3(-hx + t * 0.5f - o, y, 0f), new Vector3(t, ph * 0.94f, s.z - 0.2f), 1.1f);
-                k.Box(Planks, new Vector3(hx - t * 0.5f + o, y, 0f), new Vector3(t, ph * 0.94f, s.z - 0.2f), 1.1f);
-                k.Box(Planks, new Vector3(0f, y, -hz + t * 0.5f - o), new Vector3(s.x - 0.2f, ph * 0.94f, t), 1.1f);
-                k.Box(Planks, new Vector3(0f, y, hz - t * 0.5f + o), new Vector3(s.x - 0.2f, ph * 0.94f, t), 1.1f);
+                int n = Mathf.Max(3, Mathf.RoundToInt((width - 0.2f) / (bw + gap))); float step = (width - 0.2f) / n;
+                for (int i = 0; i < n; i++)
+                {
+                    uint h = (uint)(seed * 73856093 ^ (i + 1) * 19349663 ^ Mathf.RoundToInt(normal.x * 3f + normal.z * 7f) * 83492791);
+                    float j0 = ((h & 255) / 255f - 0.5f), j1 = (((h >> 8) & 255) / 255f - 0.5f), j2 = (((h >> 16) & 255) / 255f - 0.5f);
+                    float len = s.y * (0.97f + 0.05f * j1), dy = 0.03f * j2 - (s.y - len) * 0.5f;
+                    var c = normal * (outAt + 0.004f * j1) + along * (-(width - 0.2f) * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
+                    var rot = Quaternion.AngleAxis(2.2f * j0, normal) * Quaternion.AngleAxis(1.2f * j2, along); // crooked boards
+                    var size = Mathf.Abs(normal.x) > 0.5f ? new Vector3(0.05f, len, step - gap) : new Vector3(step - gap, len, 0.05f);
+                    k.Box(j1 > 0.3f ? PlanksWorn : Planks, c, size, 1.1f, rot);
+                }
+            }
+            Boards(Vector3.left, Vector3.forward, s.z, hx - 0.025f); Boards(Vector3.right, Vector3.forward, s.z, hx - 0.025f);
+            Boards(Vector3.back, Vector3.right, s.x, hz - 0.025f); Boards(Vector3.forward, Vector3.right, s.x, hz - 0.025f);
+            // a horizontal batten across the boards, top and bottom
+            foreach (float yb in new[] { -hy + 0.18f, hy - 0.2f })
+            {
+                k.Box(Timber, new Vector3(-hx - 0.02f, yb, 0f), new Vector3(0.05f, 0.11f, s.z - 0.25f), 1f);
+                k.Box(Timber, new Vector3(0f, yb, -hz - 0.02f), new Vector3(s.x - 0.25f, 0.11f, 0.05f), 1f);
+                k.Box(Timber, new Vector3(0f, yb, hz + 0.02f), new Vector3(s.x - 0.25f, 0.11f, 0.05f), 1f);
             }
             // corner posts + sill / top plates
             foreach (float x in new[] { -hx + 0.08f, hx - 0.08f })
