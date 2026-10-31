@@ -245,7 +245,8 @@ namespace Crashverse.Visuals
             var gold = new List<CombineInstance>();
             void Add(Vector3 position, Vector3 size, Quaternion rotation = default)
             {
-                if (rotation == default) rotation = Quaternion.identity;
+                if (rotation.x == 0f && rotation.y == 0f && rotation.z == 0f && rotation.w == 0f)
+                    rotation = Quaternion.identity;
                 gold.Add(new CombineInstance { mesh = cube, transform = Matrix4x4.TRS(position, rotation, size) });
             }
 
