@@ -19,6 +19,7 @@ namespace Crashverse.Visuals
         ParticleSystem _planks, _sparks, _fire, _smoke, _ball, _ring;
         struct Burn { public Vector3 at; public float until, next; }
         readonly List<Burn> _burns = new List<Burn>();
+        readonly List<Material> _ownedMaterials = new List<Material>();
         float _scale = 1f; System.Random _rng = new System.Random(7);
 
         public static KingdomFx Create(Transform parent, bool low)
@@ -29,11 +30,19 @@ namespace Crashverse.Visuals
             Instance = fx; return fx;
         }
 
-        void OnDestroy() { if (Instance == this) Instance = null; }
+        void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
+            // Each gameplay run creates its own particle materials. Destroy them with the run to avoid
+            // native material accumulation when players retry levels or move between campaign stages.
+            foreach (var m in _ownedMaterials) if (m != null) Destroy(m);
+            _ownedMaterials.Clear();
+        }
 
         Material Mat(VfxAssets a, Texture2D tex, bool add, Color tint, float intensity)
         {
             var m = new Material(a.particleShader) { name = "MK_Fx_" + (tex != null ? tex.name : "none") };
+            _ownedMaterials.Add(m); // one runtime material per layer; release it when this run's environment is destroyed
             if (tex != null) m.SetTexture("_BaseMap", tex);
             m.SetColor("_BaseColor", tint); m.SetFloat("_Intensity", intensity);
             m.SetFloat("_SrcBlend", add ? 1f : 5f); m.SetFloat("_DstBlend", add ? 1f : 10f); m.SetFloat("_AlphaClip", add ? 0.02f : 0.06f);
