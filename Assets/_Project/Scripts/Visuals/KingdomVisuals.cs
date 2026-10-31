@@ -115,7 +115,11 @@ namespace Crashverse.Visuals
             if (palace && !dark && RenderSettings.sun != null) { RenderSettings.sun.intensity = 1.2f; RenderSettings.sun.color = new Color(0.85f, 0.88f, 1f); }
             try
             {
-                KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark, GameplayDirector.StructureBounds(s, s.structureBase));
+                var region = ctx != null && ctx.mode == RunMode.DailyBoss ? KingdomRegion.Quarry :
+                    ctx?.level == null || ctx.level.number <= 3 ? KingdomRegion.Harbour :
+                    ctx.level.number <= 6 ? KingdomRegion.MillFields :
+                    ctx.level.number <= 9 ? KingdomRegion.Clocktower : KingdomRegion.CrownRock;
+                KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark, region, GameplayDirector.StructureBounds(s, s.structureBase));
                 CannonDresser.Dress(wb);
                 if (s.builder != null) KingdomTheme.Apply(s.builder.Blocks, levelId);
 

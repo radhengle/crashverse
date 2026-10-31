@@ -4,6 +4,8 @@ using UnityEngine.Rendering;
 
 namespace Crashverse.Visuals
 {
+    public enum KingdomRegion { Harbour, MillFields, Clocktower, CrownRock, Quarry }
+
     /// <summary>
     /// Phase 1 environment for every run (concept art design/level_concepts_v1): photo sky, ocean with a turquoise lagoon and foam
     /// line, a textured grass island with a sand beach, shoreline rocks, palms, a plank harbour deck under the cannon with posts, rope and
@@ -19,17 +21,19 @@ namespace Crashverse.Visuals
         static bool Compact => Rx < 20f;
         static bool OnIsland(Vector3 p, float margin = 0.85f) { float u = (p.x - Cx) / Rx, w = p.z / Rz; return u * u + w * w < margin * margin; }
 
-        public static GameObject Build(Transform parent, Vector3 cannonRoot, Vector3 structureBase, bool palaceLevel, bool dark, Bounds? structure = null)
+        public static GameObject Build(Transform parent, Vector3 cannonRoot, Vector3 structureBase, bool palaceLevel, bool dark, KingdomRegion region, Bounds? structure = null)
         {
             var root = new GameObject("KingdomEnvironment"); root.transform.SetParent(parent, false);
+            var bounds = structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f));
             Ocean(root.transform);
             Island(root.transform, structureBase);
             Deck(root.transform, cannonRoot);
             Shore(root.transform, cannonRoot, structureBase);
-            Horizon(root.transform, palaceLevel);
-            if (Rx >= 20f) Yard(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
+            Horizon(root.transform, palaceLevel, region);
+            if (Rx >= 20f) Yard(root.transform, cannonRoot, bounds);
             Harbour(root.transform, structureBase);
-            Foliage(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
+            RegionSetDressing(root.transform, structureBase, bounds, region);
+            Foliage(root.transform, cannonRoot, bounds);
             return root;
         }
 
@@ -451,8 +455,108 @@ namespace Crashverse.Visuals
             l.AddComponent<Sway>().amp = 1.6f;
         }
 
+        // ---------------- region landmarks ----------------
+        // These skyline silhouettes make the campaign's journey legible before the player even reads the level title.
+        // They are presentation-only, have no colliders, and sit on distant islands outside the playable firing lane.
+        static void WindmillLandmark(Transform parent)
+        {
+            var t = new GameObject("CrownMillLandmark").transform; t.SetParent(parent, false);
+            t.localPosition = new Vector3(150f, WaterY, 70f);
+            Box("MillTower", t, new Vector3(0f, 5.2f, 0f), new Vector3(5.2f, 10.4f, 5.2f), KingdomMaterials.Make("MillStone", "T_K_Stone", new Color(0.82f, 0.72f, 0.55f), 0f, 0.9f, Vector2.one), 2.5f);
+            Box("MillRoof", t, new Vector3(0f, 10.8f, 0f), new Vector3(6.2f, 1.0f, 6.2f), KingdomMaterials.Roof, 2f);
+            Box("MillDoor", t, new Vector3(-2.66f, 1.3f, 0f), new Vector3(0.08f, 2.4f, 1.1f), KingdomMaterials.Bore, 1f);
+            var rotor = new GameObject("WindmillRotor").transform; rotor.SetParent(t, false);
+            rotor.localPosition = new Vector3(-2.8f, 8.7f, 0f);
+            for (int i = 0; i < 4; i++)
+            {
+                var blade = new GameObject("BladePivot").transform; blade.SetParent(rotor, false);
+                blade.localRotation = Quaternion.Euler(i * 90f, 0f, 0f);
+                Box("Sail", blade, new Vector3(0f, 2.15f, 0f), new Vector3(0.34f, 4.3f, 0.66f), KingdomMaterials.Planks, 1.2f);
+                Box("SailTip", blade, new Vector3(0f, 4.05f, 0f), new Vector3(0.42f, 0.45f, 0.82f), KingdomMaterials.Wood, 1f);
+            }
+            var hub = Obj("MillHub", rotor, Sphere(), KingdomMaterials.Iron, false, false);
+            hub.transform.localScale = Vector3.one * 0.9f;
+            rotor.gameObject.AddComponent<WindmillRotor>().degreesPerSecond = 8f;
+        }
+
+        static void ClocktowerLandmark(Transform parent)
+        {
+            var t = new GameObject("CurfewClocktowerLandmark").transform; t.SetParent(parent, false);
+            t.localPosition = new Vector3(184f, WaterY, -75f);
+            var stone = KingdomMaterials.Make("ClocktowerStone", "T_K_Stone", new Color(0.86f, 0.82f, 0.73f), 0f, 0.88f, Vector2.one);
+            Box("ClockTowerBase", t, new Vector3(0f, 6f, 0f), new Vector3(5.2f, 12f, 5.2f), stone, 2.5f);
+            Box("ClockTowerUpper", t, new Vector3(0f, 14.5f, 0f), new Vector3(4.2f, 7f, 4.2f), stone, 2f);
+            Box("ClockTowerRoof", t, new Vector3(0f, 18.3f, 0f), new Vector3(5.4f, 1.0f, 5.4f), KingdomMaterials.Roof, 2f);
+            var dial = Obj("ClockDial", t, Cylinder(), KingdomMaterials.Make("ClockDial", null, new Color(0.92f, 0.82f, 0.58f), 0.25f, 0.55f, Vector2.one), false, false);
+            dial.transform.localPosition = new Vector3(-2.68f, 14.6f, 0f);
+            dial.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            dial.transform.localScale = new Vector3(2.4f, 0.12f, 2.4f);
+            Box("ClockMinuteHand", t, new Vector3(-2.78f, 14.6f, 0f), new Vector3(0.08f, 1.05f, 0.08f), KingdomMaterials.CannonBronze, 1f);
+            Box("ClockHourHand", t, new Vector3(-2.78f, 14.6f, 0.25f), new Vector3(0.08f, 0.08f, 0.72f), KingdomMaterials.CannonBronze, 1f);
+            for (int i = 0; i < 4; i++)
+                Box("ClockMerlon", t, new Vector3((i % 2 == 0 ? -1f : 1f) * 1.35f, 19.2f, (i < 2 ? -1f : 1f) * 1.35f), new Vector3(0.7f, 1.0f, 0.7f), stone, 1f);
+        }
+
+        static void QuarryLandmark(Transform parent)
+        {
+            var rocks = CvMesh.Load("Kingdom/Meshes/Rocks");
+            var t = new GameObject("IronjawQuarryLandmark").transform; t.SetParent(parent, false);
+            t.localPosition = new Vector3(154f, WaterY, 68f);
+            string[] ids = { "Rock_A", "Rock_B", "Rock_C" };
+            for (int i = 0; i < ids.Length; i++)
+            {
+                if (!rocks.TryGetValue(ids[i], out var mesh)) continue;
+                var rock = Obj(ids[i], t, mesh, KingdomMaterials.Rock, false, false);
+                rock.transform.localPosition = new Vector3((i - 1) * 4.6f, 1.5f + (i % 2) * 1.4f, (i % 2 == 0 ? -1f : 1f) * 2.5f);
+                rock.transform.localRotation = Quaternion.Euler(0f, i * 41f, 0f);
+                rock.transform.localScale = new Vector3(2.8f, 3.8f + i * 0.8f, 2.7f);
+            }
+        }
+
+        static void RegionSetDressing(Transform root, Vector3 structure, Bounds bounds, KingdomRegion region)
+        {
+            if (region == KingdomRegion.MillFields)
+            {
+                var hay = KingdomMaterials.Make("HayBale", "T_K_Grass", new Color(1.15f, 0.82f, 0.34f), 0f, 0.98f, Vector2.one);
+                foreach (float side in new[] { -1f, 1f })
+                {
+                    float z = bounds.center.z + side * (bounds.extents.z + 3.2f);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        float x = bounds.min.x - 2.2f + i * 1.25f;
+                        Box("HayBale", root, new Vector3(x, 0.42f, z), new Vector3(1.1f, 0.84f, 0.8f), hay, 0.8f, Quaternion.Euler(0f, side * (8f + i * 7f), 0f));
+                    }
+                    Box("HayStackTop", root, new Vector3(bounds.min.x - 1.6f, 1.15f, z), new Vector3(0.9f, 0.62f, 0.72f), hay, 0.7f, Quaternion.Euler(0f, side * 18f, 0f));
+                }
+            }
+            else if (region == KingdomRegion.Clocktower)
+            {
+                foreach (float side in new[] { -1f, 1f })
+                {
+                    var post = Obj("TownLampPost", root, Cylinder(), KingdomMaterials.Wood, false, false);
+                    post.transform.localPosition = new Vector3(bounds.min.x - 2.5f, 2.0f, bounds.center.z + side * (bounds.extents.z + 3.0f));
+                    post.transform.localScale = new Vector3(0.18f, 2.0f, 0.18f);
+                    var lantern = Obj("TownLantern", root, Sphere(), KingdomMaterials.Make("LanternGlow", null, new Color(1f, 0.68f, 0.24f), 0f, 0.25f, Vector2.one, new Color(1.2f, 0.48f, 0.12f)), false, false);
+                    lantern.transform.localPosition = post.transform.localPosition + Vector3.up * 2.1f;
+                    lantern.transform.localScale = Vector3.one * 0.42f;
+                }
+            }
+            else if (region == KingdomRegion.CrownRock)
+            {
+                var gold = KingdomMaterials.CannonBronze;
+                foreach (float side in new[] { -1f, 1f })
+                {
+                    var standard = Obj("CrownRockStandard", root, Cylinder(), KingdomMaterials.Gold, false, false);
+                    standard.transform.localPosition = new Vector3(bounds.min.x - 2.8f, 2.2f, bounds.center.z + side * (bounds.extents.z + 3.2f));
+                    standard.transform.localScale = new Vector3(0.12f, 2.2f, 0.12f);
+                    Box("StandardCrossbar", root, standard.transform.localPosition + Vector3.up * 1.65f, new Vector3(0.14f, 0.14f, 1.5f), gold, 1f);
+                    Box("StandardCloth", root, standard.transform.localPosition + Vector3.up * 1.0f, new Vector3(0.12f, 1.0f, 0.9f), KingdomMaterials.FlagRed, 1f);
+                }
+            }
+        }
+
         // ---------------- horizon ----------------
-        static void Horizon(Transform root, bool palaceLevel)
+        static void Horizon(Transform root, bool palaceLevel, KingdomRegion region)
         {
             var isles = CvMesh.Load("Kingdom/Meshes/Isles"); var palace = CvMesh.Load("Kingdom/Meshes/Palace"); var palms = CvMesh.Load("Kingdom/Meshes/Palms");
             var h = new GameObject("Horizon").transform; h.SetParent(root, false);
@@ -473,6 +577,9 @@ namespace Crashverse.Visuals
             Isle("IsleB", isles, new Vector3(185f, WaterY, -75f), 1.1f, 140f);
             Isle("IsleA", isles, new Vector3(-60f, WaterY, 150f), 1.3f, 75f);
             Isle("IsleB", isles, new Vector3(260f, WaterY, 25f), 0.9f, 260f);
+            if (region == KingdomRegion.MillFields) WindmillLandmark(h);
+            else if (region == KingdomRegion.Clocktower) ClocktowerLandmark(h);
+            else if (region == KingdomRegion.Quarry) QuarryLandmark(h);
             // King Grimhold's palace on Crown Rock: always on the horizon (screen right), close and huge on L10
             var pal = new GameObject("CrownRockPalace").transform; pal.SetParent(h, false);
             pal.localPosition = palaceLevel ? new Vector3(185f, WaterY, -16f) : new Vector3(230f, WaterY, -45f);
@@ -509,4 +616,15 @@ namespace Crashverse.Visuals
             transform.localRotation = _base * Quaternion.Euler(Mathf.Sin(t) * amp, 0f, Mathf.Sin(t * 1.3f + 1f) * amp * 0.7f);
         }
     }
+    /// <summary>Slow background windmill motion; purely decorative and disabled while Reduce Motion is active.</summary>
+    public class WindmillRotor : MonoBehaviour
+    {
+        public float degreesPerSecond = 8f;
+        void Update()
+        {
+            if (Crashverse.Feel.MotionSettings.Current != null && Crashverse.Feel.MotionSettings.Current.ReduceMotion) return;
+            transform.Rotate(Vector3.right, degreesPerSecond * Time.deltaTime, Space.Self);
+        }
+    }
+
 }
