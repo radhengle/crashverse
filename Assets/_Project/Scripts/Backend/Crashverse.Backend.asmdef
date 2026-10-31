@@ -2,7 +2,8 @@
     "name": "Crashverse.Backend",
     "rootNamespace": "Crashverse.Backend",
     "references": [
-        "Crashverse.Rules"
+        "Crashverse.Rules",
+        "Crashverse.Physics.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
