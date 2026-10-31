@@ -62,7 +62,7 @@ namespace UnityEngine
         public Material sharedMaterial, material; public int numCapVertices, numCornerVertices; public Gradient colorGradient; public LineTextureMode textureMode; public LineAlignment alignment;
         public void SetPosition(int i, Vector3 p) { } public void SetPositions(Vector3[] p) { }
     }
-    public class Material : Object { public Material(Shader s) { } public Material(Material m) { } public void SetTexture(string n, Texture t) { } public void SetFloat(string n, float f) { } public bool enableInstancing; public Shader shader; public Color color; public void SetColor(string n, Color c) { } }
+    public class Material : Object { public Material(Shader s) { } public Material(Material m) { } public void SetTexture(string n, Texture t) { } public void SetFloat(string n, float f) { } public bool enableInstancing; public Shader shader; public Color color; public void SetColor(string n, Color c) { } public Texture mainTexture; public Vector2 mainTextureScale; }
     public class Shader : Object { public static Shader Find(string n) => new Shader(); public bool isSupported = true; }
     public enum TouchPhase { Began, Moved, Stationary, Ended, Canceled }
     public struct Touch { public int fingerId; public Vector2 position; public Vector2 deltaPosition; public TouchPhase phase; }
