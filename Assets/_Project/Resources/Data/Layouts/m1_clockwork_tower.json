@@ -23,7 +23,7 @@
    "indestructible": true,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   },
   {
    "id": "ring0",
@@ -49,7 +49,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R0.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "wallF1",
@@ -75,7 +79,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1F.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "wallB1",
@@ -101,7 +109,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1B.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "wallL1",
@@ -127,7 +139,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1L.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "wallR1",
@@ -153,7 +169,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W1R.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "ring1",
@@ -182,7 +202,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R1.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "wallF2",
@@ -208,7 +232,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2F.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "wallB2",
@@ -234,7 +262,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2B.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "wallL2",
@@ -260,7 +292,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2L.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "wallR2",
@@ -286,7 +322,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_W2R.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "ring2",
@@ -315,7 +355,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_R2.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "crownFloor",
@@ -341,7 +385,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrFl.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "crownWood",
@@ -367,7 +415,12 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdA.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrWdB.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "crownBrick",
@@ -393,7 +446,11 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrBk.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "crownRoof",
@@ -419,14 +476,19 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0,
+   "parts": [
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfA.fbx",
+    "Assets/_Project/Models/Realistic/Buildings/Bld_StoneTower/Kit_RealTower_CrRfB.fbx"
+   ],
+   "rotY": -90
   },
   {
    "id": "annex",
    "mat": "brick",
    "p": [
     0.4,
-    2.0,
+    2,
     2.5
    ],
    "s": [
@@ -445,7 +507,7 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   },
   {
    "id": "wingL",
@@ -471,7 +533,7 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   },
   {
    "id": "wingR",
@@ -497,7 +559,7 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   },
   {
    "id": "crate",
@@ -523,7 +585,7 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   },
   {
    "id": "crateTop",
@@ -549,7 +611,7 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   },
   {
    "id": "barrel",
@@ -575,7 +637,7 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   },
   {
    "id": "barrel2",
@@ -601,7 +663,7 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   },
   {
    "id": "barrelDecor",
@@ -609,7 +671,7 @@
    "p": [
     -2,
     0.6,
-    4.0
+    4
    ],
    "s": [
     0.8,
@@ -625,7 +687,7 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0
   }
  ]
 }

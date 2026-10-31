@@ -61,7 +61,9 @@ namespace Crashverse.Visuals
                 }
                 else if (!ArchitectureDresser.Dressed.Contains(b)) Retexture(b, castle);
             }
-            Decorate(blocks, castle);
+            bool clocktower = levelId != null && levelId.Contains("clockwork");
+            Decorate(blocks, castle, clocktower);
+            if (clocktower) AddClockFace(blocks);
         }
 
         /// <summary>L1 "Royal Watch Post": a pitched shingle roof over the top piece, a ladder up the cannon-facing side and rope
@@ -221,7 +223,37 @@ namespace Crashverse.Visuals
         static Mesh _cyl;
         static Mesh Cyl() { if (_cyl == null) { var t = GameObject.CreatePrimitive(PrimitiveType.Cylinder); _cyl = t.GetComponent<MeshFilter>().sharedMesh; Object.Destroy(t); } return _cyl; }
 
-        static void Decorate(IReadOnlyList<DestructibleBlock> blocks, bool castle)
+        /// <summary>Adds a breakable clock face to the cannon-facing upper storey of the Curfew Clocktower.</summary>
+        static void AddClockFace(IReadOnlyList<DestructibleBlock> blocks)
+        {
+            DestructibleBlock host = null;
+            foreach (var b in blocks) if (b != null && b.blockId == "wallF2") { host = b; break; }
+            if (host == null) return;
+            var root = MetricChild(host, "Kingdom_ClockFace");
+            float front = -host.transform.localScale.x * 0.5f - 0.025f;
+            var rim = R("ClockFace_Rim", root, Cyl(), KingdomMaterials.CannonBronze);
+            rim.transform.localPosition = new Vector3(front, 0.42f, 0f);
+            rim.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            rim.transform.localScale = new Vector3(1.12f, 0.055f, 1.12f);
+            var plate = R("ClockFace_Plate", root, Cyl(), KingdomMaterials.Make("ClockFaceIvory", null, new Color(0.82f, 0.75f, 0.61f), 0.12f, 0.72f, Vector2.one));
+            plate.transform.localPosition = new Vector3(front - 0.055f, 0.42f, 0f);
+            plate.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            plate.transform.localScale = new Vector3(0.94f, 0.035f, 0.94f);
+            var dark = KingdomMaterials.Make("ClockHands", null, new Color(0.10f, 0.16f, 0.22f), 0.45f, 0.48f, Vector2.one);
+            var handMesh = CvMesh.BoxCube(Vector3.one, 0.2f);
+            var minute = R("ClockMinuteHand", root, handMesh, dark);
+            minute.transform.localPosition = new Vector3(front - 0.095f, 0.61f, 0f);
+            minute.transform.localScale = new Vector3(0.035f, 0.39f, 0.045f);
+            var hour = R("ClockHourHand", root, handMesh, dark);
+            hour.transform.localPosition = new Vector3(front - 0.095f, 0.42f, 0.12f);
+            hour.transform.localScale = new Vector3(0.035f, 0.045f, 0.28f);
+            var hub = R("ClockHub", root, Cyl(), KingdomMaterials.Gold);
+            hub.transform.localPosition = new Vector3(front - 0.12f, 0.42f, 0f);
+            hub.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            hub.transform.localScale = Vector3.one * 0.12f;
+        }
+
+        static void Decorate(IReadOnlyList<DestructibleBlock> blocks, bool castle, bool authoredBanners = false)
         {
             // banners: up to 2 walls with the biggest cannon-facing area
             var walls = new List<DestructibleBlock>();
@@ -230,7 +262,7 @@ namespace Crashverse.Visuals
             {
                 if (b == null || b.role == "island" || b.isRoof || b.role == "roof") continue;
                 var s = b.transform.localScale;
-                if (s.y >= 1.1f && !ArchitectureDresser.Dressed.Contains(b) && s.z >= 1.1f && s.x <= Mathf.Max(s.y, s.z)) walls.Add(b);
+                if (!authoredBanners && s.y >= 1.1f && !ArchitectureDresser.Dressed.Contains(b) && s.z >= 1.1f && s.x <= Mathf.Max(s.y, s.z)) walls.Add(b);
                 float y = b.transform.position.y + s.y * 0.5f;
                 if (y > topY && s.x >= 0.25f && s.z >= 0.25f) { topY = y; top = b; }
             }
