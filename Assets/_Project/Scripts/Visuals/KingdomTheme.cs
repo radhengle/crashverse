@@ -232,11 +232,15 @@ namespace Crashverse.Visuals
                 used.Add(w.transform.position); placed++;
                 var s = w.transform.localScale; var m = MetricChild(w, "Kingdom_Banner");
                 float bw = Mathf.Min(1.2f, s.z * 0.42f), bh = Mathf.Min(2.0f, s.y * 0.72f, bw * 1.75f);
-                var q = R("Banner", m, Quad(), KingdomMaterials.Banner);
-                q.transform.localPosition = new Vector3(-s.x * 0.5f - 0.03f, s.y * 0.5f - bh * 0.5f - 0.12f, 0f); q.transform.localScale = new Vector3(1f, bh, bw);
-                var rod = R("BannerRod", m, Cyl(), KingdomMaterials.Gold);
-                rod.transform.localPosition = new Vector3(-s.x * 0.5f - 0.05f, s.y * 0.5f - 0.1f, 0f);
+                // Hinge the cloth from its top rod so the royal colours catch the same island breeze as the palms and roof flag.
+                var rig = new GameObject("BannerRig").transform; rig.SetParent(m, false);
+                rig.localPosition = new Vector3(-s.x * 0.5f - 0.05f, s.y * 0.5f - 0.1f, 0f);
+                var q = R("Banner", rig, Quad(), KingdomMaterials.Banner);
+                q.transform.localPosition = new Vector3(0.02f, -bh * 0.5f - 0.02f, 0f);
+                q.transform.localScale = new Vector3(1f, bh, bw);
+                var rod = R("BannerRod", rig, Cyl(), KingdomMaterials.Gold);
                 rod.transform.localRotation = Quaternion.Euler(90f, 0f, 0f); rod.transform.localScale = new Vector3(0.06f, bw * 0.6f, 0.06f);
+                rig.gameObject.AddComponent<Sway>().amp = 3f;
             }
             if (top != null)
             {
