@@ -81,33 +81,51 @@ namespace Crashverse.Visuals
             AddWheel(carriageRoot, -1.30f, 0.38f, 0.98f, 0.38f, "Rear");
         }
 
+        static Mesh _spokeCube, _hubCylinder;
+        static Mesh PrimitiveMesh(ref Mesh cache, PrimitiveType type)
+        {
+            if (cache != null) return cache;
+            var temp = GameObject.CreatePrimitive(type);
+            cache = temp.GetComponent<MeshFilter>().sharedMesh;
+            Object.Destroy(temp);
+            return cache;
+        }
+
         static void AddWheel(Transform root, float x, float y, float z, float radius, string label)
         {
             var spokeMat = KingdomMaterials.CarriageWood;
+            var cube = PrimitiveMesh(ref _spokeCube, PrimitiveType.Cube);
+            var cylinder = PrimitiveMesh(ref _hubCylinder, PrimitiveType.Cylinder);
             for (int side = -1; side <= 1; side += 2)
             {
-                for (int i = 0; i < 8; i++)
+                // Eight timber spokes are one mesh per wheel face (rather than 8 renderers).
+                var pieces = new CombineInstance[8];
+                for (int i = 0; i < pieces.Length; i++)
                 {
                     float angle = i * Mathf.PI / 4f;
-                    var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    go.name = "Cannon_" + label + "Wheel_Spoke_" + side + "_" + i;
-                    go.transform.SetParent(root, false);
-                    go.transform.localPosition = new Vector3(x + Mathf.Cos(angle) * radius * 0.52f,
+                    var pos = new Vector3(x + Mathf.Cos(angle) * radius * 0.52f,
                         y + Mathf.Sin(angle) * radius * 0.52f, side * (z + 0.125f));
-                    go.transform.localRotation = Quaternion.Euler(0f, 0f, angle * Mathf.Rad2Deg);
+                    var rot = Quaternion.Euler(0f, 0f, angle * Mathf.Rad2Deg);
                     float length = radius * 0.90f;
-                    go.transform.localScale = new Vector3(length, Mathf.Max(0.075f, radius * 0.18f), 0.035f);
-                    var col = go.GetComponent<Collider>(); if (col != null) Object.Destroy(col);
-                    var renderer = go.GetComponent<MeshRenderer>(); if (renderer != null) renderer.sharedMaterial = spokeMat;
+                    var scale = new Vector3(length, Mathf.Max(0.075f, radius * 0.18f), 0.035f);
+                    pieces[i] = new CombineInstance { mesh = cube, transform = Matrix4x4.TRS(pos, rot, scale) };
                 }
-                var hub = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                hub.name = "Cannon_" + label + "Wheel_BrassHub_" + side;
+                var spokesMesh = new Mesh { name = "Cannon_" + label + "Wheel_Spokes", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
+                spokesMesh.CombineMeshes(pieces, true, true);
+                spokesMesh.RecalculateBounds();
+                var spokes = new GameObject("Cannon_" + label + "Wheel_Spokes_" + side);
+                spokes.transform.SetParent(root, false);
+                spokes.AddComponent<MeshFilter>().sharedMesh = spokesMesh;
+                spokes.AddComponent<MeshRenderer>().sharedMaterial = spokeMat;
+                RuntimeMeshCleanup.Own(root, spokesMesh);
+
+                var hub = new GameObject("Cannon_" + label + "Wheel_BrassHub_" + side);
                 hub.transform.SetParent(root, false);
                 hub.transform.localPosition = new Vector3(x, y, side * (z + 0.15f));
                 hub.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
                 hub.transform.localScale = new Vector3(radius * 0.42f, 0.045f, radius * 0.42f);
-                var hc = hub.GetComponent<Collider>(); if (hc != null) Object.Destroy(hc);
-                var hr = hub.GetComponent<MeshRenderer>(); if (hr != null) hr.sharedMaterial = KingdomMaterials.CannonBronze;
+                hub.AddComponent<MeshFilter>().sharedMesh = cylinder;
+                hub.AddComponent<MeshRenderer>().sharedMaterial = KingdomMaterials.CannonBronze;
             }
         }
 
