@@ -23,13 +23,13 @@ namespace Crashverse.Meta
         public class Settings
         {
             public float back = 20f;         // metres behind the cannon root, along the firing line (PM QA 31 Oct: concept framing, muzzle ~40% up)
-            public float height = 8.0f;      // camera height above the cannon's ground (looks down on the cannon so it no longer covers the target)
+            public float height = 5.0f;      // PM QA 31 Oct (L01.jpg): slightly behind + above the cannon; lower eye puts the building upper-middle and bigger
             public float cannonRear = 1.8f;  // the cannon envelope reaches this far behind its root (rear roller / carriage)
             public float cannonTop = 2.6f;   // barrel tip / booster top at rest elevation
             public float topMargin = 0.06f;  // minimum share of the screen height above the structure's top (the HUD band, see HudTopMargin)
             public float bottomMargin = 0.03f; // share left under the cannon's wheels
-            public float sideFill = 0.92f;   // the structure's width may use up to this share of the screen width
-            public float minFov = 24f, maxFov = 68f;
+            public float sideFill = 0.80f;   // the structure's width may use up to this share of the screen width
+            public float minFov = 18f, maxFov = 68f; // 18: small huts may zoom in to fill ~70-80% of the width
         }
 
         public static readonly Settings Default = new Settings();
