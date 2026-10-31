@@ -64,32 +64,62 @@ namespace Crashverse.UI
             if (_mode == RunMode.DailyBoss)
             {
                 heading = "THE QUARRY · DAILY BOSS";
-                copy = "The King's siege golem guards the stoneworks. Break its armour and strike the molten core.";
-            }
-            else if (_lvl.number <= 3)
-            {
-                heading = "IRONVALE HARBOUR";
-                copy = "Grimhold's blockade begins here. Bring down the royal outposts that keep the harbour under his thumb.";
-            }
-            else if (_lvl.number <= 6)
-            {
-                heading = "THE MILL FIELDS";
-                copy = "The crown takes the grain before families can eat. Rook is dismantling the King's chain of supply.";
-            }
-            else if (_lvl.number <= 9)
-            {
-                heading = "THE CURFEW DISTRICT";
-                copy = "The clocktower keeps the town afraid and the sea-wall keeps it trapped. Clear the road to Crown Rock.";
+                copy = "Ironjaw Golem guards the King's stoneworks. Break its armour and strike the molten chest core.";
             }
             else
             {
-                heading = "CROWN ROCK · THE PALACE";
-                copy = "The royal stronghold stands between Rook and the Iron King. Tear down its defenses; the final duel lies beyond.";
+                switch (_lvl.number)
+                {
+                    case 1:
+                        heading = "IRONVALE HARBOUR · ROYAL WATCH POST";
+                        copy = "The watch post spots boats defying the blockade. Take it down and give the harbour room to breathe.";
+                        break;
+                    case 2:
+                        heading = "IRONVALE HARBOUR · KING'S CISTERN";
+                        copy = "The crown controls the town's water. Break every support and return the supply to the people.";
+                        break;
+                    case 3:
+                        heading = "IRONVALE HARBOUR · ROYAL BAKERY";
+                        copy = "The palace eats while the harbour goes hungry. Smash the King's monopoly on bread.";
+                        break;
+                    case 4:
+                        heading = "THE MILL FIELDS · CROWN MILL";
+                        copy = "The mill grinds grain for Grimhold's troops. Topple it and stop the royal levy.";
+                        break;
+                    case 5:
+                        heading = "THE MILL FIELDS · TAX COLLECTORS";
+                        copy = "Two lodges guard the bridge and squeeze every traveller. One well-placed shot can free both approaches.";
+                        break;
+                    case 6:
+                        heading = "THE MILL FIELDS · ROYAL GRANARY";
+                        copy = "Steel braces protect the grain seized from the people. Break the joints and bring down the hoard.";
+                        break;
+                    case 7:
+                        heading = "THE CURFEW DISTRICT · CLOCKTOWER";
+                        copy = "The King's clock keeps the town afraid. Bring down its supports and silence the curfew bell.";
+                        break;
+                    case 8:
+                        heading = "THE CURFEW DISTRICT · ROYAL MARKET";
+                        copy = "The royal arcade taxes every stall. Clear the toll hall and open the road to the sea-wall.";
+                        break;
+                    case 9:
+                        heading = "THE CURFEW DISTRICT · SEA-WALL BEACON";
+                        copy = "The beacon guides Grimhold's blockade ships. Destroy the signal and expose the route to Crown Rock.";
+                        break;
+                    case 10:
+                        heading = "CROWN ROCK · THE KING'S PALACE";
+                        copy = "Break the palace towers and gatehouse, expose its hidden core, and reach the throne room. The Iron King awaits beyond.";
+                        break;
+                    default:
+                        heading = "THE KINGDOM OF IRONVALE";
+                        copy = "Captain Rook is dismantling Grimhold's royal strongholds, one structure at a time.";
+                        break;
+                }
             }
 
             var card = V2.Card("MissionStory", parent, Th);
             var layout = card.gameObject.AddComponent<LayoutElement>();
-            layout.minHeight = layout.preferredHeight = _mode == RunMode.DailyBoss ? 66f : 62f;
+            layout.minHeight = layout.preferredHeight = 72f;
             var content = UIFactory.VStack(card.transform, 1f, 8f, TextAnchor.MiddleLeft);
             UIFactory.Stretch(content);
             var title = UIFactory.Label(content, heading, Th.captionSp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
@@ -97,7 +127,7 @@ namespace Crashverse.UI
             var body = UIFactory.Label(content, copy, Th.captionSp, Th.body, TextAnchor.MiddleLeft, Th);
             body.horizontalOverflow = HorizontalWrapMode.Wrap;
             body.verticalOverflow = VerticalWrapMode.Overflow;
-            body.GetComponent<LayoutElement>().minHeight = 28f;
+            body.GetComponent<LayoutElement>().minHeight = 34f;
         }
 
         void Refresh()
