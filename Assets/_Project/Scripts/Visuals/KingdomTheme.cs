@@ -65,7 +65,7 @@ namespace Crashverse.Visuals
             Decorate(blocks, castle, clocktower);
             if (clocktower) AddClockFace(blocks);
             if (levelId != null && levelId.Contains("l09")) AddBeaconLantern(blocks);
-            if (levelId != null && levelId.EndsWith("l10")) AddIronFistCrest(blocks);
+            if (levelId != null && levelId.Contains("l10")) AddIronFistCrest(blocks);
         }
 
         /// <summary>L1 "Royal Watch Post": a pitched shingle roof over the top piece, a ladder up the cannon-facing side and rope

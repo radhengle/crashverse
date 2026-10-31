@@ -109,7 +109,7 @@ namespace Crashverse.Visuals
             RuntimeMeshCleanup.Attach(root.transform);
             string levelId = ctx?.level != null ? ctx.level.id : (ctx != null && ctx.mode == RunMode.DailyBoss ? "dailyboss" : "");
             bool dark = ctx != null && (ctx.IsHard || ctx.mode == RunMode.DailyBoss);
-            bool palace = levelId.EndsWith("l10");
+            bool palace = levelId != null && levelId.Contains("l10");
             Mood(dark || palace); SkyOnCameras();
             Debug.Log($"[KingdomSky] run: skybox={(RenderSettings.skybox != null ? RenderSettings.skybox.name : "null")} cam={(Camera.main != null ? Camera.main.name + ":" + Camera.main.clearFlags : "none")}");
             if (palace && !dark && RenderSettings.sun != null) { RenderSettings.sun.intensity = 1.2f; RenderSettings.sun.color = new Color(0.85f, 0.88f, 1f); }
