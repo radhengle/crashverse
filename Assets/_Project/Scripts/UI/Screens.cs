@@ -31,6 +31,7 @@ namespace Crashverse.UI
             var bg = UIFactory.TrimPanel("Briefing", root, Th); UIFactory.Stretch(bg.rectTransform, 12f);
             var v = UIFactory.VStack(bg.transform, Th.gap, 16f); UIFactory.Stretch(v);
             UIFactory.Label(v, (_lvl.number > 0 ? $"Level {_lvl.number}: " : "") + UIFactory.Truncate(_lvl.name, 32), Th.titleSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            BuildMissionStory(v);
             int shots = new RunContext { mode = _mode, level = _lvl, mod = _mod }.ShotBudget;
             UIFactory.Label(v, $"Shots: {shots}   Win: destroy {Mathf.RoundToInt(_lvl.winThreshold * 100)}%", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
             // star bands from per-level thresholds (SG-01)
@@ -54,6 +55,49 @@ namespace Crashverse.UI
             UIFactory.Button(go, "Back", Th.navy500, () => Router.Pop(), Th);
             UIFactory.Button(go, _mode == RunMode.TitanRanked ? "Start Ranked" : "Play", Th.green, Play, Th);
             Refresh();
+        }
+
+        /// <summary>Short chapter-specific story beat: the current district, why Rook is here, and what the target represents.</summary>
+        void BuildMissionStory(Transform parent)
+        {
+            string heading, copy;
+            if (_mode == RunMode.DailyBoss)
+            {
+                heading = "THE QUARRY · DAILY BOSS";
+                copy = "The King's siege golem guards the stoneworks. Break its armour and strike the molten core.";
+            }
+            else if (_lvl.number <= 3)
+            {
+                heading = "IRONVALE HARBOUR";
+                copy = "Grimhold's blockade begins here. Bring down the royal outposts that keep the harbour under his thumb.";
+            }
+            else if (_lvl.number <= 6)
+            {
+                heading = "THE MILL FIELDS";
+                copy = "The crown takes the grain before families can eat. Rook is dismantling the King's chain of supply.";
+            }
+            else if (_lvl.number <= 9)
+            {
+                heading = "THE CURFEW DISTRICT";
+                copy = "The clocktower keeps the town afraid and the sea-wall keeps it trapped. Clear the road to Crown Rock.";
+            }
+            else
+            {
+                heading = "CROWN ROCK · THE PALACE";
+                copy = "The royal stronghold stands between Rook and the Iron King. Tear down its defenses; the final duel lies beyond.";
+            }
+
+            var card = V2.Card("MissionStory", parent, Th);
+            var layout = card.gameObject.AddComponent<LayoutElement>();
+            layout.minHeight = layout.preferredHeight = _mode == RunMode.DailyBoss ? 66f : 62f;
+            var content = UIFactory.VStack(card.transform, 1f, 8f, TextAnchor.MiddleLeft);
+            UIFactory.Stretch(content);
+            var title = UIFactory.Label(content, heading, Th.captionSp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            title.fontStyle = FontStyle.Bold;
+            var body = UIFactory.Label(content, copy, Th.captionSp, Th.body, TextAnchor.MiddleLeft, Th);
+            body.horizontalOverflow = HorizontalWrapMode.Wrap;
+            body.verticalOverflow = VerticalWrapMode.Overflow;
+            body.GetComponent<LayoutElement>().minHeight = 28f;
         }
 
         void Refresh()
