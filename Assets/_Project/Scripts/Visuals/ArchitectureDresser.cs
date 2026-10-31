@@ -29,7 +29,7 @@ namespace Crashverse.Visuals
                 l.Add(new CombineInstance { mesh = mesh, transform = trs });
             }
             public void Box(Material m, Vector3 c, Vector3 size, float tile, Quaternion r = default)
-                => Add(m, CvMesh.BoxCube(size, tile), Matrix4x4.TRS(c, r == default ? Quaternion.identity : r, size));
+                => Add(m, CvMesh.BoxCube(size, tile), Matrix4x4.TRS(c, (r.x == 0f && r.y == 0f && r.z == 0f && r.w == 0f ? Quaternion.identity : r) /* Quaternion == is a dot test: default never equals */, size));
             public void Log(Material m, Vector3 a, Vector3 b, float radius)
             {
                 var d = b - a; float len = d.magnitude; if (len < 1e-3f) return;

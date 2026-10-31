@@ -125,7 +125,7 @@ namespace Crashverse.Visuals
         static GameObject Box(string name, Transform parent, Vector3 pos, Vector3 size, Material mat, float tile, Quaternion rot = default)
         {
             var go = Obj(name, parent, Cube(size, tile), mat);
-            go.transform.localPosition = pos; go.transform.localRotation = rot == default ? Quaternion.identity : rot; go.transform.localScale = size;
+            go.transform.localPosition = pos; go.transform.localRotation = (rot.x == 0f && rot.y == 0f && rot.z == 0f && rot.w == 0f ? Quaternion.identity : rot); go.transform.localScale = size;
             return go;
         }
 
