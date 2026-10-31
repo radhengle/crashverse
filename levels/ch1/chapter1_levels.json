@@ -26,7 +26,7 @@
    "reward": [],
    "star3Pct": 0.6,
    "star2Pct": 0.3,
-   "starCapIfPowerupUsed": 3,
+   "starCapIfPowerupUsed": 2,
    "islandKillY": -2.0,
    "hintTarget": "post",
    "hintYaw": 0.0,
@@ -325,7 +325,7 @@
     "brick",
     "steel"
    ],
-   "teaches": "Boss phases + weak points",
+   "teaches": "Castle masonry: gatehouse, keep and towers; find the hidden core",
    "mastery": {
     "type": "SHOTS_LEFT_AT_LEAST",
     "value": 2,
