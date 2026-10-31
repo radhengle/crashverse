@@ -106,6 +106,7 @@ namespace Crashverse.Visuals
         static void OnRun(GameObject root, GameSession s, Crashverse.Weapons.WreckerBuilder wb, RunContext ctx)
         {
             if (root == null || s == null) return;
+            RuntimeMeshCleanup.Attach(root.transform);
             string levelId = ctx?.level != null ? ctx.level.id : (ctx != null && ctx.mode == RunMode.DailyBoss ? "dailyboss" : "");
             bool dark = ctx != null && (ctx.IsHard || ctx.mode == RunMode.DailyBoss);
             bool palace = levelId.EndsWith("l10");

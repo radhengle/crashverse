@@ -43,6 +43,13 @@ namespace Crashverse.Visuals
             return go;
         }
 
+        static GameObject ObjOwned(string name, Transform parent, Mesh mesh, Material mat, bool shadows = true, bool receive = true)
+        {
+            var go = Obj(name, parent, mesh, mat, shadows, receive);
+            RuntimeMeshCleanup.Own(parent, mesh);
+            return go;
+        }
+
         // ---------------- ocean ----------------
         static void Ocean(Transform root)
         {
@@ -69,7 +76,7 @@ namespace Crashverse.Visuals
                 }
             var m = new Mesh { name = "Ocean", indexFormat = IndexFormat.UInt32 }; m.vertices = v; m.triangles = t;
             m.RecalculateNormals(); m.bounds = new Bounds(new Vector3(30f, 0f, 0f), new Vector3(size, 4f, size));
-            Obj("Ocean", root, m, mat, false, false);
+            ObjOwned("Ocean", root, m, mat, false, false);
             _ = x0; _ = z0;
         }
 
@@ -118,11 +125,11 @@ namespace Crashverse.Visuals
         {
             // grass top (wavy edge, slightly inside the collider rim) + sand beach that slopes under the water
             // PM QA 31 Oct (L01.jpg): a sand island, not a lawn: dry sand on top, darker trampled sand under the building
-            var sandTop = Obj("IslandSand", root, Ring(0f, 0.97f, 0.005f, 0.005f, 96, 6f, 1.3f, 1f), KingdomMaterials.Make("SandDry", "T_K_Sand", new Color(1.04f, 0.98f, 0.88f), 0f, 0.97f, Vector2.one), false, true);
-            var beach = Obj("IslandBeach", root, Ring(0.9f, 1.22f, -0.01f, WaterY - 1.4f, 96, 5f, 1.3f, 0.6f), KingdomMaterials.Sand, false, true);
+            var sandTop = ObjOwned("IslandSand", root, Ring(0f, 0.97f, 0.005f, 0.005f, 96, 6f, 1.3f, 1f), KingdomMaterials.Make("SandDry", "T_K_Sand", new Color(1.04f, 0.98f, 0.88f), 0f, 0.97f, Vector2.one), false, true);
+            var beach = ObjOwned("IslandBeach", root, Ring(0.9f, 1.22f, -0.01f, WaterY - 1.4f, 96, 5f, 1.3f, 0.6f), KingdomMaterials.Sand, false, true);
             sandTop.transform.localPosition = beach.transform.localPosition = new Vector3(Cx, 0f, 0f);
             // sandy plaza under the building and a path toward the cannon
-            Obj("Plaza", root, Disc(Mathf.Min(7.5f, Rx * 0.75f), Mathf.Min(6.5f, Rz * 0.75f), 0.012f, 40, 5f, 4.1f, new Vector3(structureBase.x, 0f, structureBase.z)), KingdomMaterials.Make("SandTrod", "T_K_Sand", new Color(0.82f, 0.74f, 0.62f), 0f, 0.9f, Vector2.one), false, true);
+            ObjOwned("Plaza", root, Disc(Mathf.Min(7.5f, Rx * 0.75f), Mathf.Min(6.5f, Rz * 0.75f), 0.012f, 40, 5f, 4.1f, new Vector3(structureBase.x, 0f, structureBase.z)), KingdomMaterials.Make("SandTrod", "T_K_Sand", new Color(0.82f, 0.74f, 0.62f), 0f, 0.9f, Vector2.one), false, true);
         }
 
         // ---------------- harbour deck ----------------
@@ -398,9 +405,15 @@ namespace Crashverse.Visuals
             void Merge(string n, List<CombineInstance> l, Material mat, float tile)
             {
                 if (l.Count == 0) return;
-                var mesh = new Mesh { name = n, indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 }; mesh.CombineMeshes(l.ToArray(), true, true); mesh.RecalculateBounds();
-                if (tile > 0f) mesh = CvMesh.WithBoxUv(mesh, tile, Vector3.one);
-                Obj(n, t, mesh, mat, true, true);
+                var combined = new Mesh { name = n + "_Combined", indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
+                combined.CombineMeshes(l.ToArray(), true, true); combined.RecalculateBounds();
+                Mesh mesh = combined;
+                if (tile > 0f)
+                {
+                    mesh = CvMesh.WithBoxUv(combined, tile, Vector3.one);
+                    Object.Destroy(combined);
+                }
+                ObjOwned(n, t, mesh, mat, true, true);
             }
             Merge("Foliage_Dark", dark, KingdomMaterials.Make("LeafDark", "T_K_Grass", new Color(0.30f, 0.62f, 0.22f), 0f, 0.7f, Vector2.one), 1.2f);
             Merge("Foliage_Light", light, KingdomMaterials.Make("LeafLight", "T_K_Grass", new Color(0.55f, 0.85f, 0.30f), 0f, 0.65f, Vector2.one), 1.2f);
@@ -452,7 +465,8 @@ namespace Crashverse.Visuals
                     var mat = KingdomMaterials.ForTag(kv.Key);
                     float tile = KingdomMaterials.TileFor(kv.Key);
                     var mesh = tile > 0f ? CvMesh.WithBoxUv(kv.Value, tile, Vector3.one * scale) : kv.Value;
-                    Obj(kv.Key, t, mesh, mat, false, false);
+                    if (tile > 0f) ObjOwned(kv.Key, t, mesh, mat, false, false);
+                    else Obj(kv.Key, t, mesh, mat, false, false);
                 }
             }
             Isle("IsleA", isles, new Vector3(150f, WaterY, 70f), 1f, 20f);
@@ -467,7 +481,8 @@ namespace Crashverse.Visuals
             {
                 float tile = KingdomMaterials.TileFor(kv.Key);
                 var mesh = tile > 0f ? CvMesh.WithBoxUv(kv.Value, tile, Vector3.one) : kv.Value;
-                Obj(kv.Key, pal, mesh, KingdomMaterials.ForTag(kv.Key), false, false);
+                if (tile > 0f) ObjOwned(kv.Key, pal, mesh, KingdomMaterials.ForTag(kv.Key), false, false);
+                else Obj(kv.Key, pal, mesh, KingdomMaterials.ForTag(kv.Key), false, false);
             }
             // a few palms on the near isles' grass caps
             int i = 0;

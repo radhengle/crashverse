@@ -108,3 +108,34 @@ namespace Crashverse.Visuals
         static float F(byte[] d, ref int o) { float r = System.BitConverter.ToSingle(d, o); o += 4; return r; }
     }
 }
+    /// <summary>
+    /// Owns meshes created at runtime for one gameplay run. Unity does not destroy meshes made with new Mesh,
+    /// Instantiate or CombineMeshes when their GameObjects are destroyed; retaining them leaks native memory on retries.
+    /// Only register per-run meshes here. Resource-loaded and static cached meshes must never be registered.
+    /// </summary>
+    public sealed class RuntimeMeshCleanup : MonoBehaviour
+    {
+        readonly HashSet<Mesh> _owned = new HashSet<Mesh>();
+
+        public static RuntimeMeshCleanup Attach(Transform runRoot)
+        {
+            if (runRoot == null) return null;
+            var cleaner = runRoot.GetComponent<RuntimeMeshCleanup>();
+            return cleaner != null ? cleaner : runRoot.gameObject.AddComponent<RuntimeMeshCleanup>();
+        }
+
+        public static void Own(Transform context, Mesh mesh)
+        {
+            if (context == null || mesh == null) return;
+            var cleaner = context.GetComponentInParent<RuntimeMeshCleanup>();
+            if (cleaner == null) cleaner = Attach(context.root);
+            cleaner?._owned.Add(mesh);
+        }
+
+        void OnDestroy()
+        {
+            foreach (var mesh in _owned) if (mesh != null) Destroy(mesh);
+            _owned.Clear();
+        }
+    }
+

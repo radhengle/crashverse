@@ -44,6 +44,7 @@ namespace Crashverse.Visuals
                     mesh.RecalculateBounds(); if (mesh.uv != null && mesh.uv.Length == mesh.vertexCount) mesh.RecalculateTangents(); // normal maps
                     var go = new GameObject(name + "_" + kv.Key.name); go.transform.SetParent(parent, false);
                     go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                    RuntimeMeshCleanup.Own(parent, mesh);
                     var r = go.AddComponent<MeshRenderer>(); r.sharedMaterial = kv.Key;
                     r.shadowCastingMode = shadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
                 }

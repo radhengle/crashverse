@@ -82,7 +82,10 @@ namespace Crashverse.Visuals
             var roof = MetricChild(top, "Kingdom_HutRoof");
             float w = ts.z + 0.7f, d = ts.x + 0.9f, h = Mathf.Clamp(d * 0.45f, 0.8f, 1.8f);
             var m = Prism(w, d, h);
-            var r = R("Roof", roof, CvMesh.WithBoxUv(m, 1.2f, Vector3.one), KingdomMaterials.Roof, true);
+            var roofMesh = CvMesh.WithBoxUv(m, 1.2f, Vector3.one);
+            RuntimeMeshCleanup.Own(roof, roofMesh);
+            var r = R("Roof", roof, roofMesh, KingdomMaterials.Roof, true);
+            Object.Destroy(m);
             r.transform.localPosition = new Vector3(0f, ts.y * 0.5f, 0f);
             // ladder on the front face of the structure, leaning from the ground to the top piece
             var lowest = all.min.y; var frontX = all.min.x;
@@ -149,7 +152,14 @@ namespace Crashverse.Visuals
         static void Retexture(DestructibleBlock b, bool castle)
         {
             var mf = b.GetComponent<MeshFilter>(); var mr = b.GetComponent<MeshRenderer>(); if (mf == null || mr == null || !mr.enabled) return;
-            if (b.role == "island") { mr.sharedMaterial = KingdomMaterials.Rock; mf.sharedMesh = IslandOutcrop(b.transform.localScale); b.SetBaseTint(new Color(0.86f, 0.80f, 0.70f)); return; }
+            if (b.role == "island")
+            {
+                mr.sharedMaterial = KingdomMaterials.Rock;
+                mf.sharedMesh = IslandOutcrop(b.transform.localScale);
+                RuntimeMeshCleanup.Own(b.transform, mf.sharedMesh);
+                b.SetBaseTint(new Color(0.86f, 0.80f, 0.70f));
+                return;
+            }
             Material m; float tile;
             var kind = b.material != null ? b.material.kind : MaterialKind.Wood;
             switch (kind)
