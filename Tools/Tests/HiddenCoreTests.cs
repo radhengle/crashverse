@@ -55,7 +55,7 @@ static class HiddenCoreTests
         T.Add("hidden_core_huge_radial_blast", () =>
         {
             T.Eq(400f, HiddenCoreRules.BlastDamage(0f), "400 at the centre");
-            T.True(System.Math.Abs(HiddenCoreRules.BlastDamage(6f) - 160f) < 0.01f, "40% at the 6 m edge");
+            T.True(System.Math.Abs(HiddenCoreRules.BlastDamage(6f) - 200f) < 0.01f, "50% at the 6 m edge");
             T.Eq(0f, HiddenCoreRules.BlastDamage(6.1f), "nothing beyond 6 m");
             T.True(HiddenCoreRules.BlastDamage(3f) > HiddenCoreRules.BlastDamage(4f), "falls off with distance");
             T.True(HiddenCoreRules.Radius > 3.5f * 1.5f, "bigger than the Mega Bomb");
