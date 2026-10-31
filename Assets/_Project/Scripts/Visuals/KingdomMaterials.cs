@@ -96,9 +96,10 @@ namespace Crashverse.Visuals
         public static Material Leaf => Make("Leaf", null, new Color(0.22f, 0.62f, 0.16f), 0f, 0.6f, Vector2.one);
         public static Material Banner => Make("Banner", "T_K_Banner", Color.white, 0f, 0.75f, Vector2.one);
         public static Material Tnt => Make("Tnt", "T_K_TNT", Color.white, 0f, 0.7f, Vector2.one, new Color(1.6f, 0.45f, 0.05f) * 0f);
-        public static Material Navy => Make("Navy", "T_K_Metal", new Color(0.13f, 0.15f, 0.20f), 0.75f, 0.45f, new Vector2(1.5f, 1.5f)); // worn gunmetal iron (concept barrel)
-        public static Material Gold => Make("Gold", "T_K_Metal", new Color(0.88f, 0.64f, 0.30f), 0.9f, 0.35f, new Vector2(2f, 2f)); // worn brass bands and fittings
-        public static Material Iron => Make("Iron", "T_K_Metal", new Color(0.18f, 0.18f, 0.20f), 0.8f, 0.55f, new Vector2(2f, 2f));
+        public static Material Navy => Make("Navy", "T_K_CastIron", Color.white, 0.45f, 0.74f, new Vector2(1.5f, 1.5f)); // PM QA: dark worn cast iron, rough, rust in the pits (rusty_metal_02 derived)
+        public static Material Gold => Make("Gold", "T_K_Bronze", new Color(0.82f, 0.80f, 0.78f), 0.6f, 0.6f, new Vector2(2f, 2f)); // PM QA: aged bronze/brass, dull, darker recesses
+        public static Material Iron => Make("Iron", "T_K_CastIron", new Color(1.1f, 1.1f, 1.1f), 0.5f, 0.66f, new Vector2(2f, 2f));
+        public static Material CarriageWood => Make("CarriageWood", "T_K_Wood", new Color(0.50f, 0.38f, 0.28f), 0f, 0.9f, Vector2.one); // weathered dark brown timber
         public static Material Bore => Make("Bore", null, new Color(0.02f, 0.02f, 0.025f), 0f, 1f, Vector2.one);
         public static Material FlagRed => Make("FlagRed", null, new Color(0.72f, 0.06f, 0.08f), 0f, 0.7f, Vector2.one);
 

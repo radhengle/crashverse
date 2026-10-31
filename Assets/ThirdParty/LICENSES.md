@@ -44,3 +44,4 @@ The UV layouts did not change.
 ## PBR detail maps (Season 1 look, step 3)
 `T_K_<Surface>_N.jpg` (normal, OpenGL) and `T_K_<Surface>_ORM.jpg` (Poly Haven "arm": AO / roughness / metal) in `Resources/Kingdom/Textures/`, 1k, unmodified, CC0 from Poly Haven: Sand `coast_sand_01`, Grass + Rock `rocky_terrain_02`, Planks `brown_planks_03`, Wood `weathered_planks`, Stone `castle_wall_varriation`, Brick `red_brick_03`, Roof `clay_roof_tiles_02`, Bark `bark_brown_02`. Android import max 512.
 - `T_K_Metal.jpg` (greyscale remap), `T_K_Metal_N.jpg`, `T_K_Metal_ORM.jpg`: Poly Haven `rusty_metal_02` (CC0), for the worn iron barrel and brass bands.
+- `T_K_CastIron.jpg` / `T_K_Bronze.jpg` (recoloured from the diffuse: near-black cast iron with rust only in the pits; dull aged bronze with dark patina) and their `_N` / `_ORM` maps: Poly Haven `rusty_metal_02` (CC0), for the cannon barrel, bands and carriage fittings.

@@ -28,15 +28,17 @@ namespace Crashverse.Visuals
             cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y, 0f) * VisualScale; // ground under the pivot
             cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y * VisualScale, 0f);
             cRoot.localScale = Vector3.one * VisualScale;
-            foreach (var kv in carriage) Part(kv.Key, kv.Value, cRoot, kv.Key.EndsWith("_Wood") ? 0.9f : KingdomMaterials.TileFor(kv.Key));
+            foreach (var kv in carriage) Part(kv.Key, kv.Value, cRoot, kv.Key.EndsWith("_Wood") ? 0.9f : KingdomMaterials.TileFor(kv.Key), true);
             return true;
         }
 
-        static void Part(string name, Mesh mesh, Transform parent, float boxTile)
+        static void Part(string name, Mesh mesh, Transform parent, float boxTile, bool carriage = false)
         {
             var go = new GameObject(name); go.transform.SetParent(parent, false);
             go.AddComponent<MeshFilter>().sharedMesh = boxTile > 0f ? CvMesh.WithBoxUv(mesh, boxTile, Vector3.one) : mesh;
-            var r = go.AddComponent<MeshRenderer>(); r.sharedMaterial = KingdomMaterials.ForTag(name);
+            // PM QA 31 Oct: timber carriage = weathered dark brown wood with IRON fittings/bolts; bronze stays on the barrel bands
+                        var mat = name.EndsWith("_Wood") ? KingdomMaterials.CarriageWood : carriage && name.EndsWith("_Gold") ? KingdomMaterials.Iron : KingdomMaterials.ForTag(name);
+            var r = go.AddComponent<MeshRenderer>(); r.sharedMaterial = mat;
             r.shadowCastingMode = ShadowCastingMode.On; r.receiveShadows = true;
         }
     }
