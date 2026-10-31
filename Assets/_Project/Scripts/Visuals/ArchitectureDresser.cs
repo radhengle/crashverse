@@ -57,11 +57,15 @@ namespace Crashverse.Visuals
         static Material Planks => KingdomMaterials.Planks;
         static Material Timber => KingdomMaterials.Wood;
         static Material Shingle => KingdomMaterials.Roof;
+        // PM QA (L01.jpg): timber huts get worn, weathered wood shingles (dark grey-brown, a few lighter sun-bleached ones), not clay tiles
+        static Material WoodShingle => KingdomMaterials.Make("WoodShingle", "T_K_Planks", new Color(0.50f, 0.42f, 0.36f), 0f, 0.92f, Vector2.one);
+        static Material WoodShingleWorn => KingdomMaterials.Make("WoodShingleWorn", "T_K_Planks", new Color(0.68f, 0.60f, 0.52f), 0f, 0.95f, Vector2.one);
+        static Material WoodShingleDark => KingdomMaterials.Make("WoodShingleDark", "T_K_Wood", new Color(0.30f, 0.25f, 0.21f), 0f, 0.95f, Vector2.one);
         static Material Dark => KingdomMaterials.Make("WindowDark", null, new Color(0.06f, 0.07f, 0.09f), 0f, 0.4f, Vector2.one);
         static Material Rope => KingdomMaterials.Make("Rope", "T_K_Bark", new Color(0.95f, 0.85f, 0.62f), 0f, 0.9f, new Vector2(0.3f, 3f));
         static Material Bronze => KingdomMaterials.Make("Bronze", null, new Color(0.62f, 0.42f, 0.18f), 0.8f, 0.35f, Vector2.one);
         static Material Iron => KingdomMaterials.Iron;
-        static Material Gap => KingdomMaterials.Make("BoardGap", "T_K_Wood", new Color(0.16f, 0.12f, 0.09f), 0f, 0.95f, Vector2.one);
+        static Material Gap => KingdomMaterials.Make("BoardGap", "T_K_Wood", new Color(0.08f, 0.06f, 0.05f), 0f, 0.95f, Vector2.one);
         static Material PlanksWorn => KingdomMaterials.Make("PlanksWorn", "T_K_Planks", new Color(0.78f, 0.74f, 0.70f), 0f, 0.9f, Vector2.one); // sun-bleached boards
 
         public static HashSet<DestructibleBlock> Dressed = new HashSet<DestructibleBlock>();
@@ -87,7 +91,7 @@ namespace Crashverse.Visuals
                     else if (b.role == "shoulder" || b.role == "arm" || b.role == "shutter" || b.role == "core" || b.role == "armor") ok = false; // boss anatomy keeps its look
                     else ok = Masonry(bld, s, castle, b, blocks);
                 }
-                else if (b.isRoof || b.role == "roof" || id.Contains("roof")) ok = Roof(bld, s);
+                else if (b.isRoof || b.role == "roof" || id.Contains("roof")) ok = Roof(bld, s, true);
                 else if (id.Contains("flag")) ok = Flag(bld, s);
                 else if (id == "bell" || id.EndsWith("bell")) ok = Bell(bld, s);
                 else if (id.Contains("frame")) ok = Frame(bld, s);
@@ -134,7 +138,7 @@ namespace Crashverse.Visuals
             // L01.jpg: weathered VERTICAL boards with dark gaps between them, each a little crooked / uneven at the ends,
             // over a dark inner core (the gaps read as shadow, never see-through)
             k.Box(Gap, Vector3.zero, s - Vector3.one * 0.1f, 1.2f);
-            float bw = 0.19f, gap = 0.028f; int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
+            float bw = 0.21f, gap = 0.045f; /* wider dark gaps: readable at ~25 m */ int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
             void Boards(Vector3 normal, Vector3 along, float width, float outAt)
             {
                 int n = Mathf.Max(3, Mathf.RoundToInt((width - 0.2f) / (bw + gap))); float step = (width - 0.2f) / n;
@@ -143,9 +147,9 @@ namespace Crashverse.Visuals
                     uint h = (uint)(seed * 73856093 ^ (i + 1) * 19349663 ^ Mathf.RoundToInt(normal.x * 3f + normal.z * 7f) * 83492791);
                     float j0 = ((h & 255) / 255f - 0.5f), j1 = (((h >> 8) & 255) / 255f - 0.5f), j2 = (((h >> 16) & 255) / 255f - 0.5f);
                     float len = s.y * (0.97f + 0.05f * j1), dy = 0.03f * j2 - (s.y - len) * 0.5f;
-                    var c = normal * (outAt + 0.004f * j1) + along * (-(width - 0.2f) * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
-                    var rot = Quaternion.AngleAxis(2.2f * j0, normal) * Quaternion.AngleAxis(1.2f * j2, along); // crooked boards
-                    var size = Mathf.Abs(normal.x) > 0.5f ? new Vector3(0.05f, len, step - gap) : new Vector3(step - gap, len, 0.05f);
+                    var c = normal * (outAt + 0.018f * j1) + along * (-(width - 0.2f) * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
+                    var rot = Quaternion.AngleAxis(3.2f * j0, normal) * Quaternion.AngleAxis(1.8f * j2, along); // crooked boards
+                    var size = Mathf.Abs(normal.x) > 0.5f ? new Vector3(0.07f, len, step - gap) : new Vector3(step - gap, len, 0.07f);
                     k.Box(j1 > 0.3f ? PlanksWorn : Planks, c, size, 1.1f, rot);
                 }
             }
@@ -161,7 +165,7 @@ namespace Crashverse.Visuals
             // corner posts + sill / top plates
             foreach (float x in new[] { -hx + 0.08f, hx - 0.08f })
                 foreach (float z in new[] { -hz + 0.08f, hz - 0.08f })
-                    k.Box(Timber, new Vector3(x, 0f, z), new Vector3(0.17f, s.y, 0.17f), 1f);
+                    k.Box(Timber, new Vector3(x * 1.02f, 0.02f, z * 1.02f), new Vector3(0.24f, s.y + 0.08f, 0.24f), 1f); // chunky corner posts stand proud of the boards
             k.Box(Timber, new Vector3(-hx - 0.01f, -hy + 0.07f, 0f), new Vector3(0.1f, 0.14f, s.z), 1f);
             k.Box(Timber, new Vector3(-hx - 0.01f, hy - 0.07f, 0f), new Vector3(0.1f, 0.14f, s.z), 1f);
             // cannon-facing openings: a door on the main cabin, otherwise a window with open shutters
@@ -199,16 +203,41 @@ namespace Crashverse.Visuals
             }
         }
 
-        static bool Roof(Builder k, Vector3 s)
+        static bool Roof(Builder k, Vector3 s, bool wood = false)
         {
-            float w = s.z + 0.9f, d = s.x + 1.0f, h = Mathf.Max(s.y, Mathf.Clamp(d * 0.42f, 0.6f, 2.2f)), y0 = -s.y * 0.5f;
-            k.Add(Shingle, CvMesh.WithBoxUv(Prism(w, d, h), 0.9f, Vector3.one), Matrix4x4.Translate(new Vector3(0f, y0, 0f)));
-            // shingle courses (stepped strips) on the cannon-facing slope for relief
-            float slope = Mathf.Atan2(h, d * 0.5f) * Mathf.Rad2Deg; int rows = Mathf.Max(3, Mathf.RoundToInt(Mathf.Sqrt(h * h + d * d * 0.25f) / 0.28f));
-            for (int i = 0; i < rows; i++)
+            // wood: deeper overhang (L01.jpg) and individual staggered, slightly crooked shingles on both slopes over a dark underlay
+            float w = s.z + (wood ? 1.5f : 0.9f), d = s.x + (wood ? 1.7f : 1.0f), h = Mathf.Max(s.y, Mathf.Clamp(d * 0.42f, 0.6f, 2.2f)), y0 = -s.y * 0.5f;
+            k.Add(wood ? WoodShingleDark : Shingle, CvMesh.WithBoxUv(Prism(w, d, h), 0.9f, Vector3.one), Matrix4x4.Translate(new Vector3(0f, y0, 0f)));
+            float slope = Mathf.Atan2(h, d * 0.5f) * Mathf.Rad2Deg; float sl = Mathf.Sqrt(h * h + d * d * 0.25f);
+            if (wood)
             {
-                float f = (i + 0.5f) / rows; var p = new Vector3(-d * 0.5f * (1f - f), y0 + h * f + 0.03f, 0f);
-                k.Box(Shingle, p, new Vector3(0.05f, Mathf.Sqrt(h * h + d * d * 0.25f) / rows * 0.5f, w * 0.99f), 0.9f, Quaternion.Euler(0f, 0f, -(90f - slope)));
+                int rows = Mathf.Max(4, Mathf.RoundToInt(sl / 0.24f)); float rl = sl / rows; int seed = Mathf.RoundToInt(w * 53f + d * 29f);
+                foreach (float sg in new[] { -1f, 1f })
+                    for (int i = 0; i < rows; i++)
+                    {
+                        float f = (i + 0.5f) / rows, sw = 0.30f; int n = Mathf.Max(3, Mathf.RoundToInt(w / sw));
+                        for (int j = 0; j < n; j++)
+                        {
+                            uint hsh = (uint)((seed + i * 131 + j * 17 + (sg > 0 ? 7919 : 0)) * 2654435761u);
+                            float j0 = ((hsh >> 4) & 255) / 255f - 0.5f, j1 = ((hsh >> 12) & 255) / 255f - 0.5f, j2 = ((hsh >> 20) & 255) / 255f - 0.5f;
+                            if (j2 > 0.46f && i > 0 && i < rows - 1) continue; // a missing shingle here and there
+                            float z = -w * 0.5f + (j + 0.5f + ((i & 1) == 1 ? 0.5f : 0f)) * (w / n); if (z > w * 0.5f - 0.05f) continue;
+                            var p = new Vector3(sg * d * 0.5f * (1f - f), y0 + h * f + 0.05f, z);
+                            var rot = Quaternion.Euler(0f, 0f, sg * (90f - slope)) * Quaternion.Euler(j0 * 6f, 0f, -sg * 8f); // butt ends lifted, crooked
+                            var m = j1 > 0.3f ? WoodShingleWorn : j1 < -0.35f ? WoodShingleDark : WoodShingle;
+                            k.Box(m, p, new Vector3(0.045f + 0.02f * (j2 + 0.5f), rl * 1.35f, w / n * 0.92f), 0.9f, rot);
+                        }
+                    }
+            }
+            else
+            {
+                // shingle courses (stepped strips) on the cannon-facing slope for relief
+                int rows = Mathf.Max(3, Mathf.RoundToInt(sl / 0.28f));
+                for (int i = 0; i < rows; i++)
+                {
+                    float f = (i + 0.5f) / rows; var p = new Vector3(-d * 0.5f * (1f - f), y0 + h * f + 0.03f, 0f);
+                    k.Box(Shingle, p, new Vector3(0.05f, sl / rows * 0.5f, w * 0.99f), 0.9f, Quaternion.Euler(0f, 0f, -(90f - slope)));
+                }
             }
             k.Log(Timber, new Vector3(0f, y0 + h + 0.02f, -w * 0.5f - 0.1f), new Vector3(0f, y0 + h + 0.02f, w * 0.5f + 0.1f), 0.09f); // ridge
             // exposed rafter tails under the deep eaves (concept: chunky overhang with visible timber ends)

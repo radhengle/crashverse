@@ -48,6 +48,8 @@ namespace Crashverse.Visuals
         {
             var mat = KingdomMaterials.Water; if (mat == null) { Debug.LogWarning("[Kingdom] water shader missing"); return; }
             mat.SetVector("_Island", new Vector4(Cx, 0f, Rx * 1.0f, Rz * 1.0f));
+            // shore band is in ellipse units: a small island needs wider units for a ~5 m bright turquoise lagoon and visible foam (L01.jpg)
+            mat.SetFloat("_ShoreFade", Compact ? 1.5f : 0.9f); mat.SetFloat("_FoamWidth", Compact ? 0.085f : 0.035f);
             int n = 96; float size = 900f, x0 = -330f, z0 = -450f;
             var v = new Vector3[(n + 1) * (n + 1)]; var t = new int[n * n * 6];
             for (int j = 0; j <= n; j++)
@@ -324,8 +326,8 @@ namespace Crashverse.Visuals
             for (int i = 0; i < ang.Length; i++)
             {
                 float a = ang[i]; var p = new Vector3(Cx + Mathf.Cos(a) * Rx * 0.93f, 0f, Mathf.Sin(a) * Rz * 0.9f);
-                if (Compact && i % 3 != 0) continue; // small island: a few palms, not a ring of them
-                if (Mathf.Abs(p.z) < 6.5f && p.x > cannon.x - 2f && p.x < structure.x + 12f) continue;
+                if (Compact && i % 2 != 0) continue; // small island: a few palms, not a ring of them
+                if (Compact ? (p.x < Cx && Mathf.Abs(p.z) < Rz * 0.6f) : (Mathf.Abs(p.z) < 6.5f && p.x > cannon.x - 2f && p.x < structure.x + 12f)) continue;
                 if (p.x < cannon.x + 6f) continue; // next to / behind the camera: fronds would fill the screen corners
                 Palm(shore, palms, p, i);
             }
@@ -341,10 +343,15 @@ namespace Crashverse.Visuals
             var rocks = CvMesh.Load("Kingdom/Meshes/Rocks");
             var dark = new List<CombineInstance>(); var light = new List<CombineInstance>(); var stone = new List<CombineInstance>();
             Vector3 c = sb.center; float ex = sb.extents.x + 0.6f, ez = sb.extents.z + 0.6f;
-            for (int i = 0; i < 46; i++)
+            for (int i = 0; i < (Compact ? 90 : 46); i++)
             {
                 float a = R(0f, Mathf.PI * 2f), d = R(1.0f, 1.9f);
                 var p = new Vector3(c.x + Mathf.Cos(a) * ex * d, 0f, c.z + Mathf.Sin(a) * ez * d);
+                if (Compact) // small island (L01.jpg): bushes / ferns all over the sand around the stilts, beach rim kept open
+                {
+                    float r = R(0.35f, 0.88f); p = new Vector3(Cx + Mathf.Cos(a) * Rx * r, 0f, Mathf.Sin(a) * Rz * r);
+                    if (Mathf.Abs(p.x - c.x) < 0.9f && Mathf.Abs(p.z - c.z) < 0.9f) continue; // the centre post / pedestal
+                }
                 if (p.x < c.x - ex * 0.9f && Mathf.Abs(p.z - c.z) < 1.4f) continue; // keep the front door / sight line clear
                 if (!OnIsland(p, 0.92f) || p.x < cannon.x + 7f) continue;
                 int kind = i % 3;

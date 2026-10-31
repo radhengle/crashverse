@@ -11,7 +11,7 @@ def new_obj(name, bm):
     me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
     for p in me.polygons: p.use_smooth = True
     o = bpy.data.objects.new(name, me); bpy.context.collection.objects.link(o); return o
-def lathe(bm, prof, segs=40, axis='X', at=(0,0,0), caps=True):
+def lathe(bm, prof, segs=40, axis='X', at=(0,0,0), caps=True, jitter=0.0, seed=7):
     """prof = [(t, r)]; revolve around axis through 'at'. Smooth sides; caps get their own verts (hard edge)."""
     ax = Vector(at)
     def P(t, r, a):
@@ -19,9 +19,10 @@ def lathe(bm, prof, segs=40, axis='X', at=(0,0,0), caps=True):
         if axis == 'X': return ax + Vector((t, c, s))
         if axis == 'Y': return ax + Vector((c, t, s))
         return ax + Vector((c, s, t))
-    rings = []
+    rings = []; rj = random.Random(seed)
     for (t, r) in prof:
-        rings.append([bm.verts.new(P(t, r, 2*math.pi*i/segs)) for i in range(segs)])
+        # jitter: hand-cast iron is never perfectly round (pitted, lumpy surface), applied per vertex
+        rings.append([bm.verts.new(P(t, r * (1.0 + (rj.uniform(-jitter, jitter) if jitter else 0.0)), 2*math.pi*i/segs)) for i in range(segs)])
     for k in range(len(rings)-1):
         a, b = rings[k], rings[k+1]
         for i in range(segs):
@@ -58,15 +59,18 @@ def cannon():
     # Concept (design/level_concepts_v1/L01): stubby, thick, barely tapered iron barrel; four heavy brass bands; a big flared muzzle bell.
     # Low-poly (28 segments). Overall extents unchanged (r <= 0.57, x -1.86..2.07) so the PlayMode framing tests still hold.
     S = 28
-    lathe(navy, [(-1.20, 0.52), (-0.9, 0.53), (-0.30, 0.52)], segs=S)
-    lathe(navy, [(0.0, 0.51), (0.5, 0.50), (0.88, 0.49)], segs=S)
-    lathe(navy, [(1.06, 0.48), (1.30, 0.475), (1.48, 0.47)], segs=S)
-    lathe(navy, [(1.58, 0.47), (1.62, 0.465)], segs=S)
+    # cast-iron reinforce / chase sections: many rings with per-vertex jitter (not machined-smooth), slight swells between bands
+    def iron(t0, t1, r0, r1, n, sd):
+        lathe(navy, [(t0 + (t1 - t0) * k / n, r0 + (r1 - r0) * k / n + 0.006 * math.sin(k * 2.3)) for k in range(n + 1)], segs=S, jitter=0.012, seed=sd)
+    iron(-1.20, -0.30, 0.52, 0.52, 8, 11)
+    iron(0.0, 0.88, 0.51, 0.49, 8, 12)
+    iron(1.06, 1.48, 0.48, 0.47, 4, 13)
+    iron(1.58, 1.62, 0.47, 0.465, 1, 14)
     lathe(gold, [(-1.40, 0.12), (-1.38, 0.44), (-1.34, 0.57), (-1.22, 0.57), (-1.18, 0.52)], segs=S)           # breech ring
     lathe(gold, [(-0.33, 0.52), (-0.29, 0.565), (-0.03, 0.565), (0.01, 0.51)], segs=S)                           # reinforce ring
     lathe(gold, [(0.86, 0.49), (0.90, 0.54), (1.04, 0.54), (1.08, 0.48)], segs=S)                                # chase band
     lathe(gold, [(1.46, 0.47), (1.49, 0.505), (1.57, 0.505), (1.60, 0.47)], segs=S)                              # astragal
-    lathe(gold, [(1.62, 0.465), (1.72, 0.49), (1.84, 0.53), (1.93, 0.57), (2.04, 0.57), (2.07, 0.53)], segs=S, caps=False)  # muzzle bell
+    lathe(gold, [(1.62, 0.465), (1.72, 0.49), (1.84, 0.53), (1.93, 0.56), (1.96, 0.56), (1.965, 0.60), (2.065, 0.60), (2.07, 0.53)], segs=S, caps=False)  # muzzle bell + raised muzzle ring (PM QA)
     lathe(gold, [(2.07, 0.53), (2.07, 0.31)], segs=S, caps=False)
     lathe(dark, [(2.07, 0.31), (1.5, 0.31), (1.5, 0.0)], segs=S, caps=False)
     prof = [(-1.40, 0.11), (-1.50, 0.09), (-1.55, 0.15), (-1.64, 0.20), (-1.76, 0.19), (-1.83, 0.12), (-1.86, 0.0)]
