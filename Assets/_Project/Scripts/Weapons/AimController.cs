@@ -41,8 +41,9 @@ namespace Crashverse.Weapons
             _pitchRestLocal = pitch != null ? pitch.localPosition : Vector3.zero;
             // User 2026-10-30: a CLEAR aim line from behind the cannon: wider far end (stays readable 30 m out), white → orange,
             // plus a landing marker where the shot first hits.
-            _arc = MakeLine("TrajectoryArc", new Color(1f, 1f, 1f, 0.95f), 0.16f);
-            _arc.endWidth = 0.34f; _arc.numCapVertices = 4;
+            // PM QA 31 Oct: a THIN DOTTED arc (the solid 0.16-0.34 m ribbon read as a thick beam through the building)
+            _arc = MakeLine("TrajectoryArc", new Color(1f, 1f, 1f, 0.95f), 0.11f, true);
+            _arc.endWidth = 0.16f;
             var g = new Gradient();
             g.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(1f, 0.85f, 0.3f), 0.6f), new GradientColorKey(new Color(1f, 0.48f, 0.1f), 1f) },
                       new[] { new GradientAlphaKey(0.55f, 0f), new GradientAlphaKey(0.95f, 0.25f), new GradientAlphaKey(1f, 1f) });
@@ -50,21 +51,40 @@ namespace Crashverse.Weapons
             var mk = GameObject.CreatePrimitive(PrimitiveType.Cylinder); mk.name = "AimLandingMarker";
             var mc = mk.GetComponent<Collider>(); if (mc != null) Destroy(mc); // never a physics target (the arc raycast must not hit it)
             mk.transform.SetParent(transform, false); mk.transform.localScale = new Vector3(1.1f, 0.03f, 1.1f);
-            var mr = mk.GetComponent<Renderer>(); mr.sharedMaterial = _arc.sharedMaterial; mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            var mr = mk.GetComponent<Renderer>(); mr.sharedMaterial = new Material(Shader.Find("Sprites/Default")); mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             var mb = new MaterialPropertyBlock(); mb.SetColor("_Color", new Color(1f, 0.48f, 0.1f, 0.85f)); mr.SetPropertyBlock(mb);
             _marker = mk.transform; _marker.gameObject.SetActive(false);
-            _ghost = MakeLine("HintGhostArc", new Color(0.13f, 0.83f, 0.93f, 0.45f), 0.2f);
+            _ghost = MakeLine("HintGhostArc", new Color(0.13f, 0.83f, 0.93f, 0.6f), 0.12f, true);
             _ghost.enabled = false;
             SnapVisualNow();
         }
 
-        LineRenderer MakeLine(string n, Color c, float w)
+        static Texture2D _dot;
+        /// <summary>One round dot per texture tile (transparent around it): with LineTextureMode.Tile the line becomes a row of dots.</summary>
+        static Texture2D Dot()
+        {
+            if (_dot != null) return _dot;
+            const int W = 64, H = 32; _dot = new Texture2D(W, H, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Repeat, filterMode = FilterMode.Bilinear, name = "AimDot" };
+            var px = new Color32[W * H];
+            for (int y = 0; y < H; y++) for (int x = 0; x < W; x++)
+            {
+                float dx = (x + 0.5f - H * 0.5f) / (H * 0.5f), dy = (y + 0.5f - H * 0.5f) / (H * 0.5f); // dot in the left half, gap in the right
+                float a = Mathf.Clamp01((1f - Mathf.Sqrt(dx * dx + dy * dy)) * 6f);
+                px[y * W + x] = new Color32(255, 255, 255, (byte)(a * 255));
+            }
+            _dot.SetPixels32(px); _dot.Apply(false, true);
+            return _dot;
+        }
+
+        LineRenderer MakeLine(string n, Color c, float w, bool dotted = false)
         {
             var go = new GameObject(n);
             go.transform.SetParent(transform, false);
             var lr = go.AddComponent<LineRenderer>();
             lr.positionCount = 0; lr.startWidth = w; lr.endWidth = w * 0.5f; lr.startColor = c; lr.endColor = c;
             lr.material = new Material(Shader.Find("Sprites/Default"));
+            if (dotted) { lr.material.mainTexture = Dot(); lr.textureMode = LineTextureMode.Tile; lr.material.mainTextureScale = new Vector2(1f / Mathf.Max(0.05f, w * 4f), 1f); }
+            lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; lr.receiveShadows = false;
             return lr;
         }
 

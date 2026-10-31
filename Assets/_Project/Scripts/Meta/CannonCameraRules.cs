@@ -35,7 +35,7 @@ namespace Crashverse.Meta
         public static readonly Settings Default = new Settings();
         /// <summary>Compact levels (target 12-20 m away on its own island, L01.jpg): closer, lower eye and a wider view so the
         /// building fills ~70% of the width with water visible on both sides.</summary>
-        public static readonly Settings Compact = new Settings { back = 10f, height = 4.5f, sideFill = 0.70f };
+        public static readonly Settings Compact = new Settings { back = 11f, height = 7.5f, sideFill = 0.70f }; // PM QA: look down over the cannon so the island + beach show above it
         public static Settings For(Vector3 cannonRoot, Bounds structure) =>
             structure.center.x - cannonRoot.x < ArenaLayoutRules.CompactBelow + 2f ? Compact : Default;
 
