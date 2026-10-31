@@ -78,6 +78,11 @@ assets_flip l1_hud
 # QA LOW + P0 (aim mirrored on dev-build-6): real touch swipes through AimController; +yaw is screen-left from the run camera,
 # so a RIGHT swipe must drive the logged target yaw negative and a LEFT swipe positive (no hook, no Drag() shortcut).
 D=$(adb shell wm density | grep -o '[0-9]*$' | tail -1); SW=$(( 100 * D / 160 ))
+# wait (max 150 s) until the run renders at >= 4 fps twice in a row: a CPU-GL emulator compiles shaders / uploads the dressed
+# level over the first frames, and a swipe delivered then is coalesced into one frame (dropped, run 41146299606). FPS kept as evidence.
+fps_ok(){ adb logcat -d -s Unity | grep -oE "CVFPS\|[0-9.]+" | tail -2 | cut -d'|' -f2 | awk '{ if ($1+0 >= 4) n++ } END { exit !(n == 2) }'; }
+SECONDS=0; until fps_ok || [ $SECONDS -ge 150 ]; do sleep 3; done
+echo "fps before swipes (${SECONDS}s wait): $(adb logcat -d -s Unity | grep -oE 'CVFPS\|[0-9.]+' | tail -4 | cut -d'|' -f2 | tr '\n' ' ')" | tee "$OUT/fps.txt"
 aim_yaw(){ sleep 3; adb logcat -d -s Unity | grep -oE "CVTAP\|AIM\|yaw=-?[0-9.]+" | tail -1 | cut -d= -f2 || true; }  # no line -> empty, reported below
 adb logcat -c; adb shell input swipe 540 1300 $(( 540 + SW )) 1300 2000; YR=$(aim_yaw)   # 2 s: several frames even at CPU-GL frame rates
 adb logcat -c; adb shell input swipe 540 1300 $(( 540 - 2 * SW )) 1300 2000; YL=$(aim_yaw)

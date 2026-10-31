@@ -14,8 +14,12 @@ namespace Crashverse.UI
         UIRouter _r; object _lastTop; int _lastCount; float _t;
         object _doneLogged; float _resultsT, _lastYaw = 9999f; // not NaN: NaN never compares > 0.5, so nothing was logged
         void Awake() { _r = GetComponent<UIRouter>(); Debug.Log($"CVTAP|META|screen|{Screen.width}|{Screen.height}|dpi={Screen.dpi}"); }
+        int _frames; float _fpsT;
         void LateUpdate()
         {
+            // perf heartbeat for the smoke: frames per 2 s of real time while a run is on screen (CPU-GL emulators can drop to ~1 fps
+            // during the first seconds of a heavy level; the smoke waits for this before its real-touch swipes)
+            _frames++; if ((_fpsT += Time.unscaledDeltaTime) >= 2f) { if (_r != null && _r.Top is HudScreen) Debug.Log($"CVFPS|{_frames / _fpsT:F1}"); _frames = 0; _fpsT = 0f; }
             if ((_t += Time.unscaledDeltaTime) < 0.5f) return; _t = 0f;
             var top = _r != null ? _r.Top : null;
             // QA C-1/C-3: one line once the results sequence is final, so the smoke screenshots the settled panel and can assert score/stars
