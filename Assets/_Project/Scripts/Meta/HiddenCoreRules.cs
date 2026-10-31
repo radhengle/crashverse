@@ -6,14 +6,14 @@ namespace Crashverse.Meta
     /// The pure rules for the hidden core (design/Season1_KingStory_v1.md §3). They are deterministic and Unity-free, so the logic
     /// tests can cover them. Visuals.HiddenCore applies them in a run.
     ///  - Host: among the eligible pieces (destructible, objective, not roof/explosive/island, min side ≥ 0.35 m, with at least one
-    ///    support or dependent), take the 60 % closest to the centroid (ties by id), then pick one with System.Random(seed ^ FNV(levelId)).
+    ///    support or dependent), take the 60 % closest to the centroid (ties by id), then pick one with SimRng(seed ^ FNV(levelId)).
     ///  - Exposed: the host is at ≤ 66 % HP, or any touching piece (support/dependent) broke.
     ///  - Detonates on a direct hit while exposed, or when the host breaks while exposed. Breaking before exposure is a dud.
-    ///  - Blast: 400 damage at the centre, linear falloff to 40 % at the 6 m edge, nothing beyond.
+    ///  - Blast: 400 damage at the centre, linear falloff to 50 % at the 6 m edge, nothing beyond.
     /// </summary>
     public static class HiddenCoreRules
     {
-        public const float Radius = 6f, Damage = 400f, EdgeFactor = 0.4f, ExposeHpFrac = 0.66f, MinSide = 0.35f, PoolFrac = 0.6f;
+        public const float Radius = 6f, Damage = 400f, EdgeFactor = 0.5f, ExposeHpFrac = 0.66f, MinSide = 0.35f, PoolFrac = 0.6f;
 
         public struct Candidate
         {
@@ -34,8 +34,8 @@ namespace Crashverse.Meta
             double D(int i) { var c = all[i]; return (c.x - cx) * (c.x - cx) + (c.y - cy) * (c.y - cy) + (c.z - cz) * (c.z - cz); }
             idx.Sort((a, b) => { int k = D(a).CompareTo(D(b)); return k != 0 ? k : string.CompareOrdinal(all[a].id, all[b].id); });
             int pool = System.Math.Max(1, (int)System.Math.Ceiling(idx.Count * PoolFrac));
-            int seed = (int)((uint)(runSeed ^ (runSeed >> 32)) ^ Fnv(levelId));
-            return idx[new System.Random(seed).Next(pool)];
+            long seed = unchecked((long)(unchecked((ulong)runSeed) ^ Fnv(levelId)));
+            return idx[new Crashverse.Sim.SimRng(seed).NextInt(pool)];
         }
 
         public static bool ShouldExpose(float hp, float maxHp, bool neighbourBroken) => neighbourBroken || (maxHp > 0f && hp > 0f && hp <= maxHp * ExposeHpFrac);
