@@ -145,7 +145,9 @@ namespace Crashverse.Visuals
                 v[i] = r;                                                              // top flush with the block (+0.5) so the stilts stand on it, bottom sunk 0.15 into the sand
             }
             m.vertices = v; m.RecalculateNormals(); m.RecalculateBounds();
-            return CvMesh.WithBoxUv(m, 2.5f, scale);
+            var boxed = CvMesh.WithBoxUv(m, 2.5f, scale);
+            Object.Destroy(m); // WithBoxUv returns the owned render mesh; release this temporary deformed source.
+            return boxed;
         }
 
         /// <summary>A block the kit didn't dress: tiled kingdom surface on a box-UV cube, white base tint (damage still darkens).</summary>
