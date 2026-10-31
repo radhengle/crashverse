@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 
 namespace Crashverse.Visuals
 {
-    public enum KingdomRegion { Harbour, MillFields, Clocktower, CrownRock, Quarry }
+    public enum KingdomRegion { Harbour, MillFields, Clocktower, RoyalMarket, SeaWallBeacon, CrownRock, Quarry }
 
     /// <summary>
     /// Phase 1 environment for every run (concept art design/level_concepts_v1): photo sky, ocean with a turquoise lagoon and foam
@@ -31,7 +31,7 @@ namespace Crashverse.Visuals
             Shore(root.transform, cannonRoot, structureBase);
             Horizon(root.transform, palaceLevel, region);
             if (Rx >= 20f) Yard(root.transform, cannonRoot, bounds);
-            Harbour(root.transform, structureBase);
+            if (region == KingdomRegion.Harbour) Harbour(root.transform, structureBase);
             RegionSetDressing(root.transform, structureBase, bounds, region);
             Foliage(root.transform, cannonRoot, bounds);
             return root;
@@ -497,6 +497,59 @@ namespace Crashverse.Visuals
                 Box("ClockMerlon", t, new Vector3((i % 2 == 0 ? -1f : 1f) * 1.35f, 19.2f, (i < 2 ? -1f : 1f) * 1.35f), new Vector3(0.7f, 1.0f, 0.7f), stone, 1f);
         }
 
+        static void RoyalMarketLandmark(Transform parent)
+        {
+            var t = new GameObject("RoyalMarketLandmark").transform; t.SetParent(parent, false);
+            t.localPosition = new Vector3(184f, WaterY, -75f);
+            var stone = KingdomMaterials.Make("MarketStone", "T_K_Stone", new Color(0.78f, 0.70f, 0.58f), 0f, 0.9f, Vector2.one);
+            var red = KingdomMaterials.Make("MarketCrimson", "T_K_Banner", new Color(0.9f, 0.78f, 0.62f), 0f, 0.9f, Vector2.one);
+            Box("MarketHall", t, new Vector3(0f, 3.0f, 0f), new Vector3(11f, 6f, 7f), stone, 2.5f);
+            Box("MarketRoof", t, new Vector3(0f, 6.3f, 0f), new Vector3(12f, 0.7f, 8f), KingdomMaterials.Roof, 2f);
+            for (int i = 0; i < 3; i++)
+            {
+                float z = (i - 1) * 3.0f;
+                Box("MarketArchShadow", t, new Vector3(-5.56f, 2.7f, z), new Vector3(0.08f, 3.6f, 1.55f), KingdomMaterials.Bore, 1f);
+                Box("MarketColumn", t, new Vector3(-5.8f, 2.4f, z - 0.95f), new Vector3(0.5f, 4.8f, 0.5f), stone, 1f);
+            }
+            foreach (float side in new[] { -1f, 1f })
+            {
+                var stall = new GameObject("MarketStall").transform; stall.SetParent(t, false);
+                stall.localPosition = new Vector3(-7f, 0f, side * 8f);
+                Box("StallCounter", stall, new Vector3(0f, 0.9f, 0f), new Vector3(3.6f, 0.25f, 1.6f), KingdomMaterials.Planks, 1f);
+                Box("StallAwning", stall, new Vector3(0f, 2.5f, 0f), new Vector3(4.0f, 0.18f, 2.0f), red, 1f);
+                foreach (float x in new[] { -1.7f, 1.7f })
+                {
+                    var post = Obj("StallPost", stall, Cylinder(), KingdomMaterials.Wood, false, false);
+                    post.transform.localPosition = new Vector3(x, 1.65f, side * 0.7f);
+                    post.transform.localScale = new Vector3(0.12f, 1.65f, 0.12f);
+                }
+            }
+        }
+
+        static void SeaWallBeaconLandmark(Transform parent)
+        {
+            var t = new GameObject("SeaWallBeaconLandmark").transform; t.SetParent(parent, false);
+            t.localPosition = new Vector3(184f, WaterY, -75f);
+            var stone = KingdomMaterials.Make("BeaconStone", "T_K_Stone", new Color(0.82f, 0.78f, 0.69f), 0f, 0.9f, Vector2.one);
+            var glow = KingdomMaterials.Make("BeaconGlow", null, new Color(1f, 0.75f, 0.38f), 0f, 0.25f, Vector2.one, new Color(2.2f, 1.25f, 0.45f));
+            Box("BeaconTowerBase", t, new Vector3(0f, 6f, 0f), new Vector3(4.8f, 12f, 4.8f), stone, 2.5f);
+            Box("BeaconTowerNeck", t, new Vector3(0f, 13.5f, 0f), new Vector3(3.3f, 4f, 3.3f), stone, 2f);
+            var room = Obj("BeaconLanternRoom", t, Cylinder(), KingdomMaterials.Gold, false, false);
+            room.transform.localPosition = new Vector3(-1.8f, 16.0f, 0f);
+            room.transform.localScale = new Vector3(2.5f, 1.0f, 2.5f);
+            var lens = Obj("BeaconLens", t, Sphere(), glow, false, false);
+            lens.transform.localPosition = new Vector3(-1.8f, 16.2f, 0f);
+            lens.transform.localScale = new Vector3(1.25f, 0.8f, 1.25f);
+            Box("BeaconRoof", t, new Vector3(0f, 17.3f, 0f), new Vector3(4.2f, 0.65f, 4.2f), KingdomMaterials.FlagRed, 1f);
+            // A crenellated sea wall makes the beacon read as part of the King's blockade, not a free-standing tower.
+            for (int i = 0; i < 7; i++)
+            {
+                float z = (i - 3) * 1.1f;
+                Box("SeaWall", t, new Vector3(-3.2f, 1.4f, z), new Vector3(1.2f, 2.8f, 0.85f), stone, 1f);
+                if (i % 2 == 0) Box("SeaWallMerlon", t, new Vector3(-3.2f, 3.0f, z), new Vector3(1.35f, 0.55f, 0.95f), stone, 1f);
+            }
+        }
+
         static void QuarryLandmark(Transform parent)
         {
             var rocks = CvMesh.Load("Kingdom/Meshes/Rocks");
@@ -541,6 +594,41 @@ namespace Crashverse.Visuals
                     lantern.transform.localScale = Vector3.one * 0.42f;
                 }
             }
+            else if (region == KingdomRegion.RoyalMarket)
+            {
+                var goods = KingdomMaterials.Make("MarketGoods", "T_K_Wood", new Color(0.78f, 0.57f, 0.30f), 0f, 0.95f, Vector2.one);
+                foreach (float side in new[] { -1f, 1f })
+                {
+                    float z = bounds.center.z + side * (bounds.extents.z + 3.4f);
+                    var stall = new GameObject("MarketStall").transform; stall.SetParent(root, false);
+                    stall.localPosition = new Vector3(bounds.min.x - 2.6f, 0f, z);
+                    Box("MarketCounter", stall, new Vector3(0f, 0.9f, 0f), new Vector3(2.8f, 0.25f, 1.45f), KingdomMaterials.Planks, 1f);
+                    Box("MarketAwning", stall, new Vector3(0f, 2.25f, 0f), new Vector3(3.2f, 0.16f, 1.8f), KingdomMaterials.Banner, 1f);
+                    foreach (float x in new[] { -1.35f, 1.35f })
+                    {
+                        var post = Obj("MarketPost", stall, Cylinder(), KingdomMaterials.Wood, false, false);
+                        post.transform.localPosition = new Vector3(x, 1.45f, side * 0.55f);
+                        post.transform.localScale = new Vector3(0.1f, 1.45f, 0.1f);
+                    }
+                    for (int i = 0; i < 3; i++)
+                    {
+                        var crate = Obj("MarketCrate", stall, Cube(new Vector3(0.48f, 0.48f, 0.48f), 0.6f), goods, false, false);
+                        crate.transform.localPosition = new Vector3(-0.72f + i * 0.72f, 1.28f, 0f);
+                        crate.transform.localScale = Vector3.one * 0.48f;
+                    }
+                }
+            }
+            else if (region == KingdomRegion.SeaWallBeacon)
+            {
+                var stone = KingdomMaterials.Make("SeaWallStone", "T_K_Stone", new Color(0.78f, 0.76f, 0.71f), 0f, 0.92f, Vector2.one);
+                foreach (float side in new[] { -1f, 1f })
+                {
+                    float z = bounds.center.z + side * (bounds.extents.z + 2.4f);
+                    Box("SeaWallFlank", root, new Vector3(bounds.min.x - 2.0f, 0.72f, z), new Vector3(3.2f, 1.44f, 0.65f), stone, 1.5f);
+                    for (int i = 0; i < 3; i++)
+                        Box("SeaWallCrenel", root, new Vector3(bounds.min.x - 3.2f + i * 1.15f, 1.55f, z), new Vector3(0.55f, 0.45f, 0.75f), stone, 1f);
+                }
+            }
             else if (region == KingdomRegion.CrownRock)
             {
                 var gold = KingdomMaterials.CannonBronze;
@@ -579,6 +667,8 @@ namespace Crashverse.Visuals
             Isle("IsleB", isles, new Vector3(260f, WaterY, 25f), 0.9f, 260f);
             if (region == KingdomRegion.MillFields) WindmillLandmark(h);
             else if (region == KingdomRegion.Clocktower) ClocktowerLandmark(h);
+            else if (region == KingdomRegion.RoyalMarket) RoyalMarketLandmark(h);
+            else if (region == KingdomRegion.SeaWallBeacon) SeaWallBeaconLandmark(h);
             else if (region == KingdomRegion.Quarry) QuarryLandmark(h);
             // King Grimhold's palace on Crown Rock: always on the horizon (screen right), close and huge on L10
             var pal = new GameObject("CrownRockPalace").transform; pal.SetParent(h, false);

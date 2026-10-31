@@ -118,7 +118,9 @@ namespace Crashverse.Visuals
                 var region = ctx != null && ctx.mode == RunMode.DailyBoss ? KingdomRegion.Quarry :
                     ctx?.level == null || ctx.level.number <= 3 ? KingdomRegion.Harbour :
                     ctx.level.number <= 6 ? KingdomRegion.MillFields :
-                    ctx.level.number <= 9 ? KingdomRegion.Clocktower : KingdomRegion.CrownRock;
+                    ctx.level.number == 7 ? KingdomRegion.Clocktower :
+                    ctx.level.number == 8 ? KingdomRegion.RoyalMarket :
+                    ctx.level.number == 9 ? KingdomRegion.SeaWallBeacon : KingdomRegion.CrownRock;
                 KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark, region, GameplayDirector.StructureBounds(s, s.structureBase));
                 CannonDresser.Dress(wb);
                 if (s.builder != null) KingdomTheme.Apply(s.builder.Blocks, levelId);
