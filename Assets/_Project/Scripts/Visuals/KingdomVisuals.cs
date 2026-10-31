@@ -53,11 +53,22 @@ namespace Crashverse.Visuals
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.Linear;
             RenderSettings.fogColor = KingdomMaterials.HorizonColor; RenderSettings.fogStartDistance = 55f; RenderSettings.fogEndDistance = 380f; // atmospheric haze over the far islands
             var sky = KingdomMaterials.Sky;
-            if (sky != null && Camera.main != null) { RenderSettings.skybox = sky; Camera.main.clearFlags = CameraClearFlags.Skybox; }
+            // skybox does not depend on the camera existing yet (PostBuild can run before the run camera is created); the run hook
+            // re-applies the clear flags on every camera (SkyOnCameras)
+            if (sky != null) RenderSettings.skybox = sky;
+            SkyOnCameras();
+            var shSky = Shader.Find("Crashverse/SkyPano");
+            Debug.Log($"[KingdomSky] sky={(sky != null ? sky.shader.name : "null")} shader={(shSky != null ? (shSky.isSupported ? "ok" : "unsupported") : "missing")} tex={(Resources.Load<Texture2D>("Kingdom/Textures/T_K_Sky") != null)} cam={(Camera.main != null ? Camera.main.name + ":" + Camera.main.clearFlags : "none")}");
             Mood(false);
         }
 
         /// <summary>Hard level / Daily Boss: stormy dusk over the King's palace (L10 concept) — darker sky and sea, navy fog.</summary>
+        static void SkyOnCameras()
+        {
+            if (RenderSettings.skybox == null || KingdomMaterials.Sky == null) return;
+            foreach (var c in Camera.allCameras) if (c != null && c.cameraType == CameraType.Game && c.targetTexture == null && c.clearFlags != CameraClearFlags.Depth && c.clearFlags != CameraClearFlags.Nothing) c.clearFlags = CameraClearFlags.Skybox;
+        }
+
         static void Mood(bool dark)
         {
             var sky = KingdomMaterials.Sky; var w = KingdomMaterials.Water;
@@ -97,7 +108,8 @@ namespace Crashverse.Visuals
             string levelId = ctx?.level != null ? ctx.level.id : (ctx != null && ctx.mode == RunMode.DailyBoss ? "dailyboss" : "");
             bool dark = ctx != null && (ctx.IsHard || ctx.mode == RunMode.DailyBoss);
             bool palace = levelId.EndsWith("l10");
-            Mood(dark || palace);
+            Mood(dark || palace); SkyOnCameras();
+            Debug.Log($"[KingdomSky] run: skybox={(RenderSettings.skybox != null ? RenderSettings.skybox.name : "null")} cam={(Camera.main != null ? Camera.main.name + ":" + Camera.main.clearFlags : "none")}");
             if (palace && !dark && RenderSettings.sun != null) { RenderSettings.sun.intensity = 1.2f; RenderSettings.sun.color = new Color(0.85f, 0.88f, 1f); }
             try
             {

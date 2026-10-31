@@ -139,7 +139,7 @@ namespace Crashverse.Visuals
                 if (sh == null || !sh.isSupported || t == null) return null;
                 t.wrapModeU = TextureWrapMode.Repeat; t.wrapModeV = TextureWrapMode.Clamp;
                 _sky = new Material(sh) { name = "MK_Sky" }; _sky.SetTexture("_MainTex", t);
-                _sky.SetFloat("_Rotation", 0f); // big cumulus bank straight ahead of the cannon (+x) _sky.SetFloat("_Exposure", 1.05f); _sky.SetFloat("_BottomElev", -3.6f);
+                _sky.SetFloat("_Rotation", 0f); _sky.SetFloat("_Exposure", 1.05f); _sky.SetFloat("_BottomElev", -3.6f); // rotation 0: big cumulus bank straight ahead of the cannon (+x)
                 _sky.SetColor("_HorizonColor", HorizonColor);
                 return _sky;
             }
