@@ -64,6 +64,7 @@ namespace Crashverse.Visuals
             bool clocktower = levelId != null && levelId.Contains("clockwork");
             Decorate(blocks, castle, clocktower);
             if (clocktower) AddClockFace(blocks);
+            if (levelId != null && levelId.Contains("l09")) AddBeaconLantern(blocks);
         }
 
         /// <summary>L1 "Royal Watch Post": a pitched shingle roof over the top piece, a ladder up the cannon-facing side and rope
@@ -222,6 +223,40 @@ namespace Crashverse.Visuals
 
         static Mesh _cyl;
         static Mesh Cyl() { if (_cyl == null) { var t = GameObject.CreatePrimitive(PrimitiveType.Cylinder); _cyl = t.GetComponent<MeshFilter>().sharedMesh; Object.Destroy(t); } return _cyl; }
+        static Mesh _sphere;
+        static Mesh Sphere() { if (_sphere == null) { var t = GameObject.CreatePrimitive(PrimitiveType.Sphere); _sphere = t.GetComponent<MeshFilter>().sharedMesh; Object.Destroy(t); } return _sphere; }
+
+
+        /// <summary>Bright, gold-framed beacon lens attached to the existing Level 9 lantern block.</summary>
+        static void AddBeaconLantern(IReadOnlyList<DestructibleBlock> blocks)
+        {
+            DestructibleBlock host = null;
+            foreach (var b in blocks) if (b != null && b.blockId == "lhLantern") { host = b; break; }
+            if (host == null) return;
+            var root = MetricChild(host, "Kingdom_BeaconLens");
+            var brass = KingdomMaterials.CannonBronze;
+            var emissive = KingdomMaterials.Make("BeaconLensGlow", null, new Color(1f, 0.78f, 0.42f), 0.05f, 0.22f,
+                Vector2.one, new Color(2.0f, 1.0f, 0.35f));
+            foreach (float y in new[] { -0.42f, 0.38f })
+            {
+                var ring = R("BeaconLens_Ring", root, Cyl(), brass);
+                ring.transform.localPosition = new Vector3(0f, y, 0f);
+                ring.transform.localScale = new Vector3(0.96f, 0.075f, 0.96f);
+            }
+            var lens = R("BeaconLens_Core", root, Sphere(), emissive);
+            lens.transform.localPosition = new Vector3(0f, -0.02f, 0f);
+            lens.transform.localScale = Vector3.one * 0.68f;
+            for (int x = -1; x <= 1; x += 2)
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    var strut = R("BeaconLens_Strut", root, Cyl(), brass);
+                    strut.transform.localPosition = new Vector3(x * 0.39f, 0f, z * 0.39f);
+                    strut.transform.localScale = new Vector3(0.055f, 0.72f, 0.055f);
+                }
+            var crown = R("BeaconLens_Cap", root, Cyl(), brass);
+            crown.transform.localPosition = new Vector3(0f, 0.43f, 0f);
+            crown.transform.localScale = new Vector3(0.72f, 0.07f, 0.72f);
+        }
 
         /// <summary>Adds a breakable clock face to the cannon-facing upper storey of the Curfew Clocktower.</summary>
         static void AddClockFace(IReadOnlyList<DestructibleBlock> blocks)
