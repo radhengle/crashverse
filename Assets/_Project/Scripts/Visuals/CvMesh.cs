@@ -10,6 +10,24 @@ namespace Crashverse.Visuals
     public static class CvMesh
     {
         static readonly Dictionary<string, Dictionary<string, Mesh>> _cache = new Dictionary<string, Dictionary<string, Mesh>>();
+        // ArchitectureDresser builds many repeated timber boards, beams and stone blocks. Keep one immutable unit-box mesh
+        // per quantised dimensions/tile tuple instead of allocating a native Mesh for every repeated architectural component.
+        readonly struct BoxKey : System.IEquatable<BoxKey>
+        {
+            readonly int x, y, z, tile;
+            public BoxKey(Vector3 size, float metresPerTile)
+            {
+                x = Mathf.RoundToInt(size.x * 1000f); y = Mathf.RoundToInt(size.y * 1000f);
+                z = Mathf.RoundToInt(size.z * 1000f); tile = Mathf.RoundToInt(metresPerTile * 1000f);
+            }
+            public bool Equals(BoxKey other) => x == other.x && y == other.y && z == other.z && tile == other.tile;
+            public override bool Equals(object obj) => obj is BoxKey other && Equals(other);
+            public override int GetHashCode()
+            {
+                unchecked { int h = x; h = h * 397 ^ y; h = h * 397 ^ z; return h * 397 ^ tile; }
+            }
+        }
+        static readonly Dictionary<BoxKey, Mesh> _boxCubes = new Dictionary<BoxKey, Mesh>();
 
         public static Dictionary<string, Mesh> Load(string resource)
         {
@@ -59,6 +77,8 @@ namespace Crashverse.Visuals
         /// <summary>Unit cube (-0.5..0.5) whose UVs tile every <paramref name="tile"/> metres once scaled to <paramref name="size"/>.</summary>
         public static Mesh BoxCube(Vector3 size, float tile)
         {
+            var key = new BoxKey(size, tile);
+            if (_boxCubes.TryGetValue(key, out var cached) && cached != null) return cached;
             var m = new Mesh { name = "KCube" };
             var v = new List<Vector3>(); var nn = new List<Vector3>(); var uv = new List<Vector2>(); var t = new List<int>();
             var edge = new List<Vector4>(); // per-face metres (u, v) + face size (w, h) for the GlossyPBR edge wear
@@ -80,6 +100,7 @@ namespace Crashverse.Visuals
             Face(Vector3.up, Vector3.right, Vector3.forward); Face(Vector3.down, Vector3.right, Vector3.back);
             Face(Vector3.forward, Vector3.left, Vector3.up); Face(Vector3.back, Vector3.right, Vector3.up);
             m.SetVertices(v); m.SetNormals(nn); m.SetUVs(0, uv); m.SetUVs(2, edge); m.SetTriangles(t, 0); m.RecalculateBounds(); m.RecalculateTangents();
+            _boxCubes[key] = m;
             return m;
         }
 
