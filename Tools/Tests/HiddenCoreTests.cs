@@ -42,6 +42,19 @@ static class HiddenCoreTests
             T.True(hosts.Count >= 2, "different run seeds pick different hosts on the King's Palace (" + hosts.Count + ")");
             T.Eq(-1, HiddenCoreRules.PickHost(new List<HiddenCoreRules.Candidate>(), 1, "x"), "no candidates -> no core");
         });
+        T.Add("hidden_core_uses_full_64_bit_seed_and_is_order_independent", () =>
+        {
+            var l = Db.Chapter1.levels.First(x => x.number == 10); var c = Cands(Db.GetLayout(l.layout));
+            int original = HiddenCoreRules.PickHost(c, 12345L, l.id);
+            var reversed = c.AsEnumerable().Reverse().ToList();
+            int reverseIndex = HiddenCoreRules.PickHost(reversed, 12345L, l.id);
+            T.True(original >= 0 && reverseIndex >= 0, "both candidate orders select a host");
+            if (original >= 0 && reverseIndex >= 0)
+                T.Eq(c[original].id, reversed[reverseIndex].id, "candidate ordering does not change the selected host");
+            var highBitHosts = new HashSet<int>();
+            for (long i = 0; i < 40; i++) highBitHosts.Add(HiddenCoreRules.PickHost(c, (i << 32) | 12345L, l.id));
+            T.True(highBitHosts.Count >= 2, "upper 32 seed bits affect host selection (" + highBitHosts.Count + " hosts)");
+        });
         T.Add("hidden_core_expose_and_detonate_rules", () =>
         {
             T.True(!HiddenCoreRules.ShouldExpose(100, 100, false), "full HP hidden");
