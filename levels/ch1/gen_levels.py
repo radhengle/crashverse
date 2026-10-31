@@ -259,7 +259,7 @@ OVR={1:dict(hintTarget="post",mastery=M("DESTROYED_AT_LEAST","Destroy at least 9
  7:dict(hintTarget="ring0",mastery=M("ROLE_INTACT","Topple the tower without breaking the crown",0.8,"crown")),
  8:dict(shots=6,hintTarget="key1",mastery=M("STARS","Earn 3 stars",3)),
  9:dict(shots=5,hintTarget="lhRing",mastery=M("NO_POWERUP","Win without using a power-up")),
- 10:dict(shots=7,star3Pct=0.42,star2Pct=0.28,hintTarget="gateLintel",mastery=M("SHOTS_LEFT_AT_LEAST","Take the King's Palace with 2 shots to spare",2))}
+ 10:dict(shots=7,star3Pct=0.42,star2Pct=0.28,starCapIfPowerupUsed=2,hintTarget="gateLintel",mastery=M("SHOTS_LEFT_AT_LEAST","Take the King's Palace with 2 shots to spare",2))}
 if __name__=="__main__":
     os.makedirs(os.path.join(HERE,"layouts"),exist_ok=True)
     for n,(lid,f) in LAYOUTS.items():
