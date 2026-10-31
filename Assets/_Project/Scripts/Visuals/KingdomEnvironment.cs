@@ -405,11 +405,23 @@ namespace Crashverse.Visuals
             Merge("Foliage_Rock", stone, KingdomMaterials.Rock, 1.5f);
         }
 
-        static readonly Dictionary<Mesh, Mesh> _boxUv = new Dictionary<Mesh, Mesh>();
+        // Box-projected rock UVs depend on both the source mesh and the requested tile size.
+        // Keying by Mesh alone reused the first random rock's UV scale for every later instance,
+        // making the same shoreline asset show inconsistent texel density across the island.
+        readonly struct BoxUvKey : System.IEquatable<BoxUvKey>
+        {
+            readonly int meshId, tileMilli;
+            public BoxUvKey(Mesh mesh, float tile) { meshId = mesh.GetInstanceID(); tileMilli = Mathf.RoundToInt(tile * 1000f); }
+            public bool Equals(BoxUvKey other) => meshId == other.meshId && tileMilli == other.tileMilli;
+            public override bool Equals(object obj) => obj is BoxUvKey other && Equals(other);
+            public override int GetHashCode() { unchecked { return meshId * 397 ^ tileMilli; } }
+        }
+        static readonly Dictionary<BoxUvKey, Mesh> _boxUv = new Dictionary<BoxUvKey, Mesh>();
         static Mesh BoxUvCached(Mesh m, float tile)
         {
-            if (_boxUv.TryGetValue(m, out var hit)) return hit;
-            return _boxUv[m] = CvMesh.WithBoxUv(m, tile, Vector3.one * 2.5f);
+            var key = new BoxUvKey(m, tile);
+            if (_boxUv.TryGetValue(key, out var hit) && hit != null) return hit;
+            return _boxUv[key] = CvMesh.WithBoxUv(m, tile, Vector3.one * 2.5f);
         }
 
         static void Palm(Transform parent, Dictionary<string, Mesh> palms, Vector3 p, int i, float leanOut = 0f, float scale = 0f)
