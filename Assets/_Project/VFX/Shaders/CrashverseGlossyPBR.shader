@@ -42,6 +42,9 @@ Shader "Crashverse/GlossyPBR"
         _InnerColor ("Inner Colour", Color) = (0.42,0.26,0.15,1)
         _InnerRoughness ("Inner Roughness", Range(0,1)) = 0.9
 
+        _EdgeWear ("Edge Wear (needs per-face edge data in UV2)", Range(0,1)) = 0
+        _EdgeWearColor ("Edge Wear Tint (x albedo, x2)", Color) = (0.75,0.68,0.58,1)
+        _EdgeWidth ("Edge Wear Width (m)", Range(0.005,0.2)) = 0.06
         _LowSpec ("Low tier spec intensity", Range(0,2)) = 0.5
         _LowRoughness ("Low tier roughness (no ORM)", Range(0,1)) = 0.45
     }
@@ -54,6 +57,7 @@ Shader "Crashverse/GlossyPBR"
         half _BumpScale, _Roughness, _Metallic, _OcclusionStrength;
         half _Terminator, _TerminatorOffset, _ShadeStrength, _RimIntensity, _RimPower;
         half _DamageStep, _DarkenPerStep, _HitFlash, _FlexAmount, _InnerFace, _InnerRoughness, _LowSpec, _LowRoughness;
+        half4 _EdgeWearColor; half _EdgeWear, _EdgeWidth;
     CBUFFER_END
     TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
     TEXTURE2D(_BumpMap); TEXTURE2D(_ORMMap); TEXTURE2D(_EmissionMap); TEXTURE2D(_CrackMap);
@@ -101,14 +105,14 @@ Shader "Crashverse/GlossyPBR"
             struct Attributes
             {
                 float4 positionOS:POSITION; float3 normalOS:NORMAL; float4 tangentOS:TANGENT; half4 color:COLOR;
-                float2 uv:TEXCOORD0; float2 uv2:TEXCOORD1; UNITY_VERTEX_INPUT_INSTANCE_ID
+                float2 uv:TEXCOORD0; float2 uv2:TEXCOORD1; float4 edge:TEXCOORD2; UNITY_VERTEX_INPUT_INSTANCE_ID
             };
             struct Varyings
             {
                 float4 positionCS:SV_POSITION; float2 uv:TEXCOORD0; float3 positionWS:TEXCOORD1;
                 half3 normalWS:TEXCOORD2; half4 tangentWS:TEXCOORD3; half4 color:TEXCOORD4;
                 DECLARE_LIGHTMAP_OR_SH(lightmapUV, vertexSH, 5);
-                half fog:TEXCOORD6; UNITY_VERTEX_INPUT_INSTANCE_ID
+                half fog:TEXCOORD6; float4 edge:TEXCOORD7; UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             Varyings vert(Attributes i)
@@ -118,7 +122,7 @@ Shader "Crashverse/GlossyPBR"
                 VertexNormalInputs nrm = GetVertexNormalInputs(i.normalOS, i.tangentOS);
                 o.positionCS = p.positionCS; o.positionWS = p.positionWS;
                 o.normalWS = nrm.normalWS; o.tangentWS = half4(nrm.tangentWS, i.tangentOS.w * GetOddNegativeScale());
-                o.uv = TRANSFORM_TEX(i.uv, _BaseMap); o.color = i.color;
+                o.uv = TRANSFORM_TEX(i.uv, _BaseMap); o.color = i.color; o.edge = i.edge;
                 OUTPUT_LIGHTMAP_UV(i.uv2, unity_LightmapST, o.lightmapUV);
                 OUTPUT_SH(o.normalWS, o.vertexSH);
                 o.fog = ComputeFogFactor(p.positionCS.z);
@@ -137,6 +141,18 @@ Shader "Crashverse/GlossyPBR"
 
                 half rough = orm.g * _Roughness, metal = orm.b * _Metallic;
                 half ao = lerp(1.0h, orm.r, _OcclusionStrength);
+                // Edge wear: per-face metres to the nearest face border (UV2 = u, v, width, height; zero = no data), broken up by a
+                // second, offset sample of the albedo so chipped/rubbed edges look irregular. Worn edges are lighter and rougher.
+                if (_EdgeWear > 0.001h)
+                {
+                    float2 ed = min(i.edge.xy, i.edge.zw - i.edge.xy);
+                    half valid = step(1e-3, min(i.edge.z, i.edge.w));
+                    half breakup = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv * 2.37 + 0.31).g;
+                    half m = saturate(1.0h - min(ed.x, ed.y) / _EdgeWidth) * valid;
+                    half wear = smoothstep(0.45h, 0.75h, m * (0.55h + breakup)) * _EdgeWear;
+                    albedo.rgb = lerp(albedo.rgb, saturate(albedo.rgb * _EdgeWearColor.rgb * 2.0h), wear);
+                    rough = saturate(rough + wear * 0.2h); ao = lerp(ao, 1.0h, wear * 0.5h);
+                }
                 // Inner face (fragment interiors): own colour, rough, non-metal, no normal detail
                 albedo.rgb = lerp(albedo.rgb, _InnerColor.rgb * albedo.rgb, _InnerFace);
                 rough = lerp(rough, _InnerRoughness, _InnerFace); metal *= 1.0h - _InnerFace;

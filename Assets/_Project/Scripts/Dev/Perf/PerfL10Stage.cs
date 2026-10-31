@@ -102,7 +102,7 @@ namespace Crashverse.DevTools.Perf
             {
                 mode = RunMode.Campaign, // tier caps as shipped (Low 25 / Mid 60 / High 90); not a scored run
                 level = PerfL10Fixture.Level(l10),
-                layout = PerfL10Fixture.Layout(db.GetLayout(l10.layout)),
+                layout = PerfL10Fixture.Layout(db.GetLayout("c1_l10_tidewarden")), // the perf fixture keeps the 13-piece Tidewarden base
                 seed = PerfL10Fixture.Seed,
             };
             ctx.loadout.Tiles[PerfL10Fixture.PowerUpSlot] = PerfL10Fixture.PowerUpId;

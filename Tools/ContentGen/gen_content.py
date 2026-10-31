@@ -230,16 +230,16 @@ chapter = {
     {"id": "clocktower", "name": "Clocktower Isle", "pos": [44, 6, 0], "gateAfterLevel": "c1_l06"},
     {"id": "storm", "name": "Storm Isle", "pos": [64, 10, 10], "gateAfterLevel": "c1_l09"}],
   "levels": [
-    LV(1, "harbor", "Wooden Lookout Hut", "c1_l01_lookout_hut", [W], 4, "Aim + fire, trajectory arc", M("CLEAR_IN_SHOTS", 1, "Clear in 1 shot")),
-    LV(2, "harbor", "Stilt Water Tower", "c1_l02_stilt_tower", [W], 4, "Hit supports, not walls", M("ROLE_BELOW_HEIGHT", 0, "Topple tank into sea (off the island)", "tank")),
-    LV(3, "harbor", "Brick Bakery", "c1_l03_bakery", [W, Bk], 5, "Brick needs support loss", M("DESTROYED_AT_LEAST", .95, ">=95% destroyed")),
-    LV(4, "mill", "Windmill", "c1_l04_windmill", [W, Bk], 5, "Collapse chains between pieces", M("THREE_STARS_NO_ROLE_HITS", 0, "3 stars with no wall hits", "wall")),
-    LV(5, "mill", "Twin Cottages", "c1_l05_twin_cottages", [W, Bk], 5, "One shot, two targets (bridge)", M("CLEAR_IN_SHOTS", 1, "Both in 1 shot")),
-    LV(6, "mill", "Steel-Braced Granary", "c1_l06_granary", [Bk, S], 5, "Steel joints take 2x damage", M("ALL_ROLE_BROKEN", 0, "Break all 3 joints", "steel_joint")),
-    LV(7, "clocktower", "Clockwork Tower", "m1_clockwork_tower", [W, Bk, S], 5, "Joint sequencing; first power-up pick (Earthquake)", M("ROLE_INTACT", 0.8, "Crown falls intact", "crown"), forced=[("Core", "earthquake")], locked=["Module", "Booster"]),
-    LV(8, "clocktower", "Market Arcade", "c1_l08_market_arcade", [W, Bk, S], 5, "Choose loadout deliberately (Multi Shot)", M("STARS", 3, "3 stars"), forced=[("Module", "multi_shot")]),
-    LV(9, "clocktower", "Lighthouse Gauntlet", "c1_l09_lighthouse_gauntlet", [W, Bk, S], 6, "Tests everything; tight budget", M("NO_POWERUP", 0, "No power-up used")),
-    LV(10, "storm", "The Tidewarden", "c1_l10_tidewarden", [W, Bk, S], 7, "Boss phases + weak points", M("SHOTS_LEFT_AT_LEAST", 3, "Defeat with 3 shots left"), boss="tidewarden",
+    LV(1, "harbor", "Royal Watch Post", "c1_l01_lookout_hut", [W], 4, "Aim + fire, trajectory arc", M("CLEAR_IN_SHOTS", 1, "Clear in 1 shot")),
+    LV(2, "harbor", "King's Cistern", "c1_l02_stilt_tower", [W], 4, "Hit supports, not walls", M("ROLE_BELOW_HEIGHT", 0, "Topple tank into sea (off the island)", "tank")),
+    LV(3, "harbor", "Royal Bakery", "c1_l03_bakery", [W, Bk], 5, "Brick needs support loss", M("DESTROYED_AT_LEAST", .95, ">=95% destroyed")),
+    LV(4, "mill", "Crown Mill", "c1_l04_windmill", [W, Bk], 5, "Collapse chains between pieces", M("THREE_STARS_NO_ROLE_HITS", 0, "3 stars with no wall hits", "wall")),
+    LV(5, "mill", "Tax Collectors' Lodges", "c1_l05_twin_cottages", [W, Bk], 5, "One shot, two targets (bridge)", M("CLEAR_IN_SHOTS", 1, "Both in 1 shot")),
+    LV(6, "mill", "Royal Granary", "c1_l06_granary", [Bk, S], 5, "Steel joints take 2x damage", M("ALL_ROLE_BROKEN", 0, "Break all 3 joints", "steel_joint")),
+    LV(7, "clocktower", "Curfew Clocktower", "m1_clockwork_tower", [W, Bk, S], 5, "Joint sequencing; first power-up pick (Earthquake)", M("ROLE_INTACT", 0.8, "Crown falls intact", "crown"), forced=[("Core", "earthquake")], locked=["Module", "Booster"]),
+    LV(8, "clocktower", "Royal Market Arcade", "c1_l08_market_arcade", [W, Bk, S], 5, "Choose loadout deliberately (Multi Shot)", M("STARS", 3, "3 stars"), forced=[("Module", "multi_shot")]),
+    LV(9, "clocktower", "Sea-Wall Beacon", "c1_l09_lighthouse_gauntlet", [W, Bk, S], 6, "Tests everything; tight budget", M("NO_POWERUP", 0, "No power-up used")),
+    LV(10, "storm", "The King's Palace", "c1_l10_tidewarden", [W, Bk, S], 7, "Boss phases + weak points", M("SHOTS_LEFT_AT_LEAST", 3, "Defeat with 3 shots left"), boss="tidewarden",
        reward=[{"type": "coins", "amount": 500, "id": ""}, {"type": "powerup", "amount": 1, "id": "black_hole"}, {"type": "gate", "amount": 1, "id": "frozen_peaks"}])]}
 
 def P(id, name, slot, effect, charges, utype, ulevel, utext, **p):

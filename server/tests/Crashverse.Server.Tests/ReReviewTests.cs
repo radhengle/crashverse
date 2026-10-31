@@ -138,13 +138,14 @@ public class ReReviewTests
     {
         await using var h = await Harness.Start();
         var l10 = h.X.Content.Level("c1_l10");
-        Assert.Equal(8, l10.shots); Assert.Equal(0.375f, l10.star3Pct); Assert.Equal(0.25f, l10.star2Pct);
-        Assert.Equal("NO_CLOSED_SHUTTER_HIT", l10.mastery.type);
+        // Season 1: L10 is the King's Palace (7 shots, 0.42 / 0.28 bands, 2-shots-to-spare mastery)
+        Assert.Equal(7, l10.shots); Assert.Equal(0.42f, l10.star3Pct); Assert.Equal(0.28f, l10.star2Pct);
+        Assert.Equal("SHOTS_LEFT_AT_LEAST", l10.mastery.type);
         Assert.Equal("DESTROYED_AT_LEAST", h.X.Content.Level("c1_l01").mastery.type);
-        // an 8-shot L10 run is accepted, and validated stars use L10's own bands (3 of 8 left = 37.5% → 3★; the old 60% default would give 2★)
+        // a 7-shot L10 run is accepted, and validated stars use L10's own bands (3 of 7 left ≥ 42% → 3★; the old 60% default would give 2★)
         var s = await h.Guest();
         await h.ClearPrereqs(s, "c1_l10");
-        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 3, 8, 0.9f, 2), s);
+        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 3, 7, 0.9f, 2), s);
         Assert.True(r["accepted"].GetBoolean());
         await new ReplayService(h.X).Enqueue((await h.X.Db.List<RunDoc>("runs")).Last(x => x.key == "c1_l10").runId, "test");
         h.Replay.Fn = _ => new ReplayResult { won = true, shotsLeft = 3, destroyedRatio = 0.9f, bestCombo = 2 };

@@ -22,17 +22,25 @@ namespace Crashverse.Meta
         [System.Serializable]
         public class Settings
         {
-            public float back = 14f;         // metres behind the cannon root, along the firing line
-            public float height = 4.0f;      // camera height above the cannon's ground
+            public float back = 20f;         // metres behind the cannon root, along the firing line (PM QA 31 Oct: concept framing, muzzle ~40% up)
+            public float height = 4.5f;      // PM QA 31 Oct (L01.jpg): slightly behind + above the cannon; PM QA: lower pitch so the barrel reads from behind, not from the top
             public float cannonRear = 1.8f;  // the cannon envelope reaches this far behind its root (rear roller / carriage)
             public float cannonTop = 2.6f;   // barrel tip / booster top at rest elevation
             public float topMargin = 0.06f;  // minimum share of the screen height above the structure's top (the HUD band, see HudTopMargin)
             public float bottomMargin = 0.03f; // share left under the cannon's wheels
-            public float sideFill = 0.92f;   // the structure's width may use up to this share of the screen width
-            public float minFov = 24f, maxFov = 68f;
+            public float sideFill = 0.80f;   // the structure's width may use up to this share of the screen width
+            public float minFov = 18f, maxFov = 68f; // 18: small huts may zoom in to fill ~70-80% of the width
         }
 
         public static readonly Settings Default = new Settings();
+        /// <summary>Compact levels (target 12-20 m away on its own island, L01.jpg): closer, lower eye and a wider view so the
+        /// building fills ~70% of the width with water visible on both sides.</summary>
+        public static readonly Settings Compact = new Settings { back = 11f, height = 6.5f, sideFill = 0.70f }; // PM QA: over the cannon so the island shows above it, but low enough that the barrel reads from behind, not from the top
+        /// <summary>Height (m) of the Kingdom roof-top flag pole above the highest block; the run camera keeps its tip in frame.</summary>
+        public const float RoofFlagPole = 1.2f;
+
+        public static Settings For(Vector3 cannonRoot, Bounds structure) =>
+            structure.center.x - cannonRoot.x < ArenaLayoutRules.CompactBelow + 2f ? Compact : Default;
 
         /// <summary>HUD band at the top of the screen (UI Developer: HUD bottom ≈ safe-area top inset + 104 dp; ~390 px on 1080x2340)
         /// plus an 8 dp breathing buffer (PM 2026-10-30), as a share of the screen height:
@@ -47,13 +55,13 @@ namespace Crashverse.Meta
 
         /// <summary>Solve the locked pose. aspect = width / height (portrait phones ~0.42–0.56).</summary>
         public static CannonCameraPose Solve(Vector3 cannonRoot, Bounds structure, float aspect, Settings s = null) =>
-            Solve(cannonRoot, Vector3.right, structure, aspect, s);
+            Solve(cannonRoot, Vector3.right, structure, aspect, s ?? For(cannonRoot, structure));
 
         /// <summary>Per-device solve: topMargin = the HUD band (HudTopMargin); extraAbove = points that must also stay below the HUD
         /// (the hint arc's apex and samples).</summary>
         public static CannonCameraPose Solve(Vector3 cannonRoot, Bounds structure, float aspect, float topMargin, Vector3[] extraAbove = null)
         {
-            var d = Default;
+            var d = For(cannonRoot, structure);
             var s = new Settings { back = d.back, height = d.height, cannonRear = d.cannonRear, cannonTop = d.cannonTop, topMargin = Mathf.Clamp(topMargin, d.topMargin, 0.4f),
                                    bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov };
             return Solve(cannonRoot, Vector3.right, structure, aspect, s, extraAbove);
@@ -109,6 +117,22 @@ namespace Crashverse.Meta
             float topEdge = -pitchDown + fovV * (0.5f - s.topMargin);   // the HUD band starts here
             if (topEdge < aTop) pitchDown -= aTop - topEdge;
             var rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(pitchDown, 0f, 0f);
+            // the angle maths above is linear in degrees while the projection is linear in tan: refine on the real corners so the
+            // building top never pokes into the HUD band (a few 1e-4 of the screen on tall-and-wide layouts)
+            float limit = 1f - s.topMargin;
+            for (int it = 0; it < 6; it++)
+            {
+                var pose = new CannonCameraPose { position = cam, rotation = rot, fov = fovV };
+                float yMax = float.MinValue;
+                for (int ci = 0; ci < 8; ci++)
+                {
+                    var w = new Vector3((ci & 1) == 0 ? structure.min.x : structure.max.x, (ci & 2) == 0 ? structure.min.y : structure.max.y, (ci & 4) == 0 ? structure.min.z : structure.max.z);
+                    yMax = Mathf.Max(yMax, ToViewport(pose, aspect, w).y);
+                }
+                if (yMax <= limit - 0.0005f) break;
+                pitchDown -= (yMax - limit + 0.001f) * fovV;
+                rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(pitchDown, 0f, 0f);
+            }
             return new CannonCameraPose { position = cam, rotation = rot, fov = fovV };
         }
 

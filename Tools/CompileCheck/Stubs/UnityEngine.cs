@@ -310,7 +310,7 @@ namespace UnityEngine
     {
         public bool enabled = true; public Material sharedMaterial; public Material material;
         public Bounds bounds; public Material[] sharedMaterials; public Material[] materials;
-        public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
+        public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode; public bool receiveShadows;
         public void GetPropertyBlock(MaterialPropertyBlock b) { }
         public void SetPropertyBlock(MaterialPropertyBlock b) { }
     }

@@ -23,6 +23,8 @@ namespace Crashverse.Rendering.Editor
             "Crashverse/GlossyPBR",
             "Crashverse/GlossyToon",
             "Crashverse/VfxParticle",
+            "Crashverse/SkyPano",           // Season 1 kingdom sky (Visuals/KingdomMaterials, Shader.Find)
+            "Crashverse/Water",             // Season 1 ocean (Visuals/KingdomMaterials, Shader.Find)
         };
 
         public int callbackOrder => -100;

@@ -56,24 +56,26 @@ namespace Crashverse.Rendering.Tests
         }
 
         [Test]
-        public void Tonemapping_IsNeutralOnEveryTier_AndBloomOnlyOnEmissive()
+        public void Tonemapping_IsAcesOnEveryTier_WithWarmGrade()
         {
             foreach (var res in new[] { RenderTiers.VolumeFullResource, RenderTiers.VolumeLowResource })
             {
                 var p = Resources.Load<VolumeProfile>(res);
                 Assert.NotNull(p, res);
                 Assert.IsTrue(p.TryGet<Tonemapping>(out var tm) && tm.active, res + ": Tonemapping");
-                Assert.AreEqual(TonemappingMode.Neutral, tm.mode.value, res + ": PM decision is Neutral on every tier, not ACES");
+                Assert.AreEqual(TonemappingMode.ACES, tm.mode.value, res + ": user decision 2026-10-31: ACES on every tier");
                 Assert.IsTrue(p.TryGet<ColorAdjustments>(out var ca));
-                Assert.AreEqual(0f, ca.postExposure.value, 1e-4f, res + " exposure");
-                Assert.AreEqual(8f, ca.contrast.value, 1e-4f, res + " contrast");
-                Assert.AreEqual(8f, ca.saturation.value, 1e-4f, res + " saturation");
+                Assert.AreEqual(RenderTiers.PostExposure, ca.postExposure.value, 1e-4f, res + " exposure");
+                Assert.AreEqual(RenderTiers.PostContrast, ca.contrast.value, 1e-4f, res + " contrast");
+                Assert.AreEqual(RenderTiers.PostSaturation, ca.saturation.value, 1e-4f, res + " saturation");
+                Assert.IsTrue(p.TryGet<WhiteBalance>(out var wb) && wb.temperature.value > 0f, res + ": warm white balance");
+                Assert.IsTrue(p.TryGet<SplitToning>(out _), res + ": split toning");
             }
             var full = Resources.Load<VolumeProfile>(RenderTiers.VolumeFullResource);
             Assert.IsTrue(full.TryGet<Bloom>(out var b));
-            Assert.GreaterOrEqual(b.threshold.value, 1.1f, "HDR bloom threshold >= 1.1: lit sandstone/steel/sky must not bloom");
+            Assert.GreaterOrEqual(b.threshold.value, 0.9f, "bloom only on bright highlights");
             Assert.LessOrEqual(b.intensity.value, 1f, "moderate bloom");
-            Assert.IsTrue(full.TryGet<Vignette>(out var v)); Assert.LessOrEqual(v.intensity.value, 0.2f, "light vignette");
+            Assert.IsTrue(full.TryGet<Vignette>(out var v)); Assert.LessOrEqual(v.intensity.value, 0.3f, "framing vignette");
             foreach (var t in RenderTiers.All) if (t.bloom) Assert.IsTrue(t.hdr, t.name + ": HDR bloom threshold needs an HDR tier");
         }
 
@@ -98,6 +100,16 @@ namespace Crashverse.Rendering.Tests
         public void TierLookup_MapsQualityNames()
         {
             Assert.AreEqual(0, RenderTiers.IndexFor("Low")); Assert.AreEqual(1, RenderTiers.IndexFor("Mid")); Assert.AreEqual(2, RenderTiers.IndexFor("High"));
+        }
+
+        [Test]
+        public void SoftwareRendererDetection()
+        {
+            Assert.IsTrue(RenderTiers.IsSoftwareRenderer("ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver-5.0.0)"));
+            Assert.IsTrue(RenderTiers.IsSoftwareRenderer("llvmpipe (LLVM 15.0.7, 256 bits)"));
+            Assert.IsFalse(RenderTiers.IsSoftwareRenderer("Adreno (TM) 619"));
+            Assert.IsFalse(RenderTiers.IsSoftwareRenderer("Mali-G57 MC2"));
+            Assert.IsFalse(RenderTiers.IsSoftwareRenderer(null));
         }
     }
 }

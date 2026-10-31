@@ -405,7 +405,8 @@ jobs:
     needs: [sign, emulator-smoke]
     # QA C-9b + Security L-52-1: dispatch only, from main or dev/* only, a NEW tag each time (never overwrites), tagged at the
     # exact built commit, and only once unity-tests (incl. unity-tests-gate) and server-ci passed on that same commit.
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish_tag != '' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/dev/'))
+    # always() + explicit results: the implicit success() also sees the PR-only build-release ancestor as skipped and skipped publish
+    if: always() && needs.sign.result == 'success' && needs.emulator-smoke.result == 'success' && github.event_name == 'workflow_dispatch' && github.event.inputs.publish_tag != '' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/dev/'))
     runs-on: ubuntu-24.04
     environment: dev-builds
     permissions:
