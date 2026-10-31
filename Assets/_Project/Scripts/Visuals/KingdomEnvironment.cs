@@ -112,10 +112,11 @@ namespace Crashverse.Visuals
         static void Island(Transform root, Vector3 structureBase)
         {
             // grass top (wavy edge, slightly inside the collider rim) + sand beach that slopes under the water
-            Obj("IslandGrass", root, Ring(0f, 0.97f, 0.005f, 0.005f, 96, 6f, 1.3f, 1f), KingdomMaterials.Grass, false, true);
+            // PM QA 31 Oct (L01.jpg): a sand island, not a lawn: dry sand on top, darker trampled sand under the building
+            Obj("IslandSand", root, Ring(0f, 0.97f, 0.005f, 0.005f, 96, 6f, 1.3f, 1f), KingdomMaterials.Make("SandDry", "T_K_Sand", new Color(1.04f, 0.98f, 0.88f), 0f, 0.97f, Vector2.one), false, true);
             Obj("IslandBeach", root, Ring(0.9f, 1.22f, -0.01f, WaterY - 1.4f, 96, 5f, 1.3f, 0.6f), KingdomMaterials.Sand, false, true);
             // sandy plaza under the building and a path toward the cannon
-            Obj("Plaza", root, Disc(7.5f, 6.5f, 0.012f, 40, 5f, 4.1f, new Vector3(structureBase.x, 0f, structureBase.z)), KingdomMaterials.Sand, false, true);
+            Obj("Plaza", root, Disc(7.5f, 6.5f, 0.012f, 40, 5f, 4.1f, new Vector3(structureBase.x, 0f, structureBase.z)), KingdomMaterials.Make("SandTrod", "T_K_Sand", new Color(0.82f, 0.74f, 0.62f), 0f, 0.9f, Vector2.one), false, true);
         }
 
         // ---------------- harbour deck ----------------
@@ -189,8 +190,7 @@ namespace Crashverse.Visuals
             float halfW = Mathf.Max(2.5f, sb.extents.z), x0 = sb.min.x, x1 = sb.max.x, cz = sb.center.z;
             // sand path (slightly raised so it never z-fights the grass)
             float pathStart = cannon.x + 3.8f, pathEnd = x0 - 0.5f;
-            if (pathEnd > pathStart)
-                Box("SandPath", y, new Vector3((pathStart + pathEnd) * 0.5f, 0.015f, cz), new Vector3(pathEnd - pathStart, 0.03f, 3.2f), KingdomMaterials.Sand, 3f);
+            // sand island now: no separate path strip (pathStart/pathEnd kept for the fences below)
             // fences along both sides of the yard
             foreach (float side in new[] { -1f, 1f })
             {
@@ -298,6 +298,19 @@ namespace Crashverse.Visuals
                 r.GetComponent<MeshFilter>().sharedMesh = BoxUvCached(rm, 2.5f * s);
                 r.transform.localPosition = p; r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
                 r.transform.localScale = new Vector3(s, s * (0.7f + (float)rng.NextDouble() * 0.5f), s);
+            }
+            // L01.jpg: weathered rock outcrops on the sand either side of the building and along the path (in frame at the new
+            // camera, outside the firing lane |z| < 2.6 and the building footprint)
+            for (int i = 0; i < 14; i++)
+            {
+                float side = (i & 1) == 0 ? -1f : 1f;
+                float x = Mathf.Lerp(cannon.x + 9f, structure.x + 5f, (i / 2) / 6f) + (float)rng.NextDouble() * 2f;
+                float z = side * (3.2f + (float)rng.NextDouble() * 3.5f + (Mathf.Abs(x - structure.x) < 6f ? 2.5f : 0f));
+                if (!rocks.TryGetValue(rockNames[(i + 1) % 3], out var rm)) continue;
+                float s = 0.35f + (float)rng.NextDouble() * 0.55f;
+                var r = Obj("SandRock", shore, BoxUvCached(rm, 2.5f * s), KingdomMaterials.Rock, true);
+                r.transform.localPosition = new Vector3(x, -0.12f * s, z); r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
+                r.transform.localScale = new Vector3(s * 1.2f, s * (0.55f + (float)rng.NextDouble() * 0.4f), s);
             }
             // palms on the beach, out of the firing lane (|z| > 6 between the cannon and the building)
             float[] ang = { 0.55f, 0.95f, 1.35f, 1.85f, 2.3f, 2.75f, 3.55f, 3.95f, 4.45f, 4.9f, 5.35f, 5.8f };
