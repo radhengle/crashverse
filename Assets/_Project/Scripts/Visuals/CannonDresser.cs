@@ -39,7 +39,8 @@ namespace Crashverse.Visuals
 
         static void AddFlameCrests(Transform barrelRoot)
         {
-            // Barrel axis is +X. Put a crest on both lateral faces for readability throughout the orbit.
+            // Barrel axis is +X; Unity Y is vertical and Unity Z is lateral. Conform each crest
+            // vertex to the barrel's tapered circular surface instead of placing a flat plate outside it.
             var points = new Vector2[]
             {
                 new Vector2(-0.18f, -0.22f), new Vector2(-0.08f, -0.08f),
@@ -54,14 +55,15 @@ namespace Crashverse.Visuals
             {
                 var mesh = new Mesh { name = "Cannon_FlameCrest" };
                 var vertices = new Vector3[points.Length + 1];
-                vertices[0] = new Vector3(0.38f, side * 0.523f, 0.02f);
+                vertices[0] = CrestSurfacePoint(0.38f, 0.02f, side);
                 for (int i = 0; i < points.Length; i++)
-                    vertices[i + 1] = new Vector3(0.38f + points[i].x, side * 0.523f, 0.02f + points[i].y);
+                    vertices[i + 1] = CrestSurfacePoint(0.38f + points[i].x, 0.02f + points[i].y, side);
                 var triangles = new int[points.Length * 3];
                 for (int i = 0; i < points.Length; i++)
                 {
                     int a = 1 + i, b = 1 + ((i + 1) % points.Length);
                     triangles[i * 3] = 0;
+                    // The polygon is clockwise in X/Y; reverse on +Z so both outward faces render.
                     triangles[i * 3 + (side > 0 ? 2 : 1)] = a;
                     triangles[i * 3 + (side > 0 ? 1 : 2)] = b;
                 }
@@ -72,6 +74,15 @@ namespace Crashverse.Visuals
                 go.AddComponent<MeshRenderer>().sharedMaterial = mat;
                 RuntimeMeshCleanup.Own(barrelRoot, mesh);
             }
+        }
+
+        static Vector3 CrestSurfacePoint(float x, float vertical, int side)
+        {
+            // This crest occupies the straight barrel section x=0..0.9, whose radius tapers 0.51 -> 0.49 m.
+            float radius = Mathf.Lerp(0.51f, 0.49f, Mathf.Clamp01(x / 0.9f));
+            float y = Mathf.Clamp(vertical, -radius * 0.95f, radius * 0.95f);
+            float lateral = Mathf.Sqrt(Mathf.Max(0f, radius * radius - y * y)) + 0.008f;
+            return new Vector3(x, y, side * lateral);
         }
 
         static void AddWheelSpokes(Transform carriageRoot)
