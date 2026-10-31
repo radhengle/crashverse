@@ -168,6 +168,8 @@ namespace Crashverse.Core
             var rk = ctx.mode == RunMode.DailyBoss ? "dailyboss" : ctx.mode == RunMode.Campaign && ctx.level != null ? ctx.level.id : "";
             if (rk.Length > 0) { PlayerPrefs.SetString(ResumeKey, rk); PlayerPrefs.Save(); }
             _runRoot = new GameObject("Run");
+            float dist = ctx.level != null ? ctx.level.targetDistance : Crashverse.Meta.ArenaLayoutRules.DefaultDistance;
+            ArenaBuilder.Configure(Crashverse.Meta.ArenaLayoutRules.Island(dist, Crashverse.Meta.ArenaLayoutRules.FootprintHalf(ctx.layout)));
             var arena = new GameObject("Arena").AddComponent<ArenaBuilder>();
             arena.transform.SetParent(_runRoot.transform);
             arena.Build();
@@ -193,7 +195,7 @@ namespace Crashverse.Core
             s.integrity = levelGo.AddComponent<StructuralIntegrity>();
             s.killPlane = KillPlane.Instance;
             s.fire = fire; s.aim = aim;
-            s.structureBase = new Vector3(10f, 0f, 0f); // 30u from the Wrecker (targets 25–40u away)
+            s.structureBase = Crashverse.Meta.ArenaLayoutRules.StructureBase(dist); // per level (default 30 m; compact L1 ~14 m on its own island)
             Session = s;
 
             var cam = Camera.main;

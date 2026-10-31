@@ -11,6 +11,9 @@ namespace Crashverse.Core
     {
         public const float IslandLength = 60f, IslandWidth = 25f, KillY = -6f;
         public static float GrassY => 0f;
+        /// <summary>Island ellipse for this run (ArenaLayoutRules.Island): centre x and radii. Default = the original 60×25 m island.</summary>
+        public static float IslandCx = 0f, IslandRx = IslandLength * 0.5f, IslandRz = IslandWidth * 0.5f;
+        public static void Configure(Vector3 island) { IslandCx = island.x; IslandRx = island.y; IslandRz = island.z; }
 
         /// <summary>Season 1 kingdom look (Crashverse.Visuals.KingdomVisuals): skip the greybox island details; PostBuild dresses the arena.</summary>
         public static bool KingdomLook;
@@ -20,7 +23,8 @@ namespace Crashverse.Core
         {
             var island = new GameObject("FloatingIsland");
             island.transform.SetParent(transform, false);
-            var mesh = ProceduralMesh.IslandTop(IslandLength * 0.5f, IslandWidth * 0.5f, 0.6f, 48);
+            island.transform.localPosition = new Vector3(IslandCx, 0f, 0f);
+            var mesh = ProceduralMesh.IslandTop(IslandRx, IslandRz, 0.6f, 48);
             island.AddComponent<MeshFilter>().sharedMesh = mesh;
             var vc = VisualConfig.Current;
             Paint(island.AddComponent<MeshRenderer>(), vc.grassHex, vc.grassSmoothness);
@@ -28,7 +32,8 @@ namespace Crashverse.Core
 
             var rock = new GameObject("IslandRock");
             rock.transform.SetParent(transform, false);
-            rock.AddComponent<MeshFilter>().sharedMesh = ProceduralMesh.Cone(IslandLength * 0.5f, IslandWidth * 0.5f, -0.6f, -16f, 48);
+            rock.transform.localPosition = new Vector3(IslandCx, 0f, 0f);
+            rock.AddComponent<MeshFilter>().sharedMesh = ProceduralMesh.Cone(IslandRx, IslandRz, -0.6f, -16f, 48);
             Paint(rock.AddComponent<MeshRenderer>(), vc.cliffHex, vc.cliffSmoothness); // cliff colour (indestructible, Art v2)
 
             var pad = GameObject.CreatePrimitive(PrimitiveType.Cylinder); RenderMaterials.Apply(pad);

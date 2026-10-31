@@ -13,8 +13,11 @@ namespace Crashverse.Visuals
     public static class KingdomEnvironment
     {
         public const float WaterY = -0.35f;
-        static float Rx => Crashverse.Core.ArenaBuilder.IslandLength * 0.5f;
-        static float Rz => Crashverse.Core.ArenaBuilder.IslandWidth * 0.5f;
+        static float Rx => Crashverse.Core.ArenaBuilder.IslandRx;
+        static float Rz => Crashverse.Core.ArenaBuilder.IslandRz;
+        static float Cx => Crashverse.Core.ArenaBuilder.IslandCx; // compact levels: the target's own small island (ArenaLayoutRules)
+        static bool Compact => Rx < 20f;
+        static bool OnIsland(Vector3 p, float margin = 0.85f) { float u = (p.x - Cx) / Rx, w = p.z / Rz; return u * u + w * w < margin * margin; }
 
         public static GameObject Build(Transform parent, Vector3 cannonRoot, Vector3 structureBase, bool palaceLevel, bool dark, Bounds? structure = null)
         {
@@ -24,7 +27,7 @@ namespace Crashverse.Visuals
             Deck(root.transform, cannonRoot);
             Shore(root.transform, cannonRoot, structureBase);
             Horizon(root.transform, palaceLevel);
-            Yard(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
+            if (Rx >= 20f) Yard(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
             Harbour(root.transform, structureBase);
             Foliage(root.transform, cannonRoot, structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f)));
             return root;
@@ -44,7 +47,7 @@ namespace Crashverse.Visuals
         static void Ocean(Transform root)
         {
             var mat = KingdomMaterials.Water; if (mat == null) { Debug.LogWarning("[Kingdom] water shader missing"); return; }
-            mat.SetVector("_Island", new Vector4(0f, 0f, Rx * 1.0f, Rz * 1.0f));
+            mat.SetVector("_Island", new Vector4(Cx, 0f, Rx * 1.0f, Rz * 1.0f));
             int n = 96; float size = 900f, x0 = -330f, z0 = -450f;
             var v = new Vector3[(n + 1) * (n + 1)]; var t = new int[n * n * 6];
             for (int j = 0; j <= n; j++)
@@ -113,10 +116,11 @@ namespace Crashverse.Visuals
         {
             // grass top (wavy edge, slightly inside the collider rim) + sand beach that slopes under the water
             // PM QA 31 Oct (L01.jpg): a sand island, not a lawn: dry sand on top, darker trampled sand under the building
-            Obj("IslandSand", root, Ring(0f, 0.97f, 0.005f, 0.005f, 96, 6f, 1.3f, 1f), KingdomMaterials.Make("SandDry", "T_K_Sand", new Color(1.04f, 0.98f, 0.88f), 0f, 0.97f, Vector2.one), false, true);
-            Obj("IslandBeach", root, Ring(0.9f, 1.22f, -0.01f, WaterY - 1.4f, 96, 5f, 1.3f, 0.6f), KingdomMaterials.Sand, false, true);
+            var sandTop = Obj("IslandSand", root, Ring(0f, 0.97f, 0.005f, 0.005f, 96, 6f, 1.3f, 1f), KingdomMaterials.Make("SandDry", "T_K_Sand", new Color(1.04f, 0.98f, 0.88f), 0f, 0.97f, Vector2.one), false, true);
+            var beach = Obj("IslandBeach", root, Ring(0.9f, 1.22f, -0.01f, WaterY - 1.4f, 96, 5f, 1.3f, 0.6f), KingdomMaterials.Sand, false, true);
+            sandTop.transform.localPosition = beach.transform.localPosition = new Vector3(Cx, 0f, 0f);
             // sandy plaza under the building and a path toward the cannon
-            Obj("Plaza", root, Disc(7.5f, 6.5f, 0.012f, 40, 5f, 4.1f, new Vector3(structureBase.x, 0f, structureBase.z)), KingdomMaterials.Make("SandTrod", "T_K_Sand", new Color(0.82f, 0.74f, 0.62f), 0f, 0.9f, Vector2.one), false, true);
+            Obj("Plaza", root, Disc(Mathf.Min(7.5f, Rx * 0.75f), Mathf.Min(6.5f, Rz * 0.75f), 0.012f, 40, 5f, 4.1f, new Vector3(structureBase.x, 0f, structureBase.z)), KingdomMaterials.Make("SandTrod", "T_K_Sand", new Color(0.82f, 0.74f, 0.62f), 0f, 0.9f, Vector2.one), false, true);
         }
 
         // ---------------- harbour deck ----------------
@@ -290,7 +294,7 @@ namespace Crashverse.Visuals
             for (int i = 0; i < 26; i++)
             {
                 float a = i * Mathf.PI * 2f / 26f + (float)rng.NextDouble() * 0.15f;
-                var p = new Vector3(Mathf.Cos(a) * Rx * 1.03f, WaterY + 0.05f, Mathf.Sin(a) * Rz * 1.06f);
+                var p = new Vector3(Cx + Mathf.Cos(a) * Rx * 1.03f, WaterY + 0.05f, Mathf.Sin(a) * Rz * 1.06f);
                 if (p.x < cannon.x + 6f && Mathf.Abs(p.z) < 5f) continue; // keep the harbour deck clear
                 if (!rocks.TryGetValue(rockNames[i % 3], out var rm)) continue;
                 float s = 0.6f + (float)rng.NextDouble() * 0.9f;
@@ -309,14 +313,16 @@ namespace Crashverse.Visuals
                 if (!rocks.TryGetValue(rockNames[(i + 1) % 3], out var rm)) continue;
                 float s = 0.35f + (float)rng.NextDouble() * 0.55f;
                 var r = Obj("SandRock", shore, BoxUvCached(rm, 2.5f * s), KingdomMaterials.Rock, true);
-                r.transform.localPosition = new Vector3(x, -0.12f * s, z); r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
+                bool land = OnIsland(new Vector3(x, 0f, z), 0.95f);
+                r.transform.localPosition = new Vector3(x, land ? -0.12f * s : WaterY - 0.1f * s, z); if (!land) r.transform.localScale *= 1.6f; // off the island: surf rocks r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
                 r.transform.localScale = new Vector3(s * 1.2f, s * (0.55f + (float)rng.NextDouble() * 0.4f), s);
             }
             // palms on the beach, out of the firing lane (|z| > 6 between the cannon and the building)
             float[] ang = { 0.55f, 0.95f, 1.35f, 1.85f, 2.3f, 2.75f, 3.55f, 3.95f, 4.45f, 4.9f, 5.35f, 5.8f };
             for (int i = 0; i < ang.Length; i++)
             {
-                float a = ang[i]; var p = new Vector3(Mathf.Cos(a) * Rx * 0.93f, 0f, Mathf.Sin(a) * Rz * 0.9f);
+                float a = ang[i]; var p = new Vector3(Cx + Mathf.Cos(a) * Rx * 0.93f, 0f, Mathf.Sin(a) * Rz * 0.9f);
+                if (Compact && i % 3 != 0) continue; // small island: a few palms, not a ring of them
                 if (Mathf.Abs(p.z) < 6.5f && p.x > cannon.x - 2f && p.x < structure.x + 12f) continue;
                 if (p.x < cannon.x + 6f) continue; // next to / behind the camera: fronds would fill the screen corners
                 Palm(shore, palms, p, i);
@@ -338,7 +344,7 @@ namespace Crashverse.Visuals
                 float a = R(0f, Mathf.PI * 2f), d = R(1.0f, 1.9f);
                 var p = new Vector3(c.x + Mathf.Cos(a) * ex * d, 0f, c.z + Mathf.Sin(a) * ez * d);
                 if (p.x < c.x - ex * 0.9f && Mathf.Abs(p.z - c.z) < 1.4f) continue; // keep the front door / sight line clear
-                if (Mathf.Abs(p.x) > Rx * 0.92f || Mathf.Abs(p.z) > Rz * 0.92f || p.x < cannon.x + 7f) continue;
+                if (!OnIsland(p, 0.92f) || p.x < cannon.x + 7f) continue;
                 int kind = i % 3;
                 if (kind == 0)
                 {   // round bush: 3-4 squashed blobs

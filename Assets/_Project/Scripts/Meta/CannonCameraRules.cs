@@ -33,6 +33,11 @@ namespace Crashverse.Meta
         }
 
         public static readonly Settings Default = new Settings();
+        /// <summary>Compact levels (target 12-20 m away on its own island, L01.jpg): closer, lower eye and a wider view so the
+        /// building fills ~70% of the width with water visible on both sides.</summary>
+        public static readonly Settings Compact = new Settings { back = 10f, height = 4.5f, sideFill = 0.70f };
+        public static Settings For(Vector3 cannonRoot, Bounds structure) =>
+            structure.center.x - cannonRoot.x < ArenaLayoutRules.CompactBelow + 2f ? Compact : Default;
 
         /// <summary>HUD band at the top of the screen (UI Developer: HUD bottom ≈ safe-area top inset + 104 dp; ~390 px on 1080x2340)
         /// plus an 8 dp breathing buffer (PM 2026-10-30), as a share of the screen height:
@@ -47,13 +52,13 @@ namespace Crashverse.Meta
 
         /// <summary>Solve the locked pose. aspect = width / height (portrait phones ~0.42–0.56).</summary>
         public static CannonCameraPose Solve(Vector3 cannonRoot, Bounds structure, float aspect, Settings s = null) =>
-            Solve(cannonRoot, Vector3.right, structure, aspect, s);
+            Solve(cannonRoot, Vector3.right, structure, aspect, s ?? For(cannonRoot, structure));
 
         /// <summary>Per-device solve: topMargin = the HUD band (HudTopMargin); extraAbove = points that must also stay below the HUD
         /// (the hint arc's apex and samples).</summary>
         public static CannonCameraPose Solve(Vector3 cannonRoot, Bounds structure, float aspect, float topMargin, Vector3[] extraAbove = null)
         {
-            var d = Default;
+            var d = For(cannonRoot, structure);
             var s = new Settings { back = d.back, height = d.height, cannonRear = d.cannonRear, cannonTop = d.cannonTop, topMargin = Mathf.Clamp(topMargin, d.topMargin, 0.4f),
                                    bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov };
             return Solve(cannonRoot, Vector3.right, structure, aspect, s, extraAbove);

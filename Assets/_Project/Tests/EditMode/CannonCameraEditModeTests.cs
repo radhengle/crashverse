@@ -28,13 +28,21 @@ namespace Crashverse.Backend.Tests
         };
 
         /// <summary>Hint ghost arc (same launch model as GameBootstrap.HintArcPoints: muzzle ~2 m up at the barrel tip, 28 m/s, g 9.81).</summary>
+        /// <summary>Per-level structure base (PM 31 Oct: targetDistance; compact L1 ~14 m on its own island).</summary>
+        static Vector3 BaseFor(string layoutId)
+        {
+            var db = ContentDatabase.LoadBundled();
+            var l = db.Chapter1.levels.FirstOrDefault(x => x.layout == layoutId);
+            return ArenaLayoutRules.StructureBase(l != null ? l.targetDistance : ArenaLayoutRules.DefaultDistance);
+        }
+
         static Vector3[] Arc(LevelEntry l)
         {
             if (l == null || !l.HasHint) return null;
             var start = new Vector3(-18.05f, 2.0f, 0f); float yaw = l.hintYaw * Mathf.Deg2Rad, el = l.hintPitch * Mathf.Deg2Rad;
             var vel = new Vector3(Mathf.Cos(el) * Mathf.Cos(yaw), Mathf.Sin(el), Mathf.Cos(el) * Mathf.Sin(yaw)) * 28f;
             var pts = new List<Vector3>();
-            for (int i = 1; i <= 60; i++) { float t = i * 0.05f; var p = start + vel * t + new Vector3(0f, -9.81f, 0f) * (0.5f * t * t); pts.Add(p); if (p.x > StructureBase.x + 2f || p.y < 0f) break; }
+            for (int i = 1; i <= 60; i++) { float t = i * 0.05f; var p = start + vel * t + new Vector3(0f, -9.81f, 0f) * (0.5f * t * t); pts.Add(p); if (p.x > BaseFor(l.layout).x + 2f || p.y < 0f) break; }
             return pts.ToArray();
         }
 
@@ -50,7 +58,7 @@ namespace Crashverse.Backend.Tests
             }
             foreach (var (layoutId, lvl) in levels)
             {
-                var b = LayoutBounds(db.GetLayout(layoutId)); var arc = Arc(lvl);
+                var b = LayoutBounds(db.GetLayout(layoutId), BaseFor(layoutId)); var arc = Arc(lvl);
                 foreach (var dev in Devices)
                 {
                     float tm = CannonCameraRules.HudTopMargin(dev.h, dev.inset, dev.dpi), a = dev.w / dev.h; n++;
@@ -74,12 +82,12 @@ namespace Crashverse.Backend.Tests
             Assert.AreEqual((60f + 112f) / 1600f, CannonCameraRules.HudTopMargin(1600f, 60f, 0f), 1e-5f, "dpi 0 -> 160");
         }
 
-        static Bounds LayoutBounds(LayoutData lay)
+        static Bounds LayoutBounds(LayoutData lay, Vector3 structureBase)
         {
             var b = new Bounds(); bool any = false;
             foreach (var bd in lay.blocks)
             {
-                var bb = new Bounds(StructureBase + new Vector3(bd.p[0], bd.p[1], bd.p[2]), new Vector3(bd.s[0], bd.s[1], bd.s[2]));
+                var bb = new Bounds(structureBase + new Vector3(bd.p[0], bd.p[1], bd.p[2]), new Vector3(bd.s[0], bd.s[1], bd.s[2]));
                 if (!any) { b = bb; any = true; } else b.Encapsulate(bb);
             }
             return b;
@@ -92,13 +100,7 @@ namespace Crashverse.Backend.Tests
             foreach (var id in ids)
             {
                 var lay = db.GetLayout(id); Assert.NotNull(lay, id);
-                var b = new Bounds(); bool any = false;
-                foreach (var bd in lay.blocks)
-                {
-                    var bb = new Bounds(StructureBase + new Vector3(bd.p[0], bd.p[1], bd.p[2]), new Vector3(bd.s[0], bd.s[1], bd.s[2]));
-                    if (!any) { b = bb; any = true; } else b.Encapsulate(bb);
-                }
-                yield return (id, b);
+                yield return (id, LayoutBounds(lay, BaseFor(id)));
             }
         }
 

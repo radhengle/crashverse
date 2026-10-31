@@ -75,7 +75,8 @@
    "islandKillY": -2.0,
    "hintTarget": "post",
    "hintYaw": 0.0,
-   "hintPitch": 11.0
+   "hintPitch": 6.5,
+   "targetDistance": 14.0
   },
   {
    "id": "c1_l02",
