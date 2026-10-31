@@ -1,4 +1,5 @@
 using Crashverse.Core;
+using Crashverse.Perf;
 using Crashverse.VFX;
 using UnityEngine;
 
@@ -119,7 +120,9 @@ namespace Crashverse.Visuals
 
                 var go = new GameObject("VfxDirector"); go.SetActive(false); go.transform.SetParent(root.transform, false);
                 _vfx = go.AddComponent<VfxDirector>();
-                _vfx.tier = SystemInfo.systemMemorySize > 0 && SystemInfo.systemMemorySize < 3000 ? Crashverse.Feel.QualityTier.Low : Crashverse.Feel.QualityTier.Mid;
+                // Honour the player's selected Low / Mid / High profile. Memory-based guessing silently ignored
+                // the High tier and could spend a Mid-tier particle budget after the player selected Low.
+                _vfx.tier = QualityController.FeelTier;
                 _vfx.muzzleSocket = wb != null ? wb.projectileSpawn : null;
                 go.SetActive(true);
 
