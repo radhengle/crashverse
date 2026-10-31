@@ -101,5 +101,15 @@ namespace Crashverse.Rendering.Tests
         {
             Assert.AreEqual(0, RenderTiers.IndexFor("Low")); Assert.AreEqual(1, RenderTiers.IndexFor("Mid")); Assert.AreEqual(2, RenderTiers.IndexFor("High"));
         }
+
+        [Test]
+        public void SoftwareRendererDetection()
+        {
+            Assert.IsTrue(RenderTiers.IsSoftwareRenderer("ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver-5.0.0)"));
+            Assert.IsTrue(RenderTiers.IsSoftwareRenderer("llvmpipe (LLVM 15.0.7, 256 bits)"));
+            Assert.IsFalse(RenderTiers.IsSoftwareRenderer("Adreno (TM) 619"));
+            Assert.IsFalse(RenderTiers.IsSoftwareRenderer("Mali-G57 MC2"));
+            Assert.IsFalse(RenderTiers.IsSoftwareRenderer(null));
+        }
     }
 }

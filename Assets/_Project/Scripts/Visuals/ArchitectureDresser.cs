@@ -106,12 +106,16 @@ namespace Crashverse.Visuals
         /// <summary>True when a piece's visual is only the generic realistic box kit (Kit_RealWood_Block etc.), not authored modules.</summary>
         static bool BoxKitOnly(GameObject visual)
         {
+            // RealKit names the LOD GameObjects "LOD0..2"; the generic piece is in the MESH name ("Kit_RealWood_Block_LOD0").
+            // (The old check read the GameObject name, so nothing was ever dressed on device.) Props (crates/barrels) keep their model.
+            bool any = false;
             foreach (var mf in visual.GetComponentsInChildren<MeshFilter>(true))
             {
-                var n = mf.name; int i = n.IndexOf("_LOD"); if (i > 0) n = n.Substring(0, i);
-                if (System.Array.IndexOf(Crashverse.Meta.RealPieceRules.Pieces, n) < 0) return false;
+                var n = mf.sharedMesh != null ? mf.sharedMesh.name : mf.name; int i = n.IndexOf("_LOD"); if (i > 0) n = n.Substring(0, i);
+                if (n.StartsWith("Kit_RealProps_") || System.Array.IndexOf(Crashverse.Meta.RealPieceRules.Pieces, n) < 0) return false;
+                any = true;
             }
-            return true;
+            return any;
         }
 
         static Transform Metric(DestructibleBlock b, string name)

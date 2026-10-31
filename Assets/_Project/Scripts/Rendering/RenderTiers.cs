@@ -89,6 +89,16 @@ namespace Crashverse.Rendering
         public const float SsaoIntensity = 1.4f, SsaoRadius = 0.35f, SsaoDirectLighting = 0.25f;
         public static bool SsaoOn(int tier) => tier > 0;
 
+        /// <summary>CPU rasterisers (the CI emulator's SwiftShader/ANGLE, llvmpipe): SSAO and MSAA cost whole frames there and drop
+        /// touch input, so they are skipped and the render scale is capped. Real GPUs are unaffected.</summary>
+        public static bool IsSoftwareRenderer(string deviceName)
+        {
+            if (string.IsNullOrEmpty(deviceName)) return false;
+            var n = deviceName.ToLowerInvariant();
+            return n.Contains("swiftshader") || n.Contains("llvmpipe") || n.Contains("softpipe");
+        }
+        public const float SoftwareRenderScale = 0.6f;
+
         // ---------------- Realistic PBR textures ----------------
         public const string RealisticRoot = "Assets/_Project/Models/Realistic/";
         public const int SourceSize = 2048;        // CC0 scans are authored at 2048; the importer downsizes for Android

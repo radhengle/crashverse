@@ -138,7 +138,7 @@ namespace Crashverse.Visuals
                 if (sh == null || !sh.isSupported || t == null) return null;
                 t.wrapModeU = TextureWrapMode.Repeat; t.wrapModeV = TextureWrapMode.Clamp;
                 _sky = new Material(sh) { name = "MK_Sky" }; _sky.SetTexture("_MainTex", t);
-                _sky.SetFloat("_Rotation", 200f); _sky.SetFloat("_Exposure", 1.05f); _sky.SetFloat("_BottomElev", -3.6f);
+                _sky.SetFloat("_Rotation", 0f); // big cumulus bank straight ahead of the cannon (+x) _sky.SetFloat("_Exposure", 1.05f); _sky.SetFloat("_BottomElev", -3.6f);
                 _sky.SetColor("_HorizonColor", HorizonColor);
                 return _sky;
             }
@@ -154,7 +154,7 @@ namespace Crashverse.Visuals
                 if (sh == null || !sh.isSupported) return null;
                 _water = new Material(sh) { name = "MK_Water" };
                 _water.SetColor("_HorizonColor", HorizonColor);
-                var sky = Tex("T_K_Sky"); if (sky != null) { sky.wrapModeV = TextureWrapMode.Clamp; _water.SetTexture("_SkyTex", sky); _water.SetFloat("_SkyRot", 200f); }
+                var sky = Tex("T_K_Sky"); if (sky != null) { sky.wrapModeV = TextureWrapMode.Clamp; _water.SetTexture("_SkyTex", sky); _water.SetFloat("_SkyRot", 0f); }
                 return _water;
             }
         }
