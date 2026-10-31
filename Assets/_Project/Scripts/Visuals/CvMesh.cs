@@ -107,7 +107,7 @@ namespace Crashverse.Visuals
         static int I(byte[] d, ref int o) { int r = System.BitConverter.ToInt32(d, o); o += 4; return r; }
         static float F(byte[] d, ref int o) { float r = System.BitConverter.ToSingle(d, o); o += 4; return r; }
     }
-}
+
     /// <summary>
     /// Owns meshes created at runtime for one gameplay run. Unity does not destroy meshes made with new Mesh,
     /// Instantiate or CombineMeshes when their GameObjects are destroyed; retaining them leaks native memory on retries.
@@ -138,4 +138,4 @@ namespace Crashverse.Visuals
             _owned.Clear();
         }
     }
-
+}
