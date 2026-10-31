@@ -29,7 +29,86 @@ namespace Crashverse.Visuals
             cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y * VisualScale, 0f);
             cRoot.localScale = Vector3.one * VisualScale;
             foreach (var kv in carriage) Part(kv.Key, kv.Value, cRoot, kv.Key.EndsWith("_Wood") ? 0.9f : KingdomMaterials.TileFor(kv.Key), true);
+
+            // Hero-asset detailing: orange flame crests and visible timber wheel spokes.
+            // Render-only additions preserve the existing colliders, yaw/pitch pivots and projectile spawn.
+            AddFlameCrests(bRoot);
+            AddWheelSpokes(cRoot);
             return true;
+        }
+
+        static void AddFlameCrests(Transform barrelRoot)
+        {
+            // Barrel axis is +X. Put a crest on both lateral faces for readability throughout the orbit.
+            var points = new Vector2[]
+            {
+                new Vector2(-0.18f, -0.22f), new Vector2(-0.08f, -0.08f),
+                new Vector2(-0.12f, 0.08f), new Vector2(-0.02f, 0.02f),
+                new Vector2(0.02f, 0.22f), new Vector2(0.13f, 0.10f),
+                new Vector2(0.18f, -0.04f), new Vector2(0.10f, -0.02f),
+                new Vector2(0.04f, -0.16f), new Vector2(-0.04f, -0.10f)
+            };
+            var mat = KingdomMaterials.Make("CannonFlameCrest", null, new Color(1f, 0.30f, 0.035f), 0.28f, 0.32f,
+                Vector2.one, new Color(0.22f, 0.035f, 0.002f));
+            for (int side = -1; side <= 1; side += 2)
+            {
+                var mesh = new Mesh { name = "Cannon_FlameCrest" };
+                var vertices = new Vector3[points.Length + 1];
+                vertices[0] = new Vector3(0.38f, side * 0.523f, 0.02f);
+                for (int i = 0; i < points.Length; i++)
+                    vertices[i + 1] = new Vector3(0.38f + points[i].x, side * 0.523f, 0.02f + points[i].y);
+                var triangles = new int[points.Length * 3];
+                for (int i = 0; i < points.Length; i++)
+                {
+                    int a = 1 + i, b = 1 + ((i + 1) % points.Length);
+                    triangles[i * 3] = 0;
+                    triangles[i * 3 + (side > 0 ? 1 : 2)] = a;
+                    triangles[i * 3 + (side > 0 ? 2 : 1)] = b;
+                }
+                mesh.vertices = vertices; mesh.triangles = triangles; mesh.RecalculateNormals(); mesh.RecalculateBounds();
+                var go = new GameObject(side > 0 ? "Cannon_FlameCrest_Right" : "Cannon_FlameCrest_Left");
+                go.transform.SetParent(barrelRoot, false);
+                go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                go.AddComponent<MeshRenderer>().sharedMaterial = mat;
+                RuntimeMeshCleanup.Own(barrelRoot, mesh);
+            }
+        }
+
+        static void AddWheelSpokes(Transform carriageRoot)
+        {
+            // Warm timber spokes sit just proud of both wheel faces; the original tyre mesh remains intact.
+            AddWheel(carriageRoot, 0.30f, 0.60f, 0.98f, 0.60f, "Front");
+            AddWheel(carriageRoot, -1.30f, 0.38f, 0.98f, 0.38f, "Rear");
+        }
+
+        static void AddWheel(Transform root, float x, float y, float z, float radius, string label)
+        {
+            var spokeMat = KingdomMaterials.CarriageWood;
+            for (int side = -1; side <= 1; side += 2)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    float angle = i * Mathf.PI / 4f;
+                    var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    go.name = "Cannon_" + label + "Wheel_Spoke_" + side + "_" + i;
+                    go.transform.SetParent(root, false);
+                    go.transform.localPosition = new Vector3(x + Mathf.Cos(angle) * radius * 0.52f,
+                        y + Mathf.Sin(angle) * radius * 0.52f, side * (z + 0.125f));
+                    go.transform.localRotation = Quaternion.Euler(0f, 0f, angle * Mathf.Rad2Deg);
+                    float length = radius * 0.90f;
+                    go.transform.localScale = new Vector3(length, Mathf.Max(0.075f, radius * 0.18f), 0.035f);
+                    var col = go.GetComponent<Collider>(); if (col != null) Object.Destroy(col);
+                    var renderer = go.GetComponent<MeshRenderer>(); if (renderer != null) renderer.sharedMaterial = spokeMat;
+                }
+                var hub = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                hub.name = "Cannon_" + label + "Wheel_BrassHub_" + side;
+                hub.transform.SetParent(root, false);
+                hub.transform.localPosition = new Vector3(x, y, side * (z + 0.15f));
+                hub.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                hub.transform.localScale = new Vector3(radius * 0.42f, 0.045f, radius * 0.42f);
+                var hc = hub.GetComponent<Collider>(); if (hc != null) Object.Destroy(hc);
+                var hr = hub.GetComponent<MeshRenderer>(); if (hr != null) hr.sharedMaterial = KingdomMaterials.CannonBronze;
+            }
         }
 
         static void Part(string name, Mesh mesh, Transform parent, float boxTile, bool carriage = false)
