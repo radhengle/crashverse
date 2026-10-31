@@ -55,20 +55,22 @@ def sharp_caps(o):
 def cannon():
     clear(); objs = []
     navy = bmesh.new(); gold = bmesh.new(); dark = bmesh.new()
-    lathe(navy, [(-1.25, 0.50), (-0.9, 0.52), (-0.25, 0.50)])
-    lathe(navy, [(-0.05, 0.47), (0.5, 0.45), (0.92, 0.43)])
-    lathe(navy, [(1.02, 0.42), (1.45, 0.39), (1.62, 0.38)])
-    lathe(gold, [(-1.38, 0.10), (-1.36, 0.40), (-1.33, 0.56), (-1.25, 0.57), (-1.22, 0.53)])  # breech base ring
-    lathe(gold, [(-0.27, 0.53), (-0.22, 0.56), (-0.08, 0.56), (-0.03, 0.49)])                # reinforce ring
-    lathe(gold, [(0.90, 0.45), (0.93, 0.47), (1.01, 0.47), (1.04, 0.44)])
-    lathe(gold, [(1.60, 0.39), (1.72, 0.42), (1.84, 0.47), (1.90, 0.52), (2.02, 0.53), (2.06, 0.50)], caps=False)  # muzzle swell
-    # muzzle face (annulus) + bore
-    lathe(gold, [(2.06, 0.50), (2.06, 0.25)], caps=False)
-    lathe(dark, [(2.06, 0.25), (1.5, 0.25), (1.5, 0.0)], caps=False)
-    # cascabel knob
-    prof = [(-1.38, 0.10), (-1.50, 0.08)] + [(-1.62 - 0.14*math.sin(a), 0.16*math.cos(a)) for a in [i*math.pi/2/8 - math.pi/2*0 for i in range(0, 9)]]
-    prof = [(-1.38, 0.09), (-1.48, 0.08), (-1.52, 0.13), (-1.60, 0.17), (-1.70, 0.16), (-1.78, 0.11), (-1.82, 0.0)]
-    lathe(gold, prof, segs=24, caps=False)
+    # Concept (design/level_concepts_v1/L01): stubby, thick, barely tapered iron barrel; four heavy brass bands; a big flared muzzle bell.
+    # Low-poly (28 segments). Overall extents unchanged (r <= 0.57, x -1.86..2.07) so the PlayMode framing tests still hold.
+    S = 28
+    lathe(navy, [(-1.20, 0.52), (-0.9, 0.53), (-0.30, 0.52)], segs=S)
+    lathe(navy, [(0.0, 0.51), (0.5, 0.50), (0.88, 0.49)], segs=S)
+    lathe(navy, [(1.06, 0.48), (1.30, 0.475), (1.48, 0.47)], segs=S)
+    lathe(navy, [(1.58, 0.47), (1.62, 0.465)], segs=S)
+    lathe(gold, [(-1.40, 0.12), (-1.38, 0.44), (-1.34, 0.57), (-1.22, 0.57), (-1.18, 0.52)], segs=S)           # breech ring
+    lathe(gold, [(-0.33, 0.52), (-0.29, 0.565), (-0.03, 0.565), (0.01, 0.51)], segs=S)                           # reinforce ring
+    lathe(gold, [(0.86, 0.49), (0.90, 0.54), (1.04, 0.54), (1.08, 0.48)], segs=S)                                # chase band
+    lathe(gold, [(1.46, 0.47), (1.49, 0.505), (1.57, 0.505), (1.60, 0.47)], segs=S)                              # astragal
+    lathe(gold, [(1.62, 0.465), (1.72, 0.49), (1.84, 0.53), (1.93, 0.57), (2.04, 0.57), (2.07, 0.53)], segs=S, caps=False)  # muzzle bell
+    lathe(gold, [(2.07, 0.53), (2.07, 0.31)], segs=S, caps=False)
+    lathe(dark, [(2.07, 0.31), (1.5, 0.31), (1.5, 0.0)], segs=S, caps=False)
+    prof = [(-1.40, 0.11), (-1.50, 0.09), (-1.55, 0.15), (-1.64, 0.20), (-1.76, 0.19), (-1.83, 0.12), (-1.86, 0.0)]
+    lathe(gold, prof, segs=20, caps=False)  # cascabel knob
     # trunnions + caps
     cyl(navy, (0, 0, 0), 0.13, 1.30, 'Y', 20)
     for y in (-0.66, 0.66): cyl(gold, (0, y, 0), 0.16, 0.06, 'Y', 20)
@@ -82,15 +84,16 @@ def cannon():
     wood = bmesh.new(); gld = bmesh.new(); iron = bmesh.new()
     for y in (-0.72, 0.72):
         # stepped cheek: front block up to the trunnion, then 2 steps down to the rear
-        box(wood, (0.15, y, 0.95), (1.30, 0.22, 0.95))   # x -0.5..0.8, z 0.475..1.425
-        box(wood, (-0.75, y, 0.80), (0.55, 0.22, 0.65))
-        box(wood, (-1.25, y, 0.65), (0.50, 0.22, 0.38))
+        box(wood, (0.15, y, 0.95), (1.30, 0.28, 0.95))   # x -0.5..0.8, z 0.475..1.425 (heavy cheek)
+        box(wood, (-0.75, y, 0.80), (0.55, 0.28, 0.65))
+        box(wood, (-1.25, y, 0.65), (0.50, 0.28, 0.38))
+        box(gld, (0.78, y, 0.95), (0.06, 0.31, 0.95))   # brass front edge plate
         # gold top trims + bolts
-        box(gld, (0.15, y, 1.44), (1.30, 0.25, 0.04))
-        box(gld, (-0.75, y, 1.14), (0.55, 0.25, 0.04))
-        box(gld, (-1.25, y, 0.85), (0.50, 0.25, 0.04))
+        box(gld, (0.15, y, 1.44), (1.30, 0.31, 0.05))
+        box(gld, (-0.75, y, 1.14), (0.55, 0.31, 0.05))
+        box(gld, (-1.25, y, 0.85), (0.50, 0.31, 0.05))
         for (bx, bz) in ((0.6, 1.2), (-0.3, 1.2), (0.6, 0.65), (-0.3, 0.65), (-0.75, 0.8), (-1.25, 0.6)):
-            cyl(gld, (bx, y + (0.13 if y > 0 else -0.13), bz), 0.05, 0.04, 'Y', 10)
+            cyl(gld, (bx, y + (0.155 if y > 0 else -0.155), bz), 0.06, 0.04, 'Y', 8)
         # trunnion cap-square (iron strap)
         box(iron, (0.0, y, 1.47), (0.36, 0.26, 0.06))
     box(wood, (-0.35, 0, 0.58), (2.1, 1.22, 0.16))   # bed / transom
@@ -100,16 +103,16 @@ def cannon():
     cyl(iron, (0.30, 0, 0.60), 0.08, 2.2, 'Y', 12); cyl(iron, (-1.30, 0, 0.38), 0.07, 2.0, 'Y', 12)
     # wheels: front r .6, rear r .38, spoked
     def wheel(cx, cz, r, y):
-        lathe(wood, [(-0.10, r*0.80), (-0.11, r*0.98), (0.11, r*0.98), (0.10, r*0.80)], segs=36, axis='Y', at=(cx, y, cz), caps=False)
-        lathe(wood, [(0.10, r*0.80), (-0.10, r*0.80)], segs=36, axis='Y', at=(cx, y, cz), caps=False)
-        lathe(iron, [(-0.12, r*0.98), (-0.12, r*1.04), (0.12, r*1.04), (0.12, r*0.98)], segs=36, axis='Y', at=(cx, y, cz), caps=False)
-        for k in range(10):
-            a = k * 2 * math.pi / 10
-            rm = Matrix.Rotation(-a, 3, 'Y')
-            c = Vector((cx, y, cz)) + rm @ Vector((r*0.5, 0, 0))
-            box(wood, c, (r*0.62, 0.07, 0.07), rm)
-        cyl(gld, (cx, y, cz), r*0.24, 0.26, 'Y', 20)
-        cyl(gld, (cx, y + (0.15 if y > 0 else -0.15), cz), r*0.12, 0.06, 'Y', 16)
+        # solid timber truck (concept): two faces + tread, iron tyre, brass hub and cap; 24 segments
+        W = 24
+        lathe(wood, [(0.10, r*0.22), (0.10, r*0.96)], segs=W, axis='Y', at=(cx, y, cz), caps=False)
+        lathe(wood, [(-0.10, r*0.96), (-0.10, r*0.22)], segs=W, axis='Y', at=(cx, y, cz), caps=False)
+        lathe(iron, [(-0.12, r*0.96), (-0.12, r*1.04), (0.12, r*1.04), (0.12, r*0.96)], segs=W, axis='Y', at=(cx, y, cz), caps=False)
+        for k in range(4):  # plank seams across the disc (raised battens)
+            rm = Matrix.Rotation(-k * math.pi / 4, 3, 'Y')
+            box(wood, Vector((cx, y + (0.11 if y > 0 else -0.11), cz)), (r*1.8, 0.03, 0.05), rm)
+        cyl(gld, (cx, y, cz), r*0.26, 0.28, 'Y', 16)
+        cyl(gld, (cx, y + (0.16 if y > 0 else -0.16), cz), r*0.13, 0.06, 'Y', 12)
     for y in (-0.98, 0.98): wheel(0.30, 0.60, 0.60, y); wheel(-1.30, 0.38, 0.38, y)
     cobjs = []
     for b, n in ((wood, 'Carriage_Wood'), (gld, 'Carriage_Gold'), (iron, 'Carriage_Iron')):
