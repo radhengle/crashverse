@@ -72,11 +72,11 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "post",
-   "hintYaw": 0.0,
+   "hintYaw": 0,
    "hintPitch": 6.5,
-   "targetDistance": 14.0
+   "targetDistance": 14
   },
   {
    "id": "c1_l02",
@@ -105,11 +105,11 @@
    "star3Pct": 0.4,
    "star2Pct": 0.2,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "sillL",
    "hintYaw": -3.5,
-   "hintPitch": 5.0,
-   "targetDistance": 19.0
+   "hintPitch": 5,
+   "targetDistance": 19
   },
   {
    "id": "c1_l03",
@@ -139,9 +139,9 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "propL",
-   "hintYaw": 4.0,
+   "hintYaw": 4,
    "hintPitch": 7.5
   },
   {
@@ -172,10 +172,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "beamL",
    "hintYaw": -2.5,
-   "hintPitch": 13.0
+   "hintPitch": 13
   },
   {
    "id": "c1_l05",
@@ -205,11 +205,11 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "bridge",
-   "hintYaw": 0.0,
-   "hintPitch": 10.0,
-   "targetDistance": 19.0
+   "hintYaw": 0,
+   "hintPitch": 10,
+   "targetDistance": 19
   },
   {
    "id": "c1_l06",
@@ -239,10 +239,10 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "braceL",
-   "hintYaw": -3.0,
-   "hintPitch": 14.0
+   "hintYaw": -3,
+   "hintPitch": 14
   },
   {
    "id": "c1_l07",
@@ -281,9 +281,9 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "ring0",
-   "hintYaw": 0.0,
+   "hintYaw": 0,
    "hintPitch": 9.5
   },
   {
@@ -320,7 +320,7 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "key1",
    "hintYaw": -1.5,
    "hintPitch": 11.5
@@ -354,11 +354,11 @@
    "star3Pct": 0.6,
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 2,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "lhRing",
    "hintYaw": -8.5,
    "hintPitch": 11.5,
-   "targetDistance": 19.0
+   "targetDistance": 19
   },
   {
    "id": "c1_l10",
@@ -405,10 +405,10 @@
    "star3Pct": 0.42,
    "star2Pct": 0.28,
    "starCapIfPowerupUsed": 2,
-   "islandKillY": -2.0,
+   "islandKillY": -2,
    "hintTarget": "gateLintel",
-   "hintYaw": 0.0,
-   "hintPitch": 15.0
+   "hintYaw": 0,
+   "hintPitch": 15
   }
  ]
 }
