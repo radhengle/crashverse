@@ -322,6 +322,18 @@ namespace Crashverse.Visuals
                 r.transform.localScale = new Vector3(s * 1.2f, s * (0.55f + (float)rng.NextDouble() * 0.4f), s);
             }
             // palms on the beach, out of the firing lane (|z| > 6 between the cannon and the building)
+            if (Compact)
+            {
+                // QA L1: palms on the island's far left/right edges, leaning out over the water, so the fronds frame the hut instead
+                // of covering its roof (concept L01: palms sit at the shoreline beside the building)
+                float[] side = { -1f, 1f, -1f, 1f }; float[] dx = { 0.35f, 0.15f, -0.45f, -0.6f };
+                for (int i = 0; i < side.Length; i++)
+                {
+                    var p = new Vector3(Cx + dx[i] * Rx, 0f, side[i] * Rz * Mathf.Sqrt(1f - dx[i] * dx[i]) * 0.93f); // on the sand rim, not in the water
+                    Palm(shore, palms, p, i, side[i] * (14f + i * 3f), i < 2 ? 0.8f : 0.62f);
+                }
+                return;
+            }
             float[] ang = { 0.55f, 0.95f, 1.35f, 1.85f, 2.3f, 2.75f, 3.55f, 3.95f, 4.45f, 4.9f, 5.35f, 5.8f };
             for (int i = 0; i < ang.Length; i++)
             {
@@ -400,12 +412,13 @@ namespace Crashverse.Visuals
             return _boxUv[m] = CvMesh.WithBoxUv(m, tile, Vector3.one * 2.5f);
         }
 
-        static void Palm(Transform parent, Dictionary<string, Mesh> palms, Vector3 p, int i)
+        static void Palm(Transform parent, Dictionary<string, Mesh> palms, Vector3 p, int i, float leanOut = 0f, float scale = 0f)
         {
             string id = i % 2 == 0 ? "PalmA" : "PalmB";
             if (!palms.TryGetValue(id + "_Trunk", out var trunk) || !palms.TryGetValue(id + "_Leaf", out var leaf)) return;
             var t = new GameObject(id).transform; t.SetParent(parent, false); t.localPosition = p;
-            t.localRotation = Quaternion.Euler(0f, i * 47f, 0f); t.localScale = Vector3.one * (0.85f + (i % 3) * 0.12f);
+            t.localRotation = Quaternion.Euler(leanOut, 0f, 0f) * Quaternion.Euler(0f, i * 47f, 0f); // leanOut: tilt about x, away from the building (+z side tilts to +z)
+            t.localScale = Vector3.one * (scale > 0f ? scale : 0.85f + (i % 3) * 0.12f);
             Obj("Trunk", t, trunk, KingdomMaterials.Bark).AddComponent<Sway>().amp = 0f;
             var l = Obj("Leaves", t, leaf, KingdomMaterials.Leaf);
             l.AddComponent<Sway>().amp = 1.6f;

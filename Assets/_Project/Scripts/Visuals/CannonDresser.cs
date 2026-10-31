@@ -37,7 +37,8 @@ namespace Crashverse.Visuals
             var go = new GameObject(name); go.transform.SetParent(parent, false);
             go.AddComponent<MeshFilter>().sharedMesh = boxTile > 0f ? CvMesh.WithBoxUv(mesh, boxTile, Vector3.one) : mesh;
             // PM QA 31 Oct: timber carriage = weathered dark brown wood with IRON fittings/bolts; bronze stays on the barrel bands
-                        var mat = name.EndsWith("_Wood") ? KingdomMaterials.CarriageWood : carriage && name.EndsWith("_Gold") ? KingdomMaterials.Iron : KingdomMaterials.ForTag(name);
+            var mat = name.EndsWith("_Wood") ? KingdomMaterials.CarriageWood : carriage && name.EndsWith("_Gold") ? KingdomMaterials.Iron
+                : !carriage && name.EndsWith("_Gold") ? KingdomMaterials.CannonBronze : !carriage && name.EndsWith("_Navy") ? KingdomMaterials.CannonIron : KingdomMaterials.ForTag(name);
             var r = go.AddComponent<MeshRenderer>(); r.sharedMaterial = mat;
             r.shadowCastingMode = ShadowCastingMode.On; r.receiveShadows = true;
         }

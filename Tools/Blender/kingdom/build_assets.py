@@ -59,19 +59,19 @@ def cannon():
     # Concept (design/level_concepts_v1/L01): stubby, thick, barely tapered iron barrel; four heavy brass bands; a big flared muzzle bell.
     # Low-poly (28 segments). Overall extents unchanged (r <= 0.57, x -1.86..2.07) so the PlayMode framing tests still hold.
     S = 28
-    # cast-iron reinforce / chase sections: many rings with per-vertex jitter (not machined-smooth), slight swells between bands
+    # PM QA 31 Oct: smooth dark cast iron with only subtle unevenness; narrow polished bronze bands (~8-10% of the barrel length each);
+    # the muzzle bell is iron with a slim raised bronze muzzle ring (the wide bronze bell read as cork from the camera)
     def iron(t0, t1, r0, r1, n, sd):
-        lathe(navy, [(t0 + (t1 - t0) * k / n, r0 + (r1 - r0) * k / n + 0.006 * math.sin(k * 2.3)) for k in range(n + 1)], segs=S, jitter=0.012, seed=sd)
-    iron(-1.20, -0.30, 0.52, 0.52, 8, 11)
-    iron(0.0, 0.88, 0.51, 0.49, 8, 12)
-    iron(1.06, 1.48, 0.48, 0.47, 4, 13)
-    iron(1.58, 1.62, 0.47, 0.465, 1, 14)
-    lathe(gold, [(-1.40, 0.12), (-1.38, 0.44), (-1.34, 0.57), (-1.22, 0.57), (-1.18, 0.52)], segs=S)           # breech ring
-    lathe(gold, [(-0.33, 0.52), (-0.29, 0.565), (-0.03, 0.565), (0.01, 0.51)], segs=S)                           # reinforce ring
-    lathe(gold, [(0.86, 0.49), (0.90, 0.54), (1.04, 0.54), (1.08, 0.48)], segs=S)                                # chase band
-    lathe(gold, [(1.46, 0.47), (1.49, 0.505), (1.57, 0.505), (1.60, 0.47)], segs=S)                              # astragal
-    lathe(gold, [(1.62, 0.465), (1.72, 0.49), (1.84, 0.53), (1.93, 0.56), (1.96, 0.56), (1.965, 0.60), (2.065, 0.60), (2.07, 0.53)], segs=S, caps=False)  # muzzle bell + raised muzzle ring (PM QA)
-    lathe(gold, [(2.07, 0.53), (2.07, 0.31)], segs=S, caps=False)
+        lathe(navy, [(t0 + (t1 - t0) * k / n, r0 + (r1 - r0) * k / n + 0.002 * math.sin(k * 2.3)) for k in range(n + 1)], segs=S, jitter=0.003, seed=sd)
+    lathe(gold, [(-1.40, 0.12), (-1.38, 0.44), (-1.35, 0.565), (-1.16, 0.565), (-1.13, 0.52)], segs=S)          # breech band 0.27 (8%)
+    iron(-1.13, -0.28, 0.52, 0.515, 6, 11)
+    lathe(gold, [(-0.28, 0.515), (-0.25, 0.56), (-0.03, 0.56), (0.0, 0.51)], segs=S)                             # reinforce band 0.28 (8%)
+    iron(0.0, 0.90, 0.51, 0.49, 6, 12)
+    lathe(gold, [(0.90, 0.49), (0.93, 0.53), (1.15, 0.53), (1.18, 0.48)], segs=S)                                # chase band 0.28 (8%)
+    iron(1.18, 1.72, 0.48, 0.47, 4, 13)
+    lathe(navy, [(1.72, 0.47), (1.80, 0.49), (1.88, 0.53), (1.95, 0.555)], segs=S, caps=False)                   # iron muzzle swell
+    lathe(gold, [(1.95, 0.555), (1.96, 0.60), (2.06, 0.60), (2.07, 0.53)], segs=S, caps=False)                   # raised bronze muzzle ring
+    lathe(gold, [(2.07, 0.53), (2.07, 0.31)], segs=S, caps=False)  # muzzle face
     lathe(dark, [(2.07, 0.31), (1.5, 0.31), (1.5, 0.0)], segs=S, caps=False)
     prof = [(-1.40, 0.11), (-1.50, 0.09), (-1.55, 0.15), (-1.64, 0.20), (-1.76, 0.19), (-1.83, 0.12), (-1.86, 0.0)]
     lathe(gold, prof, segs=20, caps=False)  # cascabel knob

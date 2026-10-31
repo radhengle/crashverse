@@ -23,7 +23,7 @@ namespace Crashverse.Meta
         public class Settings
         {
             public float back = 20f;         // metres behind the cannon root, along the firing line (PM QA 31 Oct: concept framing, muzzle ~40% up)
-            public float height = 5.0f;      // PM QA 31 Oct (L01.jpg): slightly behind + above the cannon; lower eye puts the building upper-middle and bigger
+            public float height = 4.5f;      // PM QA 31 Oct (L01.jpg): slightly behind + above the cannon; PM QA: lower pitch so the barrel reads from behind, not from the top
             public float cannonRear = 1.8f;  // the cannon envelope reaches this far behind its root (rear roller / carriage)
             public float cannonTop = 2.6f;   // barrel tip / booster top at rest elevation
             public float topMargin = 0.06f;  // minimum share of the screen height above the structure's top (the HUD band, see HudTopMargin)
@@ -35,7 +35,10 @@ namespace Crashverse.Meta
         public static readonly Settings Default = new Settings();
         /// <summary>Compact levels (target 12-20 m away on its own island, L01.jpg): closer, lower eye and a wider view so the
         /// building fills ~70% of the width with water visible on both sides.</summary>
-        public static readonly Settings Compact = new Settings { back = 11f, height = 7.5f, sideFill = 0.70f }; // PM QA: look down over the cannon so the island + beach show above it
+        public static readonly Settings Compact = new Settings { back = 11f, height = 6.5f, sideFill = 0.70f }; // PM QA: over the cannon so the island shows above it, but low enough that the barrel reads from behind, not from the top
+        /// <summary>Height (m) of the Kingdom roof-top flag pole above the highest block; the run camera keeps its tip in frame.</summary>
+        public const float RoofFlagPole = 1.2f;
+
         public static Settings For(Vector3 cannonRoot, Bounds structure) =>
             structure.center.x - cannonRoot.x < ArenaLayoutRules.CompactBelow + 2f ? Compact : Default;
 

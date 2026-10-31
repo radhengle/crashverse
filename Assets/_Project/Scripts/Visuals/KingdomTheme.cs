@@ -122,11 +122,34 @@ namespace Crashverse.Visuals
             return m;
         }
 
+        /// <summary>QA L1: the layout's island block read as a grey concrete slab. Visual only (collider unchanged): a weathered rock
+        /// outcrop from the Kingdom rock kit fitted to the block's unit box, flat-topped so the stilts still stand on it, slightly wider at
+        /// the base and sunk into the sand so it reads as a natural ledge, not a plinth.</summary>
+        const float FlagPole = Crashverse.Meta.CannonCameraRules.RoofFlagPole;
+
+        static Mesh IslandOutcrop(Vector3 scale)
+        {
+            var rocks = CvMesh.Load("Kingdom/Meshes/Rocks");
+            if (rocks == null || !rocks.TryGetValue("Rock_B", out var src) || src == null) return CvMesh.BoxCube(scale, 3f);
+            var m = Object.Instantiate(src); m.name = "IslandOutcrop";
+            var v = m.vertices; var b = src.bounds; var ext = b.size;
+            for (int i = 0; i < v.Length; i++)
+            {
+                var q = v[i] - b.center;
+                float ny = q.y / Mathf.Max(0.01f, ext.y) + 0.5f;                       // 0 bottom .. 1 top
+                float widen = Mathf.Lerp(1.30f, 0.98f, Mathf.Clamp01(ny));             // skirt flares out into the sand
+                var r = new Vector3(q.x / Mathf.Max(0.01f, ext.x) * widen, Mathf.Min(ny, 0.94f) / 0.94f * 1.15f - 0.65f, q.z / Mathf.Max(0.01f, ext.z) * widen);
+                v[i] = r;                                                              // top flush with the block (+0.5) so the stilts stand on it, bottom sunk 0.15 into the sand
+            }
+            m.vertices = v; m.RecalculateNormals(); m.RecalculateBounds();
+            return CvMesh.WithBoxUv(m, 2.5f, scale);
+        }
+
         /// <summary>A block the kit didn't dress: tiled kingdom surface on a box-UV cube, white base tint (damage still darkens).</summary>
         static void Retexture(DestructibleBlock b, bool castle)
         {
             var mf = b.GetComponent<MeshFilter>(); var mr = b.GetComponent<MeshRenderer>(); if (mf == null || mr == null || !mr.enabled) return;
-            if (b.role == "island") { mr.sharedMaterial = KingdomMaterials.Rock; mf.sharedMesh = CvMesh.BoxCube(b.transform.localScale, 3f); b.SetBaseTint(Color.white); return; }
+            if (b.role == "island") { mr.sharedMaterial = KingdomMaterials.Rock; mf.sharedMesh = IslandOutcrop(b.transform.localScale); b.SetBaseTint(new Color(0.86f, 0.80f, 0.70f)); return; }
             Material m; float tile;
             var kind = b.material != null ? b.material.kind : MaterialKind.Wood;
             switch (kind)
@@ -219,8 +242,8 @@ namespace Crashverse.Visuals
             {
                 var s = top.transform.localScale; var m = MetricChild(top, "Kingdom_Flag");
                 var pole = R("FlagPole", m, Cyl(), KingdomMaterials.Gold, true);
-                pole.transform.localPosition = new Vector3(0f, s.y * 0.5f + 1.1f, 0f); pole.transform.localScale = new Vector3(0.07f, 1.1f, 0.07f);
-                var cloth = new GameObject("FlagCloth").transform; cloth.SetParent(m, false); cloth.localPosition = new Vector3(0f, s.y * 0.5f + 1.75f, 0f);
+                pole.transform.localPosition = new Vector3(0f, s.y * 0.5f + FlagPole * 0.5f, 0f); pole.transform.localScale = new Vector3(0.07f, FlagPole * 0.5f, 0.07f);
+                var cloth = new GameObject("FlagCloth").transform; cloth.SetParent(m, false); cloth.localPosition = new Vector3(0f, s.y * 0.5f + FlagPole - 0.38f, 0f);
                 foreach (var mesh in new[] { Quad(), QuadBack() })
                 {
                     var f = R("Flag", cloth, mesh, KingdomMaterials.Banner);
