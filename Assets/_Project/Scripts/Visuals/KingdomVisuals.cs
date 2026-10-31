@@ -8,7 +8,7 @@ namespace Crashverse.Visuals
     /// Season 1 "Kingdom of Ironvale" look (Phase 1, design/Season1_KingStory_v1.md): wires the presentation layer into a run through
     /// two hooks — ArenaBuilder.PostBuild (lighting, sky, hide the greybox island renderers; colliders stay) and GameplayDirector.RunBuilt
     /// (ocean/island/deck/horizon, the navy-and-gold cannon, royal re-theme of the structure, pooled VFX director, hidden core).
-    /// Presentation only: never read by the sim; the headless sim/tests don't load this assembly path.
+    /// Presentation integration with one intentional gameplay feature: HiddenCore attaches a deterministic, seeded gameplay modifier to campaign structures. The simulation rules live in the Unity-free Meta layer; this class only binds the visual/runtime effects.
     /// </summary>
     public static class KingdomVisuals
     {
@@ -128,7 +128,7 @@ namespace Crashverse.Visuals
                 if (s.builder != null) WireDamage(s.builder.Blocks);
 
                 if (ctx != null && ctx.mode == RunMode.Campaign && s.builder != null)
-                    HiddenCore.Attach(s.builder.Blocks, (int)(ctx.seed ^ (ctx.seed >> 32)), levelId, root.transform);
+                    HiddenCore.Attach(s.builder.Blocks, ctx.seed, levelId, root.transform);
             }
             catch (System.Exception e) { Debug.LogError("[Kingdom] run dressing failed: " + e); }
         }
