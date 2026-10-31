@@ -26,7 +26,7 @@ namespace Crashverse.Visuals
         Transform _crate; Renderer[] _glowR; MaterialPropertyBlock _mpb; ParticleSystem _fuse; Light _flash;
         bool _queued; float _flashT = -1f; readonly List<DestructibleBlock> _neighbours = new List<DestructibleBlock>();
 
-        public static DestructibleBlock Pick(IReadOnlyList<DestructibleBlock> blocks, int seed, string levelId)
+        public static DestructibleBlock Pick(IReadOnlyList<DestructibleBlock> blocks, long seed, string levelId)
         {
             var list = new List<DestructibleBlock>(); var cands = new List<Crashverse.Meta.HiddenCoreRules.Candidate>();
             foreach (var b in blocks)
@@ -44,7 +44,7 @@ namespace Crashverse.Visuals
             return i < 0 ? null : list[i];
         }
 
-        public static HiddenCore Attach(IReadOnlyList<DestructibleBlock> blocks, int seed, string levelId, Transform parent)
+        public static HiddenCore Attach(IReadOnlyList<DestructibleBlock> blocks, long seed, string levelId, Transform parent)
         {
             var host = Pick(blocks, seed, levelId); if (host == null) return null;
             var go = new GameObject("HiddenCore"); go.transform.SetParent(parent, false);
