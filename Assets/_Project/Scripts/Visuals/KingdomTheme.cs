@@ -269,7 +269,8 @@ namespace Crashverse.Visuals
             var sigil = new GameObject("IronFistCrest_Sigil");
             sigil.transform.SetParent(root, false);
             sigil.AddComponent<MeshFilter>().sharedMesh = emblem;
-            sigil.AddComponent<MeshRenderer>().sharedMaterial = KingdomMaterials.CannonBronze;
+            sigil.AddComponent<MeshRenderer>().sharedMaterial =
+                KingdomMaterials.Make("IronFistGold", null, new Color(1.0f, 0.72f, 0.26f), 0.82f, 0.3f, Vector2.one);
             RuntimeMeshCleanup.Own(root, emblem);
         }
 
