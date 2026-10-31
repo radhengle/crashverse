@@ -62,8 +62,8 @@ namespace Crashverse.Visuals
                 {
                     int a = 1 + i, b = 1 + ((i + 1) % points.Length);
                     triangles[i * 3] = 0;
-                    triangles[i * 3 + (side > 0 ? 1 : 2)] = a;
-                    triangles[i * 3 + (side > 0 ? 2 : 1)] = b;
+                    triangles[i * 3 + (side > 0 ? 2 : 1)] = a;
+                    triangles[i * 3 + (side > 0 ? 1 : 2)] = b;
                 }
                 mesh.vertices = vertices; mesh.triangles = triangles; mesh.RecalculateNormals(); mesh.RecalculateBounds();
                 var go = new GameObject(side > 0 ? "Cannon_FlameCrest_Right" : "Cannon_FlameCrest_Left");
