@@ -318,8 +318,10 @@ namespace Crashverse.Visuals
                 var r = Obj("SandRock", shore, BoxUvCached(rm, 2.5f * s), KingdomMaterials.Rock, true);
                 bool land = OnIsland(new Vector3(x, 0f, z), 0.95f);
                 if (Compact && (!land || x < Cx - Rx * 0.3f)) continue; // compact: no rocks in the water lane / on the front beach
-                r.transform.localPosition = new Vector3(x, land ? -0.12f * s : WaterY - 0.1f * s, z); if (!land) r.transform.localScale *= 1.6f; // off the island: surf rocks r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
-                r.transform.localScale = new Vector3(s * 1.2f, s * (0.55f + (float)rng.NextDouble() * 0.4f), s);
+                r.transform.localPosition = new Vector3(x, land ? -0.12f * s : WaterY - 0.1f * s, z);
+                r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
+                float surfScale = land ? 1f : 1.6f;
+                r.transform.localScale = new Vector3(s * 1.2f * surfScale, s * (0.55f + (float)rng.NextDouble() * 0.4f), s * surfScale);
             }
             // palms on the beach, out of the firing lane (|z| > 6 between the cannon and the building)
             if (Compact)
