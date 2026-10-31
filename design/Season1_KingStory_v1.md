@@ -20,9 +20,9 @@ iron-fist crest, royal flags on the roof peaks, guard props (spear racks, shield
 | 7 | m1_clockwork_tower Clockwork Tower | **Curfew Clocktower** | joint sequencing, Earthquake | 5 |
 | 8 | c1_l08 Market Arcade | **Royal Market Arcade** (toll hall) | loadout choice, Multi Shot | 6 |
 | 9 | c1_l09 Lighthouse Gauntlet | **Sea-Wall Beacon** (blockade lighthouse) | tests everything | 5 |
-| 10 | c1_l10 (replaces the Tidewarden target) | **The King's Palace**: keep, towers, gatehouse, throne-room spire | weak points = palace pillars/gate (existing weak-point data) | 8 |
+| 10 | c1_l10 (replaces the Tidewarden target) | **The King's Palace**: keep, towers, gatehouse, throne-room spire | structural destruction + hidden core; King fight moves to Phase 2 | 7 |
 
-The Tidewarden creature is retired as the L10 target; its layout id and weak-point logic stay (re-dressed as palace pieces) so sim/hint data stay valid.
+The Tidewarden encounter is intentionally retired from Chapter 1 in Phase 1. L10 is now a structural Palace level; the King Grimhold boss encounter is a separate Phase 2 Hard Level. The old Tidewarden boss layout remains in the project for historical/reference use, but its boss logic is not used by the Palace.
 
 ## 2. Hard Level: "The Iron King" (map node after L10, not L11)
 Crowned-skull node beside the palace. Unlocks after L10 (any stars). Arena = the ruined palace balcony over the sea.
@@ -38,7 +38,7 @@ Crowned-skull node beside the palace. Unlocks after L10 (any stars). Arena = the
 
 ## 3. Hidden Core (every building)
 - At level load one block is the **core host**, picked from that layout's candidate blocks (interior, non-roof, non-island, supported pieces)
-  with `DetRng(seed = runSeed XOR hash(levelId))`, so ranked replays pick the same one. Nobody can see it at first.
+  with the cross-platform `SimRng(seed = runSeed XOR FNV1a(levelId))`, so ranked replays pick the same one. Nobody can see it at first.
 - **Exposure:** when the host itself is damaged to <= 66 % HP, or any block touching it (support or dependent) breaks, the core is exposed:
   a crown-stamped TNT crate appears on the host's cannon-facing side, with a pulsing orange fuse glow and sparks.
 - **Detonation:** a direct hit on the exposed host (or the host breaking while exposed) detonates the core: radial damage 400 within 6 m
