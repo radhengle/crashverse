@@ -297,7 +297,8 @@ namespace Crashverse.Visuals
                 var p = new Vector3(Cx + Mathf.Cos(a) * Rx * 1.03f, WaterY + 0.05f, Mathf.Sin(a) * Rz * 1.06f);
                 if (p.x < cannon.x + 6f && Mathf.Abs(p.z) < 5f) continue; // keep the harbour deck clear
                 if (!rocks.TryGetValue(rockNames[i % 3], out var rm)) continue;
-                float s = 0.6f + (float)rng.NextDouble() * 0.9f;
+                float s = (0.6f + (float)rng.NextDouble() * 0.9f) * (Compact ? 0.4f : 1f); // small island: low surf rocks, not boulders over the sand
+                if (Compact && (i % 2 == 1 || p.x < Cx - Rx * 0.5f)) continue; // keep the cannon-facing beach open (L01.jpg)
                 var r = Obj("ShoreRock", shore, rm, KingdomMaterials.Rock, true);
                 r.GetComponent<MeshFilter>().sharedMesh = BoxUvCached(rm, 2.5f * s);
                 r.transform.localPosition = p; r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
@@ -314,6 +315,7 @@ namespace Crashverse.Visuals
                 float s = 0.35f + (float)rng.NextDouble() * 0.55f;
                 var r = Obj("SandRock", shore, BoxUvCached(rm, 2.5f * s), KingdomMaterials.Rock, true);
                 bool land = OnIsland(new Vector3(x, 0f, z), 0.95f);
+                if (Compact && (!land || x < Cx - Rx * 0.3f)) continue; // compact: no rocks in the water lane / on the front beach
                 r.transform.localPosition = new Vector3(x, land ? -0.12f * s : WaterY - 0.1f * s, z); if (!land) r.transform.localScale *= 1.6f; // off the island: surf rocks r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
                 r.transform.localScale = new Vector3(s * 1.2f, s * (0.55f + (float)rng.NextDouble() * 0.4f), s);
             }
