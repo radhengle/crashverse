@@ -31,6 +31,7 @@ namespace Crashverse.UI
             var bg = UIFactory.TrimPanel("Briefing", root, Th); UIFactory.Stretch(bg.rectTransform, 12f);
             var v = UIFactory.VStack(bg.transform, Th.gap, 16f); UIFactory.Stretch(v);
             UIFactory.Label(v, (_lvl.number > 0 ? $"Level {_lvl.number}: " : "") + UIFactory.Truncate(_lvl.name, 32), Th.titleSp, Th.goldFill, TextAnchor.MiddleCenter, Th, true);
+            BuildMissionStory(v);
             int shots = new RunContext { mode = _mode, level = _lvl, mod = _mod }.ShotBudget;
             UIFactory.Label(v, $"Shots: {shots}   Win: destroy {Mathf.RoundToInt(_lvl.winThreshold * 100)}%", Th.bodySp, Th.white, TextAnchor.MiddleCenter, Th);
             // star bands from per-level thresholds (SG-01)
@@ -54,6 +55,79 @@ namespace Crashverse.UI
             UIFactory.Button(go, "Back", Th.navy500, () => Router.Pop(), Th);
             UIFactory.Button(go, _mode == RunMode.TitanRanked ? "Start Ranked" : "Play", Th.green, Play, Th);
             Refresh();
+        }
+
+        /// <summary>Short chapter-specific story beat: the current district, why Rook is here, and what the target represents.</summary>
+        void BuildMissionStory(Transform parent)
+        {
+            string heading, copy;
+            if (_mode == RunMode.DailyBoss)
+            {
+                heading = "THE QUARRY · DAILY BOSS";
+                copy = "Ironjaw Golem guards the King's stoneworks. Break its armour and strike the molten chest core.";
+            }
+            else
+            {
+                switch (_lvl.number)
+                {
+                    case 1:
+                        heading = "IRONVALE HARBOUR · ROYAL WATCH POST";
+                        copy = "The watch post spots boats defying the blockade. Take it down and give the harbour room to breathe.";
+                        break;
+                    case 2:
+                        heading = "IRONVALE HARBOUR · KING'S CISTERN";
+                        copy = "The crown controls the town's water. Break every support and return the supply to the people.";
+                        break;
+                    case 3:
+                        heading = "IRONVALE HARBOUR · ROYAL BAKERY";
+                        copy = "The palace eats while the harbour goes hungry. Smash the King's monopoly on bread.";
+                        break;
+                    case 4:
+                        heading = "THE MILL FIELDS · CROWN MILL";
+                        copy = "The mill grinds grain for Grimhold's troops. Topple it and stop the royal levy.";
+                        break;
+                    case 5:
+                        heading = "THE MILL FIELDS · TAX COLLECTORS";
+                        copy = "Two lodges guard the bridge and squeeze every traveller. One well-placed shot can free both approaches.";
+                        break;
+                    case 6:
+                        heading = "THE MILL FIELDS · ROYAL GRANARY";
+                        copy = "Steel braces protect the grain seized from the people. Break the joints and bring down the hoard.";
+                        break;
+                    case 7:
+                        heading = "THE CURFEW DISTRICT · CLOCKTOWER";
+                        copy = "The King's clock keeps the town afraid. Bring down its supports and silence the curfew bell.";
+                        break;
+                    case 8:
+                        heading = "THE CURFEW DISTRICT · ROYAL MARKET";
+                        copy = "The royal arcade taxes every stall. Clear the toll hall and open the road to the sea-wall.";
+                        break;
+                    case 9:
+                        heading = "THE CURFEW DISTRICT · SEA-WALL BEACON";
+                        copy = "The beacon guides Grimhold's blockade ships. Destroy the signal and expose the route to Crown Rock.";
+                        break;
+                    case 10:
+                        heading = "CROWN ROCK · THE KING'S PALACE";
+                        copy = "Break the palace towers and gatehouse, expose its hidden core, and reach the throne room. The Iron King awaits beyond.";
+                        break;
+                    default:
+                        heading = "THE KINGDOM OF IRONVALE";
+                        copy = "Captain Rook is dismantling Grimhold's royal strongholds, one structure at a time.";
+                        break;
+                }
+            }
+
+            var card = V2.Card("MissionStory", parent, Th);
+            var layout = card.gameObject.AddComponent<LayoutElement>();
+            layout.minHeight = layout.preferredHeight = 72f;
+            var content = UIFactory.VStack(card.transform, 1f, 8f, TextAnchor.MiddleLeft);
+            UIFactory.Stretch(content);
+            var title = UIFactory.Label(content, heading, Th.captionSp, Th.goldFill, TextAnchor.MiddleLeft, Th, true);
+            title.fontStyle = FontStyle.Bold;
+            var body = UIFactory.Label(content, copy, Th.captionSp, Th.body, TextAnchor.MiddleLeft, Th);
+            body.horizontalOverflow = HorizontalWrapMode.Wrap;
+            body.verticalOverflow = VerticalWrapMode.Overflow;
+            body.GetComponent<LayoutElement>().minHeight = 34f;
         }
 
         void Refresh()
@@ -271,7 +345,7 @@ namespace Crashverse.UI
                 _pu[i].interactable = _s.State == SessionState.Aiming && (st.charges > 0 || st.armed);
             }
             _fire.interactable = _s.State == SessionState.Aiming && _s.ShotsLeft > 0;
-            _status.text = _s.State == SessionState.Resolving ? "Settling…" : _s.State == SessionState.BossTell ? "The Tidewarden shifts!" :
+            _status.text = _s.State == SessionState.Resolving ? "Settling…" : _s.State == SessionState.BossTell ? "The King's guard shifts!" :
                 _s.Boss != null ? $"Core hits {_s.Boss.CoreHits}/{Crashverse.Boss.TidewardenController.CoreHitsToWin} · Shutter {(_s.Boss.ShutterOpen ? "OPEN" : "closed")}" :
                 _s.HintVisible ? "💡 Follow the ghost arc" : _s.Ctx.titan != null ? _s.Ctx.titan.ruleText : _s.Ctx.IsHard ? "HARD LEVEL" : "";
         }

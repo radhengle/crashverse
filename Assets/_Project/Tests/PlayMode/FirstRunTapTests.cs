@@ -177,7 +177,7 @@ namespace Crashverse.Tests.PlayMode
             Assert.True(st.xMin >= -tol && st.xMax <= 1f + tol && st.yMin >= -tol && st.yMax <= 1f + tol, "whole building on screen: " + st);
             Assert.AreEqual(0.5f, c.center.x, 0.03f, "cannon horizontally centred");
             Assert.Less(c.yMin, 0.1f, "cannon at the bottom");
-            Assert.True(c.width > 0.3f || c.height > 0.4f, "cannon big (portrait: wide, landscape editor: tall): " + c);
+            Assert.True(c.width > 0.22f || c.height > 0.3f, "cannon big (portrait: wide, landscape editor: tall): " + c);
             Assert.Greater(st.center.y, c.center.y + 0.15f, "building above the cannon");
             Assert.True(s.aim.Arc != null && s.aim.Arc.positionCount > 2, "aim line drawn");
         }

@@ -28,6 +28,7 @@ namespace Crashverse.Data
         public string requires; public string bossId; public Reward[] reward;
         public float star3Pct = 0.60f; public float star2Pct = 0.30f; public int starCapIfPowerupUsed = 3; public float islandKillY = -2f; // SG-21
         public string hintTarget; public float hintYaw; public float hintPitch; // Addendum v1.1 §1
+        public float targetDistance = 30f; // PM 31 Oct: cannon→structure base (m); < 20 = compact (own small island, ArenaLayoutRules)
         public bool HasHint => !string.IsNullOrEmpty(hintTarget);
         public bool IsBoss => !string.IsNullOrEmpty(bossId);
         /// <summary>v2: at most one hero building (keep or gatehouse, Bld_* FBX from the 3D Modeler) per level; null = empty slot.</summary>

@@ -3,7 +3,7 @@
 
 Geometry (code, not guesses): Wrecker at x=WreckerSpec.WreckerX (-20), barrel pivot y=1.5, projectile spawn 1.95 along the
 barrel (SpawnAlong), barrel +x rotated by elevation about z, then by yaw about y (AimController: Euler(0,-yaw,0), so +yaw → +z).
-Layout block positions are relative to GameSession.structureBase (10,0,0). launchSpeed from wrecker.json, g = 9.81 × gravityScale.
+Layout block positions are relative to GameSession.structureBase = (WreckerX + level.targetDistance, 0, 0) (default 30 m -> (10,0,0)). launchSpeed from wrecker.json, g = 9.81 × gravityScale.
 Low-arc ballistic solve, no drag; clamped to the aim envelope (elevation 5–70°, yaw ±60°) and rounded to 0.5°.
 
 Usage: derive_hints.py [chapter.json] [--layouts DIR] [--check] [--season-only]
@@ -43,7 +43,9 @@ def derive(levels, layouts_dir, v, g):
         lay = json.load(open(os.path.join(layouts_dir, L["layout"] + ".json")))
         b = next((b for b in lay["blocks"] if b["id"] == t), None)
         if b is None: raise SystemExit(f"{L['id']}: hintTarget '{t}' not in layout {L['layout']}")
-        s = solve(tuple(BASE[i] + b["p"][i] for i in range(3)), v, g)
+        d = float(L.get("targetDistance") or 30.0); d = max(12.0, min(40.0, d))  # ArenaLayoutRules.Distance
+        base = (WRECKER_X + d, BASE[1], BASE[2])
+        s = solve(tuple(base[i] + b["p"][i] for i in range(3)), v, g)
         if s is None: raise SystemExit(f"{L['id']}: target '{t}' out of range at {v} m/s")
         out[L["id"]] = s
     return out

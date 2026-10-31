@@ -320,7 +320,7 @@ public class H1_CampaignTests
         await using var h = await Harness.Start();
         var s = await h.Linked(); var viewer = await h.Linked();
         await h.ClearPrereqs(s, "c1_l10");
-        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 3, 8, 0.9f, 2), s);
+        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 3, 7, 0.9f, 2), s);
         Assert.True(r["firstClear"].GetBoolean());
         Assert.Equal(500, (await h.Wallet(s)).coins); // provisional first-clear reward (capped per day)
         h.Replay.Fn = _ => new ReplayResult { won = true, shotsLeft = 3, destroyedRatio = 0.5f, bestCombo = 2 }; // far off
@@ -338,7 +338,7 @@ public class H1_CampaignTests
         await using var h = await Harness.Start(o => o.FirstClearDailyCap = 0);
         var s = await h.Guest();
         await h.ClearPrereqs(s, "c1_l10");
-        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 3, 8, 0.9f, 2), s);
+        var r = await h.Post("/v1/campaign/results", Harness.Win("c1_l10", await h.Attempt(s, "c1_l10"), 3, 7, 0.9f, 2), s);
         Assert.True(r["rewardDeferred"].GetBoolean()); Assert.Equal(0, (await h.Wallet(s)).coins);
         await new ReplayService(h.X).Enqueue((await h.X.Db.List<RunDoc>("runs")).Single().runId, "test");
         h.Replay.Fn = _ => new ReplayResult { won = true, shotsLeft = 3, destroyedRatio = 0.9f, bestCombo = 2 };

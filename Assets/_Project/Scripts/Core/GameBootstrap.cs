@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Crashverse.Backend;
 using Crashverse.Data;
 using Crashverse.Destruction;
@@ -158,6 +159,9 @@ namespace Crashverse.Core
             { r.Push(new LevelSelectScreen(lvl)); r.Toast("Back to Level " + lvl.number); Debug.Log("[V2-01] resumed " + resume + " after restart"); }
         }
 
+        /// <summary>Presentation hook after a run is fully built (Crashverse.Visuals.KingdomVisuals). Never read by the sim.</summary>
+        public static event System.Action<GameObject, GameSession, Weapons.WreckerBuilder, RunContext> RunBuilt;
+
         public static void StartRun(RunContext ctx)
         {
             EndRun();
@@ -165,6 +169,8 @@ namespace Crashverse.Core
             var rk = ctx.mode == RunMode.DailyBoss ? "dailyboss" : ctx.mode == RunMode.Campaign && ctx.level != null ? ctx.level.id : "";
             if (rk.Length > 0) { PlayerPrefs.SetString(ResumeKey, rk); PlayerPrefs.Save(); }
             _runRoot = new GameObject("Run");
+            float dist = ctx.level != null ? ctx.level.targetDistance : Crashverse.Meta.ArenaLayoutRules.DefaultDistance;
+            ArenaBuilder.Configure(Crashverse.Meta.ArenaLayoutRules.Island(dist, Crashverse.Meta.ArenaLayoutRules.FootprintHalf(ctx.layout)));
             var arena = new GameObject("Arena").AddComponent<ArenaBuilder>();
             arena.transform.SetParent(_runRoot.transform);
             arena.Build();
@@ -190,7 +196,7 @@ namespace Crashverse.Core
             s.integrity = levelGo.AddComponent<StructuralIntegrity>();
             s.killPlane = KillPlane.Instance;
             s.fire = fire; s.aim = aim;
-            s.structureBase = new Vector3(10f, 0f, 0f); // 30u from the Wrecker (targets 25–40u away)
+            s.structureBase = Crashverse.Meta.ArenaLayoutRules.StructureBase(dist); // per level (default 30 m; compact L1 ~14 m on its own island)
             Session = s;
 
             var cam = Camera.main;
@@ -200,12 +206,17 @@ namespace Crashverse.Core
             RunCamera.Frame(wreckerGo.transform.position, s.structureBase);
             s.Begin(ctx);
             // User 2026-10-30 / Target UI §5: locked camera behind the cannon, framing the cannon (bottom centre) + the whole building
-            RunCamera.FrameBehindCannon(wreckerGo.transform.position, StructureBounds(s, s.structureBase), HintArcPoints(s));
+            var sb = StructureBounds(s, s.structureBase);
+            // QA L1: the roof-top flag (KingdomTheme.FlagPole above the highest block) was cut off by the top of the frame
+            var above = new List<Vector3>(HintArcPoints(s) ?? new Vector3[0]) { new Vector3(sb.center.x, sb.max.y + CannonCameraRules.RoofFlagPole + 0.1f, sb.center.z) };
+            RunCamera.FrameBehindCannon(wreckerGo.transform.position, sb, above.ToArray());
             int fx = RenderMaterials.FixAll(_runRoot); if (fx > 0) Debug.LogWarning($"[BUG-23] run: {fx} renderers had no usable material");
             // #18/#20: PHYS_* ImpactEvents (Impact/Crack/Break/JointSnap/CollapseStart/End with pieceIds) on AnimEventBus.
             // Added after Begin so it binds to the SimRunner that Begin created. Presentation only; never read by the sim.
             if (Crashverse.Sim.ImpactEventEmitter.Instance == null) levelGo.AddComponent<Crashverse.Sim.ImpactEventEmitter>();
             var feel = levelGo.AddComponent<Crashverse.Feel.FeelDirector>(); feel.Bind(s, RunCamera, aim); feel.BindWrecker(wb); // 01 cannon parts
+            RunBuilt?.Invoke(_runRoot, s, wb, ctx);
+            RenderMaterials.FixAll(_runRoot);
             AppServices.Router.Push(new HudScreen(s));
 #if CRASHVERSE_DEV
             // BUG-24 automation: dev-only aim hook (inert without the cv_dev_aim launch extra; never in ranked).

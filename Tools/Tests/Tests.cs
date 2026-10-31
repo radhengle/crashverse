@@ -77,12 +77,12 @@ static class Tests
                 T.True(l.star2Pct < l.star3Pct, l.id + " bands monotonic (2★ < 3★)");
             }
             var l10 = ch.levels[9]; // Level_Rulings_v1 §1–2 (values live in the Level Designer's data)
-            T.Eq(8, l10.shots, "L10 budget 8"); T.Eq(0.375f, l10.star3Pct, "L10 3★ 0.375"); T.Eq(0.25f, l10.star2Pct, "L10 2★ 0.25");
-            T.Eq("NO_CLOSED_SHUTTER_HIT", l10.mastery.type, "L10 mastery");
-            T.Eq(3, StarRules.Compute(true, 3, l10.shots, l10.star3Pct, l10.star2Pct), "perfect 5-shot run (3 left of 8) = 3★");
+            T.Eq(7, l10.shots, "L10 King's Palace budget 7"); T.Eq(0.42f, l10.star3Pct, "L10 3★ 0.42"); T.Eq(0.28f, l10.star2Pct, "L10 2★ 0.28");
+            T.Eq("SHOTS_LEFT_AT_LEAST", l10.mastery.type, "L10 mastery"); T.Eq("c1_l10_kings_palace", l10.layout, "L10 = the King's Palace layout");
+            T.Eq(3, StarRules.Compute(true, 3, l10.shots, l10.star3Pct, l10.star2Pct), "4-shot run (3 left of 7) = 3★");
             T.Eq(2, StarRules.Compute(true, 2, l10.shots, l10.star3Pct, l10.star2Pct), "2 left = 2★");
             T.Eq("m1_clockwork_tower", ch.levels[6].layout, "L7 = M1 tower");
-            T.Eq("tidewarden", ch.levels[9].bossId, "L10 boss");
+            T.Eq("", ch.levels[9].bossId, "L10 is no longer the Tidewarden boss (Season 1: the King's Palace)");
             T.Eq(2, ch.levels[8].starCapIfPowerupUsed, "L9 cap");
         });
         T.Add("LEVEL_tidewarden_shutter_SG05", () =>
@@ -744,9 +744,9 @@ static class Tests
         });
         T.Add("PERF_L10_fixture_deterministic", () =>
         {
-            var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId); var baseLayout = Db.GetLayout(l10.layout);
+            var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId); var baseLayout = Db.GetLayout("c1_l10_tidewarden") /* perf fixture keeps the 13-piece Tidewarden base (Season 1 moved L10 to the palace) */;
             string a = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(baseLayout));
-            string b = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(Db.GetLayout(l10.layout)));
+            string b = Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Layout(Db.GetLayout("c1_l10_tidewarden") /* perf fixture keeps the 13-piece Tidewarden base (Season 1 moved L10 to the palace) */));
             T.Eq(a, b, "same L10 input -> identical perf layout");
             T.Eq(Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Script()), Newtonsoft.Json.JsonConvert.SerializeObject(PerfL10Fixture.Script()), "same script");
             T.Eq(0x4C31305045524631L, PerfL10Fixture.Seed, "fixed long seed");
@@ -758,7 +758,7 @@ static class Tests
         T.Add("PERF_L10_fixture_hits_caps_and_mixes_materials", () =>
         {
             var l10 = Db.GetLevel(PerfL10Fixture.BaseLevelId);
-            var lay = PerfL10Fixture.Layout(Db.GetLayout(l10.layout));
+            var lay = PerfL10Fixture.Layout(Db.GetLayout("c1_l10_tidewarden") /* perf fixture keeps the 13-piece Tidewarden base (Season 1 moved L10 to the palace) */);
             T.True(PerfL10Fixture.IsDevLayout(lay.id), "dev_ layout id");
             T.Eq(13 + PerfL10Fixture.Layers * PerfL10Fixture.Rows * PerfL10Fixture.Columns + PerfL10Fixture.DropPanes + 2 * PerfL10Fixture.AnvilPairs, lay.blocks.Length, "L10 + curtain + drop panes + hammer/anvil pairs");
             // Hammers: a 4 kg steel hammer must break a 12 HP glass anvil on its first hit (ruling #7a maths), and they keep

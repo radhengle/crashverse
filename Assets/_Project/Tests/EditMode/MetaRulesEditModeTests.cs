@@ -82,10 +82,10 @@ namespace Crashverse.Backend.Tests
         [Test]
         public void Only_levels_tagged_hard_get_the_shot_penalty()
         {
-            // GD ruling: c1_l10 (Tidewarden) keeps its authored 8 shots and 0.375 / 0.25 bands
+            // Season 1: c1_l10 (the King's Palace) keeps its authored 7 shots and 0.42 / 0.28 bands
             var l10 = Db.Chapter1Authored.levels.First(l => l.number == 10);
-            Assert.False(HardLevelRules.IsHard(l10)); Assert.AreEqual(8, HardLevelRules.Shots(l10)); Assert.AreEqual(0.375f, l10.star3Pct); Assert.AreEqual(0.25f, l10.star2Pct);
-            Assert.AreEqual(MapNodeKind.Boss, WorldMapRules.KindFor(l10));
+            Assert.False(HardLevelRules.IsHard(l10)); Assert.AreEqual(7, HardLevelRules.Shots(l10)); Assert.AreEqual(0.42f, l10.star3Pct); Assert.AreEqual(0.28f, l10.star2Pct);
+            Assert.AreEqual(MapNodeKind.Normal, WorldMapRules.KindFor(l10));
             Assert.False(HardLevelRules.IsHard(new LevelEntry { number = 30, shots = 7 }), "untagged 10th level is not hard");
             foreach (var l in Db.Chapter1.levels)
             {

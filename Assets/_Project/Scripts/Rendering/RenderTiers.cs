@@ -49,7 +49,7 @@ namespace Crashverse.Rendering
         {
             new RenderTier { name = "Low",  hdr = false, msaa = 1, renderScale = 0.75f, mainShadows = false, shadowResolution = 512,  shadowDistance = 15f, cascades = 1, cascade2Split = 0.25f, softShadows = false, additionalLights = 0, srpBatcher = true, bloom = false, vignette = false,
                              textureMipLimit = 1, albedoMax = 512,  normalMax = 512,  ormMax = 512,  anisotropic = AnisotropicFiltering.Disable, lodBias = 0.7f, maximumLODLevel = 1, foliageShadows = false, maxBatches = 100 },
-            new RenderTier { name = "Mid",  hdr = true,  msaa = 2, renderScale = 0.9f,  mainShadows = true,  shadowResolution = 1024, shadowDistance = 30f, cascades = 1, cascade2Split = 0.25f, softShadows = false, additionalLights = 2, srpBatcher = true, bloom = true,  vignette = true,
+            new RenderTier { name = "Mid",  hdr = true,  msaa = 2, renderScale = 0.9f,  mainShadows = true,  shadowResolution = 1024, shadowDistance = 30f, cascades = 1, cascade2Split = 0.25f, softShadows = true,  additionalLights = 2, srpBatcher = true, bloom = true,  vignette = true,
                              textureMipLimit = 0, albedoMax = 1024, normalMax = 1024, ormMax = 1024, anisotropic = AnisotropicFiltering.Enable,  lodBias = 1.0f, maximumLODLevel = 0, foliageShadows = true,  maxBatches = 150 },
             // High albedo stays 1024: PM capped Android textures at 1024. High 2048 albedo would need PM approval (raise AndroidImportMax
             // for _A only and keep High at mip limit 0; Mid/Low would then need limit 1/2 to stay on budget).
@@ -74,11 +74,30 @@ namespace Crashverse.Rendering
         // Trilight ambient: sky lifted toward white so shade stays cool and light (board: never below sRGB ~45 on lit albedo).
         public static readonly Color AmbientSky = Color.Lerp(SkyTop, Color.white, 0.45f), AmbientEquator = SkyHorizon, AmbientGround = new Color(0.62f, 0.58f, 0.52f);
 
-        // Post (PM decision, style board v3 §6): Neutral tonemapper on EVERY tier (keeps palette hex closer than ACES).
-        // Full (Mid/High): exposure 0, contrast +8, saturation +8, HDR bloom threshold 1.1 so only emissive Core/FX bloom
-        // (lit sandstone, steel and sky must not), moderate intensity, light vignette. Low: same grading, no bloom/vignette.
-        public const float PostExposure = 0f, PostContrast = 8f, PostSaturation = 8f;
-        public const float BloomThreshold = 1.1f, BloomIntensity = 0.5f, BloomScatter = 0.6f, VignetteIntensity = 0.12f;
+        // Post (user decision 2026-10-31, overrides style board v3 §6 "Neutral"): ACES filmic tonemapping on every tier with a warm,
+        // dramatic grade toward the Season 1 concept art (design/level_concepts_v1): slight exposure lift (ACES darkens mid-tones),
+        // more contrast and saturation, warm white balance, golden highlights / cool shadows. Full (Mid/High) adds bloom on bright
+        // highlights (sun-lit timber edges, sky, fire, the hidden core), a framing vignette and downsampled SSAO.
+        public const UnityEngine.Rendering.Universal.TonemappingMode Tonemapper = UnityEngine.Rendering.Universal.TonemappingMode.ACES;
+        public const float PostExposure = 0.35f, PostContrast = 18f, PostSaturation = 24f;
+        public static readonly Color PostColorFilter = new Color(1f, 0.97f, 0.92f, 1f);
+        public const float WhiteBalanceTemperature = 9f, WhiteBalanceTint = 2f;
+        public static readonly Color SplitShadows = new Color(0.42f, 0.52f, 0.70f, 1f), SplitHighlights = new Color(1f, 0.80f, 0.55f, 1f);
+        public const float SplitBalance = -15f;
+        public const float BloomThreshold = 0.95f, BloomIntensity = 0.75f, BloomScatter = 0.7f, VignetteIntensity = 0.24f;
+        // Mobile-safe SSAO (Mid/High only, toggled off on Low at runtime by LightingRig): half resolution, depth source, low samples.
+        public const float SsaoIntensity = 1.4f, SsaoRadius = 0.35f, SsaoDirectLighting = 0.25f;
+        public static bool SsaoOn(int tier) => tier > 0;
+
+        /// <summary>CPU rasterisers (the CI emulator's SwiftShader/ANGLE, llvmpipe): SSAO and MSAA cost whole frames there and drop
+        /// touch input, so they are skipped and the render scale is capped. Real GPUs are unaffected.</summary>
+        public static bool IsSoftwareRenderer(string deviceName)
+        {
+            if (string.IsNullOrEmpty(deviceName)) return false;
+            var n = deviceName.ToLowerInvariant();
+            return n.Contains("swiftshader") || n.Contains("llvmpipe") || n.Contains("softpipe");
+        }
+        public const float SoftwareRenderScale = 0.6f;
 
         // ---------------- Realistic PBR textures ----------------
         public const string RealisticRoot = "Assets/_Project/Models/Realistic/";

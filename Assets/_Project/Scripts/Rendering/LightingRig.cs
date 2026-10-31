@@ -36,6 +36,23 @@ namespace Crashverse.Rendering
             var p = Resources.Load<VolumeProfile>(res);
             if (p == null) Debug.LogError($"[LightingRig] missing volume profile Resources/{res} (run Crashverse/Rendering/Setup Lighting + Post)");
             _vol.sharedProfile = p;
+            bool soft = RenderTiers.IsSoftwareRenderer(SystemInfo.graphicsDeviceName);
+            SetSsao(RenderTiers.SsaoOn(_tier) && !soft);
+            if (soft && GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset ua)
+            {
+                ua.msaaSampleCount = 1; ua.renderScale = Mathf.Min(ua.renderScale, RenderTiers.SoftwareRenderScale);
+                Debug.Log($"[LightingRig] software renderer ({SystemInfo.graphicsDeviceName}): SSAO/MSAA off, renderScale {ua.renderScale:0.00}");
+            }
+        }
+
+        /// <summary>SSAO lives on the shared URP renderer (LightingSetup); off on the Low tier (mobile budget).</summary>
+        static void SetSsao(bool on)
+        {
+            var asset = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset; if (asset == null) return;
+            var fi = typeof(UniversalRenderPipelineAsset).GetField("m_RendererDataList", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (!(fi?.GetValue(asset) is ScriptableRendererData[] list)) return;
+            foreach (var rd in list)
+                if (rd != null) foreach (var f in rd.rendererFeatures) if (f != null && f.GetType().Name == "ScreenSpaceAmbientOcclusion") f.SetActive(on);
         }
 
         void ApplyScene()
