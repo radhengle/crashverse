@@ -336,6 +336,7 @@ jobs:
     # (publish needs it). Plain pushes to main build/sign but don't re-run the emulators. build-release/sign are event-specific.
     if: always() && needs.build.result == 'success' && needs.sign.result != 'failure' && (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
+    timeout-minutes: 35 # a healthy smoke takes 13-19 min; dev-build-11/12 each had one emulator hang for 6 h until cancelled by hand
     permissions:
       contents: read
     strategy:
