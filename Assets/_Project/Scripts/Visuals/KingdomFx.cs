@@ -174,6 +174,7 @@ namespace Crashverse.Visuals
         {
             // PM QA 17 Nov (L01.jpg, 3-4x the b13 burst): orange fireball (opaque core + additive glow), a radial spark burst, 20-40 large
             // spinning plank chunks under gravity, a dust ring on the ground, a lingering smoke column and a short fire.
+            // L1: the derived practice hint lands on the stilt post (the line that wins L1), so the burst is sized to engulf the deck and cabin base.
             bool onStructure = at.y > 0.4f;
             Emit(_blast, at, N(28), 0.7f, 1.5f, 5.5f, 2.4f, 4.2f, 0.7f, 1.2f);
             Emit(_ball, at, N(26), 0.6f, 2.0f, 6.5f, 2.0f, 3.8f, 0.45f, 0.85f);
