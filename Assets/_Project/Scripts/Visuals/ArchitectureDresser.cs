@@ -106,6 +106,7 @@ namespace Crashverse.Visuals
                 else if (id.Contains("frame")) ok = Frame(bld, s);
                 else if (s.y <= 0.55f && s.x >= 1.2f && s.z >= 1.2f) ok = Deck(bld, s, b, blocks);
                 else if (s.x <= 0.7f && s.z <= 0.7f && s.y >= 1f) ok = Post(bld, s);
+                else if (s.y >= 0.8f && Mathf.Min(s.x, s.z) <= 0.3f && Mathf.Max(s.x, s.z) >= 0.8f) ok = Panel(bld, s, b.blockId); // L1 re-cut: plank wall panels
                 else if (s.x >= 0.9f && s.y >= 0.9f && s.z >= 0.9f) ok = Cabin(bld, s, id.Contains("hut") || id.Contains("house") || id.Contains("main"));
                 else ok = Beam(bld, s);
                 if (!ok) continue;
@@ -157,10 +158,10 @@ namespace Crashverse.Visuals
                     float j0 = ((h & 255) / 255f - 0.5f), j1 = (((h >> 8) & 255) / 255f - 0.5f), j2 = (((h >> 16) & 255) / 255f - 0.5f);
                     float len = s.y * (0.97f + 0.05f * j1), dy = 0.03f * j2 - (s.y - len) * 0.5f;
                     var c = normal * (outAt + 0.018f * j1) + along * (-(width - 0.2f) * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
-                    var rot = Quaternion.AngleAxis(3.2f * j0, normal) * Quaternion.AngleAxis(1.8f * j2, along); // crooked boards
+                    var rot = Quaternion.AngleAxis(5.5f * j0, normal) * Quaternion.AngleAxis(2.5f * j2, along); // crooked boards (PM 17 Nov: more rickety)
                     uint h2 = h * 2654435761u; float j3 = ((h2 >> 9) & 255) / 255f, j4 = ((h2 >> 19) & 255) / 255f;
                     var mat = j1 > 0.32f ? CabinBoardWorn : j1 < -0.3f ? CabinBoardDark : j3 > 0.86f ? CabinBoardRot : CabinBoard;
-                    bool broken = j4 > 0.84f && i > 0 && i < n - 1; // L1 QA: a few snapped boards with the dark gap showing through
+                    bool broken = j4 > 0.72f && i > 0 && i < n - 1; // L1 QA: a few snapped boards with the dark gap showing through
                     if (broken)
                     {
                         float keep = len * (0.45f + 0.2f * j3);
@@ -386,6 +387,43 @@ namespace Crashverse.Visuals
             float r = Mathf.Min(s.x, s.z) * 0.45f;
             k.Log(Timber, new Vector3(0f, -s.y * 0.5f, 0f), new Vector3(0f, s.y * 0.5f, 0f), r);
             k.Log(Rope, new Vector3(0f, s.y * 0.2f, 0f), new Vector3(0f, s.y * 0.2f + 0.12f, 0f), r + 0.02f);
+            return true;
+        }
+
+        /// <summary>PM 17 Nov (L1 re-cut into ~30 breakable pieces): a thin wall panel = rickety vertical boards on both faces over a dark
+        /// core, uneven lengths, crooked (up to ~6 deg), a few snapped or missing boards, top/bottom battens and a diagonal brace.</summary>
+        static bool Panel(Builder k, Vector3 s, string id)
+        {
+            bool alongZ = s.x <= s.z; float width = alongZ ? s.z : s.x, thick = alongZ ? s.x : s.z, hy = s.y * 0.5f;
+            var along = alongZ ? Vector3.forward : Vector3.right; var normal = alongZ ? Vector3.left : Vector3.back;
+            k.Box(Gap, Vector3.zero, alongZ ? new Vector3(thick * 0.5f, s.y - 0.1f, width - 0.06f) : new Vector3(width - 0.06f, s.y - 0.1f, thick * 0.5f), 1.2f);
+            int seed = 0; foreach (char ch in id ?? "") seed = seed * 31 + ch;
+            float bw = 0.2f, gap = 0.05f; int n = Mathf.Max(3, Mathf.RoundToInt(width / (bw + gap))); float step = width / n;
+            foreach (float side in new[] { 1f, -1f })
+                for (int i = 0; i < n; i++)
+                {
+                    uint h = (uint)(seed * 73856093 ^ (i + 1) * 19349663 ^ (side > 0 ? 83492791 : 49979687));
+                    float j0 = (h & 255) / 255f - 0.5f, j1 = ((h >> 8) & 255) / 255f - 0.5f, j2 = ((h >> 16) & 255) / 255f - 0.5f, j3 = ((h >> 24) & 255) / 255f;
+                    if (side > 0 && j3 > 0.9f && i > 0 && i < n - 1) continue; // a missing board: the dark gap shows through
+                    float len = s.y * (0.93f + 0.1f * j1), dy = 0.05f * j2 - (s.y - len) * 0.5f;
+                    var c = normal * side * (thick * 0.5f - 0.02f + 0.02f * j1) + along * (-width * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
+                    var rot = Quaternion.AngleAxis(6f * j0, normal) * Quaternion.AngleAxis(2.5f * j2, along);
+                    var mat = j1 > 0.3f ? CabinBoardWorn : j1 < -0.28f ? CabinBoardDark : j3 > 0.8f ? CabinBoardRot : CabinBoard;
+                    if (side > 0 && j3 > 0.74f && j3 <= 0.9f && i > 0 && i < n - 1) // snapped board: short, kinked, jagged stub at the base
+                    {
+                        float keep = len * (0.4f + 0.25f * j1 + 0.12f); c += Vector3.up * ((len - keep) * 0.5f); len = keep; rot = rot * Quaternion.AngleAxis(8f + 8f * j2, normal);
+                        k.Box(CabinBoardRot, c - Vector3.up * (len * 0.5f + 0.35f), alongZ ? new Vector3(0.06f, 0.35f, step - gap) : new Vector3(step - gap, 0.35f, 0.06f), 1.1f, Quaternion.AngleAxis(-9f, normal));
+                    }
+                    k.Box(mat, c, alongZ ? new Vector3(0.06f, len, step - gap) : new Vector3(step - gap, len, 0.06f), 1.1f, rot);
+                }
+            foreach (float yb in new[] { -hy + 0.2f, hy - 0.22f }) // battens, slightly skewed
+                k.Box(Timber, normal * (thick * 0.5f + 0.03f) + Vector3.up * yb, alongZ ? new Vector3(0.05f, 0.11f, width - 0.1f) : new Vector3(width - 0.1f, 0.11f, 0.05f), 1f,
+                      Quaternion.AngleAxis(2.5f * Mathf.Sign(yb + 0.01f) * ((seed & 1) == 0 ? 1f : -1f), normal));
+            var a = normal * (thick * 0.5f + 0.05f) + along * (-width * 0.5f + 0.12f) + Vector3.up * (-hy + 0.3f);
+            var b2 = normal * (thick * 0.5f + 0.05f) + along * (width * 0.5f - 0.12f) + Vector3.up * (hy - 0.32f);
+            if ((seed & 2) != 0) { float t = a.y; a.y = b2.y; b2.y = t; }
+            k.Log(CarvedTrim, a, b2, 0.045f); // diagonal brace
+            k.Box(CabinGrime, normal * (thick * 0.5f + 0.012f) + Vector3.up * (-hy + 0.2f), alongZ ? new Vector3(0.03f, 0.38f, width - 0.1f) : new Vector3(width - 0.1f, 0.38f, 0.03f), 1f);
             return true;
         }
 

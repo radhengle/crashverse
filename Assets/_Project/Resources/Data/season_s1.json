@@ -53,10 +53,10 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "hut",
+     "hintTarget": "hutF2",
      "hintYaw": 0.0,
-     "hintPitch": 16.0,
-     "blastRadius": 1.3,
+     "hintPitch": 15.5,
+     "blastRadius": 1.5,
      "blastDamage": 36
     },
     {
@@ -240,10 +240,10 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "hut",
+     "hintTarget": "hutF2",
      "hintYaw": 0.0,
-     "hintPitch": 16.0,
-     "blastRadius": 1.3,
+     "hintPitch": 15.5,
+     "blastRadius": 1.5,
      "blastDamage": 36
     },
     {
@@ -427,10 +427,10 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "hut",
+     "hintTarget": "hutF2",
      "hintYaw": 0.0,
-     "hintPitch": 23.0,
-     "blastRadius": 1.3,
+     "hintPitch": 22.0,
+     "blastRadius": 1.5,
      "blastDamage": 36
     },
     {
@@ -614,10 +614,10 @@
      "star2Pct": 0.3,
      "starCapIfPowerupUsed": 3,
      "islandKillY": -2.0,
-     "hintTarget": "hut",
+     "hintTarget": "hutF2",
      "hintYaw": 0.0,
-     "hintPitch": 16.0,
-     "blastRadius": 1.3,
+     "hintPitch": 15.5,
+     "blastRadius": 1.5,
      "blastDamage": 36
     },
     {

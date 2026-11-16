@@ -100,7 +100,7 @@ namespace Crashverse.Visuals
         public static Material Gold => Make("Gold", "T_K_Bronze", new Color(0.62f, 0.58f, 0.54f), 0.6f, 0.62f, new Vector2(3f, 3f)); // PM QA: aged bronze/brass, dull, darker recesses
         // PM QA 31 Oct (fix once, all levels): cannon barrel = smooth dark iron with subtle wear; bands = polished dark bronze, no noise map
         public static Material CannonIron => Studio(Make("CannonIron", null, new Color(0.14f, 0.17f, 0.23f), 0.85f, 0.3f, Vector2.one), new Color(0.9f, 1.05f, 1.3f), new Color(2.6f, 2.7f, 2.9f), new Color(0.03f, 0.03f, 0.035f)); // L1 QA 16 Nov: smooth dark blue-black cast iron (the cast-iron detail map read as cork/log)
-        public static Material CannonBronze => Studio(Make("CannonBronze", null, new Color(0.86f, 0.58f, 0.24f), 1f, 0.18f, Vector2.one), new Color(1.1f, 0.98f, 0.8f), new Color(2.2f, 1.9f, 1.4f), new Color(0.05f, 0.035f, 0.02f)); // L1 QA 16 Nov: polished, reflective bronze (was flat tan)
+        public static Material CannonBronze => Studio(Make("CannonBronze", null, new Color(0.64f, 0.42f, 0.17f), 1f, 0.22f, Vector2.one), new Color(0.9f, 0.74f, 0.52f), new Color(1.7f, 1.3f, 0.8f), new Color(0.04f, 0.025f, 0.012f)); // PM 17 Nov (b14 QA): warmer, darker aged brass (b14 read saturated orange-yellow)
         /// <summary>L1 QA 16 Nov: polished metal gets the GlossyPBR analytic studio environment (dark ground, hot horizon band, bright
         /// sky) instead of the flat grey reflect floor, so curved bands and barrels show bright highlights and dark reflections.</summary>
         static Material Studio(Material m, Color sky, Color horizon, Color ground)
@@ -152,11 +152,11 @@ namespace Crashverse.Visuals
                 if (sh == null || !sh.isSupported || t == null) return null;
                 t.wrapModeU = TextureWrapMode.Repeat; t.wrapModeV = TextureWrapMode.Clamp;
                 _sky = new Material(sh) { name = "MK_Sky" }; _sky.SetTexture("_MainTex", t);
-                _sky.SetFloat("_Rotation", 0f); _sky.SetFloat("_Exposure", 1.05f); _sky.SetFloat("_BottomElev", -3.6f); // rotation 0: big cumulus bank straight ahead of the cannon (+x)
+                _sky.SetFloat("_Rotation", 215f); _sky.SetFloat("_Exposure", 1.08f); _sky.SetFloat("_BottomElev", -8f); // rotation 215: the puffy low-cloud band ahead of the cannon
                 _sky.SetColor("_HorizonColor", HorizonColor);
                 // L1 QA 16 Nov (L01.jpg): the portrait view only saw the small low clouds; pull the big bright cumulus bank (elev 40-60 deg
                 // in the photo, straight ahead) down into the frame above the building
-                _sky.SetFloat("_ElevPow", 0.3f); _sky.SetFloat("_UScale", 3f); // squeeze 3x around the view axis so whole cumulus shapes fit the narrow portrait view
+                _sky.SetFloat("_ElevPow", 0.65f); _sky.SetFloat("_UScale", 3.8f); // PM 17 Nov (b14 QA): bright blue with several puffy cumulus (the low cloud band) instead of one huge hazy bank; Python-simulated (/workspace/p1/skysim.py)
                 return _sky;
             }
         }

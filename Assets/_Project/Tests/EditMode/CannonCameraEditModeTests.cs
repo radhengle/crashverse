@@ -67,7 +67,7 @@ namespace Crashverse.Backend.Tests
                     var s = CannonCameraRules.ViewportRect(pose, a, b);
                     Assert.LessOrEqual(s.yMax, 1f - tm + 0.003f, "building top below the HUD: " + at);
                     Assert.GreaterOrEqual(s.yMin, -0.005f, "building base on screen: " + at);
-                    Assert.True(CannonCameraRules.FullyVisible(pose, a, Cannon), "whole cannon on screen: " + at);
+                    Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(Cannon, CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
                     if (arc != null) foreach (var p in arc)
                     {
                         if (p.x < CannonRoot.x + 4f) continue; // the first metres sit on the cannon itself
@@ -114,7 +114,7 @@ namespace Crashverse.Backend.Tests
                     var pose = CannonCameraRules.Solve(CannonRoot, b, a); n++;
                     string at = $"{id} @ aspect {a:F3} (fov {pose.fov:F1})";
                     Assert.True(CannonCameraRules.FullyVisible(pose, a, b), "whole building on screen: " + at);
-                    Assert.True(CannonCameraRules.FullyVisible(pose, a, Cannon), "whole cannon on screen: " + at);
+                    Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(Cannon, CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
                     var c = CannonCameraRules.ViewportRect(pose, a, Cannon); var s = CannonCameraRules.ViewportRect(pose, a, b);
                     Assert.AreEqual(0.5f, c.center.x, 0.02f, "cannon horizontally centred: " + at);
                     Assert.Less(c.yMin, 0.08f, "cannon at the bottom: " + at);

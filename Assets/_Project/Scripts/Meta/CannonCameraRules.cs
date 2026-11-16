@@ -35,7 +35,9 @@ namespace Crashverse.Meta
         public static readonly Settings Default = new Settings();
         /// <summary>Compact levels (target 12-20 m away on its own island, L01.jpg): closer, lower eye and a wider view so the
         /// building fills ~70% of the width with water visible on both sides.</summary>
-        public static readonly Settings Compact = new Settings { back = 13f, height = 5.6f, sideFill = 0.70f }; // L1 QA 16 Nov (b): cannon ~45% of the width like L01.jpg (was ~53%); // L1 QA 16 Nov: 6.5 still looked down onto the barrel top; // PM QA: over the cannon so the island shows above it, but low enough that the barrel reads from behind, not from the top
+        /// PM 17 Nov (L01.jpg): the cannon a little bigger and cut off at the bottom like the concept (carriage base ~8% below the frame;
+        /// MustShow keeps the barrel and the top of the carriage fully on screen).
+        public static readonly Settings Compact = new Settings { back = 11.5f, height = 5.4f, sideFill = 0.70f, bottomMargin = -0.08f };
         /// <summary>Height (m) of the Kingdom roof-top flag pole above the highest block; the run camera keeps its tip in frame.</summary>
         public const float RoofFlagPole = 1.2f;
 
@@ -144,6 +146,14 @@ namespace Crashverse.Meta
             if (local.z <= 1e-4f) return new Vector3(-1f, -1f, local.z);
             float t = Mathf.Tan(pose.fov * 0.5f * Mathf.Deg2Rad);
             return new Vector3(0.5f + 0.5f * local.x / (local.z * t * aspect), 0.5f + 0.5f * local.y / (local.z * t), local.z);
+        }
+
+        /// <summary>The part of the cannon envelope that must be fully on screen: all of it, or (when the framing crops the cannon at the
+        /// bottom, bottomMargin &lt; 0) everything above its lowest metre: the barrel and the top of the carriage.</summary>
+        public static Bounds MustShow(Bounds cannon, Settings s)
+        {
+            if (s == null || s.bottomMargin >= 0f) return cannon;
+            var b = new Bounds(); b.SetMinMax(new Vector3(cannon.min.x, cannon.min.y + 1f, cannon.min.z), cannon.max); return b;
         }
 
         /// <summary>True when all 8 corners of b are inside the viewport (with a tiny tolerance).</summary>
