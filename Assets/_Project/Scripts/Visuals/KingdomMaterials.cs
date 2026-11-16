@@ -99,8 +99,8 @@ namespace Crashverse.Visuals
         public static Material Navy => Make("Navy", "T_K_CastIron", Color.white, 0.45f, 0.74f, new Vector2(1.5f, 1.5f)); // PM QA: dark worn cast iron, rough, rust in the pits (rusty_metal_02 derived)
         public static Material Gold => Make("Gold", "T_K_Bronze", new Color(0.62f, 0.58f, 0.54f), 0.6f, 0.62f, new Vector2(3f, 3f)); // PM QA: aged bronze/brass, dull, darker recesses
         // PM QA 31 Oct (fix once, all levels): cannon barrel = smooth dark iron with subtle wear; bands = polished dark bronze, no noise map
-        public static Material CannonIron => Make("CannonIron", "T_K_CastIron", new Color(0.52f, 0.52f, 0.54f), 0.62f, 0.48f, new Vector2(0.7f, 0.7f));
-        public static Material CannonBronze => Make("CannonBronze", null, new Color(0.40f, 0.28f, 0.14f), 0.9f, 0.30f, Vector2.one);
+        public static Material CannonIron => Make("CannonIron", null, new Color(0.12f, 0.14f, 0.18f), 0.78f, 0.34f, Vector2.one); // L1 QA 16 Nov: smooth dark blue-black cast iron (the cast-iron detail map read as cork/log)
+        public static Material CannonBronze => Make("CannonBronze", null, new Color(0.62f, 0.42f, 0.17f), 1f, 0.24f, Vector2.one); // L1 QA 16 Nov: polished bronze, not flat tan
         public static Material Iron => Make("Iron", "T_K_CastIron", new Color(1.1f, 1.1f, 1.1f), 0.5f, 0.66f, new Vector2(2f, 2f));
         public static Material CarriageWood => Make("CarriageWood", "T_K_Wood", new Color(0.50f, 0.38f, 0.28f), 0f, 0.9f, Vector2.one); // weathered dark brown timber
         public static Material Bore => Make("Bore", null, new Color(0.02f, 0.02f, 0.025f), 0f, 1f, Vector2.one);

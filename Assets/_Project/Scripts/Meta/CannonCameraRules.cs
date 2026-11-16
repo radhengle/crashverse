@@ -35,7 +35,7 @@ namespace Crashverse.Meta
         public static readonly Settings Default = new Settings();
         /// <summary>Compact levels (target 12-20 m away on its own island, L01.jpg): closer, lower eye and a wider view so the
         /// building fills ~70% of the width with water visible on both sides.</summary>
-        public static readonly Settings Compact = new Settings { back = 11f, height = 6.5f, sideFill = 0.70f }; // PM QA: over the cannon so the island shows above it, but low enough that the barrel reads from behind, not from the top
+        public static readonly Settings Compact = new Settings { back = 11f, height = 5.4f, sideFill = 0.70f }; // L1 QA 16 Nov: 6.5 still looked down onto the barrel top; // PM QA: over the cannon so the island shows above it, but low enough that the barrel reads from behind, not from the top
         /// <summary>Height (m) of the Kingdom roof-top flag pole above the highest block; the run camera keeps its tip in frame.</summary>
         public const float RoofFlagPole = 1.2f;
 

@@ -343,7 +343,7 @@ namespace Crashverse.Visuals
                 for (int i = 0; i < side.Length; i++)
                 {
                     var p = new Vector3(Cx + dx[i] * Rx, 0f, side[i] * Rz * Mathf.Sqrt(1f - dx[i] * dx[i]) * 0.93f); // on the sand rim, not in the water
-                    Palm(shore, palms, p, i, side[i] * (14f + i * 3f), i < 2 ? 0.8f : 0.62f);
+                    Palm(shore, palms, p, i, side[i] * (7f + i * 2f), i < 2 ? 0.8f : 0.62f); // L1 QA 16 Nov: 14-23 deg read as fallen poles
                 }
                 return;
             }
