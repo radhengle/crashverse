@@ -114,7 +114,16 @@ namespace Crashverse.Meta
             fovV = Mathf.Clamp(Mathf.Max(fovV, fovFromWidth), s.minFov, s.maxFov);
 
             // pitch: put the cannon's lowest point bottomMargin above the bottom edge (bottom-anchored framing, like the mockup)
-            float pitchDown = -(lo + fovV * (0.5f - s.bottomMargin)); // positive = looking down
+            // a concept-style bottom crop (bottomMargin < 0) never hides more than the cannon's lowest ~0.85 m (MustShow keeps the
+            // rest on screen), however wide the view gets on tall layouts
+            float bm = s.bottomMargin;
+            if (bm < 0f)
+            {
+                float aCrop = Mathf.Atan2(ground + 0.85f - cam.y, Mathf.Max(0.5f, s.back - s.cannonRear)) * Mathf.Rad2Deg;
+                bm = Mathf.Max(bm, -(aCrop - aCannonLow) / Mathf.Max(1f, fovV));
+                fovV = Mathf.Clamp(Mathf.Max(fovV, span / Mathf.Max(0.5f, 1f - s.topMargin - bm)), s.minFov, s.maxFov);
+            }
+            float pitchDown = -(lo + fovV * (0.5f - bm)); // positive = looking down
             // never tilt so far up that the building's top leaves the frame
             float topEdge = -pitchDown + fovV * (0.5f - s.topMargin);   // the HUD band starts here
             if (topEdge < aTop) pitchDown -= aTop - topEdge;

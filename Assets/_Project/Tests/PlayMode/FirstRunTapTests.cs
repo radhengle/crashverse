@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using Crashverse.Core;
+using Crashverse.Meta;
 using Crashverse.UI;
 using NUnit.Framework;
 using UnityEngine;
@@ -173,7 +174,10 @@ namespace Crashverse.Tests.PlayMode
             var c = VpRect(cb); var st = VpRect(GameplayDirector.StructureBounds(s, s.structureBase));
             Debug.Log($"CANNONCAM aspect={cam.aspect:F3} fov={cam.fieldOfView:F1} cannon={c} structure={st}");
             const float tol = 0.01f;
-            Assert.True(c.xMin >= -tol && c.xMax <= 1f + tol && c.yMin >= -tol && c.yMax <= 1f + tol, "whole cannon on screen: " + c);
+            // PM 17 Nov (L01.jpg): compact levels crop the carriage base at the bottom; everything above it must be on screen
+            var sb = GameplayDirector.StructureBounds(s, s.structureBase);
+            var cm = VpRect(CannonCameraRules.MustShow(cb, CannonCameraRules.For(s.aim.transform.position, sb)));
+            Assert.True(cm.xMin >= -tol && cm.xMax <= 1f + tol && cm.yMin >= -tol && cm.yMax <= 1f + tol, "whole cannon (above a concept-style bottom crop) on screen: " + cm + " full " + c);
             Assert.True(st.xMin >= -tol && st.xMax <= 1f + tol && st.yMin >= -tol && st.yMax <= 1f + tol, "whole building on screen: " + st);
             Assert.AreEqual(0.5f, c.center.x, 0.03f, "cannon horizontally centred");
             Assert.Less(c.yMin, 0.1f, "cannon at the bottom");
