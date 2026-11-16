@@ -148,7 +148,15 @@ for LV in $LVS; do
     # smoke) and its aftermath. Screens only; crash-gated like every other step.
     if [ "$LV" = c1_l01 ] && [ -n "$BP" ] && [ -n "${FIRE_X:-}" ]; then
       tap "${HINT_X:?}" "${HINT_Y:?}" 1.5; shot "13_c1_l01_aimed"
-      adb shell input tap "$FIRE_X" "$FIRE_Y"; sleep 0.6; shot "13_c1_l01_shot_a"; shot "13_c1_l01_shot_b"; sleep 0.6; shot "13_c1_l01_shot_c"; sleep 1.5; shot "13_c1_l01_shot_d"
+      # PM QA 17 Nov: frames at fixed offsets after the FIRE tap (+0.3/+0.8/+1.5/+3 s, +5 s for the lingering smoke) so one lands on the fireball;
+      # timed from a single t0 (no cam_log in between) and the real offset of each capture is logged.
+      adb shell input tap "$FIRE_X" "$FIRE_Y"; T0=$(date +%s.%N)
+      for spec in a:0.3 b:0.8 c:1.5 d:3.0 e:5.0; do
+        n=${spec%%:*}; at=${spec#*:}
+        wait_s=$(awk -v t0="$T0" -v at="$at" -v now="$(date +%s.%N)" 'BEGIN{w=t0+at-now; if(w<0)w=0; printf "%.3f", w}')
+        sleep "$wait_s"; adb exec-out screencap -p > "$OUT/13_c1_l01_shot_$n.png"
+        echo "shot_$n target +${at}s, captured +$(awk -v t0="$T0" -v now="$(date +%s.%N)" 'BEGIN{printf "%.2f", now-t0}')s" | tee -a "$OUT/l01_shot_timing.txt"
+      done
       check "dev_l01_shot"
     fi
   else echo "$LV: cv_dev_level not honoured (release build?)" | tee -a "$OUT/realkit.txt"; fi

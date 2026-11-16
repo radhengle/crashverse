@@ -104,7 +104,7 @@ namespace Crashverse.Feel
         void OnImpact(Projectile p)
         {
             _camSm.FirstImpact(); _time.HitStop(50f);
-            Dispatch.Submit(ShakeTable.ImpactWood, ShakeFamily.Impact, Time.frameCount, Time.unscaledTime * 1000f); // one impact shake per frame (IMPACT_* / PHYS_IMPACT may also arrive; strongest wins)
+            Dispatch.Submit(ShakeTable.CannonBlast, ShakeFamily.Impact, Time.frameCount, Time.unscaledTime * 1000f); // one impact shake per frame (IMPACT_* / PHYS_IMPACT may also arrive; strongest wins)
         }
 
         void Update()

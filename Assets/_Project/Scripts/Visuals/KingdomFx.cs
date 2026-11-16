@@ -11,13 +11,13 @@ namespace Crashverse.Visuals
     /// shipped Crashverse/VfxParticle sheets: flying plank chunks (mesh particles, no rigidbodies so the sim never sees them), sparks,
     /// fire, smoke plumes, a fireball and a ground shockwave ring. Pieces breaking emit bursts; some wood breaks keep burning a few
     /// seconds. The hidden core uses Core(): fireball + shockwave + sparks + a plank storm + a smoke column. Presentation only.
-    /// Budget: ≤ 600 live particles, 6 draw calls, Low tier halves every count.
+    /// Budget: ≤ 850 live particles, 7 draw calls, Low tier halves every count.
     /// </summary>
     public class KingdomFx : MonoBehaviour
     {
         public static KingdomFx Instance { get; private set; }
-        ParticleSystem _planks, _sparks, _fire, _smoke, _ball, _ring;
-        struct Burn { public Vector3 at; public float until, next; }
+        ParticleSystem _planks, _sparks, _fire, _smoke, _ball, _ring, _blast;
+        struct Burn { public Vector3 at; public float until, next; public bool column; }
         readonly List<Burn> _burns = new List<Burn>();
         readonly List<Material> _ownedMaterials = new List<Material>();
         float _scale = 1f; System.Random _rng = new System.Random(7);
@@ -78,16 +78,25 @@ namespace Crashverse.Visuals
             _fire = Sys("Fire", Mat(a, a.puffFlipbook, true, new Color(1f, 0.55f, 0.15f), 2.2f), 140, -0.15f, ParticleSystemRenderMode.Billboard, true);
             var fc = _fire.colorOverLifetime; fc.enabled = true; fc.color = Grad(new Color(1f, 0.85f, 0.4f), new Color(1f, 0.25f, 0.05f), 1f, 0f);
             var fs = _fire.sizeOverLifetime; fs.enabled = true; fs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.6f, 1f, 1.3f));
-            _smoke = Sys("Smoke", Mat(a, a.puffFlipbook, false, new Color(0.30f, 0.29f, 0.28f, 0.85f), 1f), 160, -0.05f, ParticleSystemRenderMode.Billboard, true);
+            _smoke = Sys("Smoke", Mat(a, a.puffFlipbook, false, new Color(0.30f, 0.29f, 0.28f, 0.85f), 1f), 220, -0.05f, ParticleSystemRenderMode.Billboard, true);
             var sc = _smoke.colorOverLifetime; sc.enabled = true; sc.color = Grad(new Color(0.35f, 0.33f, 0.31f), new Color(0.55f, 0.55f, 0.56f), 0.8f, 0f);
             var ss = _smoke.sizeOverLifetime; ss.enabled = true; ss.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.5f, 1f, 2.6f));
-            _ball = Sys("Fireball", Mat(a, a.puffFlipbook, true, new Color(1f, 0.6f, 0.2f), 3.2f), 80, -0.1f, ParticleSystemRenderMode.Billboard, true);
-            var bc = _ball.colorOverLifetime; bc.enabled = true; bc.color = Grad(new Color(1f, 0.95f, 0.7f), new Color(0.9f, 0.2f, 0.05f), 1f, 0f);
+            // PM QA 17 Nov: the additive fireball alone washed out to a white puff against the bright sky. Additive glow is now deep orange,
+            // over an alpha-blended orange->soot core (_blast) that stays orange on any background.
+            _ball = Sys("Fireball", Mat(a, a.puffFlipbook, true, new Color(1f, 0.45f, 0.1f), 2.6f), 100, -0.1f, ParticleSystemRenderMode.Billboard, true);
+            var bc = _ball.colorOverLifetime; bc.enabled = true; bc.color = Grad(new Color(1f, 0.8f, 0.35f), new Color(0.8f, 0.15f, 0.02f), 1f, 0f);
+            _blast = Sys("FireballCore", Mat(a, a.puffFlipbook, false, new Color(1f, 0.5f, 0.12f, 1f), 1.7f), 90, -0.12f, ParticleSystemRenderMode.Billboard, true);
+            var xc = _blast.colorOverLifetime; xc.enabled = true;
+            var xg = new Gradient();
+            xg.SetKeys(new[] { new GradientColorKey(new Color(1f, 0.85f, 0.4f), 0f), new GradientColorKey(new Color(1f, 0.42f, 0.06f), 0.3f), new GradientColorKey(new Color(0.22f, 0.17f, 0.14f), 1f) },
+                       new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.95f, 0.5f), new GradientAlphaKey(0f, 1f) });
+            xc.color = xg;
+            var xs = _blast.sizeOverLifetime; xs.enabled = true; xs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.45f, 1f, 1.5f));
             var bs = _ball.sizeOverLifetime; bs.enabled = true; bs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.4f, 1f, 1.6f));
             _ring = Sys("Shockwave", Mat(a, a.ring, true, new Color(1f, 0.85f, 0.6f), 2f), 4, 0f, ParticleSystemRenderMode.HorizontalBillboard, false);
             var rc = _ring.colorOverLifetime; rc.enabled = true; rc.color = Grad(Color.white, new Color(1f, 0.6f, 0.3f), 1f, 0f);
             var rs = _ring.sizeOverLifetime; rs.enabled = true; rs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.05f, 1f, 1f));
-            foreach (var p in new[] { _planks, _sparks, _fire, _smoke, _ball, _ring }) p.Play();
+            foreach (var p in new[] { _planks, _sparks, _fire, _smoke, _ball, _ring, _blast }) p.Play();
         }
 
         static Gradient Grad(Color a, Color b, float a0, float a1)
@@ -114,14 +123,14 @@ namespace Crashverse.Visuals
             }
         }
 
-        void EmitPlanks(Vector3 at, int n, float speed)
+        void EmitPlanks(Vector3 at, int n, float speed, float big = 1f)
         {
             var e = new ParticleSystem.EmitParams { applyShapeToPosition = false };
             for (int i = 0; i < n; i++)
             {
                 e.position = at + new Vector3(R(-0.3f, 0.3f), R(-0.2f, 0.3f), R(-0.3f, 0.3f));
                 e.velocity = Dir(1.2f) * R(speed * 0.4f, speed);
-                e.startSize3D = new Vector3(R(0.35f, 0.8f), R(0.05f, 0.09f), R(0.1f, 0.2f));
+                e.startSize3D = new Vector3(R(0.35f, 0.8f) * big, R(0.05f, 0.09f) * Mathf.Sqrt(big), R(0.1f, 0.2f) * big);
                 e.rotation3D = new Vector3(R(0f, 360f), R(0f, 360f), R(0f, 360f));
                 e.startLifetime = R(1.6f, 2.6f); e.startColor = Color.Lerp(new Color(0.85f, 0.75f, 0.6f), Color.white, R(0f, 1f));
                 _planks.Emit(e, 1);
@@ -134,7 +143,7 @@ namespace Crashverse.Visuals
             float k = Mathf.Clamp(size, 0.6f, 2.5f);
             if (materialKind == 0)
             {
-                EmitPlanks(at, N((int)(6 * k)), 7f);
+                EmitPlanks(at, N((int)(12 * k)), 8f, k > 1.5f ? 1.5f : 1.1f); // PM QA 17 Nov: big breaks throw many large planks
                 if (_rng.NextDouble() < 0.35 && _burns.Count < 6) _burns.Add(new Burn { at = at, until = Time.time + R(2.5f, 4.5f) });
             }
             else Emit(_sparks, at, N(10), 0.2f, 4f, 9f, 0.06f, 0.12f, 0.3f, 0.7f);
@@ -163,19 +172,34 @@ namespace Crashverse.Visuals
         /// out, a smoke puff and a short fire at the hit. Presentation only (no rigidbodies, never read by the sim).</summary>
         public void Impact(Vector3 at)
         {
+            // PM QA 17 Nov (L01.jpg, 3-4x the b13 burst): orange fireball (opaque core + additive glow), a radial spark burst, 20-40 large
+            // spinning plank chunks under gravity, a dust ring on the ground, a lingering smoke column and a short fire.
             bool onStructure = at.y > 0.4f;
-            Emit(_ball, at, N(14), 0.35f, 1.0f, 3.2f, 1.4f, 2.6f, 0.45f, 0.8f);
-            Emit(_sparks, at, N(60), 0.25f, 7f, 16f, 0.07f, 0.14f, 0.45f, 1.1f, 1.3f);
-            if (onStructure) EmitPlanks(at, N(18), 11f);
-            Emit(_smoke, at, N(8), 0.6f, 0.6f, 1.8f, 1.6f, 3.0f, 2.6f, 4.2f, 2f);
-            if (onStructure && _burns.Count < 8) _burns.Add(new Burn { at = at, until = Time.time + R(2.5f, 3.5f) });
+            Emit(_blast, at, N(28), 0.7f, 1.5f, 5.5f, 2.4f, 4.2f, 0.7f, 1.2f);
+            Emit(_ball, at, N(26), 0.6f, 2.0f, 6.5f, 2.0f, 3.8f, 0.45f, 0.85f);
+            Emit(_sparks, at, N(150), 0.3f, 9f, 22f, 0.1f, 0.2f, 0.5f, 1.3f, 1.2f);
+            if (onStructure) EmitPlanks(at, N(32), 15f, 1.7f);
+            Emit(_smoke, at, N(14), 0.9f, 0.8f, 2.6f, 2.2f, 4.0f, 3f, 5f, 2f);
+            float ground = Mathf.Max(0.15f, Crashverse.Visuals.KingdomTheme.MoundHeight(at.x, at.z));
+            var ge = new ParticleSystem.EmitParams { applyShapeToPosition = false };
+            int dust = N(18);
+            for (int i = 0; i < dust; i++)
+            {
+                float ang = i * Mathf.PI * 2f / dust + R(-0.15f, 0.15f); var d = new Vector3(Mathf.Cos(ang), 0f, Mathf.Sin(ang));
+                ge.position = new Vector3(at.x, ground + 0.3f, at.z) + d * R(0.6f, 1.2f); ge.velocity = d * R(3f, 6f) + Vector3.up * R(0.3f, 1.0f);
+                ge.startSize = R(1.6f, 2.8f); ge.startLifetime = R(1.6f, 2.6f); ge.rotation = R(0f, 360f); ge.startColor = new Color(0.95f, 0.85f, 0.7f, 0.8f);
+                _smoke.Emit(ge, 1);
+            }
+            _ring.Emit(new ParticleSystem.EmitParams { applyShapeToPosition = false, position = new Vector3(at.x, ground + 0.1f, at.z), velocity = Vector3.zero, startSize = 9f, startLifetime = 0.5f }, 1);
+            if (_burns.Count < 8) _burns.Add(new Burn { at = at, until = Time.time + R(5.5f, 7f), column = true });
+            if (onStructure && _burns.Count < 8) _burns.Add(new Burn { at = at + Vector3.down * 0.3f, until = Time.time + R(3f, 4f) });
             if (_flash == null)
             {
                 var go = new GameObject("ImpactFlash"); go.transform.SetParent(transform, false);
                 _flash = go.AddComponent<Light>(); _flash.type = LightType.Point; _flash.color = new Color(1f, 0.62f, 0.25f);
                 _flash.range = 9f; _flash.shadows = LightShadows.None;
             }
-            _flash.transform.position = at + Vector3.up * 0.3f; _flash.intensity = 6f; _flash.enabled = true; _flashUntil = Time.time + 0.35f;
+            _flash.transform.position = at + Vector3.up * 0.3f; _flash.range = 14f; _flash.intensity = 9f; _flash.enabled = true; _flashUntil = Time.time + 0.45f;
         }
 
         void Update()
@@ -184,13 +208,19 @@ namespace Crashverse.Visuals
             if (_flash != null && _flash.enabled)
             {
                 float left = _flashUntil - t;
-                if (left <= 0f) _flash.enabled = false; else _flash.intensity = 6f * (left / 0.35f);
+                if (left <= 0f) _flash.enabled = false; else _flash.intensity = 9f * (left / 0.45f);
             }
             for (int i = _burns.Count - 1; i >= 0; i--)
             {
                 var b = _burns[i];
                 if (t > b.until) { _burns.RemoveAt(i); continue; }
                 if (t < b.next) continue;
+                if (b.column) // lingering smoke column rising from the impact (dark at the base, greyer as it climbs)
+                {
+                    b.next = t + 0.1f; _burns[i] = b;
+                    Emit(_smoke, b.at + Vector3.up * 0.4f, 1, 0.35f, 1.4f, 2.4f, 1.4f, 2.4f, 3.5f, 5f, 6f);
+                    continue;
+                }
                 b.next = t + 0.08f; _burns[i] = b;
                 Emit(_fire, b.at, 1, 0.25f, 0.6f, 1.6f, 0.5f, 1.0f, 0.5f, 0.9f, 2.5f);
                 if (_rng.NextDouble() < 0.35) Emit(_smoke, b.at + Vector3.up * 0.6f, 1, 0.2f, 0.6f, 1.2f, 0.8f, 1.4f, 2.5f, 3.5f, 3f);

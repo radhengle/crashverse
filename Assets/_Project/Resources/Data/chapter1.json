@@ -73,9 +73,9 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2,
-   "hintTarget": "post",
+   "hintTarget": "hut",
    "hintYaw": 0,
-   "hintPitch": 6.5,
+   "hintPitch": 17.5,
    "targetDistance": 14
   },
   {

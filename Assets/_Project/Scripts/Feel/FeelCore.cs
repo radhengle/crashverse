@@ -285,6 +285,8 @@ namespace Crashverse.Feel
             SteelRing = new ShakeSpec(0.01f, 0.1f, 6, 200),   // 02 steel face: ring 6 Hz 200 ms, 0.01 m
             Terrain = new ShakeSpec(0.01f, 0.1f, 14, 80),     // final (Animator): minimal thud, no haptic
             SteelBreak = new ShakeSpec(0.03f, 0.3f, 12, 150); // BREAK_STEEL non-joint (Animator): 0.03 m / 0.3° 150 ms, light haptic
+        /// <summary>PM QA 17 Nov (L01.jpg): a cannonball landing is an explosion, not a light wood tap; short and punchy.</summary>
+        public static readonly ShakeSpec CannonBlast = new ShakeSpec(0.07f, 0.7f, 12, 240);
         public const float MaxPos = 0.15f, MaxRot = 1.5f;
     }
 
