@@ -47,6 +47,10 @@ Shader "Crashverse/GlossyPBR"
         _EdgeWidth ("Edge Wear Width (m)", Range(0.005,0.2)) = 0.06
         _LowSpec ("Low tier spec intensity", Range(0,2)) = 0.5
         _LowRoughness ("Low tier roughness (no ORM)", Range(0,1)) = 0.45
+        _FakeEnv ("Studio env for polished metal (0 = probe)", Range(0,1)) = 0
+        _FakeSky ("Studio env sky", Color) = (1,1,1,1)
+        _FakeHorizon ("Studio env horizon band", Color) = (1,1,1,1)
+        _FakeGround ("Studio env ground", Color) = (0,0,0,1)
     }
 
     HLSLINCLUDE
@@ -58,6 +62,7 @@ Shader "Crashverse/GlossyPBR"
         half _Terminator, _TerminatorOffset, _ShadeStrength, _RimIntensity, _RimPower;
         half _DamageStep, _DarkenPerStep, _HitFlash, _FlexAmount, _InnerFace, _InnerRoughness, _LowSpec, _LowRoughness;
         half4 _EdgeWearColor; half _EdgeWear, _EdgeWidth;
+        half4 _FakeSky, _FakeHorizon, _FakeGround; half _FakeEnv;
     CBUFFER_END
     TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
     TEXTURE2D(_BumpMap); TEXTURE2D(_ORMMap); TEXTURE2D(_EmissionMap); TEXTURE2D(_CrackMap);
@@ -173,6 +178,15 @@ Shader "Crashverse/GlossyPBR"
                 half3 reflWS = reflect(-v, n);
                 half3 envSpec = GlossyEnvironmentReflection(reflWS, i.positionWS, brdf.perceptualRoughness, ao);
                 envSpec = lerp(envSpec, max(envSpec, _MetalReflectFloor.rgb * ao), metal);
+                // L1 QA 16 Nov: polished bronze / dark iron read flat under the grey reflect floor (no baked probe at runtime). A cheap
+                // analytic studio environment (dark ground, hot horizon band, bright sky) gives crisp bright/dark reflections on curved metal.
+                if (_FakeEnv > 0.001h)
+                {
+                    half ry = reflWS.y;
+                    half3 fake = lerp(_FakeGround.rgb, _FakeSky.rgb, smoothstep(-0.15h, 0.35h, ry));
+                    fake += _FakeHorizon.rgb * exp(-abs(ry - 0.12h) * 9.0h) * (1.0h - rough);
+                    envSpec = lerp(envSpec, fake * ao, _FakeEnv);
+                }
                 half fresnelTerm = Pow4(1.0h - saturate(dot(n, v)));
                 half3 gi = EnvironmentBRDF(brdf, bakedGI * ao, envSpec, fresnelTerm);
 
@@ -292,7 +306,14 @@ Shader "Crashverse/GlossyPBR"
                 half3 h = normalize(L.direction + v);
                 half gloss = 1.0h - _LowRoughness; // Low tier: scalar roughness (no ORM fetch)
                 half spec = step(0.5h, pow(saturate(dot(n, h)), exp2(gloss * 8.0h + 2.0h))) * band * _LowSpec * (1.0h - _InnerFace);
-                half3 col = albedo.rgb * (L.color * lerp(shade, 1.0h, band) + lerp(i.sh * 0.6h, max(i.sh * 0.6h, _MetalReflectFloor.rgb), _Metallic)) + spec + Rim(n, v) * _RimColor.rgb + _EmissionColor.rgb;
+                half3 metalEnv = max(i.sh * 0.6h, _MetalReflectFloor.rgb);
+                if (_FakeEnv > 0.001h) // studio env (see High): bright/dark reflections on polished metal
+                {
+                    half ry = reflect(-v, n).y;
+                    half3 fake = lerp(_FakeGround.rgb, _FakeSky.rgb, smoothstep(-0.15h, 0.35h, ry)) + _FakeHorizon.rgb * exp(-abs(ry - 0.12h) * 9.0h) * gloss;
+                    metalEnv = lerp(metalEnv, fake, _FakeEnv);
+                }
+                half3 col = albedo.rgb * (L.color * lerp(shade, 1.0h, band) + lerp(i.sh * 0.6h, metalEnv, _Metallic)) + spec + Rim(n, v) * _RimColor.rgb + _EmissionColor.rgb;
                 col = ApplyDamage(col, i.uv, i.color.r);
                 col = ApplyFlash(col);
                 return half4(MixFog(col, i.fog), 1);

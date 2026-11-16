@@ -99,8 +99,18 @@ namespace Crashverse.Visuals
         public static Material Navy => Make("Navy", "T_K_CastIron", Color.white, 0.45f, 0.74f, new Vector2(1.5f, 1.5f)); // PM QA: dark worn cast iron, rough, rust in the pits (rusty_metal_02 derived)
         public static Material Gold => Make("Gold", "T_K_Bronze", new Color(0.62f, 0.58f, 0.54f), 0.6f, 0.62f, new Vector2(3f, 3f)); // PM QA: aged bronze/brass, dull, darker recesses
         // PM QA 31 Oct (fix once, all levels): cannon barrel = smooth dark iron with subtle wear; bands = polished dark bronze, no noise map
-        public static Material CannonIron => Make("CannonIron", null, new Color(0.12f, 0.14f, 0.18f), 0.78f, 0.34f, Vector2.one); // L1 QA 16 Nov: smooth dark blue-black cast iron (the cast-iron detail map read as cork/log)
-        public static Material CannonBronze => Make("CannonBronze", null, new Color(0.62f, 0.42f, 0.17f), 1f, 0.24f, Vector2.one); // L1 QA 16 Nov: polished bronze, not flat tan
+        public static Material CannonIron => Studio(Make("CannonIron", null, new Color(0.14f, 0.17f, 0.23f), 0.85f, 0.3f, Vector2.one), new Color(0.9f, 1.05f, 1.3f), new Color(2.6f, 2.7f, 2.9f), new Color(0.03f, 0.03f, 0.035f)); // L1 QA 16 Nov: smooth dark blue-black cast iron (the cast-iron detail map read as cork/log)
+        public static Material CannonBronze => Studio(Make("CannonBronze", null, new Color(0.86f, 0.58f, 0.24f), 1f, 0.18f, Vector2.one), new Color(1.1f, 0.98f, 0.8f), new Color(2.2f, 1.9f, 1.4f), new Color(0.05f, 0.035f, 0.02f)); // L1 QA 16 Nov: polished, reflective bronze (was flat tan)
+        /// <summary>L1 QA 16 Nov: polished metal gets the GlossyPBR analytic studio environment (dark ground, hot horizon band, bright
+        /// sky) instead of the flat grey reflect floor, so curved bands and barrels show bright highlights and dark reflections.</summary>
+        static Material Studio(Material m, Color sky, Color horizon, Color ground)
+        {
+            if (m == null || !m.HasProperty("_FakeEnv")) return m;
+            m.SetFloat("_FakeEnv", 1f); m.SetColor("_FakeSky", sky); m.SetColor("_FakeHorizon", horizon); m.SetColor("_FakeGround", ground);
+            if (m.HasProperty("_MetalReflectFloor")) m.SetColor("_MetalReflectFloor", ground);
+            if (m.HasProperty("_RimIntensity")) m.SetFloat("_RimIntensity", 0.6f);
+            return m;
+        }
         public static Material Iron => Make("Iron", "T_K_CastIron", new Color(1.1f, 1.1f, 1.1f), 0.5f, 0.66f, new Vector2(2f, 2f));
         public static Material CarriageWood => Make("CarriageWood", "T_K_Wood", new Color(0.50f, 0.38f, 0.28f), 0f, 0.9f, Vector2.one); // weathered dark brown timber
         public static Material Bore => Make("Bore", null, new Color(0.02f, 0.02f, 0.025f), 0f, 1f, Vector2.one);

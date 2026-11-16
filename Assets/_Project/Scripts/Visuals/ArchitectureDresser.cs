@@ -59,9 +59,9 @@ namespace Crashverse.Visuals
         static Material Timber => KingdomMaterials.Wood;
         static Material Shingle => KingdomMaterials.Roof;
         // PM QA (L01.jpg): timber huts get worn, weathered wood shingles (dark grey-brown, a few lighter sun-bleached ones), not clay tiles
-        static Material WoodShingle => KingdomMaterials.Make("WoodShingle", "T_K_Planks", new Color(0.50f, 0.42f, 0.36f), 0f, 0.92f, Vector2.one);
-        static Material WoodShingleWorn => KingdomMaterials.Make("WoodShingleWorn", "T_K_Planks", new Color(0.68f, 0.60f, 0.52f), 0f, 0.95f, Vector2.one);
-        static Material WoodShingleDark => KingdomMaterials.Make("WoodShingleDark", "T_K_Wood", new Color(0.30f, 0.25f, 0.21f), 0f, 0.95f, Vector2.one);
+        static Material WoodShingle => KingdomMaterials.Make("WoodShingle", "T_K_Planks", new Color(0.48f, 0.55f, 0.65f), 0f, 0.92f, Vector2.one);
+        static Material WoodShingleWorn => KingdomMaterials.Make("WoodShingleWorn", "T_K_Planks", new Color(0.62f, 0.72f, 0.86f), 0f, 0.95f, Vector2.one);
+        static Material WoodShingleDark => KingdomMaterials.Make("WoodShingleDark", "T_K_Wood", new Color(0.36f, 0.46f, 0.60f), 0f, 0.95f, Vector2.one);
         static Material Dark => KingdomMaterials.Make("WindowDark", null, new Color(0.06f, 0.07f, 0.09f), 0f, 0.4f, Vector2.one);
         static Material Rope => KingdomMaterials.Make("Rope", "T_K_Bark", new Color(0.95f, 0.85f, 0.62f), 0f, 0.9f, new Vector2(0.3f, 3f));
         static Material Bronze => KingdomMaterials.Make("Bronze", null, new Color(0.62f, 0.42f, 0.18f), 0.8f, 0.35f, Vector2.one);
@@ -69,12 +69,13 @@ namespace Crashverse.Visuals
         static Material Gap => KingdomMaterials.Make("BoardGap", "T_K_Wood", new Color(0.08f, 0.06f, 0.05f), 0f, 0.95f, Vector2.one);
         static Material PlanksWorn => KingdomMaterials.Make("PlanksWorn", "T_K_Planks", new Color(0.78f, 0.74f, 0.70f), 0f, 0.9f, Vector2.one); // sun-bleached boards
         // L1 QA 16 Nov (L01.jpg): weathered cabin boards in several tones, with grime and rot near the base
-        static Material CabinBoard => KingdomMaterials.Make("CabinBoard", "T_K_Planks", new Color(0.62f, 0.50f, 0.40f), 0f, 0.92f, Vector2.one);
-        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(0.70f, 0.64f, 0.56f), 0f, 0.94f, Vector2.one);
-        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.42f, 0.33f, 0.26f), 0f, 0.95f, Vector2.one);
-        static Material CabinBoardRot => KingdomMaterials.Make("CabinBoardRot", "T_K_Wood", new Color(0.27f, 0.23f, 0.19f), 0f, 0.97f, Vector2.one);
-        static Material CabinGrime => KingdomMaterials.Make("CabinGrime", "T_K_Wood", new Color(0.18f, 0.15f, 0.12f), 0f, 0.98f, Vector2.one);
-        static Material CarvedTrim => KingdomMaterials.Make("CarvedTrim", "T_K_Wood", new Color(0.36f, 0.27f, 0.20f), 0f, 0.85f, Vector2.one);
+        // L1 QA 16 Nov (b): T_K_Planks/T_K_Wood are saturated orange-brown; cool tints pull the cabin to L01.jpg's grey-brown aged wood.
+        static Material CabinBoard => KingdomMaterials.Make("CabinBoard", "T_K_Planks", new Color(0.58f, 0.66f, 0.78f), 0f, 0.92f, Vector2.one);
+        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(0.72f, 0.84f, 0.98f), 0f, 0.94f, Vector2.one);
+        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.45f, 0.50f, 0.58f), 0f, 0.95f, Vector2.one);
+        static Material CabinBoardRot => KingdomMaterials.Make("CabinBoardRot", "T_K_Wood", new Color(0.42f, 0.57f, 0.75f), 0f, 0.97f, Vector2.one);
+        static Material CabinGrime => KingdomMaterials.Make("CabinGrime", "T_K_Wood", new Color(0.30f, 0.40f, 0.52f), 0f, 0.98f, Vector2.one);
+        static Material CarvedTrim => KingdomMaterials.Make("CarvedTrim", "T_K_Wood", new Color(0.55f, 0.68f, 0.85f), 0f, 0.85f, Vector2.one);
 
         public static HashSet<DestructibleBlock> Dressed = new HashSet<DestructibleBlock>();
 

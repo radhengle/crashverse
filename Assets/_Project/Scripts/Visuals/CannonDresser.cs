@@ -32,9 +32,49 @@ namespace Crashverse.Visuals
 
             // Hero-asset detailing: orange flame crests and visible timber wheel spokes.
             // Render-only additions preserve the existing colliders, yaw/pitch pivots and projectile spawn.
+            AddRoundedBreech(bRoot);
             AddFlameCrests(bRoot);
             AddWheelSpokes(cRoot);
             return true;
+        }
+
+        /// <summary>L1 QA 16 Nov: the breech read as a flat disc. A rounded cast-iron dome behind the breech band (enclosing the old flat
+        /// face) and a larger polished bronze cascabel knob on a neck, as in L01.jpg. Render-only; inside the WreckerSpec envelope
+        /// (x >= -1.86, the framing tests' cannonRear).</summary>
+        static void AddRoundedBreech(Transform barrelRoot)
+        {
+            var dome = new[] { new Vector2(-1.34f, 0.0f), new Vector2(-1.34f, 0.535f), new Vector2(-1.40f, 0.515f), new Vector2(-1.46f, 0.47f), new Vector2(-1.51f, 0.40f),
+                               new Vector2(-1.55f, 0.31f), new Vector2(-1.58f, 0.21f), new Vector2(-1.60f, 0.12f), new Vector2(-1.61f, 0.0f) };
+            var knob = new[] { new Vector2(-1.58f, 0.095f), new Vector2(-1.63f, 0.085f), new Vector2(-1.66f, 0.12f), new Vector2(-1.70f, 0.175f), new Vector2(-1.75f, 0.195f),
+                               new Vector2(-1.80f, 0.175f), new Vector2(-1.84f, 0.11f), new Vector2(-1.86f, 0.0f) };
+            var ring = new[] { new Vector2(-1.33f, 0.50f), new Vector2(-1.34f, 0.545f), new Vector2(-1.38f, 0.535f), new Vector2(-1.39f, 0.50f) };
+            Lathe("Cannon_BreechDome", dome, barrelRoot, KingdomMaterials.CannonIron);
+            Lathe("Cannon_BreechRing", ring, barrelRoot, KingdomMaterials.CannonBronze);
+            Lathe("Cannon_Cascabel", knob, barrelRoot, KingdomMaterials.CannonBronze);
+        }
+
+        static void Lathe(string name, Vector2[] prof, Transform parent, Material mat, int segs = 28)
+        {
+            // double-sided (each copy has its own vertices so the normals of the visible side always face the camera)
+            var v = new System.Collections.Generic.List<Vector3>(); var t = new System.Collections.Generic.List<int>();
+            for (int copy = 0; copy < 2; copy++)
+            {
+                int b0 = v.Count;
+                foreach (var p in prof)
+                    for (int i = 0; i < segs; i++) { float a = i * Mathf.PI * 2f / segs; v.Add(new Vector3(p.x, Mathf.Cos(a) * p.y, Mathf.Sin(a) * p.y)); }
+                for (int k = 0; k < prof.Length - 1; k++)
+                    for (int i = 0; i < segs; i++)
+                    {
+                        int j = (i + 1) % segs, a0 = b0 + k * segs + i, a1 = b0 + k * segs + j, c0 = a0 + segs, c1 = a1 + segs;
+                        if (copy == 0) { t.Add(a0); t.Add(a1); t.Add(c0); t.Add(a1); t.Add(c1); t.Add(c0); }
+                        else { t.Add(a0); t.Add(c0); t.Add(a1); t.Add(a1); t.Add(c0); t.Add(c1); }
+                    }
+            }
+            var m = new Mesh { name = name }; m.SetVertices(v); m.SetTriangles(t, 0); m.RecalculateNormals(); m.RecalculateBounds();
+            var go = new GameObject(name); go.transform.SetParent(parent, false);
+            go.AddComponent<MeshFilter>().sharedMesh = m;
+            var r = go.AddComponent<MeshRenderer>(); r.sharedMaterial = mat; r.shadowCastingMode = ShadowCastingMode.On;
+            RuntimeMeshCleanup.Own(parent, m);
         }
 
         static void AddFlameCrests(Transform barrelRoot)
