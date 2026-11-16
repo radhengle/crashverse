@@ -122,11 +122,32 @@ namespace Crashverse.Weapons
                 hit.NoteImpact(at, _rb != null && _rb.velocity.sqrMagnitude > 1e-6f ? -_rb.velocity.normalized : Vector3.up); // chunks release outward from the hit
                 using (ImpactSourceScope.Push(ShotSource, ShotSourceId)) hit.ApplyDamage(damage, directHit: true); // steel joints take 2x here
                 if (mods.shockwave) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.Shockwave)) Shockwave(hit);
+                if (BlastRadius > 0f && BlastDamage > 0f) using (ImpactSourceScope.Push(ShotSource, ShotSourceId)) Blast(hit, at);
             }
             if (mods.shockwave && mods.shockRadius > 0f) EarthquakeImpulse(at); // v2 Earthquake: radial impulse within R (4 m)
             if (mods.megaBomb) using (ImpactSourceScope.Push(ImpactSourceKind.PowerUp, PowerUpIds.MegaBomb)) MegaBomb(at);
             if (mods.gravityWell) GravityWellEffect.Spawn(at, mods.gwRadius, mods.gwTicks, mods.gwBurst);
             Despawn(hit != null ? "hit " + hit.name : "impact");
+        }
+
+        /// <summary>Per-level cannonball blast (LevelEntry.blastRadius/blastDamage, set by GameSession each attempt; 0 = off).</summary>
+        public static float BlastRadius, BlastDamage;
+        /// <summary>PM 17 Nov (L1): splash BlastDamage to every other piece within BlastRadius of the impact (nearest point of its
+        /// collider bounds). Applied in blockId order so live play and replay break pieces in the same order.</summary>
+        void Blast(DestructibleBlock hit, Vector3 at)
+        {
+            var set = new List<DestructibleBlock>();
+            foreach (var c in Physics.OverlapSphere(at, BlastRadius))
+            {
+                if (c == null || c.isTrigger || !c.enabled) continue;
+                var b = c.GetComponentInParent<DestructibleBlock>();
+                if (b == null || b == hit || set.Contains(b)) continue;
+                var bb = c.bounds; var q = Vector3.Max(bb.min, Vector3.Min(bb.max, at));
+                if ((q - at).sqrMagnitude > BlastRadius * BlastRadius) continue;
+                set.Add(b);
+            }
+            set.Sort((a, b) => string.CompareOrdinal(a.blockId, b.blockId));
+            foreach (var b in set) b.ApplyDamage(BlastDamage, directHit: false, splash: true);
         }
 
         /// <summary>40 splash to every piece connected 1 support link deep; not multiplied by the joint bonus (SG-08).</summary>

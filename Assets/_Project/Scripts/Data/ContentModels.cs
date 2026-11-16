@@ -28,6 +28,9 @@ namespace Crashverse.Data
         public string requires; public string bossId; public Reward[] reward;
         public float star3Pct = 0.60f; public float star2Pct = 0.30f; public int starCapIfPowerupUsed = 3; public float islandKillY = -2f; // SG-21
         public string hintTarget; public float hintYaw; public float hintPitch; // Addendum v1.1 §1
+        /// <summary>PM 17 Nov (L1): cannonball blast. A direct hit also deals blastDamage to every other piece whose collider is within
+        /// blastRadius m of the impact point, so a cabin hit knocks out the pieces around it. 0 = off (all other levels unchanged).</summary>
+        public float blastRadius, blastDamage;
         public float targetDistance = 30f; // PM 31 Oct: cannon→structure base (m); < 20 = compact (own small island, ArenaLayoutRules)
         public bool HasHint => !string.IsNullOrEmpty(hintTarget);
         public bool IsBoss => !string.IsNullOrEmpty(bossId);

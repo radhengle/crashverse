@@ -104,6 +104,8 @@ namespace Crashverse.Core
             aim.inputEnabled = true;
             aim.SetAim(0f, WreckerSpec.RestElevation);
             aim.SnapVisualNow(); // deterministic reset: no barrel catch-up after Retry
+            Crashverse.Weapons.Projectile.BlastRadius = Ctx.level != null && Ctx.mode != RunMode.TitanRanked ? Ctx.level.blastRadius : 0f; // PM 17 Nov: per-level cannonball blast
+            Crashverse.Weapons.Projectile.BlastDamage = Ctx.level != null ? Ctx.level.blastDamage : 0f;
             SetupHint();
             Changed?.Invoke();
         }
@@ -369,6 +371,7 @@ namespace Crashverse.Core
 
         void OnDestroy()
         {
+            Crashverse.Weapons.Projectile.BlastRadius = 0f; Crashverse.Weapons.Projectile.BlastDamage = 0f;
             Physics.gravity = _baseGravity;
             if (_sim != null) { _sim.InputApplied -= OnSimInput; _sim.Ticked -= OnSimTick; _sim.EndRun(); }
         }
