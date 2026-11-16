@@ -144,6 +144,13 @@ for LV in $LVS; do
   if adb logcat -d -s Unity | grep -q "cv_dev_level opened $LV"; then
     for i in $(seq 1 20); do BP=$(adb logcat -d -s Unity | grep -o "CVTAP|LevelSelectScreen|Button_Play|[0-9]*|[0-9]*" | tail -1 | cut -d'|' -f4,5); [ -n "$BP" ] && break; sleep 1; done
     [ -n "$BP" ] && { tap ${BP%|*} ${BP#*|} 10; check "dev_$LV"; shot "12_${LV}_hud"; adb logcat -d -s Unity | grep -o "\[RealKit\] [^ ]*: [0-9]*/[0-9]* blocks dressed[^\r]*" | tail -1 | tee -a "$OUT/realkit.txt"; }
+    # PM QA 16 Nov: L1 smash look (L01.jpg): aim with the practice hint, FIRE, then capture the impact (flash, sparks, flying planks,
+    # smoke) and its aftermath. Screens only; crash-gated like every other step.
+    if [ "$LV" = c1_l01 ] && [ -n "$BP" ] && [ -n "${FIRE_X:-}" ]; then
+      tap "${HINT_X:?}" "${HINT_Y:?}" 1.5; shot "13_c1_l01_aimed"
+      adb shell input tap "$FIRE_X" "$FIRE_Y"; sleep 0.6; shot "13_c1_l01_shot_a"; shot "13_c1_l01_shot_b"; sleep 0.6; shot "13_c1_l01_shot_c"; sleep 1.5; shot "13_c1_l01_shot_d"
+      check "dev_l01_shot"
+    fi
   else echo "$LV: cv_dev_level not honoured (release build?)" | tee -a "$OUT/realkit.txt"; fi
 done
 # camera HUD gate: every framed level/boss logs [CAM] ... hudLine H buildingTop T arcTop A; T and A must be <= H (+0.01)

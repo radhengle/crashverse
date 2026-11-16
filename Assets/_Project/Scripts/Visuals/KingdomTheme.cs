@@ -42,6 +42,7 @@ namespace Crashverse.Visuals
 
         public static void Apply(IReadOnlyList<DestructibleBlock> blocks, string levelId)
         {
+            Mound = default;
             if (blocks == null || blocks.Count == 0) return;
             _swap.Clear();
             bool castle = CastleStone(levelId);
@@ -154,16 +155,65 @@ namespace Crashverse.Visuals
             return boxed;
         }
 
+        /// <summary>The island block of the current run (world bounds), or size 0 when the layout has none.</summary>
+        public static Bounds Mound;
+        const float MoundFlatX = 1.9f, MoundFlatZ = 3.6f, MoundSlope = 0.75f; // flat top (m, covers every stilt) + slope width in ellipse units
+
+        /// <summary>World height of the sand mound's surface at (x, z); 0 outside it.</summary>
+        public static float MoundHeight(float x, float z)
+        {
+            if (Mound.size.y <= 0f) return 0f;
+            float u = (x - Mound.center.x) / MoundFlatX, w = (z - Mound.center.z) / MoundFlatZ, r = Mathf.Sqrt(u * u + w * w);
+            float f = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((r - 1f) / MoundSlope));
+            return Mound.max.y * f;
+        }
+
+        /// <summary>Sand rise in the block's unit space: flat top level with the block top (the stilts stand on it), a soft wavy slope
+        /// down to the beach and a skirt sunk below the sand. Built in metres, then divided by the block scale.</summary>
+        static Mesh SandMound(Vector3 scale)
+        {
+            int rings = 10, seg = 48; var v = new List<Vector3>(); var t = new List<int>();
+            v.Add(new Vector3(0f, 0.5f, 0f));
+            for (int r = 1; r <= rings; r++)
+            {
+                float e = (1f + MoundSlope + 0.05f) * r / rings; // ellipse units
+                for (int i = 0; i < seg; i++)
+                {
+                    float a = i * Mathf.PI * 2f / seg, wob = 1f + 0.06f * Mathf.Sin(a * 3f + 1.3f) + 0.04f * Mathf.Sin(a * 7f + 0.4f);
+                    float ee = e * (e > 1f ? wob : 1f);
+                    float f = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((ee - 1f) / MoundSlope));
+                    float yM = scale.y * f - 0.06f + (e > 1f ? 0.04f * Mathf.Sin(a * 5f + r) * f : 0f); // metres above the block bottom
+                    if (r == rings) yM = -0.12f;
+                    var pM = new Vector3(Mathf.Cos(a) * MoundFlatX * ee, yM, Mathf.Sin(a) * MoundFlatZ * ee);
+                    v.Add(new Vector3(pM.x / scale.x, pM.y / scale.y - 0.5f, pM.z / scale.z));
+                }
+            }
+            for (int i = 0; i < seg; i++) { t.Add(0); t.Add(1 + (i + 1) % seg); t.Add(1 + i); }
+            for (int r = 0; r < rings - 1; r++)
+                for (int i = 0; i < seg; i++)
+                {
+                    int a = 1 + r * seg + i, b = 1 + r * seg + (i + 1) % seg, c = a + seg, d = b + seg;
+                    t.Add(a); t.Add(b); t.Add(c); t.Add(b); t.Add(d); t.Add(c);
+                }
+            var m = new Mesh { name = "SandMound" }; m.SetVertices(v); m.SetTriangles(t, 0); m.RecalculateNormals(); m.RecalculateBounds();
+            var boxed = CvMesh.WithBoxUv(m, 4f, scale);
+            Object.Destroy(m);
+            return boxed;
+        }
+
         /// <summary>A block the kit didn't dress: tiled kingdom surface on a box-UV cube, white base tint (damage still darkens).</summary>
         static void Retexture(DestructibleBlock b, bool castle)
         {
             var mf = b.GetComponent<MeshFilter>(); var mr = b.GetComponent<MeshRenderer>(); if (mf == null || mr == null || !mr.enabled) return;
             if (b.role == "island")
             {
-                mr.sharedMaterial = KingdomMaterials.Rock;
-                mf.sharedMesh = IslandOutcrop(b.transform.localScale);
+                // L1 QA 16 Nov: the rock outcrop still read as a bald boulder under the stilts; L01.jpg has a sandy rise covered in
+                // bushes and a few small rocks (KingdomEnvironment.Foliage plants them on MoundHeight). Visual only, collider unchanged.
+                mr.sharedMaterial = KingdomMaterials.Make("SandMound", "T_K_Sand", new Color(0.96f, 0.88f, 0.74f), 0f, 0.96f, Vector2.one);
+                mf.sharedMesh = SandMound(b.transform.localScale);
                 RuntimeMeshCleanup.Own(b.transform, mf.sharedMesh);
-                b.SetBaseTint(new Color(0.86f, 0.80f, 0.70f));
+                b.SetBaseTint(Color.white);
+                Mound = new Bounds(b.transform.position, b.transform.localScale);
                 return;
             }
             Material m; float tile;

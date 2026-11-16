@@ -68,6 +68,13 @@ namespace Crashverse.Visuals
         static Material Iron => KingdomMaterials.Iron;
         static Material Gap => KingdomMaterials.Make("BoardGap", "T_K_Wood", new Color(0.08f, 0.06f, 0.05f), 0f, 0.95f, Vector2.one);
         static Material PlanksWorn => KingdomMaterials.Make("PlanksWorn", "T_K_Planks", new Color(0.78f, 0.74f, 0.70f), 0f, 0.9f, Vector2.one); // sun-bleached boards
+        // L1 QA 16 Nov (L01.jpg): weathered cabin boards in several tones, with grime and rot near the base
+        static Material CabinBoard => KingdomMaterials.Make("CabinBoard", "T_K_Planks", new Color(0.62f, 0.50f, 0.40f), 0f, 0.92f, Vector2.one);
+        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(0.70f, 0.64f, 0.56f), 0f, 0.94f, Vector2.one);
+        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.42f, 0.33f, 0.26f), 0f, 0.95f, Vector2.one);
+        static Material CabinBoardRot => KingdomMaterials.Make("CabinBoardRot", "T_K_Wood", new Color(0.27f, 0.23f, 0.19f), 0f, 0.97f, Vector2.one);
+        static Material CabinGrime => KingdomMaterials.Make("CabinGrime", "T_K_Wood", new Color(0.18f, 0.15f, 0.12f), 0f, 0.98f, Vector2.one);
+        static Material CarvedTrim => KingdomMaterials.Make("CarvedTrim", "T_K_Wood", new Color(0.36f, 0.27f, 0.20f), 0f, 0.85f, Vector2.one);
 
         public static HashSet<DestructibleBlock> Dressed = new HashSet<DestructibleBlock>();
 
@@ -150,8 +157,20 @@ namespace Crashverse.Visuals
                     float len = s.y * (0.97f + 0.05f * j1), dy = 0.03f * j2 - (s.y - len) * 0.5f;
                     var c = normal * (outAt + 0.018f * j1) + along * (-(width - 0.2f) * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
                     var rot = Quaternion.AngleAxis(3.2f * j0, normal) * Quaternion.AngleAxis(1.8f * j2, along); // crooked boards
+                    uint h2 = h * 2654435761u; float j3 = ((h2 >> 9) & 255) / 255f, j4 = ((h2 >> 19) & 255) / 255f;
+                    var mat = j1 > 0.32f ? CabinBoardWorn : j1 < -0.3f ? CabinBoardDark : j3 > 0.86f ? CabinBoardRot : CabinBoard;
+                    bool broken = j4 > 0.84f && i > 0 && i < n - 1; // L1 QA: a few snapped boards with the dark gap showing through
+                    if (broken)
+                    {
+                        float keep = len * (0.45f + 0.2f * j3);
+                        c += Vector3.up * ((len - keep) * 0.5f); len = keep;
+                        rot = rot * Quaternion.AngleAxis(4f + 6f * j3, normal);
+                    }
                     var size = Mathf.Abs(normal.x) > 0.5f ? new Vector3(0.07f, len, step - gap) : new Vector3(step - gap, len, 0.07f);
-                    k.Box(j1 > 0.3f ? PlanksWorn : Planks, c, size, 1.1f, rot);
+                    k.Box(mat, c, size, 1.1f, rot);
+                    if (broken) // jagged stub at the bottom of the snapped board
+                        k.Box(CabinBoardRot, normal * (outAt + 0.01f) + along * (-(width - 0.2f) * 0.5f + step * (i + 0.5f)) + Vector3.up * (-s.y * 0.5f + 0.16f),
+                              Mathf.Abs(normal.x) > 0.5f ? new Vector3(0.07f, 0.3f, step - gap) : new Vector3(step - gap, 0.3f, 0.07f), 1.1f, Quaternion.AngleAxis(-7f, normal));
                 }
             }
             Boards(Vector3.left, Vector3.forward, s.z, hx - 0.025f); Boards(Vector3.right, Vector3.forward, s.z, hx - 0.025f);
@@ -169,6 +188,21 @@ namespace Crashverse.Visuals
                     k.Box(Timber, new Vector3(x * 1.02f, 0.02f, z * 1.02f), new Vector3(0.24f, s.y + 0.08f, 0.24f), 1f); // chunky corner posts stand proud of the boards
             k.Box(Timber, new Vector3(-hx - 0.01f, -hy + 0.07f, 0f), new Vector3(0.1f, 0.14f, s.z), 1f);
             k.Box(Timber, new Vector3(-hx - 0.01f, hy - 0.07f, 0f), new Vector3(0.1f, 0.14f, s.z), 1f);
+            // L1 QA 16 Nov: grime / damp stain along the base of every wall (dark, slightly proud of the boards)
+            k.Box(CabinGrime, new Vector3(-hx - 0.012f, -hy + 0.2f, 0f), new Vector3(0.03f, 0.4f, s.z - 0.3f), 1f);
+            k.Box(CabinGrime, new Vector3(0f, -hy + 0.2f, -hz - 0.012f), new Vector3(s.x - 0.3f, 0.4f, 0.03f), 1f);
+            k.Box(CabinGrime, new Vector3(0f, -hy + 0.2f, hz + 0.012f), new Vector3(s.x - 0.3f, 0.4f, 0.03f), 1f);
+            // carved frame on the cannon face: knee braces in the top corners and a notched (dentil) frieze under the eaves
+            foreach (float sg in new[] { -1f, 1f })
+            {
+                var a = new Vector3(-hx - 0.06f, hy - 0.62f, sg * (hz - 0.14f)); var b = new Vector3(-hx - 0.06f, hy - 0.1f, sg * (hz - 0.62f));
+                k.Log(CarvedTrim, a, b, 0.05f);
+                k.Box(CarvedTrim, new Vector3(-hx - 0.07f, hy - 0.62f, sg * (hz - 0.14f)), new Vector3(0.06f, 0.1f, 0.14f), 1f);
+            }
+            int dent = Mathf.Max(4, Mathf.RoundToInt((s.z - 0.4f) / 0.16f));
+            for (int i = 0; i < dent; i++)
+                k.Box(CarvedTrim, new Vector3(-hx - 0.075f, hy - 0.31f, -(s.z - 0.4f) * 0.5f + (s.z - 0.4f) * (i + 0.5f) / dent), new Vector3(0.05f, 0.09f, 0.07f), 1f);
+            k.Box(CarvedTrim, new Vector3(-hx - 0.06f, hy - 0.25f, 0f), new Vector3(0.04f, 0.035f, s.z - 0.3f), 1f);
             // cannon-facing openings: a door on the main cabin, otherwise a window with open shutters
             if (main && s.y >= 1.3f)
             {
@@ -207,7 +241,7 @@ namespace Crashverse.Visuals
         static bool Roof(Builder k, Vector3 s, bool wood = false)
         {
             // wood: deeper overhang (L01.jpg) and individual staggered, slightly crooked shingles on both slopes over a dark underlay
-            float w = s.z + (wood ? 1.5f : 0.9f), d = s.x + (wood ? 1.7f : 1.0f), h = Mathf.Max(s.y, Mathf.Clamp(d * 0.42f, 0.6f, 2.2f)), y0 = -s.y * 0.5f;
+            float w = s.z + (wood ? 2.1f : 0.9f), d = s.x + (wood ? 2.3f : 1.0f) /* L1 QA 16 Nov: deeper eaves (L01.jpg) */, h = Mathf.Max(s.y, Mathf.Clamp(d * 0.42f, 0.6f, 2.2f)), y0 = -s.y * 0.5f;
             k.Add(wood ? WoodShingleDark : Shingle, CvMesh.WithBoxUv(Prism(w, d, h), 0.9f, Vector3.one), Matrix4x4.Translate(new Vector3(0f, y0, 0f)));
             float slope = Mathf.Atan2(h, d * 0.5f) * Mathf.Rad2Deg; float sl = Mathf.Sqrt(h * h + d * d * 0.25f);
             if (wood)
@@ -376,8 +410,10 @@ namespace Crashverse.Visuals
 
         static bool Flag(Builder k, Vector3 s)
         {
-            k.Log(KingdomMaterials.Gold, new Vector3(0f, -s.y * 0.5f, 0f), new Vector3(0f, s.y * 0.5f + 0.1f, 0f), 0.04f);
-            k.Add(KingdomMaterials.Banner, CvMesh.BoxCube(new Vector3(0.02f, 0.45f, 0.7f), 1f), Matrix4x4.TRS(new Vector3(0f, s.y * 0.5f - 0.22f, -0.37f), Quaternion.identity, new Vector3(0.02f, 0.45f, 0.7f)));
+            // L1 QA 16 Nov: the pennant hid behind the cabin roof; a taller pole with the cloth flying OUTWARD (+z = away from the cabin)
+            float top = s.y * 0.5f + 1.1f;
+            k.Log(Timber, new Vector3(0f, -s.y * 0.5f, 0f), new Vector3(0f, top, 0f), 0.045f);
+            k.Add(KingdomMaterials.Banner, CvMesh.BoxCube(new Vector3(0.02f, 0.42f, 0.75f), 1f), Matrix4x4.TRS(new Vector3(0f, top - 0.24f, 0.4f), Quaternion.Euler(0f, 0f, -4f), new Vector3(0.02f, 0.42f, 0.75f)));
             return true;
         }
 

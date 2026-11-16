@@ -8,6 +8,8 @@ Shader "Crashverse/SkyPano"
         _Rotation ("Rotation (deg)", Range(0, 360)) = 0
         _BottomElev ("Elevation of the image bottom (deg)", Range(-20, 10)) = -3.6
         _Exposure ("Exposure", Range(0, 3)) = 1
+        _ElevPow ("Elevation remap (<1 pulls the high cloud bank down)", Range(0.2, 1)) = 1
+        _UScale ("Azimuth squeeze around +x (odd integer keeps the seam closed)", Float) = 1
         _HorizonColor ("Below the horizon", Color) = (0.72, 0.84, 0.95, 1)
     }
     SubShader
@@ -21,7 +23,7 @@ Shader "Crashverse/SkyPano"
             #pragma fragment frag
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             CBUFFER_START(UnityPerMaterial)
-                float4 _MainTex_ST; float _Rotation, _BottomElev, _Exposure; half4 _HorizonColor;
+                float4 _MainTex_ST; float _Rotation, _BottomElev, _Exposure, _ElevPow, _UScale; half4 _HorizonColor;
             CBUFFER_END
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
             struct A { float4 positionOS : POSITION; };
@@ -31,8 +33,8 @@ Shader "Crashverse/SkyPano"
             {
                 float3 d = normalize(i.dir);
                 float elev = degrees(asin(clamp(d.y, -1.0, 1.0)));
-                float u = atan2(d.x, d.z) / (2.0 * PI) + 0.5 + _Rotation / 360.0;
-                float v = saturate((elev - _BottomElev) / (90.0 - _BottomElev));
+                float u = 0.75 + (atan2(d.x, d.z) / (2.0 * PI) + 0.5 - 0.75) * _UScale + _Rotation / 360.0;
+                float v = pow(saturate((elev - _BottomElev) / (90.0 - _BottomElev)), _ElevPow);
                 half3 c = SAMPLE_TEXTURE2D_LOD(_MainTex, sampler_MainTex, float2(u, v), 0).rgb;
                 half below = saturate((_BottomElev + 2.0 - elev) / 4.0);
                 c = lerp(c, _HorizonColor.rgb, below);

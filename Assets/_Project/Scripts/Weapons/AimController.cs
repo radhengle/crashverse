@@ -142,11 +142,25 @@ namespace Crashverse.Weapons
 
         static float DpPerPixel => 160f / (Screen.dpi > 1f ? Screen.dpi : 160f);
 
+        /// <summary>L1 QA 16 Nov (L01.jpg has no aim line on screen): the trajectory preview is only visible while the player touches to
+        /// aim, and for <see cref="ArcLingerSeconds"/> after the finger lifts so the shot can still be read before FIRE. The arc's points
+        /// are still computed every frame (tests and hint probes read them).</summary>
+        public const float ArcLingerSeconds = 1.2f;
+        float _arcVisibleFor;
+        void ShowArcWhileAiming()
+        {
+            if (_arc == null) return;
+            if (_dragging) _arcVisibleFor = ArcLingerSeconds; else _arcVisibleFor -= Time.unscaledDeltaTime;
+            bool on = _arcVisibleFor > 0f;
+            if (_arc.enabled != on) _arc.enabled = on;
+        }
+
         void Update()
         {
-            if (!inputEnabled) { _dragging = false; DrawArc(_arc); return; }
+            if (!inputEnabled) { _dragging = false; ShowArcWhileAiming(); DrawArc(_arc); return; }
             if (Input.touchCount > 0) HandleTouch();
             else HandleMouse();
+            ShowArcWhileAiming();
             DrawArc(_arc);
         }
 

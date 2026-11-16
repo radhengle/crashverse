@@ -153,9 +153,39 @@ namespace Crashverse.Visuals
             for (int i = 0; i < 3 && _burns.Count < 8; i++) _burns.Add(new Burn { at = at + new Vector3(R(-1.5f, 1.5f), R(-1f, 0.5f), R(-1.5f, 1.5f)), until = Time.time + R(3f, 5f) });
         }
 
+        void OnEnable() { Crashverse.Weapons.Projectile.FirstImpact += OnShotImpact; }
+        void OnDisable() { Crashverse.Weapons.Projectile.FirstImpact -= OnShotImpact; }
+        void OnShotImpact(Crashverse.Weapons.Projectile p) { if (p != null) Impact(p.transform.position); }
+
+        Light _flash; float _flashUntil;
+
+        /// <summary>L1 QA 16 Nov (L01.jpg): every cannonball impact = a bright explosion flash, a burst of sparks, splintered planks flying
+        /// out, a smoke puff and a short fire at the hit. Presentation only (no rigidbodies, never read by the sim).</summary>
+        public void Impact(Vector3 at)
+        {
+            bool onStructure = at.y > 0.4f;
+            Emit(_ball, at, N(14), 0.35f, 1.0f, 3.2f, 1.4f, 2.6f, 0.45f, 0.8f);
+            Emit(_sparks, at, N(60), 0.25f, 7f, 16f, 0.07f, 0.14f, 0.45f, 1.1f, 1.3f);
+            if (onStructure) EmitPlanks(at, N(18), 11f);
+            Emit(_smoke, at, N(8), 0.6f, 0.6f, 1.8f, 1.6f, 3.0f, 2.6f, 4.2f, 2f);
+            if (onStructure && _burns.Count < 8) _burns.Add(new Burn { at = at, until = Time.time + R(2.5f, 3.5f) });
+            if (_flash == null)
+            {
+                var go = new GameObject("ImpactFlash"); go.transform.SetParent(transform, false);
+                _flash = go.AddComponent<Light>(); _flash.type = LightType.Point; _flash.color = new Color(1f, 0.62f, 0.25f);
+                _flash.range = 9f; _flash.shadows = LightShadows.None;
+            }
+            _flash.transform.position = at + Vector3.up * 0.3f; _flash.intensity = 6f; _flash.enabled = true; _flashUntil = Time.time + 0.35f;
+        }
+
         void Update()
         {
             float t = Time.time;
+            if (_flash != null && _flash.enabled)
+            {
+                float left = _flashUntil - t;
+                if (left <= 0f) _flash.enabled = false; else _flash.intensity = 6f * (left / 0.35f);
+            }
             for (int i = _burns.Count - 1; i >= 0; i--)
             {
                 var b = _burns[i];

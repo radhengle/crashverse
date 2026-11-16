@@ -261,9 +261,32 @@ namespace Crashverse.Visuals
                         var post = Obj("PierPost", pier, Cylinder(), KingdomMaterials.Wood);
                         post.transform.localPosition = new Vector3(px, -0.2f, dir * z); post.transform.localScale = new Vector3(0.24f, 0.75f, 0.24f);
                     }
+                // L1 QA 16 Nov: rope railing on taller mooring posts along both pier edges (L01.jpg docks)
+                var rope = KingdomMaterials.Make("Rope", "T_K_Bark", new Color(0.95f, 0.85f, 0.62f), 0f, 0.9f, new Vector2(0.3f, 3f));
+                foreach (float px in new[] { -1.05f, 1.05f })
+                {
+                    Vector3? prev = null;
+                    for (float z = 0.6f; z < len; z += 2.2f)
+                    {
+                        var top = Obj("PierPostTop", pier, Cylinder(), KingdomMaterials.Wood);
+                        top.transform.localPosition = new Vector3(px, 0.62f, dir * z); top.transform.localScale = new Vector3(0.2f, 0.36f, 0.2f);
+                        var cur = new Vector3(px, 0.86f, dir * z);
+                        if (prev.HasValue)
+                        {
+                            var mid = (prev.Value + cur) * 0.5f + Vector3.down * 0.08f; float l = Vector3.Distance(prev.Value, cur);
+                            var rp = Obj("PierRope", pier, Cylinder(), rope, false);
+                            rp.transform.localPosition = mid; rp.transform.localRotation = Quaternion.FromToRotation(Vector3.up, (cur - prev.Value).normalized);
+                            rp.transform.localScale = new Vector3(0.05f, l * 0.5f, 0.05f);
+                        }
+                        prev = cur;
+                    }
+                }
                 // rowboats moored alongside
                 Rowboat(h, new Vector3(x + 2.3f, WaterY + 0.05f, zEdge + dir * 5.5f), side > 0 ? 8f : 172f);
                 if (side > 0) Rowboat(h, new Vector3(x - 2.4f, WaterY + 0.05f, zEdge + dir * 7.5f), -14f);
+                // L1 QA 16 Nov: the moored boats were off-screen on the small island; two rowboats in the lagoon at the island's
+                // front corners, hulls along the view so they stay out of the firing lane (|z| > 2.7)
+                if (Compact) Rowboat(h, new Vector3(Cx - Rx * 0.9f, WaterY + 0.05f, side * Mathf.Max(3.6f, Rz * 0.8f)), side > 0 ? 18f : -24f);
             }
         }
 
@@ -337,13 +360,26 @@ namespace Crashverse.Visuals
             // palms on the beach, out of the firing lane (|z| > 6 between the cannon and the building)
             if (Compact)
             {
+                // L1 QA 16 Nov (L01.jpg): weathered rock clusters on the island's front-left / front-right shore and in the shallows
+                for (int i = 0; i < 12; i++)
+                {
+                    float sd = (i & 1) == 0 ? -1f : 1f, a = Mathf.PI - sd * (0.5f + 0.09f * (i / 2)) ;
+                    var p = new Vector3(Cx + Mathf.Cos(a) * Rx * (0.98f + 0.08f * (i % 3)), WaterY + 0.02f, Mathf.Sin(a) * Rz * (1.0f + 0.06f * (i % 3)));
+                    if (Mathf.Abs(p.z) < 2.7f) continue; // the firing lane
+                    if (!rocks.TryGetValue(rockNames[i % 3], out var rm)) continue;
+                    float s = 0.45f + (float)rng.NextDouble() * 0.5f;
+                    var r = Obj("FrontRock", shore, BoxUvCached(rm, 2.5f * s), KingdomMaterials.Rock, true);
+                    r.transform.localPosition = p; r.transform.localRotation = Quaternion.Euler(0f, (float)rng.NextDouble() * 360f, 0f);
+                    r.transform.localScale = new Vector3(s * 1.2f, s * (0.7f + (float)rng.NextDouble() * 0.5f), s);
+                }
                 // QA L1: palms on the island's far left/right edges, leaning out over the water, so the fronds frame the hut instead
                 // of covering its roof (concept L01: palms sit at the shoreline beside the building)
                 float[] side = { -1f, 1f, -1f, 1f }; float[] dx = { 0.35f, 0.15f, -0.45f, -0.6f };
                 for (int i = 0; i < side.Length; i++)
                 {
                     var p = new Vector3(Cx + dx[i] * Rx, 0f, side[i] * Rz * Mathf.Sqrt(1f - dx[i] * dx[i]) * 0.93f); // on the sand rim, not in the water
-                    Palm(shore, palms, p, i, side[i] * (7f + i * 2f), i < 2 ? 0.8f : 0.62f); // L1 QA 16 Nov: 14-23 deg read as fallen poles
+                    // L1 QA 16 Nov: straight leaning trunks read as poles; small lean + a curved trunk bending out over the water
+                    Palm(shore, palms, p, i, side[i] * (3f + i), i < 2 ? 0.8f : 0.62f, side[i] * (1.5f + 0.35f * i));
                 }
                 return;
             }
@@ -379,6 +415,7 @@ namespace Crashverse.Visuals
                 }
                 if (p.x < c.x - ex * 0.9f && Mathf.Abs(p.z - c.z) < 1.4f) continue; // keep the front door / sight line clear
                 if (!OnIsland(p, 0.92f) || p.x < cannon.x + 7f) continue;
+                p.y = KingdomTheme.MoundHeight(p.x, p.z); // L1 QA 16 Nov: plants sit on the sand rise under the stilts
                 int kind = i % 3;
                 if (kind == 0)
                 {   // round bush: 3-4 squashed blobs
@@ -403,6 +440,40 @@ namespace Crashverse.Visuals
                 {
                     float s = R(0.18f, 0.4f);
                     stone.Add(new CombineInstance { mesh = rm, transform = Matrix4x4.TRS(p + Vector3.down * 0.05f, Quaternion.Euler(0f, R(0f, 360f), 0f), new Vector3(s, s * R(0.6f, 1f), s)) });
+                }
+            }
+            if (KingdomTheme.Mound.size.y > 0f)
+            {
+                // L1 QA 16 Nov (L01.jpg): the rise under the stilts is covered in green bushes and ferns with a few small rocks
+                var mc = KingdomTheme.Mound.center;
+                for (int i = 0; i < 46; i++)
+                {
+                    float a = i * 2.39996f, r = R(0.55f, 1.5f);
+                    var p = new Vector3(mc.x + Mathf.Cos(a) * 1.9f * r, 0f, mc.z + Mathf.Sin(a) * 3.6f * r);
+                    if (p.x < mc.x - 1.2f && Mathf.Abs(p.z - mc.z) < 0.8f) continue; // the ladder foot
+                    p.y = KingdomTheme.MoundHeight(p.x, p.z);
+                    int kind = i % 5;
+                    if (kind <= 2)
+                        for (int k = 0; k < 4; k++)
+                        {
+                            float sz = R(0.4f, 0.8f);
+                            var m = Matrix4x4.TRS(p + new Vector3(R(-0.3f, 0.3f), sz * 0.32f, R(-0.3f, 0.3f)), Quaternion.Euler(0f, R(0f, 360f), 0f), new Vector3(sz, sz * 0.72f, sz));
+                            (k % 2 == 0 ? dark : light).Add(new CombineInstance { mesh = sphere, transform = m });
+                        }
+                    else if (kind == 3)
+                    {
+                        int fr = 8; float len = R(0.6f, 1.0f), yaw0 = R(0f, 360f);
+                        for (int k = 0; k < fr; k++)
+                        {
+                            var q = Quaternion.Euler(0f, yaw0 + k * 360f / fr, 0f) * Quaternion.Euler(0f, 0f, R(28f, 48f));
+                            light.Add(new CombineInstance { mesh = cube, transform = Matrix4x4.TRS(p + q * new Vector3(len * 0.5f, 0f, 0f) + Vector3.up * 0.05f, q, new Vector3(len, 0.025f, 0.16f)) });
+                        }
+                    }
+                    else if (rocks.TryGetValue(i % 2 == 0 ? "Rock_A" : "Rock_C", out var rm))
+                    {
+                        float sz = R(0.22f, 0.45f);
+                        stone.Add(new CombineInstance { mesh = rm, transform = Matrix4x4.TRS(p + Vector3.down * 0.06f, Quaternion.Euler(0f, R(0f, 360f), 0f), new Vector3(sz, sz * R(0.55f, 0.9f), sz)) });
+                    }
                 }
             }
             var t = new GameObject("Foliage").transform; t.SetParent(root, false);
@@ -443,16 +514,43 @@ namespace Crashverse.Visuals
             return _boxUv[key] = CvMesh.WithBoxUv(m, tile, Vector3.one * 2.5f);
         }
 
-        static void Palm(Transform parent, Dictionary<string, Mesh> palms, Vector3 p, int i, float leanOut = 0f, float scale = 0f)
+        static void Palm(Transform parent, Dictionary<string, Mesh> palms, Vector3 p, int i, float leanOut = 0f, float scale = 0f, float bend = 0f)
         {
             string id = i % 2 == 0 ? "PalmA" : "PalmB";
             if (!palms.TryGetValue(id + "_Trunk", out var trunk) || !palms.TryGetValue(id + "_Leaf", out var leaf)) return;
             var t = new GameObject(id).transform; t.SetParent(parent, false); t.localPosition = p;
-            t.localRotation = Quaternion.Euler(leanOut, 0f, 0f) * Quaternion.Euler(0f, i * 47f, 0f); // leanOut: tilt about x, away from the building (+z side tilts to +z)
             t.localScale = Vector3.one * (scale > 0f ? scale : 0.85f + (i % 3) * 0.12f);
-            Obj("Trunk", t, trunk, KingdomMaterials.Bark).AddComponent<Sway>().amp = 0f;
-            var l = Obj("Leaves", t, leaf, KingdomMaterials.Leaf);
-            l.AddComponent<Sway>().amp = 1.6f;
+            if (bend == 0f)
+            {
+                t.localRotation = Quaternion.Euler(leanOut, 0f, 0f) * Quaternion.Euler(0f, i * 47f, 0f); // leanOut: tilt about x, away from the building (+z side tilts to +z)
+                Obj("Trunk", t, trunk, KingdomMaterials.Bark).AddComponent<Sway>().amp = 0f;
+                var l = Obj("Leaves", t, leaf, KingdomMaterials.Leaf);
+                l.AddComponent<Sway>().amp = 1.6f;
+                return;
+            }
+            // L1 QA 16 Nov (L01.jpg): a naturally curved trunk (quadratic bow toward +z by `bend` m at the top, with a slight S near the
+            // base) and a lush double crown of fronds following the trunk tip
+            t.localRotation = Quaternion.Euler(leanOut, 0f, 0f);
+            var bent = Object.Instantiate(trunk); bent.name = trunk.name + "_Bent";
+            var v = bent.vertices; float H = Mathf.Max(0.5f, trunk.bounds.max.y);
+            for (int k = 0; k < v.Length; k++)
+            {
+                float f = Mathf.Clamp01(v[k].y / H);
+                v[k].z += bend * (f * f) - bend * 0.08f * Mathf.Sin(f * Mathf.PI);
+            }
+            bent.vertices = v; bent.RecalculateNormals(); bent.RecalculateBounds();
+            ObjOwned("Trunk", t, bent, KingdomMaterials.Bark).AddComponent<Sway>().amp = 0f;
+            float tipTilt = Mathf.Atan2(2f * bend, H) * Mathf.Rad2Deg * 0.5f;
+            var crown = new GameObject("Crown").transform; crown.SetParent(t, false);
+            crown.localPosition = new Vector3(0f, H, bend); crown.localRotation = Quaternion.Euler(tipTilt, 0f, 0f);
+            var a = Obj("Leaves", crown, leaf, KingdomMaterials.Leaf);
+            a.transform.localPosition = new Vector3(0f, -H, 0f); a.transform.localRotation = Quaternion.Euler(0f, i * 47f, 0f);
+            a.transform.localScale = Vector3.one * 1.25f; a.transform.localPosition = new Vector3(0f, -H * 1.25f, 0f);
+            a.AddComponent<Sway>().amp = 1.4f;
+            var b = Obj("LeavesUnder", crown, leaf, KingdomMaterials.Make("LeafUnder", null, new Color(0.12f, 0.40f, 0.10f), 0f, 0.65f, Vector2.one));
+            b.transform.localRotation = Quaternion.Euler(0f, i * 47f + 36f, 0f);
+            b.transform.localScale = new Vector3(1.05f, 0.85f, 1.05f); b.transform.localPosition = new Vector3(0f, -H * 0.85f - 0.12f, 0f);
+            b.AddComponent<Sway>().amp = 1.8f;
         }
 
         // ---------------- region landmarks ----------------
@@ -665,6 +763,14 @@ namespace Crashverse.Visuals
             Isle("IsleB", isles, new Vector3(185f, WaterY, -75f), 1.1f, 140f);
             Isle("IsleA", isles, new Vector3(-60f, WaterY, 150f), 1.3f, 75f);
             Isle("IsleB", isles, new Vector3(260f, WaterY, 25f), 0.9f, 260f);
+            if (Compact)
+            {
+                // L1 QA 16 Nov (L01.jpg): distant rocky islands either side of the target, inside the narrow portrait view
+                Isle("IsleB", isles, new Vector3(Cx + 62f, WaterY, 19f), 0.5f, 40f);
+                Isle("IsleA", isles, new Vector3(Cx + 85f, WaterY, -24f), 0.55f, 200f);
+                Isle("IsleB", isles, new Vector3(Cx + 120f, WaterY, 34f), 0.7f, 300f);
+                Isle("IsleA", isles, new Vector3(Cx + 140f, WaterY, -40f), 0.75f, 120f);
+            }
             if (region == KingdomRegion.MillFields) WindmillLandmark(h);
             else if (region == KingdomRegion.Clocktower) ClocktowerLandmark(h);
             else if (region == KingdomRegion.RoyalMarket) RoyalMarketLandmark(h);

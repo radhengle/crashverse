@@ -74,7 +74,7 @@ namespace Crashverse.Visuals
         {
             var sky = KingdomMaterials.Sky; var w = KingdomMaterials.Water;
             var hz = dark ? new Color(0.30f, 0.33f, 0.42f) : KingdomMaterials.HorizonColor;
-            if (sky != null) { sky.SetFloat("_Exposure", dark ? 0.6f : 1.05f); sky.SetColor("_HorizonColor", hz); }
+            if (sky != null) { sky.SetFloat("_Exposure", dark ? 0.6f : 1.12f); sky.SetColor("_HorizonColor", hz); }
             if (w != null)
             {
                 w.SetColor("_HorizonColor", hz);
@@ -121,9 +121,10 @@ namespace Crashverse.Visuals
                     ctx.level.number == 7 ? KingdomRegion.Clocktower :
                     ctx.level.number == 8 ? KingdomRegion.RoyalMarket :
                     ctx.level.number == 9 ? KingdomRegion.SeaWallBeacon : KingdomRegion.CrownRock;
+                if (s.builder != null) KingdomTheme.Apply(s.builder.Blocks, levelId); // first: the environment plants foliage on KingdomTheme.Mound
+                else KingdomTheme.Mound = default;
                 KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark, region, GameplayDirector.StructureBounds(s, s.structureBase));
                 CannonDresser.Dress(wb);
-                if (s.builder != null) KingdomTheme.Apply(s.builder.Blocks, levelId);
 
                 var go = new GameObject("VfxDirector"); go.SetActive(false); go.transform.SetParent(root.transform, false);
                 _vfx = go.AddComponent<VfxDirector>();
