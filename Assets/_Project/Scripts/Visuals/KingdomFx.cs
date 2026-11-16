@@ -73,7 +73,7 @@ namespace Crashverse.Visuals
             var rot = _planks.rotationOverLifetime; rot.enabled = true; rot.separateAxes = true;
             rot.x = new ParticleSystem.MinMaxCurve(-8f, 8f); rot.y = new ParticleSystem.MinMaxCurve(-6f, 6f); rot.z = new ParticleSystem.MinMaxCurve(-8f, 8f);
 
-            _sparks = Sys("Sparks", Mat(a, a.sparkStreak, true, new Color(1f, 0.75f, 0.35f), 2.5f), 220, 0.9f, ParticleSystemRenderMode.Stretch, false);
+            _sparks = Sys("Sparks", Mat(a, a.sparkStreak, true, new Color(1f, 0.5f, 0.12f), 1.7f), 220, 0.9f, ParticleSystemRenderMode.Stretch, false); // b14 QA: the 2.5x pale tint read as white streaks on the bright sky
             var sr = _sparks.GetComponent<ParticleSystemRenderer>(); sr.velocityScale = 0.06f; sr.lengthScale = 1.5f;
             _fire = Sys("Fire", Mat(a, a.puffFlipbook, true, new Color(1f, 0.55f, 0.15f), 2.2f), 140, -0.15f, ParticleSystemRenderMode.Billboard, true);
             var fc = _fire.colorOverLifetime; fc.enabled = true; fc.color = Grad(new Color(1f, 0.85f, 0.4f), new Color(1f, 0.25f, 0.05f), 1f, 0f);

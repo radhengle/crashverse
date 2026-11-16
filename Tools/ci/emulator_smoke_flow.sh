@@ -148,15 +148,24 @@ for LV in $LVS; do
     # smoke) and its aftermath. Screens only; crash-gated like every other step.
     if [ "$LV" = c1_l01 ] && [ -n "$BP" ] && [ -n "${FIRE_X:-}" ]; then
       tap "${HINT_X:?}" "${HINT_Y:?}" 1.5; shot "13_c1_l01_aimed"
-      # PM QA 17 Nov: frames at fixed offsets after the FIRE tap (+0.3/+0.8/+1.5/+3 s, +5 s for the lingering smoke) so one lands on the fireball;
-      # timed from a single t0 (no cam_log in between) and the real offset of each capture is logged.
-      adb shell input tap "$FIRE_X" "$FIRE_Y"; T0=$(date +%s.%N)
-      for spec in a:0.3 b:0.8 c:1.5 d:3.0 e:5.0; do
-        n=${spec%%:*}; at=${spec#*:}
-        wait_s=$(awk -v t0="$T0" -v at="$at" -v now="$(date +%s.%N)" 'BEGIN{w=t0+at-now; if(w<0)w=0; printf "%.3f", w}')
-        sleep "$wait_s"; adb exec-out screencap -p > "$OUT/13_c1_l01_shot_$n.png"
-        echo "shot_$n target +${at}s, captured +$(awk -v t0="$T0" -v now="$(date +%s.%N)" 'BEGIN{printf "%.2f", now-t0}')s" | tee -a "$OUT/l01_shot_timing.txt"
-      done
+      # PM QA 17 Nov (b): screencap takes 3-5 s per frame on the emulator, so b14's "+0.3 s" frame was really +3.8 s. Record the smash
+      # with screenrecord and cut frames at +0.3/+0.8/+1.5/+3/+5 s after the FIRE tap (+ a 5 fps burst); screencap only as fallback.
+      adb shell rm -f /sdcard/l01_shot.mp4 >/dev/null 2>&1
+      R0=$(date +%s.%N); adb shell screenrecord --time-limit 10 --size 720x1560 --bit-rate 12000000 /sdcard/l01_shot.mp4 >/dev/null 2>&1 & REC=$!
+      sleep 1.5; T0=$(date +%s.%N); adb shell input tap "$FIRE_X" "$FIRE_Y"
+      wait $REC || true; adb pull /sdcard/l01_shot.mp4 "$OUT/l01_shot.mp4" >/dev/null 2>&1 || true
+      OFF=$(awk -v r="$R0" -v t="$T0" 'BEGIN{printf "%.2f", t-r+0.15}') # tap time inside the video (+~0.15 s adb shell latency)
+      if command -v ffmpeg >/dev/null && [ -s "$OUT/l01_shot.mp4" ]; then
+        for spec in a:0.3 b:0.8 c:1.5 d:3.0 e:5.0; do
+          n=${spec%%:*}; at=${spec#*:}; ss=$(awk -v o="$OFF" -v a="$at" 'BEGIN{printf "%.2f", o+a}')
+          ffmpeg -loglevel error -y -ss "$ss" -i "$OUT/l01_shot.mp4" -frames:v 1 "$OUT/13_c1_l01_shot_$n.png" || true
+          echo "shot_$n = video +${ss}s (fire +${at}s)" | tee -a "$OUT/l01_shot_timing.txt"
+        done
+        mkdir -p "$OUT/l01_burst"; ffmpeg -loglevel error -y -ss "$OFF" -t 6 -i "$OUT/l01_shot.mp4" -vf fps=5,scale=360:-2 "$OUT/l01_burst/f_%02d.png" || true
+      else
+        echo "screenrecord/ffmpeg unavailable: screencap fallback (frames late by 3-5 s each)" | tee -a "$OUT/l01_shot_timing.txt"
+        for n in a b c d e; do adb exec-out screencap -p > "$OUT/13_c1_l01_shot_$n.png"; done
+      fi
       check "dev_l01_shot"
     fi
   else echo "$LV: cv_dev_level not honoured (release build?)" | tee -a "$OUT/realkit.txt"; fi
