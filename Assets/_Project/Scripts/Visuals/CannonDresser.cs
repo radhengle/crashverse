@@ -50,6 +50,110 @@ namespace Crashverse.Visuals
             return muzzle;
         }
 
+        /// <summary>L1 v2 goal cannon (design/L01_v2_spec.md §2, measured from L01_v2_goal.png): a procedural navy barrel at world scale
+        /// whose axis rides 0.2 m above the pitch pivot (1.7 m at the trunnions), four gold rings (muzzle lip +1.97, ring +0.66,
+        /// reinforce -0.53, breech ring -1.91, the widest), a sun emblem on the top at -1.45, a rounded breech with a cascabel knob, and
+        /// stepped timber cheeks at z +/-(0.7..1.3) with trunnion caps. The muzzle (+1.97) sits on the projectile spawn (+1.95), so the
+        /// hint maths and pivots are unchanged. Returns the visual muzzle.</summary>
+        public static Transform DressGoal(Crashverse.Weapons.WreckerBuilder wb)
+        {
+            if (wb == null || wb.yawPivot == null || wb.pitchPivot == null) return null;
+            foreach (var r in wb.GetComponentsInChildren<MeshRenderer>(true)) r.enabled = false;
+            Material Mk(string k, Color c, float metal, float rough, string tex = null, Color em = default) => KingdomMaterials.Make("TwCannon" + k, tex, c, metal, rough, Vector2.one, em);
+            var navy = Mk("Navy", new Color(0.13f, 0.145f, 0.28f), 0.45f, 0.42f);          // #212548
+            var navyDark = Mk("NavyDark", new Color(0.235f, 0.223f, 0.305f), 0.3f, 0.6f);  // #3C394E
+            var gold = Mk("Gold", new Color(0.75f, 0.50f, 0.31f), 0.55f, 0.35f);          // #C08050
+            var sunGold = Mk("Sun", new Color(0.97f, 0.89f, 0.45f), 0.4f, 0.3f, null, new Color(0.25f, 0.14f, 0.02f)); // #F8E474
+            var sunDeep = Mk("SunDeep", new Color(0.93f, 0.57f, 0.08f), 0.4f, 0.35f);     // #EC9114
+            var bore = Mk("Bore", new Color(0.03f, 0.03f, 0.05f), 0f, 1f);
+            var wood = Mk("Wood", new Color(1.25f, 0.95f, 0.85f), 0f, 0.85f, "T_K_Wood"); // #714130 on the wood texture
+            var iron = Mk("Iron", new Color(0.12f, 0.12f, 0.14f), 0.6f, 0.45f);
+
+            var bRoot = new GameObject("Kingdom_Barrel").transform; bRoot.SetParent(wb.yawPivot, false);
+            var f = bRoot.gameObject.AddComponent<PivotFollower>(); f.src = wb.pitchPivot; f.offset = new Vector3(0f, 0.2f, 0f); f.LateUpdate();
+            var t = new TwMesh();
+            // navy body: breech dome -> breech ring -> body tapering 0.62 -> 0.52 with the reinforce and second ring -> muzzle lip
+            t.Lathe(navy, 1f, new[] {
+                new Vector2(-2.24f, 0f), new Vector2(-2.235f, 0.2f), new Vector2(-2.2f, 0.38f), new Vector2(-2.13f, 0.52f), new Vector2(-2.05f, 0.6f) }, 28);
+            t.Lathe(navy, 1f, new[] { new Vector2(-1.78f, 0.62f), new Vector2(-0.68f, 0.6f) }, 28);
+            t.Lathe(navy, 1f, new[] { new Vector2(-0.38f, 0.58f), new Vector2(0.55f, 0.55f) }, 28);
+            t.Lathe(navy, 1f, new[] { new Vector2(0.78f, 0.535f), new Vector2(1.80f, 0.52f) }, 28);
+            void Band(float x0, float x1, float rIn, float rOut, float lip)
+            {
+                // gold ring with a rounded lip at both ends (steps of rIn -> rOut - lip -> rOut -> rOut - lip -> rIn)
+                t.Lathe(gold, 1f, new[] { new Vector2(x0, rIn), new Vector2(x0, rOut - lip), new Vector2(x0 + lip, rOut), new Vector2(x1 - lip, rOut), new Vector2(x1, rOut - lip), new Vector2(x1, rIn) }, 28);
+            }
+            Band(-2.05f, -1.78f, 0.6f, 0.65f, 0.03f);
+            t.Lathe(navyDark, 1f, new[] { new Vector2(-1.93f, 0.651f), new Vector2(-1.90f, 0.651f) }, 28); // the breech ring's groove
+            Band(-0.68f, -0.38f, 0.58f, 0.66f, 0.035f);
+            Band(0.55f, 0.78f, 0.535f, 0.585f, 0.03f);
+            Band(1.80f, 2.02f, 0.52f, 0.565f, 0.035f);
+            // muzzle face and bore
+            t.Lathe(gold, 1f, new[] { new Vector2(2.02f, 0.53f), new Vector2(2.02f, 0.36f) }, 28);
+            t.Lathe(bore, 1f, new[] { new Vector2(2.02f, 0.36f), new Vector2(1.5f, 0.36f), new Vector2(1.5f, 0f) }, 20);
+            // cascabel: neck and knob behind the breech
+            t.Lathe(navyDark, 1f, new[] { new Vector2(-2.24f, 0.13f), new Vector2(-2.32f, 0.09f), new Vector2(-2.36f, 0.09f) }, 16);
+            t.Sphere(gold, 1f, new Vector3(-2.47f, 0f, 0f), Vector3.one * 0.13f, 12, 8);
+            // trunnions into the cheeks (their dark iron cap straps sit on the cheek tops, below)
+            foreach (float sz in new[] { -1f, 1f })
+            {
+                t.Cyl(navy, 1f, new Vector3(0f, -0.2f, sz * 0.5f), new Vector3(0f, -0.2f, sz * 0.72f), 0.13f, 0.13f, 12, true);
+            }
+            // sun emblem on the top of the breech (16 rays, long 0.28 / short 0.19, disc 0.15)
+            var top = new Vector3(-1.45f, 0.62f, 0f); var up = Vector3.up;
+            var disc = new Vector3[16];
+            for (int i = 0; i < 16; i++) { float a = -i * Mathf.PI * 2f / 16f; disc[i] = top + new Vector3(Mathf.Cos(a) * 0.15f, 0.012f, Mathf.Sin(a) * 0.15f); }
+            if (Vector3.Dot(Vector3.Cross(disc[1] - disc[0], disc[2] - disc[0]), up) < 0f) System.Array.Reverse(disc);
+            t.Poly(sunGold, 1f, disc);
+            for (int i = 0; i < 16; i++)
+            {
+                float a = i * Mathf.PI * 2f / 16f; var d = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a)); var sd = Vector3.Cross(up, d);
+                float len = i % 2 == 0 ? 0.28f : 0.19f;
+                // follow the barrel's curve so the rays lie on its surface
+                Vector3 P(Vector3 q) { float z = q.z; float y = Mathf.Sqrt(Mathf.Max(0f, 0.62f * 0.62f - z * z)) + 0.008f; return new Vector3(q.x, y, z); }
+                var q3 = new[] { P(top + d * 0.12f - sd * 0.045f), P(top + d * len), P(top + d * 0.12f + sd * 0.045f) };
+                if (Vector3.Dot(Vector3.Cross(q3[1] - q3[0], q3[2] - q3[0]), up) < 0f) System.Array.Reverse(q3);
+                t.Poly(i % 2 == 0 ? sunGold : sunDeep, 1f, q3);
+            }
+            t.Build(bRoot, "TwCannonBarrel", true);
+            var muzzle = new GameObject("Kingdom_Muzzle").transform; muzzle.SetParent(bRoot, false);
+            muzzle.localPosition = new Vector3(wb.projectileSpawn != null ? wb.projectileSpawn.localPosition.x : 1.95f, 0f, 0f);
+
+            // carriage: two stepped timber cheeks (z +/-0.7..1.3) with gold caps, transoms and rear blocks; follows the yaw only
+            var cRoot = new GameObject("Kingdom_Carriage").transform; cRoot.SetParent(wb.yawPivot, false);
+            cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y, 0f);
+            var c = new TwMesh();
+            foreach (float sz in new[] { -1f, 1f })
+            {
+                float z0 = sz * 0.7f, z1 = sz * 1.3f; float zl = Mathf.Min(z0, z1), zh = Mathf.Max(z0, z1);
+                c.BoxMinMax(wood, 0.9f, new Vector3(-0.35f, 0f, zl), new Vector3(1.0f, 1.62f, zh));
+                c.BoxMinMax(wood, 0.9f, new Vector3(-0.95f, 0f, zl), new Vector3(-0.35f, 1.2f, zh));
+                c.BoxMinMax(wood, 0.9f, new Vector3(-1.55f, 0f, zl), new Vector3(-0.95f, 0.85f, zh));
+                foreach (var (x0, x1, y) in new[] { (-0.35f, 1.0f, 1.62f), (-0.95f, -0.35f, 1.2f), (-1.55f, -0.95f, 0.85f) })
+                {
+                    c.BoxMinMax(gold, 1f, new Vector3(x0 - 0.02f, y, zl - 0.02f), new Vector3(x1 + 0.02f, y + 0.05f, zh + 0.02f));
+                    c.BoxMinMax(gold, 1f, new Vector3(x0 - 0.03f, y - 0.42f, zl - 0.02f), new Vector3(x0 + 0.03f, y, zh + 0.02f));
+                }
+                // iron bolts on the outer and inner faces
+                for (int k = 0; k < 3; k++)
+                {
+                    float bx = -1.3f + k * 0.6f, by = 0.45f;
+                    c.Sphere(iron, 1f, new Vector3(bx, by, sz > 0 ? zh + 0.01f : zl - 0.01f), Vector3.one * 0.05f, 6, 4);
+                    c.Sphere(iron, 1f, new Vector3(bx, by, sz > 0 ? zl - 0.01f : zh + 0.01f), Vector3.one * 0.05f, 6, 4);
+                }
+                // trunnion seat (dark iron cap strap over the pivot)
+                c.BoxMinMax(iron, 1f, new Vector3(-0.2f, 1.6f, zl - 0.03f), new Vector3(0.2f, 1.7f, zh + 0.03f));
+                // front blocks at the bottom (goal u 22-38 / 62-80, v 94-100) and the rear chock
+                c.BoxMinMax(wood, 0.9f, new Vector3(0.6f, 0f, zl - 0.1f), new Vector3(1.05f, 0.35f, zh + 0.1f));
+                c.BoxMinMax(wood, 0.9f, new Vector3(-1.7f, 0f, zl), new Vector3(-1.3f, 0.5f, zh));
+            }
+            c.BoxMinMax(wood, 0.9f, new Vector3(-1.5f, 0.15f, -0.7f), new Vector3(-1.0f, 0.5f, 0.7f));  // rear transom
+            c.BoxMinMax(wood, 0.9f, new Vector3(0.3f, 0.15f, -0.7f), new Vector3(0.9f, 0.6f, 0.7f));    // front transom
+            c.BoxMinMax(navyDark, 1f, new Vector3(-0.9f, 0.5f, -0.7f), new Vector3(-0.5f, 0.75f, 0.7f)); // elevation quoin
+            c.Build(cRoot, "TwCannonCarriage", true);
+            return muzzle;
+        }
+
         /// <summary>PM b18 QA (L01.jpg): the gold bands read as thin lines. Every ring-shaped cluster of the Barrel_Gold mesh (centred on
         /// the bore axis, narrower than 0.45 m) gets a thicker, wider rounded antique-gold collar around it. Render-only.</summary>
         static void ThickenBands(Transform barrelRoot, Mesh gold)

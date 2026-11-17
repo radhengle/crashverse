@@ -103,6 +103,20 @@ namespace Crashverse.Visuals
             }
         }
 
+        /// <summary>L1 v2 scene: the sea sits at y -1 so the grey-box island floor (top y 0, colliders only) drops under it and debris
+        /// leaving the rocks falls into the lagoon; the far cliffs, castle and waterfall stand ~400 m out, so the haze starts later and
+        /// the far clip reaches past them.</summary>
+        static void TideScene(bool tide, bool dark)
+        {
+            // the arena may outlive one run: always set the floor height and haze from scratch
+            var arena = Object.FindObjectOfType<ArenaBuilder>();
+            if (arena != null) { var fi = arena.transform.Find("FloatingIsland"); if (fi != null) fi.localPosition = new Vector3(fi.localPosition.x, tide ? -1.5f : 0f, fi.localPosition.z); }
+            if (!tide) { if (!dark) { RenderSettings.fogStartDistance = 55f; RenderSettings.fogEndDistance = 380f; } return; }
+            RenderSettings.fogStartDistance = 150f; RenderSettings.fogEndDistance = 1100f;
+            foreach (var c in Camera.allCameras) if (c != null && c.cameraType == CameraType.Game && c.targetTexture == null) c.farClipPlane = Mathf.Max(c.farClipPlane, 1300f);
+            if (Camera.main != null) Camera.main.farClipPlane = Mathf.Max(Camera.main.farClipPlane, 1300f);
+        }
+
         static void OnRun(GameObject root, GameSession s, Crashverse.Weapons.WreckerBuilder wb, RunContext ctx)
         {
             if (root == null || s == null) return;
@@ -121,11 +135,15 @@ namespace Crashverse.Visuals
                     ctx.level.number == 7 ? KingdomRegion.Clocktower :
                     ctx.level.number == 8 ? KingdomRegion.RoyalMarket :
                     ctx.level.number == 9 ? KingdomRegion.SeaWallBeacon : KingdomRegion.CrownRock;
-                if (s.builder != null) KingdomTheme.Apply(s.builder.Blocks, levelId); // first: the environment plants foliage on KingdomTheme.Mound
+                bool tide = s.builder != null && TideWatchtower.Matches(s.builder.Blocks); // L1 v2 (design/L01_v2_spec.md)
+                TideScene(tide, dark || palace);
+                if (tide) { KingdomTheme.Mound = default; TideWatchtower.Apply(s.builder.Blocks); }
+                else if (s.builder != null) KingdomTheme.Apply(s.builder.Blocks, levelId); // first: the environment plants foliage on KingdomTheme.Mound
                 else KingdomTheme.Mound = default;
-                KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark, region, GameplayDirector.StructureBounds(s, s.structureBase));
+                KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark, region, GameplayDirector.StructureBounds(s, s.structureBase), tide);
                 var camRules = s.builder != null && wb != null ? Crashverse.Meta.CannonCameraRules.For(wb.transform.position, GameplayDirector.StructureBounds(s, s.structureBase)) : Crashverse.Meta.CannonCameraRules.Default;
-                var visualMuzzle = CannonDresser.Dress(wb, camRules.cannonScale);
+                var visualMuzzle = tide || camRules.goalPose ? CannonDresser.DressGoal(wb) : CannonDresser.Dress(wb, camRules.cannonScale);
+                if (visualMuzzle == null && (tide || camRules.goalPose)) visualMuzzle = CannonDresser.Dress(wb, camRules.cannonScale);
 
                 var go = new GameObject("VfxDirector"); go.SetActive(false); go.transform.SetParent(root.transform, false);
                 _vfx = go.AddComponent<VfxDirector>();
@@ -139,7 +157,7 @@ namespace Crashverse.Visuals
                 if (fx != null && s.builder != null) fx.Watch(s.builder.Blocks);
                 if (s.builder != null) WireDamage(s.builder.Blocks);
 
-                if (ctx != null && ctx.mode == RunMode.Campaign && s.builder != null)
+                if (ctx != null && ctx.mode == RunMode.Campaign && s.builder != null && !tide) // L1's target is its visible crystal
                     HiddenCore.Attach(s.builder.Blocks, ctx.seed, levelId, root.transform);
             }
             catch (System.Exception e) { Debug.LogError("[Kingdom] run dressing failed: " + e); }

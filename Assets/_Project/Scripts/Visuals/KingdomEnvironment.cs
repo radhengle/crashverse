@@ -14,18 +14,29 @@ namespace Crashverse.Visuals
     /// </summary>
     public static class KingdomEnvironment
     {
-        public const float WaterY = -0.35f;
+        public const float DefaultWaterY = -0.35f;
+        /// <summary>Sea level of this run: -0.35 m, or -1.0 m for the L1 Tide Watchtower (spec §2: its rocks stand in a lagoon).</summary>
+        public static float WaterY = DefaultWaterY;
         static float Rx => Crashverse.Core.ArenaBuilder.IslandRx;
         static float Rz => Crashverse.Core.ArenaBuilder.IslandRz;
         static float Cx => Crashverse.Core.ArenaBuilder.IslandCx; // compact levels: the target's own small island (ArenaLayoutRules)
         static bool Compact => Rx < 20f;
         static bool OnIsland(Vector3 p, float margin = 0.85f) { float u = (p.x - Cx) / Rx, w = p.z / Rz; return u * u + w * w < margin * margin; }
 
-        public static GameObject Build(Transform parent, Vector3 cannonRoot, Vector3 structureBase, bool palaceLevel, bool dark, KingdomRegion region, Bounds? structure = null)
+        public static GameObject Build(Transform parent, Vector3 cannonRoot, Vector3 structureBase, bool palaceLevel, bool dark, KingdomRegion region, Bounds? structure = null, bool tide = false)
         {
             var root = new GameObject("KingdomEnvironment"); root.transform.SetParent(parent, false);
             var bounds = structure ?? new Bounds(structureBase + Vector3.up * 3f, new Vector3(8f, 6f, 8f));
+            WaterY = tide ? -1f : DefaultWaterY;
             Ocean(root.transform);
+            if (tide)
+            {
+                // L1 v2: a wide turquoise lagoon from the rocks to the cannon deck, deep blue beyond; the Tide set builds the rest
+                var w = KingdomMaterials.Water;
+                if (w != null) { w.SetVector("_Island", new Vector4(-3.8f, -0.3f, 5f, 9f)); w.SetFloat("_ShoreFade", 2.0f); w.SetFloat("_FoamWidth", 0.06f); }
+                TideWatchtowerEnv.Build(root.transform, cannonRoot);
+                return root;
+            }
             Island(root.transform, structureBase);
             Deck(root.transform, cannonRoot);
             Shore(root.transform, cannonRoot, structureBase);
