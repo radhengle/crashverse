@@ -117,7 +117,10 @@ namespace Crashverse.Backend.Tests
                     Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b)), CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
                     var c = CannonCameraRules.ViewportRect(pose, a, CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b))); var s = CannonCameraRules.ViewportRect(pose, a, b);
                     Assert.AreEqual(0.5f, c.center.x, 0.02f, "cannon horizontally centred: " + at);
-                    Assert.Less(c.yMin, CannonCameraRules.For(CannonRoot, b).bottomMargin + 0.05f, "cannon at the bottom (compact levels: just above the FIRE / HINT row): " + at);
+                    // concept framing (L1, PM b20 QA): the lens follows the house width, so the cannon's base sits at or (cut) below the bottom edge
+                    var rs = CannonCameraRules.For(CannonRoot, b);
+                    Assert.Less(c.yMin, rs.anchorBuilding ? 0.1f : rs.bottomMargin + 0.05f, "cannon at the bottom (compact levels: just above the FIRE / HINT row): " + at);
+                    if (rs.anchorBuilding && a < 0.7f) Assert.That(s.width, Is.InRange(0.5f, 0.7f), "concept: house ~55-60% of the width: " + at);
                     if (a < 0.7f) Assert.Greater(c.width, 0.28f, "cannon big (>= 28% of the width on phones): " + at); // tablets / 4:3 keep a smaller cannon
                     // PM 17 Nov (L01.jpg): the bigger compact-level barrel may overlap the island base, as in the concept
                     Assert.Less(c.yMax, 0.62f, "cannon stays in the lower part (barrel tip may reach the building base): " + at);

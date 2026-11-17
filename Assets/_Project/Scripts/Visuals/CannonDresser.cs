@@ -33,7 +33,7 @@ namespace Crashverse.Visuals
             }
             bRoot.localScale = Vector3.one * k;
             foreach (var kv in barrel) Part(kv.Key, kv.Value, bRoot, KingdomMaterials.TileFor(kv.Key));
-            foreach (var kv in barrel) if (kv.Key.EndsWith("_Gold")) ThickenBands(bRoot, kv.Value);
+            // PM b20 QA: the b19 band collars floated as oversized hoops; the mesh's own bronze bands stay
             var muzzle = new GameObject("Kingdom_Muzzle").transform; muzzle.SetParent(bRoot, false);
             muzzle.localPosition = wb.projectileSpawn != null ? wb.projectileSpawn.localPosition : new Vector3(1.95f, 0f, 0f);
 
@@ -86,12 +86,9 @@ namespace Crashverse.Visuals
         {
             var dome = new[] { new Vector2(-1.34f, 0.0f), new Vector2(-1.34f, 0.535f), new Vector2(-1.40f, 0.515f), new Vector2(-1.46f, 0.47f), new Vector2(-1.51f, 0.40f),
                                new Vector2(-1.55f, 0.31f), new Vector2(-1.58f, 0.21f), new Vector2(-1.60f, 0.12f), new Vector2(-1.61f, 0.0f) };
-            var knob = new[] { new Vector2(-1.58f, 0.095f), new Vector2(-1.63f, 0.085f), new Vector2(-1.66f, 0.12f), new Vector2(-1.70f, 0.175f), new Vector2(-1.75f, 0.195f),
-                               new Vector2(-1.80f, 0.175f), new Vector2(-1.84f, 0.11f), new Vector2(-1.86f, 0.0f) };
-            var ring = new[] { new Vector2(-1.33f, 0.50f), new Vector2(-1.34f, 0.545f), new Vector2(-1.38f, 0.535f), new Vector2(-1.39f, 0.50f) };
+            var knob = new[] { new Vector2(-1.580f, 0.100f), new Vector2(-1.620f, 0.085f), new Vector2(-1.645f, 0.085f), new Vector2(-1.671f, 0.145f), new Vector2(-1.710f, 0.150f), new Vector2(-1.749f, 0.145f), new Vector2(-1.785f, 0.130f), new Vector2(-1.816f, 0.106f), new Vector2(-1.840f, 0.075f), new Vector2(-1.855f, 0.039f), new Vector2(-1.860f, 0.000f) };
             Lathe("Cannon_BreechDome", dome, barrelRoot, KingdomMaterials.CannonIron);
-            Lathe("Cannon_BreechRing", ring, barrelRoot, KingdomMaterials.CannonBronze);
-            Lathe("Cannon_Cascabel", knob, barrelRoot, KingdomMaterials.CannonBronze);
+            Lathe("Cannon_Cascabel", knob, barrelRoot, KingdomMaterials.CannonBronze, 32); // PM b20 QA: a round ball on a neck, so the near end reads as the breech (not a muzzle ring)
         }
 
         static void Lathe(string name, Vector2[] prof, Transform parent, Material mat, int segs = 28)

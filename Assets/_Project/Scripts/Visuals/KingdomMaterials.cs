@@ -112,7 +112,7 @@ namespace Crashverse.Visuals
             return m;
         }
         public static Material Iron => Make("Iron", "T_K_CastIron", new Color(1.1f, 1.1f, 1.1f), 0.5f, 0.66f, new Vector2(2f, 2f));
-        public static Material CarriageWood => Make("CarriageWood", "T_K_Wood", new Color(0.66f, 0.48f, 0.32f), 0f, 0.85f, Vector2.one); // PM 17 Nov (b16 QA): warmer, lighter weathered timber so the cheeks and wheels separate from the iron barrel
+        public static Material CarriageWood => Make("CarriageWood", "T_K_Wood", new Color(0.44f, 0.29f, 0.17f), 0f, 0.85f, Vector2.one); // PM b20 QA (L01.jpg): heavy dark oak carriage. // PM 17 Nov (b16 QA): warmer, lighter weathered timber so the cheeks and wheels separate from the iron barrel
         public static Material Bore => Make("Bore", null, new Color(0.02f, 0.02f, 0.025f), 0f, 1f, Vector2.one);
         public static Material FlagRed => Make("FlagRed", null, new Color(0.72f, 0.06f, 0.08f), 0f, 0.7f, Vector2.one);
 

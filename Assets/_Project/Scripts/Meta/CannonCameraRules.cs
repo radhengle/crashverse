@@ -31,6 +31,7 @@ namespace Crashverse.Meta
             public float sideFill = 0.80f;   // the structure's width may use up to this share of the screen width
             public float minFov = 18f, maxFov = 68f; // 18: small huts may zoom in to fill ~70-80% of the width
             public float cannonScale = 1f;   // render-only scale of the Kingdom cannon (CannonDresser); cannonRear already includes it
+            public bool anchorBuilding;      // concept framing: lens from the building's width, pitch pins the building top under the HUD
         }
 
         public static readonly Settings Default = new Settings();
@@ -47,8 +48,19 @@ namespace Crashverse.Meta
         /// <summary>Height (m) of the Kingdom roof-top flag pole above the highest block; the run camera keeps its tip in frame.</summary>
         public const float RoofFlagPole = 1.2f;
 
-        public static Settings For(Vector3 cannonRoot, Bounds structure) =>
-            structure.center.x - cannonRoot.x < ArenaLayoutRules.CompactBelow + 2f ? Compact : Default;
+        /// <summary>PM b20 QA (L01.jpg): a LOW eye just behind the breech, a big sky over the top ~35-40%, the house ~58% wide above the
+        /// muzzle, and the cannon filling ~75% of the width with its wheels cut by the bottom edge. Used for the closest island levels
+        /// (target &lt; 16 m, L1): the lens comes from the building's width and the pitch pins the building top (plus flag and hint arc)
+        /// just under the HUD; the lens only widens when the cannon above its lowest metre would leave the screen.</summary>
+        public static readonly Settings Concept = new Settings { back = 9.5f, height = 4.8f, sideFill = 0.58f, bottomMargin = -0.02f, topMargin = 0.15f,
+                                                                 cannonScale = 1.25f, cannonRear = 1.8f * 1.25f, cannonTop = 2.6f * 1.25f, anchorBuilding = true };
+        public const float ConceptBelow = 16f;
+
+        public static Settings For(Vector3 cannonRoot, Bounds structure)
+        {
+            float d = structure.center.x - cannonRoot.x;
+            return d < ConceptBelow ? Concept : d < ArenaLayoutRules.CompactBelow + 2f ? Compact : Default;
+        }
 
         /// <summary>HUD band at the top of the screen (UI Developer: HUD bottom ≈ safe-area top inset + 104 dp; ~390 px on 1080x2340)
         /// plus an 8 dp breathing buffer (PM 2026-10-30), as a share of the screen height:
@@ -71,7 +83,7 @@ namespace Crashverse.Meta
         {
             var d = For(cannonRoot, structure);
             var s = new Settings { back = d.back, height = d.height, cannonRear = d.cannonRear, cannonTop = d.cannonTop, topMargin = Mathf.Clamp(topMargin, d.topMargin, 0.4f),
-                                   bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov, cannonScale = d.cannonScale };
+                                   bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov, cannonScale = d.cannonScale, anchorBuilding = d.anchorBuilding };
             return Solve(cannonRoot, Vector3.right, structure, aspect, s, extraAbove);
         }
 
@@ -83,6 +95,7 @@ namespace Crashverse.Meta
             aspect = Mathf.Clamp(aspect, 0.3f, 2.5f);
             firingDir.y = 0f;
             var dir = firingDir.sqrMagnitude > 1e-6f ? firingDir.normalized : Vector3.right;
+            if (s.anchorBuilding) return SolveAnchored(cannonRoot, dir, structure, aspect, s, extraAbove);
             var side = Vector3.Cross(Vector3.up, dir); // horizontal, perpendicular to the firing line
             float ground = cannonRoot.y;
             var cam = cannonRoot - dir * s.back + Vector3.up * s.height;
@@ -151,6 +164,57 @@ namespace Crashverse.Meta
                 rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(pitchDown, 0f, 0f);
             }
             return new CannonCameraPose { position = cam, rotation = rot, fov = fovV };
+        }
+
+        static Vector3 Corner(Bounds b, int i) =>
+            new Vector3((i & 1) == 0 ? b.min.x : b.max.x, (i & 2) == 0 ? b.min.y : b.max.y, (i & 4) == 0 ? b.min.z : b.max.z);
+
+        /// <summary>Concept framing (s.anchorBuilding): fixed low eye behind the breech; the vertical lens comes from the building's width
+        /// (sideFill), then the pitch is solved (bisection on the real projection) so the building top, its flag and the hint arc sit just
+        /// under the HUD. The cannon's lowest metre may be cut by the bottom edge; if anything above it (or the building's base) would
+        /// leave the screen, the lens widens 3% at a time.</summary>
+        static CannonCameraPose SolveAnchored(Vector3 cannonRoot, Vector3 dir, Bounds structure, float aspect, Settings s, Vector3[] extraAbove)
+        {
+            var side = Vector3.Cross(Vector3.up, dir);
+            var cam = cannonRoot - dir * s.back + Vector3.up * s.height;
+            float nearAlong = float.MaxValue, halfW = 0f;
+            for (int i = 0; i < 8; i++)
+            {
+                var d = Corner(structure, i) - cam;
+                nearAlong = Mathf.Min(nearAlong, Vector3.Dot(d, dir)); halfW = Mathf.Max(halfW, Mathf.Abs(Vector3.Dot(d, side)));
+            }
+            nearAlong = Mathf.Max(1f, nearAlong);
+            float fov = 2f * Mathf.Atan(Mathf.Tan(Mathf.Atan2(halfW / Mathf.Max(0.1f, s.sideFill), nearAlong)) / aspect) * Mathf.Rad2Deg;
+            fov = Mathf.Clamp(fov, s.minFov, s.maxFov);
+
+            var tops = new System.Collections.Generic.List<Vector3>();
+            var topBox = structure; topBox.SetMinMax(structure.min, structure.max + Vector3.up * RoofFlagPole);
+            for (int i = 0; i < 8; i++) tops.Add(Corner(topBox, i));
+            if (extraAbove != null) foreach (var p in extraAbove) if (Vector3.Dot(p - cam, dir) >= 1f) tops.Add(p);
+            // the cannon envelope (render scale) above its lowest metre must stay on screen
+            float k = s.cannonScale;
+            var must = new Bounds(); must.SetMinMax(cannonRoot - dir * s.cannonRear + side * -k + Vector3.up * 1f, cannonRoot + dir * (2f * k) + side * k + Vector3.up * s.cannonTop);
+            must.SetMinMax(Vector3.Min(must.min, must.max), Vector3.Max(must.min, must.max));
+            float limit = 1f - s.topMargin - 0.01f;
+            CannonCameraPose pose = default;
+            for (int it = 0; it < 40; it++)
+            {
+                float lo = -40f, hi = 60f;
+                for (int b = 0; b < 40; b++)
+                {
+                    float m = (lo + hi) * 0.5f;
+                    var pm = new CannonCameraPose { position = cam, rotation = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(m, 0f, 0f), fov = fov };
+                    float yMax = float.MinValue;
+                    foreach (var p in tops) yMax = Mathf.Max(yMax, ToViewport(pm, aspect, p).y);
+                    if (yMax > limit) hi = m; else lo = m;
+                }
+                pose = new CannonCameraPose { position = cam, rotation = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(lo, 0f, 0f), fov = fov };
+                var mr = ViewportRect(pose, aspect, must); var sr = ViewportRect(pose, aspect, structure);
+                bool ok = mr.yMin >= 0f && mr.xMin >= 0f && mr.xMax <= 1f && sr.yMin >= 0f && sr.xMin >= 0f && sr.xMax <= 1f;
+                if (ok || fov >= s.maxFov) break;
+                fov = Mathf.Min(s.maxFov, fov * 1.03f);
+            }
+            return pose;
         }
 
         /// <summary>Viewport point (x, y in 0..1 when on screen; z = depth) of a world point for a pose — the same projection a Unity
