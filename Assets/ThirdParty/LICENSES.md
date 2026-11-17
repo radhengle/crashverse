@@ -48,11 +48,18 @@ The UV layouts did not change.
 
 ## L1 Tide Watchtower asset pass (free assets, Nov 2026)
 PBR sets `T_TW_<Surface>{,_N,_ORM}.jpg` in `Resources/Kingdom/Textures/`, 1k. The diffuse maps were colour-graded toward `design/level_concepts_v1/L01_v2_goal.png` by `Tools/Blender/kingdom/grade_tide_textures.py`. The normal (OpenGL) and ARM maps are unmodified. All are CC0 from Poly Haven (https://polyhaven.com/license):
-- Stone: `castle_wall_slates`
+- Stone: `rock_boulder_dry`
 - Deck: `brown_planks_09`
 - Timber: `dark_wooden_planks`
 - Roof: `clay_roof_tiles_02`
 - Rock: `rock_face_03`
 - Grass: `aerial_grass_rock`
 
-`Resources/Kingdom/Meshes/Tide_Cannon.bytes`: an original mesh modelled in Blender 4.2 LTS (GPL tool; its output is ours) by `Tools/Blender/tide/build_cannon.py`. It uses no third-party geometry.
+The following meshes in `Resources/Kingdom/Meshes/` are original work. Each was built in Blender 4.2 LTS by the script named. Blender is a GPL tool, but its output belongs to us. None of these meshes uses third-party geometry.
+- `Tide_Cannon.bytes`: built by `Tools/Blender/tide/build_cannon.py`.
+- `Tide_Deck.bytes`: built by `Tools/Blender/tide/build_deck.py` (lantern, barrels, crate, balls and rope).
+- `Tide_Kit.bytes`: built by `Tools/Blender/tide/build_kit.py` (bevelled stones and faceted rocks).
+- `Tide_Cliffs.bytes`: built by `Tools/Blender/tide/build_cliffs.py`.
+- `Tide_Castle.bytes`: built by `Tools/Blender/tide/build_castle.py`.
+
+These meshes are textured at runtime with the CC0 sets listed above.

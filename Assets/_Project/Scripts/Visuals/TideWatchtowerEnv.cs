@@ -17,7 +17,7 @@ namespace Crashverse.Visuals
         static Material RailWood => M("RailWood", "T_TW_Timber", new Color(1.10f, 0.95f, 0.95f));
         static Material Brass => M("Brass", null, new Color(0.80f, 0.56f, 0.24f), 0.4f, 0.4f);
         static Material LanternGlow => M("LanternGlow", null, new Color(1f, 0.94f, 0.24f), 0f, 1f, new Color(5.0f, 4.0f, 1.1f)); // #FEF03C
-        static Material OrangeStave => M("OrangeStave", "T_K_Planks", new Color(1.55f, 1.05f, 0.55f));  // #D57321
+        static Material OrangeStave => M("OrangeStave", "T_TW_Deck", new Color(1.55f, 1.10f, 0.70f));  // #D57321
         static Material Steel => M("Steel", null, new Color(0.45f, 0.47f, 0.5f), 0.6f, 0.4f);
         static Material Ball => M("Ball", null, new Color(0.19f, 0.13f, 0.15f), 0.3f, 0.45f);        // #312227
         static Material Crate => M("Crate", "T_TW_Deck", new Color(0.95f, 0.85f, 0.85f));
@@ -37,8 +37,11 @@ namespace Crashverse.Visuals
         {
             var go = new GameObject("TideWatchtowerEnv").transform; go.SetParent(root, false);
             var t = new TwMesh(); Deck(t, cannon); t.Build(go, "TwDeck", true);
-            var p = new TwMesh(); Props(p, cannon); p.Build(go, "TwProps", true);
-            var g = new TwMesh(); Background(g); g.Build(go, "TwBackground", false, false);
+            // Blender-built props (Tools/Blender/tide/build_deck.py -> Kingdom/Meshes/Tide_Deck): lantern, barrels, crate, balls, rope
+            bool hero = HeroProps(go);
+            var p = new TwMesh(); Props(p, cannon, !hero); p.Build(go, "TwProps", true);
+            bool heroCliffs = HeroCliffs(go);
+            var g = new TwMesh(); Background(g, !heroCliffs); g.Build(go, "TwBackground", false, false);
             var sf = new TwMesh(); Surf(sf); sf.Build(go, "TwSurf", false, false);
             // the lantern's warm light on the rail and the deck
             var lg = new GameObject("LanternLight"); lg.transform.SetParent(go, false); lg.transform.position = V(-17.55f, 2.3f, 3.0f);
@@ -76,7 +79,29 @@ namespace Crashverse.Visuals
             }
         }
 
-        static void Props(TwMesh t, Vector3 c)
+        static bool HeroProps(Transform parent)
+        {
+            var bundle = CvMesh.Load("Kingdom/Meshes/Tide_Deck");
+            if (!bundle.ContainsKey("Deck_Brass") || !bundle.ContainsKey("Deck_Stave")) return false;
+            var mats = new System.Collections.Generic.Dictionary<string, Material> {
+                { "Stave", OrangeStave }, { "Crate", Crate }, { "Hoop", Steel }, { "Ball", Ball }, { "Brass", Brass }, { "Glow", LanternGlow }, { "Rope", RopeMat } };
+            foreach (var kv in bundle)
+            {
+                int us = kv.Key.LastIndexOf('_'); if (us < 0 || !mats.TryGetValue(kv.Key.Substring(us + 1), out var mat)) continue;
+                var g = new GameObject("Tw" + kv.Key); g.transform.SetParent(parent, false);
+                g.AddComponent<MeshFilter>().sharedMesh = kv.Value;
+                var mr = g.AddComponent<MeshRenderer>(); mr.sharedMaterial = mat; mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            }
+            return true;
+        }
+
+        static void Props(TwMesh t, Vector3 c, bool procedural = true)
+        {
+            if (procedural) ProceduralProps(t);
+            ClothAndBanners(t);
+        }
+
+        static void ProceduralProps(TwMesh t)
         {
             // brass hexagonal lantern on the rail top at z 3.0 (goal 0.5-12, 55-69), ~0.7 m wide, 1.3 m tall
             var lb = V(-17.55f, 1.30f, 3.0f);
@@ -118,6 +143,10 @@ namespace Crashverse.Visuals
                 t.Cyl(RopeMat, 0.4f, L(f0), L(f1), 0.04f, 0.04f, 5, false);
             }
             t.Sphere(Ball, 1f, V(-18.25f, 1.32f, -2.95f), Vector3.one * 0.17f, 10, 7);
+        }
+
+        static void ClothAndBanners(TwMesh t)
+        {
             // red cloth draped over the rail between the left post and the cannon (goal 25-37, 70-75), gold cloth on the right
             Drape(t, RedCloth, -17.72f, 1.32f, 0.95f, 1.85f, 0.75f);
             Drape(t, GoldCloth, -17.72f, 1.32f, -1.95f, -1.6f, 0.32f);
@@ -152,13 +181,41 @@ namespace Crashverse.Visuals
 
         /// <summary>Far background at ~400 m (spec §6): left cliffs + beach (goal u 0-25, v 14-29), the right cliff (u 72-100, v 6-28)
         /// with the waterfall (u 85-88, v 11-27) and the white castle with blue spires on top (u 80-93, v 0-8).</summary>
-        static void Background(TwMesh t)
+        /// <summary>Blender-built cliffs (Tools/Blender/tide/build_cliffs.py -> Kingdom/Meshes/Tide_Cliffs): the same masses as Cliff() as
+        /// crag-and-ledge heightfields, rock faces and grass tops split by slope.</summary>
+        static bool HeroCliffs(Transform parent)
         {
-            // right cliff: stacked rough masses rising toward the right, grass caps
-            Cliff(t, 31, V(400f, 0f, -72f), V(440f, 0f, -158f), 6, 26f, 46f, 62f, 98f);
+            var bundle = CvMesh.Load("Kingdom/Meshes/Tide_Cliffs");
+            if (!bundle.TryGetValue("Cliff_Rock", out var rock) || !bundle.TryGetValue("Cliff_Grass", out var grass)) return false;
+            foreach (var (mesh, mat) in new[] { (rock, CliffRock), (grass, CliffGrass) })
+            {
+                var g = new GameObject("Tw" + mesh.name); g.transform.SetParent(parent, false);
+                g.AddComponent<MeshFilter>().sharedMesh = mesh;
+                var mr = g.AddComponent<MeshRenderer>(); mr.sharedMaterial = mat; mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; mr.receiveShadows = false;
+            }
+            var castle = CvMesh.Load("Kingdom/Meshes/Tide_Castle");
+            var cm = new System.Collections.Generic.Dictionary<string, Material> { { "Castle_Wall", CastleWall }, { "Castle_Shade", CastleShade }, { "Castle_Spire", Spire }, { "Castle_Window", TideWatchtower.Socket }, { "Castle_Gold", Brass } };
+            _heroCastle = castle.ContainsKey("Castle_Wall") && castle.ContainsKey("Castle_Spire");
+            if (_heroCastle)
+                foreach (var kv in castle)
+                {
+                    if (!cm.TryGetValue(kv.Key, out var mat)) continue;
+                    var g = new GameObject("Tw" + kv.Key); g.transform.SetParent(parent, false);
+                    g.AddComponent<MeshFilter>().sharedMesh = kv.Value;
+                    var mr = g.AddComponent<MeshRenderer>(); mr.sharedMaterial = mat; mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; mr.receiveShadows = false;
+                }
+            return true;
+        }
+
+        static bool _heroCastle;
+
+        static void Background(TwMesh t, bool masses = true)
+        {
+            // right cliff: stacked rough masses rising toward the right, grass caps (foam only when the Blender cliffs are in)
+            Cliff(t, 31, V(400f, 0f, -72f), V(440f, 0f, -158f), 6, 26f, 46f, 62f, 98f, masses);
             // left headland and the mountain behind it, with a beach at the waterline
-            Cliff(t, 41, V(410f, 0f, 160f), V(400f, 0f, 84f), 5, 24f, 36f, 40f, 66f);
-            Cliff(t, 47, V(470f, 0f, 140f), V(470f, 0f, 112f), 2, 22f, 26f, 48f, 52f);
+            Cliff(t, 41, V(410f, 0f, 160f), V(400f, 0f, 84f), 5, 24f, 36f, 40f, 66f, masses);
+            Cliff(t, 47, V(470f, 0f, 140f), V(470f, 0f, 112f), 2, 22f, 26f, 48f, 52f, masses);
             t.Slab(Beach, 3f, V(385f, -0.6f, 112f), V(16f, 1.6f, 70f), 5, 0.05f);
             // waterfall down the right cliff's face, foam at its foot
             float wz = -116f;
@@ -168,7 +225,8 @@ namespace Crashverse.Visuals
                 t.Poly2(Waterfall, 4f, V(381f - i * 0.3f, 78f, z0), V(381f - i * 0.3f, 78f, z0 + 1.6f), V(380f - i * 0.3f, 0f, z0 + 2.2f), V(380f - i * 0.3f, 0f, z0 - 0.4f));
             }
             t.Slab(TideWatchtower.Foam, 4f, V(378f, -0.4f, wz), V(10f, 2.2f, 12f), 9, 0.25f);
-            // castle on the cliff top: white walls and towers with blue conical spires
+            // castle on the cliff top: white walls and towers with blue conical spires (Blender-built Tide_Castle when present)
+            if (!masses && _heroCastle) return;
             float cx = 425f, cy = 92f;
             t.BoxMinMax(CastleShade, 4f, V(cx - 8f, cy - 6f, -128f), V(cx + 8f, cy + 7f, -96f));
             t.BoxMinMax(CastleWall, 4f, V(cx - 9f, cy - 6f, -126f), V(cx - 7.5f, cy + 8f, -98f));
@@ -184,13 +242,14 @@ namespace Crashverse.Visuals
 
         /// <summary>Rounded cliff masses (PM b22: no grey boxes): each mass is a tall ellipsoid of hazy rock with a flattened green
         /// cap, two lower shoulder lumps in front with their own grass, and a dark foot at the waterline.</summary>
-        static void Cliff(TwMesh t, int seed, Vector3 a, Vector3 b, int n, float w0, float w1, float h0, float h1)
+        static void Cliff(TwMesh t, int seed, Vector3 a, Vector3 b, int n, float w0, float w1, float h0, float h1, bool masses = true)
         {
             for (int i = 0; i < n; i++)
             {
                 float f = n == 1 ? 0.5f : i / (float)(n - 1);
                 var p = Vector3.Lerp(a, b, f); float h = Mathf.Lerp(h0, h1, f) * (0.85f + 0.3f * H(seed, i)); float w = Mathf.Lerp(w0, w1, H(seed + 1, i));
                 float jz = (H(seed + 4, i) - 0.5f) * w * 0.5f;
+                if (!masses) { t.Sphere(TideWatchtower.Foam, 4f, V(p.x - w * 0.55f, -0.3f, p.z), V(w * 0.45f, 0.8f, w * 0.7f), 10, 3); continue; }
                 t.Sphere(H(seed + 3, i) < 0.5f ? CliffRock : CliffDark, 9f, V(p.x, h * 0.42f, p.z), V(w * 0.55f, h * 0.62f, w * 0.6f), 12, 8);
                 t.Sphere(CliffGrass, 6f, V(p.x - w * 0.04f, h * 0.98f, p.z), V(w * 0.5f, h * 0.09f, w * 0.52f), 12, 5);
                 t.Sphere(CliffDark, 9f, V(p.x - w * 0.42f, h * 0.18f, p.z + jz), V(w * 0.36f, h * 0.34f, w * 0.38f), 10, 7);

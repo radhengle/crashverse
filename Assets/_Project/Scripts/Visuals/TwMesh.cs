@@ -83,6 +83,25 @@ namespace Crashverse.Visuals
         /// <summary>Box between two corners (min/max), axis-aligned.</summary>
         public void BoxMinMax(Material m, float tile, Vector3 a, Vector3 b) => Box(m, tile, (a + b) * 0.5f, new Vector3(Mathf.Abs(b.x - a.x), Mathf.Abs(b.y - a.y), Mathf.Abs(b.z - a.z)));
 
+        static readonly Dictionary<Mesh, (Vector3[] v, Vector3[] n, int[] t)> _kitCache = new Dictionary<Mesh, (Vector3[], Vector3[], int[])>();
+
+        /// <summary>Appends a unit-box (-0.5..0.5) kit mesh (Blender-built bevelled stone / faceted rock, Kingdom/Meshes/Tide_Kit) scaled to
+        /// <paramref name="size"/> at <paramref name="centre"/>, with smooth normals and box UVs in metres / tile.</summary>
+        public void Kit(Material m, float tile, Mesh mesh, Vector3 centre, Vector3 size, Quaternion rot = default)
+        {
+            if (m == null || mesh == null) return;
+            if (rot.x == 0f && rot.y == 0f && rot.z == 0f && rot.w == 0f) rot = Quaternion.identity;
+            if (!_kitCache.TryGetValue(mesh, out var k)) { k = (mesh.vertices, mesh.normals, mesh.triangles); _kitCache[mesh] = k; }
+            var p = P(m, tile); int s = p.v.Count;
+            var tr = M * Matrix4x4.TRS(centre, rot, size); var nt = tr.inverse.transpose;
+            for (int i = 0; i < k.v.Length; i++)
+            {
+                var w = tr.MultiplyPoint3x4(k.v[i]); var n = nt.MultiplyVector(k.n[i]).normalized;
+                p.v.Add(w); p.n.Add(n); p.uv.Add(BoxUv(w, n, p.tile));
+            }
+            for (int i = 0; i < k.t.Length; i++) p.t.Add(s + k.t[i]);
+        }
+
         /// <summary>A rough stone / rock: a box whose corners are jittered by up to jitter x size (seeded), flat-shaded.</summary>
         public void Slab(Material m, float tile, Vector3 centre, Vector3 size, int seed, float jitter = 0.18f, Quaternion rot = default)
         {

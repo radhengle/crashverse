@@ -13,7 +13,7 @@ def grade(src, dst, target, sat=1.0, con=1.1):
     im = Image.merge('RGB', ch); im.save(O + dst + '.jpg', quality=90)
     shutil.copy(SRC + src + '_nor.jpg', O + dst + '_N.jpg'); shutil.copy(SRC + src + '_arm.jpg', O + dst + '_ORM.jpg')
     print(dst, src, mean(im))
-grade('castle_wall_slates', 'T_TW_Stone', (0.56, 0.53, 0.49), sat=0.8, con=1.15)   # grey rubble/ashlar masonry
+grade('rock_boulder_dry', 'T_TW_Stone', (0.56, 0.53, 0.49), sat=0.8, con=1.35)    # weathered block faces (the blocks themselves are modelled)
 grade('brown_planks_09', 'T_TW_Deck', (0.50, 0.33, 0.20), sat=1.0, con=1.2)        # warm worn deck boards
 grade('dark_wooden_planks', 'T_TW_Timber', (0.40, 0.25, 0.15), sat=1.0, con=1.15)  # scaffold posts/beams
 grade('clay_roof_tiles_02', 'T_TW_Roof', (0.78, 0.20, 0.11), sat=1.2, con=1.15)    # saturated red clay tiles

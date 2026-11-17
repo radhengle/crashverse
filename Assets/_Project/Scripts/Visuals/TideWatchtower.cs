@@ -69,12 +69,38 @@ namespace Crashverse.Visuals
         internal static Material Rope => M("Rope", "T_K_Bark", new Color(1.3f, 1.05f, 0.85f));
 
         static Dictionary<string, DestructibleBlock> _by;
+        static Mesh[] _stones, _rocks;
+
+        static void LoadKit()
+        {
+            if (_stones != null) return;
+            var kit = CvMesh.Load("Kingdom/Meshes/Tide_Kit"); var st = new List<Mesh>(); var rk = new List<Mesh>();
+            for (int i = 0; i < 8; i++) { if (kit.TryGetValue("Stone_" + i, out var a)) st.Add(a); if (kit.TryGetValue("Rock_" + i, out var r)) rk.Add(r); }
+            _stones = st.ToArray(); _rocks = rk.ToArray();
+        }
+
+        /// <summary>A dressed block: a Blender bevelled/chipped stone from the kit (tiny seeded tilt), or the procedural slab without it.</summary>
+        static void StoneK(TwMesh t, Material m, float tile, Vector3 c, Vector3 size, int seed, float jitter = 0.05f, Quaternion rot = default)
+        {
+            if (_stones == null || _stones.Length == 0) { t.Slab(m, tile, c, size, seed, jitter, rot); return; }
+            if (rot.x == 0f && rot.y == 0f && rot.z == 0f && rot.w == 0f) rot = Quaternion.identity;
+            var tilt = Quaternion.Euler((Hash(seed, 1) - 0.5f) * 3f, (Hash(seed, 2) - 0.5f) * 3f, (Hash(seed, 3) - 0.5f) * 3f);
+            t.Kit(m, tile, _stones[(seed & 0x7fffffff) % _stones.Length], c, size, rot * tilt);
+        }
+
+        /// <summary>A boulder: a Blender faceted rock from the kit, or the procedural jittered slab without it.</summary>
+        static void RockK(TwMesh t, Material m, float tile, Vector3 c, Vector3 size, int seed, float jitter = 0.16f, Quaternion rot = default)
+        {
+            if (_rocks == null || _rocks.Length == 0) { t.Slab(m, tile, c, size, seed, jitter, rot); return; }
+            t.Kit(m, tile, _rocks[(seed & 0x7fffffff) % _rocks.Length], c, size * 1.08f, rot);
+        }
         static Vector3 _off; // actual base - spec base
 
         /// <summary>Dresses every block of the Tide Watchtower layout. Returns the number of blocks dressed.</summary>
         public static int Apply(IReadOnlyList<DestructibleBlock> blocks)
         {
             if (!Matches(blocks)) return 0;
+            LoadKit();
             _by = new Dictionary<string, DestructibleBlock>();
             foreach (var b in blocks) if (b != null && !string.IsNullOrEmpty(b.blockId)) _by[b.blockId] = b;
             var rc = _by["rockC"]; _off = rc.transform.position - new Vector3(-3.5f, -0.4f, -0.35f);
@@ -273,9 +299,9 @@ namespace Crashverse.Visuals
                 float sz = Mathf.Lerp(s0, s1, Hash(seed + 7, i)); float top = Mathf.Lerp(yTop0, yTop1, Hash(seed + 13, i));
                 float h = top - (waterY - 0.6f);
                 var rot = Quaternion.Euler((Hash(seed, i * 3) - 0.5f) * 14f, Hash(seed + 3, i) * 90f, (Hash(seed + 5, i) - 0.5f) * 14f);
-                t.Slab(Hash(seed + 11, i) < 0.45f ? RockDark : Rock, 1.4f, V(p.x, (top + waterY - 0.6f) * 0.5f, p.z), V(sz, h, sz * (0.75f + 0.4f * Hash(seed + 17, i))), seed * 31 + i, 0.16f, rot);
+                RockK(t, Hash(seed + 11, i) < 0.45f ? RockDark : Rock, 1.4f, V(p.x, (top + waterY - 0.6f) * 0.5f, p.z), V(sz, h, sz * (0.75f + 0.4f * Hash(seed + 17, i))), seed * 31 + i, 0.16f, rot);
                 // sun-lit flat top slab + moss tuft
-                t.Slab(RockTop, 1.2f, V(p.x, top + 0.02f, p.z), V(sz * 0.7f, 0.14f, sz * 0.6f), seed * 57 + i, 0.2f, rot);
+                StoneK(t, RockTop, 1.2f, V(p.x, top + 0.02f, p.z), V(sz * 0.7f, 0.14f, sz * 0.6f), seed * 57 + i, 0.2f, rot);
                 if (Hash(seed + 19, i) < 0.55f) t.Slab(Moss, 0.8f, V(p.x + (Hash(seed, i + 40) - 0.5f) * sz * 0.4f, top + 0.09f, p.z + (Hash(seed, i + 50) - 0.5f) * sz * 0.4f), V(sz * 0.35f, 0.09f, sz * 0.3f), seed * 91 + i, 0.3f, rot);
                 // foam ring where the rock meets the sea
                 if (Hash(seed + 23, i) < 0.8f)
@@ -301,13 +327,13 @@ namespace Crashverse.Visuals
                 for (int j = 0; j < 4; j++)
                 {
                     float z0 = -1.6f + i * 0.4f, x0 = -6.4f + j * 0.42f;
-                    t.Slab(j % 2 == 0 ? StoneLight : Stone, 1f, V(x0 + 0.2f, 0.76f, z0 + 0.2f), V(0.38f, 0.1f, 0.37f), i * 7 + j, 0.05f);
+                    StoneK(t, j % 2 == 0 ? StoneLight : Stone, 1f, V(x0 + 0.2f, 0.76f, z0 + 0.2f), V(0.38f, 0.1f, 0.37f), i * 7 + j, 0.05f);
                 }
             // 5 stone steps down to the water under the arch centre (spec: z -1.0..0.25, x -6.2, y -0.23..1.05)
             for (int i = 0; i < 5; i++)
             {
                 float top = 0.62f - i * 0.2f, x1 = -6.45f - i * 0.3f;
-                t.Slab(i % 2 == 0 ? StoneLight : Stone, 1f, V(x1 - 0.15f, (top - 1.2f) * 0.5f, -0.38f), V(0.32f, top + 1.2f, 1.25f), 300 + i, 0.03f);
+                StoneK(t, i % 2 == 0 ? StoneLight : Stone, 1f, V(x1 - 0.15f, (top - 1.2f) * 0.5f, -0.38f), V(0.32f, top + 1.2f, 1.25f), 300 + i, 0.03f);
             }
             // boulders: front left and front right of the steps, the sides, and the tall flanking rocks (up to y 1.3)
             Boulders(t, 1, V(-6.8f, 0f, 2.9f), V(-6.7f, 0f, 0.45f), 3, 1.1f, 1.6f, 0.55f, 1.3f);
@@ -382,7 +408,7 @@ namespace Crashverse.Visuals
                     if (c1 - c0 < 0.08f) continue;
                     float hgt = (b - a) - 0.06f, out1 = 0.05f + 0.05f * Hash(k + 31, i);
                     var mat = Hash(k + 7, i) < 0.22f ? StoneDark : Hash(k + 9, i) < 0.35f ? StoneLight : Stone;
-                    t.Slab(mat, 0.9f, V(xf - out1 * 0.5f + 0.02f, (a + b) * 0.5f, (c0 + c1) * 0.5f), V(out1 + 0.06f, hgt, c1 - c0 - 0.05f), k * 97 + i, 0.06f);
+                    StoneK(t, mat, 0.9f, V(xf - out1 * 0.5f + 0.02f, (a + b) * 0.5f, (c0 + c1) * 0.5f), V(out1 + 0.06f, hgt, c1 - c0 - 0.05f), k * 97 + i, 0.06f);
                     // moss on a few stone tops and a green streak below some of them
                     if (Hash(k + 41, i) < 0.12f) t.Slab(Moss, 0.6f, V(xf - out1 - 0.01f, b - 0.05f, (c0 + c1) * 0.5f), V(0.05f, 0.1f, (c1 - c0) * 0.6f), k * 13 + i, 0.2f);
                 }
@@ -402,11 +428,11 @@ namespace Crashverse.Visuals
             {
                 float w = i % 2 == 0 ? JambW : JambW * 0.7f;
                 float z0 = left ? inner : inner - w, z1 = left ? inner + w : inner;
-                t.Slab(i % 2 == 0 ? Dressed : StoneLight, 0.9f, V(-4.96f, y + jh * 0.5f, (z0 + z1) * 0.5f), V(0.16f, jh - 0.05f, w - 0.04f), 400 + i + (left ? 10 : 0), 0.04f);
+                StoneK(t, i % 2 == 0 ? Dressed : StoneLight, 0.9f, V(-4.96f, y + jh * 0.5f, (z0 + z1) * 0.5f), V(0.16f, jh - 0.05f, w - 0.04f), 400 + i + (left ? 10 : 0), 0.04f);
                 y += jh;
             }
             float iw = JambW + 0.28f;
-            t.Slab(Dressed, 0.9f, V(-5.0f, y + 0.13f, inner + s * (iw * 0.5f - 0.05f)), V(0.24f, 0.26f, iw), 420 + (left ? 1 : 0), 0.04f);
+            StoneK(t, Dressed, 0.9f, V(-5.0f, y + 0.13f, inner + s * (iw * 0.5f - 0.05f)), V(0.24f, 0.26f, iw), 420 + (left ? 1 : 0), 0.04f);
             // voussoirs on this side of the crown (9 in all, keystone on the lintel)
             for (int i = 0; i < 9; i++)
             {
@@ -716,7 +742,7 @@ namespace Crashverse.Visuals
         // ---------------- decorations on the rock ----------------
         static void Brazier(TwMesh t, Vector3 at)
         {
-            t.Slab(StoneLight, 1f, at + V(0f, 0.1f, 0f), V(0.5f, 0.2f, 0.5f), (int)(at.z * 10f), 0.04f);
+            StoneK(t, StoneLight, 1f, at + V(0f, 0.1f, 0f), V(0.5f, 0.2f, 0.5f), (int)(at.z * 10f), 0.04f);
             t.BoxMinMax(Timber, 1f, at + V(-0.15f, 0.2f, -0.15f), at + V(0.15f, 1.5f, 0.15f));
             t.BoxMinMax(Iron, 1f, at + V(-0.17f, 0.6f, -0.17f), at + V(0.17f, 0.66f, 0.17f));
             t.BoxMinMax(Iron, 1f, at + V(-0.17f, 1.2f, -0.17f), at + V(0.17f, 1.26f, 0.17f));
