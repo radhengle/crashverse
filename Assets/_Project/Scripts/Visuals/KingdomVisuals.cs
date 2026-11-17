@@ -42,13 +42,13 @@ namespace Crashverse.Visuals
             var sun = RenderSettings.sun;
             if (sun != null)
             {
-                sun.color = new Color(1f, 0.90f, 0.74f); sun.intensity = 1.8f;
+                sun.color = new Color(1f, 0.86f, 0.64f); sun.intensity = 2.0f; // PM b20 QA: warmer, sunnier
                 sun.transform.rotation = Quaternion.Euler(40f, 65f, 0f); sun.shadows = LightShadows.Soft; sun.shadowStrength = 0.85f; sun.shadowBias = 0.04f; sun.shadowNormalBias = 0.3f;
             }
             foreach (var l in Object.FindObjectsOfType<Light>()) if (l.name == "RimLight") { l.intensity = 0.25f; l.color = new Color(0.75f, 0.85f, 1f); }
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
             RenderSettings.ambientSkyColor = new Color(0.46f, 0.62f, 0.88f);
-            RenderSettings.ambientEquatorColor = new Color(0.62f, 0.60f, 0.54f);
+            RenderSettings.ambientEquatorColor = new Color(0.70f, 0.63f, 0.52f);
             RenderSettings.ambientGroundColor = new Color(0.30f, 0.25f, 0.18f);
             RenderSettings.ambientIntensity = 1f;
             RenderSettings.fog = true; RenderSettings.fogMode = FogMode.Linear;
@@ -78,9 +78,9 @@ namespace Crashverse.Visuals
             if (w != null)
             {
                 w.SetColor("_HorizonColor", hz);
-                w.SetColor("_ShallowColor", dark ? new Color(0.10f, 0.42f, 0.45f) : new Color(0.22f, 0.95f, 0.86f));
-                w.SetColor("_MidColor", dark ? new Color(0.04f, 0.25f, 0.36f) : new Color(0.04f, 0.72f, 0.82f));
-                w.SetColor("_DeepColor", dark ? new Color(0.02f, 0.10f, 0.22f) : new Color(0.02f, 0.42f, 0.68f));
+                w.SetColor("_ShallowColor", dark ? new Color(0.10f, 0.42f, 0.45f) : new Color(0.08f, 0.93f, 0.82f)); // PM b20 QA: more saturated lagoon
+                w.SetColor("_MidColor", dark ? new Color(0.04f, 0.25f, 0.36f) : new Color(0.0f, 0.66f, 0.88f));
+                w.SetColor("_DeepColor", dark ? new Color(0.02f, 0.10f, 0.22f) : new Color(0.0f, 0.33f, 0.74f));
                 w.SetFloat("_WaveAmp", dark ? 0.22f : 0.12f);
             }
             if (dark) { RenderSettings.fogColor = hz; RenderSettings.fogStartDistance = 45f; RenderSettings.fogEndDistance = 300f; }

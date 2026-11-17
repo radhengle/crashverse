@@ -287,26 +287,40 @@ namespace Crashverse.Visuals
                 // L1 QA 16 Nov: the moored boats were off-screen on the small island; two rowboats in the lagoon at the island's
                 // front corners, hulls along the view so they stay out of the firing lane (|z| > 2.7)
                 // PM b18 QA: bigger and nearer, in the lagoon just in front of the island, either side of the cannon (|z| 2.8, clear of the lane)
-                if (Compact) { var rb = Rowboat(h, new Vector3(Cx - Rx - 0.9f, WaterY + 0.05f, side * 2.8f), side > 0 ? 24f : -30f); if (rb != null) rb.localScale = Vector3.one * 1.5f; }
+                if (Compact) { var rb = Rowboat(h, new Vector3(Cx - Rx - 1.2f, WaterY + 0.05f, side * 3.1f), side > 0 ? 34f : -40f); if (rb != null) rb.localScale = Vector3.one * 1.5f; } // b21: concept camera, near the screen edges
             }
         }
 
         static Transform Rowboat(Transform parent, Vector3 at, float yaw)
         {
             var b = new GameObject("Rowboat").transform; b.SetParent(parent, false); b.localPosition = at; b.localRotation = Quaternion.Euler(0f, yaw, 0f);
-            var hull = KingdomMaterials.Make("BoatHull", "T_K_Wood", new Color(0.95f, 0.9f, 0.85f), 0f, 0.7f, Vector2.one);
-            var trim = KingdomMaterials.Make("BoatTrim", null, new Color(0.08f, 0.2f, 0.45f), 0f, 0.5f, Vector2.one);
-            // tapered hull from stacked strakes: wide amidships, narrow at bow/stern
-            for (int i = 0; i < 9; i++)
+            // PM b20 QA (L01.jpg): clearly a WOODEN rowboat: warm clinker planks, a darker oak gunwale and ribs, thwarts and two oars
+            var hull = KingdomMaterials.Make("BoatHull", "T_K_Planks", new Color(0.72f, 0.5f, 0.32f), 0f, 0.8f, Vector2.one);
+            var inner = KingdomMaterials.Make("BoatInner", "T_K_Planks", new Color(0.46f, 0.32f, 0.2f), 0f, 0.85f, Vector2.one);
+            var trim = KingdomMaterials.Make("BoatTrim", "T_K_Wood", new Color(0.36f, 0.23f, 0.13f), 0f, 0.75f, Vector2.one);
+            for (int i = 0; i < 7; i++)
             {
-                float f = (i - 4) / 4f, w = Mathf.Lerp(1.25f, 0.35f, f * f), y = 0.12f + (1f - f * f) * 0.0f + Mathf.Abs(f) * 0.12f;
-                Box("Strake", b, new Vector3(f * 1.7f, y, 0f), new Vector3(0.42f, 0.32f, w), hull, 1f);
-                Box("Gunwale", b, new Vector3(f * 1.7f, y + 0.18f, w * 0.5f), new Vector3(0.42f, 0.06f, 0.06f), trim, 1f);
-                Box("Gunwale", b, new Vector3(f * 1.7f, y + 0.18f, -w * 0.5f), new Vector3(0.42f, 0.06f, 0.06f), trim, 1f);
+                float f = (i - 3) / 3f, w = Mathf.Lerp(1.3f, 0.22f, Mathf.Pow(Mathf.Abs(f), 1.6f)), sheer = 0.28f + f * f * 0.22f; // sheer line rises at bow and stern
+                // two clinker strakes per side (lower one tucked in) over a dark floor
+                Box("Floor", b, new Vector3(f * 1.8f, 0.08f, 0f), new Vector3(0.62f, 0.06f, w * 0.7f), inner, 1f);
+                foreach (float sd in new[] { -1f, 1f })
+                {
+                    Box("StrakeLow", b, new Vector3(f * 1.8f, 0.1f, sd * w * 0.4f), new Vector3(0.62f, 0.16f, 0.06f), hull, 1f, Quaternion.Euler(sd * 28f, 0f, 0f));
+                    Box("StrakeHigh", b, new Vector3(f * 1.8f, sheer - 0.06f, sd * w * 0.5f), new Vector3(0.62f, 0.18f, 0.06f), hull, 1f, Quaternion.Euler(sd * 12f, 0f, 0f));
+                    Box("Gunwale", b, new Vector3(f * 1.8f, sheer + 0.04f, sd * w * 0.52f), new Vector3(0.64f, 0.06f, 0.09f), trim, 1f);
+                }
+                if (Mathf.Abs(f) < 0.85f) Box("Rib", b, new Vector3(f * 1.8f, 0.16f, 0f), new Vector3(0.05f, 0.05f, w * 0.85f), trim, 1f);
             }
-            Box("Thwart", b, new Vector3(0.3f, 0.3f, 0f), new Vector3(0.25f, 0.05f, 1.1f), KingdomMaterials.Planks, 1f);
-            var oar = Obj("Oar", b, Cylinder(), KingdomMaterials.Wood);
-            oar.transform.localPosition = new Vector3(-0.2f, 0.4f, 0.2f); oar.transform.localRotation = Quaternion.Euler(80f, 20f, 0f); oar.transform.localScale = new Vector3(0.06f, 1.1f, 0.06f);
+            Box("Stem", b, new Vector3(1.86f, 0.36f, 0f), new Vector3(0.1f, 0.5f, 0.1f), trim, 1f, Quaternion.Euler(0f, 0f, -18f));
+            Box("Transom", b, new Vector3(-1.84f, 0.3f, 0f), new Vector3(0.08f, 0.4f, 0.36f), trim, 1f);
+            Box("Thwart", b, new Vector3(0.35f, 0.3f, 0f), new Vector3(0.24f, 0.05f, 1.15f), trim, 1f);
+            Box("Thwart", b, new Vector3(-0.75f, 0.3f, 0f), new Vector3(0.24f, 0.05f, 1.1f), trim, 1f);
+            foreach (float sd in new[] { -1f, 1f }) // oars resting across the boat, blades out over the water
+            {
+                var oar = Obj("Oar", b, Cylinder(), trim);
+                oar.transform.localPosition = new Vector3(-0.2f + sd * 0.25f, 0.4f, sd * 0.15f); oar.transform.localRotation = Quaternion.Euler(90f, sd * 14f, 0f); oar.transform.localScale = new Vector3(0.055f, 1.25f, 0.055f);
+                Box("OarBlade", b, new Vector3(-0.2f + sd * 0.25f + sd * 0.3f, 0.36f, sd * 1.32f), new Vector3(0.18f, 0.03f, 0.55f), hull, 1f, Quaternion.Euler(0f, sd * 14f, 0f));
+            }
             return b;
         }
 
@@ -787,6 +801,28 @@ namespace Crashverse.Visuals
                 Isle("IsleA", isles, new Vector3(Cx + 85f, WaterY, -24f), 0.55f, 200f);
                 Isle("IsleB", isles, new Vector3(Cx + 120f, WaterY, 34f), 0.7f, 300f);
                 Isle("IsleA", isles, new Vector3(Cx + 140f, WaterY, -40f), 0.75f, 120f);
+                // PM b20 QA (L01.jpg): tall rocky islets with palms either side of the house, near the screen edges of the low concept camera
+                void TallIsle(Vector3 pos, float sx, float sy, float yaw, int seed)
+                {
+                    var t = new GameObject("TallIsle").transform; t.SetParent(h, false); t.localPosition = pos; t.localRotation = Quaternion.Euler(0f, yaw, 0f);
+                    var sc = new Vector3(sx, sy, sx); t.localScale = sc;
+                    foreach (var kv in isles)
+                    {
+                        if (!kv.Key.StartsWith("IsleB")) continue;
+                        float tile = KingdomMaterials.TileFor(kv.Key);
+                        var mesh = tile > 0f ? CvMesh.WithBoxUv(kv.Value, tile, sc) : kv.Value;
+                        if (tile > 0f) ObjOwned(kv.Key, t, mesh, KingdomMaterials.ForTag(kv.Key), false, false);
+                        else Obj(kv.Key, t, mesh, KingdomMaterials.ForTag(kv.Key), false, false);
+                    }
+                    float top = pos.y + 9f * sy; // IsleB: cliff top 9 m (build_assets.island_cliff), grass dome +0.8
+                    for (int k = 0; k < 4; k++)
+                    {
+                        float a = seed * 1.7f + k * 1.9f, r = (k == 0 ? 0f : 0.55f) * 8f * sx;
+                        Palm(h, palms, new Vector3(pos.x + Mathf.Cos(a) * r, top + (k == 0 ? 0.6f : 0.25f), pos.z + Mathf.Sin(a) * r), seed + k, (k % 2 == 0 ? 8f : -6f), 0.9f + 0.1f * (k % 2));
+                    }
+                }
+                TallIsle(new Vector3(Cx + 58f, WaterY, 13f), 0.45f, 0.95f, 30f, 3);
+                TallIsle(new Vector3(Cx + 66f, WaterY, -15f), 0.5f, 0.85f, 200f, 6);
             }
             if (region == KingdomRegion.MillFields) WindmillLandmark(h);
             else if (region == KingdomRegion.Clocktower) ClocktowerLandmark(h);

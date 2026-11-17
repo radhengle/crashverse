@@ -86,10 +86,10 @@ namespace Crashverse.Visuals
             var gc = _glow.colorOverLifetime; gc.enabled = true; gc.color = Grad(new Color(1f, 0.6f, 0.2f), new Color(1f, 0.3f, 0.05f), 1f, 0f);
             var gs = _glow.sizeOverLifetime; gs.enabled = true; gs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.6f, 1f, 1.25f));
             _glow.GetComponent<ParticleSystemRenderer>().sortingOrder = 0;
-            _core = Sys("FireballHotCore", Mat(a, glowTex, false, Color.white, 1f), 40, 0f, ParticleSystemRenderMode.Billboard, false);
+            _core = Sys("FireballHotCore", Mat(a, glowTex, false, Color.white, 1.8f), 40, 0f, ParticleSystemRenderMode.Billboard, false);
             var cc = _core.colorOverLifetime; cc.enabled = true;
             var cg = new Gradient();
-            cg.SetKeys(new[] { new GradientColorKey(new Color(1f, 0.97f, 0.8f), 0f), new GradientColorKey(new Color(1f, 0.8f, 0.3f), 0.45f), new GradientColorKey(new Color(1f, 0.45f, 0.08f), 1f) },
+            cg.SetKeys(new[] { new GradientColorKey(new Color(1f, 1f, 0.94f), 0f), new GradientColorKey(new Color(1f, 0.95f, 0.6f), 0.4f), new GradientColorKey(new Color(1f, 0.7f, 0.2f), 0.75f), new GradientColorKey(new Color(1f, 0.45f, 0.08f), 1f) }, // PM b20 QA: white-yellow hot core
                        new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.9f, 0.5f), new GradientAlphaKey(0f, 1f) });
             cc.color = cg;
             var cs = _core.sizeOverLifetime; cs.enabled = true; cs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.7f, 1f, 1.2f));
@@ -215,7 +215,9 @@ namespace Crashverse.Visuals
             bool onStructure = at.y > 0.4f;
             Debug.Log($"CVFX|IMPACT|{at.x:F2},{at.y:F2},{at.z:F2}|t={Time.time:F2}"); // emulator smoke: cuts the smash frames from this line
             Emit(_glow, at, N(5), 0.4f, 0.2f, 0.8f, 7f, 9.5f, 0.5f, 0.8f);      // soft bloom-like halo around the blast
-            Emit(_core, at, N(14), 0.3f, 0.2f, 1.2f, 1.8f, 2.9f, 0.35f, 0.6f); // PM b18 QA: a bright white-hot core that lingers
+            Emit(_core, at, N(18), 0.25f, 0.1f, 0.9f, 2.4f, 3.8f, 0.4f, 0.7f); // PM b18/b20 QA: a big bright white-yellow core that lingers
+            Emit(_core, at, N(10), 0.6f, 1.0f, 3.0f, 1.2f, 2.0f, 0.3f, 0.5f);  // hot inner flame layer around the core
+            Emit(_fire, at, N(16), 0.4f, 2.5f, 6.5f, 1.0f, 1.8f, 0.35f, 0.6f, 1.2f); // fast yellow flame tongues (middle layer)
             Emit(_fire, at, N(24), 0.9f, 1.2f, 4.5f, 1.5f, 2.8f, 0.6f, 1.1f, 1.6f); // layered flame tongues licking outward / up
             Emit(_blast, at, N(28), 0.7f, 1.5f, 5.5f, 2.4f, 4.2f, 0.7f, 1.2f);
             Emit(_ball, at, N(26), 0.6f, 2.0f, 6.5f, 2.0f, 3.8f, 0.45f, 0.85f);

@@ -247,6 +247,8 @@ namespace Crashverse.UI
         public override bool BlocksWorldInput => false;
         public HudScreen(GameSession s) { _s = s; }
         const int StripBands = 5; public static readonly bool ShowBuildingStrip = false;
+        /// <summary>PM b20 QA (L01.jpg): no COMBO pop over the first level's fireball (the concept shows only the blast).</summary>
+        bool HideCombo => _s.Ctx.mode == RunMode.Campaign && _s.Ctx.level != null && _s.Ctx.level.id == "c1_l01";
 
         // Target UI §6/§7/§8: Steps Left box, destruction % bar, building strip (right), pause (bottom-left), power-ups, FIRE; boss HP bar on the Daily Boss.
         protected override void Build(RectTransform root)
@@ -320,7 +322,7 @@ namespace Crashverse.UI
 #endif
             _s.Changed += Refresh; _s.Ended += OnEnded;
             _s.StepProtected += () => Router.Toast("🛡 Shield: step protected!");
-            _s.tracker.ComboChanged += n => { if (n >= ComboTracker.ShowFrom) _combo.text = "COMBO x" + n; _comboSm.OnCombo(n); }; // shows from x3; pop sizes escalate at x5/x10/x20
+            _s.tracker.ComboChanged += n => { if (HideCombo) return; if (n >= ComboTracker.ShowFrom) _combo.text = "COMBO x" + n; _comboSm.OnCombo(n); }; // shows from x3; pop sizes escalate at x5/x10/x20
             Refresh();
         }
 
