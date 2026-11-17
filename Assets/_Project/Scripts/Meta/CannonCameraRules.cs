@@ -69,7 +69,9 @@ namespace Crashverse.Meta
         /// just under the HUD, the islet base near mid-screen and the world-scale cannon (rest aim 25 deg) below the crystal.
         // PM b25 QA (b26): the 1.4x taller fortress fills the tall screen: ~95% of the width, islet top ~58% from the top, turret under the
         // HUD band; a low eye (4.5 m, pitch 3) behind the breech so the barrel reads fat and short, its top ~57% from the top
-        public static readonly Settings Goal = new Settings { back = 7.25f, height = 4.5f, goalPose = true, goalPitch = 3f, goalTanH = 0.3415f,
+        // PM b26 QA (b27): the cannon covered the arch: eye 3.5 m further back and 3 m higher (pitch 11, ~66 deg vertical lens on
+        // 1080x2340) so the slimmer barrel's top sits ~62% from the top, below the islet steps, and the sea band opens up behind
+        public static readonly Settings Goal = new Settings { back = 10.75f, height = 7.5f, goalPose = true, goalPitch = 11f, goalTanH = 0.2997f,
                                                               bottomMargin = -0.3f, topMargin = 0.06f, maxFov = 100f,
                                                               cannonScale = 1f, cannonRear = 1.8f, cannonTop = 2.6f };
         /// <summary>The goal pose is chosen by geometry: a wide (z ≥ 12 m) complex close to the cannon (centre &lt; 18 m).</summary>

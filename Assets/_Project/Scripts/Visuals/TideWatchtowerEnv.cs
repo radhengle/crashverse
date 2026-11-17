@@ -45,9 +45,12 @@ namespace Crashverse.Visuals
             bool hero = HeroProps(go);
             Debug.Log("[Tide] hero props " + (hero ? "loaded" : "missing"));
             var p = new TwMesh(); Props(p, cannon, !hero); p.Build(go, "TwProps", true);
-            bool heroCliffs = HeroCliffs(go);
+            // PM b26 QA (b27): a wide turquoise sea band on both sides: the far cliffs, trees and waterfall are 0.6x as tall (about the
+            // waterline) and the castle 0.75x, standing on the lowered cliff top
+            var far = new GameObject("TwFar").transform; far.SetParent(go, false); far.localScale = new Vector3(1f, FarY, 1f);
+            bool heroCliffs = HeroCliffs(far, go);
             Debug.Log("[Tide] hero cliffs " + (heroCliffs ? "loaded" : "missing") + ", castle " + (_heroCastle ? "loaded" : "missing"));
-            var g = new TwMesh(); Background(g, !heroCliffs); g.Build(go, "TwBackground", false, false);
+            var g = new TwMesh(); Background(g, !heroCliffs); g.Build(far, "TwBackground", false, false);
             var sf = new TwMesh(); Surf(sf); sf.Build(go, "TwSurf", false, false);
             // the lantern's warm light on the rail and the deck
             var lg = new GameObject("LanternLight"); lg.transform.SetParent(go, false); lg.transform.position = V(-17.55f, 2.3f, 3.0f);
@@ -203,7 +206,8 @@ namespace Crashverse.Visuals
         /// with the waterfall (u 85-88, v 11-27) and the white castle with blue spires on top (u 80-93, v 0-8).</summary>
         /// <summary>Blender-built cliffs (Tools/Blender/tide/build_cliffs.py -> Kingdom/Meshes/Tide_Cliffs): the same masses as Cliff() as
         /// crag-and-ledge heightfields, rock faces and grass tops split by slope.</summary>
-        static bool HeroCliffs(Transform parent)
+        const float FarY = 0.6f, CastleScale = 0.75f;
+        static bool HeroCliffs(Transform parent, Transform root)
         {
             var bundle = CvMesh.Load("Kingdom/Meshes/Tide_Cliffs");
             if (!bundle.TryGetValue("Cliff_Rock", out var rock) || !bundle.TryGetValue("Cliff_Grass", out var grass)) return false;
@@ -219,13 +223,21 @@ namespace Crashverse.Visuals
             var cm = new System.Collections.Generic.Dictionary<string, Material> { { "Castle_Wall", CastleWall }, { "Castle_Shade", CastleShade }, { "Castle_Spire", Spire }, { "Castle_Window", TideWatchtower.Socket }, { "Castle_Gold", Brass } };
             _heroCastle = castle.ContainsKey("Castle_Wall") && castle.ContainsKey("Castle_Spire");
             if (_heroCastle)
+            {
+                // scale the castle about its base (centre x/z, lowest y) and stand it on the 0.6x cliff top
+                bool any = false; var bb = new Bounds();
+                foreach (var kv in castle) { if (!cm.ContainsKey(kv.Key)) continue; if (!any) { bb = kv.Value.bounds; any = true; } else bb.Encapsulate(kv.Value.bounds); }
+                var pv = new Vector3(bb.center.x, bb.min.y, bb.center.z);
+                var cp = new GameObject("TwCastle").transform; cp.SetParent(root, false);
+                cp.localScale = Vector3.one * CastleScale; cp.localPosition = new Vector3(pv.x, pv.y * FarY, pv.z) - pv * CastleScale;
                 foreach (var kv in castle)
                 {
                     if (!cm.TryGetValue(kv.Key, out var mat)) continue;
-                    var g = new GameObject("Tw" + kv.Key); g.transform.SetParent(parent, false);
+                    var g = new GameObject("Tw" + kv.Key); g.transform.SetParent(cp, false);
                     g.AddComponent<MeshFilter>().sharedMesh = kv.Value;
                     var mr = g.AddComponent<MeshRenderer>(); mr.sharedMaterial = mat; mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off; mr.receiveShadows = false;
                 }
+            }
             return true;
         }
 

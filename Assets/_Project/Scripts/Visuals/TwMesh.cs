@@ -16,15 +16,15 @@ namespace Crashverse.Visuals
         readonly List<Material> _order = new List<Material>();
         public Matrix4x4 M = Matrix4x4.identity; // extra transform applied to everything appended (push/pop by the caller)
 
-        // ---- vertical stretch (L1 b26): applied in Build() to every vertex, in "spec" space (spec = local + WarpSpecOffset) ----
-        // y above WarpPivotY is stretched by WarpK (normals and box UVs follow); vertices added between PropBegin/PropEnd keep their
-        // shape instead: they follow their anchor's stretched position and are scaled uniformly (figures, skulls, barrels, fire).
-        public float WarpK = 1f, WarpPivotY;
+        // ---- vertical stretch (L1 b26/b27): applied in Build() to every vertex, in "spec" space (spec = local + WarpSpecOffset) ----
+        // y is remapped by WarpFn (piecewise; WarpSlope = its derivative, so normals and box UVs follow); vertices added between
+        // PropBegin/PropEnd keep their shape instead: they follow their anchor's mapped position and are scaled uniformly.
+        public System.Func<float, float> WarpFn, WarpSlope;
         public Vector3 WarpSpecOffset;
         struct PropRange { public Part part; public int s, e; public Vector3 anchor; public float scale; }
         readonly List<PropRange> _props = new List<PropRange>();
         Dictionary<Part, int> _propStart; Vector3 _propAnchor; float _propScale;
-        public float WarpY(float y) => y <= WarpPivotY ? y : WarpPivotY + (y - WarpPivotY) * WarpK;
+        public float WarpY(float y) => WarpFn == null ? y : WarpFn(y);
         public bool InProp => _propStart != null;
         public void PropBegin(Vector3 anchorSpec, float scale = 1f)
         {
@@ -43,7 +43,7 @@ namespace Crashverse.Visuals
         }
         void ApplyWarp()
         {
-            if (Mathf.Approximately(WarpK, 1f) && _props.Count == 0) return;
+            if (WarpFn == null && _props.Count == 0) return;
             foreach (var p in _parts.Values)
             {
                 var isProp = new int[p.v.Count]; for (int i = 0; i < isProp.Length; i++) isProp[i] = -1;
@@ -58,9 +58,10 @@ namespace Crashverse.Visuals
                         p.v[i] = m - WarpSpecOffset;
                         continue;
                     }
-                    if (spec.y <= WarpPivotY) continue;
-                    p.v[i] = new Vector3(spec.x, WarpY(spec.y), spec.z) - WarpSpecOffset;
-                    var n = p.n[i]; n = new Vector3(n.x, n.y / WarpK, n.z).normalized; p.n[i] = n;
+                    float wy = WarpY(spec.y), k = WarpSlope == null ? 1f : WarpSlope(spec.y);
+                    if (wy == spec.y && k == 1f) continue;
+                    p.v[i] = new Vector3(spec.x, wy, spec.z) - WarpSpecOffset;
+                    var n = p.n[i]; n = new Vector3(n.x, n.y / k, n.z).normalized; p.n[i] = n;
                     p.uv[i] = BoxUv(p.v[i], n, p.tile);
                 }
             }

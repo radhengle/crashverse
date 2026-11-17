@@ -19,9 +19,15 @@ namespace Crashverse.Visuals
         static readonly Vector3 SpecBase = new Vector3(-3f, 0f, 0f);
         /// <summary>PM b25 QA (b26): everything above the islet top (y 0.8) is 1.4x taller, in the layout (Tools/ContentGen/l1v2/gen_layout.py,
         /// same K) and in the dressing (TwMesh warp; figures, skulls, barrels and fire pots keep their shape via PropBegin/PropEnd).</summary>
-        internal const float StretchK = 1.4f, StretchPivot = 0.8f;
-        internal static float StretchY(float y) => y <= StretchPivot ? y : StretchPivot + (y - StretchPivot) * StretchK;
-        static float UnstretchY(float y) => y <= StretchPivot ? y : StretchPivot + (y - StretchPivot) / StretchK;
+        // PM b26 QA (b27): piecewise height map, identical to Tools/ContentGen/l1v2/gen_layout.py Y(): below 0.78 unchanged (rocks,
+        // sea); the islet top 0.8 becomes the plinth top P; tier 1 (to the arch top 3.65) x K1; up to the roof top 9.45 x K2; turret x K3.
+        internal const float StretchP = 2.48f, StretchK1 = 1.42f, StretchK2 = 1.055f, StretchK3 = 0.85f, StretchPivot = 0.78f;
+        const float StretchYA = StretchP + (3.65f - 0.8f) * StretchK1, StretchYR = StretchYA + (9.45f - 3.65f) * StretchK2;
+        internal static float StretchY(float y) =>
+            y < StretchPivot ? y : y <= 3.65f ? StretchP + (y - 0.8f) * StretchK1 : y <= 9.45f ? StretchYA + (y - 3.65f) * StretchK2 : StretchYR + (y - 9.45f) * StretchK3;
+        static float StretchSlope(float y) => y < StretchPivot ? 1f : y <= 3.65f ? StretchK1 : y <= 9.45f ? StretchK2 : StretchK3;
+        static float UnstretchY(float w) =>
+            w < StretchPivot ? w : w <= StretchYA ? 0.8f + (w - StretchP) / StretchK1 : w <= StretchYR ? 3.65f + (w - StretchYA) / StretchK2 : 9.45f + (w - StretchYR) / StretchK3;
         static void Prop(TwMesh t, Vector3 anchor, float scale, System.Action draw) { t.PropBegin(anchor, scale); draw(); t.PropEnd(); }
 
         public static bool Matches(IReadOnlyList<DestructibleBlock> blocks)
@@ -62,7 +68,7 @@ namespace Crashverse.Visuals
         internal static Material BoneDark => M("BoneDark", null, new Color(0.62f, 0.38f, 0.22f), 0f, 0.8f);     // #C67B48
         internal static Material Socket => M("Socket", null, new Color(0.05f, 0.02f, 0.02f), 0f, 1f);
         internal static Material EyeGlow => M("EyeGlow", null, new Color(0.9f, 0.1f, 0.05f), 0f, 0.5f, new Color(2.4f, 0.25f, 0.1f));
-        internal static Material Crystal => M("Crystal", null, new Color(0.91f, 0.09f, 0.18f), 0f, 0.25f, new Color(5.0f, 0.30f, 0.45f)); // #E9172D
+        internal static Material Crystal => M("Crystal", null, new Color(0.91f, 0.09f, 0.18f), 0f, 0.25f, new Color(7.0f, 0.42f, 0.6f)); // #E9172D (PM b26 QA: brighter)
         internal static Material CrystalDark => M("CrystalDark", null, new Color(0.52f, 0.03f, 0.13f), 0f, 0.3f, new Color(0.75f, 0.02f, 0.08f)); // #840822
         internal static Material CrystalCore => M("CrystalCore", null, new Color(0.98f, 0.66f, 0.62f), 0f, 0.3f, new Color(3.2f, 1.6f, 1.0f)); // #F9A99D
         internal static Material Fire => M("Fire", null, new Color(1f, 0.45f, 0.08f), 0f, 1f, new Color(4.2f, 1.6f, 0.25f));
@@ -124,14 +130,14 @@ namespace Crashverse.Visuals
             TwMesh.ChamferMats.Add(Timber); TwMesh.ChamferMats.Add(TimberLit); TwMesh.ChamferMats.Add(Plank);
             _by = new Dictionary<string, DestructibleBlock>();
             foreach (var b in blocks) if (b != null && !string.IsNullOrEmpty(b.blockId)) _by[b.blockId] = b;
-            var rc = _by["rockC"]; _off = rc.transform.position - new Vector3(-3.5f, -0.4f, -0.35f);
+            var rc = _by["rockC"]; _off = rc.transform.position - new Vector3(-3.5f, (-1.6f + StretchY(0.8f)) * 0.5f, -0.35f); // rockC spans -1.6..P
             int n = 0;
             foreach (var b in blocks)
             {
                 if (b == null) continue;
                 var t = new TwMesh(); var c = b.transform.position; var s = b.transform.localScale;
                 t.M = Matrix4x4.Translate(_off - c);
-                t.WarpK = StretchK; t.WarpPivotY = StretchPivot; t.WarpSpecOffset = c - _off;
+                t.WarpFn = StretchY; t.WarpSlope = StretchSlope; t.WarpSpecOffset = c - _off;
                 bool ok = true;
                 switch (b.blockId)
                 {
@@ -181,7 +187,24 @@ namespace Crashverse.Visuals
                 n++;
             }
             Lights();
+            // PM b26 QA (b27): the roof halves and turret hung in the air after the smash (each keeps standing while ANY support
+            // survives). When the crystal core blows, the whole watchtower comes down storey by storey, like the Tidewarden defeat.
+            if (_by.TryGetValue("crystal", out var core)) core.Broken += _ => CollapseTower();
             return n;
+        }
+
+        static void CollapseTower()
+        {
+            if (_by == null) return;
+            var list = new List<DestructibleBlock>();
+            foreach (var kv in _by)
+            {
+                var x = kv.Value; if (x == null || x.IsBroken || x.IsCollapsed || kv.Key.StartsWith("rock") || kv.Key == "crystal") continue;
+                list.Add(x);
+            }
+            list.Sort((p, q) => { int c = p.transform.position.y.CompareTo(q.transform.position.y); return c != 0 ? c : string.CompareOrdinal(p.blockId, q.blockId); });
+            int step = 0; var si = Crashverse.Destruction.StructuralIntegrity.Current;
+            foreach (var x in list) if (si == null || !si.ScheduleCollapse(x, 2 * step++)) x.ForceCollapse();
         }
 
         static Transform Metric(DestructibleBlock b, string name)
@@ -194,7 +217,7 @@ namespace Crashverse.Visuals
         static void Lights()
         {
             // the crystal's red glow on the arch interior and a warm fire light in the gallery room (spec §4)
-            if (_by.TryGetValue("crystal", out var cr)) PointLight(cr.transform, "CrystalGlow", new Color(1f, 0.16f, 0.12f), 5.5f, 7f, new Vector3(-4.2f, 1.9f, -0.3f));
+            if (_by.TryGetValue("crystal", out var cr)) PointLight(cr.transform, "CrystalGlow", new Color(1f, 0.16f, 0.12f), 7f, 8.5f, new Vector3(-4.2f, 1.9f, -0.3f));
             if (_by.TryGetValue("roomL", out var rm)) PointLight(rm.transform, "GalleryFire", new Color(1f, 0.6f, 0.25f), 2.4f, 5f, new Vector3(-4.6f, 7.3f, -0.8f));
         }
 
@@ -345,43 +368,79 @@ namespace Crashverse.Visuals
 
         static void RockC(TwMesh t)
         {
-            // paved platform under the tower and in front of the arch (top y 0.8)
-            t.BoxMinMax(Rock, 1.4f, V(-6.3f, -1.4f, -3.7f), V(-0.6f, 0.72f, 3.0f));
-            for (int i = 0; i < 6; i++)
-                for (int j = 0; j < 4; j++)
-                {
-                    float z0 = -1.6f + i * 0.4f, x0 = -6.4f + j * 0.42f;
-                    StoneK(t, j % 2 == 0 ? StoneLight : Stone, 1f, V(x0 + 0.2f, 0.76f, z0 + 0.2f), V(0.38f, 0.1f, 0.37f), i * 7 + j, 0.05f);
-                }
-            // 5 stone steps down to the water under the arch centre (spec: z -1.0..0.25, x -6.2, y -0.23..1.05)
-            for (int i = 0; i < 5; i++)
+            // PM b26 QA (b27): the tower stands on a stepped stone plinth (top P = StretchY(0.8)) so the arch base sits well above the
+            // islet; plinth, steps and boulders are drawn in world heights (identity prop: anchor below the warp pivot).
+            float P = StretchP;
+            Prop(t, Vector3.zero, 1f, () =>
             {
-                float top = 0.62f - i * 0.2f, x1 = -6.45f - i * 0.3f;
-                StoneK(t, i % 2 == 0 ? StoneLight : Stone, 1f, V(x1 - 0.15f, (top - 1.2f) * 0.5f, -0.38f), V(0.32f, top + 1.2f, 1.25f), 300 + i, 0.03f);
-            }
-            // boulders: front left and front right of the steps, the sides, and the tall flanking rocks (up to y 1.3)
-            Boulders(t, 1, V(-6.8f, 0f, 2.9f), V(-6.7f, 0f, 0.45f), 3, 1.1f, 1.6f, 0.55f, 1.3f);
-            Boulders(t, 2, V(-6.7f, 0f, -1.25f), V(-6.6f, 0f, -3.6f), 3, 1.1f, 1.6f, 0.6f, 1.25f);
-            Boulders(t, 3, V(-5.6f, 0f, 3.05f), V(-1.2f, 0f, 3.05f), 3, 1.0f, 1.5f, 0.3f, 0.9f);
-            Boulders(t, 4, V(-5.6f, 0f, -3.75f), V(-1.2f, 0f, -3.75f), 3, 1.0f, 1.5f, 0.3f, 0.9f);
-            FernTuft(t, V(-6.55f, 1.0f, 1.6f), 0.55f, 1); FernTuft(t, V(-6.4f, 0.95f, -2.9f), 0.5f, 2); FernTuft(t, V(-5.9f, 0.85f, 2.5f), 0.4f, 3);
+                t.BoxMinMax(Rock, 1.4f, V(-6.3f, -1.4f, -3.7f), V(-0.6f, 0.72f, 3.0f));
+                // masonry plinth faces (front and both sides), coursed blocks with moss, cap stones on the rim
+                const float ch = 0.42f; int rows = Mathf.CeilToInt((P - 0.2f) / ch);
+                for (int r = 0; r < rows; r++)
+                {
+                    float y0 = 0.2f + r * ch, y1 = Mathf.Min(P - 0.08f, y0 + ch); if (y1 - y0 < 0.1f) continue;
+                    float off = (r % 2) * 0.35f;
+                    for (float z = -3.7f - off; z < 3.0f; z += 0.7f)
+                    {
+                        float z0 = Mathf.Max(-3.7f, z), z1 = Mathf.Min(3.0f, z + 0.7f); if (z1 - z0 < 0.12f) continue;
+                        if (z1 > -1.75f && z0 < 1.05f) continue; // the steps run up the middle
+                        int k = r * 37 + (int)((z + 4f) * 10f);
+                        StoneK(t, Hash(k, 3) < 0.3f ? StoneDark : Hash(k, 4) < 0.5f ? StoneLight : Stone, 1f, V(-6.22f, (y0 + y1) * 0.5f, (z0 + z1) * 0.5f), V(0.3f, y1 - y0 - 0.03f, z1 - z0 - 0.04f), 600 + k, 0.03f);
+                        if (Hash(k, 5) < 0.26f) t.Slab(Moss, 0.8f, V(-6.38f, y0 + 0.05f, (z0 + z1) * 0.5f), V(0.06f, 0.14f, (z1 - z0) * 0.8f), 650 + k, 0.2f);
+                    }
+                    foreach (float zs in new[] { 2.92f, -3.62f })
+                        for (float x = -6.2f - off; x < -0.6f; x += 0.75f)
+                        {
+                            float x0 = Mathf.Max(-6.3f, x), x1 = Mathf.Min(-0.6f, x + 0.75f); if (x1 - x0 < 0.12f) continue;
+                            int k = r * 41 + (int)((x + 7f) * 10f) + (zs > 0f ? 0 : 500);
+                            StoneK(t, Hash(k, 6) < 0.3f ? StoneDark : Stone, 1f, V((x0 + x1) * 0.5f, (y0 + y1) * 0.5f, zs), V(x1 - x0 - 0.04f, y1 - y0 - 0.03f, 0.3f), 700 + k, 0.03f);
+                        }
+                }
+                for (float z = -3.6f; z < 2.9f; z += 0.55f)
+                    if (!(z + 0.55f > -1.75f && z < 1.05f))
+                        StoneK(t, StoneLight, 1f, V(-6.2f, P - 0.04f, z + 0.27f), V(0.42f, 0.12f, 0.5f), 760 + (int)((z + 4f) * 10f), 0.03f);
+                // paving on the plinth top in front of the arch
+                for (int i = 0; i < 6; i++)
+                    for (int j = 0; j < 4; j++)
+                    {
+                        float z0 = -1.6f + i * 0.4f, x0 = -6.0f + j * 0.42f;
+                        StoneK(t, j % 2 == 0 ? StoneLight : Stone, 1f, V(x0 + 0.2f, P - 0.04f, z0 + 0.2f), V(0.38f, 0.1f, 0.37f), i * 7 + j, 0.05f);
+                    }
+                // stone steps from the plinth top down to the water under the arch centre
+                const int steps = 10; float rise = (P + 0.55f) / steps;
+                for (int i = 0; i < steps; i++)
+                {
+                    float top = P - (i + 1) * rise + rise, x1 = -6.3f - i * 0.3f;
+                    StoneK(t, i % 2 == 0 ? StoneLight : Stone, 1f, V(x1 + 0.0f, (top - 1.4f) * 0.5f, -0.33f), V(0.34f, top + 1.4f, 2.7f), 300 + i, 0.03f);
+                }
+                // boulders flanking the steps (tall, to the plinth rim), the plinth sides, and ferns in the cracks
+                Boulders(t, 1, V(-7.0f, 0f, 3.0f), V(-6.9f, 0f, 1.35f), 3, 1.1f, 1.6f, P - 0.9f, P + 0.2f);
+                Boulders(t, 2, V(-6.9f, 0f, -2.0f), V(-6.8f, 0f, -3.7f), 3, 1.1f, 1.6f, P - 0.9f, P + 0.1f);
+                Boulders(t, 3, V(-5.6f, 0f, 3.15f), V(-1.2f, 0f, 3.15f), 3, 1.0f, 1.5f, 0.3f, 1.3f);
+                Boulders(t, 4, V(-5.6f, 0f, -3.85f), V(-1.2f, 0f, -3.85f), 3, 1.0f, 1.5f, 0.3f, 1.3f);
+                FernTuft(t, V(-6.75f, P + 0.05f, 1.55f), 0.6f, 1); FernTuft(t, V(-6.6f, P - 0.1f, -2.1f), 0.55f, 2); FernTuft(t, V(-6.4f, 1.1f, 2.6f), 0.45f, 3);
+            });
         }
 
         static void RockL(TwMesh t)
         {
+            t.PropBegin(Vector3.zero, 1f); // world heights: the boulders are not part of the stretched tower
             t.BoxMinMax(Rock, 1.4f, V(-5.8f, -1.4f, 3.2f), V(-2.2f, -0.05f, 7.1f));
             Boulders(t, 11, V(-6.3f, 0f, 3.3f), V(-6.2f, 0f, 7.6f), 4, 1.1f, 1.7f, 0.2f, 1.85f);
             Boulders(t, 12, V(-4.6f, 0f, 7.6f), V(-2.4f, 0f, 7.4f), 2, 1.0f, 1.4f, 0.4f, 1.2f);
             Boulders(t, 13, V(-5.0f, 0f, 4.3f), V(-3.0f, 0f, 6.3f), 2, 0.8f, 1.1f, 0.05f, 0.35f);
             FernTuft(t, V(-6.0f, 1.2f, 6.8f), 0.5f, 4); FernTuft(t, V(-6.2f, 0.7f, 3.8f), 0.45f, 5);
+            t.PropEnd();
         }
 
         static void RockR(TwMesh t)
         {
+            t.PropBegin(Vector3.zero, 1f);
             t.BoxMinMax(Rock, 1.4f, V(-5.4f, -1.4f, -7.1f), V(-1.8f, -0.2f, -3.9f));
             Boulders(t, 21, V(-5.9f, 0f, -4.0f), V(-5.8f, 0f, -7.8f), 4, 1.0f, 1.5f, 0.1f, 1.35f);
             Boulders(t, 22, V(-4.4f, 0f, -7.8f), V(-2.0f, 0f, -7.6f), 2, 1.0f, 1.3f, 0.2f, 0.9f);
             FernTuft(t, V(-5.7f, 1.1f, -6.6f), 0.45f, 6); FernTuft(t, V(-5.9f, 0.9f, -4.6f), 0.5f, 7);
+            t.PropEnd();
         }
 
         // ---------------- stone tower ----------------
@@ -499,10 +558,10 @@ namespace Crashverse.Visuals
             Masonry(t, -4.9f, 3.65f, 4.0f, -1.49f, 0.83f, true, 2.13f);
             t.BoxMinMax(ArchInside, 1f, V(-4.9f, 3.63f, -1.49f), V(-2.75f, 3.66f, 0.83f));
             Voussoir(t, 4);
-            // PM b24: the horned skull reads bigger above the arch (x1.35 about its centre)
+            // PM b26 QA (b27): the horned skull sits ON the keystone (jaw on the arch top), x1.25; the banner hangs above its horns
             var m0 = t.M; var piv = V(-5.12f, 4.0f, -0.23f);
-            t.M = m0 * Matrix4x4.Translate(piv + V(-0.08f, 0.08f, 0f)) * Matrix4x4.Scale(Vector3.one * 1.35f) * Matrix4x4.Translate(-piv);
-            Prop(t, piv, 1.2f, () => Skull(t)); t.M = m0;
+            t.M = m0 * Matrix4x4.Translate(V(-0.06f, 0.25f, 0f));
+            Prop(t, piv, 1.25f, () => Skull(t)); t.M = m0;
         }
 
         /// <summary>The bone horned skull over the keystone (spec: 1.75 m wide with the horns, glowing red eyes).</summary>
@@ -586,7 +645,7 @@ namespace Crashverse.Visuals
             for (float x = -4.5f; x < -1.4f; x += 0.7f) t.BoxMinMax(TimberLit, 1f, V(x - 0.05f, 6.8f, zs - 0.05f), V(x + 0.05f, 7.28f, zs + 0.05f));
             t.BoxMinMax(TimberLit, 1f, V(-5.2f, 7.2f, zs - 0.08f), V(-1.3f, 7.28f, zs + 0.08f));
             // PM b24: one big red demon banner centred on the tower front, under the gallery, above the skull's horns
-            if (left) ChainMast(t); else SkullBanner(t, -4.84f, -1.3f, 0.84f, 6.15f, 4.75f, 5.25f, true);
+            if (left) ChainMast(t); else SkullBanner(t, -4.84f, -1.3f, 0.84f, 6.15f, 5.08f, 5.5f, true);
         }
 
         static void ChainMast(TwMesh t)
@@ -967,13 +1026,13 @@ namespace Crashverse.Visuals
         static void CrystalCluster(TwMesh t, DestructibleBlock b)
         {
             // stone plinth 0.5 m behind the arch face, the tall 6-sided shard (2.0 m) and 4 small shards, a bright core at the base
-            t.Cyl(StoneLight, 1f, V(-3.7f, 0.8f, -0.31f), V(-3.7f, 0.98f, -0.31f), 0.5f, 0.45f, 8, true, true);
-            t.Shard(Crystal, CrystalDark, V(-3.72f, 0.95f, -0.24f), V(-0.05f, 1f, 0.02f), 0.5f, 2.15f, 6, 0.34f, 0.2f);
-            t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, -0.75f), V(-0.15f, 1f, -0.35f), 0.22f, 1.1f, 6, 0.4f, 0.5f);
-            t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, 0.18f), V(-0.15f, 1f, 0.35f), 0.22f, 1.05f, 6, 0.4f, 0.1f);
+            t.Cyl(StoneLight, 1f, V(-3.7f, 0.8f, -0.31f), V(-3.7f, 0.98f, -0.31f), 0.6f, 0.55f, 8, true, true);
+            t.Shard(Crystal, CrystalDark, V(-3.72f, 0.95f, -0.24f), V(-0.05f, 1f, 0.02f), 0.62f, 2.35f, 6, 0.34f, 0.2f);
+            t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, -0.75f), V(-0.15f, 1f, -0.35f), 0.28f, 1.25f, 6, 0.4f, 0.5f);
+            t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, 0.18f), V(-0.15f, 1f, 0.35f), 0.28f, 1.2f, 6, 0.4f, 0.1f);
             t.Shard(Crystal, CrystalDark, V(-3.95f, 0.95f, -0.5f), V(-0.35f, 1f, -0.15f), 0.11f, 0.6f, 5, 0.45f, 0.8f);
             t.Shard(Crystal, CrystalDark, V(-3.95f, 0.95f, 0.0f), V(-0.35f, 1f, 0.2f), 0.1f, 0.55f, 5, 0.45f, 0.3f);
-            t.Cyl(CrystalCore, 1f, V(-3.72f, 0.96f, -0.28f), V(-3.72f, 1.02f, -0.28f), 0.42f, 0.3f, 10, true);
+            t.Cyl(CrystalCore, 1f, V(-3.72f, 0.96f, -0.28f), V(-3.72f, 1.02f, -0.28f), 0.52f, 0.36f, 10, true);
         }
     }
 }
