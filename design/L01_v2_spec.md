@@ -52,29 +52,29 @@ TideWatchtower
 | gallery_deck | (37.5,18.5)-(70,21.5) | x=-5.2 | y 6.21..6.8 | z -3.07..1.93 | w 5.0 h 0.59 | thick beam balcony with bolted plates, brackets below, railing on top |
 | stone_body_top | (41,21.5)-(67,24) | x=-4.5 | y 5.75..6.26 | z -2.72..1.45 | w 4.17 h 0.51 | stone tower, top width |
 | stone_body_bot | (37,44)-(71,47) | x=-4.5 | y 0.74..1.42 | z -3.53..2.2 | w 5.73 h 0.68 | stone tower, base width (battered walls) |
-| banner_C | (47.5,21.5)-(56.5,37) | x=-4.6 | y 2.98..6.25 | z -1.03..0.41 | w 1.44 h 3.27 | red demon banner, horned skull, frayed gold-fringed tip |
-| arch_outer | (40,32.5)-(62,47) | x=-4.9 | y 0.81..3.97 | z -1.93..1.66 | w 3.59 h 3.16 | stone arch frame, 9 voussoirs, block jambs |
-| arch_opening | (44.5,34)-(58.5,46) | x=-4.9 | y 1.03..3.65 | z -1.37..0.91 | w 2.28 h 2.62 | dark red interior |
-| horned_skull | (45.5,29.5)-(56.5,35) | x=-5.0 | y 3.44..4.6 | z -1.03..0.72 | w 1.75 h 1.16 | bone skull with two curved horns over the keystone |
-| crystal | (47.5,35.5)-(54,45.5) | x=-4.0 | y 0.99..3.27 | z -0.67..0.43 | w 1.1 h 2.28 | red emissive crystal cluster: 1 tall + 4 small shards |
-| brazier_L | (38,39)-(42,47) | x=-5.5 | y 0.92..2.64 | z 1.27..1.93 | w 0.66 h 1.72 | timber post brazier, iron bowl, fire |
-| brazier_R | (59.5,39)-(64,47) | x=-5.5 | y 0.92..2.64 | z -2.22..-1.53 | w 0.69 h 1.72 | same |
-| barrel_C | (63,41.5)-(68.5,47.5) | x=-5.6 | y 0.83..2.12 | z -2.93..-2.09 | w 0.84 h 1.29 | orange barrel with red/gold emblem |
-| steps | (48,47)-(56,53) | x=-6.2 | y -0.23..1.05 | z -0.93..0.32 | w 1.25 h 1.28 | 5 stone steps down to water |
+| banner_C | (55,20.8)-(63,34) | x=-4.75 | y 3.64..6.39 | z -2.05..-0.81 | w 1.24 h 2.75 | red demon banner, horned skull, frayed gold-fringed tip at u 58.5 (re-measured: hangs right of centre, over t2FR) |
+| arch_outer | (40,32.8)-(63,47) | x=-4.9 | y 0.81..3.9 | z -2.09..1.66 | w 3.75 h 3.1 | stone arch frame, 9 voussoirs, block jambs with protruding imposts at v 36-38 |
+| arch_opening | (45,35.5)-(59.2,46) | x=-4.9 | y 1.03..3.5 | z -1.49..0.83 | w 2.32 h 2.5 | dark red interior (centre z -0.33) |
+| horned_skull | (46,29.5)-(56.9,36.5) | x=-5.0 | y 3.12..4.6 | z -1.10..0.65 | w 1.75 h 1.48 | bone skull (face u 49.5-54) with two curved horns, jaw over the arch crown |
+| crystal | (47.5,36.5)-(56.2,46) | x=-4.0 | y 0.88..3.05 | z -1.05..0.43 | w 1.48 h 2.17 | red emissive cluster: tall shard u 49-53.9 (z -0.66..0.17) + 4 small |
+| brazier_L | (38.9,38)-(42.6,47) | x=-5.5 | y 0.92..2.85 | z 1.17..1.79 | w 0.62 h 1.93 | timber post brazier, iron bowl v 41.5-43, fire v 38-41.5 |
+| brazier_R | (61.7,38)-(65.6,47) | x=-5.5 | y 0.92..2.85 | z -2.46..-1.89 | w 0.57 h 1.93 | same |
+| barrel_C | (67,42.5)-(73.7,47.5) | x=-5.6 | y 0.83..1.91 | z -3.76..-2.73 | w 1.03 h 1.08 | orange barrel with red/gold emblem |
+| steps | (50,47)-(58,53) | x=-6.2 | y -0.23..1.05 | z -1.0..0.25 | w 1.25 h 1.28 | 5 stone steps down to the water, under the arch centre |
 | rocks_C | (30,46)-(75,56) | x=-6.5 | y -0.8..1.31 | z -3.82..3.13 | w 6.95 h 2.11 | grey rock islet, moss, foam at base |
-| flagpole | (42.5,2.5)-(43.5,18) | x=-3.6 | y 7.07..10.23 | z 1.04..1.24 | w 0.2 h 3.16 | pole with red flag |
+| flagpole | (47,1.5)-(48,14) | x=-3.6 | y 7.9..10.42 | z 0.32..0.49 | w 0.17 h 2.5 | pole with red flag (re-measured: u 47.5, rises from the roof) |
 | flag | (36,3)-(47,11) | x=-3.6 | y 8.52..10.13 | z 0.48..2.28 | w 1.8 h 1.61 | red flag with gold sigil, waving left |
-| chain_mast | (38.5,6)-(40,30) | x=-4.0 | y 4.48..9.44 | z 1.58..1.92 | w 0.34 h 4.96 | mast with cross spars, chains to side towers |
+| chain_mast | (39.5,3.5)-(40.5,30) | x=-4.0 | y 4.48..9.93 | z 1.50..1.75 | w 0.25 h 5.4 | mast with cross spars at v 9.5 and 12.5, chains to the left tower |
 | L_top_deck | (15.5,24.5)-(34,27) | x=-4.2 | y 5.13..5.66 | z 2.61..5.66 | w 3.05 h 0.53 | top platform beam |
 | L_top_rail | (15.5,22)-(34,24.5) | x=-4.2 | y 5.66..6.18 | z 2.6..5.63 | w 3.03 h 0.52 | railing, 5 posts |
 | L_banner | (21.5,27)-(27.5,34.5) | x=-4.2 | y 3.51..5.13 | z 3.69..4.75 | w 1.06 h 1.62 | red skull banner |
 | L_low_deck | (7,37)-(35,39.5) | x=-5.2 | y 2.5..3.03 | z 2.4..6.91 | w 4.51 h 0.53 | lower deck beam |
 | L_low_rail | (7,35)-(35,37) | x=-5.2 | y 3.03..3.46 | z 2.39..6.88 | w 4.49 h 0.43 | railing |
 | L_legs | (13,27)-(33,50) | x=-4.6 | y 0.06..5.12 | z 2.74..6.27 | w 3.53 h 5.06 | 4 square legs + X braces |
-| L_ladder | (17,39)-(21,52) | x=-5.6 | y -0.16..2.65 | z 4.57..5.35 | w 0.78 h 2.81 | ladder, 9 rungs, leaning |
+| L_ladder | (17,38)-(23.5,52) | x=-5.6 | y -0.16..2.86 | z 4.16..5.35 | w 1.2 h 3.0 | ladder, 9 rungs, top further right (leaning) |
 | L_fire1 | (9,34)-(14,37) | x=-5.2 | y 3.03..3.67 | z 5.72..6.56 | w 0.84 h 0.64 | fire pot |
 | L_fire2 | (25,35)-(31,38) | x=-5.2 | y 2.82..3.46 | z 3.03..4.01 | w 0.98 h 0.64 | fire pot (big) |
-| L_archer | (22,15)-(31,24) | x=-3.8 | y 5.78..7.67 | z 3.09..4.65 | w 1.56 h 1.89 | hooded horned archer, drawing bow |
+| L_archer | (22,16)-(34.3,24.5) | x=-3.8 | y 5.67..7.46 | z 2.56..4.65 | w 2.1 h 1.8 | hooded horned archer drawing a bow, arrow pointing screen-right |
 | rocks_L | (0,43)-(30,55) | x=-6.0 | y -0.72..1.86 | z 3.12..8.0 | w 4.88 h 2.58 | rock islet under left tower |
 | R_top_deck | (69,26)-(86,29.5) | x=-4.0 | y 4.59..5.35 | z -5.95..-3.16 | w 2.79 h 0.76 | top platform beam |
 | R_top_rail | (69,23.5)-(86,26) | x=-4.0 | y 5.35..5.88 | z -5.92..-3.14 | w 2.78 h 0.53 | railing |
@@ -82,8 +82,8 @@ TideWatchtower
 | R_low_rail | (76,37.5)-(97,40) | x=-5.4 | y 2.42..2.94 | z -7.45..-4.15 | w 3.3 h 0.52 | railing |
 | R_legs | (71,29)-(95,51) | x=-4.6 | y -0.17..4.7 | z -7.28..-3.57 | w 3.71 h 4.87 | legs + X braces |
 | R_scaffold | (63,32)-(71,44) | x=-4.8 | y 1.46..4.07 | z -3.39..-2.15 | w 1.24 h 2.61 | inner scaffold between tower and right deck |
-| R_cannon | (82,33.5)-(92,40) | x=-5.2 | y 2.39..3.77 | z -6.67..-5.15 | w 1.52 h 1.38 | black iron cannon on carriage, muzzle toward camera-right |
-| R_archer | (74,17)-(87,27) | x=-3.8 | y 5.14..7.26 | z -6.05..-4.01 | w 2.04 h 2.12 | archer |
+| R_cannon | (79,32.5)-(93,40) | x=-5.2 | y 2.39..3.98 | z -6.81..-4.67 | w 2.1 h 1.6 | black iron cannon on a wooden carriage, muzzle facing the camera and screen-right |
+| R_archer | (74,18.5)-(86,26) | x=-3.8 | y 5.35..6.94 | z -5.91..-4.00 | w 1.9 h 1.6 | horned archer, bow drawn, arrow pointing screen-right |
 | rocks_R | (75,45)-(100,53) | x=-5.6 | y -0.38..1.37 | z -7.98..-4.06 | w 3.92 h 1.75 | rock islet |
 
 Foreground (on the cannon deck y = 0). The rail plane is x = -17.55; the rail top is y 1.30, its bottom y 0.81, and the
@@ -103,6 +103,11 @@ post tops y 1.69.
 - Corner banners: red cloth on gold-capped poles at both bottom corners, goal (0-8, 87-100) and (92-100, 87-100).
   Deck point x -20.2, z +/-2.34.
 - Deck: warm planks (#E28D55 lit, #8A503C mid, #351912 gaps) running away from the camera; plank width about 0.35 m.
+
+### Re-measure (17 Nov, colour masks + 1 % grid crops of the goal)
+- The first pass put banner_C, the flagpole, brazier_R and barrel_C 3-10 % too far left. They are corrected in the table above,
+  and the physics layout moved to match: the arch opening is now z -1.49..0.83, the crystal z -0.86..0.24, brazier_R z -2.17,
+  the barrel z -3.25.
 
 ## 3. Player cannon (render-only scale k = 1.35; the pivots and ballistics are unchanged)
 - Barrel: dark navy #212548 (lit #3C394E), satin. It reads long; the breech ring diameter is about 1.25 m and the muzzle
@@ -142,11 +147,11 @@ post tops y 1.69.
   - One tall 6-sided shard (2.0 m) and 4 small shards around it.
   - Sits on a stone plinth 0.5 m behind the arch face.
   - Red glow on the arch interior (#44101E, cracks #8C2630).
-- Central banner: hangs from under the gallery, centred u 52.
-  - 1.44 m wide, 3.3 m long; red #8C140E with darker folds.
+- Central banner: hangs from under the gallery, centred u 59 (z -1.43), over t2FR.
+  - 1.24 m wide, 2.75 m long; red #8C140E with darker folds.
   - Pale horned-skull emblem; gold fringe; split (swallowtail) bottom.
-- Braziers L/R: square timber post 0.3 m, iron bowl 0.66 m, fire. At z +1.6 and -1.9, x -5.5.
-- Barrel: orange #AE5E30 with a red diamond and a gold sun emblem, at z -2.5.
+- Braziers L/R: square timber post 0.3 m, iron bowl 0.6 m, fire. At z +1.48 and -2.17, x -5.5.
+- Barrel: orange #AE5E30 with a red diamond and a gold sun emblem, at z -3.25.
 
 ### Gallery and roof
 - Gallery deck (balcony): 5.0 m wide, 0.6 m thick beams, y 6.2-6.8; projects 0.35 m beyond the stone.
@@ -162,7 +167,7 @@ post tops y 1.69.
 - Turret: open lantern room 0.95 m wide (4 posts, warm light), y 9.45-10.1.
   - Small pagoda roof 1.5 m wide with gold upturned corners.
   - Finial spike at y 10.7.
-- Flag: pole at z +1.1 from y 7.1 to 10.2. Red flag 1.8 x 1.6 m with a gold sigil, waving toward the screen left.
+- Flag: pole at z +0.4 from the roof (y 7.9) to 10.4. Red flag 1.8 x 1.6 m with a gold sigil, waving toward the screen left.
 - Chain mast: thin pole with 3 cross spars at z +1.7, with iron chains hanging from it to the left tower.
 
 ## 5. Archer towers

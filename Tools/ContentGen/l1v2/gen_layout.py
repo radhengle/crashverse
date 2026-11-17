@@ -11,12 +11,12 @@ box("rockC", "brick", -6.5, -0.5, -1.6, 0.8, -3.8, 3.1, role="island", obj=False
 box("rockL", "brick", -6.0, -2.0, -1.6, 0.0, 3.1, 7.3, role="island", obj=False, ind=True)
 box("rockR", "brick", -5.6, -1.6, -1.6, -0.15, -7.3, -3.8, role="island", obj=False, ind=True)
 # Corruption_Crystal: breaks on a direct hit (wood HP 30 < blast 36) and detonates (r 2.5, 80 dmg) -> the whole tier-1 base breaks
-box("crystal", "wood", -4.15, -3.25, 0.8, 3.0, -0.68, 0.42, ["rockC"], role="core", obj=False, explosive=True)
+box("crystal", "wood", -4.15, -3.25, 0.8, 3.0, -0.86, 0.24, ["rockC"], role="core", obj=False, explosive=True)
 # Stone_Structure tier 1 (brick HP 60), every centre within 2.5 m of the crystal centre
-box("t1L", "brick", -4.9, -1.5, 0.8, 4.0, 1.01, 2.2, ["rockC"], role="wall")
-box("t1R", "brick", -4.9, -1.5, 0.8, 4.0, -3.53, -1.27, ["rockC"], role="wall")
-box("t1B", "brick", -2.75, -1.5, 0.8, 4.0, -1.27, 1.01, ["rockC"], role="wall")
-box("lintel", "brick", -4.9, -2.75, 3.65, 4.0, -1.27, 1.01, ["t1L", "t1R", "t1B"], role="wall")
+box("t1L", "brick", -4.9, -1.5, 0.8, 4.0, 0.83, 2.2, ["rockC"], role="wall")
+box("t1R", "brick", -4.9, -1.5, 0.8, 4.0, -3.53, -1.49, ["rockC"], role="wall")
+box("t1B", "brick", -2.75, -1.5, 0.8, 4.0, -1.49, 0.83, ["rockC"], role="wall")
+box("lintel", "brick", -4.9, -2.75, 3.65, 4.0, -1.49, 0.83, ["t1L", "t1R", "t1B"], role="wall")
 T1 = ["t1L", "t1R", "t1B", "lintel"]
 # tier 2 (y 4.0-6.2), 4 quarters
 for n, (x0, x1) in (("F", (-4.75, -3.2)), ("B", (-3.2, -1.65))):
@@ -33,9 +33,9 @@ box("roofL", "wood", -5.0, -1.4, 7.7, 9.45, -0.75, 1.69, ["roomL", "roomR"], rol
 box("roofR", "wood", -5.0, -1.4, 7.7, 9.45, -3.19, -0.75, ["roomL", "roomR"], role="roof")
 box("turret", "wood", -3.7, -2.7, 9.45, 10.75, -1.4, -0.4, ["roofL", "roofR"], role="roof")
 # Decorations on the rock (breakable, non-objective)
-box("brazierL", "wood", -5.68, -5.32, 0.8, 2.6, 1.42, 1.78, ["rockC"], role="prop", obj=False)
-box("brazierR", "wood", -5.68, -5.32, 0.8, 2.6, -2.05, -1.69, ["rockC"], role="prop", obj=False)
-box("fortBarrel", "wood", -6.0, -5.2, 0.8, 2.1, -2.93, -2.09, ["rockC"], role="prop", obj=False)
+box("brazierL", "wood", -5.68, -5.32, 0.8, 2.6, 1.30, 1.66, ["rockC"], role="prop", obj=False)
+box("brazierR", "wood", -5.68, -5.32, 0.8, 2.6, -2.35, -1.99, ["rockC"], role="prop", obj=False)
+box("fortBarrel", "wood", -6.0, -5.2, 0.8, 2.1, -3.67, -2.83, ["rockC"], role="prop", obj=False)
 # Left_Archer_Platform (dark timber): legs + lower deck + top deck (objective)
 LX = (-5.15, -2.45)
 for i, x in enumerate(LX):
