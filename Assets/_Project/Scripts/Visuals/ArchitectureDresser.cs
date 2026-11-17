@@ -317,6 +317,7 @@ namespace Crashverse.Visuals
             float ground = 0f;
             foreach (var b in blocks) if (b != null && b.role == "island") { var bb = new Bounds(b.transform.position, b.transform.localScale); var c = self.transform.position; if (Mathf.Abs(c.x - bb.center.x) < bb.extents.x + 1f && Mathf.Abs(c.z - bb.center.z) < bb.extents.z + 1f) ground = Mathf.Max(ground, bb.max.y); }
             float drop = self.transform.position.y - hy - ground;
+            // (L1 b20: the island block's top is 0.6 m, so these legs read as ~1.4 m stilts and a broken deck drops the house > 1 m)
             if (drop > 0.6f)
             {
                 // PM 17 Nov (b16 QA, L01.jpg): an open timber frame under the platform: splayed log legs, X braces on every face and a
