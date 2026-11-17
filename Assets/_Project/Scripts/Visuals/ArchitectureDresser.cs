@@ -73,8 +73,8 @@ namespace Crashverse.Visuals
         // L1 QA 16 Nov (L01.jpg): weathered cabin boards in several tones, with grime and rot near the base
         // L1 QA 16 Nov (b): T_K_Planks/T_K_Wood are saturated orange-brown; cool tints pull the cabin to L01.jpg's grey-brown aged wood.
         static Material CabinBoard => KingdomMaterials.Make("CabinBoard", "T_K_Planks", new Color(1.0f, 1.1f, 1.25f), 0f, 0.92f, Vector2.one);
-        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(1.25f, 1.35f, 1.5f), 0f, 0.94f, Vector2.one);
-        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.78f, 0.84f, 0.94f), 0f, 0.95f, Vector2.one);
+        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(1.5f, 1.55f, 1.65f), 0f, 0.94f, Vector2.one);
+        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.6f, 0.64f, 0.72f), 0f, 0.95f, Vector2.one);
         static Material CabinBoardRot => KingdomMaterials.Make("CabinBoardRot", "T_K_Wood", new Color(0.95f, 1.1f, 1.3f), 0f, 0.97f, Vector2.one);
         static Material CabinGrime => KingdomMaterials.Make("CabinGrime", "T_K_Wood", new Color(0.6f, 0.68f, 0.8f), 0f, 0.98f, Vector2.one);
         static Material CarvedTrim => KingdomMaterials.Make("CarvedTrim", "T_K_Wood", new Color(1.2f, 1.3f, 1.45f), 0f, 0.85f, Vector2.one);
@@ -106,6 +106,7 @@ namespace Crashverse.Visuals
                 else if (id.Contains("flag")) ok = Flag(bld, s);
                 else if (id == "bell" || id.EndsWith("bell")) ok = Bell(bld, s);
                 else if (id.Contains("frame")) ok = Frame(bld, s);
+                else if (id.Contains("crate")) ok = Crate(bld, s);
                 else if (s.y <= 0.55f && s.x >= 1.2f && s.z >= 1.2f) ok = Deck(bld, s, b, blocks);
                 else if (s.x <= 0.7f && s.z <= 0.7f && s.y >= 1f) ok = Post(bld, s);
                 else if (s.y >= 0.8f && Mathf.Min(s.x, s.z) <= 0.3f && Mathf.Max(s.x, s.z) >= 0.8f) ok = Panel(bld, s, b.blockId); // L1 re-cut: plank wall panels
@@ -150,7 +151,7 @@ namespace Crashverse.Visuals
             // L01.jpg: weathered VERTICAL boards with dark gaps between them, each a little crooked / uneven at the ends,
             // over a dark inner core (the gaps read as shadow, never see-through)
             k.Box(Gap, Vector3.zero, s - Vector3.one * 0.1f, 1.2f);
-            float bw = 0.21f, gap = 0.07f; /* wider dark gaps: readable at ~25 m */ int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
+            float bw = 0.3f, gap = 0.1f; /* b17 QA: fewer, wider boards with wide dark gaps: readable at phone scale */ int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
             void Boards(Vector3 normal, Vector3 along, float width, float outAt)
             {
                 int n = Mathf.Max(3, Mathf.RoundToInt((width - 0.2f) / (bw + gap))); float step = (width - 0.2f) / n;
@@ -419,7 +420,7 @@ namespace Crashverse.Visuals
             var along = alongZ ? Vector3.forward : Vector3.right; var normal = alongZ ? Vector3.left : Vector3.back;
             k.Box(Gap, Vector3.zero, alongZ ? new Vector3(thick * 0.5f, s.y - 0.1f, width - 0.06f) : new Vector3(width - 0.06f, s.y - 0.1f, thick * 0.5f), 1.2f);
             int seed = 0; foreach (char ch in id ?? "") seed = seed * 31 + ch;
-            float bw = 0.2f, gap = 0.075f; /* b16 QA: wider dark gaps, readable at phone scale */ int n = Mathf.Max(3, Mathf.RoundToInt(width / (bw + gap))); float step = width / n;
+            float bw = 0.3f, gap = 0.1f; /* b17 QA: fewer, wider boards with wide dark gaps: readable at phone scale */ int n = Mathf.Max(3, Mathf.RoundToInt(width / (bw + gap))); float step = width / n;
             foreach (float side in new[] { 1f, -1f })
                 for (int i = 0; i < n; i++)
                 {
@@ -449,6 +450,25 @@ namespace Crashverse.Visuals
         }
 
         static bool Beam(Builder k, Vector3 s) { k.Box(Timber, Vector3.zero, s, 1f); k.Box(Planks, new Vector3(0f, s.y * 0.5f + 0.01f, 0f), new Vector3(s.x * 0.98f, 0.02f, s.z * 0.98f), 1f); return true; }
+
+        /// <summary>b18 (L01.jpg balcony clutter): a slatted cargo crate: dark core, horizontal slats with gaps and corner battens.</summary>
+        static bool Crate(Builder k, Vector3 s)
+        {
+            k.Box(CabinGrime, Vector3.zero, s * 0.94f, 1f);
+            float hx = s.x * 0.5f, hy = s.y * 0.5f, hz = s.z * 0.5f; int n = 3; float sh = s.y / n;
+            for (int i = 0; i < n; i++)
+            {
+                float y = -hy + sh * (i + 0.5f); var m = i == 1 ? CabinBoardWorn : CabinBoard;
+                k.Box(m, new Vector3(0f, y, -hz + 0.02f), new Vector3(s.x * 0.96f, sh * 0.78f, 0.04f), 1f);
+                k.Box(m, new Vector3(0f, y, hz - 0.02f), new Vector3(s.x * 0.96f, sh * 0.78f, 0.04f), 1f);
+                k.Box(m, new Vector3(-hx + 0.02f, y, 0f), new Vector3(0.04f, sh * 0.78f, s.z * 0.96f), 1f);
+                k.Box(m, new Vector3(hx - 0.02f, y, 0f), new Vector3(0.04f, sh * 0.78f, s.z * 0.96f), 1f);
+            }
+            k.Box(CabinBoardDark, new Vector3(0f, hy - 0.02f, 0f), new Vector3(s.x * 0.98f, 0.04f, s.z * 0.98f), 1f);
+            foreach (float x in new[] { -hx + 0.04f, hx - 0.04f }) foreach (float z in new[] { -hz + 0.04f, hz - 0.04f })
+                k.Box(Timber, new Vector3(x, 0f, z), new Vector3(0.09f, s.y, 0.09f), 1f);
+            return true;
+        }
 
         static bool Frame(Builder k, Vector3 s)
         {

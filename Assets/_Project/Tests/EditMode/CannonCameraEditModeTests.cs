@@ -67,7 +67,7 @@ namespace Crashverse.Backend.Tests
                     var s = CannonCameraRules.ViewportRect(pose, a, b);
                     Assert.LessOrEqual(s.yMax, 1f - tm + 0.003f, "building top below the HUD: " + at);
                     Assert.GreaterOrEqual(s.yMin, -0.005f, "building base on screen: " + at);
-                    Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(Cannon, CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
+                    Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b)), CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
                     if (arc != null) foreach (var p in arc)
                     {
                         if (p.x < CannonRoot.x + 4f) continue; // the first metres sit on the cannon itself
@@ -114,12 +114,13 @@ namespace Crashverse.Backend.Tests
                     var pose = CannonCameraRules.Solve(CannonRoot, b, a); n++;
                     string at = $"{id} @ aspect {a:F3} (fov {pose.fov:F1})";
                     Assert.True(CannonCameraRules.FullyVisible(pose, a, b), "whole building on screen: " + at);
-                    Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(Cannon, CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
-                    var c = CannonCameraRules.ViewportRect(pose, a, Cannon); var s = CannonCameraRules.ViewportRect(pose, a, b);
+                    Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b)), CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
+                    var c = CannonCameraRules.ViewportRect(pose, a, CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b))); var s = CannonCameraRules.ViewportRect(pose, a, b);
                     Assert.AreEqual(0.5f, c.center.x, 0.02f, "cannon horizontally centred: " + at);
                     Assert.Less(c.yMin, CannonCameraRules.For(CannonRoot, b).bottomMargin + 0.05f, "cannon at the bottom (compact levels: just above the FIRE / HINT row): " + at);
                     if (a < 0.7f) Assert.Greater(c.width, 0.28f, "cannon big (>= 28% of the width on phones): " + at); // tablets / 4:3 keep a smaller cannon
-                    Assert.Less(c.yMax, 0.55f, "cannon stays in the lower part (barrel tip may reach the building base): " + at);
+                    // PM 17 Nov (L01.jpg): the bigger compact-level barrel may overlap the island base, as in the concept
+                    Assert.Less(c.yMax, 0.62f, "cannon stays in the lower part (barrel tip may reach the building base): " + at);
                     Assert.Greater(s.center.y, c.center.y + 0.15f, "building above the cannon: " + at);
                     Assert.True(s.width >= 0.65f || s.yMax >= 0.7f, $"building fills the view (width {s.width:F2} >= 0.65 or top {s.yMax:F2} >= 0.70): " + at);
                 }

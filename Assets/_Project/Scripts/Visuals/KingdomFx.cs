@@ -213,6 +213,7 @@ namespace Crashverse.Visuals
             // spinning plank chunks under gravity, a dust ring on the ground, a lingering smoke column and a short fire.
             // L1: the derived practice hint lands on the stilt post (the line that wins L1), so the burst is sized to engulf the deck and cabin base.
             bool onStructure = at.y > 0.4f;
+            Debug.Log($"CVFX|IMPACT|{at.x:F2},{at.y:F2},{at.z:F2}|t={Time.time:F2}"); // emulator smoke: cuts the smash frames from this line
             Emit(_glow, at, N(5), 0.4f, 0.2f, 0.8f, 7f, 9.5f, 0.5f, 0.8f);      // soft bloom-like halo around the blast
             Emit(_core, at, N(9), 0.35f, 0.3f, 1.5f, 1.4f, 2.4f, 0.25f, 0.45f); // glowing yellow-white core
             Emit(_blast, at, N(28), 0.7f, 1.5f, 5.5f, 2.4f, 4.2f, 0.7f, 1.2f);

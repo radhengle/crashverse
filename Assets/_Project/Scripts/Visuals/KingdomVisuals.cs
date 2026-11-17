@@ -124,14 +124,15 @@ namespace Crashverse.Visuals
                 if (s.builder != null) KingdomTheme.Apply(s.builder.Blocks, levelId); // first: the environment plants foliage on KingdomTheme.Mound
                 else KingdomTheme.Mound = default;
                 KingdomEnvironment.Build(root.transform, wb != null ? wb.transform.position : new Vector3(-20f, 0f, 0f), s.structureBase, palace, dark, region, GameplayDirector.StructureBounds(s, s.structureBase));
-                CannonDresser.Dress(wb);
+                var camRules = s.builder != null && wb != null ? Crashverse.Meta.CannonCameraRules.For(wb.transform.position, GameplayDirector.StructureBounds(s, s.structureBase)) : Crashverse.Meta.CannonCameraRules.Default;
+                var visualMuzzle = CannonDresser.Dress(wb, camRules.cannonScale);
 
                 var go = new GameObject("VfxDirector"); go.SetActive(false); go.transform.SetParent(root.transform, false);
                 _vfx = go.AddComponent<VfxDirector>();
                 // Honour the player's selected Low / Mid / High profile. Memory-based guessing silently ignored
                 // the High tier and could spend a Mid-tier particle budget after the player selected Low.
                 _vfx.tier = QualityController.FeelTier;
-                _vfx.muzzleSocket = wb != null ? wb.projectileSpawn : null;
+                _vfx.muzzleSocket = visualMuzzle != null ? visualMuzzle : (wb != null ? wb.projectileSpawn : null);
                 go.SetActive(true);
 
                 var fx = KingdomFx.Create(root.transform, _vfx.tier == Crashverse.Feel.QualityTier.Low);

@@ -30,6 +30,7 @@ namespace Crashverse.Meta
             public float bottomMargin = 0.03f; // share left under the cannon's wheels
             public float sideFill = 0.80f;   // the structure's width may use up to this share of the screen width
             public float minFov = 18f, maxFov = 68f; // 18: small huts may zoom in to fill ~70-80% of the width
+            public float cannonScale = 1f;   // render-only scale of the Kingdom cannon (CannonDresser); cannonRear already includes it
         }
 
         public static readonly Settings Default = new Settings();
@@ -37,7 +38,10 @@ namespace Crashverse.Meta
         /// building fills ~70% of the width with water visible on both sides.</summary>
         /// PM 17 Nov (b16 QA): the bottom crop hid the carriage behind the FIRE / HINT buttons (bottom ~11% of the screen). The whole
         /// cannon, wheels and side cheeks included, now sits ~10% above the bottom edge (margin 0.09: 4:3 tablets keep the barrel below the building), just over the button row.
-        public static readonly Settings Compact = new Settings { back = 11.5f, height = 5.4f, sideFill = 0.70f, bottomMargin = 0.09f };
+        /// PM 17 Nov (b17 QA, L01.jpg): the barrel must dominate the foreground. Compact levels dress a 1.25x cannon (render-only: pivots,
+        /// spawn and hints unchanged) and frame its envelope from a little further back, so it is ~56% of a phone's width (was ~46%).
+        public static readonly Settings Compact = new Settings { back = 12.5f, height = 5.4f, sideFill = 0.70f, bottomMargin = 0.09f,
+                                                                 cannonScale = 1.25f, cannonRear = 1.8f * 1.25f, cannonTop = 2.6f * 1.25f };
         /// <summary>Height (m) of the Kingdom roof-top flag pole above the highest block; the run camera keeps its tip in frame.</summary>
         public const float RoofFlagPole = 1.2f;
 
@@ -65,7 +69,7 @@ namespace Crashverse.Meta
         {
             var d = For(cannonRoot, structure);
             var s = new Settings { back = d.back, height = d.height, cannonRear = d.cannonRear, cannonTop = d.cannonTop, topMargin = Mathf.Clamp(topMargin, d.topMargin, 0.4f),
-                                   bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov };
+                                   bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov, cannonScale = d.cannonScale };
             return Solve(cannonRoot, Vector3.right, structure, aspect, s, extraAbove);
         }
 
@@ -163,6 +167,13 @@ namespace Crashverse.Meta
         {
             if (s == null || s.bottomMargin >= 0f) return cannon;
             var b = new Bounds(); b.SetMinMax(new Vector3(cannon.min.x, cannon.min.y + 1f, cannon.min.z), cannon.max); return b;
+        }
+
+        /// <summary>The dressed cannon's envelope: the scale-1 envelope scaled by s.cannonScale about the cannon root (ground point).</summary>
+        public static Bounds Envelope(Bounds cannonAtScale1, Vector3 cannonRoot, Settings s)
+        {
+            float k = s != null ? s.cannonScale : 1f; var b = new Bounds();
+            b.SetMinMax(cannonRoot + (cannonAtScale1.min - cannonRoot) * k, cannonRoot + (cannonAtScale1.max - cannonRoot) * k); return b;
         }
 
         /// <summary>True when all 8 corners of b are inside the viewport (with a tiny tolerance).</summary>

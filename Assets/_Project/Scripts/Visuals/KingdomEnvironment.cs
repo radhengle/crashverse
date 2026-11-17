@@ -476,6 +476,21 @@ namespace Crashverse.Visuals
                     }
                 }
             }
+            if (Compact && KingdomTheme.Mound.size.y > 0f)
+            {
+                // PM 17 Nov (b17 QA, L01.jpg): boulder clusters around the stilt feet (front corners first, they face the camera)
+                var mc = KingdomTheme.Mound.center; float hx = Mathf.Min(1.1f, sb.extents.x * 0.5f), hz = Mathf.Min(1.1f, sb.extents.z * 0.5f);
+                foreach (var corner in new[] { new Vector2(-1f, -1f), new Vector2(-1f, 1f), new Vector2(1f, -1f), new Vector2(1f, 1f) })
+                    for (int k = 0; k < 3; k++)
+                    {
+                        if (!rocks.TryGetValue(k % 2 == 0 ? "Rock_A" : "Rock_C", out var rm)) break;
+                        var p = new Vector3(mc.x + corner.x * hx + R(-0.45f, 0.45f), 0f, mc.z + corner.y * hz + R(-0.45f, 0.45f));
+                        if (corner.x < 0f && Mathf.Abs(p.z - mc.z) < 0.8f) continue; // the ladder foot
+                        p.y = KingdomTheme.MoundHeight(p.x, p.z);
+                        float sz = (k == 0 ? R(0.5f, 0.7f) : R(0.28f, 0.45f)) * (corner.x < 0f ? 1.15f : 1f);
+                        stone.Add(new CombineInstance { mesh = rm, transform = Matrix4x4.TRS(p + Vector3.down * 0.08f, Quaternion.Euler(R(-8f, 8f), R(0f, 360f), R(-8f, 8f)), new Vector3(sz, sz * R(0.6f, 0.85f), sz)) });
+                    }
+            }
             var t = new GameObject("Foliage").transform; t.SetParent(root, false);
             void Merge(string n, List<CombineInstance> l, Material mat, float tile)
             {

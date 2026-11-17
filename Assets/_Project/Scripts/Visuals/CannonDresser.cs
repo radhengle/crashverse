@@ -13,21 +13,32 @@ namespace Crashverse.Visuals
     {
         public const float VisualScale = 1.0f; // the locked camera frames WreckerSpec's envelope (PlayMode AssertCannonFramedFromBehind)
 
-        public static bool Dress(Crashverse.Weapons.WreckerBuilder wb)
+        /// <summary>scale: render-only size (CannonCameraRules.Settings.cannonScale; compact levels 1.25). The carriage grows from the
+        /// ground and the barrel rides on a mount that follows the pitch pivot (aim + recoil) at the scaled trunnion height, so the
+        /// pivots, projectile spawn and hint maths are unchanged. Returns the visual muzzle (null on failure).</summary>
+        public static Transform Dress(Crashverse.Weapons.WreckerBuilder wb, float scale = 1f)
         {
-            if (wb == null || wb.yawPivot == null || wb.pitchPivot == null) return false;
+            if (wb == null || wb.yawPivot == null || wb.pitchPivot == null) return null;
             var barrel = CvMesh.Load("Kingdom/Meshes/Cannon_Barrel"); var carriage = CvMesh.Load("Kingdom/Meshes/Cannon_Carriage");
-            if (barrel.Count == 0 || carriage.Count == 0) return false;
+            if (barrel.Count == 0 || carriage.Count == 0) return null;
             foreach (var r in wb.GetComponentsInChildren<MeshRenderer>(true)) r.enabled = false;
+            float k = VisualScale * Mathf.Max(0.5f, scale);
 
-            var bRoot = new GameObject("Kingdom_Barrel").transform; bRoot.SetParent(wb.pitchPivot, false);
-            bRoot.localScale = Vector3.one * VisualScale;
+            var bRoot = new GameObject("Kingdom_Barrel").transform;
+            if (Mathf.Abs(k - 1f) < 1e-3f) bRoot.SetParent(wb.pitchPivot, false);
+            else
+            {
+                bRoot.SetParent(wb.yawPivot, false);
+                var f = bRoot.gameObject.AddComponent<PivotFollower>(); f.src = wb.pitchPivot; f.offset = new Vector3(0f, wb.yawPivot.localPosition.y * (k - 1f), 0f); f.LateUpdate();
+            }
+            bRoot.localScale = Vector3.one * k;
             foreach (var kv in barrel) Part(kv.Key, kv.Value, bRoot, KingdomMaterials.TileFor(kv.Key));
+            var muzzle = new GameObject("Kingdom_Muzzle").transform; muzzle.SetParent(bRoot, false);
+            muzzle.localPosition = wb.projectileSpawn != null ? wb.projectileSpawn.localPosition : new Vector3(1.95f, 0f, 0f);
 
             var cRoot = new GameObject("Kingdom_Carriage").transform; cRoot.SetParent(wb.yawPivot, false);
-            cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y, 0f) * VisualScale; // ground under the pivot
-            cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y * VisualScale, 0f);
-            cRoot.localScale = Vector3.one * VisualScale;
+            cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y, 0f); // ground under the pivot
+            cRoot.localScale = Vector3.one * k;
             foreach (var kv in carriage) Part(kv.Key, kv.Value, cRoot, kv.Key.EndsWith("_Wood") ? 0.9f : KingdomMaterials.TileFor(kv.Key), true);
 
             // Hero-asset detailing: orange flame crests and visible timber wheel spokes.
@@ -35,7 +46,14 @@ namespace Crashverse.Visuals
             AddRoundedBreech(bRoot);
             AddFlameCrests(bRoot);
             AddWheelSpokes(cRoot);
-            return true;
+            return muzzle;
+        }
+
+        /// <summary>Copies the pitch pivot's local pose (aim elevation + recoil) onto the scaled barrel's mount.</summary>
+        public sealed class PivotFollower : MonoBehaviour
+        {
+            public Transform src; public Vector3 offset;
+            public void LateUpdate() { if (src == null) return; transform.localPosition = src.localPosition + offset; transform.localRotation = src.localRotation; }
         }
 
         /// <summary>L1 QA 16 Nov: the breech read as a flat disc. A rounded cast-iron dome behind the breech band (enclosing the old flat
