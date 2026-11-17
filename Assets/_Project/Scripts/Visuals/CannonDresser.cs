@@ -66,8 +66,32 @@ namespace Crashverse.Visuals
             var sunGold = Mk("Sun", new Color(0.97f, 0.89f, 0.45f), 0.4f, 0.3f, null, new Color(0.25f, 0.14f, 0.02f)); // #F8E474
             var sunDeep = Mk("SunDeep", new Color(0.93f, 0.57f, 0.08f), 0.4f, 0.35f);     // #EC9114
             var bore = Mk("Bore", new Color(0.03f, 0.03f, 0.05f), 0f, 1f);
-            var wood = Mk("Wood", new Color(1.05f, 0.92f, 0.95f), 0f, 0.9f, "T_K_Wood"); // dark brown #714130 lit // #714130 on the wood texture
+            var wood = Mk("Wood", new Color(0.92f, 0.80f, 0.85f), 0f, 0.85f, "T_TW_Timber"); // dark brown #714130 lit, Poly Haven CC0 planks
             var iron = Mk("Iron", new Color(0.12f, 0.12f, 0.14f), 0.6f, 0.45f);
+
+            // Blender-built hero mesh (Tools/Blender/tide/build_cannon.py -> Kingdom/Meshes/Tide_Cannon): same dimensions as the
+            // procedural fallback below, with rounded bevelled rings, a raised sun emblem and bevelled timber. Objects are <Part>_<Material>.
+            var hero = CvMesh.Load("Kingdom/Meshes/Tide_Cannon");
+            if (hero.ContainsKey("Barrel_Navy") && hero.ContainsKey("Carriage_Wood"))
+            {
+                var mats = new System.Collections.Generic.Dictionary<string, Material> {
+                    { "Navy", navy }, { "NavyDark", navyDark }, { "Gold", gold }, { "Sun", sunGold }, { "SunDeep", sunDeep }, { "Bore", bore }, { "Wood", wood }, { "Iron", iron } };
+                var hb = new GameObject("Kingdom_Barrel").transform; hb.SetParent(wb.yawPivot, false);
+                var hf = hb.gameObject.AddComponent<PivotFollower>(); hf.src = wb.pitchPivot; hf.offset = new Vector3(0f, 0.2f, 0f); hf.LateUpdate();
+                var hc = new GameObject("Kingdom_Carriage").transform; hc.SetParent(wb.yawPivot, false);
+                hc.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y, 0f);
+                foreach (var kv in hero)
+                {
+                    int us = kv.Key.LastIndexOf('_'); if (us < 0) continue;
+                    if (!mats.TryGetValue(kv.Key.Substring(us + 1), out var mat)) continue;
+                    var go = new GameObject("Tw" + kv.Key); go.transform.SetParent(kv.Key.StartsWith("Barrel") ? hb : hc, false);
+                    go.AddComponent<MeshFilter>().sharedMesh = kv.Value;
+                    var mr = go.AddComponent<MeshRenderer>(); mr.sharedMaterial = mat; mr.shadowCastingMode = ShadowCastingMode.On;
+                }
+                var hm = new GameObject("Kingdom_Muzzle").transform; hm.SetParent(hb, false);
+                hm.localPosition = new Vector3(wb.projectileSpawn != null ? wb.projectileSpawn.localPosition.x : 1.95f, 0f, 0f);
+                return hm;
+            }
 
             var bRoot = new GameObject("Kingdom_Barrel").transform; bRoot.SetParent(wb.yawPivot, false);
             var f = bRoot.gameObject.AddComponent<PivotFollower>(); f.src = wb.pitchPivot; f.offset = new Vector3(0f, 0.2f, 0f); f.LateUpdate();

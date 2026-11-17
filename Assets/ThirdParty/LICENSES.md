@@ -45,3 +45,14 @@ The UV layouts did not change.
 `T_K_<Surface>_N.jpg` (normal, OpenGL) and `T_K_<Surface>_ORM.jpg` (Poly Haven "arm": AO / roughness / metal) in `Resources/Kingdom/Textures/`, 1k, unmodified, CC0 from Poly Haven: Sand `coast_sand_01`, Grass + Rock `rocky_terrain_02`, Planks `brown_planks_03`, Wood `weathered_planks`, Stone `castle_wall_varriation`, Brick `red_brick_03`, Roof `clay_roof_tiles_02`, Bark `bark_brown_02`. Android import max 512.
 - `T_K_Metal.jpg` (greyscale remap), `T_K_Metal_N.jpg`, `T_K_Metal_ORM.jpg`: Poly Haven `rusty_metal_02` (CC0), for the worn iron barrel and brass bands.
 - `T_K_CastIron.jpg` / `T_K_Bronze.jpg` (recoloured from the diffuse: near-black cast iron with rust only in the pits; dull aged bronze with dark patina) and their `_N` / `_ORM` maps: Poly Haven `rusty_metal_02` (CC0), for the cannon barrel, bands and carriage fittings.
+
+## L1 Tide Watchtower asset pass (free assets, Nov 2026)
+PBR sets `T_TW_<Surface>{,_N,_ORM}.jpg` in `Resources/Kingdom/Textures/`, 1k. The diffuse maps were colour-graded toward `design/level_concepts_v1/L01_v2_goal.png` by `Tools/Blender/kingdom/grade_tide_textures.py`. The normal (OpenGL) and ARM maps are unmodified. All are CC0 from Poly Haven (https://polyhaven.com/license):
+- Stone: `castle_wall_slates`
+- Deck: `brown_planks_09`
+- Timber: `dark_wooden_planks`
+- Roof: `clay_roof_tiles_02`
+- Rock: `rock_face_03`
+- Grass: `aerial_grass_rock`
+
+`Resources/Kingdom/Meshes/Tide_Cannon.bytes`: an original mesh modelled in Blender 4.2 LTS (GPL tool; its output is ours) by `Tools/Blender/tide/build_cannon.py`. It uses no third-party geometry.

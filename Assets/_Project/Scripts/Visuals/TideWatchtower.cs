@@ -28,26 +28,26 @@ namespace Crashverse.Visuals
 
         // ---------------- palette (design/L01_v2_spec.md hex palette; tints = goal colour / texture mean) ----------------
         static Material M(string k, string tex, Color c, float metal = 0f, float rough = 0.9f, Color emission = default) => KingdomMaterials.Make("Tw" + k, tex, c, metal, rough, Vector2.one, emission);
-        internal static Material Stone => M("Stone", "T_K_Stone", new Color(0.74f, 0.64f, 0.66f));           // PM b22: darker grey stone
-        internal static Material StoneLight => M("StoneLight", "T_K_Stone", new Color(0.88f, 0.78f, 0.78f));
-        internal static Material StoneDark => M("StoneDark", "T_K_Stone", new Color(0.52f, 0.44f, 0.46f));
+        internal static Material Stone => M("Stone", "T_TW_Stone", new Color(0.80f, 0.79f, 0.80f));           // PM b22: darker grey stone
+        internal static Material StoneLight => M("StoneLight", "T_TW_Stone", new Color(0.98f, 0.95f, 0.93f));
+        internal static Material StoneDark => M("StoneDark", "T_TW_Stone", new Color(0.60f, 0.58f, 0.60f));
         internal static Material Mortar => M("Mortar", null, new Color(0.13f, 0.09f, 0.08f), 0f, 1f);
-        internal static Material Dressed => M("Dressed", "T_K_Stone", new Color(1.05f, 0.80f, 0.74f));   // arch voussoirs, jambs #C48A6F
+        internal static Material Dressed => M("Dressed", "T_TW_Stone", new Color(1.30f, 0.98f, 0.86f));   // arch voussoirs, jambs #C48A6F
         internal static Material ArchInside => M("ArchInside", null, new Color(0.27f, 0.06f, 0.11f), 0f, 0.95f, new Color(0.10f, 0.01f, 0.02f)); // #44101E
         internal static Material ArchCrack => M("ArchCrack", null, new Color(0.55f, 0.15f, 0.19f), 0f, 0.8f, new Color(0.9f, 0.12f, 0.08f));   // #8C2630 glowing
-        internal static Material Rock => M("Rock", "T_K_Rock", new Color(1.0f, 0.98f, 0.95f));        // #7C6E5F
-        internal static Material RockDark => M("RockDark", "T_K_Rock", new Color(0.78f, 0.80f, 0.78f));  // #393933 in shade
-        internal static Material RockTop => M("RockTop", "T_K_Rock", new Color(1.30f, 1.22f, 1.10f));    // sun-lit tops #E7D1A8
-        internal static Material Moss => M("Moss", "T_K_Grass", new Color(1.9f, 1.75f, 1.6f));
+        internal static Material Rock => M("Rock", "T_TW_Rock", new Color(0.88f, 0.86f, 0.84f));        // #7C6E5F
+        internal static Material RockDark => M("RockDark", "T_TW_Rock", new Color(0.66f, 0.68f, 0.68f));  // #393933 in shade
+        internal static Material RockTop => M("RockTop", "T_TW_Rock", new Color(1.12f, 1.08f, 1.0f));    // sun-lit tops #E7D1A8
+        internal static Material Moss => M("Moss", "T_TW_Grass", new Color(1.15f, 1.15f, 1.1f));
         internal static Material Fern => M("Fern", null, new Color(0.30f, 0.55f, 0.12f), 0f, 0.7f);
         internal static Material Foam => M("Foam", null, new Color(0.93f, 0.97f, 1.0f), 0f, 0.6f, new Color(0.18f, 0.2f, 0.22f));
-        internal static Material Timber => M("Timber", "T_K_Wood", new Color(1.05f, 0.95f, 0.92f));     // dark timber #361C14 .. lit #AF612C
-        internal static Material TimberLit => M("TimberLit", "T_K_Planks", new Color(1.05f, 0.85f, 0.72f));
-        internal static Material Plank => M("Plank", "T_K_Planks", new Color(0.95f, 0.78f, 0.68f));
+        internal static Material Timber => M("Timber", "T_TW_Timber", new Color(0.92f, 0.90f, 0.88f));     // dark timber #361C14 .. lit #AF612C
+        internal static Material TimberLit => M("TimberLit", "T_TW_Deck", new Color(1.0f, 0.90f, 0.85f));
+        internal static Material Plank => M("Plank", "T_TW_Deck", new Color(0.90f, 0.82f, 0.80f));
         internal static Material Iron => M("Iron", null, new Color(0.16f, 0.16f, 0.18f), 0.5f, 0.55f);
         internal static Material Gold => M("Gold", null, new Color(0.86f, 0.60f, 0.27f), 0.35f, 0.45f);
-        internal static Material RoofTile => M("RoofTile", null, new Color(0.80f, 0.13f, 0.08f), 0f, 0.6f);     // PM b22: saturated red   // #E15A43
-        internal static Material RoofTileDark => M("RoofTileDark", null, new Color(0.52f, 0.07f, 0.05f), 0f, 0.7f);
+        internal static Material RoofTile => M("RoofTile", "T_TW_Roof", new Color(1.05f, 0.78f, 0.78f), 0f, 0.6f);     // PM b22: saturated red   // #E15A43
+        internal static Material RoofTileDark => M("RoofTileDark", "T_TW_Roof", new Color(0.78f, 0.55f, 0.55f), 0f, 0.7f);
         internal static Material RoofUnder => M("RoofUnder", null, new Color(0.36f, 0.10f, 0.08f), 0f, 0.9f);    // #5C1A15
         internal static Material Banner => M("Banner", null, new Color(0.60f, 0.07f, 0.05f), 0f, 0.85f);         // #8C140E
         internal static Material BannerFold => M("BannerFold", null, new Color(0.42f, 0.04f, 0.04f), 0f, 0.9f);
@@ -62,7 +62,7 @@ namespace Crashverse.Visuals
         internal static Material Fire => M("Fire", null, new Color(1f, 0.45f, 0.08f), 0f, 1f, new Color(4.2f, 1.6f, 0.25f));
         internal static Material FireCore => M("FireCore", null, new Color(1f, 0.85f, 0.35f), 0f, 1f, new Color(5.0f, 3.8f, 1.2f));
         internal static Material WindowGlow => M("WindowGlow", null, new Color(1f, 0.63f, 0.25f), 0f, 1f, new Color(2.6f, 1.1f, 0.25f)); // #FFA040
-        internal static Material BarrelWood => M("BarrelWood", "T_K_Planks", new Color(1.55f, 1.05f, 0.62f));   // #AE5E30
+        internal static Material BarrelWood => M("BarrelWood", "T_TW_Deck", new Color(1.45f, 1.12f, 0.90f));   // #AE5E30
         internal static Material Cloth => M("ClothDark", null, new Color(0.30f, 0.07f, 0.09f), 0f, 0.9f);
         internal static Material Leather => M("Leather", null, new Color(0.22f, 0.13f, 0.10f), 0f, 0.85f);
         internal static Material Hood => M("Hood", null, new Color(0.46f, 0.08f, 0.13f), 0f, 0.85f);
@@ -603,7 +603,7 @@ namespace Crashverse.Visuals
                 float y = yEave + (yTop - yEave) * Mathf.Pow(f, 1.7f);  // concave: shallow at the eave, steep at the top
                 return V(Mathf.Lerp(ex, tx, f), y, Mathf.Lerp(ez, tz, f));
             }
-            void Add(Material m, params Vector3[] q) { var c = ClipZ(q, zMin, zMax); if (c != null) t.Poly(m, 1f, c); }
+            void Add(Material m, params Vector3[] q) { var c = ClipZ(q, zMin, zMax); if (c == null) return; if (m == RoofTile || m == RoofTileDark) t.PolySlope(m, 1.2f, c); else t.Poly(m, 1f, c); }
             for (int r = 0; r < rows; r++)
             {
                 float f0 = r / (float)rows, f1 = (r + 1) / (float)rows;
@@ -691,7 +691,7 @@ namespace Crashverse.Visuals
             foreach (float s in new[] { -1f, 1f })
             {
                 var e = side * s * (w * 0.62f) + Vector3.down * h * 0.45f;
-                t.Poly2(RoofTile, 1f, r0, r1, r1 + e, r0 + e);
+                t.PolySlope(RoofTile, 1.2f, r0, r1, r1 + e, r0 + e); t.PolySlope(RoofTile, 1.2f, r0 + e, r1 + e, r1, r0);
                 t.Cyl(Gold, 1f, r1 + e * 0.02f, r1 + e, 0.025f, 0.025f, 5, false);
             }
             t.Cyl(Gold, 1f, r0, r1 + face * 0.02f, 0.04f, 0.04f, 6);

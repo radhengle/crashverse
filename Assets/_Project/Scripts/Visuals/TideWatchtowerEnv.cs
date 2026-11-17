@@ -11,22 +11,22 @@ namespace Crashverse.Visuals
     {
         static Vector3 V(float x, float y, float z) => new Vector3(x, y, z);
         static Material M(string k, string tex, Color c, float metal = 0f, float rough = 0.9f, Color emission = default) => KingdomMaterials.Make("Tw" + k, tex, c, metal, rough, Vector2.one, emission);
-        static Material DeckLit => M("DeckLit", "T_K_Planks", new Color(1.10f, 0.86f, 0.90f));   // PM b22: dark brown #8A503C lit
-        static Material DeckMid => M("DeckMid", "T_K_Planks", new Color(0.80f, 0.60f, 0.62f));   // #5A3022
+        static Material DeckLit => M("DeckLit", "T_TW_Deck", new Color(1.05f, 0.92f, 1.0f));   // PM b22: dark brown #8A503C lit
+        static Material DeckMid => M("DeckMid", "T_TW_Deck", new Color(0.76f, 0.66f, 0.72f));   // #5A3022
         static Material DeckGap => M("DeckGap", null, new Color(0.10f, 0.05f, 0.035f), 0f, 1f);     // #351912
-        static Material RailWood => M("RailWood", "T_K_Wood", new Color(1.30f, 1.10f, 1.05f));
+        static Material RailWood => M("RailWood", "T_TW_Timber", new Color(1.10f, 0.95f, 0.95f));
         static Material Brass => M("Brass", null, new Color(0.80f, 0.56f, 0.24f), 0.4f, 0.4f);
         static Material LanternGlow => M("LanternGlow", null, new Color(1f, 0.94f, 0.24f), 0f, 1f, new Color(5.0f, 4.0f, 1.1f)); // #FEF03C
         static Material OrangeStave => M("OrangeStave", "T_K_Planks", new Color(1.55f, 1.05f, 0.55f));  // #D57321
         static Material Steel => M("Steel", null, new Color(0.45f, 0.47f, 0.5f), 0.6f, 0.4f);
         static Material Ball => M("Ball", null, new Color(0.19f, 0.13f, 0.15f), 0.3f, 0.45f);        // #312227
-        static Material Crate => M("Crate", "T_K_Planks", new Color(1.0f, 0.78f, 0.66f));
+        static Material Crate => M("Crate", "T_TW_Deck", new Color(0.95f, 0.85f, 0.85f));
         static Material RopeMat => M("RopeEnv", "T_K_Bark", new Color(1.35f, 1.1f, 0.95f));          // #91532F
         static Material RedCloth => M("RedCloth", null, new Color(0.47f, 0.07f, 0.08f), 0f, 0.85f);   // #791314
         static Material GoldCloth => M("GoldCloth", null, new Color(0.93f, 0.68f, 0.18f), 0f, 0.7f);
-        static Material CliffRock => M("CliffRock", "T_K_Rock", new Color(0.62f, 1.02f, 1.45f));      // hazy #3B607E
-        static Material CliffDark => M("CliffDark", "T_K_Rock", new Color(0.46f, 0.74f, 1.10f));
-        static Material CliffGrass => M("CliffGrass", "T_K_Grass", new Color(1.7f, 2.1f, 1.8f));
+        static Material CliffRock => M("CliffRock", "T_TW_Rock", new Color(0.48f, 0.72f, 0.95f));      // hazy #3B607E
+        static Material CliffDark => M("CliffDark", "T_TW_Rock", new Color(0.36f, 0.53f, 0.72f));
+        static Material CliffGrass => M("CliffGrass", "T_TW_Grass", new Color(1.2f, 1.4f, 0.9f));
         static Material Beach => M("Beach", "T_K_Sand", new Color(1.35f, 1.3f, 1.2f));
         static Material CastleWall => M("CastleWall", null, new Color(0.93f, 0.92f, 0.9f), 0f, 0.8f);
         static Material CastleShade => M("CastleShade", null, new Color(0.72f, 0.76f, 0.85f), 0f, 0.85f);

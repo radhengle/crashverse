@@ -40,6 +40,21 @@ namespace Crashverse.Visuals
             for (int i = 1; i < w.Length - 1; i++) { p.t.Add(s); p.t.Add(s + i); p.t.Add(s + i + 1); }
         }
 
+        /// <summary>Flat polygon with UVs aligned to its slope (u along the horizontal, v down the fall line), for roof tiles whose
+        /// texture columns must run down every face of a hip roof.</summary>
+        public void PolySlope(Material m, float tile, params Vector3[] q)
+        {
+            if (m == null || q.Length < 3) return;
+            var p = P(m, tile); int s = p.v.Count;
+            var w = new Vector3[q.Length]; for (int i = 0; i < q.Length; i++) w[i] = M.MultiplyPoint3x4(q[i]);
+            var nn = Vector3.Cross(w[1] - w[0], w[2] - w[0]); if (nn.sqrMagnitude < 1e-12f && q.Length > 3) nn = Vector3.Cross(w[2] - w[0], w[3] - w[0]); nn = nn.normalized;
+            var tu = Vector3.Cross(Vector3.up, nn); if (tu.sqrMagnitude < 1e-6f) tu = Vector3.right; tu.Normalize();
+            var tv = Vector3.Cross(nn, tu).normalized;
+            float k = 1f / Mathf.Max(0.01f, p.tile);
+            for (int i = 0; i < w.Length; i++) { p.v.Add(w[i]); p.n.Add(nn); p.uv.Add(new Vector2(Vector3.Dot(w[i], tu), Vector3.Dot(w[i], tv)) * k); }
+            for (int i = 1; i < w.Length - 1; i++) { p.t.Add(s); p.t.Add(s + i); p.t.Add(s + i + 1); }
+        }
+
         /// <summary>Two-sided flat polygon (cloth, flags, banners).</summary>
         public void Poly2(Material m, float tile, params Vector3[] q)
         {
