@@ -167,7 +167,7 @@ namespace Crashverse.Visuals
                 e.velocity = Dir(1.2f) * R(speed * 0.4f, speed);
                 e.startSize3D = new Vector3(R(0.35f, 0.8f) * big, R(0.05f, 0.09f) * Mathf.Sqrt(big), R(0.1f, 0.2f) * big);
                 e.rotation3D = new Vector3(R(0f, 360f), R(0f, 360f), R(0f, 360f));
-                e.startLifetime = R(1.6f, 2.6f); e.startColor = Color.Lerp(new Color(0.85f, 0.75f, 0.6f), Color.white, R(0f, 1f));
+                e.startLifetime = R(1.6f, 2.6f); e.startColor = Color.Lerp(new Color(0.32f, 0.22f, 0.14f), new Color(0.62f, 0.47f, 0.32f), R(0f, 1f)); // PM b18 QA: dark weathered planks
                 _planks.Emit(e, 1);
             }
         }
@@ -215,12 +215,20 @@ namespace Crashverse.Visuals
             bool onStructure = at.y > 0.4f;
             Debug.Log($"CVFX|IMPACT|{at.x:F2},{at.y:F2},{at.z:F2}|t={Time.time:F2}"); // emulator smoke: cuts the smash frames from this line
             Emit(_glow, at, N(5), 0.4f, 0.2f, 0.8f, 7f, 9.5f, 0.5f, 0.8f);      // soft bloom-like halo around the blast
-            Emit(_core, at, N(9), 0.35f, 0.3f, 1.5f, 1.4f, 2.4f, 0.25f, 0.45f); // glowing yellow-white core
+            Emit(_core, at, N(14), 0.3f, 0.2f, 1.2f, 1.8f, 2.9f, 0.35f, 0.6f); // PM b18 QA: a bright white-hot core that lingers
+            Emit(_fire, at, N(24), 0.9f, 1.2f, 4.5f, 1.5f, 2.8f, 0.6f, 1.1f, 1.6f); // layered flame tongues licking outward / up
             Emit(_blast, at, N(28), 0.7f, 1.5f, 5.5f, 2.4f, 4.2f, 0.7f, 1.2f);
             Emit(_ball, at, N(26), 0.6f, 2.0f, 6.5f, 2.0f, 3.8f, 0.45f, 0.85f);
             Emit(_sparks, at, N(150), 0.3f, 9f, 22f, 0.1f, 0.2f, 0.5f, 1.3f, 1.2f);
             if (onStructure) EmitPlanks(at, N(32), 15f, 1.7f);
             Emit(_smoke, at, N(14), 0.9f, 0.8f, 2.6f, 2.2f, 4.0f, 3f, 5f, 2f);
+            var soot = new ParticleSystem.EmitParams { applyShapeToPosition = false }; // dark soot billowing up behind the flames
+            for (int i = 0, n = N(12); i < n; i++)
+            {
+                soot.position = at + Dir(1f) * R(0.3f, 1.0f) + Vector3.up * 0.5f; soot.velocity = Dir(2.5f) * R(0.6f, 1.8f);
+                soot.startSize = R(2.4f, 4.0f); soot.startLifetime = R(3.5f, 5.5f); soot.rotation = R(0f, 360f); soot.startColor = new Color(0.16f, 0.14f, 0.13f, 0.9f);
+                _smoke.Emit(soot, 1);
+            }
             float ground = Mathf.Max(0.15f, Crashverse.Visuals.KingdomTheme.MoundHeight(at.x, at.z));
             var ge = new ParticleSystem.EmitParams { applyShapeToPosition = false };
             int dust = N(18);

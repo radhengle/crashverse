@@ -286,11 +286,12 @@ namespace Crashverse.Visuals
                 if (side > 0) Rowboat(h, new Vector3(x - 2.4f, WaterY + 0.05f, zEdge + dir * 7.5f), -14f);
                 // L1 QA 16 Nov: the moored boats were off-screen on the small island; two rowboats in the lagoon at the island's
                 // front corners, hulls along the view so they stay out of the firing lane (|z| > 2.7)
-                if (Compact) Rowboat(h, new Vector3(Cx - Rx * 0.9f, WaterY + 0.05f, side * Mathf.Max(3.6f, Rz * 0.8f)), side > 0 ? 18f : -24f);
+                // PM b18 QA: bigger and nearer, in the lagoon just in front of the island, either side of the cannon (|z| 2.8, clear of the lane)
+                if (Compact) { var rb = Rowboat(h, new Vector3(Cx - Rx - 0.9f, WaterY + 0.05f, side * 2.8f), side > 0 ? 24f : -30f); if (rb != null) rb.localScale = Vector3.one * 1.5f; }
             }
         }
 
-        static void Rowboat(Transform parent, Vector3 at, float yaw)
+        static Transform Rowboat(Transform parent, Vector3 at, float yaw)
         {
             var b = new GameObject("Rowboat").transform; b.SetParent(parent, false); b.localPosition = at; b.localRotation = Quaternion.Euler(0f, yaw, 0f);
             var hull = KingdomMaterials.Make("BoatHull", "T_K_Wood", new Color(0.95f, 0.9f, 0.85f), 0f, 0.7f, Vector2.one);
@@ -306,6 +307,7 @@ namespace Crashverse.Visuals
             Box("Thwart", b, new Vector3(0.3f, 0.3f, 0f), new Vector3(0.25f, 0.05f, 1.1f), KingdomMaterials.Planks, 1f);
             var oar = Obj("Oar", b, Cylinder(), KingdomMaterials.Wood);
             oar.transform.localPosition = new Vector3(-0.2f, 0.4f, 0.2f); oar.transform.localRotation = Quaternion.Euler(80f, 20f, 0f); oar.transform.localScale = new Vector3(0.06f, 1.1f, 0.06f);
+            return b;
         }
 
         static void Props(Transform parent, Vector3 at, int seed)

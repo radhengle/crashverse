@@ -40,7 +40,9 @@ namespace Crashverse.Meta
         /// cannon, wheels and side cheeks included, now sits ~10% above the bottom edge (margin 0.09: 4:3 tablets keep the barrel below the building), just over the button row.
         /// PM 17 Nov (b17 QA, L01.jpg): the barrel must dominate the foreground. Compact levels dress a 1.25x cannon (render-only: pivots,
         /// spawn and hints unchanged) and frame its envelope from a little further back, so it is ~56% of a phone's width (was ~46%).
-        public static readonly Settings Compact = new Settings { back = 12.5f, height = 5.4f, sideFill = 0.70f, bottomMargin = 0.09f,
+        /// PM b18 QA (L01.jpg): building ABOVE the muzzle (building ~41-77% of the height, barrel tip ~46%, below the building's base),
+        /// the wide L1 house ~60% of the width: a higher eye from further back with a narrower lens (~35 deg on 19.5:9).
+        public static readonly Settings Compact = new Settings { back = 18f, height = 7.5f, sideFill = 0.70f, bottomMargin = 0.09f,
                                                                  cannonScale = 1.25f, cannonRear = 1.8f * 1.25f, cannonTop = 2.6f * 1.25f };
         /// <summary>Height (m) of the Kingdom roof-top flag pole above the highest block; the run camera keeps its tip in frame.</summary>
         public const float RoofFlagPole = 1.2f;

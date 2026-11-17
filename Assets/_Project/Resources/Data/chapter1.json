@@ -74,8 +74,8 @@
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2,
    "hintTarget": "lowF2",
-   "hintYaw": 2.5,
-   "hintPitch": 16.0,
+   "hintYaw": 0.0,
+   "hintPitch": 10.0,
    "blastRadius": 1.5,
    "blastDamage": 36,
    "targetDistance": 14

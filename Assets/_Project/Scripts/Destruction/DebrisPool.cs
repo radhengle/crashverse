@@ -180,7 +180,9 @@ namespace Crashverse.Destruction
                 Vector3 v = inherit + away * kick + rng.InsideUnitSphere() * 0.5f;
                 Vector3 w = rng.InsideUnitSphere() * (c.kind == ChunkKind.TimberBeam ? 2.5f : 4f);
                 piece.PieceId = src.PieceId;
-                piece.ActivateChunk(src.material, matType, c, i, count, world, t.rotation, csize * 0.98f, mass, v, w, col);
+                // PM b18 QA (L01.jpg): wood chunks read as dark weathered planks, not pale cubes (presentation only)
+                Color cc = matType == MaterialType.Wood ? Color.Lerp(new Color(0.24f, 0.16f, 0.10f), new Color(0.46f, 0.33f, 0.22f), ((i * 37) % 11) / 10f) : col;
+                piece.ActivateChunk(src.material, matType, c, i, count, world, t.rotation, csize * 0.98f, mass, v, w, cc);
                 _ledger.Activate(piece.Slot, now, now + c.delayTicks, ChunkBudget.MaxDynamicTicks);
                 if (c.delayTicks <= 0) { piece.Release(); Raise(ChunkEvents.Release, _evRelease, piece, now); }
                 spawned++;

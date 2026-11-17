@@ -72,12 +72,12 @@ namespace Crashverse.Visuals
         static Material PlanksWorn => KingdomMaterials.Make("PlanksWorn", "T_K_Planks", new Color(0.78f, 0.74f, 0.70f), 0f, 0.9f, Vector2.one); // sun-bleached boards
         // L1 QA 16 Nov (L01.jpg): weathered cabin boards in several tones, with grime and rot near the base
         // L1 QA 16 Nov (b): T_K_Planks/T_K_Wood are saturated orange-brown; cool tints pull the cabin to L01.jpg's grey-brown aged wood.
-        static Material CabinBoard => KingdomMaterials.Make("CabinBoard", "T_K_Planks", new Color(1.0f, 1.1f, 1.25f), 0f, 0.92f, Vector2.one);
-        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(1.5f, 1.55f, 1.65f), 0f, 0.94f, Vector2.one);
-        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.6f, 0.64f, 0.72f), 0f, 0.95f, Vector2.one);
-        static Material CabinBoardRot => KingdomMaterials.Make("CabinBoardRot", "T_K_Wood", new Color(0.95f, 1.1f, 1.3f), 0f, 0.97f, Vector2.one);
-        static Material CabinGrime => KingdomMaterials.Make("CabinGrime", "T_K_Wood", new Color(0.6f, 0.68f, 0.8f), 0f, 0.98f, Vector2.one);
-        static Material CarvedTrim => KingdomMaterials.Make("CarvedTrim", "T_K_Wood", new Color(1.2f, 1.3f, 1.45f), 0f, 0.85f, Vector2.one);
+        static Material CabinBoard => KingdomMaterials.Make("CabinBoard", "T_K_Planks", new Color(0.74f, 0.6f, 0.46f), 0f, 0.92f, Vector2.one);
+        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(0.92f, 0.78f, 0.62f), 0f, 0.94f, Vector2.one);
+        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.46f, 0.36f, 0.27f), 0f, 0.95f, Vector2.one);
+        static Material CabinBoardRot => KingdomMaterials.Make("CabinBoardRot", "T_K_Wood", new Color(0.62f, 0.56f, 0.46f), 0f, 0.97f, Vector2.one);
+        static Material CabinGrime => KingdomMaterials.Make("CabinGrime", "T_K_Wood", new Color(0.3f, 0.25f, 0.2f), 0f, 0.98f, Vector2.one);
+        static Material CarvedTrim => KingdomMaterials.Make("CarvedTrim", "T_K_Wood", new Color(0.8f, 0.68f, 0.54f), 0f, 0.85f, Vector2.one);
 
         public static HashSet<DestructibleBlock> Dressed = new HashSet<DestructibleBlock>();
 
@@ -102,6 +102,7 @@ namespace Crashverse.Visuals
                     else if (b.role == "shoulder" || b.role == "arm" || b.role == "shutter" || b.role == "core" || b.role == "armor") ok = false; // boss anatomy keeps its look
                     else ok = Masonry(bld, s, castle, b, blocks);
                 }
+                else if (id.StartsWith("gable")) ok = GableHalf(bld, s, id.EndsWith("r") ? 1f : -1f); // PM b18 QA: L1 gable, ridge toward the camera
                 else if (b.isRoof || b.role == "roof" || id.Contains("roof")) ok = Roof(bld, s, true);
                 else if (id.Contains("flag")) ok = Flag(bld, s);
                 else if (id == "bell" || id.EndsWith("bell")) ok = Bell(bld, s);
@@ -151,7 +152,7 @@ namespace Crashverse.Visuals
             // L01.jpg: weathered VERTICAL boards with dark gaps between them, each a little crooked / uneven at the ends,
             // over a dark inner core (the gaps read as shadow, never see-through)
             k.Box(Gap, Vector3.zero, s - Vector3.one * 0.1f, 1.2f);
-            float bw = 0.3f, gap = 0.1f; /* b17 QA: fewer, wider boards with wide dark gaps: readable at phone scale */ int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
+            float bw = 0.3f, gap = 0.045f; /* PM b18 QA: solid wide boards, small dark gaps */ int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
             void Boards(Vector3 normal, Vector3 along, float width, float outAt)
             {
                 int n = Mathf.Max(3, Mathf.RoundToInt((width - 0.2f) / (bw + gap))); float step = (width - 0.2f) / n;
@@ -347,7 +348,7 @@ namespace Crashverse.Visuals
                 }
                 if (rightMost)
                 {
-                    float lz = hz * 0.35f, foot = -hx - 1.25f;
+                    float lz = -hz * 0.62f, foot = -hx - 1.1f; // PM b18 QA (L01.jpg): the ladder on the right (+z is screen-left)
                     var lo = new Vector3(foot, -hy - drop, lz); var hi = new Vector3(-hx - 0.05f, hy + 0.75f, lz);
                     foreach (float dz in new[] { -0.3f, 0.3f }) k.Log(Stilt, lo + Vector3.forward * dz, hi + Vector3.forward * dz, 0.065f);
                     float lh = drop + s.y + 0.75f;
@@ -420,13 +421,13 @@ namespace Crashverse.Visuals
             var along = alongZ ? Vector3.forward : Vector3.right; var normal = alongZ ? Vector3.left : Vector3.back;
             k.Box(Gap, Vector3.zero, alongZ ? new Vector3(thick * 0.5f, s.y - 0.1f, width - 0.06f) : new Vector3(width - 0.06f, s.y - 0.1f, thick * 0.5f), 1.2f);
             int seed = 0; foreach (char ch in id ?? "") seed = seed * 31 + ch;
-            float bw = 0.3f, gap = 0.1f; /* b17 QA: fewer, wider boards with wide dark gaps: readable at phone scale */ int n = Mathf.Max(3, Mathf.RoundToInt(width / (bw + gap))); float step = width / n;
+            float bw = 0.3f, gap = 0.045f; /* PM b18 QA: solid wide boards, small dark gaps over the dark backing */ int n = Mathf.Max(3, Mathf.RoundToInt(width / (bw + gap))); float step = width / n;
             foreach (float side in new[] { 1f, -1f })
                 for (int i = 0; i < n; i++)
                 {
                     uint h = (uint)(seed * 73856093 ^ (i + 1) * 19349663 ^ (side > 0 ? 83492791 : 49979687));
                     float j0 = (h & 255) / 255f - 0.5f, j1 = ((h >> 8) & 255) / 255f - 0.5f, j2 = ((h >> 16) & 255) / 255f - 0.5f, j3 = ((h >> 24) & 255) / 255f;
-                    if (side > 0 && j3 > 0.86f && i > 0 && i < n - 1) continue; // a missing board: the dark gap shows through
+                    if (side > 0 && j3 > 0.94f && i > 0 && i < n - 1) continue; // a missing board: the dark gap shows through
                     float len = s.y * (0.93f + 0.1f * j1), dy = 0.05f * j2 - (s.y - len) * 0.5f;
                     var c = normal * side * (thick * 0.5f - 0.02f + 0.02f * j1) + along * (-width * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
                     var rot = Quaternion.AngleAxis(12f * j0, normal) * Quaternion.AngleAxis(4f * j2, along); // b16 QA: up to ~6 deg read as straight at phone scale
@@ -446,6 +447,76 @@ namespace Crashverse.Visuals
             if ((seed & 2) != 0) { float t = a.y; a.y = b2.y; b2.y = t; }
             k.Log(CarvedTrim, a, b2, 0.045f); // diagonal brace
             k.Box(CabinGrime, normal * (thick * 0.5f + 0.012f) + Vector3.up * (-hy + 0.2f), alongZ ? new Vector3(0.03f, 0.38f, width - 0.1f) : new Vector3(width - 0.1f, 0.38f, 0.03f), 1f);
+            if ((id ?? "").ToLowerInvariant().Contains("win")) Window(k, normal, along, alongZ, thick, width, s.y);
+            return true;
+        }
+
+        /// <summary>PM b18 QA (L01.jpg): a dark window opening in a timber frame with a sill and two board shutters hanging open.</summary>
+        static void Window(Builder k, Vector3 normal, Vector3 along, bool alongZ, float thick, float width, float height)
+        {
+            float w = Mathf.Min(0.72f, width * 0.48f), h = Mathf.Min(0.7f, height * 0.45f), yc = height * 0.08f, f = thick * 0.5f;
+            Vector3 Sz(float a, float y, float n) => alongZ ? new Vector3(n, y, a) : new Vector3(a, y, n);
+            var c = normal * (f + 0.05f) + Vector3.up * yc;
+            k.Box(Gap, c, Sz(w, h, 0.03f), 1f);                                                    // the dark room behind
+            foreach (float sg in new[] { -1f, 1f })
+            {
+                k.Box(Timber, c + normal * 0.03f + along * sg * (w * 0.5f + 0.04f), Sz(0.09f, h + 0.16f, 0.07f), 1f);   // jambs
+                k.Box(Timber, c + normal * 0.03f + Vector3.up * sg * (h * 0.5f + 0.04f), Sz(w + 0.16f, 0.09f, 0.07f), 1f); // head / sill
+                var sh = c + normal * 0.09f + along * sg * (w * 0.5f + 0.1f + w * 0.25f);                // shutter swung open against the wall
+                var rot = Quaternion.AngleAxis(sg * 14f, Vector3.up);
+                for (int i = 0; i < 2; i++)
+                    k.Box(i == 0 ? CabinBoardDark : CabinBoard, sh + along * ((i - 0.5f) * w * 0.25f), Sz(w * 0.24f, h * 0.98f, 0.045f), 1f, rot);
+                k.Box(Timber, sh + normal * 0.03f + Vector3.up * (h * 0.25f), Sz(w * 0.5f, 0.06f, 0.03f), 1f, rot); // ledges
+                k.Box(Timber, sh + normal * 0.03f - Vector3.up * (h * 0.25f), Sz(w * 0.5f, 0.06f, 0.03f), 1f, rot);
+            }
+            k.Box(Timber, c + normal * 0.06f - Vector3.up * (h * 0.5f + 0.1f), Sz(w + 0.3f, 0.07f, 0.16f), 1f); // projecting sill
+        }
+
+        /// <summary>PM b18 QA (L01.jpg): one half of a steep gable roof whose ridge runs toward the camera, so the gable triangle faces
+        /// the cannon. side -1: the block's ridge edge is at +z (the half slopes down to -z); +1 the mirror. Dark underlay, staggered
+        /// crooked shingles, deep eaves (0.7 m) and front/back overhangs (0.55 m), bargeboards, a ridge log, rafter tails and a plank
+        /// gable end with dark gaps.</summary>
+        static bool GableHalf(Builder k, Vector3 s, float side)
+        {
+            float hx = s.x * 0.5f, hy = s.y * 0.5f, hz = s.z * 0.5f, ov = 0.7f, ovx = 0.55f;
+            float ang = Mathf.Atan2(s.y, s.z);
+            var ridge = new Vector3(0f, hy, -side * hz);
+            var down = new Vector3(0f, -Mathf.Sin(ang), side * Mathf.Cos(ang));      // along the slope, ridge -> eave
+            var n = new Vector3(0f, Mathf.Cos(ang), side * Mathf.Sin(ang));          // slope normal (up / outward)
+            float L = Mathf.Sqrt(s.y * s.y + s.z * s.z) + ov, len = s.x + 2f * ovx;
+            var rot = Quaternion.LookRotation(down, n);
+            k.Box(WoodShingleDark, ridge + down * (L * 0.5f) - n * 0.07f, new Vector3(len, 0.14f, L), 1f, rot); // underlay / sheathing
+            int rows = Mathf.Max(5, Mathf.RoundToInt(L / 0.3f)); float rl = L / rows; int cols = Mathf.Max(4, Mathf.RoundToInt(len / 0.34f)); float cw = len / cols;
+            int seed = Mathf.RoundToInt(s.x * 53f + s.z * 29f + side * 7f);
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                {
+                    uint hsh = (uint)((seed + i * 131 + j * 17) * 2654435761u);
+                    float j0 = ((hsh >> 4) & 255) / 255f - 0.5f, j1 = ((hsh >> 12) & 255) / 255f - 0.5f, j2 = ((hsh >> 20) & 255) / 255f - 0.5f;
+                    if (j2 > 0.45f && i > 0 && i < rows - 1) continue; // a missing shingle here and there
+                    float x = -len * 0.5f + (j + 0.5f + ((i & 1) == 1 ? 0.5f : 0f)) * cw; if (x > len * 0.5f - 0.05f) continue;
+                    var p = ridge + down * ((i + 0.62f) * rl) + n * (0.02f + 0.03f * (i & 1)) + Vector3.right * x;
+                    var m = j1 > 0.28f ? WoodShingleWorn : j1 < -0.33f ? WoodShingleDark : WoodShingle;
+                    k.Box(m, p, new Vector3(cw * 0.93f, 0.05f, rl * 1.35f), 0.9f, rot * Quaternion.Euler(-7f, j0 * 6f, j0 * 4f));
+                }
+            foreach (float sx in new[] { -1f, 1f }) // bargeboards along both gable edges
+                k.Box(Timber, ridge + down * (L * 0.5f) + Vector3.right * sx * (len * 0.5f + 0.03f) + n * 0.02f, new Vector3(0.08f, 0.26f, L + 0.05f), 1f, rot);
+            k.Box(Timber, ridge + down * (L - 0.04f) - n * 0.04f, new Vector3(len + 0.1f, 0.2f, 0.09f), 1f, rot);  // eave fascia
+            k.Log(Timber, new Vector3(-len * 0.5f - 0.1f, hy + 0.06f, ridge.z), new Vector3(len * 0.5f + 0.1f, hy + 0.06f, ridge.z), 0.1f); // ridge log
+            for (float x = -len * 0.5f + 0.25f; x < len * 0.5f - 0.1f; x += 0.5f) // rafter tails under the eave
+                k.Box(Timber, ridge + down * (L - 0.35f) - n * 0.16f + Vector3.right * x, new Vector3(0.09f, 0.11f, 0.6f), 1f, rot);
+            // gable end walls (front + back): vertical boards up to the slope over a dark backing
+            float bw = 0.3f; int nb = Mathf.Max(2, Mathf.CeilToInt(s.z / bw));
+            foreach (float gx in new[] { -hx, hx })
+                for (int i = 0; i < nb; i++)
+                {
+                    float z0 = -side * hz + side * (i * s.z / nb), z1 = -side * hz + side * ((i + 1) * s.z / nb), zc = (z0 + z1) * 0.5f;
+                    float dist = Mathf.Abs(zc - ridge.z), top = hy - dist * s.y / s.z - 0.05f, hgt = top + hy; if (hgt < 0.08f) continue;
+                    uint hsh = (uint)((seed + i * 977 + (gx < 0 ? 0 : 5)) * 2654435761u); float j1 = ((hsh >> 12) & 255) / 255f - 0.5f;
+                    k.Box(Gap, new Vector3(gx * 0.98f, -hy + hgt * 0.5f, zc), new Vector3(0.05f, hgt, s.z / nb), 1f);
+                    k.Box(j1 > 0.25f ? CabinBoardWorn : j1 < -0.3f ? CabinBoardDark : CabinBoard, new Vector3(gx + Mathf.Sign(gx) * 0.03f, -hy + hgt * 0.5f, zc),
+                          new Vector3(0.05f, hgt * (0.96f + 0.04f * j1), s.z / nb - 0.045f), 1.1f);
+                }
             return true;
         }
 

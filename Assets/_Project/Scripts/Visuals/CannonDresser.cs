@@ -33,6 +33,7 @@ namespace Crashverse.Visuals
             }
             bRoot.localScale = Vector3.one * k;
             foreach (var kv in barrel) Part(kv.Key, kv.Value, bRoot, KingdomMaterials.TileFor(kv.Key));
+            foreach (var kv in barrel) if (kv.Key.EndsWith("_Gold")) ThickenBands(bRoot, kv.Value);
             var muzzle = new GameObject("Kingdom_Muzzle").transform; muzzle.SetParent(bRoot, false);
             muzzle.localPosition = wb.projectileSpawn != null ? wb.projectileSpawn.localPosition : new Vector3(1.95f, 0f, 0f);
 
@@ -47,6 +48,28 @@ namespace Crashverse.Visuals
             AddFlameCrests(bRoot);
             AddWheelSpokes(cRoot);
             return muzzle;
+        }
+
+        /// <summary>PM b18 QA (L01.jpg): the gold bands read as thin lines. Every ring-shaped cluster of the Barrel_Gold mesh (centred on
+        /// the bore axis, narrower than 0.45 m) gets a thicker, wider rounded antique-gold collar around it. Render-only.</summary>
+        static void ThickenBands(Transform barrelRoot, Mesh gold)
+        {
+            if (gold == null || !gold.isReadable) return;
+            var v = gold.vertices; if (v.Length == 0) return;
+            var xs = new System.Collections.Generic.List<Vector3>(v); xs.Sort((a, b) => a.x.CompareTo(b.x));
+            int start = 0;
+            for (int i = 1; i <= xs.Count; i++)
+            {
+                if (i < xs.Count && xs[i].x - xs[i - 1].x < 0.05f) continue;
+                float x0 = xs[start].x, x1 = xs[i - 1].x, rMax = 0f, rMin = 9f; Vector2 mean = Vector2.zero; int cnt = i - start;
+                for (int j = start; j < i; j++) { float r = Mathf.Sqrt(xs[j].y * xs[j].y + xs[j].z * xs[j].z); rMax = Mathf.Max(rMax, r); rMin = Mathf.Min(rMin, r); mean += new Vector2(xs[j].y, xs[j].z); }
+                mean /= Mathf.Max(1, cnt); start = i;
+                if (cnt < 8 || x1 - x0 > 0.45f || rMax < 0.15f || mean.magnitude > 0.05f || rMin < rMax * 0.5f) continue;
+                float r1 = rMax + 0.045f;
+                Lathe("Cannon_BandCollar", new[] { new Vector2(x0 - 0.06f, rMax - 0.03f), new Vector2(x0 - 0.045f, r1 - 0.01f), new Vector2(x0 - 0.02f, r1),
+                                                   new Vector2(x1 + 0.02f, r1), new Vector2(x1 + 0.045f, r1 - 0.01f), new Vector2(x1 + 0.06f, rMax - 0.03f) },
+                      barrelRoot, KingdomMaterials.CannonBronze, 36);
+            }
         }
 
         /// <summary>Copies the pitch pivot's local pose (aim elevation + recoil) onto the scaled barrel's mount.</summary>

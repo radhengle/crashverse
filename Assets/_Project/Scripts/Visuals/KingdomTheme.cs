@@ -393,7 +393,14 @@ namespace Crashverse.Visuals
             DestructibleBlock top = null; float topY = float.MinValue;
             foreach (var b in blocks)
             {
-                if (b == null || b.role == "island" || b.isRoof || b.role == "roof") continue;
+                if (b == null || b.role == "island") continue;
+                if ((b.isRoof || b.role == "roof") && (b.blockId ?? "").StartsWith("gable"))
+                {   // PM b18 QA (L01.jpg): the flag flies from the front apex of a gable roof, not through its slope
+                    float gy = b.transform.position.y + b.transform.localScale.y * 0.5f + 0.01f;
+                    if (gy > topY) { topY = gy; top = b; }
+                    continue;
+                }
+                if (b.isRoof || b.role == "roof") continue;
                 var s = b.transform.localScale;
                 if (!authoredBanners && s.y >= 1.1f && !ArchitectureDresser.Dressed.Contains(b) && s.z >= 1.1f && s.x <= Mathf.Max(s.y, s.z)) walls.Add(b);
                 float y = b.transform.position.y + s.y * 0.5f;
@@ -422,6 +429,8 @@ namespace Crashverse.Visuals
             if (top != null)
             {
                 var s = top.transform.localScale; var m = MetricChild(top, "Kingdom_Flag");
+                if ((top.blockId ?? "").StartsWith("gable")) // ridge edge of the half, at the front eave
+                    m.localPosition += new Vector3(-0.5f - 0.35f / Mathf.Max(0.01f, s.x), 0f, top.blockId.EndsWith("L") ? 0.5f : -0.5f); // parent space = unit block
                 var pole = R("FlagPole", m, Cyl(), KingdomMaterials.Gold, true);
                 pole.transform.localPosition = new Vector3(0f, s.y * 0.5f + FlagPole * 0.5f, 0f); pole.transform.localScale = new Vector3(0.07f, FlagPole * 0.5f, 0.07f);
                 var cloth = new GameObject("FlagCloth").transform; cloth.SetParent(m, false); cloth.localPosition = new Vector3(0f, s.y * 0.5f + FlagPole - 0.38f, 0f);
