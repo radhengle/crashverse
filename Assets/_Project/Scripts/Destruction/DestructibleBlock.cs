@@ -20,6 +20,8 @@ namespace Crashverse.Destruction
         public bool isSteelJoint;
         public bool indestructible;
         public bool explosive;
+        public float blastRadius = DefaultBlastRadius;
+        public const float DefaultBlastRadius = 2.5f;
         public float currentHp;
         public float InitialY { get; private set; }
         public float Height { get; private set; } = 1f;
@@ -72,6 +74,7 @@ namespace Crashverse.Destruction
             isSteelJoint = d.joint;
             indestructible = d.indestructible;
             explosive = d.explosive;
+            blastRadius = d.blastRadius > 0f ? d.blastRadius : DefaultBlastRadius;
             currentHp = mat.maxHp;
             _rb = GetComponent<Rigidbody>();
             _rb.mass = mat.mass;
@@ -197,7 +200,7 @@ namespace Crashverse.Destruction
             Body.detectCollisions = false;
             var mp = GetComponent<MovingPart>(); if (mp != null) mp.enabled = false;
             Broken?.Invoke(this);
-            if (explosive) Explosion.Detonate(transform.position, 2.5f, 80f, this); // Explosion source (scope pushed inside)
+            if (explosive) Explosion.Detonate(transform.position, blastRadius, 80f, this); // Explosion source (scope pushed inside)
             NotifyDependents();
         }
 

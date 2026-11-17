@@ -58,6 +58,9 @@ namespace Crashverse.Data
         public string id; public string mat; public float[] p; public float[] s; public string[] sup;
         public bool joint; public string role; public bool nonObj; public string color; public bool explosive;
         public bool indestructible; public float[] spinAxis; public float[] pivot; public float spinDps;
+        /// <summary>Optional blast radius (m, centre-to-centre) of an explosive piece; 0 = the default 2.5 m. L1's corruption crystal
+        /// uses it so its explosion brings the whole watchtower down (design/L01_v2_TideWatchtower.md, S3).</summary>
+        public float blastRadius;
         /// <summary>Optional kit module (Level Designer prefab map): an FBX asset path under Assets/_Project/Models/ or a module name
         /// (e.g. "Kit_Tower_RingDoor"). Empty = RealPieceRules picks a Kit_Real* piece. Visual only: the box collider stays size s.</summary>
         public string model;

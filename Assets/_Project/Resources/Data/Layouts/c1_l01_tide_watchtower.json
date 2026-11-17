@@ -97,7 +97,8 @@
    "indestructible": false,
    "spinAxis": [],
    "pivot": [],
-   "spinDps": 0.0
+   "spinDps": 0.0,
+   "blastRadius": 7.0
   },
   {
    "id": "t1L",
