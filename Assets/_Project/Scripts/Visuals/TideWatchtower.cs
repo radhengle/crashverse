@@ -123,7 +123,9 @@ namespace Crashverse.Visuals
                 var root = Metric(b, "Tide_" + b.blockId);
                 t.Build(root, "Tw_" + b.blockId, true);
                 var own = b.GetComponent<MeshRenderer>(); if (own != null) own.enabled = false;
-                if (b.visual != null) foreach (var vr in b.visual.GetComponentsInChildren<Renderer>(true)) if (!vr.transform.IsChildOf(root)) vr.enabled = false;
+                // every other look on the block (greybox, RealKit modules, kingdom visuals) is replaced by the Tide dressing
+                foreach (var vr in b.GetComponentsInChildren<Renderer>(true)) if (!vr.transform.IsChildOf(root) && !(vr is ParticleSystemRenderer)) vr.enabled = false;
+                if (b.visual != null && !b.visual.transform.IsChildOf(b.transform)) foreach (var vr in b.visual.GetComponentsInChildren<Renderer>(true)) if (!vr.transform.IsChildOf(root)) vr.enabled = false;
                 n++;
             }
             Lights();
