@@ -17,6 +17,12 @@ namespace Crashverse.Visuals
     {
         public const string LayoutId = "c1_l01_tide_watchtower";
         static readonly Vector3 SpecBase = new Vector3(-3f, 0f, 0f);
+        /// <summary>PM b25 QA (b26): everything above the islet top (y 0.8) is 1.4x taller, in the layout (Tools/ContentGen/l1v2/gen_layout.py,
+        /// same K) and in the dressing (TwMesh warp; figures, skulls, barrels and fire pots keep their shape via PropBegin/PropEnd).</summary>
+        internal const float StretchK = 1.4f, StretchPivot = 0.8f;
+        internal static float StretchY(float y) => y <= StretchPivot ? y : StretchPivot + (y - StretchPivot) * StretchK;
+        static float UnstretchY(float y) => y <= StretchPivot ? y : StretchPivot + (y - StretchPivot) / StretchK;
+        static void Prop(TwMesh t, Vector3 anchor, float scale, System.Action draw) { t.PropBegin(anchor, scale); draw(); t.PropEnd(); }
 
         public static bool Matches(IReadOnlyList<DestructibleBlock> blocks)
         {
@@ -35,9 +41,9 @@ namespace Crashverse.Visuals
         internal static Material Dressed => M("Dressed", "T_TW_Stone", new Color(1.30f, 0.98f, 0.86f));   // arch voussoirs, jambs #C48A6F
         internal static Material ArchInside => M("ArchInside", null, new Color(0.27f, 0.06f, 0.11f), 0f, 0.95f, new Color(0.10f, 0.01f, 0.02f)); // #44101E
         internal static Material ArchCrack => M("ArchCrack", null, new Color(0.55f, 0.15f, 0.19f), 0f, 0.8f, new Color(0.9f, 0.12f, 0.08f));   // #8C2630 glowing
-        internal static Material Rock => M("Rock", "T_TW_Rock", new Color(0.88f, 0.86f, 0.84f));        // #7C6E5F
-        internal static Material RockDark => M("RockDark", "T_TW_Rock", new Color(0.66f, 0.68f, 0.68f));  // #393933 in shade
-        internal static Material RockTop => M("RockTop", "T_TW_Rock", new Color(1.12f, 1.08f, 1.0f));    // sun-lit tops #E7D1A8
+        internal static Material Rock => M("Rock", "T_TW_Rock", new Color(0.60f, 0.54f, 0.48f));        // b26: darker grey-brown        // #7C6E5F
+        internal static Material RockDark => M("RockDark", "T_TW_Rock", new Color(0.40f, 0.38f, 0.36f));  // #393933 in shade
+        internal static Material RockTop => M("RockTop", "T_TW_Rock", new Color(0.78f, 0.72f, 0.64f));    // sun-lit tops #E7D1A8
         internal static Material Moss => M("Moss", "T_TW_Grass", new Color(1.15f, 1.15f, 1.1f));
         internal static Material Fern => M("Fern", null, new Color(0.30f, 0.55f, 0.12f), 0f, 0.7f);
         internal static Material Foam => M("Foam", null, new Color(0.93f, 0.97f, 1.0f), 0f, 0.6f, new Color(0.18f, 0.2f, 0.22f));
@@ -125,6 +131,7 @@ namespace Crashverse.Visuals
                 if (b == null) continue;
                 var t = new TwMesh(); var c = b.transform.position; var s = b.transform.localScale;
                 t.M = Matrix4x4.Translate(_off - c);
+                t.WarpK = StretchK; t.WarpPivotY = StretchPivot; t.WarpSpecOffset = c - _off;
                 bool ok = true;
                 switch (b.blockId)
                 {
@@ -193,7 +200,7 @@ namespace Crashverse.Visuals
 
         static void PointLight(Transform parent, string name, Color c, float intensity, float range, Vector3 specWorld)
         {
-            var go = new GameObject(name); go.transform.SetParent(parent, true); go.transform.position = specWorld + _off;
+            var go = new GameObject(name); go.transform.SetParent(parent, true); go.transform.position = new Vector3(specWorld.x, StretchY(specWorld.y), specWorld.z) + _off;
             var l = go.AddComponent<Light>(); l.type = LightType.Point; l.color = c; l.intensity = intensity; l.range = range; l.shadows = LightShadows.None;
             var owner = parent.GetComponent<DestructibleBlock>();
             if (owner != null) owner.Broken += _ => { if (l != null) l.enabled = false; };
@@ -213,8 +220,10 @@ namespace Crashverse.Visuals
 
         internal static void IronBowl(TwMesh t, Vector3 at, float r0, float r1, float h)
         {
+            bool own = !t.InProp; if (own) t.PropBegin(at, 1f);
             t.Cyl(Iron, 1f, at, at + Vector3.up * h, r0, r1, 10, true);
             t.Cyl(Gold, 1f, at + Vector3.up * (h - 0.04f), at + Vector3.up * (h + 0.02f), r1 + 0.02f, r1 + 0.02f, 10, true);
+            if (own) t.PropEnd();
         }
 
         internal static void Torch(TwMesh t, Vector3 baseAt, float pole)
@@ -313,7 +322,7 @@ namespace Crashverse.Visuals
                 var p = Vector3.Lerp(a, b, f);
                 float sz = Mathf.Lerp(s0, s1, Hash(seed + 7, i)); float top = Mathf.Lerp(yTop0, yTop1, Hash(seed + 13, i));
                 float h = top - (waterY - 0.6f);
-                var rot = Quaternion.Euler((Hash(seed, i * 3) - 0.5f) * 14f, Hash(seed + 3, i) * 90f, (Hash(seed + 5, i) - 0.5f) * 14f);
+                var rot = Quaternion.Euler((Hash(seed, i * 3) - 0.5f) * 26f, Hash(seed + 3, i) * 90f, (Hash(seed + 5, i) - 0.5f) * 26f);
                 RockK(t, Hash(seed + 11, i) < 0.45f ? RockDark : Rock, 1.4f, V(p.x, (top + waterY - 0.6f) * 0.5f, p.z), V(sz, h, sz * (0.75f + 0.4f * Hash(seed + 17, i))), seed * 31 + i, 0.16f, rot);
                 // sun-lit flat top slab + moss tuft
                 StoneK(t, RockTop, 1.2f, V(p.x, top + 0.02f, p.z), V(sz * 0.7f, 0.14f, sz * 0.6f), seed * 57 + i, 0.2f, rot);
@@ -376,7 +385,7 @@ namespace Crashverse.Visuals
         }
 
         // ---------------- stone tower ----------------
-        const float CourseH = 0.45f, Course0 = 0.8f;
+        const float CourseH = 0.32f, Course0 = 0.8f;   // b26: 0.45 m courses after the 1.4x stretch
         const float ArchZc = -0.33f, ArchHw = 1.16f, ArchTop = 3.5f, ArchRin = 1.16f, ArchRout = 1.58f, JambW = 0.66f;
         static float ArchSpring => ArchTop - ArchRin;
         static float TaperL(float y) => 2.2f + (1.45f - 2.2f) * (y - 0.8f) / 5.4f;   // battered walls: 5.7 m at y 0.8 to 4.2 m at y 6.2
@@ -394,7 +403,7 @@ namespace Crashverse.Visuals
         /// courses of 0.45 m, stones 0.6-0.9 m, mortar #402C25), following the battered taper and skipping the arch outline.</summary>
         static void Masonry(TwMesh t, float xf, float y0, float y1, float zMin, float zMax, bool arch, float depth)
         {
-            for (int k = 0; k < 14; k++)
+            for (int k = 0; k < 20; k++)
             {
                 float cb = Course0 + k * CourseH, ct = cb + CourseH;
                 float a = Mathf.Max(cb, y0), b = Mathf.Min(ct, y1); if (b - a < 0.05f) continue;
@@ -425,7 +434,8 @@ namespace Crashverse.Visuals
                     var mat = Hash(k + 7, i) < 0.22f ? StoneDark : Hash(k + 9, i) < 0.35f ? StoneLight : Stone;
                     StoneK(t, mat, 0.9f, V(xf - out1 * 0.5f + 0.02f, (a + b) * 0.5f, (c0 + c1) * 0.5f), V(out1 + 0.06f, hgt, c1 - c0 - 0.05f), k * 97 + i, 0.06f);
                     // moss on a few stone tops and a green streak below some of them
-                    if (Hash(k + 41, i) < 0.12f) t.Slab(Moss, 0.6f, V(xf - out1 - 0.01f, b - 0.05f, (c0 + c1) * 0.5f), V(0.05f, 0.1f, (c1 - c0) * 0.6f), k * 13 + i, 0.2f);
+                    if (Hash(k + 41, i) < 0.26f) t.Slab(Moss, 0.6f, V(xf - out1 - 0.02f, b - 0.04f, (c0 + c1) * 0.5f), V(0.08f, 0.09f, (c1 - c0) * 0.75f), k * 13 + i, 0.25f);
+                    if (Hash(k + 43, i) < 0.07f) t.Slab(Moss, 0.6f, V(xf - out1 - 0.015f, (a + b) * 0.5f - 0.05f, (c0 + c1) * 0.5f), V(0.04f, (b - a) * 0.9f, 0.12f), k * 17 + i, 0.25f); // green streak
                 }
             }
         }
@@ -492,7 +502,7 @@ namespace Crashverse.Visuals
             // PM b24: the horned skull reads bigger above the arch (x1.35 about its centre)
             var m0 = t.M; var piv = V(-5.12f, 4.0f, -0.23f);
             t.M = m0 * Matrix4x4.Translate(piv + V(-0.08f, 0.08f, 0f)) * Matrix4x4.Scale(Vector3.one * 1.35f) * Matrix4x4.Translate(-piv);
-            Skull(t); t.M = m0;
+            Prop(t, piv, 1.2f, () => Skull(t)); t.M = m0;
         }
 
         /// <summary>The bone horned skull over the keystone (spec: 1.75 m wide with the horns, glowing red eyes).</summary>
@@ -559,16 +569,24 @@ namespace Crashverse.Visuals
             for (int k = 0; k < 8; k++)
             {
                 float z = -3.02f + k * 0.7f; if (z < z0 - 0.01f || z >= z1) continue;
-                t.BoxMinMax(TimberLit, 1f, V(-5.18f, 6.8f, z - 0.06f), V(-5.06f, 7.6f, z + 0.06f));
-                t.Box(TimberLit, 1f, V(-5.12f, 7.66f, z), V(0.16f, 0.1f, 0.16f));
+                t.BoxMinMax(TimberLit, 1f, V(-5.18f, 6.8f, z - 0.05f), V(-5.06f, 7.28f, z + 0.05f));
+                t.Box(TimberLit, 1f, V(-5.12f, 7.32f, z), V(0.14f, 0.08f, 0.14f));
             }
-            t.BoxMinMax(TimberLit, 1f, V(-5.2f, 7.48f, z0), V(-5.04f, 7.6f, z1));
-            t.BoxMinMax(Timber, 1f, V(-5.18f, 7.12f, z0), V(-5.08f, 7.2f, z1));
+            t.BoxMinMax(TimberLit, 1f, V(-5.2f, 7.2f, z0), V(-5.04f, 7.28f, z1));
+            t.BoxMinMax(Timber, 1f, V(-5.18f, 7.0f, z0), V(-5.08f, 7.05f, z1));
+            // b26: torches at the gallery's front corners and warm lanterns hanging from the eave between the bays
+            Torch(t, V(-5.12f, 7.28f, left ? z1 - 0.1f : z0 + 0.1f), 0.12f);
+            for (float zl2 = (left ? -0.2f : -2.4f); zl2 < z1 - 0.2f && zl2 > z0 - 0.01f; zl2 += 1.1f)
+            {
+                t.Cyl(Iron, 1f, V(-4.95f, 7.62f, zl2), V(-4.95f, 7.48f, zl2), 0.012f, 0.012f, 4, false);
+                t.Box(WindowGlow, 1f, V(-4.95f, 7.38f, zl2), V(0.14f, 0.2f, 0.14f));
+                t.Box(Gold, 1f, V(-4.95f, 7.5f, zl2), V(0.17f, 0.03f, 0.17f));
+            }
             float zs = left ? z1 - 0.06f : z0 + 0.06f;
-            for (float x = -4.5f; x < -1.4f; x += 0.7f) t.BoxMinMax(TimberLit, 1f, V(x - 0.06f, 6.8f, zs - 0.06f), V(x + 0.06f, 7.6f, zs + 0.06f));
-            t.BoxMinMax(TimberLit, 1f, V(-5.2f, 7.48f, zs - 0.08f), V(-1.3f, 7.6f, zs + 0.08f));
+            for (float x = -4.5f; x < -1.4f; x += 0.7f) t.BoxMinMax(TimberLit, 1f, V(x - 0.05f, 6.8f, zs - 0.05f), V(x + 0.05f, 7.28f, zs + 0.05f));
+            t.BoxMinMax(TimberLit, 1f, V(-5.2f, 7.2f, zs - 0.08f), V(-1.3f, 7.28f, zs + 0.08f));
             // PM b24: one big red demon banner centred on the tower front, under the gallery, above the skull's horns
-            if (left) ChainMast(t); else SkullBanner(t, -4.84f, -1.12f, 0.66f, 6.0f, 4.62f, 5.05f, true);
+            if (left) ChainMast(t); else SkullBanner(t, -4.84f, -1.3f, 0.84f, 6.15f, 4.75f, 5.25f, true);
         }
 
         static void ChainMast(TwMesh t)
@@ -597,7 +615,7 @@ namespace Crashverse.Visuals
 
         static void Room(TwMesh t, float z0, float z1, DestructibleBlock b)
         {
-            float x0 = -4.3f, x1 = -2.1f;
+            float x0 = -4.65f, x1 = -2.1f;   // b26: bays brought forward (0.5 m of deck in front) so the lit room reads from the low camera
             t.BoxMinMax(Timber, 1f, V(x0 + 0.25f, 6.8f, z0 + 0.02f), V(x1 - 0.02f, 7.7f, z1 - 0.02f));     // walls behind the bays
             t.BoxMinMax(Timber, 1f, V(x0, 7.52f, z0), V(x1, 7.7f, z1));                                // header beam
             t.BoxMinMax(Timber, 1f, V(x0, 6.8f, z0), V(x0 + 0.24f, 6.98f, z1));                        // sill
@@ -607,7 +625,8 @@ namespace Crashverse.Visuals
             for (int i = 0; i < 3; i++)
             {
                 float a = edges[i] + 0.1f, c = edges[i + 1] - 0.1f; if ((a + c) * 0.5f < z0 || (a + c) * 0.5f > z1) continue;
-                t.BoxMinMax(WindowGlow, 1f, V(x0 + 0.22f, 6.98f, a), V(x0 + 0.26f, 7.52f, c));
+                t.BoxMinMax(WindowGlow, 1f, V(x0 + 0.22f, 6.9f, a), V(x0 + 0.26f, 7.55f, c));
+                for (int w = 1; w < 3; w++) t.BoxMinMax(Timber, 1f, V(x0 + 0.17f, 6.9f, Mathf.Lerp(a, c, w / 3f) - 0.025f), V(x0 + 0.21f, 7.55f, Mathf.Lerp(a, c, w / 3f) + 0.025f)); // mullions
                 Flame(t, V(x0 + 0.18f, 6.98f, (a + c) * 0.5f), 0.4f, 0.13f);
                 t.Box(Gold, 1f, V(x0 - 0.05f, 7.6f, (a + c) * 0.5f), V(0.03f, 0.1f, 0.18f));
             }
@@ -764,7 +783,8 @@ namespace Crashverse.Visuals
         }
 
         // ---------------- decorations on the rock ----------------
-        static void Brazier(TwMesh t, Vector3 at)
+        static void Brazier(TwMesh t, Vector3 at) => Prop(t, at, 1.2f, () => BrazierBody(t, at));
+        static void BrazierBody(TwMesh t, Vector3 at)
         {
             StoneK(t, StoneLight, 1f, at + V(0f, 0.1f, 0f), V(0.5f, 0.2f, 0.5f), (int)(at.z * 10f), 0.04f);
             t.BoxMinMax(Timber, 1f, at + V(-0.15f, 0.2f, -0.15f), at + V(0.15f, 1.5f, 0.15f));
@@ -786,7 +806,8 @@ namespace Crashverse.Visuals
             }
         }
 
-        static void FortBarrel(TwMesh t)
+        static void FortBarrel(TwMesh t) => Prop(t, V(-5.6f, 0.82f, -3.25f), 1.1f, () => FortBarrelBody(t));
+        static void FortBarrelBody(TwMesh t)
         {
             BarrelBody(t, V(-5.6f, 0.82f, -3.25f), 1.08f, 0.42f, BarrelWood, Iron);
             // red diamond with a gold sun on the cannon-facing side
@@ -816,7 +837,7 @@ namespace Crashverse.Visuals
         // ---------------- archer towers ----------------
         static void Leg(TwMesh t, DestructibleBlock b, Vector3 c, Vector3 s)
         {
-            float y0 = c.y - s.y * 0.5f, y1 = c.y + s.y * 0.5f;
+            float y0 = UnstretchY(c.y - s.y * 0.5f), y1 = UnstretchY(c.y + s.y * 0.5f);
             t.BoxMinMax(Timber, 1f, V(c.x - 0.15f, y0, c.z - 0.15f), V(c.x + 0.15f, y1, c.z + 0.15f));
             foreach (float f in new[] { 0.2f, 0.55f, 0.9f }) t.BoxMinMax(Iron, 1f, V(c.x - 0.17f, Mathf.Lerp(y0, y1, f) - 0.04f, c.z - 0.17f), V(c.x + 0.17f, Mathf.Lerp(y0, y1, f) + 0.04f, c.z + 0.17f));
             // X braces in the cannon-facing plane (front legs carry them) and the side plane, half per leg
@@ -894,7 +915,7 @@ namespace Crashverse.Visuals
             Railing(t, -4.92f, 5.65f, 0.53f, 2.6f, 5.66f, 5, false);
             Railing(t, -3.8f, 5.65f, 0.53f, 5.58f, 5.66f, 1, false);
             Torch(t, V(-4.92f, 6.18f, 4.73f), 0.12f);
-            Archer(t, V(-3.95f, 5.65f, 3.6f), Vector3.back);
+            Prop(t, V(-3.95f, 5.65f, 3.6f), 1.3f, () => Archer(t, V(-3.95f, 5.65f, 3.6f), Vector3.back));
             IronBowl(t, V(-4.6f, 5.65f, 5.2f), 0.14f, 0.26f, 0.22f); Flame(t, V(-4.6f, 5.8f, 5.2f), 0.55f, 0.21f);   // fire basket
             SkullBanner(t, -5.04f, 3.69f, 4.75f, 5.08f, 3.51f, 3.95f, false);
         }
@@ -911,7 +932,7 @@ namespace Crashverse.Visuals
             Deck(t, -4.85f, -2.5f, 4.6f, 5.35f, -5.95f, -3.16f);
             Railing(t, -4.77f, 5.35f, 0.53f, -5.95f, -3.16f, 5, false);
             Torch(t, V(-4.77f, 5.88f, -3.65f), 0.12f);
-            Archer(t, V(-3.95f, 5.35f, -4.96f), Vector3.back);
+            Prop(t, V(-3.95f, 5.35f, -4.96f), 1.3f, () => Archer(t, V(-3.95f, 5.35f, -4.96f), Vector3.back));
             IronBowl(t, V(-4.5f, 5.35f, -5.55f), 0.14f, 0.26f, 0.22f); Flame(t, V(-4.5f, 5.5f, -5.55f), 0.55f, 0.21f); // fire basket
             SkullBanner(t, -4.89f, -4.95f, -3.85f, 4.55f, 3.05f, 3.5f, false);                                      // PM b24: skull banner on the right tower too
         }
@@ -924,7 +945,8 @@ namespace Crashverse.Visuals
         }
 
         /// <summary>Black iron cannon on a wooden carriage, muzzle toward the camera and screen-right (goal u 79-93, v 32.5-40).</summary>
-        static void EnemyCannon(TwMesh t, Vector3 deck)
+        static void EnemyCannon(TwMesh t, Vector3 deck) => Prop(t, deck, 1.25f, () => EnemyCannonBody(t, deck));
+        static void EnemyCannonBody(TwMesh t, Vector3 deck)
         {
             var dir = new Vector3(-0.72f, 0.12f, -0.68f).normalized; var flat = new Vector3(dir.x, 0f, dir.z).normalized; var side = Vector3.Cross(Vector3.up, flat);
             var trunnion = deck + Vector3.up * 0.55f;
@@ -946,9 +968,9 @@ namespace Crashverse.Visuals
         {
             // stone plinth 0.5 m behind the arch face, the tall 6-sided shard (2.0 m) and 4 small shards, a bright core at the base
             t.Cyl(StoneLight, 1f, V(-3.7f, 0.8f, -0.31f), V(-3.7f, 0.98f, -0.31f), 0.5f, 0.45f, 8, true, true);
-            t.Shard(Crystal, CrystalDark, V(-3.72f, 0.95f, -0.24f), V(-0.05f, 1f, 0.02f), 0.4f, 2.1f, 6, 0.34f, 0.2f);
-            t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, -0.72f), V(-0.15f, 1f, -0.35f), 0.15f, 0.95f, 6, 0.4f, 0.5f);
-            t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, 0.13f), V(-0.15f, 1f, 0.35f), 0.15f, 0.9f, 6, 0.4f, 0.1f);
+            t.Shard(Crystal, CrystalDark, V(-3.72f, 0.95f, -0.24f), V(-0.05f, 1f, 0.02f), 0.5f, 2.15f, 6, 0.34f, 0.2f);
+            t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, -0.75f), V(-0.15f, 1f, -0.35f), 0.22f, 1.1f, 6, 0.4f, 0.5f);
+            t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, 0.18f), V(-0.15f, 1f, 0.35f), 0.22f, 1.05f, 6, 0.4f, 0.1f);
             t.Shard(Crystal, CrystalDark, V(-3.95f, 0.95f, -0.5f), V(-0.35f, 1f, -0.15f), 0.11f, 0.6f, 5, 0.45f, 0.8f);
             t.Shard(Crystal, CrystalDark, V(-3.95f, 0.95f, 0.0f), V(-0.35f, 1f, 0.2f), 0.1f, 0.55f, 5, 0.45f, 0.3f);
             t.Cyl(CrystalCore, 1f, V(-3.72f, 0.96f, -0.28f), V(-3.72f, 1.02f, -0.28f), 0.42f, 0.3f, 10, true);

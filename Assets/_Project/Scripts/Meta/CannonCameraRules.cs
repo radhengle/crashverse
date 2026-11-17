@@ -67,8 +67,9 @@ namespace Crashverse.Meta
         /// PM b22 QA (phones are taller than the 3:4 goal): the eye moved 1.2 m further back and 0.3 m up with a 14 deg pitch and a
         /// 37.5 deg-tan horizontal lens (75 deg vertical on 1080x2340), so the whole complex spans ~95% of the width, the tower top sits
         /// just under the HUD, the islet base near mid-screen and the world-scale cannon (rest aim 25 deg) below the crystal.
-        // PM b24: the fortress is the hero (~90% of the width, flag/turret may sit under the HUD), cannon top ~57% from the top
-        public static readonly Settings Goal = new Settings { back = 7.5f, height = 6.5f, goalPose = true, goalPitch = 15f, goalTanH = 0.3232f,
+        // PM b25 QA (b26): the 1.4x taller fortress fills the tall screen: ~95% of the width, islet top ~58% from the top, turret under the
+        // HUD band; a low eye (4.5 m, pitch 3) behind the breech so the barrel reads fat and short, its top ~57% from the top
+        public static readonly Settings Goal = new Settings { back = 7.25f, height = 4.5f, goalPose = true, goalPitch = 3f, goalTanH = 0.3415f,
                                                               bottomMargin = -0.3f, topMargin = 0.06f, maxFov = 100f,
                                                               cannonScale = 1f, cannonRear = 1.8f, cannonTop = 2.6f };
         /// <summary>The goal pose is chosen by geometry: a wide (z ≥ 12 m) complex close to the cannon (centre &lt; 18 m).</summary>

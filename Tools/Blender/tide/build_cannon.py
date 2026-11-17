@@ -123,5 +123,10 @@ cn = cnavy[0]; bpy.context.view_layer.objects.active = cn; bpy.ops.object.modifi
 barrel = [navyAll, gold, bore, groove, sunAll, raysS]
 for o in barrel:
     for m in list(o.modifiers): bpy.context.view_layer.objects.active = o; bpy.ops.object.modifier_apply(modifier=m.name)
+# PM b25 QA (b26): the goal's barrel is FAT and short on screen (~30% of the width at the breech, thick gold rings): 1.25x radius,
+# 0.92x length about the trunnion axis; the carriage spreads 1.15x sideways so the cheeks clear the fatter barrel.
+from mathutils import Matrix
+for o in barrel: o.data.transform(Matrix.Diagonal((0.92, 1.25, 1.25, 1.0)))
+for o in (cw, cg, ci, cn): o.data.transform(Matrix.Diagonal((1.0, 1.15, 1.0, 1.0)))
 export(OUT, barrel + [cw, cg, ci, cn])
 if '--blend' in sys.argv: bpy.ops.wm.save_as_mainfile(filepath=OUT.replace('.bytes', '.blend'))

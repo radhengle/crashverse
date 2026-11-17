@@ -55,7 +55,7 @@
      "islandKillY": -2.0,
      "hintTarget": "crystal",
      "hintYaw": -0.5,
-     "hintPitch": 10.0,
+     "hintPitch": 11.0,
      "blastRadius": 1.5,
      "blastDamage": 36
     },
@@ -242,7 +242,7 @@
      "islandKillY": -2.0,
      "hintTarget": "crystal",
      "hintYaw": -0.5,
-     "hintPitch": 10.0,
+     "hintPitch": 11.0,
      "blastRadius": 1.5,
      "blastDamage": 36
     },
@@ -429,7 +429,7 @@
      "islandKillY": -2.0,
      "hintTarget": "crystal",
      "hintYaw": -0.5,
-     "hintPitch": 16.5,
+     "hintPitch": 17.5,
      "blastRadius": 1.5,
      "blastDamage": 36
     },
@@ -616,7 +616,7 @@
      "islandKillY": -2.0,
      "hintTarget": "crystal",
      "hintYaw": -0.5,
-     "hintPitch": 10.0,
+     "hintPitch": 11.0,
      "blastRadius": 1.5,
      "blastDamage": 36
     },

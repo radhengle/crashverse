@@ -2,7 +2,12 @@
 import json
 BASE_X = -20.0 + 17.0   # targetDistance 17 -> structure base (-3, 0, 0)
 B = []
+# PM b25 QA (b26): the goal's towers are TALL (main tower ~2.2x taller than wide). Everything above the islet top (y 0.8) is
+# stretched vertically by K; TideWatchtower.cs applies the same map (TideWatchtower.StretchY) to the dressing.
+PIVOT_Y, K = 0.8, 1.4
+def Y(y): return y if y <= PIVOT_Y else PIVOT_Y + (y - PIVOT_Y) * K
 def box(id, mat, x0, x1, y0, y1, z0, z1, sup=(), role="", obj=True, explosive=False, ind=False, blast=0.0):
+    y0, y1 = Y(y0), Y(y1)
     B.append({"id": id, "mat": mat, "p": [round((x0 + x1) / 2 - BASE_X, 3), round((y0 + y1) / 2, 3), round((z0 + z1) / 2, 3)],
               "s": [round(x1 - x0, 3), round(y1 - y0, 3), round(z1 - z0, 3)], "sup": list(sup), "joint": False, "role": role,
               "nonObj": not obj, "color": "", "explosive": explosive, "indestructible": ind, "spinAxis": [], "pivot": [], "spinDps": 0.0})
@@ -14,7 +19,7 @@ box("rockR", "brick", -5.6, -1.6, -1.6, -0.15, -7.3, -3.8, role="island", obj=Fa
 # Corruption_Crystal: breaks on a direct hit (wood HP 30 < blast 36) and detonates (r 7.0, 80 dmg): every stone tier, the gallery,
 # room and roofs and both archer decks break (PlayMode b22: with r 2.5 only tier 1 broke and the upper tower came to rest on the
 # held tier-1 rubble, 34.5 % after 4 hint shots); the turret (8.2 m away) falls from 9.45 m
-box("crystal", "wood", -4.15, -3.25, 0.8, 3.0, -0.86, 0.24, ["rockC"], role="core", obj=False, explosive=True, blast=7.0)
+box("crystal", "wood", -4.15, -3.25, 0.8, 3.0, -0.86, 0.24, ["rockC"], role="core", obj=False, explosive=True, blast=9.5)  # b26: r 9.5 for the 1.4x taller tower
 # Stone_Structure tier 1 (brick HP 60), every centre within 2.5 m of the crystal centre
 box("t1L", "brick", -4.9, -1.5, 0.8, 4.0, 0.83, 2.2, ["rockC"], role="wall")
 box("t1R", "brick", -4.9, -1.5, 0.8, 4.0, -3.53, -1.49, ["rockC"], role="wall")
