@@ -11,22 +11,22 @@ namespace Crashverse.Visuals
     {
         static Vector3 V(float x, float y, float z) => new Vector3(x, y, z);
         static Material M(string k, string tex, Color c, float metal = 0f, float rough = 0.9f, Color emission = default) => KingdomMaterials.Make("Tw" + k, tex, c, metal, rough, Vector2.one, emission);
-        static Material DeckLit => M("DeckLit", "T_K_Planks", new Color(1.75f, 1.45f, 1.25f));   // #E28D55
-        static Material DeckMid => M("DeckMid", "T_K_Planks", new Color(1.35f, 1.05f, 0.95f));   // #8A503C
-        static Material DeckGap => M("DeckGap", null, new Color(0.2f, 0.1f, 0.07f), 0f, 1f);     // #351912
-        static Material RailWood => M("RailWood", "T_K_Wood", new Color(1.75f, 1.45f, 1.35f));
+        static Material DeckLit => M("DeckLit", "T_K_Planks", new Color(1.10f, 0.86f, 0.90f));   // PM b22: dark brown #8A503C lit
+        static Material DeckMid => M("DeckMid", "T_K_Planks", new Color(0.80f, 0.60f, 0.62f));   // #5A3022
+        static Material DeckGap => M("DeckGap", null, new Color(0.10f, 0.05f, 0.035f), 0f, 1f);     // #351912
+        static Material RailWood => M("RailWood", "T_K_Wood", new Color(1.30f, 1.10f, 1.05f));
         static Material Brass => M("Brass", null, new Color(0.80f, 0.56f, 0.24f), 0.4f, 0.4f);
-        static Material LanternGlow => M("LanternGlow", null, new Color(1f, 0.94f, 0.24f), 0f, 1f, new Color(3.2f, 2.6f, 0.7f)); // #FEF03C
-        static Material OrangeStave => M("OrangeStave", "T_K_Planks", new Color(1.8f, 1.3f, 0.62f));  // #D57321
+        static Material LanternGlow => M("LanternGlow", null, new Color(1f, 0.94f, 0.24f), 0f, 1f, new Color(5.0f, 4.0f, 1.1f)); // #FEF03C
+        static Material OrangeStave => M("OrangeStave", "T_K_Planks", new Color(1.55f, 1.05f, 0.55f));  // #D57321
         static Material Steel => M("Steel", null, new Color(0.45f, 0.47f, 0.5f), 0.6f, 0.4f);
         static Material Ball => M("Ball", null, new Color(0.19f, 0.13f, 0.15f), 0.3f, 0.45f);        // #312227
-        static Material Crate => M("Crate", "T_K_Planks", new Color(1.3f, 1.0f, 0.8f));
+        static Material Crate => M("Crate", "T_K_Planks", new Color(1.0f, 0.78f, 0.66f));
         static Material RopeMat => M("RopeEnv", "T_K_Bark", new Color(1.35f, 1.1f, 0.95f));          // #91532F
         static Material RedCloth => M("RedCloth", null, new Color(0.47f, 0.07f, 0.08f), 0f, 0.85f);   // #791314
         static Material GoldCloth => M("GoldCloth", null, new Color(0.93f, 0.68f, 0.18f), 0f, 0.7f);
-        static Material CliffRock => M("CliffRock", "T_K_Rock", new Color(0.72f, 0.95f, 1.25f));      // hazy #3B607E
-        static Material CliffDark => M("CliffDark", "T_K_Rock", new Color(0.55f, 0.72f, 0.95f));
-        static Material CliffGrass => M("CliffGrass", "T_K_Grass", new Color(2.0f, 1.9f, 1.6f));
+        static Material CliffRock => M("CliffRock", "T_K_Rock", new Color(0.62f, 1.02f, 1.45f));      // hazy #3B607E
+        static Material CliffDark => M("CliffDark", "T_K_Rock", new Color(0.46f, 0.74f, 1.10f));
+        static Material CliffGrass => M("CliffGrass", "T_K_Grass", new Color(1.7f, 2.1f, 1.8f));
         static Material Beach => M("Beach", "T_K_Sand", new Color(1.35f, 1.3f, 1.2f));
         static Material CastleWall => M("CastleWall", null, new Color(0.93f, 0.92f, 0.9f), 0f, 0.8f);
         static Material CastleShade => M("CastleShade", null, new Color(0.72f, 0.76f, 0.85f), 0f, 0.85f);
@@ -39,9 +39,10 @@ namespace Crashverse.Visuals
             var t = new TwMesh(); Deck(t, cannon); t.Build(go, "TwDeck", true);
             var p = new TwMesh(); Props(p, cannon); p.Build(go, "TwProps", true);
             var g = new TwMesh(); Background(g); g.Build(go, "TwBackground", false, false);
+            var sf = new TwMesh(); Surf(sf); sf.Build(go, "TwSurf", false, false);
             // the lantern's warm light on the rail and the deck
-            var lg = new GameObject("LanternLight"); lg.transform.SetParent(go, false); lg.transform.position = V(-17.55f, 1.95f, 3.0f);
-            var l = lg.AddComponent<Light>(); l.type = LightType.Point; l.color = new Color(1f, 0.82f, 0.4f); l.intensity = 2.2f; l.range = 3.5f; l.shadows = LightShadows.None;
+            var lg = new GameObject("LanternLight"); lg.transform.SetParent(go, false); lg.transform.position = V(-17.55f, 2.3f, 3.0f);
+            var l = lg.AddComponent<Light>(); l.type = LightType.Point; l.color = new Color(1f, 0.82f, 0.4f); l.intensity = 3.5f; l.range = 4.5f; l.shadows = LightShadows.None;
         }
 
         /// <summary>Warm planks running away from the camera (0.35 m wide) from behind the camera to the rail at x -17.55, the rail of
@@ -79,6 +80,7 @@ namespace Crashverse.Visuals
         {
             // brass hexagonal lantern on the rail top at z 3.0 (goal 0.5-12, 55-69), ~0.7 m wide, 1.3 m tall
             var lb = V(-17.55f, 1.30f, 3.0f);
+            var keepM = t.M; t.M = t.M * Matrix4x4.TRS(lb, Quaternion.identity, Vector3.one * 1.5f) * Matrix4x4.Translate(-lb); // PM b22: a big lantern on the post
             t.Cyl(Brass, 1f, lb, lb + Vector3.up * 0.12f, 0.36f, 0.33f, 6, true, true);
             t.Cyl(LanternGlow, 1f, lb + Vector3.up * 0.12f, lb + Vector3.up * 0.78f, 0.26f, 0.29f, 6, true, true);
             for (int i = 0; i < 6; i++)
@@ -90,6 +92,7 @@ namespace Crashverse.Visuals
             t.Cyl(Brass, 1f, lb + Vector3.up * 0.9f, lb + Vector3.up * 1.15f, 0.34f, 0.08f, 6, true, true);
             t.Cyl(Brass, 1f, lb + Vector3.up * 1.15f, lb + Vector3.up * 1.22f, 0.08f, 0.08f, 6, true);
             for (int i = 0; i < 8; i++) { float a0 = i * Mathf.PI / 8f, a1 = (i + 1) * Mathf.PI / 8f; t.Cyl(Brass, 1f, lb + V(0f, 1.22f + Mathf.Sin(a0) * 0.12f, Mathf.Cos(a0) * 0.12f), lb + V(0f, 1.22f + Mathf.Sin(a1) * 0.12f, Mathf.Cos(a1) * 0.12f), 0.015f, 0.015f, 4, false); }
+            t.M = keepM;
             // orange barrel, left (deck point x -18.2, z 2.9; 0.9 m wide, 1.1 m tall, 3 steel hoops)
             TideWatchtower.BarrelBody(t, V(-18.25f, 0f, 2.9f), 1.1f, 0.45f, OrangeStave, Steel);
             // cannonball crate (x -18.2, z 1.35..2.4): 5 black balls, 3 at the bottom and 2 on top
@@ -179,19 +182,39 @@ namespace Crashverse.Visuals
             }
         }
 
+        /// <summary>Rounded cliff masses (PM b22: no grey boxes): each mass is a tall ellipsoid of hazy rock with a flattened green
+        /// cap, two lower shoulder lumps in front with their own grass, and a dark foot at the waterline.</summary>
         static void Cliff(TwMesh t, int seed, Vector3 a, Vector3 b, int n, float w0, float w1, float h0, float h1)
         {
             for (int i = 0; i < n; i++)
             {
                 float f = n == 1 ? 0.5f : i / (float)(n - 1);
                 var p = Vector3.Lerp(a, b, f); float h = Mathf.Lerp(h0, h1, f) * (0.85f + 0.3f * H(seed, i)); float w = Mathf.Lerp(w0, w1, H(seed + 1, i));
-                var rot = Quaternion.Euler(0f, H(seed + 2, i) * 40f - 20f, 0f);
-                t.Slab(H(seed + 3, i) < 0.5f ? CliffRock : CliffDark, 9f, V(p.x, h * 0.5f - 3f, p.z), V(w, h + 3f, w * 0.9f), seed * 13 + i, 0.12f, rot);
-                t.Slab(CliffGrass, 6f, V(p.x, h - 1.5f, p.z), V(w * 0.95f, 4f, w * 0.85f), seed * 17 + i, 0.15f, rot);
-                // a lower ledge in front with its own grass
-                t.Slab(CliffDark, 9f, V(p.x - w * 0.45f, h * 0.22f - 3f, p.z + (H(seed + 4, i) - 0.5f) * w * 0.5f), V(w * 0.6f, h * 0.45f + 3f, w * 0.6f), seed * 19 + i, 0.15f, rot);
-                t.Slab(CliffGrass, 6f, V(p.x - w * 0.45f, h * 0.45f - 1f, p.z + (H(seed + 4, i) - 0.5f) * w * 0.5f), V(w * 0.55f, 2.5f, w * 0.55f), seed * 23 + i, 0.15f, rot);
+                float jz = (H(seed + 4, i) - 0.5f) * w * 0.5f;
+                t.Sphere(H(seed + 3, i) < 0.5f ? CliffRock : CliffDark, 9f, V(p.x, h * 0.42f, p.z), V(w * 0.55f, h * 0.62f, w * 0.6f), 12, 8);
+                t.Sphere(CliffGrass, 6f, V(p.x - w * 0.04f, h * 0.98f, p.z), V(w * 0.5f, h * 0.09f, w * 0.52f), 12, 5);
+                t.Sphere(CliffDark, 9f, V(p.x - w * 0.42f, h * 0.18f, p.z + jz), V(w * 0.36f, h * 0.34f, w * 0.38f), 10, 7);
+                t.Sphere(CliffGrass, 6f, V(p.x - w * 0.46f, h * 0.48f, p.z + jz), V(w * 0.3f, h * 0.06f, w * 0.32f), 10, 5);
+                t.Sphere(CliffRock, 9f, V(p.x - w * 0.3f, h * 0.3f, p.z - jz * 1.4f), V(w * 0.3f, h * 0.36f, w * 0.3f), 10, 7);
+                t.Sphere(CliffGrass, 6f, V(p.x - w * 0.33f, h * 0.64f, p.z - jz * 1.4f), V(w * 0.25f, h * 0.05f, w * 0.26f), 10, 5);
+                t.Sphere(TideWatchtower.Foam, 4f, V(p.x - w * 0.55f, -0.3f, p.z), V(w * 0.45f, 0.8f, w * 0.7f), 10, 3);
             }
+        }
+
+        /// <summary>White surf rings around the three rock islets at the waterline (y -1), as in the goal (spec §6 sea).</summary>
+        static void Surf(TwMesh t)
+        {
+            void Ring(float x0, float x1, float z0, float z1, int seed)
+            {
+                float cx = (x0 + x1) * 0.5f, cz = (z0 + z1) * 0.5f, rx = (x1 - x0) * 0.5f + 0.35f, rz = (z1 - z0) * 0.5f + 0.35f;
+                for (int i = 0; i < 28; i++)
+                {
+                    float an = i * Mathf.PI * 2f / 28f, k = 0.92f + 0.16f * H(seed, i);
+                    var c = V(cx + Mathf.Cos(an) * rx * k, -0.98f, cz + Mathf.Sin(an) * rz * k);
+                    t.Sphere(TideWatchtower.Foam, 2f, c, V(0.45f + 0.35f * H(seed + 1, i), 0.07f, 0.45f + 0.35f * H(seed + 2, i)), 8, 3);
+                }
+            }
+            Ring(-6.5f, -0.5f, -3.8f, 3.1f, 61); Ring(-6.0f, -2.0f, 3.1f, 7.3f, 67); Ring(-5.6f, -1.6f, -7.3f, -3.8f, 71);
         }
 
         static float H(int a, int b) { uint h = (uint)(a * 73856093) ^ (uint)(b * 19349663); h ^= h >> 13; h *= 0x5bd1e995; h ^= h >> 15; return (h % 10000u) / 10000f; }

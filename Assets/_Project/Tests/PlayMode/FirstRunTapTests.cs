@@ -184,7 +184,7 @@ namespace Crashverse.Tests.PlayMode
                 // vertically, so there it only has to be whole and readable
                 Assert.True(st.yMin >= -tol && st.yMax <= 1f + tol && st.width > (cam.aspect < 1f ? 0.85f : 0.2f), "fortress whole vertically, spanning the width: " + st);
                 Assert.AreEqual(0.5f, c.center.x, 0.03f, "cannon horizontally centred");
-                Assert.True(c.yMax > 0.2f && c.yMax < 0.7f && c.yMin < 0.12f, "cannon at the bottom, barrel top on screen: " + c);
+                Assert.True(c.yMax > 0.2f && c.yMax < 0.7f && c.yMin < 0.25f, "cannon at the bottom, barrel top on screen: " + c);
                 Assert.Greater(st.center.y, c.center.y + 0.15f, "building above the cannon");
                 Assert.True(s.aim.Arc != null && s.aim.Arc.positionCount > 2, "aim line drawn");
                 return;

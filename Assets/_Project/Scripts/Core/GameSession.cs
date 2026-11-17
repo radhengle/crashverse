@@ -102,8 +102,7 @@ namespace Crashverse.Core
             State = SessionState.Aiming;
             fire.CanFire = true;
             aim.inputEnabled = true;
-            // L1 v2 goal frame (design/L01_v2_spec.md): the barrel starts nearly level, aimed at the arch
-            aim.SetAim(0f, Ctx.level != null && Ctx.level.id == "c1_l01" ? WreckerSpec.MinElevation : WreckerSpec.RestElevation);
+            aim.SetAim(0f, WreckerSpec.RestElevation); // L1 too (PM b22: a 5 deg start pointed at the crystal, so an unaimed shot won)
             aim.SnapVisualNow(); // deterministic reset: no barrel catch-up after Retry
             Crashverse.Weapons.Projectile.BlastRadius = Ctx.level != null && Ctx.mode != RunMode.TitanRanked ? Ctx.level.blastRadius : 0f; // PM 17 Nov: per-level cannonball blast
             Crashverse.Weapons.Projectile.BlastDamage = Ctx.level != null ? Ctx.level.blastDamage : 0f;

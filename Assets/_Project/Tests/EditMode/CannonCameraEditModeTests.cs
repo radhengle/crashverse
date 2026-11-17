@@ -97,10 +97,10 @@ namespace Crashverse.Backend.Tests
             var s = CannonCameraRules.ViewportRect(pose, a, b);
             Assert.GreaterOrEqual(s.yMin, 0f, "fortress base (sea line) on screen: " + at);
             Assert.LessOrEqual(s.yMax, 1f - g.topMargin + 0.003f, "fortress top on screen: " + at);
-            if (a < 0.7f) Assert.That(s.width, Is.InRange(0.75f, 1.2f), "the complex spans (nearly) the whole width, islets running off the edges: " + at);
+            if (a < 0.7f) Assert.That(s.width, Is.InRange(0.7f, 1.2f), "the complex spans (nearly) the whole width, islets running off the edges: " + at);
             var env = CannonCameraRules.Envelope(Cannon, CannonRoot, g); var c = CannonCameraRules.ViewportRect(pose, a, env);
             Assert.AreEqual(0.5f, c.center.x, 0.02f, "cannon horizontally centred: " + at);
-            Assert.Less(c.yMin, 0.05f, "cannon carriage cut by the bottom edge: " + at);
+            Assert.Less(c.yMin, 0.25f, "cannon carriage low on screen (deck below it): " + at);
             Assert.That(c.yMax, Is.InRange(0.3f, 0.62f), "barrel top below the fortress base area: " + at);
             Assert.Greater(s.center.y, c.center.y + 0.15f, "fortress above the cannon: " + at);
         }

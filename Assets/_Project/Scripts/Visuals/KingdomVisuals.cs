@@ -15,6 +15,7 @@ namespace Crashverse.Visuals
     {
         public static bool Enabled = true;
         static VfxDirector _vfx;
+        static bool _tideLit;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void Register()
@@ -113,6 +114,15 @@ namespace Crashverse.Visuals
             if (arena != null) { var fi = arena.transform.Find("FloatingIsland"); if (fi != null) fi.localPosition = new Vector3(fi.localPosition.x, tide ? -1.5f : 0f, fi.localPosition.z); }
             if (!tide) { if (!dark) { RenderSettings.fogStartDistance = 55f; RenderSettings.fogEndDistance = 380f; } return; }
             RenderSettings.fogStartDistance = 150f; RenderSettings.fogEndDistance = 1100f;
+            _tideLit = true;
+            // PM b22 QA: neutral bright daylight with contrast (the warm kingdom rig washed L1 out orange)
+            var sun = RenderSettings.sun;
+            if (sun != null) { sun.color = new Color(1f, 0.97f, 0.92f); sun.intensity = 1.45f; sun.transform.rotation = Quaternion.Euler(42f, 55f, 0f); sun.shadowStrength = 0.9f; }
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
+            RenderSettings.ambientSkyColor = new Color(0.40f, 0.50f, 0.66f);
+            RenderSettings.ambientEquatorColor = new Color(0.38f, 0.39f, 0.40f);
+            RenderSettings.ambientGroundColor = new Color(0.16f, 0.15f, 0.14f);
+            foreach (var l in Object.FindObjectsOfType<Light>()) if (l.name == "RimLight") { l.intensity = 0.15f; l.color = new Color(0.8f, 0.88f, 1f); }
             foreach (var c in Camera.allCameras) if (c != null && c.cameraType == CameraType.Game && c.targetTexture == null) c.farClipPlane = Mathf.Max(c.farClipPlane, 1300f);
             if (Camera.main != null) Camera.main.farClipPlane = Mathf.Max(Camera.main.farClipPlane, 1300f);
         }
@@ -124,6 +134,7 @@ namespace Crashverse.Visuals
             string levelId = ctx?.level != null ? ctx.level.id : (ctx != null && ctx.mode == RunMode.DailyBoss ? "dailyboss" : "");
             bool dark = ctx != null && (ctx.IsHard || ctx.mode == RunMode.DailyBoss);
             bool palace = levelId != null && levelId.Contains("l10");
+            if (_tideLit) { _tideLit = false; Lighting(); } // the previous run was L1's neutral daylight: back to the kingdom rig
             Mood(dark || palace); SkyOnCameras();
             Debug.Log($"[KingdomSky] run: skybox={(RenderSettings.skybox != null ? RenderSettings.skybox.name : "null")} cam={(Camera.main != null ? Camera.main.name + ":" + Camera.main.clearFlags : "none")}");
             if (palace && !dark && RenderSettings.sun != null) { RenderSettings.sun.intensity = 1.2f; RenderSettings.sun.color = new Color(0.85f, 0.88f, 1f); }

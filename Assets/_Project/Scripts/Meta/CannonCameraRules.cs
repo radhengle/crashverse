@@ -64,8 +64,12 @@ namespace Crashverse.Meta
         /// the cannon root, 12.3 deg down, the goal's horizontal lens (42.7 deg) on every phone; taller screens get a taller vertical lens
         /// (more sky and sea) and the lens only widens further when the fortress top or the hint arc would reach the HUD. The cannon
         /// (1.35x) is cut at the bottom edge with its breech nearest the camera, and the rock islets run off both sides, as in the goal.</summary>
-        public static readonly Settings Goal = new Settings { back = 5.8f, height = 4.7f, goalPose = true, bottomMargin = -0.3f, topMargin = 0.06f, maxFov = 100f,
-                                                              cannonScale = 1.35f, cannonRear = 1.8f * 1.35f, cannonTop = 2.6f * 1.35f };
+        /// PM b22 QA (phones are taller than the 3:4 goal): the eye moved 1.2 m further back and 0.3 m up with a 14 deg pitch and a
+        /// 37.5 deg-tan horizontal lens (75 deg vertical on 1080x2340), so the whole complex spans ~95% of the width, the tower top sits
+        /// just under the HUD, the islet base near mid-screen and the world-scale cannon (rest aim 25 deg) below the crystal.
+        public static readonly Settings Goal = new Settings { back = 7.0f, height = 5.0f, goalPose = true, goalPitch = 14f, goalTanH = 0.3541f,
+                                                              bottomMargin = -0.3f, topMargin = 0.06f, maxFov = 100f,
+                                                              cannonScale = 1f, cannonRear = 1.8f, cannonTop = 2.6f };
         /// <summary>The goal pose is chosen by geometry: a wide (z ≥ 12 m) complex close to the cannon (centre &lt; 18 m).</summary>
         public const float GoalBelow = 18f, GoalMinWidth = 12f;
 

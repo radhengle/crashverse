@@ -60,13 +60,13 @@ namespace Crashverse.Visuals
             if (wb == null || wb.yawPivot == null || wb.pitchPivot == null) return null;
             foreach (var r in wb.GetComponentsInChildren<MeshRenderer>(true)) r.enabled = false;
             Material Mk(string k, Color c, float metal, float rough, string tex = null, Color em = default) => KingdomMaterials.Make("TwCannon" + k, tex, c, metal, rough, Vector2.one, em);
-            var navy = Mk("Navy", new Color(0.13f, 0.145f, 0.28f), 0.45f, 0.42f);          // #212548
+            var navy = Mk("Navy", new Color(0.11f, 0.12f, 0.25f), 0.25f, 0.62f);           // PM b22: satin, not glossy          // #212548
             var navyDark = Mk("NavyDark", new Color(0.235f, 0.223f, 0.305f), 0.3f, 0.6f);  // #3C394E
-            var gold = Mk("Gold", new Color(0.75f, 0.50f, 0.31f), 0.55f, 0.35f);          // #C08050
+            var gold = Mk("Gold", new Color(0.80f, 0.55f, 0.30f), 0.6f, 0.4f);          // #C08050
             var sunGold = Mk("Sun", new Color(0.97f, 0.89f, 0.45f), 0.4f, 0.3f, null, new Color(0.25f, 0.14f, 0.02f)); // #F8E474
             var sunDeep = Mk("SunDeep", new Color(0.93f, 0.57f, 0.08f), 0.4f, 0.35f);     // #EC9114
             var bore = Mk("Bore", new Color(0.03f, 0.03f, 0.05f), 0f, 1f);
-            var wood = Mk("Wood", new Color(1.25f, 0.95f, 0.85f), 0f, 0.85f, "T_K_Wood"); // #714130 on the wood texture
+            var wood = Mk("Wood", new Color(1.05f, 0.92f, 0.95f), 0f, 0.9f, "T_K_Wood"); // dark brown #714130 lit // #714130 on the wood texture
             var iron = Mk("Iron", new Color(0.12f, 0.12f, 0.14f), 0.6f, 0.45f);
 
             var bRoot = new GameObject("Kingdom_Barrel").transform; bRoot.SetParent(wb.yawPivot, false);
@@ -83,14 +83,14 @@ namespace Crashverse.Visuals
                 // gold ring with a rounded lip at both ends (steps of rIn -> rOut - lip -> rOut -> rOut - lip -> rIn)
                 t.Lathe(gold, 1f, new[] { new Vector2(x0, rIn), new Vector2(x0, rOut - lip), new Vector2(x0 + lip, rOut), new Vector2(x1 - lip, rOut), new Vector2(x1, rOut - lip), new Vector2(x1, rIn) }, 28);
             }
-            Band(-2.05f, -1.78f, 0.6f, 0.65f, 0.03f);
-            t.Lathe(navyDark, 1f, new[] { new Vector2(-1.93f, 0.651f), new Vector2(-1.90f, 0.651f) }, 28); // the breech ring's groove
-            Band(-0.68f, -0.38f, 0.58f, 0.66f, 0.035f);
-            Band(0.55f, 0.78f, 0.535f, 0.585f, 0.03f);
-            Band(1.80f, 2.02f, 0.52f, 0.565f, 0.035f);
+            Band(-2.12f, -1.74f, 0.6f, 0.72f, 0.04f);   // PM b22: thick raised rings
+            t.Lathe(navyDark, 1f, new[] { new Vector2(-1.95f, 0.721f), new Vector2(-1.91f, 0.721f) }, 28); // the breech ring's groove
+            Band(-0.72f, -0.34f, 0.58f, 0.70f, 0.04f);
+            Band(0.50f, 0.82f, 0.535f, 0.63f, 0.04f);
+            Band(1.76f, 2.04f, 0.52f, 0.62f, 0.04f);
             // muzzle face and bore
-            t.Lathe(gold, 1f, new[] { new Vector2(2.02f, 0.53f), new Vector2(2.02f, 0.36f) }, 28);
-            t.Lathe(bore, 1f, new[] { new Vector2(2.02f, 0.36f), new Vector2(1.5f, 0.36f), new Vector2(1.5f, 0f) }, 20);
+            t.Lathe(gold, 1f, new[] { new Vector2(2.04f, 0.58f), new Vector2(2.04f, 0.36f) }, 28);
+            t.Lathe(bore, 1f, new[] { new Vector2(2.04f, 0.36f), new Vector2(1.5f, 0.36f), new Vector2(1.5f, 0f) }, 20);
             // cascabel: neck and knob behind the breech
             t.Lathe(navyDark, 1f, new[] { new Vector2(-2.24f, 0.13f), new Vector2(-2.32f, 0.09f), new Vector2(-2.36f, 0.09f) }, 16);
             t.Sphere(gold, 1f, new Vector3(-2.47f, 0f, 0f), Vector3.one * 0.13f, 12, 8);
@@ -100,18 +100,18 @@ namespace Crashverse.Visuals
                 t.Cyl(navy, 1f, new Vector3(0f, -0.2f, sz * 0.5f), new Vector3(0f, -0.2f, sz * 0.72f), 0.13f, 0.13f, 12, true);
             }
             // sun emblem on the top of the breech (16 rays, long 0.28 / short 0.19, disc 0.15)
-            var top = new Vector3(-1.45f, 0.62f, 0f); var up = Vector3.up;
+            var top = new Vector3(-1.25f, 0.61f, 0f); var up = Vector3.up;
             var disc = new Vector3[16];
-            for (int i = 0; i < 16; i++) { float a = -i * Mathf.PI * 2f / 16f; disc[i] = top + new Vector3(Mathf.Cos(a) * 0.15f, 0.012f, Mathf.Sin(a) * 0.15f); }
+            for (int i = 0; i < 16; i++) { float a = -i * Mathf.PI * 2f / 16f; disc[i] = top + new Vector3(Mathf.Cos(a) * 0.2f, 0.012f, Mathf.Sin(a) * 0.2f); }
             if (Vector3.Dot(Vector3.Cross(disc[1] - disc[0], disc[2] - disc[0]), up) < 0f) System.Array.Reverse(disc);
             t.Poly(sunGold, 1f, disc);
             for (int i = 0; i < 16; i++)
             {
                 float a = i * Mathf.PI * 2f / 16f; var d = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a)); var sd = Vector3.Cross(up, d);
-                float len = i % 2 == 0 ? 0.28f : 0.19f;
+                float len = i % 2 == 0 ? 0.40f : 0.28f;
                 // follow the barrel's curve so the rays lie on its surface
                 Vector3 P(Vector3 q) { float z = q.z; float y = Mathf.Sqrt(Mathf.Max(0f, 0.62f * 0.62f - z * z)) + 0.008f; return new Vector3(q.x, y, z); }
-                var q3 = new[] { P(top + d * 0.12f - sd * 0.045f), P(top + d * len), P(top + d * 0.12f + sd * 0.045f) };
+                var q3 = new[] { P(top + d * 0.16f - sd * 0.06f), P(top + d * len), P(top + d * 0.16f + sd * 0.06f) };
                 if (Vector3.Dot(Vector3.Cross(q3[1] - q3[0], q3[2] - q3[0]), up) < 0f) System.Array.Reverse(q3);
                 t.Poly(i % 2 == 0 ? sunGold : sunDeep, 1f, q3);
             }

@@ -28,26 +28,26 @@ namespace Crashverse.Visuals
 
         // ---------------- palette (design/L01_v2_spec.md hex palette; tints = goal colour / texture mean) ----------------
         static Material M(string k, string tex, Color c, float metal = 0f, float rough = 0.9f, Color emission = default) => KingdomMaterials.Make("Tw" + k, tex, c, metal, rough, Vector2.one, emission);
-        internal static Material Stone => M("Stone", "T_K_Stone", new Color(0.92f, 0.74f, 0.80f));
-        internal static Material StoneLight => M("StoneLight", "T_K_Stone", new Color(1.06f, 0.90f, 0.92f));
-        internal static Material StoneDark => M("StoneDark", "T_K_Stone", new Color(0.70f, 0.56f, 0.60f));
-        internal static Material Mortar => M("Mortar", null, new Color(0.25f, 0.17f, 0.145f), 0f, 1f);
-        internal static Material Dressed => M("Dressed", "T_K_Stone", new Color(1.25f, 0.95f, 0.88f));   // arch voussoirs, jambs #C48A6F
+        internal static Material Stone => M("Stone", "T_K_Stone", new Color(0.74f, 0.64f, 0.66f));           // PM b22: darker grey stone
+        internal static Material StoneLight => M("StoneLight", "T_K_Stone", new Color(0.88f, 0.78f, 0.78f));
+        internal static Material StoneDark => M("StoneDark", "T_K_Stone", new Color(0.52f, 0.44f, 0.46f));
+        internal static Material Mortar => M("Mortar", null, new Color(0.13f, 0.09f, 0.08f), 0f, 1f);
+        internal static Material Dressed => M("Dressed", "T_K_Stone", new Color(1.05f, 0.80f, 0.74f));   // arch voussoirs, jambs #C48A6F
         internal static Material ArchInside => M("ArchInside", null, new Color(0.27f, 0.06f, 0.11f), 0f, 0.95f, new Color(0.10f, 0.01f, 0.02f)); // #44101E
         internal static Material ArchCrack => M("ArchCrack", null, new Color(0.55f, 0.15f, 0.19f), 0f, 0.8f, new Color(0.9f, 0.12f, 0.08f));   // #8C2630 glowing
-        internal static Material Rock => M("Rock", "T_K_Rock", new Color(1.22f, 1.18f, 1.12f));        // #7C6E5F
+        internal static Material Rock => M("Rock", "T_K_Rock", new Color(1.0f, 0.98f, 0.95f));        // #7C6E5F
         internal static Material RockDark => M("RockDark", "T_K_Rock", new Color(0.78f, 0.80f, 0.78f));  // #393933 in shade
-        internal static Material RockTop => M("RockTop", "T_K_Rock", new Color(1.55f, 1.45f, 1.30f));    // sun-lit tops #E7D1A8
+        internal static Material RockTop => M("RockTop", "T_K_Rock", new Color(1.30f, 1.22f, 1.10f));    // sun-lit tops #E7D1A8
         internal static Material Moss => M("Moss", "T_K_Grass", new Color(1.9f, 1.75f, 1.6f));
         internal static Material Fern => M("Fern", null, new Color(0.30f, 0.55f, 0.12f), 0f, 0.7f);
         internal static Material Foam => M("Foam", null, new Color(0.93f, 0.97f, 1.0f), 0f, 0.6f, new Color(0.18f, 0.2f, 0.22f));
-        internal static Material Timber => M("Timber", "T_K_Wood", new Color(1.25f, 1.15f, 1.10f));     // dark timber #361C14 .. lit #AF612C
-        internal static Material TimberLit => M("TimberLit", "T_K_Planks", new Color(1.30f, 1.05f, 0.85f));
-        internal static Material Plank => M("Plank", "T_K_Planks", new Color(1.15f, 0.95f, 0.80f));
+        internal static Material Timber => M("Timber", "T_K_Wood", new Color(1.05f, 0.95f, 0.92f));     // dark timber #361C14 .. lit #AF612C
+        internal static Material TimberLit => M("TimberLit", "T_K_Planks", new Color(1.05f, 0.85f, 0.72f));
+        internal static Material Plank => M("Plank", "T_K_Planks", new Color(0.95f, 0.78f, 0.68f));
         internal static Material Iron => M("Iron", null, new Color(0.16f, 0.16f, 0.18f), 0.5f, 0.55f);
         internal static Material Gold => M("Gold", null, new Color(0.86f, 0.60f, 0.27f), 0.35f, 0.45f);
-        internal static Material RoofTile => M("RoofTile", null, new Color(0.86f, 0.31f, 0.22f), 0f, 0.65f);   // #E15A43
-        internal static Material RoofTileDark => M("RoofTileDark", null, new Color(0.62f, 0.17f, 0.12f), 0f, 0.7f);
+        internal static Material RoofTile => M("RoofTile", null, new Color(0.80f, 0.13f, 0.08f), 0f, 0.6f);     // PM b22: saturated red   // #E15A43
+        internal static Material RoofTileDark => M("RoofTileDark", null, new Color(0.52f, 0.07f, 0.05f), 0f, 0.7f);
         internal static Material RoofUnder => M("RoofUnder", null, new Color(0.36f, 0.10f, 0.08f), 0f, 0.9f);    // #5C1A15
         internal static Material Banner => M("Banner", null, new Color(0.60f, 0.07f, 0.05f), 0f, 0.85f);         // #8C140E
         internal static Material BannerFold => M("BannerFold", null, new Color(0.42f, 0.04f, 0.04f), 0f, 0.9f);
@@ -56,11 +56,11 @@ namespace Crashverse.Visuals
         internal static Material BoneDark => M("BoneDark", null, new Color(0.62f, 0.38f, 0.22f), 0f, 0.8f);     // #C67B48
         internal static Material Socket => M("Socket", null, new Color(0.05f, 0.02f, 0.02f), 0f, 1f);
         internal static Material EyeGlow => M("EyeGlow", null, new Color(0.9f, 0.1f, 0.05f), 0f, 0.5f, new Color(2.4f, 0.25f, 0.1f));
-        internal static Material Crystal => M("Crystal", null, new Color(0.91f, 0.09f, 0.18f), 0f, 0.25f, new Color(1.9f, 0.10f, 0.20f)); // #E9172D
+        internal static Material Crystal => M("Crystal", null, new Color(0.91f, 0.09f, 0.18f), 0f, 0.25f, new Color(3.2f, 0.18f, 0.30f)); // #E9172D
         internal static Material CrystalDark => M("CrystalDark", null, new Color(0.52f, 0.03f, 0.13f), 0f, 0.3f, new Color(0.75f, 0.02f, 0.08f)); // #840822
         internal static Material CrystalCore => M("CrystalCore", null, new Color(0.98f, 0.66f, 0.62f), 0f, 0.3f, new Color(3.2f, 1.6f, 1.0f)); // #F9A99D
-        internal static Material Fire => M("Fire", null, new Color(1f, 0.45f, 0.08f), 0f, 1f, new Color(3.0f, 1.1f, 0.18f));
-        internal static Material FireCore => M("FireCore", null, new Color(1f, 0.85f, 0.35f), 0f, 1f, new Color(3.6f, 2.8f, 0.9f));
+        internal static Material Fire => M("Fire", null, new Color(1f, 0.45f, 0.08f), 0f, 1f, new Color(4.2f, 1.6f, 0.25f));
+        internal static Material FireCore => M("FireCore", null, new Color(1f, 0.85f, 0.35f), 0f, 1f, new Color(5.0f, 3.8f, 1.2f));
         internal static Material WindowGlow => M("WindowGlow", null, new Color(1f, 0.63f, 0.25f), 0f, 1f, new Color(2.6f, 1.1f, 0.25f)); // #FFA040
         internal static Material BarrelWood => M("BarrelWood", "T_K_Planks", new Color(1.55f, 1.05f, 0.62f));   // #AE5E30
         internal static Material Cloth => M("ClothDark", null, new Color(0.30f, 0.07f, 0.09f), 0f, 0.9f);
@@ -122,6 +122,10 @@ namespace Crashverse.Visuals
                 if (!ok || t.Empty) continue;
                 var root = Metric(b, "Tide_" + b.blockId);
                 t.Build(root, "Tw_" + b.blockId, true);
+                // the dressing goes with the piece: hidden when it breaks into chunks or leaves the island (PM b22: the tower still stood at +15 s)
+                var go = root.gameObject;
+                b.Broken += _ => { if (go != null) go.SetActive(false); };
+                b.WentOutOfBounds += _ => { if (go != null) go.SetActive(false); };
                 var own = b.GetComponent<MeshRenderer>(); if (own != null) own.enabled = false;
                 // every other look on the block (greybox, RealKit modules, kingdom visuals) is replaced by the Tide dressing
                 foreach (var vr in b.GetComponentsInChildren<Renderer>(true)) if (!vr.transform.IsChildOf(root) && !(vr is ParticleSystemRenderer)) vr.enabled = false;
@@ -150,6 +154,8 @@ namespace Crashverse.Visuals
         {
             var go = new GameObject(name); go.transform.SetParent(parent, true); go.transform.position = specWorld + _off;
             var l = go.AddComponent<Light>(); l.type = LightType.Point; l.color = c; l.intensity = intensity; l.range = range; l.shadows = LightShadows.None;
+            var owner = parent.GetComponent<DestructibleBlock>();
+            if (owner != null) owner.Broken += _ => { if (l != null) l.enabled = false; };
         }
 
         static Vector3 V(float x, float y, float z) => new Vector3(x, y, z);
