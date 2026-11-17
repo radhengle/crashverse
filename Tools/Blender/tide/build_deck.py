@@ -1,7 +1,7 @@
 # L1 deck props (design/L01_v2_spec.md §3, positions identical to TideWatchtowerEnv.Props): a big brass ship lantern with glowing
 # panes on the rail post, a staved orange barrel with steel hoops, a plank crate of cannonballs, a rope barrel with a twisted
 # 3-strand rope coil, a hanging loop and a ball. Modelled in Blender with bevels and UVs for the CC0 PBR sets.
-# Output: Resources/Kingdom/Meshes/Tide_Deck.bytes, objects <Part>_<Material>; Material in Stave Crate Hoop Ball Brass Glow Rope.
+# Output: Resources/Kingdom/Meshes/Tide_Deck.bytes, objects <Item>_<Material> (Item: Lantern BarrelL Crate BarrelR); Material in Stave Crate Hoop Ball Brass Glow Rope.
 # Coordinates are the environment's (UNITY world metres).
 import bpy, bmesh, math, sys, os, random
 sys.path.insert(0, os.path.dirname(__file__))
@@ -9,7 +9,8 @@ from tw_lib import *
 OUT = sys.argv[sys.argv.index('--') + 1]
 clear(); random.seed(11)
 groups = {}
-def add(mat, o): groups.setdefault(mat, []).append(o)
+ITEM = ['Lantern']   # b28: objects are <Item>_<Material> so the environment can place and scale each prop on its own
+def add(mat, o): groups.setdefault((ITEM[0], mat), []).append(o)
 
 def ring_pts(cx, y, cz, r, n, fn=None):
     return [(cx + math.cos(2*math.pi*i/n) * r * (fn(i) if fn else 1), y, cz + math.sin(2*math.pi*i/n) * r * (fn(i) if fn else 1)) for i in range(n)]
@@ -98,7 +99,9 @@ for i in range(20):   # carrying ring
 o = obj('Ring', bm); add('Brass', o)
 
 # ---- orange barrel (-18.25, 2.9), cannonball crate, rope barrel (-2.95)
+ITEM[0] = 'BarrelL'
 barrel(-18.25, 2.9, 1.1, 0.45, 'Stave', 'Hoop')
+ITEM[0] = 'Crate'
 cx0, cx1, cz0, cz1 = -18.5, -17.9, 1.35, 2.4
 for k in range(3):   # side boards, 3 per side with a 1 cm gap
     y0 = k * 0.15; y1 = y0 + 0.14
@@ -113,6 +116,7 @@ for (a, b) in (((cx0 - 0.025, 0.36, cz0 - 0.025), (cx1 + 0.025, 0.40, cz0 + 0.0)
     bbox(a, b, 'Hoop', 0.005)
 for i in range(3): ball((-18.2, 0.48, 1.55 + i * 0.33))
 for i in range(2): ball((-18.2, 0.76, 1.71 + i * 0.33))
+ITEM[0] = 'BarrelR'
 barrel(-18.25, -2.95, 0.95, 0.45, 'Crate', 'Hoop')
 
 # twisted 3-strand rope: a tube along a path whose radius is modulated by a twist so the strands read
@@ -151,7 +155,7 @@ rope(loop)
 ball((-18.25, 1.45, -2.95))
 
 objs = []
-for mat, os_ in groups.items():
-    objs.append(join(os_, 'Deck' + '_' + mat))
+for (item, mat), os_ in groups.items():
+    objs.append(join(os_, item + '_' + mat))
 export(OUT, objs)
 if '--blend' in sys.argv: bpy.ops.wm.save_as_mainfile(filepath=OUT.replace('.bytes', '.blend'))

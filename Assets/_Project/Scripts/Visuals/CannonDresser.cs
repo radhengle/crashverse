@@ -55,6 +55,7 @@ namespace Crashverse.Visuals
         /// reinforce -0.53, breech ring -1.91, the widest), a sun emblem on the top at -1.45, a rounded breech with a cascabel knob, and
         /// stepped timber cheeks at z +/-(0.7..1.3) with trunnion caps. The muzzle (+1.97) sits on the projectile spawn (+1.95), so the
         /// hint maths and pivots are unchanged. Returns the visual muzzle.</summary>
+        public const float GoalScale = 1.5f;
         public static Transform DressGoal(Crashverse.Weapons.WreckerBuilder wb)
         {
             if (wb == null || wb.yawPivot == null || wb.pitchPivot == null) return null;
@@ -88,7 +89,15 @@ namespace Crashverse.Visuals
                     go.AddComponent<MeshFilter>().sharedMesh = kv.Value;
                     var mr = go.AddComponent<MeshRenderer>(); mr.sharedMaterial = mat; mr.shadowCastingMode = ShadowCastingMode.On;
                 }
-                Debug.Log("[Tide] hero cannon mesh loaded: " + hero.Count + " parts");
+                // PM b27 QA (b28): in the goal the cannon dominates the bottom of the screen (breech ~35% of the width, carriage cheeks
+                // 20-75%). Render-only: barrel and carriage are scaled GoalScale about the trunnion, so the barrel reaches back toward
+                // the camera and its muzzle sits beyond the gameplay spawn (the ball leaves through the bore); the wheels sink below
+                // the deck planks.
+                var trunnion = wb.pitchPivot.localPosition + hf.offset;
+                hb.localScale = Vector3.one * GoalScale;
+                hc.localScale = Vector3.one * GoalScale;
+                hc.localPosition = trunnion + (new Vector3(0f, -wb.yawPivot.localPosition.y, 0f) - trunnion) * GoalScale;
+                Debug.Log("[Tide] hero cannon mesh loaded: " + hero.Count + " parts, x" + GoalScale);
                 var hm = new GameObject("Kingdom_Muzzle").transform; hm.SetParent(hb, false);
                 hm.localPosition = new Vector3(wb.projectileSpawn != null ? wb.projectileSpawn.localPosition.x : 1.95f, 0f, 0f);
                 return hm;

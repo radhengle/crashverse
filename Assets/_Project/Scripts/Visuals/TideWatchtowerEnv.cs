@@ -53,7 +53,7 @@ namespace Crashverse.Visuals
             var g = new TwMesh(); Background(g, !heroCliffs); g.Build(far, "TwBackground", false, false);
             var sf = new TwMesh(); Surf(sf); sf.Build(go, "TwSurf", false, false);
             // the lantern's warm light on the rail and the deck
-            var lg = new GameObject("LanternLight"); lg.transform.SetParent(go, false); lg.transform.position = V(-17.55f, 2.3f, 3.0f);
+            var lg = new GameObject("LanternLight"); lg.transform.SetParent(go, false); lg.transform.position = V(-17.55f, 2.55f, 3.0f);
             var l = lg.AddComponent<Light>(); l.type = LightType.Point; l.color = new Color(1f, 0.82f, 0.4f); l.intensity = 3.5f; l.range = 4.5f; l.shadows = LightShadows.None;
         }
 
@@ -102,16 +102,33 @@ namespace Crashverse.Visuals
             }
         }
 
+        // PM b27 QA (b28): bigger deck props framing the big cannon: the lantern on the left post, the orange barrel and the cannonball
+        // crate in the bottom-left corner, the rope barrel on the right. Item -> (authored base, placed base, scale).
+        static readonly System.Collections.Generic.Dictionary<string, (Vector3 from, Vector3 to, float k)> PropPlace =
+            new System.Collections.Generic.Dictionary<string, (Vector3, Vector3, float)> {
+                { "Lantern", (new Vector3(-17.55f, 1.30f, 3.0f), new Vector3(-17.55f, 1.30f, 3.0f), 1.35f) },
+                { "BarrelL", (new Vector3(-18.25f, 0f, 2.9f), new Vector3(-20.0f, 0f, 3.25f), 1.35f) },
+                { "Crate", (new Vector3(-18.2f, 0f, 1.875f), new Vector3(-20.95f, 0f, 2.0f), 1.35f) },
+                { "BarrelR", (new Vector3(-18.25f, 0f, -2.95f), new Vector3(-19.3f, 0f, -3.35f), 1.35f) } };
+
         static bool HeroProps(Transform parent)
         {
             var bundle = CvMesh.Load("Kingdom/Meshes/Tide_Deck");
-            if (!bundle.ContainsKey("Deck_Brass") || !bundle.ContainsKey("Deck_Stave")) return false;
+            if (!bundle.ContainsKey("Lantern_Brass") || !bundle.ContainsKey("BarrelL_Stave")) return false;
             var mats = new System.Collections.Generic.Dictionary<string, Material> {
                 { "Stave", OrangeStave }, { "Crate", Crate }, { "Hoop", Steel }, { "Ball", Ball }, { "Brass", Brass }, { "Glow", LanternGlow }, { "Rope", RopeMat } };
+            var roots = new System.Collections.Generic.Dictionary<string, Transform>();
             foreach (var kv in bundle)
             {
                 int us = kv.Key.LastIndexOf('_'); if (us < 0 || !mats.TryGetValue(kv.Key.Substring(us + 1), out var mat)) continue;
-                var g = new GameObject("Tw" + kv.Key); g.transform.SetParent(parent, false);
+                string item = kv.Key.Substring(0, us);
+                if (!roots.TryGetValue(item, out var r))
+                {
+                    r = new GameObject("Tw" + item).transform; r.SetParent(parent, false);
+                    if (PropPlace.TryGetValue(item, out var pl)) { r.localScale = Vector3.one * pl.k; r.localPosition = pl.to - pl.from * pl.k; }
+                    roots[item] = r;
+                }
+                var g = new GameObject("Tw" + kv.Key); g.transform.SetParent(r, false);
                 g.AddComponent<MeshFilter>().sharedMesh = kv.Value;
                 var mr = g.AddComponent<MeshRenderer>(); mr.sharedMaterial = mat; mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             }
@@ -174,9 +191,12 @@ namespace Crashverse.Visuals
             Drape(t, RedCloth, -17.72f, 1.32f, 0.95f, 1.85f, 0.75f);
             Drape(t, GoldCloth, -17.72f, 1.32f, -1.95f, -1.6f, 0.32f);
             // corner banners: red cloth on gold-capped poles at both bottom corners (deck x -20.2, z +/-2.34)
-            foreach (float z in new[] { 2.34f, -2.34f })
+            var m0 = t.M;
+            foreach (float z in new[] { 2.55f, -2.55f })
             {
-                var b = V(-20.2f, 0f, z);
+                // PM b27 QA (b28): red cloth on the posts in both bottom corners, 1.3x
+                var b = V(-23.0f, 0f, z);
+                t.M = m0 * Matrix4x4.TRS(b, Quaternion.identity, Vector3.one * 1.3f) * Matrix4x4.Translate(-b);
                 t.Cyl(TideWatchtower.Timber, 0.8f, b, b + Vector3.up * 2.1f, 0.05f, 0.045f, 7);
                 t.Sphere(Brass, 1f, b + Vector3.up * 2.15f, Vector3.one * 0.08f, 6, 4);
                 t.Cyl(Brass, 1f, b + V(-0.02f, 2.0f, -0.35f), b + V(-0.02f, 2.0f, 0.35f), 0.03f, 0.03f, 5);
@@ -187,6 +207,7 @@ namespace Crashverse.Visuals
                 }
                 t.Poly2(TideWatchtower.Gold, 1f, b + V(-0.01f, 0.83f, -0.33f), b + V(-0.01f, 0.75f, -0.33f), b + V(-0.01f, 1.07f, 0.33f), b + V(-0.01f, 1.15f, 0.33f));
             }
+            t.M = m0;
         }
 
         static void Drape(TwMesh t, Material m, float x, float yTop, float z0, float z1, float drop)
@@ -206,7 +227,7 @@ namespace Crashverse.Visuals
         /// with the waterfall (u 85-88, v 11-27) and the white castle with blue spires on top (u 80-93, v 0-8).</summary>
         /// <summary>Blender-built cliffs (Tools/Blender/tide/build_cliffs.py -> Kingdom/Meshes/Tide_Cliffs): the same masses as Cliff() as
         /// crag-and-ledge heightfields, rock faces and grass tops split by slope.</summary>
-        const float FarY = 0.6f, CastleScale = 0.75f;
+        const float FarY = 0.8f, CastleScale = 1.05f; // PM b27 QA (b28): cliffs 0.8x, bigger castle
         static bool HeroCliffs(Transform parent, Transform root)
         {
             var bundle = CvMesh.Load("Kingdom/Meshes/Tide_Cliffs");
@@ -301,16 +322,21 @@ namespace Crashverse.Visuals
             void Ring(float x0, float x1, float z0, float z1, int seed)
             {
                 float cx = (x0 + x1) * 0.5f, cz = (z0 + z1) * 0.5f, rx = (x1 - x0) * 0.5f + 0.35f, rz = (z1 - z0) * 0.5f + 0.35f;
-                for (int ring = 0; ring < 2; ring++)
-                    for (int i = 0; i < 40; i++)
+                // PM b27 QA (b28): white surf around the islets: a dense breaking ring, an outer lace ring and spray on the rocks
+                for (int ring = 0; ring < 3; ring++)
+                    for (int i = 0; i < 56; i++)
                     {
-                        float an = (i + ring * 0.5f) * Mathf.PI * 2f / 40f, k = (ring == 0 ? 0.9f : 1.12f) + 0.14f * H(seed + ring * 7, i);
+                        float an = (i + ring * 0.33f) * Mathf.PI * 2f / 56f, k = (ring == 0 ? 0.88f : ring == 1 ? 1.08f : 1.3f) + 0.16f * H(seed + ring * 7, i);
+                        if (ring == 2 && H(seed + 13, i) < 0.35f) continue;
                         var c = V(cx + Mathf.Cos(an) * rx * k, -0.97f + ring * -0.01f, cz + Mathf.Sin(an) * rz * k);
-                        float sz = ring == 0 ? 0.7f : 0.5f;
-                        t.Sphere(TideWatchtower.Foam, 2f, c, V(sz + 0.5f * H(seed + 1, i), ring == 0 ? 0.14f : 0.08f, sz + 0.5f * H(seed + 2, i)), 8, 3);
+                        float sz = ring == 0 ? 0.85f : ring == 1 ? 0.6f : 0.4f;
+                        t.Sphere(TideWatchtower.Foam, 2f, c, V(sz + 0.6f * H(seed + 1, i), ring == 0 ? 0.2f : 0.08f, sz + 0.6f * H(seed + 2, i)), 8, 3);
+                        if (ring == 0 && H(seed + 17, i) < 0.4f) // spray thrown up against the rock
+                            t.Sphere(TideWatchtower.Foam, 2f, c + V(0f, 0.25f + 0.35f * H(seed + 19, i), 0f), V(0.35f, 0.3f + 0.4f * H(seed + 21, i), 0.35f), 7, 4);
                     }
             }
-            Ring(-6.5f, -0.5f, -3.8f, 3.1f, 61); Ring(-6.0f, -2.0f, 3.1f, 7.3f, 67); Ring(-5.6f, -1.6f, -7.3f, -3.8f, 71);
+            // the b28 widened islets (TideWatchtower.WidenZ) and the step ledge in front
+            Ring(-8.0f, -0.5f, -4.15f, 3.45f, 61); Ring(-6.2f, -2.0f, 3.45f, 7.65f, 67); Ring(-5.8f, -1.6f, -7.65f, -4.15f, 71);
         }
 
         static float H(int a, int b) { uint h = (uint)(a * 73856093) ^ (uint)(b * 19349663); h ^= h >> 13; h *= 0x5bd1e995; h ^= h >> 15; return (h % 10000u) / 10000f; }
