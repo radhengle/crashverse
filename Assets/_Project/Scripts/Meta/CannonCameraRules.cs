@@ -32,6 +32,10 @@ namespace Crashverse.Meta
             public float minFov = 18f, maxFov = 68f; // 18: small huts may zoom in to fill ~70-80% of the width
             public float cannonScale = 1f;   // render-only scale of the Kingdom cannon (CannonDresser); cannonRear already includes it
             public bool anchorBuilding;      // concept framing: lens from the building's width, pitch pins the building top under the HUD
+            public bool goalPose;            // fixed measured pose (L01_v2_goal.png, design/L01_v2_spec.md §1): eye, pitch and horizontal lens
+            public float goalPitch = 12.3f;  // degrees down
+            public float goalTanH = 0.3905f; // tan(half horizontal FOV) of the goal frame (42.7 deg)
+            public float goalMinFov = 55f;   // the goal frame's own vertical FOV (3:4); taller phones see more sky and sea, never less
         }
 
         public static readonly Settings Default = new Settings();
@@ -56,9 +60,19 @@ namespace Crashverse.Meta
                                                                  cannonScale = 1.25f, cannonRear = 1.8f * 1.25f, cannonTop = 2.6f * 1.25f, anchorBuilding = true };
         public const float ConceptBelow = 16f;
 
+        /// <summary>L1 v2 (Tide Watchtower, design/L01_v2_spec.md §1): the goal image's measured camera. Eye 5.8 m behind and 4.7 m above
+        /// the cannon root, 12.3 deg down, the goal's horizontal lens (42.7 deg) on every phone; taller screens get a taller vertical lens
+        /// (more sky and sea) and the lens only widens further when the fortress top or the hint arc would reach the HUD. The cannon
+        /// (1.35x) is cut at the bottom edge with its breech nearest the camera, and the rock islets run off both sides, as in the goal.</summary>
+        public static readonly Settings Goal = new Settings { back = 5.8f, height = 4.7f, goalPose = true, bottomMargin = -0.3f, topMargin = 0.06f, maxFov = 100f,
+                                                              cannonScale = 1.35f, cannonRear = 1.8f * 1.35f, cannonTop = 2.6f * 1.35f };
+        /// <summary>The goal pose is chosen by geometry: a wide (z ≥ 12 m) complex close to the cannon (centre &lt; 18 m).</summary>
+        public const float GoalBelow = 18f, GoalMinWidth = 12f;
+
         public static Settings For(Vector3 cannonRoot, Bounds structure)
         {
             float d = structure.center.x - cannonRoot.x;
+            if (d < GoalBelow && structure.size.z >= GoalMinWidth) return Goal;
             return d < ConceptBelow ? Concept : d < ArenaLayoutRules.CompactBelow + 2f ? Compact : Default;
         }
 
@@ -83,7 +97,8 @@ namespace Crashverse.Meta
         {
             var d = For(cannonRoot, structure);
             var s = new Settings { back = d.back, height = d.height, cannonRear = d.cannonRear, cannonTop = d.cannonTop, topMargin = Mathf.Clamp(topMargin, d.topMargin, 0.4f),
-                                   bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov, cannonScale = d.cannonScale, anchorBuilding = d.anchorBuilding };
+                                   bottomMargin = d.bottomMargin, sideFill = d.sideFill, minFov = d.minFov, maxFov = d.maxFov, cannonScale = d.cannonScale, anchorBuilding = d.anchorBuilding,
+                                   goalPose = d.goalPose, goalPitch = d.goalPitch, goalTanH = d.goalTanH, goalMinFov = d.goalMinFov };
             return Solve(cannonRoot, Vector3.right, structure, aspect, s, extraAbove);
         }
 
@@ -95,6 +110,7 @@ namespace Crashverse.Meta
             aspect = Mathf.Clamp(aspect, 0.3f, 2.5f);
             firingDir.y = 0f;
             var dir = firingDir.sqrMagnitude > 1e-6f ? firingDir.normalized : Vector3.right;
+            if (s.goalPose) return SolveGoal(cannonRoot, dir, structure, aspect, s, extraAbove);
             if (s.anchorBuilding) return SolveAnchored(cannonRoot, dir, structure, aspect, s, extraAbove);
             var side = Vector3.Cross(Vector3.up, dir); // horizontal, perpendicular to the firing line
             float ground = cannonRoot.y;
@@ -164,6 +180,29 @@ namespace Crashverse.Meta
                 rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(pitchDown, 0f, 0f);
             }
             return new CannonCameraPose { position = cam, rotation = rot, fov = fovV };
+        }
+
+        /// <summary>Goal pose (s.goalPose): fixed eye and pitch; vertical lens = max(goal 55 deg, the goal's horizontal lens at this aspect),
+        /// widened 1% at a time (max s.maxFov) while the structure top or a hint-arc point is above the HUD line.</summary>
+        static CannonCameraPose SolveGoal(Vector3 cannonRoot, Vector3 dir, Bounds structure, float aspect, Settings s, Vector3[] extraAbove)
+        {
+            var cam = cannonRoot - dir * s.back + Vector3.up * s.height;
+            var rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(s.goalPitch, 0f, 0f);
+            float fov = Mathf.Max(s.goalMinFov, 2f * Mathf.Atan(s.goalTanH / aspect) * Mathf.Rad2Deg);
+            var tops = new System.Collections.Generic.List<Vector3>();
+            for (int i = 0; i < 8; i++) tops.Add(Corner(structure, i));
+            if (extraAbove != null) foreach (var p in extraAbove) if (Vector3.Dot(p - cam, dir) >= 1f) tops.Add(p);
+            float limit = 1f - s.topMargin - 0.002f;
+            var pose = new CannonCameraPose { position = cam, rotation = rot, fov = Mathf.Min(fov, s.maxFov) };
+            for (int it = 0; it < 80 && pose.fov < s.maxFov; it++)
+            {
+                float yMax = float.MinValue, yMin = float.MaxValue;
+                foreach (var p in tops) { var v = ToViewport(pose, aspect, p); yMax = Mathf.Max(yMax, v.y); }
+                yMin = ViewportRect(pose, aspect, structure).yMin;
+                if (yMax <= limit && yMin >= 0f) break;
+                pose.fov = Mathf.Min(s.maxFov, pose.fov * 1.01f);
+            }
+            return pose;
         }
 
         static Vector3 Corner(Bounds b, int i) =>

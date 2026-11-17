@@ -176,11 +176,21 @@ namespace Crashverse.Tests.PlayMode
             const float tol = 0.01f;
             // PM 17 Nov (L01.jpg): compact levels crop the carriage base at the bottom; everything above it must be on screen
             var sb = GameplayDirector.StructureBounds(s, s.structureBase);
-            var cm = VpRect(CannonCameraRules.MustShow(cb, CannonCameraRules.For(s.aim.transform.position, sb)));
+            var rs = CannonCameraRules.For(s.aim.transform.position, sb);
+            if (rs.goalPose)
+            {
+                // L1 v2 goal pose (design/L01_v2_spec.md §1): carriage cut by the bottom edge, the rock islets run off both sides
+                Assert.True(st.yMin >= -tol && st.yMax <= 1f + tol && st.width > 0.85f, "fortress whole vertically, spanning the width: " + st);
+                Assert.AreEqual(0.5f, c.center.x, 0.03f, "cannon horizontally centred");
+                Assert.True(c.yMax > 0.2f && c.yMax < 0.7f && c.yMin < 0.12f, "cannon at the bottom, barrel top on screen: " + c);
+                Assert.Greater(st.center.y, c.center.y + 0.15f, "building above the cannon");
+                Assert.True(s.aim.Arc != null && s.aim.Arc.positionCount > 2, "aim line drawn");
+                return;
+            }
+            var cm = VpRect(CannonCameraRules.MustShow(cb, rs));
             Assert.True(cm.xMin >= -tol && cm.xMax <= 1f + tol && cm.yMin >= -tol && cm.yMax <= 1f + tol, "whole cannon (above a concept-style bottom crop) on screen: " + cm + " full " + c);
             Assert.True(st.xMin >= -tol && st.xMax <= 1f + tol && st.yMin >= -tol && st.yMax <= 1f + tol, "whole building on screen: " + st);
             Assert.AreEqual(0.5f, c.center.x, 0.03f, "cannon horizontally centred");
-            var rs = CannonCameraRules.For(s.aim.transform.position, sb);
             Assert.Less(c.yMin, rs.anchorBuilding ? 0.12f : rs.bottomMargin + 0.06f, "cannon at the bottom (compact levels: just above the FIRE / HINT row)");
             Assert.True(c.width > 0.22f || c.height > 0.3f, "cannon big (portrait: wide, landscape editor: tall): " + c);
             Assert.Greater(st.center.y, c.center.y + 0.15f, "building above the cannon");

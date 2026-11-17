@@ -67,7 +67,8 @@ namespace Crashverse.Backend.Tests
                     var s = CannonCameraRules.ViewportRect(pose, a, b);
                     Assert.LessOrEqual(s.yMax, 1f - tm + 0.003f, "building top below the HUD: " + at);
                     Assert.GreaterOrEqual(s.yMin, -0.005f, "building base on screen: " + at);
-                    Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b)), CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
+                    if (CannonCameraRules.For(CannonRoot, b).goalPose) AssertGoalPose(pose, a, b, at);
+                    else Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b)), CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
                     if (arc != null) foreach (var p in arc)
                     {
                         if (p.x < CannonRoot.x + 4f) continue; // the first metres sit on the cannon itself
@@ -80,6 +81,28 @@ namespace Crashverse.Backend.Tests
             Assert.AreEqual(0.06f, CannonCameraRules.HudTopMargin(10000f, 0f, 160f), 1e-4f, "floor 0.06");
             Assert.AreEqual((63f + 112f * 420f / 160f) / 2340f, CannonCameraRules.HudTopMargin(2340f, 63f, 420f), 1e-5f);
             Assert.AreEqual((60f + 112f) / 1600f, CannonCameraRules.HudTopMargin(1600f, 60f, 0f), 1e-5f, "dpi 0 -> 160");
+        }
+
+        /// <summary>L1 v2 goal pose (design/L01_v2_spec.md §1): the measured eye and pitch, the goal's horizontal lens on phones, the
+        /// fortress whole on screen vertically and ~90-110% of the width (the rock islets run off both edges, as in the goal), the
+        /// cannon centred with its barrel top and muzzle on screen and its carriage cut by the bottom edge.</summary>
+        static void AssertGoalPose(CannonCameraPose pose, float a, Bounds b, string at)
+        {
+            var g = CannonCameraRules.Goal;
+            Assert.AreEqual(CannonRoot.x - g.back, pose.position.x, 1e-3f, "goal eye behind the cannon: " + at);
+            Assert.AreEqual(CannonRoot.y + g.height, pose.position.y, 1e-3f, "goal eye height: " + at);
+            Assert.AreEqual(0f, pose.position.z, 1e-3f, "goal eye on the firing line: " + at);
+            Assert.AreEqual(g.goalPitch, pose.rotation.eulerAngles.x, 0.05f, "goal pitch: " + at);
+            Assert.GreaterOrEqual(pose.fov, g.goalMinFov - 1e-3f, "never narrower than the goal frame: " + at);
+            var s = CannonCameraRules.ViewportRect(pose, a, b);
+            Assert.GreaterOrEqual(s.yMin, 0f, "fortress base (sea line) on screen: " + at);
+            Assert.LessOrEqual(s.yMax, 1f - g.topMargin + 0.003f, "fortress top on screen: " + at);
+            if (a < 0.7f) Assert.That(s.width, Is.InRange(0.75f, 1.2f), "the complex spans (nearly) the whole width, islets running off the edges: " + at);
+            var env = CannonCameraRules.Envelope(Cannon, CannonRoot, g); var c = CannonCameraRules.ViewportRect(pose, a, env);
+            Assert.AreEqual(0.5f, c.center.x, 0.02f, "cannon horizontally centred: " + at);
+            Assert.Less(c.yMin, 0.05f, "cannon carriage cut by the bottom edge: " + at);
+            Assert.That(c.yMax, Is.InRange(0.3f, 0.62f), "barrel top below the fortress base area: " + at);
+            Assert.Greater(s.center.y, c.center.y + 0.15f, "fortress above the cannon: " + at);
         }
 
         static Bounds LayoutBounds(LayoutData lay, Vector3 structureBase)
@@ -113,6 +136,7 @@ namespace Crashverse.Backend.Tests
                 {
                     var pose = CannonCameraRules.Solve(CannonRoot, b, a); n++;
                     string at = $"{id} @ aspect {a:F3} (fov {pose.fov:F1})";
+                    if (CannonCameraRules.For(CannonRoot, b).goalPose) { AssertGoalPose(pose, a, b, at); continue; }
                     Assert.True(CannonCameraRules.FullyVisible(pose, a, b), "whole building on screen: " + at);
                     Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b)), CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
                     var c = CannonCameraRules.ViewportRect(pose, a, CannonCameraRules.Envelope(Cannon, CannonRoot, CannonCameraRules.For(CannonRoot, b))); var s = CannonCameraRules.ViewportRect(pose, a, b);

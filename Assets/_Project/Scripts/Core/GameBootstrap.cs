@@ -208,7 +208,9 @@ namespace Crashverse.Core
             // User 2026-10-30 / Target UI §5: locked camera behind the cannon, framing the cannon (bottom centre) + the whole building
             var sb = StructureBounds(s, s.structureBase);
             // QA L1: the roof-top flag (KingdomTheme.FlagPole above the highest block) was cut off by the top of the frame
-            var above = new List<Vector3>(HintArcPoints(s) ?? new Vector3[0]) { new Vector3(sb.center.x, sb.max.y + CannonCameraRules.RoofFlagPole + 0.1f, sb.center.z) };
+            var above = new List<Vector3>(HintArcPoints(s) ?? new Vector3[0]);
+            // the goal-pose level (L1 v2) has its own turret flag inside the layout; no extra roof-top flag pole is dressed there
+            if (!CannonCameraRules.For(wreckerGo.transform.position, sb).goalPose) above.Add(new Vector3(sb.center.x, sb.max.y + CannonCameraRules.RoofFlagPole + 0.1f, sb.center.z));
             RunCamera.FrameBehindCannon(wreckerGo.transform.position, sb, above.ToArray());
             int fx = RenderMaterials.FixAll(_runRoot); if (fx > 0) Debug.LogWarning($"[BUG-23] run: {fx} renderers had no usable material");
             // #18/#20: PHYS_* ImpactEvents (Impact/Crack/Break/JointSnap/CollapseStart/End with pieceIds) on AnimEventBus.
