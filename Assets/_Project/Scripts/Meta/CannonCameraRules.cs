@@ -67,7 +67,8 @@ namespace Crashverse.Meta
         /// PM b22 QA (phones are taller than the 3:4 goal): the eye moved 1.2 m further back and 0.3 m up with a 14 deg pitch and a
         /// 37.5 deg-tan horizontal lens (75 deg vertical on 1080x2340), so the whole complex spans ~95% of the width, the tower top sits
         /// just under the HUD, the islet base near mid-screen and the world-scale cannon (rest aim 25 deg) below the crystal.
-        public static readonly Settings Goal = new Settings { back = 6.0f, height = 6.25f, goalPose = true, goalPitch = 18f, // PM b23: cannon in the bottom ~45%, its muzzle at ~55% from the top goalTanH = 0.3541f,
+        // PM b24: the fortress is the hero (~90% of the width, flag/turret may sit under the HUD), cannon top ~57% from the top
+        public static readonly Settings Goal = new Settings { back = 7.5f, height = 6.5f, goalPose = true, goalPitch = 15f, goalTanH = 0.3232f,
                                                               bottomMargin = -0.3f, topMargin = 0.06f, maxFov = 100f,
                                                               cannonScale = 1f, cannonRear = 1.8f, cannonTop = 2.6f };
         /// <summary>The goal pose is chosen by geometry: a wide (z ≥ 12 m) complex close to the cannon (centre &lt; 18 m).</summary>
@@ -193,17 +194,21 @@ namespace Crashverse.Meta
             var cam = cannonRoot - dir * s.back + Vector3.up * s.height;
             var rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(s.goalPitch, 0f, 0f);
             float fov = Mathf.Max(s.goalMinFov, 2f * Mathf.Atan(s.goalTanH / aspect) * Mathf.Rad2Deg);
+            // PM b24: the fortress may reach up under the HUD band (it only has to stay on screen); the hint arc stays below the HUD
             var tops = new System.Collections.Generic.List<Vector3>();
             for (int i = 0; i < 8; i++) tops.Add(Corner(structure, i));
-            if (extraAbove != null) foreach (var p in extraAbove) if (Vector3.Dot(p - cam, dir) >= 1f) tops.Add(p);
+            var arc = new System.Collections.Generic.List<Vector3>();
+            if (extraAbove != null) foreach (var p in extraAbove) if (Vector3.Dot(p - cam, dir) >= 1f) arc.Add(p);
             float limit = 1f - s.topMargin - 0.002f;
             var pose = new CannonCameraPose { position = cam, rotation = rot, fov = Mathf.Min(fov, s.maxFov) };
             for (int it = 0; it < 80 && pose.fov < s.maxFov; it++)
             {
                 float yMax = float.MinValue, yMin = float.MaxValue;
+                float aMax = float.MinValue;
                 foreach (var p in tops) { var v = ToViewport(pose, aspect, p); yMax = Mathf.Max(yMax, v.y); }
+                foreach (var p in arc) { var v = ToViewport(pose, aspect, p); aMax = Mathf.Max(aMax, v.y); }
                 yMin = ViewportRect(pose, aspect, structure).yMin;
-                if (yMax <= limit && yMin >= 0f) break;
+                if (yMax <= 0.998f && aMax <= limit && yMin >= 0f) break;
                 pose.fov = Mathf.Min(s.maxFov, pose.fov * 1.01f);
             }
             return pose;

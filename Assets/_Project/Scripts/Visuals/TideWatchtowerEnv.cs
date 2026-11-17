@@ -37,6 +37,7 @@ namespace Crashverse.Visuals
         public static void Build(Transform root, Vector3 cannon)
         {
             var go = new GameObject("TideWatchtowerEnv").transform; go.SetParent(root, false);
+            SeaLook();
             if (TwMesh.ChamferMats == null) TwMesh.ChamferMats = new System.Collections.Generic.HashSet<Material>();
             TwMesh.ChamferMats.Add(RailWood); TwMesh.ChamferMats.Add(Crate);
             var t = new TwMesh(); Deck(t, cannon); t.Build(go, "TwDeck", true);
@@ -51,6 +52,20 @@ namespace Crashverse.Visuals
             // the lantern's warm light on the rail and the deck
             var lg = new GameObject("LanternLight"); lg.transform.SetParent(go, false); lg.transform.position = V(-17.55f, 2.3f, 3.0f);
             var l = lg.AddComponent<Light>(); l.type = LightType.Point; l.color = new Color(1f, 0.82f, 0.4f); l.intensity = 3.5f; l.range = 4.5f; l.shadows = LightShadows.None;
+        }
+
+        /// <summary>PM b24: deeper, more saturated turquoise sea (goal water ~ RGB 2,161,197) with a scrolling wave normal map
+        /// (Tools/Blender/tide/make_water_normal.py -> T_TW_Water_N) and the shore foam kept.</summary>
+        static void SeaLook()
+        {
+            var w = KingdomMaterials.Water; if (w == null) return;
+            w.SetColor("_ShallowColor", new Color(0.0f, 0.60f, 0.64f));
+            w.SetColor("_MidColor", new Color(0.0f, 0.44f, 0.60f));
+            w.SetColor("_DeepColor", new Color(0.0f, 0.24f, 0.44f));
+            w.SetFloat("_Reflect", 0.30f); w.SetFloat("_Caustics", 0.18f); w.SetFloat("_Glint", 1.6f);
+            var n = Resources.Load<Texture2D>("Kingdom/Textures/T_TW_Water_N");
+            if (n != null) { w.SetTexture("_WaveTex", n); w.SetFloat("_WaveTile", 7f); w.SetFloat("_WaveNormal", 0.55f); }
+            Debug.Log("[Tide] sea look, wave normal " + (n != null ? "loaded" : "missing"));
         }
 
         /// <summary>Warm planks running away from the camera (0.35 m wide) from behind the camera to the rail at x -17.55, the rail of

@@ -95,6 +95,18 @@ namespace Crashverse.Visuals
             if (_rocks == null || _rocks.Length == 0) { t.Slab(m, tile, c, size, seed, jitter, rot); return; }
             t.Kit(m, tile, _rocks[(seed & 0x7fffffff) % _rocks.Length], c, size * 1.08f, rot);
         }
+        static Dictionary<string, Mesh> _roof;
+        /// <summary>Blender pagoda roofs (Tools/Blender/tide/build_roof.py -> Kingdom/Meshes/Tide_Roof): appends part_Tile/_Gold/_Timber
+        /// in spec coordinates; false when the bundle is missing (procedural HipRoof fallback).</summary>
+        static bool HeroRoof(TwMesh t, string part)
+        {
+            if (_roof == null) { _roof = CvMesh.Load("Kingdom/Meshes/Tide_Roof"); Debug.Log("[Tide] hero roof " + (_roof.ContainsKey("RoofL_Tile") ? "loaded" : "missing")); }
+            if (!_roof.TryGetValue(part + "_Tile", out var tile)) return false;
+            t.Kit(RoofTile, 1.2f, tile, Vector3.zero, Vector3.one);
+            if (_roof.TryGetValue(part + "_Gold", out var g)) t.Kit(Gold, 1f, g, Vector3.zero, Vector3.one);
+            if (_roof.TryGetValue(part + "_Timber", out var w)) t.Kit(Timber, 1f, w, Vector3.zero, Vector3.one);
+            return true;
+        }
         static Vector3 _off; // actual base - spec base
 
         /// <summary>Dresses every block of the Tide Watchtower layout. Returns the number of blocks dressed.</summary>
@@ -680,11 +692,13 @@ namespace Crashverse.Visuals
         static void MainRoof(TwMesh t, float zMin, float zMax, DestructibleBlock b)
         {
             // eaves 4.9 m wide at y 7.7 (x -5.0..-1.4, z -3.19..1.69), plateau under the turret at y 9.4; 5 tile rows (spec §4)
-            HipRoof(t, Rect.MinMaxRect(-5.0f, -3.19f, -1.4f, 1.69f), 7.7f, Rect.MinMaxRect(-3.8f, -1.62f, -2.6f, -0.38f), 9.4f, 5, zMin, zMax, 0.6f, 0.07f);
+            // PM b24: Blender pagoda roof (swept upturned corners, rolled tiles, gold hips/eave band/horns), procedural fallback
+            bool hero = HeroRoof(t, zMax > 0f ? "RoofL" : "RoofR");
+            if (!hero) HipRoof(t, Rect.MinMaxRect(-5.0f, -3.19f, -1.4f, 1.69f), 7.7f, Rect.MinMaxRect(-3.8f, -1.62f, -2.6f, -0.38f), 9.4f, 5, zMin, zMax, 0.6f, 0.07f);
             // soffit under the eaves out to the room walls
             void Soffit(params Vector3[] q) { var c = ClipZ(q, zMin, zMax); if (c != null) t.Poly(RoofUnder, 1f, c); }
-            float y = 7.69f;
-            Soffit(V(-5.0f, y, -3.19f), V(-1.4f, y, -3.19f), V(-1.4f, y, 1.69f), V(-5.0f, y, 1.69f));
+            float y = hero ? 7.6f : 7.69f; float ex0 = hero ? -5.15f : -5.0f, ex1 = hero ? -1.25f : -1.4f, ez0 = hero ? -3.35f : -3.19f, ez1 = hero ? 1.85f : 1.69f;
+            Soffit(V(ex0, y, ez0), V(ex1, y, ez0), V(ex1, y, ez1), V(ex0, y, ez1));
             if (zMax > 0f)
             {
                 // dormer_L on the front slope (z 0.0..0.78, y 8.15..8.83)
@@ -737,9 +751,12 @@ namespace Crashverse.Visuals
             foreach (var p in new[] { V(-3.6f, 0f, -1.45f), V(-2.8f, 0f, -1.45f), V(-3.6f, 0f, -0.55f), V(-2.8f, 0f, -0.55f) })
                 t.BoxMinMax(TimberLit, 1f, V(p.x - 0.05f, 9.84f, p.z - 0.05f), V(p.x + 0.05f, 10.13f, p.z + 0.05f));
             Flame(t, V(-3.5f, 9.84f, -1.2f), 0.2f, 0.06f); Flame(t, V(-3.5f, 9.84f, -0.75f), 0.2f, 0.06f);
-            HipRoof(t, Rect.MinMaxRect(-3.95f, -1.77f, -2.45f, -0.21f), 10.12f, Rect.MinMaxRect(-3.25f, -1.02f, -3.15f, -0.96f), 10.62f, 3, -99f, 99f, 0.3f, 0.05f);
-            t.Cyl(Gold, 1f, V(-3.2f, 10.6f, -0.99f), V(-3.2f, 10.95f, -0.99f), 0.05f, 0.0f, 6, true);
-            t.Sphere(Gold, 1f, V(-3.2f, 10.7f, -0.99f), Vector3.one * 0.07f, 6, 4);
+            if (!HeroRoof(t, "Turret"))
+            {
+                HipRoof(t, Rect.MinMaxRect(-3.95f, -1.77f, -2.45f, -0.21f), 10.12f, Rect.MinMaxRect(-3.25f, -1.02f, -3.15f, -0.96f), 10.62f, 3, -99f, 99f, 0.3f, 0.05f);
+                t.Cyl(Gold, 1f, V(-3.2f, 10.6f, -0.99f), V(-3.2f, 10.95f, -0.99f), 0.05f, 0.0f, 6, true);
+                t.Sphere(Gold, 1f, V(-3.2f, 10.7f, -0.99f), Vector3.one * 0.07f, 6, 4);
+            }
         }
 
         // ---------------- decorations on the rock ----------------

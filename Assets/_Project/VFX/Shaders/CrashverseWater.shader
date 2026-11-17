@@ -21,6 +21,9 @@ Shader "Crashverse/Water"
         _SkyRot ("Sky rotation (deg)", Float) = 200
         _Reflect ("Reflection strength", Range(0, 1)) = 0.55
         _Caustics ("Lagoon caustics", Range(0, 1)) = 0.35
+        [Normal] _WaveTex ("Wave normal map (optional)", 2D) = "bump" {}
+        _WaveTile ("Wave normal tile (m)", Float) = 9
+        _WaveNormal ("Wave normal strength (0 = off)", Range(0, 2)) = 0
     }
     SubShader
     {
@@ -39,9 +42,9 @@ Shader "Crashverse/Water"
             CBUFFER_START(UnityPerMaterial)
                 half4 _ShallowColor, _MidColor, _DeepColor, _HorizonColor, _FoamColor;
                 float4 _Island; float _ShoreFade, _FoamWidth, _WaveAmp, _WaveLen, _WaveSpeed, _Glint;
-                float4 _SkyTex_ST; float _SkyRot, _Reflect, _Caustics;
+                float4 _SkyTex_ST; float _SkyRot, _Reflect, _Caustics; float4 _WaveTex_ST; float _WaveTile, _WaveNormal;
             CBUFFER_END
-            TEXTURE2D(_SkyTex); SAMPLER(sampler_SkyTex);
+            TEXTURE2D(_SkyTex); SAMPLER(sampler_SkyTex); TEXTURE2D(_WaveTex); SAMPLER(sampler_WaveTex);
             struct A { float4 positionOS : POSITION; };
             struct V { float4 positionCS : SV_POSITION; float3 posWS : TEXCOORD0; float3 nWS : TEXCOORD1; half fog : TEXCOORD2; };
 
@@ -69,6 +72,14 @@ Shader "Crashverse/Water"
                 // fine ripples for the glint
                 float3 n = i.nWS;
                 n.xz += 0.06 * float2(sin(p.x * 2.1 + t * 2.3) + sin(p.z * 3.3 - t * 1.7), cos(p.z * 2.7 + t * 2.1) + cos(p.x * 3.9 + t * 1.3));
+                // optional scrolling wave normal map (two layers crossing), used by L1 Tide Watchtower
+                if (_WaveNormal > 0.001)
+                {
+                    float2 w0 = p.xz / max(0.5, _WaveTile);
+                    half3 n1 = UnpackNormal(SAMPLE_TEXTURE2D(_WaveTex, sampler_WaveTex, w0 + float2(0.031, 0.017) * t));
+                    half3 n2 = UnpackNormal(SAMPLE_TEXTURE2D(_WaveTex, sampler_WaveTex, w0 * 1.73 + float2(-0.023, 0.029) * t + 0.37));
+                    n.xz += (n1.xy + n2.xy) * 0.5 * _WaveNormal;
+                }
                 n = normalize(n);
                 float3 v = normalize(GetWorldSpaceViewDir(p));
                 float2 q = (p.xz - _Island.xy) / max(float2(0.1, 0.1), _Island.zw);
