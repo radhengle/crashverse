@@ -194,7 +194,7 @@ namespace Crashverse.Meta
             var cam = cannonRoot - dir * s.back + Vector3.up * s.height;
             var rot = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(s.goalPitch, 0f, 0f);
             float fov = Mathf.Max(s.goalMinFov, 2f * Mathf.Atan(s.goalTanH / aspect) * Mathf.Rad2Deg);
-            // PM b24: the fortress may reach up under the HUD band (it only has to stay on screen); the hint arc stays below the HUD
+            // the fortress top (layout blocks; the flag and finial may poke higher) and the hint arc stay below the HUD band
             var tops = new System.Collections.Generic.List<Vector3>();
             for (int i = 0; i < 8; i++) tops.Add(Corner(structure, i));
             var arc = new System.Collections.Generic.List<Vector3>();
@@ -208,7 +208,7 @@ namespace Crashverse.Meta
                 foreach (var p in tops) { var v = ToViewport(pose, aspect, p); yMax = Mathf.Max(yMax, v.y); }
                 foreach (var p in arc) { var v = ToViewport(pose, aspect, p); aMax = Mathf.Max(aMax, v.y); }
                 yMin = ViewportRect(pose, aspect, structure).yMin;
-                if (yMax <= 0.998f && aMax <= limit && yMin >= 0f) break;
+                if (yMax <= limit && aMax <= limit && yMin >= 0f) break;
                 pose.fov = Mathf.Min(s.maxFov, pose.fov * 1.01f);
             }
             return pose;
