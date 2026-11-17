@@ -379,6 +379,11 @@ jobs:
         with:
           name: crashverse-android-apk-release-unsigned
           path: rel
+      - name: ffmpeg for the timed L1 smash frames (screenrecord cut at fire +0.3/0.8/1.5/3/5 s)
+        if: matrix.rep == 1
+        run: |
+          command -v ffmpeg >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends ffmpeg >/dev/null; }
+          ffmpeg -version | head -1 || true
       - name: QA first-run flow (age gate → map → L1 → win → retry → fail)
         env:
           ALL_LEVEL_SHOTS: ${{ matrix.rep == 1 && '1' || '0' }} # rep 1 (API 34 + 36): screenshot L1-10 HUD framing

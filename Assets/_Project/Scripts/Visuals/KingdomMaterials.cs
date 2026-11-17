@@ -100,7 +100,7 @@ namespace Crashverse.Visuals
         public static Material Gold => Make("Gold", "T_K_Bronze", new Color(0.62f, 0.58f, 0.54f), 0.6f, 0.62f, new Vector2(3f, 3f)); // PM QA: aged bronze/brass, dull, darker recesses
         // PM QA 31 Oct (fix once, all levels): cannon barrel = smooth dark iron with subtle wear; bands = polished dark bronze, no noise map
         public static Material CannonIron => Studio(Make("CannonIron", null, new Color(0.14f, 0.17f, 0.23f), 0.85f, 0.3f, Vector2.one), new Color(0.9f, 1.05f, 1.3f), new Color(2.6f, 2.7f, 2.9f), new Color(0.03f, 0.03f, 0.035f)); // L1 QA 16 Nov: smooth dark blue-black cast iron (the cast-iron detail map read as cork/log)
-        public static Material CannonBronze => Studio(Make("CannonBronze", null, new Color(0.64f, 0.42f, 0.17f), 1f, 0.22f, Vector2.one), new Color(0.9f, 0.74f, 0.52f), new Color(1.7f, 1.3f, 0.8f), new Color(0.04f, 0.025f, 0.012f)); // PM 17 Nov (b14 QA): warmer, darker aged brass (b14 read saturated orange-yellow)
+        public static Material CannonBronze => Studio(Make("CannonBronze", null, new Color(0.50f, 0.33f, 0.14f), 1f, 0.22f, Vector2.one), new Color(0.75f, 0.72f, 0.70f), new Color(1.6f, 1.5f, 1.4f), new Color(0.03f, 0.02f, 0.01f)); // PM 17 Nov (b16 QA): darker, warmer bronze. The warm env x warm albedo doubled the saturation (orange-yellow); neutral env: mids ~(0.37,0.24,0.10), highlights ~(0.8,0.5,0.2)
         /// <summary>L1 QA 16 Nov: polished metal gets the GlossyPBR analytic studio environment (dark ground, hot horizon band, bright
         /// sky) instead of the flat grey reflect floor, so curved bands and barrels show bright highlights and dark reflections.</summary>
         static Material Studio(Material m, Color sky, Color horizon, Color ground)
@@ -112,7 +112,7 @@ namespace Crashverse.Visuals
             return m;
         }
         public static Material Iron => Make("Iron", "T_K_CastIron", new Color(1.1f, 1.1f, 1.1f), 0.5f, 0.66f, new Vector2(2f, 2f));
-        public static Material CarriageWood => Make("CarriageWood", "T_K_Wood", new Color(0.50f, 0.38f, 0.28f), 0f, 0.9f, Vector2.one); // weathered dark brown timber
+        public static Material CarriageWood => Make("CarriageWood", "T_K_Wood", new Color(0.66f, 0.48f, 0.32f), 0f, 0.85f, Vector2.one); // PM 17 Nov (b16 QA): warmer, lighter weathered timber so the cheeks and wheels separate from the iron barrel
         public static Material Bore => Make("Bore", null, new Color(0.02f, 0.02f, 0.025f), 0f, 1f, Vector2.one);
         public static Material FlagRed => Make("FlagRed", null, new Color(0.72f, 0.06f, 0.08f), 0f, 0.7f, Vector2.one);
 
@@ -152,11 +152,12 @@ namespace Crashverse.Visuals
                 if (sh == null || !sh.isSupported || t == null) return null;
                 t.wrapModeU = TextureWrapMode.Repeat; t.wrapModeV = TextureWrapMode.Clamp;
                 _sky = new Material(sh) { name = "MK_Sky" }; _sky.SetTexture("_MainTex", t);
-                _sky.SetFloat("_Rotation", 215f); _sky.SetFloat("_Exposure", 1.08f); _sky.SetFloat("_BottomElev", -8f); // rotation 215: the puffy low-cloud band ahead of the cannon
+                _sky.SetFloat("_Rotation", 0f); _sky.SetFloat("_Exposure", 1.08f); _sky.SetFloat("_BottomElev", -8f);
                 _sky.SetColor("_HorizonColor", HorizonColor);
-                // L1 QA 16 Nov (L01.jpg): the portrait view only saw the small low clouds; pull the big bright cumulus bank (elev 40-60 deg
-                // in the photo, straight ahead) down into the frame above the building
-                _sky.SetFloat("_ElevPow", 0.65f); _sky.SetFloat("_UScale", 3.8f); // PM 17 Nov (b14 QA): bright blue with several puffy cumulus (the low cloud band) instead of one huge hazy bank; Python-simulated (/workspace/p1/skysim.py)
+                // PM 17 Nov (b16 QA, L01.jpg): T_K_Sky is now a painted panorama (/workspace/p1/skygen.py): saturated blue with distinct
+                // puffy cumulus. It covers 72 deg of azimuth (_UScale 5, seam-free) and elev -8..90 with v = t^0.5, so the portrait
+                // view (elev 0-20 deg, ~30 deg wide) gets ~4 clouds at ~2x the texel density of the old photo.
+                _sky.SetFloat("_ElevPow", 0.5f); _sky.SetFloat("_UScale", 5f);
                 return _sky;
             }
         }

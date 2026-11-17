@@ -117,7 +117,7 @@ namespace Crashverse.Backend.Tests
                     Assert.True(CannonCameraRules.FullyVisible(pose, a, CannonCameraRules.MustShow(Cannon, CannonCameraRules.For(CannonRoot, b))), "whole cannon (above a concept-style bottom crop) on screen: " + at);
                     var c = CannonCameraRules.ViewportRect(pose, a, Cannon); var s = CannonCameraRules.ViewportRect(pose, a, b);
                     Assert.AreEqual(0.5f, c.center.x, 0.02f, "cannon horizontally centred: " + at);
-                    Assert.Less(c.yMin, 0.08f, "cannon at the bottom: " + at);
+                    Assert.Less(c.yMin, CannonCameraRules.For(CannonRoot, b).bottomMargin + 0.05f, "cannon at the bottom (compact levels: just above the FIRE / HINT row): " + at);
                     if (a < 0.7f) Assert.Greater(c.width, 0.28f, "cannon big (>= 28% of the width on phones): " + at); // tablets / 4:3 keep a smaller cannon
                     Assert.Less(c.yMax, 0.55f, "cannon stays in the lower part (barrel tip may reach the building base): " + at);
                     Assert.Greater(s.center.y, c.center.y + 0.15f, "building above the cannon: " + at);

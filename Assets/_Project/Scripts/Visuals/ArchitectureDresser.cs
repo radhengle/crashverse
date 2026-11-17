@@ -66,16 +66,18 @@ namespace Crashverse.Visuals
         static Material Rope => KingdomMaterials.Make("Rope", "T_K_Bark", new Color(0.95f, 0.85f, 0.62f), 0f, 0.9f, new Vector2(0.3f, 3f));
         static Material Bronze => KingdomMaterials.Make("Bronze", null, new Color(0.62f, 0.42f, 0.18f), 0.8f, 0.35f, Vector2.one);
         static Material Iron => KingdomMaterials.Iron;
+        /// <summary>PM 17 Nov (b16 QA, L01.jpg): stilts, frame braces and the ladder in lighter, sun-weathered timber (T_K_Wood alone reads near-black).</summary>
+        static Material Stilt => KingdomMaterials.Make("StiltTimber", "T_K_Planks", new Color(0.95f, 1.0f, 1.08f), 0f, 0.9f, Vector2.one);
         static Material Gap => KingdomMaterials.Make("BoardGap", "T_K_Wood", new Color(0.08f, 0.06f, 0.05f), 0f, 0.95f, Vector2.one);
         static Material PlanksWorn => KingdomMaterials.Make("PlanksWorn", "T_K_Planks", new Color(0.78f, 0.74f, 0.70f), 0f, 0.9f, Vector2.one); // sun-bleached boards
         // L1 QA 16 Nov (L01.jpg): weathered cabin boards in several tones, with grime and rot near the base
         // L1 QA 16 Nov (b): T_K_Planks/T_K_Wood are saturated orange-brown; cool tints pull the cabin to L01.jpg's grey-brown aged wood.
-        static Material CabinBoard => KingdomMaterials.Make("CabinBoard", "T_K_Planks", new Color(0.58f, 0.66f, 0.78f), 0f, 0.92f, Vector2.one);
-        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(0.72f, 0.84f, 0.98f), 0f, 0.94f, Vector2.one);
-        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.45f, 0.50f, 0.58f), 0f, 0.95f, Vector2.one);
-        static Material CabinBoardRot => KingdomMaterials.Make("CabinBoardRot", "T_K_Wood", new Color(0.42f, 0.57f, 0.75f), 0f, 0.97f, Vector2.one);
-        static Material CabinGrime => KingdomMaterials.Make("CabinGrime", "T_K_Wood", new Color(0.30f, 0.40f, 0.52f), 0f, 0.98f, Vector2.one);
-        static Material CarvedTrim => KingdomMaterials.Make("CarvedTrim", "T_K_Wood", new Color(0.55f, 0.68f, 0.85f), 0f, 0.85f, Vector2.one);
+        static Material CabinBoard => KingdomMaterials.Make("CabinBoard", "T_K_Planks", new Color(1.0f, 1.1f, 1.25f), 0f, 0.92f, Vector2.one);
+        static Material CabinBoardWorn => KingdomMaterials.Make("CabinBoardWorn", "T_K_Planks", new Color(1.25f, 1.35f, 1.5f), 0f, 0.94f, Vector2.one);
+        static Material CabinBoardDark => KingdomMaterials.Make("CabinBoardDark", "T_K_Planks", new Color(0.78f, 0.84f, 0.94f), 0f, 0.95f, Vector2.one);
+        static Material CabinBoardRot => KingdomMaterials.Make("CabinBoardRot", "T_K_Wood", new Color(0.95f, 1.1f, 1.3f), 0f, 0.97f, Vector2.one);
+        static Material CabinGrime => KingdomMaterials.Make("CabinGrime", "T_K_Wood", new Color(0.6f, 0.68f, 0.8f), 0f, 0.98f, Vector2.one);
+        static Material CarvedTrim => KingdomMaterials.Make("CarvedTrim", "T_K_Wood", new Color(1.2f, 1.3f, 1.45f), 0f, 0.85f, Vector2.one);
 
         public static HashSet<DestructibleBlock> Dressed = new HashSet<DestructibleBlock>();
 
@@ -148,7 +150,7 @@ namespace Crashverse.Visuals
             // L01.jpg: weathered VERTICAL boards with dark gaps between them, each a little crooked / uneven at the ends,
             // over a dark inner core (the gaps read as shadow, never see-through)
             k.Box(Gap, Vector3.zero, s - Vector3.one * 0.1f, 1.2f);
-            float bw = 0.21f, gap = 0.045f; /* wider dark gaps: readable at ~25 m */ int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
+            float bw = 0.21f, gap = 0.07f; /* wider dark gaps: readable at ~25 m */ int seed = Mathf.RoundToInt(s.x * 97f + s.y * 31f + s.z * 13f);
             void Boards(Vector3 normal, Vector3 along, float width, float outAt)
             {
                 int n = Mathf.Max(3, Mathf.RoundToInt((width - 0.2f) / (bw + gap))); float step = (width - 0.2f) / n;
@@ -158,10 +160,10 @@ namespace Crashverse.Visuals
                     float j0 = ((h & 255) / 255f - 0.5f), j1 = (((h >> 8) & 255) / 255f - 0.5f), j2 = (((h >> 16) & 255) / 255f - 0.5f);
                     float len = s.y * (0.97f + 0.05f * j1), dy = 0.03f * j2 - (s.y - len) * 0.5f;
                     var c = normal * (outAt + 0.018f * j1) + along * (-(width - 0.2f) * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
-                    var rot = Quaternion.AngleAxis(5.5f * j0, normal) * Quaternion.AngleAxis(2.5f * j2, along); // crooked boards (PM 17 Nov: more rickety)
+                    var rot = Quaternion.AngleAxis(11f * j0, normal) * Quaternion.AngleAxis(4f * j2, along); // crooked boards (b16 QA: readable at phone scale)
                     uint h2 = h * 2654435761u; float j3 = ((h2 >> 9) & 255) / 255f, j4 = ((h2 >> 19) & 255) / 255f;
                     var mat = j1 > 0.32f ? CabinBoardWorn : j1 < -0.3f ? CabinBoardDark : j3 > 0.86f ? CabinBoardRot : CabinBoard;
-                    bool broken = j4 > 0.72f && i > 0 && i < n - 1; // L1 QA: a few snapped boards with the dark gap showing through
+                    bool broken = j4 > 0.62f && i > 0 && i < n - 1; // L1 QA: a few snapped boards with the dark gap showing through
                     if (broken)
                     {
                         float keep = len * (0.45f + 0.2f * j3);
@@ -315,25 +317,44 @@ namespace Crashverse.Visuals
             float drop = self.transform.position.y - hy - ground;
             if (drop > 0.6f)
             {
+                // PM 17 Nov (b16 QA, L01.jpg): an open timber frame under the platform: splayed log legs, X braces on every face and a
+                // mid-height girt, in lighter weathered timber so it reads as a frame (not a dark mass) at phone scale
+                var legs = new List<Vector3>();
                 foreach (float x in new[] { -hx + 0.15f, hx - 0.15f })
                     foreach (float z in new[] { -hz + 0.2f, hz - 0.2f, 0f })
                     {
-                        k.Log(Timber, new Vector3(x, -hy, z), new Vector3(x * 1.08f, -hy - drop, z * 1.04f), 0.11f);
+                        k.Log(Stilt, new Vector3(x, -hy, z), new Vector3(x * 1.08f, -hy - drop, z * 1.04f), 0.12f);
+                        legs.Add(new Vector3(x, 0f, z));
                     }
-                // X braces on the cannon-facing side
-                foreach (float sg in new[] { -1f, 1f })
+                Vector3 Leg(float x, float z, float f) => new Vector3(x * (1f + 0.08f * f), -hy - drop * f, z * (1f + 0.04f * f));
+                void Cross(float x0, float z0, float x1, float z1)
                 {
-                    k.Log(Timber, new Vector3(-hx + 0.15f, -hy - drop * 0.15f, sg * (hz - 0.2f)), new Vector3(-hx + 0.15f, -hy - drop * 0.85f, 0f), 0.05f);
-                    k.Log(Timber, new Vector3(-hx + 0.15f, -hy - drop * 0.85f, sg * (hz - 0.2f)), new Vector3(-hx + 0.15f, -hy - drop * 0.15f, 0f), 0.05f);
+                    k.Log(Stilt, Leg(x0, z0, 0.12f), Leg(x1, z1, 0.88f), 0.055f);
+                    k.Log(Stilt, Leg(x0, z0, 0.88f), Leg(x1, z1, 0.12f), 0.055f);
+                    k.Log(Stilt, Leg(x0, z0, 0.5f), Leg(x1, z1, 0.5f), 0.05f); // girt
                 }
-                // ladder up the front
-                float lz = hz * 0.55f;
-                foreach (float dz in new[] { -0.25f, 0.25f }) k.Log(Timber, new Vector3(-hx - 0.7f, -hy - drop, lz + dz), new Vector3(-hx - 0.05f, hy + 0.6f, lz + dz), 0.045f);
-                float lh = drop + s.y + 0.6f;
-                for (float y = 0.3f; y < lh - 0.2f; y += 0.32f)
+                float fx = -hx + 0.15f, bx = hx - 0.15f, zl = -hz + 0.2f, zr = hz - 0.2f;
+                Cross(fx, zl, fx, 0f); Cross(fx, 0f, fx, zr);   // cannon-facing side
+                Cross(bx, zl, bx, 0f); Cross(bx, 0f, bx, zr);   // back
+                Cross(fx, zl, bx, zl); Cross(fx, zr, bx, zr);   // both ends
+                // one big leaning ladder up the front-right of the right-most platform (L01.jpg), thick enough to read on a phone
+                bool rightMost = true; var me = self.transform.position;
+                foreach (var o in blocks)
                 {
-                    float f = y / lh; var p = Vector3.Lerp(new Vector3(-hx - 0.7f, -hy - drop, lz), new Vector3(-hx - 0.05f, hy + 0.6f, lz), f);
-                    k.Log(Timber, p + Vector3.back * 0.25f, p + Vector3.forward * 0.25f, 0.03f);
+                    if (o == null || o == self) continue; var os = o.transform.localScale; var op = o.transform.position;
+                    if (os.y <= 0.55f && os.x >= 1.2f && os.z >= 1.2f && Mathf.Abs(op.y - me.y) < 0.3f && Mathf.Abs(op.x - me.x) < 1.5f && op.z > me.z + 0.5f) { rightMost = false; break; }
+                }
+                if (rightMost)
+                {
+                    float lz = hz * 0.35f, foot = -hx - 1.25f;
+                    var lo = new Vector3(foot, -hy - drop, lz); var hi = new Vector3(-hx - 0.05f, hy + 0.75f, lz);
+                    foreach (float dz in new[] { -0.3f, 0.3f }) k.Log(Stilt, lo + Vector3.forward * dz, hi + Vector3.forward * dz, 0.065f);
+                    float lh = drop + s.y + 0.75f;
+                    for (float y = 0.3f; y < lh - 0.15f; y += 0.34f)
+                    {
+                        var p = Vector3.Lerp(lo, hi, y / lh);
+                        k.Log(Stilt, p + Vector3.back * 0.33f, p + Vector3.forward * 0.33f, 0.045f);
+                    }
                 }
             }
             return true;
@@ -385,7 +406,7 @@ namespace Crashverse.Visuals
         static bool Post(Builder k, Vector3 s)
         {
             float r = Mathf.Min(s.x, s.z) * 0.45f;
-            k.Log(Timber, new Vector3(0f, -s.y * 0.5f, 0f), new Vector3(0f, s.y * 0.5f, 0f), r);
+            k.Log(Stilt, new Vector3(0f, -s.y * 0.5f, 0f), new Vector3(0f, s.y * 0.5f, 0f), r);
             k.Log(Rope, new Vector3(0f, s.y * 0.2f, 0f), new Vector3(0f, s.y * 0.2f + 0.12f, 0f), r + 0.02f);
             return true;
         }
@@ -398,18 +419,18 @@ namespace Crashverse.Visuals
             var along = alongZ ? Vector3.forward : Vector3.right; var normal = alongZ ? Vector3.left : Vector3.back;
             k.Box(Gap, Vector3.zero, alongZ ? new Vector3(thick * 0.5f, s.y - 0.1f, width - 0.06f) : new Vector3(width - 0.06f, s.y - 0.1f, thick * 0.5f), 1.2f);
             int seed = 0; foreach (char ch in id ?? "") seed = seed * 31 + ch;
-            float bw = 0.2f, gap = 0.05f; int n = Mathf.Max(3, Mathf.RoundToInt(width / (bw + gap))); float step = width / n;
+            float bw = 0.2f, gap = 0.075f; /* b16 QA: wider dark gaps, readable at phone scale */ int n = Mathf.Max(3, Mathf.RoundToInt(width / (bw + gap))); float step = width / n;
             foreach (float side in new[] { 1f, -1f })
                 for (int i = 0; i < n; i++)
                 {
                     uint h = (uint)(seed * 73856093 ^ (i + 1) * 19349663 ^ (side > 0 ? 83492791 : 49979687));
                     float j0 = (h & 255) / 255f - 0.5f, j1 = ((h >> 8) & 255) / 255f - 0.5f, j2 = ((h >> 16) & 255) / 255f - 0.5f, j3 = ((h >> 24) & 255) / 255f;
-                    if (side > 0 && j3 > 0.9f && i > 0 && i < n - 1) continue; // a missing board: the dark gap shows through
+                    if (side > 0 && j3 > 0.86f && i > 0 && i < n - 1) continue; // a missing board: the dark gap shows through
                     float len = s.y * (0.93f + 0.1f * j1), dy = 0.05f * j2 - (s.y - len) * 0.5f;
                     var c = normal * side * (thick * 0.5f - 0.02f + 0.02f * j1) + along * (-width * 0.5f + step * (i + 0.5f)) + Vector3.up * dy;
-                    var rot = Quaternion.AngleAxis(6f * j0, normal) * Quaternion.AngleAxis(2.5f * j2, along);
+                    var rot = Quaternion.AngleAxis(12f * j0, normal) * Quaternion.AngleAxis(4f * j2, along); // b16 QA: up to ~6 deg read as straight at phone scale
                     var mat = j1 > 0.3f ? CabinBoardWorn : j1 < -0.28f ? CabinBoardDark : j3 > 0.8f ? CabinBoardRot : CabinBoard;
-                    if (side > 0 && j3 > 0.74f && j3 <= 0.9f && i > 0 && i < n - 1) // snapped board: short, kinked, jagged stub at the base
+                    if (side > 0 && j3 > 0.64f && j3 <= 0.86f && i > 0 && i < n - 1) // snapped board: short, kinked, jagged stub at the base
                     {
                         float keep = len * (0.4f + 0.25f * j1 + 0.12f); c += Vector3.up * ((len - keep) * 0.5f); len = keep; rot = rot * Quaternion.AngleAxis(8f + 8f * j2, normal);
                         k.Box(CabinBoardRot, c - Vector3.up * (len * 0.5f + 0.35f), alongZ ? new Vector3(0.06f, 0.35f, step - gap) : new Vector3(step - gap, 0.35f, 0.06f), 1.1f, Quaternion.AngleAxis(-9f, normal));

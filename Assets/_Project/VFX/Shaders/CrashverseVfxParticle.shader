@@ -44,6 +44,8 @@ Shader "Crashverse/VfxParticle"
             {
                 half4 c = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, i.uv) * i.color;
                 clip(c.a - _AlphaClip);
+                // additive (One One): weight by alpha, or sheets whose transparent texels are not black (the puff flipbook) add square cards
+                if (_SrcBlend < 1.5) c.rgb *= c.a;
                 c.rgb *= _Intensity;
                 c.rgb = MixFog(c.rgb, i.fog);
                 return c;

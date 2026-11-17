@@ -16,10 +16,11 @@ namespace Crashverse.Visuals
     public class KingdomFx : MonoBehaviour
     {
         public static KingdomFx Instance { get; private set; }
-        ParticleSystem _planks, _sparks, _fire, _smoke, _ball, _ring, _blast;
+        ParticleSystem _planks, _sparks, _fire, _smoke, _ball, _ring, _blast, _glow, _core;
         struct Burn { public Vector3 at; public float until, next; public bool column; }
         readonly List<Burn> _burns = new List<Burn>();
         readonly List<Material> _ownedMaterials = new List<Material>();
+        readonly List<Texture2D> _ownedTextures = new List<Texture2D>();
         float _scale = 1f; System.Random _rng = new System.Random(7);
 
         public static KingdomFx Create(Transform parent, bool low)
@@ -37,6 +38,8 @@ namespace Crashverse.Visuals
             // native material accumulation when players retry levels or move between campaign stages.
             foreach (var m in _ownedMaterials) if (m != null) Destroy(m);
             _ownedMaterials.Clear();
+            foreach (var tx in _ownedTextures) if (tx != null) Destroy(tx);
+            _ownedTextures.Clear();
         }
 
         Material Mat(VfxAssets a, Texture2D tex, bool add, Color tint, float intensity)
@@ -73,8 +76,24 @@ namespace Crashverse.Visuals
             var rot = _planks.rotationOverLifetime; rot.enabled = true; rot.separateAxes = true;
             rot.x = new ParticleSystem.MinMaxCurve(-8f, 8f); rot.y = new ParticleSystem.MinMaxCurve(-6f, 6f); rot.z = new ParticleSystem.MinMaxCurve(-8f, 8f);
 
-            _sparks = Sys("Sparks", Mat(a, a.sparkStreak, true, new Color(1f, 0.5f, 0.12f), 1.7f), 220, 0.9f, ParticleSystemRenderMode.Stretch, false); // b14 QA: the 2.5x pale tint read as white streaks on the bright sky
-            var sr = _sparks.GetComponent<ParticleSystemRenderer>(); sr.velocityScale = 0.06f; sr.lengthScale = 1.5f;
+            // PM 17 Nov (b16 QA): additive sparks summed to white on the bright sky. The streaks are alpha-blended hot yellow -> deep orange
+            // (keeps its colour on any background); the additive glow comes from a soft halo layer (_glow) kept below white.
+            _sparks = Sys("Sparks", Mat(a, a.sparkStreak, false, Color.white, 1.35f), 220, 0.9f, ParticleSystemRenderMode.Stretch, false);
+            var sr = _sparks.GetComponent<ParticleSystemRenderer>(); sr.velocityScale = 0.06f; sr.lengthScale = 1.5f; sr.sortingOrder = 3;
+            var spc = _sparks.colorOverLifetime; spc.enabled = true; spc.color = Grad(new Color(1f, 0.88f, 0.35f), new Color(1f, 0.38f, 0.04f), 1f, 0f);
+            var glowTex = SoftDot(); _ownedTextures.Add(glowTex);
+            _glow = Sys("FireballHalo", Mat(a, glowTex, true, new Color(1f, 0.42f, 0.08f), 0.55f), 40, 0f, ParticleSystemRenderMode.Billboard, false);
+            var gc = _glow.colorOverLifetime; gc.enabled = true; gc.color = Grad(new Color(1f, 0.6f, 0.2f), new Color(1f, 0.3f, 0.05f), 1f, 0f);
+            var gs = _glow.sizeOverLifetime; gs.enabled = true; gs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.6f, 1f, 1.25f));
+            _glow.GetComponent<ParticleSystemRenderer>().sortingOrder = 0;
+            _core = Sys("FireballHotCore", Mat(a, glowTex, false, Color.white, 1f), 40, 0f, ParticleSystemRenderMode.Billboard, false);
+            var cc = _core.colorOverLifetime; cc.enabled = true;
+            var cg = new Gradient();
+            cg.SetKeys(new[] { new GradientColorKey(new Color(1f, 0.97f, 0.8f), 0f), new GradientColorKey(new Color(1f, 0.8f, 0.3f), 0.45f), new GradientColorKey(new Color(1f, 0.45f, 0.08f), 1f) },
+                       new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.9f, 0.5f), new GradientAlphaKey(0f, 1f) });
+            cc.color = cg;
+            var cs = _core.sizeOverLifetime; cs.enabled = true; cs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.7f, 1f, 1.2f));
+            _core.GetComponent<ParticleSystemRenderer>().sortingOrder = 2;
             _fire = Sys("Fire", Mat(a, a.puffFlipbook, true, new Color(1f, 0.55f, 0.15f), 2.2f), 140, -0.15f, ParticleSystemRenderMode.Billboard, true);
             var fc = _fire.colorOverLifetime; fc.enabled = true; fc.color = Grad(new Color(1f, 0.85f, 0.4f), new Color(1f, 0.25f, 0.05f), 1f, 0f);
             var fs = _fire.sizeOverLifetime; fs.enabled = true; fs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.6f, 1f, 1.3f));
@@ -91,12 +110,28 @@ namespace Crashverse.Visuals
             xg.SetKeys(new[] { new GradientColorKey(new Color(1f, 0.85f, 0.4f), 0f), new GradientColorKey(new Color(1f, 0.42f, 0.06f), 0.3f), new GradientColorKey(new Color(0.22f, 0.17f, 0.14f), 1f) },
                        new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.95f, 0.5f), new GradientAlphaKey(0f, 1f) });
             xc.color = xg;
+            _blast.GetComponent<ParticleSystemRenderer>().sortingOrder = 1;
             var xs = _blast.sizeOverLifetime; xs.enabled = true; xs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.45f, 1f, 1.5f));
             var bs = _ball.sizeOverLifetime; bs.enabled = true; bs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.4f, 1f, 1.6f));
             _ring = Sys("Shockwave", Mat(a, a.ring, true, new Color(1f, 0.85f, 0.6f), 2f), 4, 0f, ParticleSystemRenderMode.HorizontalBillboard, false);
             var rc = _ring.colorOverLifetime; rc.enabled = true; rc.color = Grad(Color.white, new Color(1f, 0.6f, 0.3f), 1f, 0f);
             var rs = _ring.sizeOverLifetime; rs.enabled = true; rs.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 0.05f, 1f, 1f));
-            foreach (var p in new[] { _planks, _sparks, _fire, _smoke, _ball, _ring, _blast }) p.Play();
+            foreach (var p in new[] { _planks, _sparks, _fire, _smoke, _ball, _ring, _blast, _glow, _core }) p.Play();
+        }
+
+        /// <summary>64x64 soft radial dot (premultiplied-friendly: rgb = alpha = smooth falloff) for the fireball halo and hot core.</summary>
+        static Texture2D SoftDot()
+        {
+            const int N = 64; var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { name = "T_VFX_SoftDot", wrapMode = TextureWrapMode.Clamp };
+            var px = new Color32[N * N];
+            for (int y = 0; y < N; y++)
+                for (int x = 0; x < N; x++)
+                {
+                    float dx = (x + 0.5f) / N * 2f - 1f, dy = (y + 0.5f) / N * 2f - 1f; float r = Mathf.Sqrt(dx * dx + dy * dy);
+                    float f = Mathf.Clamp01(1f - r); f = f * f * (3f - 2f * f); byte b = (byte)(f * 255f);
+                    px[y * N + x] = new Color32(b, b, b, b);
+                }
+            tex.SetPixels32(px); tex.Apply(false, true); return tex;
         }
 
         static Gradient Grad(Color a, Color b, float a0, float a1)
@@ -153,6 +188,8 @@ namespace Crashverse.Visuals
         /// <summary>The hidden core: a huge fireball, a ground shockwave, sparks, a storm of planks and a smoke column.</summary>
         public void Core(Vector3 at)
         {
+            Emit(_glow, at, N(6), 0.6f, 0.2f, 1f, 10f, 13f, 0.6f, 0.9f);
+            Emit(_core, at, N(12), 0.5f, 0.3f, 2f, 2f, 3.2f, 0.3f, 0.55f);
             Emit(_ball, at, N(36), 0.9f, 1.5f, 5f, 2.2f, 4.2f, 0.55f, 1.0f);
             Emit(_sparks, at, N(80), 0.4f, 8f, 18f, 0.08f, 0.16f, 0.5f, 1.2f);
             EmitPlanks(at, N(40), 14f);
@@ -176,6 +213,8 @@ namespace Crashverse.Visuals
             // spinning plank chunks under gravity, a dust ring on the ground, a lingering smoke column and a short fire.
             // L1: the derived practice hint lands on the stilt post (the line that wins L1), so the burst is sized to engulf the deck and cabin base.
             bool onStructure = at.y > 0.4f;
+            Emit(_glow, at, N(5), 0.4f, 0.2f, 0.8f, 7f, 9.5f, 0.5f, 0.8f);      // soft bloom-like halo around the blast
+            Emit(_core, at, N(9), 0.35f, 0.3f, 1.5f, 1.4f, 2.4f, 0.25f, 0.45f); // glowing yellow-white core
             Emit(_blast, at, N(28), 0.7f, 1.5f, 5.5f, 2.4f, 4.2f, 0.7f, 1.2f);
             Emit(_ball, at, N(26), 0.6f, 2.0f, 6.5f, 2.0f, 3.8f, 0.45f, 0.85f);
             Emit(_sparks, at, N(150), 0.3f, 9f, 22f, 0.1f, 0.2f, 0.5f, 1.3f, 1.2f);

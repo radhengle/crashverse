@@ -301,7 +301,7 @@
     1.0
    ],
    "sup": [
-    "deckC"
+    "hutF2"
    ],
    "joint": false,
    "role": "wall",
@@ -353,7 +353,7 @@
     1.0
    ],
    "sup": [
-    "deckC"
+    "hutF2"
    ],
    "joint": false,
    "role": "wall",
@@ -535,11 +535,7 @@
     1.6
    ],
    "sup": [
-    "hutF1",
-    "hutF2",
-    "hutSL1",
-    "hutSL2",
-    "hutB1"
+    "hutF1"
    ],
    "joint": false,
    "role": "roof",
@@ -565,11 +561,7 @@
     1.6
    ],
    "sup": [
-    "hutF2",
-    "hutF3",
-    "hutSR1",
-    "hutSR2",
-    "hutB2"
+    "hutF3"
    ],
    "joint": false,
    "role": "roof",
