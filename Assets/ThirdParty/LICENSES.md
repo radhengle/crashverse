@@ -61,5 +61,7 @@ The following meshes in `Resources/Kingdom/Meshes/` are original work. Each was 
 - `Tide_Kit.bytes`: built by `Tools/Blender/tide/build_kit.py` (bevelled stones and faceted rocks).
 - `Tide_Cliffs.bytes`: built by `Tools/Blender/tide/build_cliffs.py`.
 - `Tide_Castle.bytes`: built by `Tools/Blender/tide/build_castle.py`.
+- `Tide_Roof.bytes`: built by `Tools/Blender/tide/build_roof.py` (pagoda main roof halves and two-tier turret roof).
+- `Textures/T_TW_Water_N.jpg`: original procedural wave normal map from `Tools/Blender/tide/make_water_normal.py` (no third-party source).
 
 These meshes are textured at runtime with the CC0 sets listed above.

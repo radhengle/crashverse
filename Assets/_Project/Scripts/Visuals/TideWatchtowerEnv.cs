@@ -11,10 +11,10 @@ namespace Crashverse.Visuals
     {
         static Vector3 V(float x, float y, float z) => new Vector3(x, y, z);
         static Material M(string k, string tex, Color c, float metal = 0f, float rough = 0.9f, Color emission = default) => KingdomMaterials.Make("Tw" + k, tex, c, metal, rough, Vector2.one, emission);
-        static Material DeckLit => M("DeckLit", "T_TW_Deck", new Color(0.74f, 0.62f, 0.68f));   // PM b22: dark brown #8A503C lit
-        static Material DeckMid => M("DeckMid", "T_TW_Deck", new Color(0.54f, 0.45f, 0.50f));   // #5A3022
+        static Material DeckLit => M("DeckLit", "T_TW_Deck", new Color(0.66f, 0.54f, 0.58f));   // PM b24 darker; PM b22: dark brown #8A503C lit
+        static Material DeckMid => M("DeckMid", "T_TW_Deck", new Color(0.48f, 0.39f, 0.43f));   // #5A3022
         static Material DeckGap => M("DeckGap", null, new Color(0.10f, 0.05f, 0.035f), 0f, 1f);     // #351912
-        static Material RailWood => M("RailWood", "T_TW_Timber", new Color(0.82f, 0.68f, 0.68f));
+        static Material RailWood => M("RailWood", "T_TW_Timber", new Color(0.70f, 0.57f, 0.58f));
         static Material Brass => M("Brass", null, new Color(0.80f, 0.56f, 0.24f), 0.4f, 0.4f);
         static Material LanternGlow => M("LanternGlow", null, new Color(1f, 0.94f, 0.24f), 0f, 1f, new Color(5.0f, 4.0f, 1.1f)); // #FEF03C
         static Material OrangeStave => M("OrangeStave", "T_TW_Deck", new Color(1.55f, 1.10f, 0.70f));  // #D57321

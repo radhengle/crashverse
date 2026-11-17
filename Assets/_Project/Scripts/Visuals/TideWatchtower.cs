@@ -41,9 +41,9 @@ namespace Crashverse.Visuals
         internal static Material Moss => M("Moss", "T_TW_Grass", new Color(1.15f, 1.15f, 1.1f));
         internal static Material Fern => M("Fern", null, new Color(0.30f, 0.55f, 0.12f), 0f, 0.7f);
         internal static Material Foam => M("Foam", null, new Color(0.93f, 0.97f, 1.0f), 0f, 0.6f, new Color(0.18f, 0.2f, 0.22f));
-        internal static Material Timber => M("Timber", "T_TW_Timber", new Color(0.70f, 0.64f, 0.64f));     // dark timber #361C14 .. lit #AF612C
-        internal static Material TimberLit => M("TimberLit", "T_TW_Deck", new Color(0.78f, 0.66f, 0.64f));
-        internal static Material Plank => M("Plank", "T_TW_Deck", new Color(0.70f, 0.60f, 0.60f));
+        internal static Material Timber => M("Timber", "T_TW_Timber", new Color(0.58f, 0.50f, 0.52f));     // PM b24: darker, less orange // dark timber #361C14 .. lit #AF612C
+        internal static Material TimberLit => M("TimberLit", "T_TW_Deck", new Color(0.64f, 0.52f, 0.52f));
+        internal static Material Plank => M("Plank", "T_TW_Deck", new Color(0.58f, 0.48f, 0.49f));
         internal static Material Iron => M("Iron", null, new Color(0.16f, 0.16f, 0.18f), 0.5f, 0.55f);
         internal static Material Gold => M("Gold", null, new Color(0.86f, 0.60f, 0.27f), 0.35f, 0.45f);
         internal static Material RoofTile => M("RoofTile", "T_TW_Roof", new Color(1.05f, 0.78f, 0.78f), 0f, 0.6f);     // PM b22: saturated red   // #E15A43
@@ -56,7 +56,7 @@ namespace Crashverse.Visuals
         internal static Material BoneDark => M("BoneDark", null, new Color(0.62f, 0.38f, 0.22f), 0f, 0.8f);     // #C67B48
         internal static Material Socket => M("Socket", null, new Color(0.05f, 0.02f, 0.02f), 0f, 1f);
         internal static Material EyeGlow => M("EyeGlow", null, new Color(0.9f, 0.1f, 0.05f), 0f, 0.5f, new Color(2.4f, 0.25f, 0.1f));
-        internal static Material Crystal => M("Crystal", null, new Color(0.91f, 0.09f, 0.18f), 0f, 0.25f, new Color(3.2f, 0.18f, 0.30f)); // #E9172D
+        internal static Material Crystal => M("Crystal", null, new Color(0.91f, 0.09f, 0.18f), 0f, 0.25f, new Color(5.0f, 0.30f, 0.45f)); // #E9172D
         internal static Material CrystalDark => M("CrystalDark", null, new Color(0.52f, 0.03f, 0.13f), 0f, 0.3f, new Color(0.75f, 0.02f, 0.08f)); // #840822
         internal static Material CrystalCore => M("CrystalCore", null, new Color(0.98f, 0.66f, 0.62f), 0f, 0.3f, new Color(3.2f, 1.6f, 1.0f)); // #F9A99D
         internal static Material Fire => M("Fire", null, new Color(1f, 0.45f, 0.08f), 0f, 1f, new Color(4.2f, 1.6f, 0.25f));
@@ -187,7 +187,7 @@ namespace Crashverse.Visuals
         static void Lights()
         {
             // the crystal's red glow on the arch interior and a warm fire light in the gallery room (spec §4)
-            if (_by.TryGetValue("crystal", out var cr)) PointLight(cr.transform, "CrystalGlow", new Color(1f, 0.16f, 0.12f), 3.2f, 5.5f, new Vector3(-4.2f, 1.9f, -0.3f));
+            if (_by.TryGetValue("crystal", out var cr)) PointLight(cr.transform, "CrystalGlow", new Color(1f, 0.16f, 0.12f), 5.5f, 7f, new Vector3(-4.2f, 1.9f, -0.3f));
             if (_by.TryGetValue("roomL", out var rm)) PointLight(rm.transform, "GalleryFire", new Color(1f, 0.6f, 0.25f), 2.4f, 5f, new Vector3(-4.6f, 7.3f, -0.8f));
         }
 
@@ -489,7 +489,10 @@ namespace Crashverse.Visuals
             Masonry(t, -4.9f, 3.65f, 4.0f, -1.49f, 0.83f, true, 2.13f);
             t.BoxMinMax(ArchInside, 1f, V(-4.9f, 3.63f, -1.49f), V(-2.75f, 3.66f, 0.83f));
             Voussoir(t, 4);
-            Skull(t);
+            // PM b24: the horned skull reads bigger above the arch (x1.35 about its centre)
+            var m0 = t.M; var piv = V(-5.12f, 4.0f, -0.23f);
+            t.M = m0 * Matrix4x4.Translate(piv + V(-0.08f, 0.08f, 0f)) * Matrix4x4.Scale(Vector3.one * 1.35f) * Matrix4x4.Translate(-piv);
+            Skull(t); t.M = m0;
         }
 
         /// <summary>The bone horned skull over the keystone (spec: 1.75 m wide with the horns, glowing red eyes).</summary>
@@ -564,7 +567,8 @@ namespace Crashverse.Visuals
             float zs = left ? z1 - 0.06f : z0 + 0.06f;
             for (float x = -4.5f; x < -1.4f; x += 0.7f) t.BoxMinMax(TimberLit, 1f, V(x - 0.06f, 6.8f, zs - 0.06f), V(x + 0.06f, 7.6f, zs + 0.06f));
             t.BoxMinMax(TimberLit, 1f, V(-5.2f, 7.48f, zs - 0.08f), V(-1.3f, 7.6f, zs + 0.08f));
-            if (left) ChainMast(t); else SkullBanner(t, -4.82f, -2.05f, -0.81f, 6.15f, 3.64f, 4.3f, true);
+            // PM b24: one big red demon banner centred on the tower front, under the gallery, above the skull's horns
+            if (left) ChainMast(t); else SkullBanner(t, -4.84f, -1.12f, 0.66f, 6.0f, 4.62f, 5.05f, true);
         }
 
         static void ChainMast(TwMesh t)
@@ -766,8 +770,8 @@ namespace Crashverse.Visuals
             t.BoxMinMax(Timber, 1f, at + V(-0.15f, 0.2f, -0.15f), at + V(0.15f, 1.5f, 0.15f));
             t.BoxMinMax(Iron, 1f, at + V(-0.17f, 0.6f, -0.17f), at + V(0.17f, 0.66f, 0.17f));
             t.BoxMinMax(Iron, 1f, at + V(-0.17f, 1.2f, -0.17f), at + V(0.17f, 1.26f, 0.17f));
-            IronBowl(t, at + V(0f, 1.48f, 0f), 0.16f, 0.31f, 0.22f);
-            Flame(t, at + V(0f, 1.62f, 0f), 0.45f, 0.24f);
+            IronBowl(t, at + V(0f, 1.48f, 0f), 0.2f, 0.4f, 0.26f);
+            Flame(t, at + V(0f, 1.62f, 0f), 0.8f, 0.33f);
         }
 
         internal static void BarrelBody(TwMesh t, Vector3 bottom, float h, float r, Material wood, Material hoop)
@@ -891,6 +895,7 @@ namespace Crashverse.Visuals
             Railing(t, -3.8f, 5.65f, 0.53f, 5.58f, 5.66f, 1, false);
             Torch(t, V(-4.92f, 6.18f, 4.73f), 0.12f);
             Archer(t, V(-3.95f, 5.65f, 3.6f), Vector3.back);
+            IronBowl(t, V(-4.6f, 5.65f, 5.2f), 0.14f, 0.26f, 0.22f); Flame(t, V(-4.6f, 5.8f, 5.2f), 0.55f, 0.21f);   // fire basket
             SkullBanner(t, -5.04f, 3.69f, 4.75f, 5.08f, 3.51f, 3.95f, false);
         }
 
@@ -907,6 +912,8 @@ namespace Crashverse.Visuals
             Railing(t, -4.77f, 5.35f, 0.53f, -5.95f, -3.16f, 5, false);
             Torch(t, V(-4.77f, 5.88f, -3.65f), 0.12f);
             Archer(t, V(-3.95f, 5.35f, -4.96f), Vector3.back);
+            IronBowl(t, V(-4.5f, 5.35f, -5.55f), 0.14f, 0.26f, 0.22f); Flame(t, V(-4.5f, 5.5f, -5.55f), 0.55f, 0.21f); // fire basket
+            SkullBanner(t, -4.89f, -4.95f, -3.85f, 4.55f, 3.05f, 3.5f, false);                                      // PM b24: skull banner on the right tower too
         }
 
         static void Scaffold(TwMesh t)
@@ -939,7 +946,7 @@ namespace Crashverse.Visuals
         {
             // stone plinth 0.5 m behind the arch face, the tall 6-sided shard (2.0 m) and 4 small shards, a bright core at the base
             t.Cyl(StoneLight, 1f, V(-3.7f, 0.8f, -0.31f), V(-3.7f, 0.98f, -0.31f), 0.5f, 0.45f, 8, true, true);
-            t.Shard(Crystal, CrystalDark, V(-3.72f, 0.95f, -0.24f), V(-0.05f, 1f, 0.02f), 0.3f, 2.05f, 6, 0.34f, 0.2f);
+            t.Shard(Crystal, CrystalDark, V(-3.72f, 0.95f, -0.24f), V(-0.05f, 1f, 0.02f), 0.4f, 2.1f, 6, 0.34f, 0.2f);
             t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, -0.72f), V(-0.15f, 1f, -0.35f), 0.15f, 0.95f, 6, 0.4f, 0.5f);
             t.Shard(Crystal, CrystalDark, V(-3.75f, 0.95f, 0.13f), V(-0.15f, 1f, 0.35f), 0.15f, 0.9f, 6, 0.4f, 0.1f);
             t.Shard(Crystal, CrystalDark, V(-3.95f, 0.95f, -0.5f), V(-0.35f, 1f, -0.15f), 0.11f, 0.6f, 5, 0.45f, 0.8f);
