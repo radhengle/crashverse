@@ -36,8 +36,8 @@ namespace Crashverse.Meta
         /// <summary>Compact levels (target 12-20 m away on its own island, L01.jpg): closer, lower eye and a wider view so the
         /// building fills ~70% of the width with water visible on both sides.</summary>
         /// PM 17 Nov (b16 QA): the bottom crop hid the carriage behind the FIRE / HINT buttons (bottom ~11% of the screen). The whole
-        /// cannon, wheels and side cheeks included, now sits 10% above the bottom edge, just over the button row.
-        public static readonly Settings Compact = new Settings { back = 11.5f, height = 5.4f, sideFill = 0.70f, bottomMargin = 0.10f };
+        /// cannon, wheels and side cheeks included, now sits ~10% above the bottom edge (margin 0.09: 4:3 tablets keep the barrel below the building), just over the button row.
+        public static readonly Settings Compact = new Settings { back = 11.5f, height = 5.4f, sideFill = 0.70f, bottomMargin = 0.09f };
         /// <summary>Height (m) of the Kingdom roof-top flag pole above the highest block; the run camera keeps its tip in frame.</summary>
         public const float RoofFlagPole = 1.2f;
 
