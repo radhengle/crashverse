@@ -41,9 +41,9 @@ namespace Crashverse.Visuals
         internal static Material Moss => M("Moss", "T_TW_Grass", new Color(1.15f, 1.15f, 1.1f));
         internal static Material Fern => M("Fern", null, new Color(0.30f, 0.55f, 0.12f), 0f, 0.7f);
         internal static Material Foam => M("Foam", null, new Color(0.93f, 0.97f, 1.0f), 0f, 0.6f, new Color(0.18f, 0.2f, 0.22f));
-        internal static Material Timber => M("Timber", "T_TW_Timber", new Color(0.92f, 0.90f, 0.88f));     // dark timber #361C14 .. lit #AF612C
-        internal static Material TimberLit => M("TimberLit", "T_TW_Deck", new Color(1.0f, 0.90f, 0.85f));
-        internal static Material Plank => M("Plank", "T_TW_Deck", new Color(0.90f, 0.82f, 0.80f));
+        internal static Material Timber => M("Timber", "T_TW_Timber", new Color(0.70f, 0.64f, 0.64f));     // dark timber #361C14 .. lit #AF612C
+        internal static Material TimberLit => M("TimberLit", "T_TW_Deck", new Color(0.78f, 0.66f, 0.64f));
+        internal static Material Plank => M("Plank", "T_TW_Deck", new Color(0.70f, 0.60f, 0.60f));
         internal static Material Iron => M("Iron", null, new Color(0.16f, 0.16f, 0.18f), 0.5f, 0.55f);
         internal static Material Gold => M("Gold", null, new Color(0.86f, 0.60f, 0.27f), 0.35f, 0.45f);
         internal static Material RoofTile => M("RoofTile", "T_TW_Roof", new Color(1.05f, 0.78f, 0.78f), 0f, 0.6f);     // PM b22: saturated red   // #E15A43
@@ -77,6 +77,7 @@ namespace Crashverse.Visuals
             var kit = CvMesh.Load("Kingdom/Meshes/Tide_Kit"); var st = new List<Mesh>(); var rk = new List<Mesh>();
             for (int i = 0; i < 8; i++) { if (kit.TryGetValue("Stone_" + i, out var a)) st.Add(a); if (kit.TryGetValue("Rock_" + i, out var r)) rk.Add(r); }
             _stones = st.ToArray(); _rocks = rk.ToArray();
+            Debug.Log("[Tide] kit stones " + _stones.Length + ", rocks " + _rocks.Length);
         }
 
         /// <summary>A dressed block: a Blender bevelled/chipped stone from the kit (tiny seeded tilt), or the procedural slab without it.</summary>
@@ -101,6 +102,8 @@ namespace Crashverse.Visuals
         {
             if (!Matches(blocks)) return 0;
             LoadKit();
+            if (TwMesh.ChamferMats == null) TwMesh.ChamferMats = new HashSet<Material>();
+            TwMesh.ChamferMats.Add(Timber); TwMesh.ChamferMats.Add(TimberLit); TwMesh.ChamferMats.Add(Plank);
             _by = new Dictionary<string, DestructibleBlock>();
             foreach (var b in blocks) if (b != null && !string.IsNullOrEmpty(b.blockId)) _by[b.blockId] = b;
             var rc = _by["rockC"]; _off = rc.transform.position - new Vector3(-3.5f, -0.4f, -0.35f);

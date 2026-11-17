@@ -4,7 +4,7 @@
 # split into Rock (steep faces) and Grass (tops, normal.y > 0.72). Output Resources/Kingdom/Meshes/Tide_Cliffs.bytes:
 # Cliff_Rock, Cliff_Grass (box UVs, 9 m / 6 m tiles).
 import bpy, bmesh, math, sys, os
-from mathutils import Vector, noise
+from mathutils import Vector, Matrix, noise
 sys.path.insert(0, os.path.dirname(__file__))
 from tw_lib import *
 OUT = sys.argv[sys.argv.index('--') + 1]
@@ -43,6 +43,7 @@ def ridged(x, z, s, oct=4):
     return v / 1.875
 
 def H(a, b): return (math.sin(a * 12.9898 + b * 78.233) * 43758.5453) % 1.0
+HS = 0.6
 def masses(seed, a, b, n, w0, w1, h0, h1):
     out = []
     for i in range(n):
@@ -50,6 +51,7 @@ def masses(seed, a, b, n, w0, w1, h0, h1):
         px = a[0] + (b[0] - a[0]) * f; pz = a[1] + (b[1] - a[1]) * f
         h = (h0 + (h1 - h0) * f) * (0.85 + 0.3 * H(seed, i)); w = w0 + (w1 - w0) * H(seed + 1, i)
         jz = (H(seed + 4, i) - 0.5) * w * 0.5
+        h *= HS
         out.append((px, pz, w * 0.62, w * 0.66, h))                                    # main mass
         out.append((px - w * 0.42, pz + jz, w * 0.40, w * 0.42, h * 0.52))              # front shoulders
         out.append((px - w * 0.30, pz - jz * 1.4, w * 0.34, w * 0.34, h * 0.66))
@@ -64,15 +66,15 @@ def mfield(ms, crag, seed):
             best = max(best, y)
         if best > 0:
             best += crag * (ridged(x + seed, z, 0.045) - 0.5) * min(1.0, best / 12)
-            strata = math.floor(best / 7.0) * 7.0; best = best * 0.55 + strata * 0.45
+            strata = math.floor(best / 4.5) * 4.5; best = best * 0.55 + strata * 0.45
         return best
     return f
-_right = mfield(masses(31, (400, -72), (440, -158), 6, 26, 46, 62, 98) + [(399, -116, 18, 11, 84)], 12, 0)  # + the waterfall buttress (face x ~381)
+_right = mfield(masses(31, (400, -72), (440, -158), 6, 26, 46, 62, 98) + [(399, -116, 18, 11, 84 * HS)], 12, 0)  # + the waterfall buttress (face x ~381)
 def right(x, z):
     h = _right(x, z)
     m = max(0.0, 1 - math.hypot((x - 425) / 17, (z - 112) / 1e9 if False else (z + 112) / 30))   # castle terrace at y 86
     m = min(1.0, m * 2.5)
-    return h + (86.0 - h) * m if h > 40 or m > 0.6 else h
+    return h + (52.0 - h) * m if h > 24 or m > 0.6 else h
 left = mfield(masses(41, (410, 160), (400, 84), 5, 24, 36, 40, 66), 10, 50)
 hill = mfield(masses(47, (470, 140), (470, 112), 2, 22, 26, 48, 52), 5, 90)
 
@@ -84,7 +86,7 @@ whole = join(parts, 'Cliffs')
 bm = bmesh.new(); bm.from_mesh(whole.data)
 bmesh.ops.delete(bm, geom=[f for f in bm.faces if max(v.co.z for v in f.verts) < -1.5], context='FACES')
 bm.normal_update()
-grass = [f for f in bm.faces if f.normal.z > 0.32 and f.calc_center_median().z > 4.0]
+grass = [f for f in bm.faces if f.normal.z > 0.22 and f.calc_center_median().z > 3.0]
 gbm = bmesh.new(); vmap = {}
 for f in grass:
     vs = []
@@ -99,5 +101,13 @@ g = obj('Cliff_Grass', gbm)
 for o in (whole, g):
     for p in o.data.polygons: p.use_smooth = True
 box_uv(whole, 9.0, 'z'); box_uv(g, 6.0, 'z')
-export(OUT, [whole, g])
+# tree / bush clumps along the green tops (lush canopy silhouettes as in the goal)
+import random
+rnd = random.Random(5); tb = bmesh.new(); gm = g.data
+tops = [p for p in gm.polygons if p.normal.z > 0.5 and p.center.z > 12]
+for p in rnd.sample(tops, min(260, len(tops))):
+    c = p.center; r = rnd.uniform(1.8, 3.6)
+    bmesh.ops.create_icosphere(tb, subdivisions=1, radius=r, matrix=Matrix.Translation(c + Vector((0, 0, r * 0.45))) @ Matrix.Diagonal((1, 1, 0.8, 1)))
+trees = obj('Cliff_Trees', tb); box_uv(trees, 5.0, 'z')
+export(OUT, [whole, g, trees])
 if '--blend' in sys.argv: bpy.ops.wm.save_as_mainfile(filepath=OUT.replace('.bytes', '.blend'))

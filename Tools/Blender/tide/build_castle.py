@@ -1,4 +1,4 @@
-# L1 far castle on the right cliff (design/L01_v2_spec.md §6; same footprint as TideWatchtowerEnv.Background: x 425, base y 86,
+# L1 far castle on the right cliff (design/L01_v2_spec.md §6; same footprint as TideWatchtowerEnv.Background: x 425, base y 52,
 # z -129..-95): white round towers with crenellated parapets and flared blue conical spires with gold finials, a curtain wall
 # with merlons, a keep, arrow-slit windows. Output Resources/Kingdom/Meshes/Tide_Castle.bytes: Castle_Wall, Castle_Shade,
 # Castle_Spire, Castle_Window, Castle_Gold.
@@ -40,7 +40,7 @@ def tower(cx, by, cz, r, h, spire=3.2):
         box(bm2, (cx - r - 0.06, y, cz - 0.25), (cx - r + 0.1, y + 1.3, cz + 0.25))
     o = obj('W', bm2, smooth=False); fix_normals(o); add('Window', o)
 
-cx, by = 425.0, 86.0
+cx, by = 425.0, 52.0   # PM b23: background lowered x0.6 (terrace at 52)
 # curtain wall + keep (shaded face is the camera side, -x)
 bm = bmesh.new(); box(bm, (cx - 8, by, -127), (cx + 8, by + 9, -97)); o = obj('Keepblock', bm, smooth=False); fix_normals(o); add('Shade', o)
 bm = bmesh.new(); box(bm, (cx - 9, by, -126), (cx - 7.5, by + 8, -98)); o = obj('Wallfront', bm, smooth=False); fix_normals(o); add('Wall', o)

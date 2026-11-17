@@ -17,7 +17,7 @@ for o in list(sc.objects):
 w = bpy.data.worlds.new('w'); sc.world = w; w.use_nodes = True; w.node_tree.nodes['Background'].inputs[0].default_value = (0.5, 0.6, 0.75, 1); w.node_tree.nodes['Background'].inputs[1].default_value = 0.8
 sun = bpy.data.objects.new('sun', bpy.data.lights.new('sun', 'SUN')); sc.collection.objects.link(sun); sun.data.energy = 4; sun.rotation_euler = Euler((math.radians(50), math.radians(10), math.radians(-60)))
 cam = bpy.data.objects.new('cam', bpy.data.cameras.new('cam')); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = Vector((-7.0, 0, 5.0)); cam.data.lens_unit = 'FOV'; cam.data.angle = math.radians(50)
-cam.rotation_euler = (Vector((2.0, 0, 1.3)) - cam.location).to_track_quat('-Z', 'Y').to_euler()
+cam.location = Vector((-6.0, 0, 6.25)); cam.data.lens_unit = "FOV"; cam.data.angle = math.radians(50)
+cam.rotation_euler = (Vector((0.0, 0, 6.25 - 6.0 * 0.3249)) - cam.location).to_track_quat('-Z', 'Y').to_euler()
 sc.render.engine = 'BLENDER_EEVEE_NEXT'; sc.render.resolution_x = 600; sc.render.resolution_y = 800; sc.render.filepath = out
 bpy.ops.render.render(write_still=True)

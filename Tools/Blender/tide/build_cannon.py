@@ -21,8 +21,8 @@ def rounded_band(x0, x1, rIn, rOut, lip, n=5):
 # ---- navy body: breech dome, breech, tapering chase to the muzzle
 bm = bmesh.new()
 prof = []
-for i in range(9):   # elliptical breech dome from the axis to r 0.6 at x -2.05
-    a = math.pi / 2 * i / 8; prof.append((-2.05 - 0.19 * math.cos(a), 0.6 * math.sin(a)))
+for i in range(13):  # PM b23: a deep closed rounded breech dome (axis at -2.52) behind the breech ring, so the near end reads as the breech
+    a = math.pi / 2 * i / 12; prof.append((-1.98 - 0.54 * math.cos(a), 0.6 * math.sin(a) ** 0.8))
 prof += [(-1.78, 0.62), (-1.2, 0.612), (-0.68, 0.60), (-0.38, 0.58), (0.0, 0.567), (0.55, 0.55), (0.78, 0.535), (1.3, 0.527), (1.80, 0.52), (1.99, 0.52)]
 prof[0] = (prof[0][0], 0.0)
 lathe(bm, prof, S)
@@ -30,21 +30,21 @@ navy = obj('Barrel_Navy', bm); lathe_uv(navy, 0.8)
 
 # ---- gold rings (thick, raised, rounded lips) + muzzle swell with face and bore
 objs = []
-for (x0, x1, ri, ro) in ((-2.12, -1.74, 0.58, 0.72), (-0.72, -0.34, 0.56, 0.70), (0.50, 0.82, 0.515, 0.63), (1.76, 2.04, 0.50, 0.62)):
+for (x0, x1, ri, ro) in ((-2.00, -1.66, 0.58, 0.72), (-0.72, -0.34, 0.56, 0.70), (0.50, 0.82, 0.515, 0.63), (1.76, 2.04, 0.50, 0.62)):
     bm = bmesh.new(); lathe(bm, rounded_band(x0, x1, ri, ro, 0.045), S); objs.append(obj('Band', bm))
 bm = bmesh.new(); lathe(bm, [(2.04, 0.58), (2.06, 0.56), (2.06, 0.38), (2.03, 0.36)], S); objs.append(obj('Face', bm))
 # fillet beads either side of each ring
-for x in (-1.70, -0.76, -0.30, 0.46, 0.86, 1.72):
+for x in (-1.62, -0.76, -0.30, 0.46, 0.86, 1.72):
     r = 0.62 - (x + 1.78) * 0.027 if x < 0 else 0.567 - x * 0.03
     bm = bmesh.new(); lathe(bm, [(x - 0.02, r - 0.005)] + [(x - 0.02 * math.cos(math.pi * i / 6), r + 0.022 * math.sin(math.pi * i / 6)) for i in range(7)] + [(x + 0.02, r - 0.005)], S); objs.append(obj('Bead', bm))
 # cascabel neck + knob
-bm = bmesh.new(); lathe(bm, [(-2.22, 0.15), (-2.30, 0.10), (-2.36, 0.095)] + [(-2.47 - 0.13 * math.cos(math.pi * i / 10), 0.13 * math.sin(math.pi * i / 10)) for i in range(11)], 32)
+bm = bmesh.new(); lathe(bm, [(-2.47, 0.19), (-2.53, 0.17), (-2.60, 0.10), (-2.63, 0.10)] + [(-2.77 - 0.15 * math.cos(math.pi * i / 12), 0.15 * math.sin(math.pi * i / 12)) for i in range(13)], 32)
 objs.append(obj('Knob', bm))
 gold = join(objs, 'Barrel_Gold'); lathe_uv(gold, 0.8)
 
 bm = bmesh.new(); lathe(bm, [(2.035, 0.36), (1.4, 0.36), (1.4, 0.0)], 32); bore = obj('Barrel_Bore', bm)
 # breech ring groove (dark)
-bm = bmesh.new(); lathe(bm, [(-1.955, 0.718), (-1.95, 0.724), (-1.91, 0.724), (-1.905, 0.718)], S); groove = obj('Barrel_NavyDark', bm)
+bm = bmesh.new(); lathe(bm, [(-1.855, 0.718), (-1.85, 0.724), (-1.81, 0.724), (-1.805, 0.718)], S); groove = obj('Barrel_NavyDark', bm)
 # trunnions (navy) out to the cheeks
 bm = bmesh.new()
 for sz in (-1, 1): cyl(bm, (0, -0.2, sz * 0.5), (0, -0.2, sz * 0.74), 0.13, 20)
@@ -87,8 +87,10 @@ for sz in (-1, 1):
     zl, zh = sorted((sz * 0.7, sz * 1.3))
     bm = bmesh.new(); extrude_profile(bm, step, zl, zh); o = obj('Cheek', bm); fix_normals(o); bevel(o, 0.035, 3); wood.append(o)
     for (x0, x1, y) in ((-0.35, 1.0, 1.62), (-0.95, -0.35, 1.2), (-1.55, -0.95, 0.85)):
-        bm = bmesh.new(); box(bm, (x0 - 0.02, y, zl - 0.025), (x1 + 0.02, y + 0.06, zh + 0.025)); o = obj('Cap', bm); fix_normals(o); bevel(o, 0.012, 2); cgold.append(o)
-        bm = bmesh.new(); box(bm, (x0 - 0.035, y - 0.42, zl - 0.025), (x0 + 0.035, y, zh + 0.025)); o = obj('Riser', bm); fix_normals(o); bevel(o, 0.01, 2); cgold.append(o)
+        # PM b23: gold only as thin trim along the step edges (the cheeks themselves read as dark wood)
+        for (za, zb) in ((zl - 0.02, zl + 0.05), (zh - 0.05, zh + 0.02)):
+            bm = bmesh.new(); box(bm, (x0 - 0.02, y - 0.03, za), (x1 + 0.02, y + 0.035, zb)); o = obj('Cap', bm); fix_normals(o); bevel(o, 0.01, 2); cgold.append(o)
+        bm = bmesh.new(); box(bm, (x0 - 0.03, y - 0.06, zl - 0.02), (x0 + 0.02, y + 0.035, zh + 0.02)); o = obj('Riser', bm); fix_normals(o); bevel(o, 0.008, 2); cgold.append(o)
     bm = bmesh.new(); box(bm, (-0.22, 1.58, zl - 0.035), (0.22, 1.72, zh + 0.035)); o = obj('Strap', bm); fix_normals(o); bevel(o, 0.015, 2); ciron.append(o)
     bm = bmesh.new(); box(bm, (-1.5, 0.30, zl - 0.02), (0.95, 0.38, zh + 0.02)); o = obj('Band', bm); fix_normals(o); bevel(o, 0.01, 2); ciron.append(o)
     bm = bmesh.new()
@@ -106,6 +108,14 @@ for sz in (-1, 1):
 for (a, b) in (((-1.5, 0.15, -0.72), (-1.0, 0.5, 0.72)), ((0.3, 0.15, -0.72), (0.9, 0.6, 0.72))):
     bm = bmesh.new(); box(bm, a, b); o = obj('Transom', bm); fix_normals(o); bevel(o, 0.03, 3); wood.append(o)
 bm = bmesh.new(); box(bm, (-0.9, 0.5, -0.7), (-0.5, 0.75, 0.7)); o = obj('Quoin', bm); fix_normals(o); bevel(o, 0.025, 2); cnavy.append(o)
+for wx in (-1.15, 0.62):
+    for sz in (-1, 1):
+        zc = sz * 1.40; r = 0.34
+        bm = bmesh.new(); cyl(bm, (wx, r, zc - 0.08), (wx, r, zc + 0.08), r, 28); o = obj('Wheel', bm); fix_normals(o); bevel(o, 0.03, 2); wood.append(o)
+        bm = bmesh.new(); cyl(bm, (wx, r, zc - 0.085), (wx, r, zc + 0.085), r + 0.025, 28); cyl(bm, (wx, r, zc - 0.07), (wx, r, zc + 0.07), r + 0.026, 28)
+        o = obj('Tyre', bm); fix_normals(o); ciron.append(o)
+        bm = bmesh.new(); cyl(bm, (wx, r, zc - 0.13), (wx, r, zc + 0.13), 0.09, 16); o = obj('Hub', bm); fix_normals(o); bevel(o, 0.02, 2); cgold.append(o)
+        bm = bmesh.new(); cyl(bm, (wx, r, -1.5), (wx, r, 1.5), 0.05, 10); o = obj('Axle', bm); fix_normals(o); ciron.append(o)
 cw = join(wood, 'Carriage_Wood'); box_uv(cw, 0.9, 'x')
 cg = join(cgold, 'Carriage_Gold'); box_uv(cg, 0.8)
 ci = join(ciron, 'Carriage_Iron'); box_uv(ci, 0.8)

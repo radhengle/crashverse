@@ -11,10 +11,10 @@ namespace Crashverse.Visuals
     {
         static Vector3 V(float x, float y, float z) => new Vector3(x, y, z);
         static Material M(string k, string tex, Color c, float metal = 0f, float rough = 0.9f, Color emission = default) => KingdomMaterials.Make("Tw" + k, tex, c, metal, rough, Vector2.one, emission);
-        static Material DeckLit => M("DeckLit", "T_TW_Deck", new Color(1.05f, 0.92f, 1.0f));   // PM b22: dark brown #8A503C lit
-        static Material DeckMid => M("DeckMid", "T_TW_Deck", new Color(0.76f, 0.66f, 0.72f));   // #5A3022
+        static Material DeckLit => M("DeckLit", "T_TW_Deck", new Color(0.74f, 0.62f, 0.68f));   // PM b22: dark brown #8A503C lit
+        static Material DeckMid => M("DeckMid", "T_TW_Deck", new Color(0.54f, 0.45f, 0.50f));   // #5A3022
         static Material DeckGap => M("DeckGap", null, new Color(0.10f, 0.05f, 0.035f), 0f, 1f);     // #351912
-        static Material RailWood => M("RailWood", "T_TW_Timber", new Color(1.10f, 0.95f, 0.95f));
+        static Material RailWood => M("RailWood", "T_TW_Timber", new Color(0.82f, 0.68f, 0.68f));
         static Material Brass => M("Brass", null, new Color(0.80f, 0.56f, 0.24f), 0.4f, 0.4f);
         static Material LanternGlow => M("LanternGlow", null, new Color(1f, 0.94f, 0.24f), 0f, 1f, new Color(5.0f, 4.0f, 1.1f)); // #FEF03C
         static Material OrangeStave => M("OrangeStave", "T_TW_Deck", new Color(1.55f, 1.10f, 0.70f));  // #D57321
@@ -26,7 +26,8 @@ namespace Crashverse.Visuals
         static Material GoldCloth => M("GoldCloth", null, new Color(0.93f, 0.68f, 0.18f), 0f, 0.7f);
         static Material CliffRock => M("CliffRock", "T_TW_Rock", new Color(0.48f, 0.72f, 0.95f));      // hazy #3B607E
         static Material CliffDark => M("CliffDark", "T_TW_Rock", new Color(0.36f, 0.53f, 0.72f));
-        static Material CliffGrass => M("CliffGrass", "T_TW_Grass", new Color(1.2f, 1.4f, 0.9f));
+        static Material CliffGrass => M("CliffGrass", "T_TW_Grass", new Color(1.35f, 1.65f, 0.85f));
+        static Material CliffTrees => M("CliffTrees", "T_TW_Grass", new Color(0.62f, 1.05f, 0.55f));   // darker canopy clumps
         static Material Beach => M("Beach", "T_K_Sand", new Color(1.35f, 1.3f, 1.2f));
         static Material CastleWall => M("CastleWall", null, new Color(0.93f, 0.92f, 0.9f), 0f, 0.8f);
         static Material CastleShade => M("CastleShade", null, new Color(0.72f, 0.76f, 0.85f), 0f, 0.85f);
@@ -36,11 +37,15 @@ namespace Crashverse.Visuals
         public static void Build(Transform root, Vector3 cannon)
         {
             var go = new GameObject("TideWatchtowerEnv").transform; go.SetParent(root, false);
+            if (TwMesh.ChamferMats == null) TwMesh.ChamferMats = new System.Collections.Generic.HashSet<Material>();
+            TwMesh.ChamferMats.Add(RailWood); TwMesh.ChamferMats.Add(Crate);
             var t = new TwMesh(); Deck(t, cannon); t.Build(go, "TwDeck", true);
             // Blender-built props (Tools/Blender/tide/build_deck.py -> Kingdom/Meshes/Tide_Deck): lantern, barrels, crate, balls, rope
             bool hero = HeroProps(go);
+            Debug.Log("[Tide] hero props " + (hero ? "loaded" : "missing"));
             var p = new TwMesh(); Props(p, cannon, !hero); p.Build(go, "TwProps", true);
             bool heroCliffs = HeroCliffs(go);
+            Debug.Log("[Tide] hero cliffs " + (heroCliffs ? "loaded" : "missing") + ", castle " + (_heroCastle ? "loaded" : "missing"));
             var g = new TwMesh(); Background(g, !heroCliffs); g.Build(go, "TwBackground", false, false);
             var sf = new TwMesh(); Surf(sf); sf.Build(go, "TwSurf", false, false);
             // the lantern's warm light on the rail and the deck
@@ -187,7 +192,9 @@ namespace Crashverse.Visuals
         {
             var bundle = CvMesh.Load("Kingdom/Meshes/Tide_Cliffs");
             if (!bundle.TryGetValue("Cliff_Rock", out var rock) || !bundle.TryGetValue("Cliff_Grass", out var grass)) return false;
-            foreach (var (mesh, mat) in new[] { (rock, CliffRock), (grass, CliffGrass) })
+            var parts = new System.Collections.Generic.List<(Mesh, Material)> { (rock, CliffRock), (grass, CliffGrass) };
+            if (bundle.TryGetValue("Cliff_Trees", out var trees)) parts.Add((trees, CliffTrees));
+            foreach (var (mesh, mat) in parts)
             {
                 var g = new GameObject("Tw" + mesh.name); g.transform.SetParent(parent, false);
                 g.AddComponent<MeshFilter>().sharedMesh = mesh;
@@ -222,7 +229,8 @@ namespace Crashverse.Visuals
             for (int i = 0; i < 3; i++)
             {
                 float z0 = wz - 2.6f + i * 1.7f;
-                t.Poly2(Waterfall, 4f, V(381f - i * 0.3f, 78f, z0), V(381f - i * 0.3f, 78f, z0 + 1.6f), V(380f - i * 0.3f, 0f, z0 + 2.2f), V(380f - i * 0.3f, 0f, z0 - 0.4f));
+                float wt = masses ? 78f : 47f; // the Blender cliffs are 0.6x as tall (below the HUD band)
+                t.Poly2(Waterfall, 4f, V(382f - i * 0.3f, wt, z0), V(382f - i * 0.3f, wt, z0 + 1.6f), V(380f - i * 0.3f, 0f, z0 + 2.2f), V(380f - i * 0.3f, 0f, z0 - 0.4f));
             }
             t.Slab(TideWatchtower.Foam, 4f, V(378f, -0.4f, wz), V(10f, 2.2f, 12f), 9, 0.25f);
             // castle on the cliff top: white walls and towers with blue conical spires (Blender-built Tide_Castle when present)
@@ -266,12 +274,14 @@ namespace Crashverse.Visuals
             void Ring(float x0, float x1, float z0, float z1, int seed)
             {
                 float cx = (x0 + x1) * 0.5f, cz = (z0 + z1) * 0.5f, rx = (x1 - x0) * 0.5f + 0.35f, rz = (z1 - z0) * 0.5f + 0.35f;
-                for (int i = 0; i < 28; i++)
-                {
-                    float an = i * Mathf.PI * 2f / 28f, k = 0.92f + 0.16f * H(seed, i);
-                    var c = V(cx + Mathf.Cos(an) * rx * k, -0.98f, cz + Mathf.Sin(an) * rz * k);
-                    t.Sphere(TideWatchtower.Foam, 2f, c, V(0.45f + 0.35f * H(seed + 1, i), 0.07f, 0.45f + 0.35f * H(seed + 2, i)), 8, 3);
-                }
+                for (int ring = 0; ring < 2; ring++)
+                    for (int i = 0; i < 40; i++)
+                    {
+                        float an = (i + ring * 0.5f) * Mathf.PI * 2f / 40f, k = (ring == 0 ? 0.9f : 1.12f) + 0.14f * H(seed + ring * 7, i);
+                        var c = V(cx + Mathf.Cos(an) * rx * k, -0.97f + ring * -0.01f, cz + Mathf.Sin(an) * rz * k);
+                        float sz = ring == 0 ? 0.7f : 0.5f;
+                        t.Sphere(TideWatchtower.Foam, 2f, c, V(sz + 0.5f * H(seed + 1, i), ring == 0 ? 0.14f : 0.08f, sz + 0.5f * H(seed + 2, i)), 8, 3);
+                    }
             }
             Ring(-6.5f, -0.5f, -3.8f, 3.1f, 61); Ring(-6.0f, -2.0f, 3.1f, 7.3f, 67); Ring(-5.6f, -1.6f, -7.3f, -3.8f, 71);
         }

@@ -66,7 +66,7 @@ namespace Crashverse.Visuals
             var sunGold = Mk("Sun", new Color(0.97f, 0.89f, 0.45f), 0.4f, 0.3f, null, new Color(0.25f, 0.14f, 0.02f)); // #F8E474
             var sunDeep = Mk("SunDeep", new Color(0.93f, 0.57f, 0.08f), 0.4f, 0.35f);     // #EC9114
             var bore = Mk("Bore", new Color(0.03f, 0.03f, 0.05f), 0f, 1f);
-            var wood = Mk("Wood", new Color(0.92f, 0.80f, 0.85f), 0f, 0.85f, "T_TW_Timber"); // dark brown #714130 lit, Poly Haven CC0 planks
+            var wood = Mk("Wood", new Color(0.62f, 0.45f, 0.48f), 0f, 0.85f, "T_TW_Timber"); // dark brown #714130 lit, Poly Haven CC0 planks
             var iron = Mk("Iron", new Color(0.12f, 0.12f, 0.14f), 0.6f, 0.45f);
 
             // Blender-built hero mesh (Tools/Blender/tide/build_cannon.py -> Kingdom/Meshes/Tide_Cannon): same dimensions as the
@@ -88,6 +88,7 @@ namespace Crashverse.Visuals
                     go.AddComponent<MeshFilter>().sharedMesh = kv.Value;
                     var mr = go.AddComponent<MeshRenderer>(); mr.sharedMaterial = mat; mr.shadowCastingMode = ShadowCastingMode.On;
                 }
+                Debug.Log("[Tide] hero cannon mesh loaded: " + hero.Count + " parts");
                 var hm = new GameObject("Kingdom_Muzzle").transform; hm.SetParent(hb, false);
                 hm.localPosition = new Vector3(wb.projectileSpawn != null ? wb.projectileSpawn.localPosition.x : 1.95f, 0f, 0f);
                 return hm;
@@ -144,6 +145,7 @@ namespace Crashverse.Visuals
             muzzle.localPosition = new Vector3(wb.projectileSpawn != null ? wb.projectileSpawn.localPosition.x : 1.95f, 0f, 0f);
 
             // carriage: two stepped timber cheeks (z +/-0.7..1.3) with gold caps, transoms and rear blocks; follows the yaw only
+            Debug.LogWarning("[Tide] hero cannon mesh missing, procedural fallback");
             var cRoot = new GameObject("Kingdom_Carriage").transform; cRoot.SetParent(wb.yawPivot, false);
             cRoot.localPosition = new Vector3(0f, -wb.yawPivot.localPosition.y, 0f);
             var c = new TwMesh();

@@ -72,12 +72,50 @@ namespace Crashverse.Visuals
             Poly(m, tile, c[0], c[1], c[5], c[4]); // -y
         }
 
+        /// <summary>Materials whose boxes are built as chamfered beams (worn timber edges that catch the light). Set by the L1 dressing.</summary>
+        public static HashSet<Material> ChamferMats;
+
         public void Box(Material m, float tile, Vector3 centre, Vector3 size, Quaternion rot = default)
         {
             if (rot.x == 0f && rot.y == 0f && rot.z == 0f && rot.w == 0f) rot = Quaternion.identity;
+            if (ChamferMats != null && m != null && ChamferMats.Contains(m))
+            {
+                float mn = Mathf.Min(size.x, Mathf.Min(size.y, size.z));
+                if (mn > 0.03f) { ChamferBox(m, tile, centre, size, rot, Mathf.Min(0.035f, mn * 0.22f)); return; }
+            }
             var c = new Vector3[8]; var h = size * 0.5f;
             for (int i = 0; i < 8; i++) c[i] = centre + rot * new Vector3((i & 1) == 0 ? -h.x : h.x, (i & 2) == 0 ? -h.y : h.y, (i & 4) == 0 ? -h.z : h.z);
             Hexa(m, tile, c);
+        }
+
+        /// <summary>A box with every edge chamfered by c (6 inset faces, 12 bevel strips, 8 corner triangles), flat-shaded.</summary>
+        public void ChamferBox(Material m, float tile, Vector3 centre, Vector3 size, Quaternion rot, float c)
+        {
+            var h = size * 0.5f;
+            Vector3 P(float x, float y, float z) => centre + rot * new Vector3(x, y, z);
+            void Out(Vector3 outDir, params Vector3[] q)
+            {
+                var n = Vector3.Cross(q[1] - q[0], q[2] - q[0]);
+                if (Vector3.Dot(n, rot * outDir) < 0f) System.Array.Reverse(q);
+                Poly(m, tile, q);
+            }
+            float hx = h.x, hy = h.y, hz = h.z, ix = hx - c, iy = hy - c, iz = hz - c;
+            foreach (float s in new[] { -1f, 1f })
+            {
+                Out(new Vector3(s, 0, 0), P(s * hx, -iy, -iz), P(s * hx, iy, -iz), P(s * hx, iy, iz), P(s * hx, -iy, iz));
+                Out(new Vector3(0, s, 0), P(-ix, s * hy, -iz), P(ix, s * hy, -iz), P(ix, s * hy, iz), P(-ix, s * hy, iz));
+                Out(new Vector3(0, 0, s), P(-ix, -iy, s * hz), P(ix, -iy, s * hz), P(ix, iy, s * hz), P(-ix, iy, s * hz));
+            }
+            foreach (float a in new[] { -1f, 1f })
+                foreach (float b in new[] { -1f, 1f })
+                {
+                    // edges along z (x/y faces), along x (y/z faces), along y (x/z faces)
+                    Out(new Vector3(a, b, 0), P(a * hx, b * iy, -iz), P(a * ix, b * hy, -iz), P(a * ix, b * hy, iz), P(a * hx, b * iy, iz));
+                    Out(new Vector3(0, a, b), P(-ix, a * hy, b * iz), P(-ix, a * iy, b * hz), P(ix, a * iy, b * hz), P(ix, a * hy, b * iz));
+                    Out(new Vector3(a, 0, b), P(a * hx, -iy, b * iz), P(a * ix, -iy, b * hz), P(a * ix, iy, b * hz), P(a * hx, iy, b * iz));
+                    foreach (float d in new[] { -1f, 1f })
+                        Out(new Vector3(a, b, d), P(a * hx, b * iy, d * iz), P(a * ix, b * hy, d * iz), P(a * ix, b * iy, d * hz));
+                }
         }
 
         /// <summary>Box between two corners (min/max), axis-aligned.</summary>

@@ -67,7 +67,7 @@ namespace Crashverse.Meta
         /// PM b22 QA (phones are taller than the 3:4 goal): the eye moved 1.2 m further back and 0.3 m up with a 14 deg pitch and a
         /// 37.5 deg-tan horizontal lens (75 deg vertical on 1080x2340), so the whole complex spans ~95% of the width, the tower top sits
         /// just under the HUD, the islet base near mid-screen and the world-scale cannon (rest aim 25 deg) below the crystal.
-        public static readonly Settings Goal = new Settings { back = 7.0f, height = 5.0f, goalPose = true, goalPitch = 14f, goalTanH = 0.3541f,
+        public static readonly Settings Goal = new Settings { back = 6.0f, height = 6.25f, goalPose = true, goalPitch = 18f, // PM b23: cannon in the bottom ~45%, its muzzle at ~55% from the top goalTanH = 0.3541f,
                                                               bottomMargin = -0.3f, topMargin = 0.06f, maxFov = 100f,
                                                               cannonScale = 1f, cannonRear = 1.8f, cannonTop = 2.6f };
         /// <summary>The goal pose is chosen by geometry: a wide (z ≥ 12 m) complex close to the cannon (centre &lt; 18 m).</summary>
