@@ -7,7 +7,7 @@ B = []
 # PM b26 QA (b27): the arch stands on a stepped plinth (its base ~7% of the screen above the islet top), the stone tiers are taller
 # and the roof/turret a little shorter so the turret tip still clears the HUD. Piecewise map of the authored height y (same numbers
 # as TideWatchtower.StretchY): below 0.78 unchanged (rocks, sea); 0.8 -> plinth top P; tier 1 x K1; up to the roof top x K2; turret x K3.
-P, K1, K2, K3 = 2.48, 1.42, 1.055, 0.85
+P, K1, K2, K3 = 2.48, 1.42, 1.12, 0.7  # b28: roof higher, turret squatter (HUD)
 YA = P + (3.65 - 0.8) * K1
 YR = YA + (9.45 - 3.65) * K2
 def Y(y):
@@ -15,8 +15,14 @@ def Y(y):
     if y <= 3.65: return P + (y - 0.8) * K1
     if y <= 9.45: return YA + (y - 3.65) * K2
     return YR + (y - 9.45) * K3
+# PM b27 QA (b28): bulkier central tower: z within ZH of ZC widens x ZK, the side towers shift outward (TideWatchtower.WidenZ)
+ZC, ZH, ZK = -0.665, 2.9, 1.12
+def Z(z):
+    d = z - ZC; a = abs(d)
+    return ZC + d * ZK if a <= ZH else ZC + (1 if d > 0 else -1) * (ZH * ZK + a - ZH)
 def box(id, mat, x0, x1, y0, y1, z0, z1, sup=(), role="", obj=True, explosive=False, ind=False, blast=0.0):
     y0, y1 = round(Y(y0), 3), round(Y(y1), 3)
+    z0, z1 = round(Z(z0), 3), round(Z(z1), 3)
     B.append({"id": id, "mat": mat, "p": [round((x0 + x1) / 2 - BASE_X, 3), round((y0 + y1) / 2, 3), round((z0 + z1) / 2, 3)],
               "s": [round(x1 - x0, 3), round(y1 - y0, 3), round(z1 - z0, 3)], "sup": list(sup), "joint": False, "role": role,
               "nonObj": not obj, "color": "", "explosive": explosive, "indestructible": ind, "spinAxis": [], "pivot": [], "spinDps": 0.0})

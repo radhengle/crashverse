@@ -20,14 +20,18 @@ namespace Crashverse.Visuals
         // y is remapped by WarpFn (piecewise; WarpSlope = its derivative, so normals and box UVs follow); vertices added between
         // PropBegin/PropEnd keep their shape instead: they follow their anchor's mapped position and are scaled uniformly.
         public System.Func<float, float> WarpFn, WarpSlope;
+        // b28: horizontal (z) map as well (the central tower is wider); props map their anchor's z, or every vertex z when zWarp
+        public System.Func<float, float> WarpZFn, WarpZSlope;
+        public float WarpZ(float z) => WarpZFn == null ? z : WarpZFn(z);
         public Vector3 WarpSpecOffset;
-        struct PropRange { public Part part; public int s, e; public Vector3 anchor; public float scale; }
+        struct PropRange { public Part part; public int s, e; public Vector3 anchor; public float scale; public bool zWarp; }
         readonly List<PropRange> _props = new List<PropRange>();
-        Dictionary<Part, int> _propStart; Vector3 _propAnchor; float _propScale;
+        Dictionary<Part, int> _propStart; Vector3 _propAnchor; float _propScale; bool _propZWarp;
         public float WarpY(float y) => WarpFn == null ? y : WarpFn(y);
         public bool InProp => _propStart != null;
-        public void PropBegin(Vector3 anchorSpec, float scale = 1f)
+        public void PropBegin(Vector3 anchorSpec, float scale = 1f, bool zWarp = false)
         {
+            _propZWarp = zWarp;
             _propStart = new Dictionary<Part, int>(); foreach (var kv in _parts) _propStart[kv.Value] = kv.Value.v.Count;
             _propAnchor = anchorSpec; _propScale = scale;
         }
@@ -37,13 +41,13 @@ namespace Crashverse.Visuals
             foreach (var kv in _parts)
             {
                 int s0 = _propStart.TryGetValue(kv.Value, out var st) ? st : 0;
-                if (kv.Value.v.Count > s0) _props.Add(new PropRange { part = kv.Value, s = s0, e = kv.Value.v.Count, anchor = _propAnchor, scale = _propScale });
+                if (kv.Value.v.Count > s0) _props.Add(new PropRange { part = kv.Value, s = s0, e = kv.Value.v.Count, anchor = _propAnchor, scale = _propScale, zWarp = _propZWarp });
             }
             _propStart = null;
         }
         void ApplyWarp()
         {
-            if (WarpFn == null && _props.Count == 0) return;
+            if (WarpFn == null && WarpZFn == null && _props.Count == 0) return;
             foreach (var p in _parts.Values)
             {
                 var isProp = new int[p.v.Count]; for (int i = 0; i < isProp.Length; i++) isProp[i] = -1;
@@ -54,14 +58,20 @@ namespace Crashverse.Visuals
                     if (isProp[i] >= 0)
                     {
                         var pr = _props[isProp[i]]; var a = pr.anchor;
-                        var m = new Vector3(a.x, WarpY(a.y), a.z) + (spec - a) * pr.scale;
+                        var m = new Vector3(a.x, WarpY(a.y), WarpZ(a.z)) + (spec - a) * pr.scale;
+                        if (pr.zWarp)
+                        {
+                            m.z = WarpZ(spec.z); float kz0 = WarpZSlope == null ? 1f : WarpZSlope(spec.z);
+                            if (kz0 != 1f) { var n0 = p.n[i]; p.n[i] = new Vector3(n0.x, n0.y, n0.z / kz0).normalized; }
+                        }
                         p.v[i] = m - WarpSpecOffset;
                         continue;
                     }
                     float wy = WarpY(spec.y), k = WarpSlope == null ? 1f : WarpSlope(spec.y);
-                    if (wy == spec.y && k == 1f) continue;
-                    p.v[i] = new Vector3(spec.x, wy, spec.z) - WarpSpecOffset;
-                    var n = p.n[i]; n = new Vector3(n.x, n.y / k, n.z).normalized; p.n[i] = n;
+                    float wz = WarpZ(spec.z), kz = WarpZSlope == null ? 1f : WarpZSlope(spec.z);
+                    if (wy == spec.y && k == 1f && wz == spec.z && kz == 1f) continue;
+                    p.v[i] = new Vector3(spec.x, wy, wz) - WarpSpecOffset;
+                    var n = p.n[i]; n = new Vector3(n.x, n.y / k, n.z / kz).normalized; p.n[i] = n;
                     p.uv[i] = BoxUv(p.v[i], n, p.tile);
                 }
             }
