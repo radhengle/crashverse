@@ -49,20 +49,21 @@
    "id": "c1_l01",
    "number": 1,
    "island": "harbor",
-   "name": "Royal Watch Post",
-   "layout": "c1_l01_lookout_hut",
+   "name": "Tide Watchtower",
+   "layout": "c1_l01_tide_watchtower",
    "objective": "DESTROY_STRUCTURE",
    "shots": 4,
    "winThreshold": 0.85,
    "materials": [
-    "wood"
+    "wood",
+    "brick"
    ],
    "teaches": "Aim + fire, trajectory arc",
    "mastery": {
     "type": "DESTROYED_AT_LEAST",
     "value": 0.95,
     "role": "",
-    "text": "Destroy at least 95% of the lookout"
+    "text": "Destroy at least 95% of the watchtower"
    },
    "forced": [],
    "lockedSlots": [],
@@ -73,12 +74,12 @@
    "star2Pct": 0.3,
    "starCapIfPowerupUsed": 3,
    "islandKillY": -2,
-   "hintTarget": "lowF2",
-   "hintYaw": 0.0,
-   "hintPitch": 10.0,
+   "hintTarget": "crystal",
+   "hintYaw": -0.5,
+   "hintPitch": 6.0,
    "blastRadius": 1.5,
    "blastDamage": 36,
-   "targetDistance": 14
+   "targetDistance": 17
   },
   {
    "id": "c1_l02",
